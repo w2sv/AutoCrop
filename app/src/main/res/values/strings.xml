@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ScreenshotBoundRemoval</string>
+    <string name="image_selection">Select Image</string>
+</resources>
