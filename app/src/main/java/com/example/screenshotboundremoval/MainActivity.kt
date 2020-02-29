@@ -17,6 +17,8 @@ import androidx.core.graphics.red
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.InputStream
 
+import com.example.screenshotboundremoval.Cropping
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,15 +75,11 @@ class MainActivity : AppCompatActivity() {
             val imageUri: Uri? = data?.data
             val imageStream: InputStream? = contentResolver.openInputStream(imageUri!!)
             val bitmap: Bitmap? = BitmapFactory.decodeStream(imageStream)
+
             val pixels: IntArray = IntArray(bitmap!!.width * bitmap.height)
 
-            println(bitmap.width)
-            println(bitmap.height)
+            pixels.to
 
-            val pixel: Int = bitmap.getPixel(320, 700)
-            println(pixel.red)
-            println(pixel.green)
-            println(pixel.blue)
 
             // bitmap.getPixels(pixels, 0 ,1,0,0, bitmap.width, bitmap.height)
 
