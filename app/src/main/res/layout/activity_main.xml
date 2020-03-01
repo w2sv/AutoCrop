@@ -11,11 +11,12 @@
 
     <Button
         android:id="@+id/image_selection_button"
+        android:background="@drawable/button_selector"
         style="@style/Base.Widget.AppCompat.Button.Colored"
         android:layout_width="136dp"
         android:layout_height="143dp"
         android:layout_centerInParent="true"
-        android:text="@string/image_selection"
-        app:backgroundTint="@color/wineRed" />
+        android:text="@string/image_selection">
+    </Button>
 
 </RelativeLayout>

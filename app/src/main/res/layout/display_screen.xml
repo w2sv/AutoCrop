@@ -8,6 +8,5 @@
         android:layout_width="match_parent"
         android:layout_height="667dp"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_image_black_24dp" />
+        android:scaleType="centerCrop" />
 </LinearLayout>

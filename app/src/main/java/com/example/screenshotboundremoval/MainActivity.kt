@@ -20,7 +20,7 @@ import java.io.InputStream
 import java.io.File
 import java.io.FileOutputStream
 
-//TODO: algorithm speed up, loading screen, exception handling, welcome screen, selection screen pimp, saving
+//TODO: loading screen, exception handling, welcome screen, selection screen pimp, saving
 
 class MainActivity : AppCompatActivity() {
     companion object{
@@ -96,6 +96,8 @@ class MainActivity : AppCompatActivity() {
 
             setContentView(R.layout.display_screen)
             image_view.setImageBitmap(croppedBitmap)
+
+            this.recreate()
 
             // saving new image
 //            val path: File = Environment.getExternalStorageDirectory()
