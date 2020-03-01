@@ -17,6 +17,7 @@ class Row(pixelRow: IntArray){
     }
 
     private val row: Array<Pixel> = pixelRow.map { Pixel(it) }.toTypedArray()
+    private val length: Int = row.size
 
     operator fun get(index: Int): Pixel = row[index]
 

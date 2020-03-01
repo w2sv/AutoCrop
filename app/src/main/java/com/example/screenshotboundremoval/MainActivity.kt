@@ -14,10 +14,13 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.display_screen.*
 import java.io.InputStream
 
 import java.io.File
 import java.io.FileOutputStream
+
+//TODO: algorithm speed up, loading screen, exception handling, welcome screen, selection screen pimp, saving
 
 class MainActivity : AppCompatActivity() {
     companion object{
@@ -26,58 +29,52 @@ class MainActivity : AppCompatActivity() {
         private const val WRITE_PERMISSION_CODE = 1002
     }
 
+    private val permission2Code: Map<String, Int> = mapOf(
+        Manifest.permission.WRITE_EXTERNAL_STORAGE to WRITE_PERMISSION_CODE,
+        Manifest.permission.READ_EXTERNAL_STORAGE to READ_PERMISSION_CODE)
+    var requiredPermissions: Int = 0
+
+    private fun checkPermission(permission: String){
+        if (checkSelfPermission(permission) == PackageManager.PERMISSION_DENIED){
+            requestPermissions(arrayOf(permission), permission2Code[permission]!!)
+            requiredPermissions ++
+        }
+    }
+
+    private fun requestActivityPermissions(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+    }
+
     /*
-    * invoked when activity created; resets previous states, initializes screen, requests permissions
+     * invoked when activity created; resets previous states, initializes screen, requests permissions
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         image_selection_button.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                println("permission required")
-                val requiredPermissions: Array<String> = arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-                    .filter { checkSelfPermission(it) == PackageManager.PERMISSION_DENIED }
-                    .toTypedArray()
+            requestActivityPermissions()
 
-                for (el in requiredPermissions) {
-                    when (el) {
-                        "Manifest.permission.READ_EXTERNAL_STORAGE" -> requestPermissions(
-                            requiredPermissions,
-                            READ_PERMISSION_CODE
-                        )
-                        "Manifest.permission.WRITE_EXTERNAL_STORAGE" -> requestPermissions(
-                            requiredPermissions,
-                            WRITE_PERMISSION_CODE
-                        ).also { print("requesting write permission") }
-                    }
-                }
-            }
-            else
-                println("no permission required")
+            if (requiredPermissions == 0)
+                pickImageFromGallery()
         }
     }
+
+    private fun permissionRequestResultHandling(grantResults: IntArray, requestDescription: String){
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)
+            Toast.makeText(this, "$requestDescription permission denied", Toast.LENGTH_SHORT).show()
+        else
+            requiredPermissions --
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
-            READ_PERMISSION_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Read permission denied", Toast.LENGTH_SHORT).show()
-                }
-            }
-            WRITE_PERMISSION_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Write permission denied", Toast.LENGTH_SHORT).show()
-                }
-            }
+            READ_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Read")
+            WRITE_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Write")
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        // pickImageFromGallery()
     }
 
     private fun pickImageFromGallery() {
@@ -86,43 +83,37 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(intent, IMAGE_PICK_CODE)
     }
 
-
-
     //handle result of picked image
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
             val imageUri: Uri? = data?.data
-            // val path: String? = imageUri?.path
             val imageStream: InputStream? = contentResolver.openInputStream(imageUri!!)
             val bitmap: Bitmap? = BitmapFactory.decodeStream(imageStream)
 
+            // cropping image
             val cropper = Cropper(bitmap)
             val croppedBitmap: Bitmap = cropper.getCroppedBitmap()
 
-            image_view.setImageBitmap(bitmap)
+            setContentView(R.layout.display_screen)
+            image_view.setImageBitmap(croppedBitmap)
 
-            val path: File = Environment.getExternalStorageDirectory()
-            val newFile = File(path, "cropped.png")
-            val fileOut = FileOutputStream(newFile)
+            // saving new image
+//            val path: File = Environment.getExternalStorageDirectory()
+//            val newFile = File(path ,"cropped.png")
+//
+//            println("post creation")
+//
+//            val fileOut = FileOutputStream(newFile)
+//
+//            println("Foo")
+//
+//            croppedBitmap.compress(Bitmap.CompressFormat.PNG, 20, fileOut)
+//            fileOut.flush()
+//            fileOut.close()
+//
+//            println("Foo1")
+//            MediaStore.Images.Media.insertImage(contentResolver, croppedBitmap, newFile.absolutePath, newFile.absolutePath)
 
-            println("Foo")
-
-            croppedBitmap.compress(Bitmap.CompressFormat.PNG, 20, fileOut)
-            fileOut.flush()
-            fileOut.close()
-
-            println("Foo1")
-            MediaStore.Images.Media.insertImage(contentResolver, croppedBitmap, newFile.absolutePath, newFile.absolutePath)
-
-            // val pixels: IntArray = IntArray(bitmap!!.width * bitmap.height)
-
-
-            // bitmap.getPixels(pixels, 0 ,1,0,0, bitmap.width, bitmap.height)
-
-            // println(pixels)
-
-            // val pixels = IntArray(bitmap.width * bitmap.height)
-            // image_view.setImageURI(data.data)
         }
     }
 }
