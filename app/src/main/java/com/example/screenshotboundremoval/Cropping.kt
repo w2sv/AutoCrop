@@ -6,28 +6,32 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import kotlin.math.pow
 
+typealias Color = Array<Int>
 typealias BorderPair = Pair<Int, Int>
 typealias ImageArray = Array<Row>
 
-class Row(pixelRow: IntArray){
-    data class Pixel(val pixel: Int){
-        private val colors: Array<Int> = arrayOf(pixel.red, pixel.green, pixel.blue)
+class Row(pixelRow: IntArray) {
+    private fun pixel2ColorChannels(pixel: Int): Color = arrayOf(pixel.red, pixel.green, pixel.blue)
 
-        operator fun get(index: Int): Int = colors[index]
-    }
-
-    private val row: Array<Pixel> = pixelRow.map { Pixel(it) }.toTypedArray()
+    private val row: Array<Color> = pixelRow.map { pixel2ColorChannels(it) }.toTypedArray()
     private val length: Int = row.size
 
-    operator fun get(index: Int): Pixel = row[index]
+    operator fun get(index: Int): Array<Int> = row[index]
 
     private fun colorChannelRow(color: Int): IntArray = row.map { it[color] }.toIntArray()
     fun IntArray.std(): Double = this.map { (it - this.average()).pow(2) }.sum() / this.size
 
     fun fluctuation(): Double = (0..2).map { this.colorChannelRow(it).std() }.sum() / 3
     fun hasFluctuation(): Boolean = this.fluctuation() != 0.toDouble()
-}
 
+    /*
+     * compares consecutive color channels against each other with certain step size
+     * breaks as soon as pixels differing from one another encountered
+     */
+    fun hasFluctuationDynamically(stepSize: Int): Boolean = !(stepSize until length step stepSize).all { row[it].contentEquals(row[it - stepSize])}
+
+    fun equalColor(color: Color): Boolean = ((0 until length).all { row[it].contentEquals(color) })
+}
 class Cropper(b: Bitmap?){
     val bitmap: Bitmap = b!!
     val width = bitmap.width
