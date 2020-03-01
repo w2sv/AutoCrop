@@ -22,7 +22,7 @@
     <ImageView
         android:id="@+id/image_view"
         android:layout_width="400dp"
-        android:layout_height="400dp"
+        android:layout_height="500dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_image_black_24dp" />
 
