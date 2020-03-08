@@ -56,8 +56,8 @@ class Cropper(b: Bitmap?){
         val croppingBorders = getCroppingBorders()
         valid = isValid(croppingBorders)
 
-        println("original dimensions: $width $height")
-        println("cropping indices: $croppingBorders")
+        /*println("original dimensions: $width $height")
+        println("cropping indices: $croppingBorders")*/
 
         return Bitmap.createBitmap(bitmap, 0, croppingBorders.first, width, croppingBorders.second - croppingBorders.first)
     }
