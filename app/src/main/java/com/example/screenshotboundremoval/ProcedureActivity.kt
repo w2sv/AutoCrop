@@ -2,31 +2,44 @@ package com.example.screenshotboundremoval
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.ContentResolver
 import android.content.DialogInterface
+import android.content.Intent
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.OpenableColumns
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
 import kotlinx.android.synthetic.main.display_screen.*
+import java.io.File
 import java.io.InputStream
-import java.time.Instant
-import java.time.format.DateTimeFormatter
 
 
-class ProcedureDialog : AppCompatDialogFragment(){
-    private class SaveButtonOnClickListener: DialogInterface.OnClickListener{
+class ProcedureDialog(private val savedImageUri: Uri) : AppCompatDialogFragment(){
+
+    private class KeepButtonOnClickListener: DialogInterface.OnClickListener{
         override fun onClick(dialog: DialogInterface?, which: Int) {
         }
     }
 
-    private class DiscardButtonOnClickListener: DialogInterface.OnClickListener{
+    private class DiscardButtonOnClickListener(val savedImageUri: Uri): DialogInterface.OnClickListener{
         override fun onClick(dialog: DialogInterface?, which: Int) {
-            TODO("not implemented")
+            deleteImage()
+        }
+
+        private fun deleteImage(){
+            val deleteFile = File(savedImageUri.path!!)
+
+            if (!deleteFile.exists())
+                println("file doesn't exist")
+            else
+                println("file exists")
+
+            deleteFile.delete()
+            println("deleted cropped image")
         }
     }
 
@@ -35,8 +48,8 @@ class ProcedureDialog : AppCompatDialogFragment(){
         builder
             .setTitle("How do you want to proceed?")
             .setMessage("")
-            .setPositiveButton("Save", SaveButtonOnClickListener())
-            .setNegativeButton("Discard", DiscardButtonOnClickListener())
+            .setPositiveButton("Keep Image", KeepButtonOnClickListener())
+            .setNegativeButton("Discard", DiscardButtonOnClickListener(savedImageUri))
 
         return builder.create()
     }
@@ -44,9 +57,13 @@ class ProcedureDialog : AppCompatDialogFragment(){
 
 
 class ProcedureActivity : AppCompatActivity() {
-    private fun openDialog(){
-        val dialog = ProcedureDialog()
+    private fun openDialog(savedImageUri: Uri){
+        val dialog = ProcedureDialog(savedImageUri)
         dialog.show(supportFragmentManager, "procedure")
+    }
+
+    private fun restartMainActivity(){
+        startActivity(Intent(this, MainActivity::class.java))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +79,10 @@ class ProcedureActivity : AppCompatActivity() {
         setContentView(R.layout.display_screen)  // crashing when procedure activity layout seized
         image_view.setImageBitmap(reloadedImage)
 
-        openDialog()
+        // query procedure
+        openDialog(savedImageUri)
+
+        // go back to main activity
+        //restartMainActivity()
     }
 }
