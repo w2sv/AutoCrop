@@ -146,8 +146,8 @@ class MainActivity : AppCompatActivity() {
             image_view.setImageBitmap(croppedImage)
 
             // save cropped image
-            val title: String? = getFileName(imageUri)
-            saveImage(croppedImage, null)
+            val originalTitle: String? = getFileName(imageUri)
+            saveImage(croppedImage, originalTitle)
 
             // repeat
             // this.recreate()
