@@ -83,6 +83,6 @@ class ProcedureActivity : AppCompatActivity() {
         openDialog(savedImageUri)
 
         // go back to main activity
-        //restartMainActivity()
+        restartMainActivity()
     }
 }

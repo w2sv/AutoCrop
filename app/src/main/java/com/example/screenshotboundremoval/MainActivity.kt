@@ -23,7 +23,8 @@ import java.time.Instant
 import java.time.format.DateTimeFormatter
 
 
-//TODO: loading screen, exception handling, welcome screen, selection screen pimp, saving
+//TODO: loading screen, edge case handling, welcome screen, selection screen pimp
+//TODO: dir cropping, deletion of original picture
 
 const val SAVED_IMAGE_URI: String = "com.example.screenshotboundremoval.SAVED_IMAGE_URI"
 
