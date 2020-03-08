@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import java.io.File
 import java.io.FileOutputStream
 
-
 class ProcedureDialog : AppCompatDialogFragment(){
     private class SaveButtonOnClickListener: DialogInterface.OnClickListener{
         /*private fun saveImage(){
