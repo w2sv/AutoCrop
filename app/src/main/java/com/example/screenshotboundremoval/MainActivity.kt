@@ -27,6 +27,7 @@ import java.time.format.DateTimeFormatter
 //TODO: Refactoring
 
 const val SAVED_IMAGE_URI: String = "com.example.screenshotboundremoval.SAVED_IMAGE_URI"
+const val ORIGINAL_IMAGE_URI: String = "com.example.screenshotboundremoval.ORIGINAL_IMAGE_URI"
 
 class MainActivity : AppCompatActivity() {
     companion object{
@@ -152,7 +153,7 @@ class MainActivity : AppCompatActivity() {
             val savedImageUri: Uri = saveImage(croppedImage, originalTitle)
 
             // start procedure activity
-            startProcedureActivity(savedImageUri)
+            startProcedureActivity(imageUri, savedImageUri)
         }
     }
 
@@ -160,9 +161,10 @@ class MainActivity : AppCompatActivity() {
     // PROCEDURE ACTIVITY
     // --------------
 
-    private fun startProcedureActivity(savedImageUri: Uri){
+    private fun startProcedureActivity(originalImageUri: Uri, savedImageUri: Uri){
         val intent: Intent = Intent(this, ProcedureActivity::class.java)
             .apply{putExtra(SAVED_IMAGE_URI, savedImageUri)}
+            .apply{putExtra(ORIGINAL_IMAGE_URI, originalImageUri)}
         startActivity(intent)
     }
 }

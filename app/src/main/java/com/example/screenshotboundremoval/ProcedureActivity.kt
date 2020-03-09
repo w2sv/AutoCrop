@@ -2,7 +2,6 @@ package com.example.screenshotboundremoval
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -12,14 +11,13 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
 import kotlinx.android.synthetic.main.display_screen.*
 import java.io.File
 
 
-class ProcedureDialog(private val savedImageUri: Uri, private val activityContext: Context) : AppCompatDialogFragment(){
+class ProcedureDialog(val originalImageUri: Uri, val savedImageUri: Uri, val activityContext: Context) : AppCompatDialogFragment(){
 
     private fun getRealPathFromURI(context: Context, contentUri: Uri): String? {
         var cursor: Cursor? = null
@@ -42,13 +40,28 @@ class ProcedureDialog(private val savedImageUri: Uri, private val activityContex
         val builder = AlertDialog.Builder(this.activity)
         builder
             .setTitle("How do you want to proceed?")
-            .setPositiveButton("Keep Image", KeepButtonOnClickListener())
             .setNegativeButton("Discard", DiscardButtonOnClickListener())
+            .setPositiveButton("Keep", KeepButtonOnClickListener())
+            .setNeutralButton("Keep and delete original image", OriginalImageDeletionOnClickListener())
 
         return builder.create()
     }
 
     private fun restartMainActivity() = startActivity(Intent(context, MainActivity::class.java))
+
+    private fun deleteImage(uri: Uri){
+        val deleteFile = File(getRealPathFromURI(activityContext, uri)!!)
+
+        if (deleteFile.exists()){
+            // deleteFile.canonicalFile.delete()
+            deleteFile.canonicalFile.deleteRecursively()
+
+            if(deleteFile.exists())
+                activityContext.deleteFile(deleteFile.name)
+
+            activityContext.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(getRealPathFromURI(activityContext, uri)!!))))
+        }
+    }
 
     // ---------------
     // BUTTON CLASSES
@@ -60,29 +73,17 @@ class ProcedureDialog(private val savedImageUri: Uri, private val activityContex
 
     private inner class DiscardButtonOnClickListener: DialogInterface.OnClickListener{
         override fun onClick(dialog: DialogInterface?, which: Int) {
-            deleteImage()
+            deleteImage(savedImageUri)
             restartMainActivity()
-        }
-
-        private fun deleteImage(){
-            val deleteFile = File(getRealPathFromURI(activityContext, savedImageUri)!!)
-
-            if (deleteFile.exists()){
-                // deleteFile.canonicalFile.delete()
-                deleteFile.canonicalFile.deleteRecursively()
-
-                if(deleteFile.exists())
-                    activityContext.deleteFile(deleteFile.name)
-
-                activityContext.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(getRealPathFromURI(activityContext, savedImageUri)!!))))
-            }
         }
     }
 
-    /*private class OriginalImageDeletionOnClickListener: DialogInterface.OnClickListener{
+    private inner class OriginalImageDeletionOnClickListener: DialogInterface.OnClickListener{
         override fun onClick(dialog: DialogInterface?, which: Int) {
+            deleteImage(originalImageUri)
+            restartMainActivity()
         }
-    }*/
+    }
 }
 
 
@@ -90,6 +91,7 @@ class ProcedureActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val originalImageUri: Uri = intent.getParcelableExtra(ORIGINAL_IMAGE_URI)!!
         val savedImageUri: Uri = intent.getParcelableExtra(SAVED_IMAGE_URI)!!
 
         // reload image
@@ -100,10 +102,10 @@ class ProcedureActivity : AppCompatActivity() {
         image_view.setImageBitmap(reloadedImage)
 
         // query procedure
-        openDialog(savedImageUri)
+        openDialog(originalImageUri, savedImageUri)
     }
-    private fun openDialog(savedImageUri: Uri){
-        val dialog = ProcedureDialog(savedImageUri, this)
+    private fun openDialog(originalImageUri: Uri, savedImageUri: Uri){
+        val dialog = ProcedureDialog(originalImageUri, savedImageUri, this)
         dialog.show(supportFragmentManager, "procedure")
     }
 }
