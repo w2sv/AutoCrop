@@ -7,24 +7,25 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.OpenableColumns
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.InputStream
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 
 
-//TODO: loading screen, edge case handling, welcome screen, selection screen pimp
-//TODO: dir cropping, deletion of original picture, save success confirmation
+//TODO: progress bar screen, edge case handling, welcome screen, selection screen pimp, robustness elaboration
+//TODO: dir cropping
 //TODO: Logo
-//TODO: Refactoring
 
 const val SAVED_IMAGE_URI: String = "com.example.screenshotboundremoval.SAVED_IMAGE_URI"
 const val ORIGINAL_IMAGE_URI: String = "com.example.screenshotboundremoval.ORIGINAL_IMAGE_URI"
@@ -38,11 +39,21 @@ class MainActivity : AppCompatActivity() {
 
     private val permission2Code: Map<String, Int> = mapOf(
         Manifest.permission.WRITE_EXTERNAL_STORAGE to WRITE_PERMISSION_CODE,
-        Manifest.permission.READ_EXTERNAL_STORAGE to READ_PERMISSION_CODE)
+        Manifest.permission.READ_EXTERNAL_STORAGE to READ_PERMISSION_CODE
+    )
+
     private var nRequiredPermissions: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // procedure result display
+        val resultCode: Int = intent.getIntExtra(DELETION_RESULT, -1)
+
+        when(resultCode){
+            ProcedureDialog.DELETED_ORIGINAL_IMAGE -> displayMessage("white", "darkgray", "Deleted original screenshot")
+        }
+
         setContentView(R.layout.activity_main)
 
         image_selection_button.setOnClickListener {
@@ -51,6 +62,16 @@ class MainActivity : AppCompatActivity() {
             if (nRequiredPermissions == 0)
                 pickImageFromGallery()
         }
+    }
+
+    private fun displayMessage(textColor: String, backgroundColor: String, text: String){
+        val toast = Toast.makeText(this, text, Toast.LENGTH_LONG)
+        toast.view.setBackgroundColor(Color.parseColor(backgroundColor))
+
+        val view = toast.view.findViewById<View>(android.R.id.message) as TextView
+        view.setTextColor(Color.parseColor(textColor))
+
+        toast.show()
     }
 
     // ----------------
@@ -129,14 +150,11 @@ class MainActivity : AppCompatActivity() {
 
         val title: String = if(!originalTitle.isNullOrEmpty()) modifyOriginalTitle() else getNewTitle()
 
-        val savedImageUri: Uri = MediaStore.Images.Media.insertImage(
+        return MediaStore.Images.Media.insertImage(
             contentResolver,
             croppedBitmap,
             title,
-            ""
-        ).toUri()
-
-        return savedImageUri
+        "").toUri()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

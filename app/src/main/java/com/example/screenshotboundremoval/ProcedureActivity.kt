@@ -17,7 +17,14 @@ import kotlinx.android.synthetic.main.display_screen.*
 import java.io.File
 
 
+const val DELETION_RESULT: String = "com.example.screenshotboundremoval.DELETION_RESULT"
+
+
 class ProcedureDialog(val originalImageUri: Uri, val savedImageUri: Uri, val activityContext: Context) : AppCompatDialogFragment(){
+
+    companion object{
+        const val DELETED_ORIGINAL_IMAGE = 1337
+    }
 
     private fun getRealPathFromURI(context: Context, contentUri: Uri): String? {
         var cursor: Cursor? = null
@@ -40,14 +47,19 @@ class ProcedureDialog(val originalImageUri: Uri, val savedImageUri: Uri, val act
         val builder = AlertDialog.Builder(this.activity)
         builder
             .setTitle("How do you want to proceed?")
-            .setNegativeButton("Discard", DiscardButtonOnClickListener())
-            .setPositiveButton("Keep", KeepButtonOnClickListener())
-            .setNeutralButton("Keep and delete original image", OriginalImageDeletionOnClickListener())
+            .setPositiveButton("Discard", DiscardButtonOnClickListener())
+            .setNegativeButton("Keep", KeepButtonOnClickListener())
+            .setNeutralButton("Keep and delete original screenshot", OriginalImageDeletionOnClickListener())
 
         return builder.create()
     }
 
-    private fun restartMainActivity() = startActivity(Intent(context, MainActivity::class.java))
+    private fun restartMainActivity(resultCode: Int?){
+        val intent = Intent(context, MainActivity::class.java).apply{
+            this.putExtra(DELETION_RESULT, resultCode)
+        }
+        startActivity(intent)
+    }
 
     private fun deleteImage(uri: Uri){
         val deleteFile = File(getRealPathFromURI(activityContext, uri)!!)
@@ -68,20 +80,20 @@ class ProcedureDialog(val originalImageUri: Uri, val savedImageUri: Uri, val act
     // ---------------
 
     private inner class KeepButtonOnClickListener: DialogInterface.OnClickListener{
-        override fun onClick(dialog: DialogInterface?, which: Int) = restartMainActivity()
+        override fun onClick(dialog: DialogInterface?, which: Int) = restartMainActivity(-1)
     }
 
     private inner class DiscardButtonOnClickListener: DialogInterface.OnClickListener{
         override fun onClick(dialog: DialogInterface?, which: Int) {
             deleteImage(savedImageUri)
-            restartMainActivity()
+            restartMainActivity(-1)
         }
     }
 
     private inner class OriginalImageDeletionOnClickListener: DialogInterface.OnClickListener{
         override fun onClick(dialog: DialogInterface?, which: Int) {
             deleteImage(originalImageUri)
-            restartMainActivity()
+            restartMainActivity(DELETED_ORIGINAL_IMAGE)
         }
     }
 }
