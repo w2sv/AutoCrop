@@ -2,7 +2,7 @@ package com.example.screenshotboundremoval
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.ContentResolver
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -12,14 +12,31 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
 import kotlinx.android.synthetic.main.display_screen.*
 import java.io.File
-import java.io.InputStream
 
 
-class ProcedureDialog(private val savedImageUri: Uri) : AppCompatDialogFragment(){
+class ProcedureDialog(private val savedImageUri: Uri, private val activityContext: Context) : AppCompatDialogFragment(){
+
+    private fun getRealPathFromURI(context: Context, contentUri: Uri): String? {
+        var cursor: Cursor? = null
+        return try {
+            val images: Array<String> = arrayOf(MediaStore.Images.Media.DATA)
+            cursor = context.contentResolver.query(contentUri, images, null, null, null)
+
+            val columnIndex = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            cursor.getString(columnIndex)
+        } catch (e: Exception) {
+            println( "getRealPathFromURI Exception : $e")
+            ""
+        } finally {
+            cursor?.close()
+        }
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(this.activity)
@@ -48,15 +65,17 @@ class ProcedureDialog(private val savedImageUri: Uri) : AppCompatDialogFragment(
         }
 
         private fun deleteImage(){
-            val deleteFile = File(savedImageUri.path!!)
+            val deleteFile = File(getRealPathFromURI(activityContext, savedImageUri)!!)
 
-            if (!deleteFile.exists())
-                println("file doesn't exist")
-            else
-                println("file exists")
+            if (deleteFile.exists()){
+                // deleteFile.canonicalFile.delete()
+                deleteFile.canonicalFile.deleteRecursively()
 
-            deleteFile.delete()
-            println("deleted cropped image")
+                if(deleteFile.exists())
+                    activityContext.deleteFile(deleteFile.name)
+
+                activityContext.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(getRealPathFromURI(activityContext, savedImageUri)!!))))
+            }
         }
     }
 
@@ -84,7 +103,7 @@ class ProcedureActivity : AppCompatActivity() {
         openDialog(savedImageUri)
     }
     private fun openDialog(savedImageUri: Uri){
-        val dialog = ProcedureDialog(savedImageUri)
+        val dialog = ProcedureDialog(savedImageUri, this)
         dialog.show(supportFragmentManager, "procedure")
     }
 }
