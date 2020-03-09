@@ -16,15 +16,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.display_screen.*
-import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 
 
 //TODO: loading screen, edge case handling, welcome screen, selection screen pimp
-//TODO: dir cropping, deletion of original picture
+//TODO: dir cropping, deletion of original picture, save success confirmation
+//TODO: Logo
+//TODO: Refactoring
 
 const val SAVED_IMAGE_URI: String = "com.example.screenshotboundremoval.SAVED_IMAGE_URI"
 
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     private val permission2Code: Map<String, Int> = mapOf(
         Manifest.permission.WRITE_EXTERNAL_STORAGE to WRITE_PERMISSION_CODE,
         Manifest.permission.READ_EXTERNAL_STORAGE to READ_PERMISSION_CODE)
-    private var requiredPermissions: Int = 0
+    private var nRequiredPermissions: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         image_selection_button.setOnClickListener {
             requestActivityPermissions()
 
-            if (requiredPermissions == 0)
+            if (nRequiredPermissions == 0)
                 pickImageFromGallery()
         }
     }
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     private fun checkPermission(permission: String){
         if (checkSelfPermission(permission) == PackageManager.PERMISSION_DENIED){
             requestPermissions(arrayOf(permission), permission2Code[permission]!!)
-            requiredPermissions ++
+            nRequiredPermissions ++
         }
     }
 
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)
             Toast.makeText(this, "$requestDescription permission denied", Toast.LENGTH_SHORT).show()
         else
-            requiredPermissions --
+            nRequiredPermissions --
     }
 
     // ----------------
@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
                 cursor?.close()
             }
         }
-        if (result == null) {
+        if (result.isNullOrEmpty()) {
             result = uri.path
             val cut = result!!.lastIndexOf('/')
             if (cut != -1)
@@ -138,21 +138,9 @@ class MainActivity : AppCompatActivity() {
         return savedImageUri
     }
 
-    // --------------
-    // PROCEDURE ACTIVITY
-    // --------------
-
-    private fun startProcedureActivity(savedImageUri: Uri){
-        val intent: Intent = Intent(this, ProcedureActivity::class.java)
-            .apply{putExtra(SAVED_IMAGE_URI, savedImageUri)}
-        startActivity(intent)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
             val imageUri: Uri? = data?.data
-
-            val imageStream: InputStream? = contentResolver.openInputStream(imageUri!!)
             val image: Bitmap? = BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri!!))
 
             // cropping image
@@ -166,5 +154,15 @@ class MainActivity : AppCompatActivity() {
             // start procedure activity
             startProcedureActivity(savedImageUri)
         }
+    }
+
+    // --------------
+    // PROCEDURE ACTIVITY
+    // --------------
+
+    private fun startProcedureActivity(savedImageUri: Uri){
+        val intent: Intent = Intent(this, ProcedureActivity::class.java)
+            .apply{putExtra(SAVED_IMAGE_URI, savedImageUri)}
+        startActivity(intent)
     }
 }
