@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
@@ -50,7 +51,7 @@ class ProcedureDialog(val originalImageUri: Uri, val savedImageUri: Uri, val act
             .setTitle("How do you want to proceed?")
             .setPositiveButton("Discard", DiscardButtonOnClickListener())
             .setNegativeButton("Keep", KeepButtonOnClickListener())
-            .setNeutralButton("Keep and delete original screenshot", OriginalImageDeletionOnClickListener())
+            .setNeutralButton("Keep and delete original", OriginalImageDeletionOnClickListener())
 
         return builder.create()
     }
@@ -114,8 +115,10 @@ class ProcedureActivity : AppCompatActivity() {
         val imageView: ImageView = findViewById(R.id.image_view)
         imageView.setImageBitmap(reloadedImage)
 
-        // query procedure
-        openDialog(originalImageUri, savedImageUri)
+        imageView.setOnClickListener(View.OnClickListener() {
+            // query procedure
+            openDialog(originalImageUri, savedImageUri)
+        })
     }
     private fun openDialog(originalImageUri: Uri, savedImageUri: Uri){
         val dialog = ProcedureDialog(originalImageUri, savedImageUri, this)
