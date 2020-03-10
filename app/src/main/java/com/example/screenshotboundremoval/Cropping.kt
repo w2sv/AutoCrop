@@ -15,7 +15,7 @@ class Cropper(b: Bitmap?){
     val width = bitmap.width
     val height = bitmap.height
 
-    val sampleStep: Int = 5
+    val sampleStep: Int = 20
 
     private val imageArray: ImageArray = (0 until height).map { row -> (0 until width).map {col -> bitmap.getPixel(col, row)}.toTypedArray() }.toTypedArray()
 

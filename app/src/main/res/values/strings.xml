@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">ScreenshotBoundRemoval</string>
+    <string name="app_name">AutoCrop</string>
     <string name="image_selection">Select Image</string>
 </resources>

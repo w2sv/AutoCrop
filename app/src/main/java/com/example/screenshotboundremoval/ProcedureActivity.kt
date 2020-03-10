@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
 import kotlinx.android.synthetic.main.display_screen.*
@@ -65,8 +66,7 @@ class ProcedureDialog(val originalImageUri: Uri, val savedImageUri: Uri, val act
         val deleteFile = File(getRealPathFromURI(activityContext, uri)!!)
 
         if (deleteFile.exists()){
-            // deleteFile.canonicalFile.delete()
-            deleteFile.canonicalFile.deleteRecursively()
+            deleteFile.canonicalFile.delete()
 
             if(deleteFile.exists())
                 activityContext.deleteFile(deleteFile.name)
@@ -111,7 +111,8 @@ class ProcedureActivity : AppCompatActivity() {
 
         // display cropped image
         setContentView(R.layout.display_screen)  // crashing when procedure activity layout seized
-        image_view.setImageBitmap(reloadedImage)
+        val imageView: ImageView = findViewById(R.id.image_view)
+        imageView.setImageBitmap(reloadedImage)
 
         // query procedure
         openDialog(originalImageUri, savedImageUri)

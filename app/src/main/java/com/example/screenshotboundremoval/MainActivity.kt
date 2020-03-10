@@ -163,8 +163,11 @@ class MainActivity : AppCompatActivity() {
             val image: Bitmap? = BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri!!))
 
             // cropping image
+            val time = System.currentTimeMillis()
             val cropper = Cropper(image)
             val croppedImage: Bitmap = cropper.getCroppedBitmap()
+            val croppingDuration = System.currentTimeMillis() - time
+            println("cropping took $croppingDuration")
 
             // saving
             val originalTitle: String? = getFileName(imageUri)
