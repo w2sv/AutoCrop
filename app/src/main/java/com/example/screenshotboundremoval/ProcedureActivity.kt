@@ -48,7 +48,7 @@ class ProcedureDialog(val originalImageUri: Uri, val savedImageUri: Uri, val act
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(this.activity)
         builder
-            .setTitle("How do you want to proceed?")
+            .setTitle("How would you like to proceed?")
             .setPositiveButton("Discard", DiscardButtonOnClickListener())
             .setNegativeButton("Keep", KeepButtonOnClickListener())
             .setNeutralButton("Keep and delete original", OriginalImageDeletionOnClickListener())

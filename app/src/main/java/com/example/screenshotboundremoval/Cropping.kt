@@ -18,7 +18,6 @@ class Cropper(b: Bitmap?){
     val sampleStep: Int = 20
 
     private val imageArray: ImageArray = (0 until height).map { row -> (0 until width).map {col -> bitmap.getPixel(col, row)}.toTypedArray() }.toTypedArray()
-
     private val borderPairs: MutableList<BorderPair> = mutableListOf()
 
     private fun Array<Int>.hasFluctuation(): Boolean = !(sampleStep until width step sampleStep).all { this[it] == this [it-sampleStep]}

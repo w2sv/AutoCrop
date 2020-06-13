@@ -24,8 +24,7 @@ import java.time.format.DateTimeFormatter
 
 
 //TODO: progress bar screen, edge case handling, welcome screen, selection screen pimp, robustness elaboration
-//TODO: dir cropping
-//TODO: Logo
+//      dir cropping, Logo
 
 const val SAVED_IMAGE_URI: String = "com.example.screenshotboundremoval.SAVED_IMAGE_URI"
 const val ORIGINAL_IMAGE_URI: String = "com.example.screenshotboundremoval.ORIGINAL_IMAGE_URI"
@@ -159,17 +158,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+            // retrieve uri and image bitmap
             val imageUri: Uri? = data?.data
             val image: Bitmap? = BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri!!))
 
-            // cropping image
-            val time = System.currentTimeMillis()
+            // crop image
+            val time = System.currentTimeMillis()  // !
             val cropper = Cropper(image)
             val croppedImage: Bitmap = cropper.getCroppedBitmap()
             val croppingDuration = System.currentTimeMillis() - time
             println("cropping took $croppingDuration")
 
-            // saving
+            // save image
             val originalTitle: String? = getFileName(imageUri)
             val savedImageUri: Uri = saveImage(croppedImage, originalTitle)
 
