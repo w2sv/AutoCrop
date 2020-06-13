@@ -26,7 +26,8 @@ import java.time.format.DateTimeFormatter
 //TODO: progress bar screen, edge case handling, welcome screen, selection screen pimp, robustness elaboration
 //      dir cropping, Logo
 
-const val URI_MAP: String = "com.example.screenshotboundremoval.URI_MAP"
+const val OLD_URIS: String = "com.example.screenshotboundremoval.OLD_URIS"
+const val CROPPED_URIS: String = "com.example.screenshotboundremoval.CROPPED_URIS"
 
 class MainActivity : AppCompatActivity() {
     companion object{
@@ -160,7 +161,8 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
 
-            val uriMap: HashMap<Uri, Uri> = hashMapOf()  // old image uri -> respectively cropped image uri
+            val oldUris: ArrayList<Uri> = arrayListOf() // old image uri -> respectively cropped image uri
+            val croppedUris: ArrayList<Uri> = arrayListOf()
             for (i in 0 until data?.clipData?.itemCount!!) {
                 // retrieve uri and resolve into bitmap
                 val imageUri: Uri? = data.clipData?.getItemAt(i)?.uri
@@ -176,10 +178,11 @@ class MainActivity : AppCompatActivity() {
                 val originalTitle: String? = getFileName(imageUri)
                 val savedImageUri: Uri = saveImage(croppedImage, originalTitle)
 
-                uriMap[imageUri] = savedImageUri
+                oldUris.add(imageUri)
+                croppedUris.add(savedImageUri)
             }
             // start procedure activity
-            // startProcedureActivity(uriMap)
+            // startProcedureActivity(oldUris, croppedUris)
         }
     }
 
@@ -187,9 +190,10 @@ class MainActivity : AppCompatActivity() {
     // PROCEDURE ACTIVITY
     // --------------
 
-    private fun startProcedureActivity(uriMap: HashMap<Uri, Uri>){
+    private fun startProcedureActivity(oldUris: ArrayList<Uri>, croppedUris: ArrayList<Uri>){
         val intent: Intent = Intent(this, ProcedureActivity::class.java)
-            .apply{putExtra(URI_MAP, uriMap)}
+            .apply{putExtra(OLD_URIS, oldUris)}
+            .apply{putExtra(CROPPED_URIS, croppedUris)}
         startActivity(intent)
     }
 }
