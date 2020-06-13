@@ -11,11 +11,11 @@ typealias ImageArray = Array<Array<Int>>
 
 
 class Cropper(b: Bitmap?){
-    val bitmap: Bitmap = b!!
-    val width = bitmap.width
-    val height = bitmap.height
+    private val bitmap: Bitmap = b!!
+    private val width = bitmap.width
+    private val height = bitmap.height
 
-    val sampleStep: Int = 20
+    private val sampleStep: Int = 20
 
     private val imageArray: ImageArray = (0 until height).map { row -> (0 until width).map {col -> bitmap.getPixel(col, row)}.toTypedArray() }.toTypedArray()
     private val borderPairs: MutableList<BorderPair> = mutableListOf()
