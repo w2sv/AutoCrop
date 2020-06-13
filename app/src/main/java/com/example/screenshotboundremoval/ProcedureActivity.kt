@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
 import kotlinx.android.synthetic.main.display_screen.*
 import java.io.File
+import java.io.Serializable
 
 
 const val DELETION_RESULT: String = "com.example.screenshotboundremoval.DELETION_RESULT"
@@ -104,10 +105,10 @@ class ProcedureActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val originalImageUri: Uri = intent.getParcelableExtra(ORIGINAL_IMAGE_URI)!!
-        val savedImageUri: Uri = intent.getParcelableExtra(SAVED_IMAGE_URI)!!
+        val uriMap: Serializable = intent.getSerializableExtra(URI_MAP)!!
+        println(uriMap)
 
-        // reload image
+        /*// reload image
         val reloadedImage: Bitmap? = BitmapFactory.decodeStream(contentResolver.openInputStream(savedImageUri))
 
         // display cropped image
@@ -118,7 +119,7 @@ class ProcedureActivity : AppCompatActivity() {
         imageView.setOnClickListener(View.OnClickListener() {
             // query procedure
             openDialog(originalImageUri, savedImageUri)
-        })
+        })*/
     }
     private fun openDialog(originalImageUri: Uri, savedImageUri: Uri){
         val dialog = ProcedureDialog(originalImageUri, savedImageUri, this)

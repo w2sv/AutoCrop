@@ -26,8 +26,7 @@ import java.time.format.DateTimeFormatter
 //TODO: progress bar screen, edge case handling, welcome screen, selection screen pimp, robustness elaboration
 //      dir cropping, Logo
 
-const val SAVED_IMAGE_URI: String = "com.example.screenshotboundremoval.SAVED_IMAGE_URI"
-const val ORIGINAL_IMAGE_URI: String = "com.example.screenshotboundremoval.ORIGINAL_IMAGE_URI"
+const val URI_MAP: String = "com.example.screenshotboundremoval.URI_MAP"
 
 class MainActivity : AppCompatActivity() {
     companion object{
@@ -112,6 +111,8 @@ class MainActivity : AppCompatActivity() {
     private fun pickImageFromGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        println("multiple image selection")
         startActivityForResult(intent, IMAGE_PICK_CODE)
     }
 
@@ -158,23 +159,27 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
-            // retrieve uri and image bitmap
-            val imageUri: Uri? = data?.data
-            val image: Bitmap? = BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri!!))
 
-            // crop image
-            val time = System.currentTimeMillis()  // !
-            val cropper = Cropper(image)
-            val croppedImage: Bitmap = cropper.getCroppedBitmap()
-            val croppingDuration = System.currentTimeMillis() - time
-            println("cropping took $croppingDuration")
+            val uriMap: HashMap<Uri, Uri> = hashMapOf()  // old image uri -> respectively cropped image uri
+            for (i in 0 until data?.clipData?.itemCount!!) {
+                // retrieve uri and resolve into bitmap
+                val imageUri: Uri? = data.clipData?.getItemAt(i)?.uri
+                val image: Bitmap? = BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri!!))
 
-            // save image
-            val originalTitle: String? = getFileName(imageUri)
-            val savedImageUri: Uri = saveImage(croppedImage, originalTitle)
+                // crop image
+                val time = System.currentTimeMillis()  // !
+                val croppedImage: Bitmap = Cropper(image).getCroppedBitmap()
+                val croppingDuration = System.currentTimeMillis() - time
+                println("cropping took $croppingDuration ms")
 
+                // save image
+                val originalTitle: String? = getFileName(imageUri)
+                val savedImageUri: Uri = saveImage(croppedImage, originalTitle)
+
+                uriMap[imageUri] = savedImageUri
+            }
             // start procedure activity
-            startProcedureActivity(imageUri, savedImageUri)
+            // startProcedureActivity(uriMap)
         }
     }
 
@@ -182,10 +187,9 @@ class MainActivity : AppCompatActivity() {
     // PROCEDURE ACTIVITY
     // --------------
 
-    private fun startProcedureActivity(originalImageUri: Uri, savedImageUri: Uri){
+    private fun startProcedureActivity(uriMap: HashMap<Uri, Uri>){
         val intent: Intent = Intent(this, ProcedureActivity::class.java)
-            .apply{putExtra(SAVED_IMAGE_URI, savedImageUri)}
-            .apply{putExtra(ORIGINAL_IMAGE_URI, originalImageUri)}
+            .apply{putExtra(URI_MAP, uriMap)}
         startActivity(intent)
     }
 }
