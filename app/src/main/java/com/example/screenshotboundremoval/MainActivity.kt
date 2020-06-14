@@ -4,30 +4,21 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.provider.OpenableColumns
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import kotlinx.android.synthetic.main.activity_main.*
-import java.time.Instant
-import java.time.format.DateTimeFormatter
 
 
 //TODO: progress bar screen, edge case handling, welcome screen, selection screen pimp, robustness elaboration
 //      dir cropping, Logo
-
-const val OLD_URIS: String = "com.example.screenshotboundremoval.OLD_URIS"
-const val CROPPED_URIS: String = "com.example.screenshotboundremoval.CROPPED_URIS"
 
 class MainActivity : AppCompatActivity() {
     companion object{
@@ -46,14 +37,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // procedure result display
-        val resultCode: Int = intent.getIntExtra(DELETION_RESULT, -1)
-
-        when(resultCode){
-            ProcedureDialog.DELETED_ORIGINAL_IMAGE -> displayMessage("white", "darkgray", "Deleted original screenshot")
-        }
-
         setContentView(R.layout.activity_main)
+
+        // procedure result display if existent
+        val resultCode: Int = intent.getIntExtra(DELETION_RESULT, -1)
+        /*when(resultCode){
+            ProcedureDialog.DELETED_ORIGINAL_IMAGE -> displayMessage("white", "darkgray", "Deleted original screenshot")
+        }*/
+
+        // clear image cash
+        ImageCash.clear()
 
         image_selection_button.setOnClickListener {
             requestActivityPermissions()
@@ -76,7 +69,6 @@ class MainActivity : AppCompatActivity() {
     // ----------------
     // PERMISSION QUERY
     // ----------------
-
     private fun checkPermission(permission: String){
         if (checkSelfPermission(permission) == PackageManager.PERMISSION_DENIED){
             requestPermissions(arrayOf(permission), permission2Code[permission]!!)
@@ -108,56 +100,16 @@ class MainActivity : AppCompatActivity() {
     // ----------------
     // IMAGE SELECTION
     // ----------------
-
     private fun pickImageFromGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        println("multiple image selection")
         startActivityForResult(intent, IMAGE_PICK_CODE)
     }
 
     // ----------------
     // SAVING
     // ----------------
-
-    private fun getFileName(uri: Uri): String? {
-        var result: String? = null
-        if (uri.scheme == "content") {
-            val cursor: Cursor? = contentResolver.query(uri, null, null, null, null)
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                }
-            } finally {
-                cursor?.close()
-            }
-        }
-        if (result.isNullOrEmpty()) {
-            result = uri.path
-            val cut = result!!.lastIndexOf('/')
-            if (cut != -1)
-                result = result.substring(cut + 1)
-        }
-        return result
-    }
-
-    private fun saveImage(croppedBitmap: Bitmap, originalTitle: String?): Uri {
-        fun String.replaceMultiple(toBeReplaced: List<String>, replaceWith: String): String = this.run { var copy = this; toBeReplaced.forEach { copy = copy.replace(it, replaceWith) }; copy }
-
-        fun modifyOriginalTitle(): String = "Cropped" + originalTitle!!.substring(0, originalTitle.indexOf(".")) + ".jpg"
-        fun getNewTitle(): String = "CroppedScreenshot" + DateTimeFormatter.ISO_INSTANT.format(
-            Instant.now()).toString().replaceMultiple(listOf(":", ".", "_", "T"), "-").removeSuffix("Z") + ".jpg"
-
-        val title: String = if(!originalTitle.isNullOrEmpty()) modifyOriginalTitle() else getNewTitle()
-
-        return MediaStore.Images.Media.insertImage(
-            contentResolver,
-            croppedBitmap,
-            title,
-        "").toUri()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
 
@@ -172,10 +124,6 @@ class MainActivity : AppCompatActivity() {
                 val croppingDuration = System.currentTimeMillis() - time
                 println("cropping took $croppingDuration ms")
 
-                // save image
-                // val originalTitle: String? = getFileName(imageUri)
-                // val savedImageUri: Uri = saveImage(croppedImage, originalTitle)
-
                 ImageCash.cash[imageUri] = croppedImage
             }
             startProcedureActivity()
@@ -185,7 +133,6 @@ class MainActivity : AppCompatActivity() {
     // --------------
     // PROCEDURE ACTIVITY
     // --------------
-
     private fun startProcedureActivity(){
         startActivity(Intent(this, ProcedureActivity::class.java))
     }
