@@ -29,6 +29,7 @@ class ProcedureActivity : FragmentActivity() {
 
         setContentView(R.layout.image_slide)
         mPager = findViewById(R.id.slide)
+        mPager.setPageTransformer(true, ZoomOutPageTransformer())
         mPager.adapter = ImageSliderAdapter(this, supportFragmentManager, contentResolver, mPager)
     }
 }
@@ -41,7 +42,7 @@ class ImageSliderAdapter(private val context: Context,
     val croppedImages: MutableList<Bitmap> = ImageCash.values().toMutableList()
     val imageUris: MutableList<Uri> = ImageCash.keys().toMutableList().also { ImageCash.clear() }
 
-    override fun getCount(): Int = croppedImages.size
+    override fun getCount(): Int = croppedImages.size.also { val c = croppedImages.size; println("COUNT: $c") }
     override fun isViewFromObject(view: View, obj: Any): Boolean = view == obj
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -52,14 +53,14 @@ class ImageSliderAdapter(private val context: Context,
 
         imageView.setOnClickListener(View.OnClickListener(){
             // open dialog
-            val dialog = ProcedureDialog(context, cr, mPager, position, this)
+            val dialog = ProcedureDialog(context, cr, mPager, position, this, container, imageView)
             dialog.show(fm, "procedure")
         })
         return imageView
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
-        // TODO: debug
+        // this.destroyItem(container, position, obj)
     }
 }
 
@@ -67,7 +68,9 @@ class ProcedureDialog(private val activityContext: Context,
                       private val cr: ContentResolver,
                       private val mPager: ViewPager,
                       private val position: Int,
-                      private val imageSliderAdapter: ImageSliderAdapter) : AppCompatDialogFragment(){
+                      private val imageSliderAdapter: ImageSliderAdapter,
+                      private val container: ViewGroup,
+                      private val imageView: ImageView) : AppCompatDialogFragment(){
 
     val imageUri: Uri = imageSliderAdapter.imageUris[position]
     val croppedImage: Bitmap = imageSliderAdapter.croppedImages[position]
@@ -82,21 +85,23 @@ class ProcedureDialog(private val activityContext: Context,
     }
 
     private fun postButtonPress(){
+        // mPager.removeViewAt(position)
+        imageSliderAdapter.destroyItem(container, position, imageView)
+        container.removeViewAt(position)
+
         imageSliderAdapter.imageUris.removeAt(position)
         imageSliderAdapter.croppedImages.removeAt(position)
-        val newCount = imageSliderAdapter.count
-        println("new count: $newCount")
 
         imageSliderAdapter.notifyDataSetChanged()
 
-        if (imageSliderAdapter.imageUris.size == 0){
+        if (imageSliderAdapter.count == 0){
             // restart main activity
             val intent = Intent(context, MainActivity::class.java)
                 // .apply{this.putExtra(DELETION_RESULT, resultCode)}
             startActivity(intent)
         }
         else{
-            mPager.setCurrentItem(position, true)
+            mPager.setCurrentItem(0, true)
         }
     }
 
