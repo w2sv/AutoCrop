@@ -182,7 +182,7 @@ class MainActivity : AppCompatActivity() {
                 croppedUris.add(savedImageUri)
             }
             // start procedure activity
-            // startProcedureActivity(oldUris, croppedUris)
+            startProcedureActivity(oldUris, croppedUris)
         }
     }
 
