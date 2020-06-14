@@ -45,9 +45,6 @@ class MainActivity : AppCompatActivity() {
             ProcedureDialog.DELETED_ORIGINAL_IMAGE -> displayMessage("white", "darkgray", "Deleted original screenshot")
         }*/
 
-        // clear image cash
-        ImageCash.clear()
-
         image_selection_button.setOnClickListener {
             requestActivityPermissions()
 

@@ -7,7 +7,7 @@ import android.net.Uri
 
 object ImageCash{
     val cash: MutableMap<Uri, Bitmap> = mutableMapOf()
-    fun clear() = cash.clear()
+    fun clear() = cash.clear().also { println("CLEARED IMAGE CASH") }
     fun keys(): MutableSet<Uri> = cash.keys
     fun values(): MutableCollection<Bitmap> = cash.values
 }

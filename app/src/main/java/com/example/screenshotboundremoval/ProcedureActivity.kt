@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -28,22 +29,17 @@ class ProcedureActivity : FragmentActivity() {
 
         setContentView(R.layout.image_slide)
         mPager = findViewById(R.id.slide)
-        mPager.adapter = ImageSliderAdapter(this, supportFragmentManager, contentResolver)
-    }
-
-    /*
-    * clear image cash on back press
-    * */
-    override fun onBackPressed() {
-        ImageCash.clear()
-        super.onBackPressed()
+        mPager.adapter = ImageSliderAdapter(this, supportFragmentManager, contentResolver, mPager)
     }
 }
 
-class ImageSliderAdapter(private val context: Context, private val fm: FragmentManager, private val cr: ContentResolver): PagerAdapter(){
+class ImageSliderAdapter(private val context: Context,
+                         private val fm: FragmentManager,
+                         private val cr: ContentResolver,
+                         private val mPager: ViewPager): PagerAdapter(){
 
-    private val croppedImages: List<Bitmap> = ImageCash.values().toList()
-    private val imageUris: List<Uri> = ImageCash.keys().toList()
+    val croppedImages: MutableList<Bitmap> = ImageCash.values().toMutableList()
+    val imageUris: MutableList<Uri> = ImageCash.keys().toMutableList().also { ImageCash.clear() }
 
     override fun getCount(): Int = croppedImages.size
     override fun isViewFromObject(view: View, obj: Any): Boolean = view == obj
@@ -56,7 +52,7 @@ class ImageSliderAdapter(private val context: Context, private val fm: FragmentM
 
         imageView.setOnClickListener(View.OnClickListener(){
             // open dialog
-            val dialog = ProcedureDialog(context, cr, imageUris[position], croppedImages[position])
+            val dialog = ProcedureDialog(context, cr, mPager, position, this)
             dialog.show(fm, "procedure")
         })
         return imageView
@@ -65,23 +61,16 @@ class ImageSliderAdapter(private val context: Context, private val fm: FragmentM
     override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
         // TODO: debug
     }
-
-    /*private fun restartMainActivity(resultCode: Int?){
-        val intent = Intent(context, MainActivity::class.java).apply{
-            this.putExtra(DELETION_RESULT, resultCode)
-        }
-        startActivity(intent)
-    }*/
 }
 
 class ProcedureDialog(private val activityContext: Context,
                       private val cr: ContentResolver,
-                      private val originalImageUri: Uri,
-                      private val croppedImage: Bitmap) : AppCompatDialogFragment(){
+                      private val mPager: ViewPager,
+                      private val position: Int,
+                      private val imageSliderAdapter: ImageSliderAdapter) : AppCompatDialogFragment(){
 
-    companion object{
-        const val DELETED_ORIGINAL_IMAGE = 1337
-    }
+    val imageUri: Uri = imageSliderAdapter.imageUris[position]
+    val croppedImage: Bitmap = imageSliderAdapter.croppedImages[position]
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(this.activity)
@@ -92,18 +81,39 @@ class ProcedureDialog(private val activityContext: Context,
         return builder.create()
     }
 
+    private fun postButtonPress(){
+        imageSliderAdapter.imageUris.removeAt(position)
+        imageSliderAdapter.croppedImages.removeAt(position)
+        val newCount = imageSliderAdapter.count
+        println("new count: $newCount")
+
+        imageSliderAdapter.notifyDataSetChanged()
+
+        if (imageSliderAdapter.imageUris.size == 0){
+            // restart main activity
+            val intent = Intent(context, MainActivity::class.java)
+                // .apply{this.putExtra(DELETION_RESULT, resultCode)}
+            startActivity(intent)
+        }
+        else{
+            mPager.setCurrentItem(position, true)
+        }
+    }
+
     // ---------------
     // BUTTON CLASSES
     // ---------------
     private inner class SaveButtonOnClickListener: DialogInterface.OnClickListener{
         override fun onClick(dialog: DialogInterface?, which: Int){
-            originalImageUri.deleteUnderlyingRessource(activityContext)
-            saveCroppedImage(cr, croppedImage, originalImageUri.getRealPath(activityContext))
+            imageUri.deleteUnderlyingRessource(activityContext)
+            saveCroppedImage(cr, croppedImage, imageUri.getRealPath(activityContext))
+            postButtonPress()
         }
     }
 
     private inner class DismissButtonOnClickListener: DialogInterface.OnClickListener{
         override fun onClick(dialog: DialogInterface?, which: Int) {
+            postButtonPress()
         }
     }
 }
