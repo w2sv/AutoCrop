@@ -10,6 +10,7 @@ class Cropper(private val image: Bitmap){
     }
     private val width: Int = image.width
     private val height: Int = image.height
+
     private val sampleStep: Int = width / pixelComparisonsPerRow
 
     private val borderPairs: MutableList<BorderPair> = mutableListOf()
@@ -17,27 +18,24 @@ class Cropper(private val image: Bitmap){
     private fun getStartInd(queryStartInd: Int){
         for (i in queryStartInd until height-2){
             if (!image.hasFluctuationThroughoutRow(i, sampleStep) && image.hasFluctuationThroughoutRow(i+1, sampleStep))
-                return getEndInd(i+1)
+                return getEndInd(i)
         }
         borderPairs.add(BorderPair(queryStartInd, height-1))
     }
 
-    private fun getEndInd(queryStartInd: Int){
-        for (i in queryStartInd until height-1){
+    private fun getEndInd(borderStartInd: Int){
+        for (i in borderStartInd until height-2){
             if (image.hasFluctuationThroughoutRow(i, sampleStep) && !image.hasFluctuationThroughoutRow(i+1, sampleStep)){
-                borderPairs.add(BorderPair(queryStartInd, i))
+                borderPairs.add(BorderPair(borderStartInd, i))
                 return getStartInd(i+1)
             }
         }
-        borderPairs.add(BorderPair(queryStartInd, height-1))
+        borderPairs.add(BorderPair(borderStartInd, height-1))
     }
 
-    // private fun isValid(croppingBounds: BorderPair): Boolean = croppingBounds != BorderPair(0, height) && (croppingBounds.second - croppingBounds.first).toFloat() / height.toFloat() > 0.15
     fun getCroppedImage(): Bitmap{
         getStartInd(0)
         val croppingBorders: BorderPair = borderPairs.maxBy { it.second - it.first }!!
-        // valid = isValid(croppingBorders)
-
         return Bitmap.createBitmap(image, 0, croppingBorders.first, width, croppingBorders.second - croppingBorders.first)
     }
 }
