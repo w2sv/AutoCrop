@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import java.io.File
 
@@ -116,7 +117,7 @@ class ProcedureActivity : FragmentActivity() {
 
         setContentView(R.layout.image_slide)
         mPager = findViewById(R.id.slide)
-        mPager.adapter = ImageSliderAdaper(supportFragmentManager, this, oldUris, croppedUris)
+        mPager.adapter = ImageSliderAdaper(this, oldUris, croppedUris)
 
         /*
         // display cropped image
@@ -130,44 +131,31 @@ class ProcedureActivity : FragmentActivity() {
         })*/
     }
 
-    private fun openDialog(originalImageUri: Uri, savedImageUri: Uri) {
+    /*private fun openDialog(originalImageUri: Uri, savedImageUri: Uri) {
         val dialog = ProcedureDialog(originalImageUri, savedImageUri, this)
         dialog.show(supportFragmentManager, "procedure")
-    }
+    }*/
 }
 
-class ScreenSlideViewFragment: Fragment(){
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.activity_image_slider, container, false)
-}
-
-class ImageSliderAdaper(fm: FragmentManager,
-                        private val context: Context,
+class ImageSliderAdaper(private val context: Context,
                         private val oldUris: ArrayList<Uri>,
-                        private val croppedUris: ArrayList<Uri>): FragmentStatePagerAdapter(fm){
+                        private val croppedUris: ArrayList<Uri>): PagerAdapter(){
 
     private fun loadBitmap(uri: Uri): Bitmap = BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri))
-
     private val bitmaps: List<Bitmap> = croppedUris.map { loadBitmap(it)}.also { println("loaded bitmaps") }
 
     override fun getCount(): Int = oldUris.size
-
-    override fun getItem(position: Int): Fragment = ScreenSlideViewFragment()
+    override fun isViewFromObject(view: View, obj: Any): Boolean = view == obj
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val imageView = ImageView(context)
         imageView.scaleType = ImageView.ScaleType.CENTER_CROP
         imageView.setImageBitmap(bitmaps[position])
-        container.addView(imageView, 0)
+        container.addView(imageView, position)
         return imageView
     }
 
-    override fun isViewFromObject(view: View, obj: Any): Boolean = view == obj
-
-    /*override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
-        container.removeView(obj.)
-    }*/
+    override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
+        container.removeViewAt(position)
+    }
 }
