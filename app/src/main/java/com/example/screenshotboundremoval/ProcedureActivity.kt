@@ -11,15 +11,12 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.fragment.app.Fragment
+import androidx.core.view.size
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import java.io.File
@@ -27,6 +24,52 @@ import java.io.File
 
 const val DELETION_RESULT: String = "com.example.screenshotboundremoval.DELETION_RESULT"
 
+class ProcedureActivity : FragmentActivity() {
+    private lateinit var mPager: ViewPager
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.image_slide)
+        mPager = findViewById(R.id.slide)
+        mPager.adapter = ImageSliderAdaper(this)
+
+        /*
+        imageView.setOnClickListener(View.OnClickListener() {
+            // query procedure
+            openDialog(originalImageUri, savedImageUri)
+        })*/
+    }
+}
+
+class ImageSliderAdaper(private val context: Context): PagerAdapter(){
+
+    private val croppedImages: List<Bitmap> = ImageCash.cash.values.toList()
+
+    override fun getCount(): Int = croppedImages.size
+    override fun isViewFromObject(view: View, obj: Any): Boolean = view == obj
+
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        val imageView = ImageView(context)
+        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+        imageView.setImageBitmap(croppedImages[position])
+        /*container.addView(imageView, position)
+
+        imageView.setOnClickListener(View.OnClickListener(){
+
+        })*/
+        return imageView
+    }
+
+    /*private fun openDialog(originalImageUri: Uri, savedImageUri: Uri) {
+        val dialog = ProcedureDialog(originalImageUri, savedImageUri, this)
+        dialog.show(supportFragmentManager, "procedure")
+    }*/
+
+    override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
+        // TODO: debug
+    }
+}
 
 class ProcedureDialog(val originalImageUri: Uri, val savedImageUri: Uri, val activityContext: Context) : AppCompatDialogFragment(){
 
@@ -54,11 +97,9 @@ class ProcedureDialog(val originalImageUri: Uri, val savedImageUri: Uri, val act
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(this.activity)
         builder
-            .setTitle("How would you like to proceed?")
-            .setPositiveButton("Discard", DiscardButtonOnClickListener())
-            .setNegativeButton("Keep", KeepButtonOnClickListener())
-            .setNeutralButton("Keep and delete original", OriginalImageDeletionOnClickListener())
-
+            .setTitle("Save and delete original screenshot?")
+            .setPositiveButton("Yes", DiscardButtonOnClickListener())
+            .setNegativeButton("No, dismiss cropped image", KeepButtonOnClickListener())
         return builder.create()
     }
 
@@ -102,60 +143,5 @@ class ProcedureDialog(val originalImageUri: Uri, val savedImageUri: Uri, val act
             deleteImage(originalImageUri)
             restartMainActivity(DELETED_ORIGINAL_IMAGE)
         }
-    }
-}
-
-
-class ProcedureActivity : FragmentActivity() {
-    private lateinit var mPager: ViewPager
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val oldUris: ArrayList<Uri> = intent.getParcelableArrayListExtra<Uri>(OLD_URIS)!!
-        val croppedUris: ArrayList<Uri> = intent.getParcelableArrayListExtra<Uri>(CROPPED_URIS)!!
-
-        setContentView(R.layout.image_slide)
-        mPager = findViewById(R.id.slide)
-        mPager.adapter = ImageSliderAdaper(this, oldUris, croppedUris)
-
-        /*
-        // display cropped image
-        setContentView(R.layout.activity_image_slider)  // crashing when procedure activity layout seized
-        val imageView: ImageView = findViewById(R.id.image_view)
-        imageView.setImageBitmap(reloadedImage)
-
-        imageView.setOnClickListener(View.OnClickListener() {
-            // query procedure
-            openDialog(originalImageUri, savedImageUri)
-        })*/
-    }
-
-    /*private fun openDialog(originalImageUri: Uri, savedImageUri: Uri) {
-        val dialog = ProcedureDialog(originalImageUri, savedImageUri, this)
-        dialog.show(supportFragmentManager, "procedure")
-    }*/
-}
-
-class ImageSliderAdaper(private val context: Context,
-                        private val oldUris: ArrayList<Uri>,
-                        private val croppedUris: ArrayList<Uri>): PagerAdapter(){
-
-    private fun loadBitmap(uri: Uri): Bitmap = BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri))
-    private val bitmaps: List<Bitmap> = croppedUris.map { loadBitmap(it)}.also { println("loaded bitmaps") }
-
-    override fun getCount(): Int = oldUris.size
-    override fun isViewFromObject(view: View, obj: Any): Boolean = view == obj
-
-    override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val imageView = ImageView(context)
-        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-        imageView.setImageBitmap(bitmaps[position])
-        container.addView(imageView, position)
-        return imageView
-    }
-
-    override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
-        container.removeViewAt(position)
     }
 }

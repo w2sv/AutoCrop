@@ -161,12 +161,10 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
 
-            val oldUris: ArrayList<Uri> = arrayListOf() // old image uri -> respectively cropped image uri
-            val croppedUris: ArrayList<Uri> = arrayListOf()
             for (i in 0 until data?.clipData?.itemCount!!) {
                 // retrieve uri and resolve into bitmap
-                val imageUri: Uri? = data.clipData?.getItemAt(i)?.uri
-                val image: Bitmap? = BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri!!))
+                val imageUri: Uri = data.clipData?.getItemAt(i)?.uri!!
+                val image: Bitmap? = BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri))
 
                 // crop image
                 val time = System.currentTimeMillis()  // !
@@ -175,14 +173,12 @@ class MainActivity : AppCompatActivity() {
                 println("cropping took $croppingDuration ms")
 
                 // save image
-                val originalTitle: String? = getFileName(imageUri)
-                val savedImageUri: Uri = saveImage(croppedImage, originalTitle)
+                // val originalTitle: String? = getFileName(imageUri)
+                // val savedImageUri: Uri = saveImage(croppedImage, originalTitle)
 
-                oldUris.add(imageUri)
-                croppedUris.add(savedImageUri)
+                ImageCash.cash[imageUri] = croppedImage
             }
-            // start procedure activity
-            startProcedureActivity(oldUris, croppedUris)
+            startProcedureActivity()
         }
     }
 
@@ -190,10 +186,7 @@ class MainActivity : AppCompatActivity() {
     // PROCEDURE ACTIVITY
     // --------------
 
-    private fun startProcedureActivity(oldUris: ArrayList<Uri>, croppedUris: ArrayList<Uri>){
-        val intent: Intent = Intent(this, ProcedureActivity::class.java)
-            .apply{putExtra(OLD_URIS, oldUris)}
-            .apply{putExtra(CROPPED_URIS, croppedUris)}
-        startActivity(intent)
+    private fun startProcedureActivity(){
+        startActivity(Intent(this, ProcedureActivity::class.java))
     }
 }
