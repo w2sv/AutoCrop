@@ -9,28 +9,28 @@ class Cropper(private val image: Bitmap){
         private const val pixelComparisonsPerRow: Int = 5
     }
     private val width: Int = image.width
-    private val height: Int = image.height
+    private val lastRowInd: Int = image.height - 1
 
     private val sampleStep: Int = width / pixelComparisonsPerRow
 
     private val borderPairs: MutableList<BorderPair> = mutableListOf()
 
     private fun getStartInd(queryStartInd: Int){
-        for (i in queryStartInd until height-2){
+        for (i in queryStartInd until lastRowInd-1){
             if (!image.hasFluctuationThroughoutRow(i, sampleStep) && image.hasFluctuationThroughoutRow(i+1, sampleStep))
                 return getEndInd(i)
         }
-        borderPairs.add(BorderPair(queryStartInd, height-1))
+        borderPairs.add(BorderPair(queryStartInd, lastRowInd))
     }
 
     private fun getEndInd(borderStartInd: Int){
-        for (i in borderStartInd until height-2){
+        for (i in borderStartInd until lastRowInd-1){
             if (image.hasFluctuationThroughoutRow(i, sampleStep) && !image.hasFluctuationThroughoutRow(i+1, sampleStep)){
                 borderPairs.add(BorderPair(borderStartInd, i))
                 return getStartInd(i+1)
             }
         }
-        borderPairs.add(BorderPair(borderStartInd, height-1))
+        borderPairs.add(BorderPair(borderStartInd, lastRowInd))
     }
 
     fun getCroppedImage(): Bitmap{
