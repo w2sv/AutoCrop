@@ -42,7 +42,7 @@ class ImageSliderAdapter(private val context: Context,
     val croppedImages: MutableList<Bitmap> = ImageCash.values().toMutableList()
     val imageUris: MutableList<Uri> = ImageCash.keys().toMutableList().also { ImageCash.clear() }
 
-    override fun getCount(): Int = croppedImages.size.also { val c = croppedImages.size; println("COUNT: $c") }
+    override fun getCount(): Int = croppedImages.size
     override fun isViewFromObject(view: View, obj: Any): Boolean = view == obj
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {

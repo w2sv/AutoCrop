@@ -117,9 +117,9 @@ class MainActivity : AppCompatActivity() {
 
                 // crop image
                 val time = System.currentTimeMillis()  // !
-                val croppedImage: Bitmap = Cropper(image).getCroppedBitmap()
+                val croppedImage: Bitmap = Cropper(image!!).getCroppedImage()
                 val croppingDuration = System.currentTimeMillis() - time
-                println("cropping took $croppingDuration ms")
+                println("CROPPING TOOK $croppingDuration MS")
 
                 ImageCash.cash[imageUri] = croppedImage
             }
