@@ -48,7 +48,7 @@ class ImageSliderAdapter(private val context: Context,
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val imageView = ImageView(context)
-        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+        imageView.scaleType = ImageView.ScaleType.FIT_CENTER
         imageView.setImageBitmap(croppedImages[position])
         container.addView(imageView, position)
 
@@ -80,7 +80,7 @@ class ProcedureDialog(private val activityContext: Context,
         val builder = AlertDialog.Builder(this.activity)
         builder
             .setTitle("Save and delete original screenshot?")
-            .setNegativeButton("Yes", SaveButtonOnClickListener())  // vice-versa in order to make yes appear first
+            .setNegativeButton("Yes", SaveButtonOnClickListener())  // vice-versa required for making yes appear first
             .setPositiveButton("No, dismiss cropped image", DismissButtonOnClickListener())
         return builder.create()
     }
