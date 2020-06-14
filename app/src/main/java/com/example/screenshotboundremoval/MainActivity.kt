@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-//TODO: progress bar screen, edge case handling, welcome screen, selection screen pimp, robustness elaboration
+//TODO: progress bar screen, welcome screen, selection screen pimp
 //      dir cropping, Logo
 
 class MainActivity : AppCompatActivity() {
@@ -40,10 +40,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // procedure result display if existent
-        val resultCode: Int = intent.getIntExtra(DELETION_RESULT, -1)
-        /*when(resultCode){
-            ProcedureDialog.DELETED_ORIGINAL_IMAGE -> displayMessage("white", "darkgray", "Deleted original screenshot")
-        }*/
+        intent.getIntExtra(SAVED_CROPS, -1).run{
+            when(this){
+                0 -> displayMessage(" Didn't crop anything ")
+                1 -> displayMessage(" Saved 1 cropped image ")
+                in 1..Int.MAX_VALUE -> displayMessage(" Saved $this cropped images ")
+            }
+        }
 
         image_selection_button.setOnClickListener {
             requestActivityPermissions()
@@ -53,12 +56,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayMessage(textColor: String, backgroundColor: String, text: String){
+    private fun displayMessage(text: String){
         val toast = Toast.makeText(this, text, Toast.LENGTH_LONG)
-        toast.view.setBackgroundColor(Color.parseColor(backgroundColor))
+        toast.view.setBackgroundColor(Color.parseColor("darkgray"))
 
         val view = toast.view.findViewById<View>(android.R.id.message) as TextView
-        view.setTextColor(Color.parseColor(textColor))
+        view.setTextColor(Color.parseColor("white"))
 
         toast.show()
     }
@@ -116,12 +119,7 @@ class MainActivity : AppCompatActivity() {
                 val image: Bitmap? = BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri))
 
                 // crop image
-                val time = System.currentTimeMillis()  // !
-                val croppedImage: Bitmap = Cropper(image!!).getCroppedImage()
-                val croppingDuration = System.currentTimeMillis() - time
-                println("CROPPING TOOK $croppingDuration MS")
-
-                ImageCash.cash[imageUri] = croppedImage
+                ImageCash.cash[imageUri] = Cropper(image!!).getCroppedImage()
             }
             startProcedureActivity()
         }

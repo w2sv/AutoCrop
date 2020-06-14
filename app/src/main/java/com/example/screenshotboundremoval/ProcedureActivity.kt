@@ -19,7 +19,7 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 
 
-const val DELETION_RESULT: String = "com.example.screenshotboundremoval.DELETION_RESULT"
+const val SAVED_CROPS: String = "com.example.screenshotboundremoval.DELETION_RESULT"
 
 class ProcedureActivity : FragmentActivity() {
     private lateinit var mPager: ViewPager
@@ -41,6 +41,7 @@ class ImageSliderAdapter(private val context: Context,
 
     val croppedImages: MutableList<Bitmap> = ImageCash.values().toMutableList()
     val imageUris: MutableList<Uri> = ImageCash.keys().toMutableList().also { ImageCash.clear() }
+    var savedCrops: Int = 0
 
     override fun getCount(): Int = croppedImages.size
     override fun isViewFromObject(view: View, obj: Any): Boolean = view == obj
@@ -60,7 +61,7 @@ class ImageSliderAdapter(private val context: Context,
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
-        // this.destroyItem(container, position, obj)
+        // TODO: debug
     }
 }
 
@@ -85,6 +86,7 @@ class ProcedureDialog(private val activityContext: Context,
     }
 
     private fun postButtonPress(){
+        // TODO: debug
         // mPager.removeViewAt(position)
         imageSliderAdapter.destroyItem(container, position, imageView)
         container.removeViewAt(position)
@@ -96,12 +98,12 @@ class ProcedureDialog(private val activityContext: Context,
 
         if (imageSliderAdapter.count == 0){
             // restart main activity
-            val intent = Intent(context, MainActivity::class.java)
-                // .apply{this.putExtra(DELETION_RESULT, resultCode)}
+            val intent = Intent(context, MainActivity::class.java).
+                apply{this.putExtra(SAVED_CROPS, imageSliderAdapter.savedCrops)}
             startActivity(intent)
         }
         else{
-            mPager.setCurrentItem(0, true)
+            mPager.setCurrentItem(if (position != 0) position - 1 else position, true)
         }
     }
 
@@ -112,6 +114,7 @@ class ProcedureDialog(private val activityContext: Context,
         override fun onClick(dialog: DialogInterface?, which: Int){
             imageUri.deleteUnderlyingRessource(activityContext)
             saveCroppedImage(cr, croppedImage, imageUri.getRealPath(activityContext))
+            imageSliderAdapter.savedCrops += 1
             postButtonPress()
         }
     }
