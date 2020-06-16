@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
@@ -40,12 +41,14 @@ class ProcedureActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_image_slider)
 
+        val pageIndication: TextView = findViewById<TextView>(R.id.page_indication)
+
         mPager = findViewById(R.id.slide)
         mPager.setPageTransformer(true, ZoomOutPageTransformer())
-        val sliderAdapter = ImageSliderAdapter(this, supportFragmentManager, contentResolver, mPager)
+        val sliderAdapter = ImageSliderAdapter(this, supportFragmentManager, contentResolver, mPager, pageIndication)
         mPager.adapter = sliderAdapter
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        // val toolbar = findViewById<Toolbar>(R.id.toolbar)
         save_all_button.setOnClickListener{
             for (i in 0 until sliderAdapter.count){
                 saveCroppedAndDeleteOriginal(sliderAdapter.imageUris[i], sliderAdapter.croppedImages[i],this, contentResolver)
@@ -59,11 +62,25 @@ class ProcedureActivity : AppCompatActivity() {
 class ImageSliderAdapter(private val context: Context,
                          private val fm: FragmentManager,
                          private val cr: ContentResolver,
-                         private val mPager: ViewPager): PagerAdapter(){
+                         private val mPager: ViewPager,
+                         val pageIndication: TextView): PagerAdapter(){
 
     val croppedImages: MutableList<Bitmap> = ImageCash.values().toMutableList()
     val imageUris: MutableList<Uri> = ImageCash.keys().toMutableList().also { ImageCash.clear() }
     var savedCrops: Int = 0
+
+    init {
+        class PageChangeListener: ViewPager.SimpleOnPageChangeListener(){
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val displayPosition: Int = position + 1
+                pageIndication.setText("$displayPosition/$count")
+            }
+        }
+
+        pageIndication.setText("1/$count")
+        mPager.addOnPageChangeListener(PageChangeListener())
+    }
 
     fun returnToMainActivity(){
         val intent = Intent(context, MainActivity::class.java).
@@ -84,9 +101,7 @@ class ImageSliderAdapter(private val context: Context,
         container.addView(imageView, position)
 
         imageView.setOnClickListener{
-            // open dialog
-            val dialog = ProcedureDialog(context, cr, mPager, position, this)
-            dialog.show(fm, "procedure")
+            ProcedureDialog(context, cr, mPager, position, this).show(fm, "procedure")
         }
         return imageView
     }
@@ -137,6 +152,9 @@ class ProcedureDialog(private val activityContext: Context,
         imageSliderAdapter.notifyDataSetChanged()
         // mPager.setCurrentItem(if (position != imageSliderAdapter.count) position else position -1, true)
         mPager.setCurrentItem(0, true)
+
+        val pages: Int = imageSliderAdapter.count // !
+        imageSliderAdapter.pageIndication.setText("1/$pages")
     }
 
     // ---------------
