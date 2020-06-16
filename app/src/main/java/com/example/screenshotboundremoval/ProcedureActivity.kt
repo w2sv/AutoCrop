@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.content.ContextCompat.startActivity
@@ -48,7 +47,6 @@ class ProcedureActivity : AppCompatActivity() {
         val sliderAdapter = ImageSliderAdapter(this, supportFragmentManager, contentResolver, mPager, pageIndication)
         mPager.adapter = sliderAdapter
 
-        // val toolbar = findViewById<Toolbar>(R.id.toolbar)
         save_all_button.setOnClickListener{
             for (i in 0 until sliderAdapter.count){
                 saveCroppedAndDeleteOriginal(sliderAdapter.imageUris[i], sliderAdapter.croppedImages[i],this, contentResolver)
@@ -74,12 +72,11 @@ class ImageSliderAdapter(private val context: Context,
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 val displayPosition: Int = position + 1
-                pageIndication.setText("$displayPosition/$count")
+                pageIndication.setText("$displayPosition/$count  ")
             }
         }
-
-        pageIndication.setText("1/$count")
         mPager.addOnPageChangeListener(PageChangeListener())
+        pageIndication.setText("1/$count  ")
     }
 
     fun returnToMainActivity(){
@@ -154,7 +151,7 @@ class ProcedureDialog(private val activityContext: Context,
         mPager.setCurrentItem(0, true)
 
         val pages: Int = imageSliderAdapter.count // !
-        imageSliderAdapter.pageIndication.setText("1/$pages")
+        imageSliderAdapter.pageIndication.setText("1/$pages  ")
     }
 
     // ---------------
