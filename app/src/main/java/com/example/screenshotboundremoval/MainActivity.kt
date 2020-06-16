@@ -2,17 +2,13 @@ package com.example.screenshotboundremoval
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,6 +17,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 //TODO: welcome screen, selection screen pimp, Logo
 
 const val N_DISMISSED_IMAGES = "com.example.screenshotboundremoval.N_DISMISSED_IMAGES"
+const val DISMISSED_ALL_IMAGES = "com.example.screenshotboundremoval.DISMISSED_ALL_IMAGES"
+const val ATTEMPTED_FOR_MULTIPLE_IMAGES = "com.example.screenshotboundremoval.ATTEMPTED_FOR_MULTIPLE_IMAGES"
 
 class MainActivity : AppCompatActivity() {
     companion object{
@@ -42,6 +40,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // procedure result display if existent
+        if (intent.getBooleanExtra(DISMISSED_ALL_IMAGES, false))
+            when(intent.getBooleanExtra(ATTEMPTED_FOR_MULTIPLE_IMAGES, false)){
+                true -> displayMessage("Couldn't find cropping bounds for \n any of the selected images", this)
+                false -> displayMessage("Couldn't find cropping bounds for selected image", this)
+            }
+
         intent.getIntExtra(SAVED_CROPS, -1).let{
             when(it){
                 0 -> displayMessage("Didn't crop anything", this)
@@ -106,7 +110,8 @@ class MainActivity : AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
 
             var nDismissedImages: Int = 0
-            for (i in 0 until data?.clipData?.itemCount!!) {
+            val itemCount: Int = data?.clipData?.itemCount!!
+            for (i in 0 until itemCount) {
                 // retrieve uri and resolve into bitmap
                 val imageUri: Uri = data.clipData?.getItemAt(i)?.uri!!
                 val image: Bitmap? = BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri))
@@ -117,17 +122,25 @@ class MainActivity : AppCompatActivity() {
                     ImageCash.cash[imageUri] = croppedImage
                 else
                     nDismissedImages += 1
-
             }
-            startProcedureActivity(nDismissedImages)
+            if (nDismissedImages != itemCount) startExaminationActivity(nDismissedImages) else
+                restartMainActivity(itemCount != 1)
         }
     }
 
     // --------------
-    // PROCEDURE ACTIVITY
+    // FOLLOW-UP ACTIVITIES
     // --------------
-    private fun startProcedureActivity(dismissedCrops: Int){
+    private fun startExaminationActivity(dismissedCrops: Int){
         startActivity(Intent(this, ProcedureActivity::class.java).
-            putExtra(N_DISMISSED_IMAGES, dismissedCrops))
+            putExtra(N_DISMISSED_IMAGES, dismissedCrops)
+        )
+    }
+
+    private fun restartMainActivity(multipleImages: Boolean){
+        startActivity(Intent(this, MainActivity::class.java)
+            .putExtra(DISMISSED_ALL_IMAGES, true)
+            .putExtra(ATTEMPTED_FOR_MULTIPLE_IMAGES, multipleImages)
+        )
     }
 }
