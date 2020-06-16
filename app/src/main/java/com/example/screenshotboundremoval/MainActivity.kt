@@ -14,9 +14,15 @@ import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import processing.android.CompatUtils
+import processing.android.PFragment
+import processing.core.PApplet
 
 
 //TODO: welcome screen, image selection screen pimp, Logo
@@ -26,7 +32,9 @@ const val DISMISSED_ALL_IMAGES = "com.example.screenshotboundremoval.DISMISSED_A
 const val ATTEMPTED_FOR_MULTIPLE_IMAGES = "com.example.screenshotboundremoval.ATTEMPTED_FOR_MULTIPLE_IMAGES"
 
 
-class MainActivity : Activity(), SensorEventListener {
+class MainActivity : FragmentActivity(), SensorEventListener {
+
+    // ------------------------SENSOR STUFF-----------------------------
 
     private lateinit var sensorManager: SensorManager
     private val accelerometerReading = FloatArray(3)
@@ -34,11 +42,25 @@ class MainActivity : Activity(), SensorEventListener {
 
     private val orientationAngles = FloatArray(3)
 
+    private var sketch: PApplet? = null
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+        val frame = FrameLayout(this)
+        frame.id = CompatUtils.getUniqueViewId()
+        setContentView(
+            frame, ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        )
+        sketch = Sketch()
+        val fragment = PFragment(sketch)
+        fragment.setView(frame, this)
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
@@ -76,15 +98,37 @@ class MainActivity : Activity(), SensorEventListener {
             System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)
 
         updateOrientationAngles()
+
+        Sketch.xOffset = orientationAngles[2]
+        Sketch.yOffset = -orientationAngles[1]
+
         // println("YARP")
         // orientationAngles.forEach { print("$it\t") }
     }
 
     private fun updateOrientationAngles() {
         val rotationMatrix = FloatArray(9)
-
         SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerReading, magnetometerReading)
         SensorManager.getOrientation(rotationMatrix, orientationAngles)
+    }
+
+    // ------------------------------PROCESSING STUFF-------------------------------------
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if (sketch != null) {
+            sketch!!.onRequestPermissionsResult(
+                requestCode, permissions, grantResults
+            )
+        }
+    }
+
+    public override fun onNewIntent(intent: Intent) {
+        if (sketch != null) {
+            sketch!!.onNewIntent(intent)
+        }
     }
 
     // -------------------------------------------------------------------
@@ -147,12 +191,12 @@ class MainActivity : Activity(), SensorEventListener {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             READ_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Read")
             WRITE_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Write")
         }
-    }
+    }*/
 
     private fun permissionRequestResultHandling(grantResults: IntArray, requestDescription: String){
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)
