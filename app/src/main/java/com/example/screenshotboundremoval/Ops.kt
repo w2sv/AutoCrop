@@ -5,8 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.Uri
 import android.provider.MediaStore
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import java.io.File
 import java.time.Instant
 import java.time.format.DateTimeFormatter
@@ -60,4 +64,18 @@ fun saveCroppedImage(contentResolver: ContentResolver, croppedImage: Bitmap, ori
         croppedImage,
         title,
         "")
+}
+
+// -------------------
+// Output Message
+// -------------------
+fun displayMessage(text: String, context: Context){
+    val paddedText = " $text "
+    val toast = Toast.makeText(context, paddedText, Toast.LENGTH_LONG)
+    toast.view.setBackgroundColor(Color.parseColor("darkgray"))
+
+    val view = toast.view.findViewById<View>(android.R.id.message) as TextView
+    view.setTextColor(Color.parseColor("white"))
+
+    toast.show()
 }

@@ -2,6 +2,7 @@ package com.example.screenshotboundremoval
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -17,8 +18,9 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-//TODO: progress bar screen, welcome screen, selection screen pimp
-//      dir cropping, Logo
+//TODO: welcome screen, selection screen pimp, Logo
+
+const val N_DISMISSED_IMAGES = "com.example.screenshotboundremoval.N_DISMISSED_IMAGES"
 
 class MainActivity : AppCompatActivity() {
     companion object{
@@ -40,11 +42,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // procedure result display if existent
-        intent.getIntExtra(SAVED_CROPS, -1).run{
-            when(this){
-                0 -> displayMessage(" Didn't crop anything ")
-                1 -> displayMessage(" Saved 1 cropped image ")
-                in 1..Int.MAX_VALUE -> displayMessage(" Saved $this cropped images ")
+        intent.getIntExtra(SAVED_CROPS, -1).let{
+            when(it){
+                0 -> displayMessage("Didn't crop anything", this)
+                1 -> displayMessage("Saved 1 cropped image", this)
+                in 1..Int.MAX_VALUE -> displayMessage("Saved $this cropped images", this)
             }
         }
 
@@ -54,16 +56,6 @@ class MainActivity : AppCompatActivity() {
             if (nRequiredPermissions == 0)
                 pickImageFromGallery()
         }
-    }
-
-    private fun displayMessage(text: String){
-        val toast = Toast.makeText(this, text, Toast.LENGTH_LONG)
-        toast.view.setBackgroundColor(Color.parseColor("darkgray"))
-
-        val view = toast.view.findViewById<View>(android.R.id.message) as TextView
-        view.setTextColor(Color.parseColor("white"))
-
-        toast.show()
     }
 
     // ----------------
@@ -113,22 +105,29 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
 
+            var nDismissedImages: Int = 0
             for (i in 0 until data?.clipData?.itemCount!!) {
                 // retrieve uri and resolve into bitmap
                 val imageUri: Uri = data.clipData?.getItemAt(i)?.uri!!
                 val image: Bitmap? = BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri))
 
                 // crop image
-                ImageCash.cash[imageUri] = Cropper(image!!).getCroppedImage()
+                val croppedImage: Bitmap? = Cropper(image!!).getCroppedImage()
+                if (croppedImage != null)
+                    ImageCash.cash[imageUri] = croppedImage
+                else
+                    nDismissedImages += 1
+
             }
-            startProcedureActivity()
+            startProcedureActivity(nDismissedImages)
         }
     }
 
     // --------------
     // PROCEDURE ACTIVITY
     // --------------
-    private fun startProcedureActivity(){
-        startActivity(Intent(this, ProcedureActivity::class.java))
+    private fun startProcedureActivity(dismissedCrops: Int){
+        startActivity(Intent(this, ProcedureActivity::class.java).
+            putExtra(N_DISMISSED_IMAGES, dismissedCrops))
     }
 }

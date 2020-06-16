@@ -33,9 +33,16 @@ class Cropper(private val image: Bitmap){
         borderPairs.add(BorderPair(borderStartInd, lastRowInd))
     }
 
-    fun getCroppedImage(): Bitmap{
+    fun getCroppedImage(): Bitmap?{
         getStartInd(0)
         val croppingBorders: BorderPair = borderPairs.maxBy { it.second - it.first }!!
-        return Bitmap.createBitmap(image, 0, croppingBorders.first, width, croppingBorders.second - croppingBorders.first)
+        val validCrop: Boolean = croppingBorders != Pair(0, lastRowInd)
+        return if(validCrop) Bitmap.createBitmap(
+            image,
+            0,
+            croppingBorders.first,
+            width,
+            croppingBorders.second - croppingBorders.first)
+                else null
     }
 }

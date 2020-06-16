@@ -38,7 +38,15 @@ class ProcedureActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_image_slider)
+        val nDismissedImages: Int = intent.getIntExtra(N_DISMISSED_IMAGES, 0)
+        if (nDismissedImages != 0){
+            when (nDismissedImages){
+                1 -> displayMessage("Couldn't find cropping bounds for $nDismissedImages image", this)
+                in 1..Int.MAX_VALUE -> displayMessage("Couldn't find cropping bounds for $nDismissedImages images", this)
+            }
+        }
+
+        setContentView(R.layout.activity_examination)
 
         val pageIndication: TextView = findViewById<TextView>(R.id.page_indication)
 
