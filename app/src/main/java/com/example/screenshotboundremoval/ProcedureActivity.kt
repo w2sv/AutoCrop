@@ -63,6 +63,10 @@ class ImageSliderAdapter(private val context: Context,
     override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
         // TODO: debug
     }
+
+    override fun getItemPosition(obj: Any): Int {
+        return POSITION_NONE
+    }
 }
 
 class ProcedureDialog(private val activityContext: Context,
@@ -86,25 +90,20 @@ class ProcedureDialog(private val activityContext: Context,
     }
 
     private fun postButtonPress(){
-        // TODO: debug
-        // mPager.removeViewAt(position)
-        imageSliderAdapter.destroyItem(container, position, imageView)
-        container.removeViewAt(position)
-
-        imageSliderAdapter.imageUris.removeAt(position)
-        imageSliderAdapter.croppedImages.removeAt(position)
-
-        imageSliderAdapter.notifyDataSetChanged()
-
-        if (imageSliderAdapter.count == 0){
+        if (imageSliderAdapter.count == 1){
             // restart main activity
             val intent = Intent(context, MainActivity::class.java).
                 apply{this.putExtra(SAVED_CROPS, imageSliderAdapter.savedCrops)}
             startActivity(intent)
         }
-        else{
-            mPager.setCurrentItem(if (position != 0) position - 1 else position, true)
-        }
+
+        mPager.setCurrentItem(0, true)
+        mPager.removeAllViews()
+
+        imageSliderAdapter.imageUris.removeAt(position)
+        imageSliderAdapter.croppedImages.removeAt(position)
+
+        imageSliderAdapter.notifyDataSetChanged()
     }
 
     // ---------------
