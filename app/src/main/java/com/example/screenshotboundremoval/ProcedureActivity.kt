@@ -12,25 +12,47 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.fragment.app.FragmentActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
+import kotlinx.android.synthetic.main.toolbar.*
 
 
 const val SAVED_CROPS: String = "com.example.screenshotboundremoval.DELETION_RESULT"
 
-class ProcedureActivity : FragmentActivity() {
+private fun saveCroppedAndDeleteOriginal(imageUri: Uri,
+                                         croppedImage: Bitmap,
+                                         context: Context,
+                                         cr: ContentResolver){
+    imageUri.deleteUnderlyingRessource(context)
+    saveCroppedImage(cr, croppedImage, imageUri.getRealPath(context))
+}
+
+class ProcedureActivity : AppCompatActivity() {
     private lateinit var mPager: ViewPager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.image_slide)
+        setContentView(R.layout.activity_image_slider)
+
         mPager = findViewById(R.id.slide)
         mPager.setPageTransformer(true, ZoomOutPageTransformer())
-        mPager.adapter = ImageSliderAdapter(this, supportFragmentManager, contentResolver, mPager)
+        val sliderAdapter = ImageSliderAdapter(this, supportFragmentManager, contentResolver, mPager)
+        mPager.adapter = sliderAdapter
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        save_all_button.setOnClickListener{
+            for (i in 0 until sliderAdapter.count){
+                saveCroppedAndDeleteOriginal(sliderAdapter.imageUris[i], sliderAdapter.croppedImages[i],this, contentResolver)
+                sliderAdapter.savedCrops += 1
+            }
+            sliderAdapter.returnToMainActivity()
+        }
     }
 }
 
@@ -43,6 +65,15 @@ class ImageSliderAdapter(private val context: Context,
     val imageUris: MutableList<Uri> = ImageCash.keys().toMutableList().also { ImageCash.clear() }
     var savedCrops: Int = 0
 
+    fun returnToMainActivity(){
+        val intent = Intent(context, MainActivity::class.java).
+            apply{this.putExtra(SAVED_CROPS, savedCrops)}
+        startActivity(context, intent, null)
+    }
+
+    // -----------------
+    // overrides
+    // -----------------
     override fun getCount(): Int = croppedImages.size
     override fun isViewFromObject(view: View, obj: Any): Boolean = view == obj
 
@@ -52,16 +83,16 @@ class ImageSliderAdapter(private val context: Context,
         imageView.setImageBitmap(croppedImages[position])
         container.addView(imageView, position)
 
-        imageView.setOnClickListener(View.OnClickListener(){
+        imageView.setOnClickListener{
             // open dialog
-            val dialog = ProcedureDialog(context, cr, mPager, position, this, container, imageView)
+            val dialog = ProcedureDialog(context, cr, mPager, position, this)
             dialog.show(fm, "procedure")
-        })
+        }
         return imageView
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
-        // TODO: debug
+        // container.removeViewAt(position)
     }
 
     override fun getItemPosition(obj: Any): Int {
@@ -73,9 +104,7 @@ class ProcedureDialog(private val activityContext: Context,
                       private val cr: ContentResolver,
                       private val mPager: ViewPager,
                       private val position: Int,
-                      private val imageSliderAdapter: ImageSliderAdapter,
-                      private val container: ViewGroup,
-                      private val imageView: ImageView) : AppCompatDialogFragment(){
+                      private val imageSliderAdapter: ImageSliderAdapter) : AppCompatDialogFragment(){
 
     val imageUri: Uri = imageSliderAdapter.imageUris[position]
     val croppedImage: Bitmap = imageSliderAdapter.croppedImages[position]
@@ -89,12 +118,14 @@ class ProcedureDialog(private val activityContext: Context,
         return builder.create()
     }
 
+    /*
+     * remove current image from view pager
+     * move to new view
+     * return to main activity in case of previously handled image being last one in view
+     */
     private fun postButtonPress(){
         if (imageSliderAdapter.count == 1){
-            // restart main activity
-            val intent = Intent(context, MainActivity::class.java).
-                apply{this.putExtra(SAVED_CROPS, imageSliderAdapter.savedCrops)}
-            startActivity(intent)
+            imageSliderAdapter.returnToMainActivity()
         }
 
         mPager.currentItem = 0
@@ -104,7 +135,8 @@ class ProcedureDialog(private val activityContext: Context,
         imageSliderAdapter.croppedImages.removeAt(position)
 
         imageSliderAdapter.notifyDataSetChanged()
-        mPager.setCurrentItem(if (position != imageSliderAdapter.count) position else position -1, true)
+        // mPager.setCurrentItem(if (position != imageSliderAdapter.count) position else position -1, true)
+        mPager.setCurrentItem(0, true)
     }
 
     // ---------------
@@ -112,8 +144,7 @@ class ProcedureDialog(private val activityContext: Context,
     // ---------------
     private inner class SaveButtonOnClickListener: DialogInterface.OnClickListener{
         override fun onClick(dialog: DialogInterface?, which: Int){
-            imageUri.deleteUnderlyingRessource(activityContext)
-            saveCroppedImage(cr, croppedImage, imageUri.getRealPath(activityContext))
+            saveCroppedAndDeleteOriginal(imageUri, croppedImage, activityContext, cr)
             imageSliderAdapter.savedCrops += 1
             postButtonPress()
         }
