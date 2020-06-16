@@ -97,13 +97,14 @@ class ProcedureDialog(private val activityContext: Context,
             startActivity(intent)
         }
 
-        mPager.setCurrentItem(0, true)
+        mPager.currentItem = 0
         mPager.removeAllViews()
 
         imageSliderAdapter.imageUris.removeAt(position)
         imageSliderAdapter.croppedImages.removeAt(position)
 
         imageSliderAdapter.notifyDataSetChanged()
+        mPager.setCurrentItem(if (position != imageSliderAdapter.count) position else position -1, true)
     }
 
     // ---------------
