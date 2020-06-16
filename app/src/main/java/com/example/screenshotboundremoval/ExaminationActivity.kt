@@ -134,7 +134,7 @@ class ProcedureDialog(private val activityContext: Context,
         builder
             .setTitle("Save and delete original screenshot?")
             .setNegativeButton("Yes", SaveButtonOnClickListener())  // vice-versa required for making yes appear first
-            .setPositiveButton("No, dismiss cropped image", DismissButtonOnClickListener())
+            .setPositiveButton("No", DismissButtonOnClickListener())
         return builder.create()
     }
 

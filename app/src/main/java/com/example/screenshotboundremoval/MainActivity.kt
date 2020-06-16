@@ -50,7 +50,7 @@ class MainActivity : Activity(), SensorEventListener {
 
         intent.getIntExtra(SAVED_CROPS, -1).let{
             when(it){
-                0 -> displayMessage("Didn't crop anything", this)
+                0 -> displayMessage("Didn't save anything", this)
                 1 -> displayMessage("Saved 1 cropped image", this)
                 in 1..Int.MAX_VALUE -> displayMessage("Saved $this cropped images", this)
             }
@@ -191,9 +191,9 @@ class MainActivity : Activity(), SensorEventListener {
     // SAVING
     // ----------------
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
 
-            var nDismissedImages: Int = 0
+            var nDismissedImages = 0
             val itemCount: Int = data?.clipData?.itemCount!!
             for (i in 0 until itemCount) {
                 // retrieve uri and resolve into bitmap
