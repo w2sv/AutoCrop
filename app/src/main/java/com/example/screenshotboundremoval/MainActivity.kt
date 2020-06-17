@@ -13,9 +13,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-
-//TODO: welcome screen, selection screen pimp, Logo
-
 const val N_DISMISSED_IMAGES = "com.example.screenshotboundremoval.N_DISMISSED_IMAGES"
 const val DISMISSED_ALL_IMAGES = "com.example.screenshotboundremoval.DISMISSED_ALL_IMAGES"
 const val ATTEMPTED_FOR_MULTIPLE_IMAGES = "com.example.screenshotboundremoval.ATTEMPTED_FOR_MULTIPLE_IMAGES"
@@ -60,6 +57,10 @@ class MainActivity : AppCompatActivity() {
             if (nRequiredPermissions == 0)
                 pickImageFromGallery()
         }
+    }
+
+    override fun onBackPressed() {
+        finishAffinity()
     }
 
     // ----------------
