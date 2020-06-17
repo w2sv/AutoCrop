@@ -1,7 +1,6 @@
 package com.example.screenshotboundremoval
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,9 +16,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.CompatUtils
 import processing.android.PFragment
 import processing.core.PApplet
@@ -58,7 +55,7 @@ class MainActivity : FragmentActivity(), SensorEventListener {
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
         )
-        sketch = Sketch()
+        sketch = FlowfieldDriver()
         val fragment = PFragment(sketch)
         fragment.setView(frame, this)
     }
@@ -99,8 +96,8 @@ class MainActivity : FragmentActivity(), SensorEventListener {
 
         updateOrientationAngles()
 
-        Sketch.xOffset = orientationAngles[2]
-        Sketch.yOffset = -orientationAngles[1]
+        EllipseSketch.xOffset = orientationAngles[2]
+        EllipseSketch.yOffset = -orientationAngles[1]
 
         // println("YARP")
         // orientationAngles.forEach { print("$it\t") }

@@ -2,14 +2,14 @@ package com.example.screenshotboundremoval;
 
 import processing.core.PApplet;
 
-public class Sketch extends PApplet {
+public class EllipseSketch extends PApplet {
     float[] coordinateArray = {};
     static float xOffset = 0;
     static float yOffset = 0;
     float MULTIPLIER = 100;
 
     public void settings() {
-        size(700, 1200);
+        size(720, 1400);
     }
 
     public void setup() {
