@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         intent.getIntExtra(SAVED_CROPS, -1).let{
             when(it){
-                0 -> displayMessage("Didn't crop anything", this)
+                0 -> displayMessage("Didn't save anything", this)
                 1 -> displayMessage("Saved 1 cropped image", this)
                 in 1..Int.MAX_VALUE -> displayMessage("Saved $this cropped images", this)
             }
