@@ -3,15 +3,13 @@ package com.example.screenshotboundremoval
 import android.graphics.Bitmap
 
 private typealias BorderPair = Pair<Int, Int>
+private const val PIXEL_COMPARISONS_PER_ROW: Int = 5
 
 class Cropper(private val image: Bitmap){
-    companion object{
-        private const val pixelComparisonsPerRow: Int = 5
-    }
+
     private val width: Int = image.width
     private val lastRowInd: Int = image.height - 1
-
-    private val sampleStep: Int = width / pixelComparisonsPerRow
+    private val sampleStep: Int = width / PIXEL_COMPARISONS_PER_ROW
 
     private val borderPairs: MutableList<BorderPair> = mutableListOf()
 
