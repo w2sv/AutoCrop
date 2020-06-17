@@ -40,9 +40,9 @@ class Cropper(private val image: Bitmap){
         return if(validCrop) Bitmap.createBitmap(
             image,
             0,
-            croppingBorders.first,
+            croppingBorders.first + 1,
             width,
-            croppingBorders.second - croppingBorders.first)
+            croppingBorders.second - 1 - croppingBorders.first + 1)
                 else null
     }
 }
