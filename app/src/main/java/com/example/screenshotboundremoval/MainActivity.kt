@@ -11,10 +11,10 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
-import processing.core.PApplet
 
 
 const val N_DISMISSED_IMAGES = "com.example.screenshotboundremoval.N_DISMISSED_IMAGES"
@@ -42,23 +42,18 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val dm = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(dm)
-
-        if (pixelField == null)
+        if (pixelField == null){
+            val dm = DisplayMetrics()
+            windowManager.defaultDisplay.getMetrics(dm)
             pixelField = PixelField(dm.widthPixels, dm.heightPixels)
+        }
+
         else
             pixelField!!.redraw()
+
         val fragment = PFragment(pixelField)
         val frameLayout = findViewById<FrameLayout>(R.id.canvas_container)
         fragment.setView(frameLayout, this)
-
-        // procedure result display if existent
-        if (intent.getBooleanExtra(DISMISSED_ALL_IMAGES, false))
-            when(intent.getBooleanExtra(ATTEMPTED_FOR_MULTIPLE_IMAGES, false)){
-                true -> displayMessage("Couldn't find cropping bounds for \n any of the selected images", this)
-                false -> displayMessage("Couldn't find cropping bounds for selected image", this)
-            }
 
         intent.getIntExtra(SAVED_CROPS, -1).let{
             when(it){
@@ -145,8 +140,10 @@ class MainActivity : FragmentActivity() {
                 else
                     nDismissedImages += 1
             }
-            if (nDismissedImages != itemCount) startExaminationActivity(nDismissedImages) else
-                restartMainActivity(itemCount != 1)
+            if (nDismissedImages != itemCount)
+                startExaminationActivity(nDismissedImages)
+            else
+                allImagesDismissedOutput(itemCount != 1)
         }
     }
 
@@ -154,16 +151,15 @@ class MainActivity : FragmentActivity() {
     // FOLLOW-UP ACTIVITIES
     // --------------
     private fun startExaminationActivity(dismissedCrops: Int){
-        pixelField!!.noLoop()
         startActivity(Intent(this, ProcedureActivity::class.java).
             putExtra(N_DISMISSED_IMAGES, dismissedCrops)
         )
     }
 
-    private fun restartMainActivity(multipleImages: Boolean){
-        startActivity(Intent(this, MainActivity::class.java)
-            .putExtra(DISMISSED_ALL_IMAGES, true)
-            .putExtra(ATTEMPTED_FOR_MULTIPLE_IMAGES, multipleImages)
-        )
+    private fun allImagesDismissedOutput(attemptedForMultipleImages: Boolean){
+        when(attemptedForMultipleImages){
+            true -> displayMessage("Couldn't find cropping bounds for \n any of the selected images", this)
+            false -> displayMessage("Couldn't find cropping bounds for selected image", this)
+        }
     }
 }

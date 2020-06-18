@@ -36,7 +36,6 @@ public class PixelField extends PApplet {
     }
 
     public void draw() {
-        println("called draw");
         float y_off = 0;
         loadPixels();
         for (int y = 0; y < height; y+=height_step){
