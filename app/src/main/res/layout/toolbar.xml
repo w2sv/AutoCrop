@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="40dp"
-    android:background="@color/wineRed"
+    android:background="@color/magenta"
     android:elevation="4dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -20,7 +20,6 @@
         android:id="@+id/page_indication"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="PLACEHOLDER"
         android:textColor="#FFF"
         android:textSize="12sp"
         android:textStyle="italic"
