@@ -28,9 +28,10 @@ class MainActivity : FragmentActivity() {
         private const val IMAGE_PICK_CODE = 69
         private const val READ_PERMISSION_CODE = 420
         private const val WRITE_PERMISSION_CODE = 47
+
+        private var pixelField: PixelField? = null
     }
 
-    private var sketch: PApplet? = null
     private var nRequiredPermissions: Int = 0
     private val permission2Code: Map<String, Int> = mapOf(
         Manifest.permission.WRITE_EXTERNAL_STORAGE to WRITE_PERMISSION_CODE,
@@ -44,7 +45,11 @@ class MainActivity : FragmentActivity() {
         val dm = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(dm)
 
-        val fragment = PFragment(PixelField(dm.widthPixels, dm.heightPixels))
+        if (pixelField == null)
+            pixelField = PixelField(dm.widthPixels, dm.heightPixels)
+        else
+            pixelField!!.redraw()
+        val fragment = PFragment(pixelField)
         val frameLayout = findViewById<FrameLayout>(R.id.canvas_container)
         fragment.setView(frameLayout, this)
 
@@ -59,7 +64,7 @@ class MainActivity : FragmentActivity() {
             when(it){
                 0 -> displayMessage("Didn't save anything", this)
                 1 -> displayMessage("Saved 1 cropped image", this)
-                in 1..Int.MAX_VALUE -> displayMessage("Saved $this cropped images", this)
+                in 1..Int.MAX_VALUE -> displayMessage("Saved $it cropped images", this)
             }
         }
 
@@ -73,12 +78,6 @@ class MainActivity : FragmentActivity() {
 
     override fun onBackPressed() {
         finishAffinity()
-    }
-
-    public override fun onNewIntent(intent: Intent) {
-        if (sketch != null) {
-            sketch!!.onNewIntent(intent)
-        }
     }
 
     // ----------------
@@ -95,11 +94,6 @@ class MainActivity : FragmentActivity() {
         requestCode: Int,
         permissions: Array<String>,
         grantResults: IntArray) {
-        if (sketch != null) {
-            sketch!!.onRequestPermissionsResult(
-                requestCode, permissions, grantResults
-            )
-        }
 
         when (requestCode) {
             READ_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Read")
@@ -160,6 +154,7 @@ class MainActivity : FragmentActivity() {
     // FOLLOW-UP ACTIVITIES
     // --------------
     private fun startExaminationActivity(dismissedCrops: Int){
+        pixelField!!.noLoop()
         startActivity(Intent(this, ProcedureActivity::class.java).
             putExtra(N_DISMISSED_IMAGES, dismissedCrops)
         )
