@@ -6,10 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -17,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.CompatUtils
 import processing.android.PFragment
 import processing.core.PApplet
@@ -29,15 +26,7 @@ const val DISMISSED_ALL_IMAGES = "com.example.screenshotboundremoval.DISMISSED_A
 const val ATTEMPTED_FOR_MULTIPLE_IMAGES = "com.example.screenshotboundremoval.ATTEMPTED_FOR_MULTIPLE_IMAGES"
 
 
-class MainActivity : FragmentActivity(), SensorEventListener {
-
-    // ------------------------SENSOR STUFF-----------------------------
-
-    private lateinit var sensorManager: SensorManager
-    private val accelerometerReading = FloatArray(3)
-    private val magnetometerReading = FloatArray(3)
-
-    private val orientationAngles = FloatArray(3)
+class MainActivity : FragmentActivity() {
 
     private var sketch: PApplet? = null
 
@@ -45,65 +34,32 @@ class MainActivity : FragmentActivity(), SensorEventListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        // val frame = FrameLayout(this)
+        val fragment = PFragment(PixelField())
+        val frameLayout = findViewById<FrameLayout>(R.id.canvas_container)
+        fragment.setView(frameLayout, this)
 
-        val frame = FrameLayout(this)
-        frame.id = CompatUtils.getUniqueViewId()
-        setContentView(
-            frame, ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-        )
-        sketch = PixelField()
-        val fragment = PFragment(sketch)
-        fragment.setView(frame, this)
-    }
+        // procedure result display if existent
+        if (intent.getBooleanExtra(DISMISSED_ALL_IMAGES, false))
+            when(intent.getBooleanExtra(ATTEMPTED_FOR_MULTIPLE_IMAGES, false)){
+                true -> displayMessage("Couldn't find cropping bounds for \n any of the selected images", this)
+                false -> displayMessage("Couldn't find cropping bounds for selected image", this)
+            }
 
-    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
-
-    override fun onResume() {
-        super.onResume()
-
-        sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
-            sensorManager.registerListener(
-                this,
-                accelerometer,
-                SensorManager.SENSOR_DELAY_NORMAL,
-                SensorManager.SENSOR_DELAY_UI
-            )
+        intent.getIntExtra(SAVED_CROPS, -1).let{
+            when(it){
+                0 -> displayMessage("Didn't save anything", this)
+                1 -> displayMessage("Saved 1 cropped image", this)
+                in 1..Int.MAX_VALUE -> displayMessage("Saved $this cropped images", this)
+            }
         }
-        sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)?.also { magneticField ->
-            sensorManager.registerListener(
-                this,
-                magneticField,
-                SensorManager.SENSOR_DELAY_NORMAL,
-                SensorManager.SENSOR_DELAY_UI
-            )
+
+        image_selection_button.setOnClickListener {
+            requestActivityPermissions()
+
+            if (nRequiredPermissions == 0)
+                pickImageFromGallery()
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        sensorManager.unregisterListener(this)
-    }
-
-    override fun onSensorChanged(event: SensorEvent) {
-        if (event.sensor.type == Sensor.TYPE_ACCELEROMETER)
-            System.arraycopy(event.values, 0, accelerometerReading, 0, accelerometerReading.size)
-        else if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD)
-            System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)
-
-        updateOrientationAngles()
-
-        EllipseSketch.xOffset = orientationAngles[2]
-        EllipseSketch.yOffset = -orientationAngles[1]
-    }
-
-    private fun updateOrientationAngles() {
-        val rotationMatrix = FloatArray(9)
-        SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerReading, magnetometerReading)
-        SensorManager.getOrientation(rotationMatrix, orientationAngles)
     }
 
     // ------------------------------PROCESSING STUFF-------------------------------------
@@ -116,6 +72,11 @@ class MainActivity : FragmentActivity(), SensorEventListener {
             sketch!!.onRequestPermissionsResult(
                 requestCode, permissions, grantResults
             )
+        }
+
+        when (requestCode) {
+            READ_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Read")
+            WRITE_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Write")
         }
     }
 
@@ -139,35 +100,6 @@ class MainActivity : FragmentActivity(), SensorEventListener {
 
     private var nRequiredPermissions: Int = 0
 
-    /*public override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-
-        // procedure result display if existent
-        if (intent.getBooleanExtra(DISMISSED_ALL_IMAGES, false))
-            when(intent.getBooleanExtra(ATTEMPTED_FOR_MULTIPLE_IMAGES, false)){
-                true -> displayMessage("Couldn't find cropping bounds for \n any of the selected images", this)
-                false -> displayMessage("Couldn't find cropping bounds for selected image", this)
-            }
-
-        intent.getIntExtra(SAVED_CROPS, -1).let{
-            when(it){
-                0 -> displayMessage("Didn't save anything", this)
-                1 -> displayMessage("Saved 1 cropped image", this)
-                in 1..Int.MAX_VALUE -> displayMessage("Saved $this cropped images", this)
-            }
-        }
-
-        image_selection_button.setOnClickListener {
-            requestActivityPermissions()
-
-            if (nRequiredPermissions == 0)
-                pickImageFromGallery()
-        }
-    }*/
-
     // ----------------
     // PERMISSION QUERY
     // ----------------
@@ -184,13 +116,6 @@ class MainActivity : FragmentActivity(), SensorEventListener {
             checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
     }
-
-    /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            READ_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Read")
-            WRITE_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Write")
-        }
-    }*/
 
     private fun permissionRequestResultHandling(grantResults: IntArray, requestDescription: String){
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)
