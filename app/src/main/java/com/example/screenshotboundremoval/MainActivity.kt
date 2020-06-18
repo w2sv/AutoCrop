@@ -11,15 +11,15 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
 
 
+// TODO: dynamic canvas size setting, maybe welcome screen, deletion of viewpager items, dismiss all button,
+//  non 0-resetting item switch, original screenshot deletion remark on first usage, item centering improvement
+
 const val N_DISMISSED_IMAGES = "com.example.screenshotboundremoval.N_DISMISSED_IMAGES"
-const val DISMISSED_ALL_IMAGES = "com.example.screenshotboundremoval.DISMISSED_ALL_IMAGES"
-const val ATTEMPTED_FOR_MULTIPLE_IMAGES = "com.example.screenshotboundremoval.ATTEMPTED_FOR_MULTIPLE_IMAGES"
 
 
 class MainActivity : FragmentActivity() {
