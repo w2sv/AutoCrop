@@ -11,11 +11,28 @@ public class PixelField extends PApplet {
     int width_step = 4;
     int height_step = 4;
 
-    public void settings() {
-        size(720, 1400, P2D);
+    int canvas_width;
+    int canvas_height;
+
+    private int find_canvas_dim(int screen_dim, int step){
+        if (screen_dim % step == 0)
+            return screen_dim;
+        else{
+            for (int i = 1; i < step; i++){
+                if ((screen_dim + i) % step == 0)
+                    return screen_dim + 1;
+            }
+        }
+        return -1;
     }
 
-    public void setup() {
+    PixelField(int screen_width, int screen_height){
+        canvas_width = find_canvas_dim(screen_width, width_step);
+        canvas_height = find_canvas_dim(screen_height, height_step);
+    }
+
+    public void settings() {
+        size(canvas_width, 1348, P2D);
     }
 
     public void draw() {

@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
@@ -40,8 +41,10 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // val frame = FrameLayout(this)
-        val fragment = PFragment(PixelField())
+        val dm = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(dm)
+
+        val fragment = PFragment(PixelField(dm.widthPixels, dm.heightPixels))
         val frameLayout = findViewById<FrameLayout>(R.id.canvas_container)
         fragment.setView(frameLayout, this)
 

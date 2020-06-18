@@ -158,8 +158,8 @@ class ProcedureDialog(private val activityContext: Context,
         // mPager.setCurrentItem(if (position != imageSliderAdapter.count) position else position -1, true)
         mPager.setCurrentItem(0, true)
 
-        val pages: Int = imageSliderAdapter.count // !
-        imageSliderAdapter.pageIndication.setText("1/$pages  ")
+        val pages: Int = imageSliderAdapter.count
+        imageSliderAdapter.pageIndication.setText(if (imageSliderAdapter.count > 0) "1/$pages  " else "0/0 ")
     }
 
     // ---------------
