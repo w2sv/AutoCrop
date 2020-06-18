@@ -15,7 +15,7 @@ public class EllipseSketch extends PApplet {
     public void setup() {
         background(145, 30, 45);
 
-        for (int i=0; i<100; i++){
+        for (int i=0; i<400; i++){
             float x = random(0, width);
             float y = random(0, height);
             coordinateArray = append(coordinateArray, x);
@@ -26,8 +26,13 @@ public class EllipseSketch extends PApplet {
     public void draw() {
         background(145, 30, 45);
 
-        fill(34, 127, 60);
-        for (int i = 0; i < coordinateArray.length; i+=2)
-            ellipse(coordinateArray[i] + xOffset * MULTIPLIER , coordinateArray[i+1] + yOffset * MULTIPLIER, 14, 15);
+        stroke(0);
+        for (int i = 0; i < 300; i++){
+            float x = noise(width, height);
+            float y = noise(width, height);
+            print(x);
+            print(y);
+            line(x, y, x + xOffset * MULTIPLIER, y + yOffset * MULTIPLIER);
+        }
     }
 }

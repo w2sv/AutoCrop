@@ -55,7 +55,7 @@ class MainActivity : FragmentActivity(), SensorEventListener {
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
         )
-        sketch = FlowfieldDriver()
+        sketch = PixelField()
         val fragment = PFragment(sketch)
         fragment.setView(frame, this)
     }
@@ -98,9 +98,6 @@ class MainActivity : FragmentActivity(), SensorEventListener {
 
         EllipseSketch.xOffset = orientationAngles[2]
         EllipseSketch.yOffset = -orientationAngles[1]
-
-        // println("YARP")
-        // orientationAngles.forEach { print("$it\t") }
     }
 
     private fun updateOrientationAngles() {
