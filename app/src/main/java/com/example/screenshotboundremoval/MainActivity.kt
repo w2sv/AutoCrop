@@ -1,7 +1,6 @@
 package com.example.screenshotboundremoval
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -9,32 +8,42 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import processing.android.PFragment
+import processing.core.PApplet
+
 
 const val N_DISMISSED_IMAGES = "com.example.screenshotboundremoval.N_DISMISSED_IMAGES"
 const val DISMISSED_ALL_IMAGES = "com.example.screenshotboundremoval.DISMISSED_ALL_IMAGES"
 const val ATTEMPTED_FOR_MULTIPLE_IMAGES = "com.example.screenshotboundremoval.ATTEMPTED_FOR_MULTIPLE_IMAGES"
 
-class MainActivity : AppCompatActivity() {
-    companion object{
+
+class MainActivity : FragmentActivity() {
+
+    private companion object{
         private const val IMAGE_PICK_CODE = 69
         private const val READ_PERMISSION_CODE = 420
         private const val WRITE_PERMISSION_CODE = 47
     }
 
+    private var sketch: PApplet? = null
+    private var nRequiredPermissions: Int = 0
     private val permission2Code: Map<String, Int> = mapOf(
         Manifest.permission.WRITE_EXTERNAL_STORAGE to WRITE_PERMISSION_CODE,
         Manifest.permission.READ_EXTERNAL_STORAGE to READ_PERMISSION_CODE
     )
 
-    private var nRequiredPermissions: Int = 0
-
-    override fun onCreate(savedInstanceState: Bundle?) {
+    public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
+
+        // val frame = FrameLayout(this)
+        val fragment = PFragment(PixelField())
+        val frameLayout = findViewById<FrameLayout>(R.id.canvas_container)
+        fragment.setView(frameLayout, this)
 
         // procedure result display if existent
         if (intent.getBooleanExtra(DISMISSED_ALL_IMAGES, false))
@@ -63,6 +72,12 @@ class MainActivity : AppCompatActivity() {
         finishAffinity()
     }
 
+    public override fun onNewIntent(intent: Intent) {
+        if (sketch != null) {
+            sketch!!.onNewIntent(intent)
+        }
+    }
+
     // ----------------
     // PERMISSION QUERY
     // ----------------
@@ -73,17 +88,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray) {
+        if (sketch != null) {
+            sketch!!.onRequestPermissionsResult(
+                requestCode, permissions, grantResults
+            )
+        }
+
+        when (requestCode) {
+            READ_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Read")
+            WRITE_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Write")
+        }
+    }
+
     private fun requestActivityPermissions(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            READ_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Read")
-            WRITE_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Write")
         }
     }
 
@@ -108,9 +132,9 @@ class MainActivity : AppCompatActivity() {
     // SAVING
     // ----------------
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
 
-            var nDismissedImages: Int = 0
+            var nDismissedImages = 0
             val itemCount: Int = data?.clipData?.itemCount!!
             for (i in 0 until itemCount) {
                 // retrieve uri and resolve into bitmap
