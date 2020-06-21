@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.widget.FrameLayout
@@ -97,10 +96,8 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun requestActivityPermissions(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
+        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
     private fun permissionRequestResultHandling(grantResults: IntArray, requestDescription: String){
