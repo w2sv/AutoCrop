@@ -60,11 +60,16 @@ class ProcedureActivity : AppCompatActivity() {
         mPager.adapter = sliderAdapter
 
         save_all_button.setOnClickListener{
-            progressBar.isInvisible = false
-            for (i in 0 until sliderAdapter.count){
-                saveCroppedAndDeleteOriginal(sliderAdapter.imageUris[i], sliderAdapter.croppedImages[i],this, contentResolver)
-                sliderAdapter.savedCrops += 1
+            progressBar.isInvisible = false.also {
+                for (i in 0 until sliderAdapter.count){
+                    saveCroppedAndDeleteOriginal(sliderAdapter.imageUris[i], sliderAdapter.croppedImages[i],this, contentResolver)
+                    sliderAdapter.savedCrops += 1
+                }
             }
+            sliderAdapter.returnToMainActivity()
+        }
+
+        dismiss_all_button.setOnClickListener{
             sliderAdapter.returnToMainActivity()
         }
     }
