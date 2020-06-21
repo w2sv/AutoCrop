@@ -43,6 +43,7 @@ class ProcedureActivity : AppCompatActivity() {
 
         val nDismissedImages: Int = intent.getIntExtra(N_DISMISSED_IMAGES, 0)
         if (nDismissedImages != 0){
+
             when (nDismissedImages){
                 1 -> displayMessage("Couldn't find cropping bounds for $nDismissedImages image", this)
                 in 1..Int.MAX_VALUE -> displayMessage("Couldn't find cropping bounds for $nDismissedImages images", this)
@@ -51,8 +52,6 @@ class ProcedureActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_examination)
         val progressBar: ProgressBar = findViewById(R.id.indeterminateBar)
-        progressBar.visibility = View.GONE
-
         val pageIndication: TextView = findViewById<TextView>(R.id.page_indication)
 
         mPager = findViewById(R.id.slide)
@@ -84,8 +83,7 @@ class ImageSliderAdapter(private val context: Context,
                          private val cr: ContentResolver,
                          private val mPager: ViewPager,
                          val pageIndication: TextView): PagerAdapter(){
-
-    val croppedImages: MutableList<Bitmap> = ImageCash.values().toMutableList()
+   val croppedImages: MutableList<Bitmap> = ImageCash.values().toMutableList()
     val imageUris: MutableList<Uri> = ImageCash.keys().toMutableList().also { ImageCash.clear() }
     var savedCrops: Int = 0
 
