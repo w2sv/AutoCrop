@@ -36,6 +36,7 @@ private fun saveCroppedAndDeleteOriginal(imageUri: Uri,
 
 class ProcedureActivity : AppCompatActivity() {
     private lateinit var mPager: ViewPager
+    private lateinit var sliderAdapter: ImageSliderAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +57,7 @@ class ProcedureActivity : AppCompatActivity() {
 
         mPager = findViewById(R.id.slide)
         mPager.setPageTransformer(true, ZoomOutPageTransformer())
-        val sliderAdapter = ImageSliderAdapter(this, supportFragmentManager, contentResolver, mPager, pageIndication)
+        sliderAdapter = ImageSliderAdapter(this, supportFragmentManager, contentResolver, mPager, pageIndication)
         mPager.adapter = sliderAdapter
 
         save_all_button.setOnClickListener{
@@ -71,6 +72,10 @@ class ProcedureActivity : AppCompatActivity() {
         dismiss_all_button.setOnClickListener{
             sliderAdapter.returnToMainActivity()
         }
+    }
+
+    override fun onBackPressed() {
+        sliderAdapter.returnToMainActivity()
     }
 }
 

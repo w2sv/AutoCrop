@@ -23,12 +23,12 @@ const val N_DISMISSED_IMAGES = "com.example.screenshotboundremoval.N_DISMISSED_I
 
 class MainActivity : FragmentActivity() {
 
-    private companion object{
+    companion object{
         private const val IMAGE_PICK_CODE = 69
         private const val READ_PERMISSION_CODE = 420
         private const val WRITE_PERMISSION_CODE = 47
 
-        private var pixelField: PixelField? = null
+        var pixelField: PixelField? = null
     }
 
     private var nRequiredPermissions: Int = 0
@@ -46,7 +46,6 @@ class MainActivity : FragmentActivity() {
             windowManager.defaultDisplay.getMetrics(dm)
             pixelField = PixelField(dm.widthPixels, dm.heightPixels)
         }
-
         else
             pixelField!!.redraw()
 
