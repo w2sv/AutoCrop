@@ -50,7 +50,7 @@ class ProcedureActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_examination)
         val progressBar: ProgressBar = findViewById(R.id.indeterminateBar)
-        progressBar.isInvisible = true
+        progressBar.visibility = View.GONE
 
         val pageIndication: TextView = findViewById<TextView>(R.id.page_indication)
 
@@ -60,11 +60,10 @@ class ProcedureActivity : AppCompatActivity() {
         mPager.adapter = sliderAdapter
 
         save_all_button.setOnClickListener{
-            progressBar.isInvisible = false.also {
-                for (i in 0 until sliderAdapter.count){
-                    saveCroppedAndDeleteOriginal(sliderAdapter.imageUris[i], sliderAdapter.croppedImages[i],this, contentResolver)
-                    sliderAdapter.savedCrops += 1
-                }
+            progressBar.visibility = View.VISIBLE
+            for (i in 0 until sliderAdapter.count){
+                saveCroppedAndDeleteOriginal(sliderAdapter.imageUris[i], sliderAdapter.croppedImages[i],this, contentResolver)
+                sliderAdapter.savedCrops += 1
             }
             sliderAdapter.returnToMainActivity()
         }
