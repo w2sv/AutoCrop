@@ -12,10 +12,12 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.content.ContextCompat.startActivity
+import androidx.core.view.isInvisible
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
@@ -47,6 +49,8 @@ class ProcedureActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_examination)
+        val progressBar: ProgressBar = findViewById(R.id.indeterminateBar)
+        progressBar.isInvisible = true
 
         val pageIndication: TextView = findViewById<TextView>(R.id.page_indication)
 
@@ -56,6 +60,7 @@ class ProcedureActivity : AppCompatActivity() {
         mPager.adapter = sliderAdapter
 
         save_all_button.setOnClickListener{
+            progressBar.isInvisible = false
             for (i in 0 until sliderAdapter.count){
                 saveCroppedAndDeleteOriginal(sliderAdapter.imageUris[i], sliderAdapter.croppedImages[i],this, contentResolver)
                 sliderAdapter.savedCrops += 1

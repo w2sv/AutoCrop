@@ -12,6 +12,16 @@
         android:layout_height="match_parent"
         android:background="@android:color/black" />
 
+    <ProgressBar
+        style="?android:progressBarStyle"
+        android:id="@+id/indeterminateBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:indeterminateDrawable="@drawable/save_all_progress_bar"
+        android:indeterminateDuration="@android:integer/config_longAnimTime">
+
+    </ProgressBar>
+
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
