@@ -30,7 +30,7 @@ private fun saveCroppedAndDeleteOriginal(imageUri: Uri,
                                          croppedImage: Bitmap,
                                          context: Context,
                                          cr: ContentResolver){
-    imageUri.deleteUnderlyingRessource(context)
+    // imageUri.deleteUnderlyingRessource(context)
     saveCroppedImage(cr, croppedImage, imageUri.getRealPath(context))
 }
 
@@ -154,7 +154,7 @@ class ImageSliderAdapter(private val context: Context,
         container.addView(this, position)
 
         this.setOnClickListener{
-            ProcedureDialog(context, cr, imageSlider, position, this@ImageSliderAdapter).show(fm, "procedure")
+            ProcedureDialog(context, cr, imageSlider, position, this@ImageSliderAdapter, container).show(fm, "procedure")
         }
     }
 
@@ -171,7 +171,8 @@ class ProcedureDialog(private val activityContext: Context,
                       private val cr: ContentResolver,
                       private val imageSlider: ViewPager,
                       private val position: Int,
-                      private val imageSliderAdapter: ImageSliderAdapter) : AppCompatDialogFragment(){
+                      private val imageSliderAdapter: ImageSliderAdapter,
+                      private val container: ViewGroup) : AppCompatDialogFragment(){
 
     val imageUri: Uri = imageSliderAdapter.imageUris[position]
     val croppedImage: Bitmap = imageSliderAdapter.croppedImages[position]
@@ -202,16 +203,20 @@ class ProcedureDialog(private val activityContext: Context,
         }
 
         imageSliderAdapter.apply{
-            this.imageUris.removeAt(position)
-            this.croppedImages.removeAt(position)
+            this.imageUris.removeAt(position).also { this.croppedImages.removeAt(position) }
             this.notifyDataSetChanged()
         }
 
-        // mPager.setCurrentItem(if (position != imageSliderAdapter.count) position else position -1, true)
-        imageSlider.setCurrentItem(0, true)
+        val newPosition: Int = if (position != imageSliderAdapter.count) position else position -1
+
+        for (i in 0..newPosition)
+            imageSliderAdapter.instantiateItem(container, i)
+
+        imageSlider.setCurrentItem(newPosition, true)
 
         val pages: Int = imageSliderAdapter.count
-        imageSliderAdapter.pageIndication.setText(if (imageSliderAdapter.count > 0) "1/$pages  " else "0/0 ")
+        val newDisplayPosition: Int = newPosition + 1
+        imageSliderAdapter.pageIndication.setText(if (imageSliderAdapter.count > 0) "$newDisplayPosition/$pages  " else "69/420 ")
     }
 
     // ---------------
