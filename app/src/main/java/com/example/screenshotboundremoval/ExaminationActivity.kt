@@ -65,7 +65,7 @@ class ProcedureActivity : AppCompatActivity() {
 
         // set toolbar button onClickListeners
         save_all_button.setOnClickListener{
-            AsyncSaveAllOnClickExecuter(progressBar, sliderAdapter, this, contentResolver).execute()
+            AsyncSaveAllOnClickExecutor(progressBar, sliderAdapter, this, contentResolver).execute()
         }
 
         dismiss_all_button.setOnClickListener{
@@ -80,7 +80,7 @@ class ProcedureActivity : AppCompatActivity() {
         sliderAdapter.returnToMainActivity()
     }
 
-    private class AsyncSaveAllOnClickExecuter(val progressBar: ProgressBar,
+    private class AsyncSaveAllOnClickExecutor(val progressBar: ProgressBar,
                                               val sliderAdapter: ImageSliderAdapter,
                                               val context: Context,
                                               val contentResolver: ContentResolver): AsyncTask<Void, Void, Void?>() {
