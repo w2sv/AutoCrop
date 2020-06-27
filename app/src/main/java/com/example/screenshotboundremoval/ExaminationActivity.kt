@@ -30,7 +30,7 @@ private fun saveCroppedAndDeleteOriginal(imageUri: Uri,
                                          croppedImage: Bitmap,
                                          context: Context,
                                          cr: ContentResolver){
-    // imageUri.deleteUnderlyingRessource(context)
+    imageUri.deleteUnderlyingRessource(context)
     saveCroppedImage(cr, croppedImage, imageUri.getRealPath(context))
 }
 
@@ -158,9 +158,7 @@ class ImageSliderAdapter(private val context: Context,
         }
     }
 
-    override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
-        // container.removeViewAt(position)
-    }
+    override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {}
 }
 
 /**

@@ -15,8 +15,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
 
 
-// TODO: dynamic canvas size setting, deletion of viewpager items, item centering improvement
-//  non 0-resetting item switch
+// TODO: dynamic canvas size setting, deletion of viewpager items
 
 const val N_DISMISSED_IMAGES = "com.example.screenshotboundremoval.N_DISMISSED_IMAGES"
 
