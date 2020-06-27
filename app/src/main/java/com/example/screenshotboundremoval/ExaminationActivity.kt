@@ -30,7 +30,7 @@ private fun saveCroppedAndDeleteOriginal(imageUri: Uri,
                                          croppedImage: Bitmap,
                                          context: Context,
                                          cr: ContentResolver){
-    imageUri.deleteUnderlyingRessource(context)
+    imageUri.deleteUnderlyingResource(context)
     saveCroppedImage(cr, croppedImage, imageUri.getRealPath(context))
 }
 
