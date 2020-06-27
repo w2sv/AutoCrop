@@ -3,7 +3,6 @@ package com.example.screenshotboundremoval
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
@@ -17,20 +16,11 @@ import java.io.File
 // ------------------
 // Uri Extensions
 // ------------------
-fun Uri.getRealPath(context: Context): String?{
-    var cursor: Cursor? = null
-    return try {
-        val images: Array<String> = arrayOf(MediaStore.Images.Media.DATA)
-        cursor = context.contentResolver.query(this, images, null, null, null)
-
-        val columnIndex = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        cursor.moveToFirst()
-        cursor.getString(columnIndex)
-    } catch (e: Exception) {""}
-    finally {
-        cursor?.close()
+fun Uri.getRealPath(context: Context): String? =
+    context.contentResolver.query(this, arrayOf(MediaStore.Images.Media.DATA), null, null, null).run {
+        this!!.moveToFirst()
+        this.getString(this.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
     }
-}
 
 fun Uri.deleteUnderlyingResource(context: Context){
     File(this.getRealPath(context)!!).canonicalFile.delete()
@@ -40,11 +30,11 @@ fun Uri.deleteUnderlyingResource(context: Context){
 // -------------------
 // Images
 // -------------------
-fun saveCroppedImage(contentResolver: ContentResolver, croppedImage: Bitmap, originalTitle: String?){
+fun saveCroppedImage(contentResolver: ContentResolver, croppedImage: Bitmap, title: String?){
     MediaStore.Images.Media.insertImage(
         contentResolver,
         croppedImage,
-        originalTitle,
+        title,
         "")
 }
 
