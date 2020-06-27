@@ -40,7 +40,7 @@ class Cropper(private val image: Bitmap){
             0,
             croppingBorders.first + 1,
             width,
-            croppingBorders.second - 1 - croppingBorders.first + 1)
+            croppingBorders.second - 2 - croppingBorders.first + 1)
                 else null
     }
 }

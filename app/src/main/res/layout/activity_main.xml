@@ -10,8 +10,7 @@
     <FrameLayout
         android:id="@+id/canvas_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
+        android:layout_height="match_parent" />
 
     <Button
         android:id="@+id/image_selection_button"
@@ -21,7 +20,6 @@
         android:layout_height="143dp"
         android:text="@string/image_selection"
         android:textColor="@android:color/darker_gray"
-        android:layout_centerInParent="true">
-    </Button>
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

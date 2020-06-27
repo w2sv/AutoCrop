@@ -19,9 +19,7 @@
         android:layout_height="match_parent"
         android:indeterminateDrawable="@drawable/save_all_progress_bar"
         android:indeterminateDuration="@android:integer/config_longAnimTime"
-        android:visibility="invisible">
-
-    </ProgressBar>
+        android:visibility="invisible" />
 
     <include
         android:id="@+id/toolbar"
