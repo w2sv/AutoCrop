@@ -17,54 +17,59 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.content.ContextCompat.startActivity
-import androidx.core.view.isInvisible
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.toolbar.*
 
 
-const val SAVED_CROPS: String = "com.example.screenshotboundremoval.DELETION_RESULT"
+const val N_SAVED_CROPS: String = "com.example.screenshotboundremoval.N_SAVED_CROPS"
 
 private fun saveCroppedAndDeleteOriginal(imageUri: Uri,
                                          croppedImage: Bitmap,
                                          context: Context,
                                          cr: ContentResolver){
-    imageUri.deleteUnderlyingRessource(context)
+    // imageUri.deleteUnderlyingRessource(context) !
     saveCroppedImage(cr, croppedImage, imageUri.getRealPath(context))
 }
 
 class ProcedureActivity : AppCompatActivity() {
-    private lateinit var mPager: ViewPager
+    private lateinit var imageSlider: ViewPager
     private lateinit var sliderAdapter: ImageSliderAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val nDismissedImages: Int = intent.getIntExtra(N_DISMISSED_IMAGES, 0)
-        if (nDismissedImages != 0){
+        // set layout, retrieve layout elements
+        setContentView(R.layout.activity_examination)
+        val progressBar: ProgressBar = findViewById(R.id.indeterminateBar)
+        val pageIndication: TextView = findViewById(R.id.page_indication)
 
-            when (nDismissedImages){
-                1 -> displayMessage("Couldn't find cropping bounds for $nDismissedImages image", this)
-                in 1..Int.MAX_VALUE -> displayMessage("Couldn't find cropping bounds for $nDismissedImages images", this)
+        // if applicable display message informing about images which couldn't be cropped
+        intent.getIntExtra(N_DISMISSED_IMAGES, 0).let{
+            when (it){
+                1 -> displayMessage("Couldn't find cropping bounds for $it image", this)
+                in 1..Int.MAX_VALUE -> displayMessage("Couldn't find cropping bounds for $this images", this)
             }
         }
 
-        setContentView(R.layout.activity_examination)
-        val progressBar: ProgressBar = findViewById(R.id.indeterminateBar)
-        val pageIndication: TextView = findViewById<TextView>(R.id.page_indication)
+        // initialize image slider
+        imageSlider = findViewById(R.id.slide)
+        imageSlider.apply{
+            this.setPageTransformer(true, ZoomOutPageTransformer())
+            sliderAdapter = ImageSliderAdapter(this@ProcedureActivity, supportFragmentManager, contentResolver, imageSlider, pageIndication)
+            this.adapter = sliderAdapter
+        }
 
-        mPager = findViewById(R.id.slide)
-        mPager.setPageTransformer(true, ZoomOutPageTransformer())
-        sliderAdapter = ImageSliderAdapter(this, supportFragmentManager, contentResolver, mPager, pageIndication)
-        mPager.adapter = sliderAdapter
-
+        // set toolbar button onClickListeners
         save_all_button.setOnClickListener{
             progressBar.visibility = View.VISIBLE
+
             for (i in 0 until sliderAdapter.count){
                 saveCroppedAndDeleteOriginal(sliderAdapter.imageUris[i], sliderAdapter.croppedImages[i],this, contentResolver)
                 sliderAdapter.savedCrops += 1
             }
+            // progressBar.visibility = View.INVISIBLE
             sliderAdapter.returnToMainActivity()
         }
 
@@ -73,21 +78,30 @@ class ProcedureActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * display saving result message on back button press
+     */
     override fun onBackPressed() {
         sliderAdapter.returnToMainActivity()
     }
 }
 
+/**
+ *  class holding both cropped images and corresponding uris,
+ *  defining sliding/image displaying behavior and inherent side effects such as
+ *      the page indication updating
+ */
 class ImageSliderAdapter(private val context: Context,
                          private val fm: FragmentManager,
                          private val cr: ContentResolver,
-                         private val mPager: ViewPager,
+                         private val imageSlider: ViewPager,
                          val pageIndication: TextView): PagerAdapter(){
-   val croppedImages: MutableList<Bitmap> = ImageCash.values().toMutableList()
+    val croppedImages: MutableList<Bitmap> = ImageCash.values().toMutableList()
     val imageUris: MutableList<Uri> = ImageCash.keys().toMutableList().also { ImageCash.clear() }
     var savedCrops: Int = 0
 
     init {
+        // change page indication text view on slide execution
         class PageChangeListener: ViewPager.SimpleOnPageChangeListener(){
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -95,46 +109,47 @@ class ImageSliderAdapter(private val context: Context,
                 pageIndication.setText("$displayPosition/$count  ")
             }
         }
-        mPager.addOnPageChangeListener(PageChangeListener())
+        imageSlider.addOnPageChangeListener(PageChangeListener())
         pageIndication.setText("1/$count  ")
     }
 
     fun returnToMainActivity(){
         val intent = Intent(context, MainActivity::class.java).
-            apply{this.putExtra(SAVED_CROPS, savedCrops)}
+            apply{this.putExtra(N_SAVED_CROPS, savedCrops)}
         startActivity(context, intent, null)
     }
 
     // -----------------
-    // overrides
+    // OVERRIDES
     // -----------------
     override fun getCount(): Int = croppedImages.size
+
+    override fun getItemPosition(obj: Any): Int = POSITION_NONE
+
     override fun isViewFromObject(view: View, obj: Any): Boolean = view == obj
 
-    override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val imageView = ImageView(context)
-        imageView.scaleType = ImageView.ScaleType.FIT_CENTER
-        imageView.setImageBitmap(croppedImages[position])
-        container.addView(imageView, position)
+    override fun instantiateItem(container: ViewGroup, position: Int): ImageView = ImageView(context).apply{
+        this.scaleType = ImageView.ScaleType.FIT_CENTER
+        this.setImageBitmap(croppedImages[position])
+        container.addView(this, position)
 
-        imageView.setOnClickListener{
-            ProcedureDialog(context, cr, mPager, position, this).show(fm, "procedure")
+        this.setOnClickListener{
+            ProcedureDialog(context, cr, imageSlider, position, this@ImageSliderAdapter).show(fm, "procedure")
         }
-        return imageView
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
         // container.removeViewAt(position)
     }
-
-    override fun getItemPosition(obj: Any): Int {
-        return POSITION_NONE
-    }
 }
 
+/**
+ * class accounting for procedure dialog message display on screen touch,
+ * defining respective procedure effects
+ */
 class ProcedureDialog(private val activityContext: Context,
                       private val cr: ContentResolver,
-                      private val mPager: ViewPager,
+                      private val imageSlider: ViewPager,
                       private val position: Int,
                       private val imageSliderAdapter: ImageSliderAdapter) : AppCompatDialogFragment(){
 
@@ -145,37 +160,42 @@ class ProcedureDialog(private val activityContext: Context,
         val builder = AlertDialog.Builder(this.activity)
         builder
             .setTitle("Save and delete original screenshot?")
-            .setNegativeButton("Yes", SaveButtonOnClickListener())  // vice-versa required for making yes appear first
+            .setNegativeButton("Yes", SaveButtonOnClickListener())  // vice-versa setting required for making yes appear first
             .setPositiveButton("No", DismissButtonOnClickListener())
         return builder.create()
     }
 
-    /*
+    /**
      * remove current image from view pager
      * move to new view
      * return to main activity in case of previously handled image being last one in view
      */
     private fun postButtonPress(){
-        if (imageSliderAdapter.count == 1){
-            imageSliderAdapter.returnToMainActivity()
+        imageSliderAdapter.apply {
+            if (this.count == 1)
+                this.returnToMainActivity()
         }
 
-        mPager.currentItem = 0
-        mPager.removeAllViews()
+        imageSlider.apply{
+            this.currentItem = 0
+            this.removeAllViews()
+        }
 
-        imageSliderAdapter.imageUris.removeAt(position)
-        imageSliderAdapter.croppedImages.removeAt(position)
+        imageSliderAdapter.apply{
+            this.imageUris.removeAt(position)
+            this.croppedImages.removeAt(position)
+            this.notifyDataSetChanged()
+        }
 
-        imageSliderAdapter.notifyDataSetChanged()
         // mPager.setCurrentItem(if (position != imageSliderAdapter.count) position else position -1, true)
-        mPager.setCurrentItem(0, true)
+        imageSlider.setCurrentItem(0, true)
 
         val pages: Int = imageSliderAdapter.count
         imageSliderAdapter.pageIndication.setText(if (imageSliderAdapter.count > 0) "1/$pages  " else "0/0 ")
     }
 
     // ---------------
-    // BUTTON CLASSES
+    // ON CLICK LISTENERS
     // ---------------
     private inner class SaveButtonOnClickListener: DialogInterface.OnClickListener{
         override fun onClick(dialog: DialogInterface?, which: Int){

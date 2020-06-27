@@ -16,7 +16,7 @@ import processing.android.PFragment
 
 
 // TODO: dynamic canvas size setting, deletion of viewpager items, item centering improvement
-//  non 0-resetting item switch, original screenshot deletion remark on first usage
+//  non 0-resetting item switch
 
 const val N_DISMISSED_IMAGES = "com.example.screenshotboundremoval.N_DISMISSED_IMAGES"
 
@@ -53,7 +53,7 @@ class MainActivity : FragmentActivity() {
         val frameLayout = findViewById<FrameLayout>(R.id.canvas_container)
         fragment.setView(frameLayout, this)
 
-        intent.getIntExtra(SAVED_CROPS, -1).let{
+        intent.getIntExtra(N_SAVED_CROPS, -1).let{
             when(it){
                 0 -> displayMessage("Didn't save anything", this)
                 1 -> displayMessage("Saved 1 cropped image", this)
