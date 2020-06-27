@@ -47,10 +47,10 @@ class ProcedureActivity : AppCompatActivity() {
         val pageIndication: TextView = findViewById(R.id.page_indication)
 
         // if applicable display message informing about images which couldn't be cropped
-        intent.getIntExtra(N_DISMISSED_IMAGES, 0).let{
-            when (it){
-                1 -> displayMessage("Couldn't find cropping bounds for $it image", this)
-                in 1..Int.MAX_VALUE -> displayMessage("Couldn't find cropping bounds for $this images", this)
+        intent.getIntExtra(N_DISMISSED_IMAGES, 0).run{
+            when (this){
+                1 -> displayMessage("Couldn't find cropping bounds for 1 image", this@ProcedureActivity)
+                in 1..Int.MAX_VALUE -> displayMessage("Couldn't find cropping bounds for $this images", this@ProcedureActivity)
             }
         }
 
