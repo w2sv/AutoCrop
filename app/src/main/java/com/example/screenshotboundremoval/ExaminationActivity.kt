@@ -8,6 +8,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,31 @@ import kotlinx.android.synthetic.main.toolbar.*
 
 const val N_SAVED_CROPS: String = "com.example.screenshotboundremoval.N_SAVED_CROPS"
 
+private class SaveAllOnClickExecuter(val progressBar: ProgressBar,
+                                     val sliderAdapter: ImageSliderAdapter,
+                                     val context: Context,
+                                     val contentResolver: ContentResolver): AsyncTask<Void, Void, Void?>() {
+    override fun onPreExecute() {
+        super.onPreExecute()
+        progressBar.visibility = View.VISIBLE
+    }
+
+    override fun doInBackground(vararg params: Void?): Void? {
+        for (i in 0 until sliderAdapter.count){
+            saveCroppedAndDeleteOriginal(sliderAdapter.imageUris[i], sliderAdapter.croppedImages[i], context, contentResolver)
+            sliderAdapter.savedCrops += 1
+        }
+        return null
+    }
+
+    override fun onPostExecute(result: Void?) {
+        super.onPostExecute(result)
+        progressBar.visibility = View.INVISIBLE
+        sliderAdapter.returnToMainActivity()
+    }
+}
+
+
 private fun saveCroppedAndDeleteOriginal(imageUri: Uri,
                                          croppedImage: Bitmap,
                                          context: Context,
@@ -32,7 +58,6 @@ private fun saveCroppedAndDeleteOriginal(imageUri: Uri,
     // imageUri.deleteUnderlyingRessource(context) !
     saveCroppedImage(cr, croppedImage, imageUri.getRealPath(context))
 }
-
 class ProcedureActivity : AppCompatActivity() {
     private lateinit var imageSlider: ViewPager
     private lateinit var sliderAdapter: ImageSliderAdapter
@@ -61,16 +86,10 @@ class ProcedureActivity : AppCompatActivity() {
             this.adapter = sliderAdapter
         }
 
+
         // set toolbar button onClickListeners
         save_all_button.setOnClickListener{
-            progressBar.visibility = View.VISIBLE
-
-            for (i in 0 until sliderAdapter.count){
-                saveCroppedAndDeleteOriginal(sliderAdapter.imageUris[i], sliderAdapter.croppedImages[i],this, contentResolver)
-                sliderAdapter.savedCrops += 1
-            }
-            // progressBar.visibility = View.INVISIBLE
-            sliderAdapter.returnToMainActivity()
+            SaveAllOnClickExecuter(progressBar, sliderAdapter, this, contentResolver).execute()
         }
 
         dismiss_all_button.setOnClickListener{
@@ -85,6 +104,7 @@ class ProcedureActivity : AppCompatActivity() {
         sliderAdapter.returnToMainActivity()
     }
 }
+
 
 /**
  *  class holding both cropped images and corresponding uris,
