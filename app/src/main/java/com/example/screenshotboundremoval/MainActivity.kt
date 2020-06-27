@@ -15,7 +15,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
 
 
-// TODO: dynamic canvas size setting, deletion of viewpager items
+// TODO: dynamic canvas size setting functioning assertion
+//  deletion of viewpager items
+//  abort google images cropping error
 
 const val N_DISMISSED_IMAGES = "com.example.screenshotboundremoval.N_DISMISSED_IMAGES"
 

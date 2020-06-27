@@ -28,7 +28,7 @@ fun Uri.deleteUnderlyingResource(context: Context){
 }
 
 // -------------------
-// Images
+// Image Saving
 // -------------------
 fun saveCroppedImage(contentResolver: ContentResolver, croppedImage: Bitmap, title: String?){
     MediaStore.Images.Media.insertImage(
@@ -39,7 +39,7 @@ fun saveCroppedImage(contentResolver: ContentResolver, croppedImage: Bitmap, tit
 }
 
 // -------------------
-// Output Message
+// Toast
 // -------------------
 fun displayMessage(text: String, context: Context){
     val toast = Toast.makeText(context, " $text ", Toast.LENGTH_LONG).apply {
