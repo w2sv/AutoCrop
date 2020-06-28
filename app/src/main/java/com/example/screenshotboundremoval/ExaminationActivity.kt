@@ -6,6 +6,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.AsyncTask
@@ -34,12 +35,14 @@ private fun saveCroppedAndDeleteOriginal(imageUri: Uri,
     saveCroppedImage(cr, croppedImage, imageUri.getRealPath(context))
 }
 
-class ProcedureActivity : AppCompatActivity() {
+class ExaminationActivity : AppCompatActivity() {
     private lateinit var imageSlider: ViewPager
     private lateinit var sliderAdapter: ImageSliderAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
 
         // set layout, retrieve layout elements
         setContentView(R.layout.activity_examination)
@@ -49,8 +52,8 @@ class ProcedureActivity : AppCompatActivity() {
         // if applicable display message informing about images which couldn't be cropped
         intent.getIntExtra(N_DISMISSED_IMAGES, 0).run{
             when (this){
-                1 -> displayMessage("Couldn't find cropping bounds for 1 image", this@ProcedureActivity)
-                in 1..Int.MAX_VALUE -> displayMessage("Couldn't find cropping bounds for $this images", this@ProcedureActivity)
+                1 -> displayMessage("Couldn't find cropping bounds for 1 image", this@ExaminationActivity)
+                in 1..Int.MAX_VALUE -> displayMessage("Couldn't find cropping bounds for $this images", this@ExaminationActivity)
             }
         }
 
@@ -58,7 +61,7 @@ class ProcedureActivity : AppCompatActivity() {
         imageSlider = findViewById(R.id.slide)
         imageSlider.apply{
             this.setPageTransformer(true, ZoomOutPageTransformer())
-            sliderAdapter = ImageSliderAdapter(this@ProcedureActivity, supportFragmentManager, contentResolver, imageSlider, pageIndication)
+            sliderAdapter = ImageSliderAdapter(this@ExaminationActivity, supportFragmentManager, contentResolver, imageSlider, pageIndication)
             this.adapter = sliderAdapter
         }
 

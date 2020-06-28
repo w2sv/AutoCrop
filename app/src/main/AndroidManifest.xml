@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".WelcomeScreenActivity">
+            android:name=".WelcomeScreenActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +25,8 @@
         </activity>
 
         <activity
-            android:name=".MainActivity">
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,7 +34,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ProcedureActivity"
+        <activity
+            android:name=".ExaminationActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

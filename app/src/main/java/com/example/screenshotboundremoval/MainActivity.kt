@@ -40,6 +40,7 @@ class MainActivity : FragmentActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
         if (pixelField == null){
@@ -111,10 +112,11 @@ class MainActivity : FragmentActivity() {
     // IMAGE SELECTION
     // ----------------
     private fun pickImageFromGallery() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        startActivityForResult(intent, IMAGE_PICK_CODE)
+        Intent(Intent.ACTION_PICK).run{
+            this.type = "image/*"
+            this.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            startActivityForResult(this, IMAGE_PICK_CODE)
+        }
     }
 
     // ----------------
@@ -148,7 +150,7 @@ class MainActivity : FragmentActivity() {
     // FOLLOW-UP ACTIVITIES
     // --------------
     private fun startExaminationActivity(dismissedCrops: Int){
-        startActivity(Intent(this, ProcedureActivity::class.java).
+        startActivity(Intent(this, ExaminationActivity::class.java).
             putExtra(N_DISMISSED_IMAGES, dismissedCrops)
         )
     }
