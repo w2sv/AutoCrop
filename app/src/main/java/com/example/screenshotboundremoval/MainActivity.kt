@@ -15,9 +15,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
 
 
-// TODO: dynamic canvas size setting functioning assertion
-//  deletion of viewpager items
+// TODO: deletion of viewpager items
 //  abort google images cropping error
+
+// TODO: consecutive elaboration: watermark removal by means of vae implemented in tensorflow lite
+//  possibly orientation change enabling
 
 const val N_DISMISSED_IMAGES = "com.example.screenshotboundremoval.N_DISMISSED_IMAGES"
 
@@ -120,20 +122,21 @@ class MainActivity : FragmentActivity() {
     }
 
     // ----------------
-    // SAVING
+    // CROPPING
     // ----------------
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
-
             var nDismissedImages = 0
             val itemCount: Int = data?.clipData?.itemCount!!
             for (i in 0 until itemCount) {
+
                 // retrieve uri and resolve into bitmap
                 val imageUri: Uri = data.clipData?.getItemAt(i)?.uri!!
                 val image: Bitmap? = BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri))
 
                 // crop image
                 val croppedImage: Bitmap? = Cropper(image!!).getCroppedImage()
+
                 if (croppedImage != null)
                     ImageCash.cash[imageUri] = croppedImage
                 else
