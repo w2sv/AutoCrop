@@ -110,6 +110,9 @@ class MainActivity : FragmentActivity() {
             READ_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "reading")
             WRITE_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "writing")
         }
+
+        if (nRequiredPermissions == 0)
+            return pickImageFromGallery()
     }
 
     // ----------------
