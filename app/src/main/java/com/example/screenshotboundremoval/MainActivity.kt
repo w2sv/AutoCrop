@@ -138,7 +138,7 @@ class MainActivity : FragmentActivity() {
                 val croppedImage: Bitmap? = Cropper(image!!).getCroppedImage()
 
                 if (croppedImage != null)
-                    ImageCash.cash[imageUri] = croppedImage
+                    ImageCash[imageUri] = croppedImage
                 else
                     nDismissedImages += 1
             }
