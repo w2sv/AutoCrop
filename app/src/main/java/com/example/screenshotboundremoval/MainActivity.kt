@@ -33,7 +33,7 @@ class MainActivity : FragmentActivity() {
         var pixelField: PixelField? = null
     }
 
-    private var nRequiredPermissions: Int = 0
+    private var nRequiredPermissions: Int = -1
     private val permission2Code: Map<String, Int> = mapOf(
         Manifest.permission.WRITE_EXTERNAL_STORAGE to WRITE_PERMISSION_CODE,
         Manifest.permission.READ_EXTERNAL_STORAGE to READ_PERMISSION_CODE
@@ -85,6 +85,8 @@ class MainActivity : FragmentActivity() {
     // PERMISSION QUERY
     // ----------------
     private fun requestActivityPermissions(){
+        nRequiredPermissions = 0
+
         fun checkPermission(permission: String){
             if (checkSelfPermission(permission) == PackageManager.PERMISSION_DENIED){
                 nRequiredPermissions ++
