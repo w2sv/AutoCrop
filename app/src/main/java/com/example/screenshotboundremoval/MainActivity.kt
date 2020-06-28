@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
@@ -42,9 +41,9 @@ class MainActivity : FragmentActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
 
+        //initialize PixelField on first creation/redraw and bind to PFragment anew on activity restart
         if (pixelField == null){
             val dm = DisplayMetrics()
             windowManager.defaultDisplay.getMetrics(dm)
@@ -57,14 +56,16 @@ class MainActivity : FragmentActivity() {
         val frameLayout = findViewById<FrameLayout>(R.id.canvas_container)
         fragment.setView(frameLayout, this)
 
-        intent.getIntExtra(N_SAVED_CROPS, -1).let{
-            when(it){
-                0 -> displayMessage("Didn't save anything", this)
-                1 -> displayMessage("Saved 1 cropped image", this)
-                in 1..Int.MAX_VALUE -> displayMessage("Saved $it cropped images", this)
+        // display saving result if present
+        intent.getIntExtra(N_SAVED_CROPS, -1).run{
+            when(this){
+                0 -> displayMessage("Didn't save anything", this@MainActivity)
+                1 -> displayMessage("Saved 1 cropped image", this@MainActivity)
+                in 1..Int.MAX_VALUE -> displayMessage("Saved $this cropped images", this@MainActivity)
             }
         }
 
+        // set image selection button onClickListener
         image_selection_button.setOnClickListener {
             requestActivityPermissions()
 
@@ -73,6 +74,9 @@ class MainActivity : FragmentActivity() {
         }
     }
 
+    /**
+     * enable exiting of app on back press
+     */
     override fun onBackPressed() {
         finishAffinity()
     }
@@ -80,34 +84,30 @@ class MainActivity : FragmentActivity() {
     // ----------------
     // PERMISSION QUERY
     // ----------------
-    private fun checkPermission(permission: String){
-        if (checkSelfPermission(permission) == PackageManager.PERMISSION_DENIED){
-            requestPermissions(arrayOf(permission), permission2Code[permission]!!)
-            nRequiredPermissions ++
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray) {
-
-        when (requestCode) {
-            READ_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Read")
-            WRITE_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "Write")
-        }
-    }
-
     private fun requestActivityPermissions(){
+        fun checkPermission(permission: String){
+            if (checkSelfPermission(permission) == PackageManager.PERMISSION_DENIED){
+                nRequiredPermissions ++
+                requestPermissions(arrayOf(permission), permission2Code[permission]!!)
+            }
+        }
+
         checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
-    private fun permissionRequestResultHandling(grantResults: IntArray, requestDescription: String){
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)
-            Toast.makeText(this, "$requestDescription permission denied", Toast.LENGTH_SHORT).show()
-        else
-            nRequiredPermissions --
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        fun permissionRequestResultHandling(grantResults: IntArray, requestDescription: String){
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)
+                displayMessage("You need to permit file $requestDescription in order\n for the app to work.", this)
+            else
+                nRequiredPermissions --
+        }
+
+        when (requestCode) {
+            READ_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "reading")
+            WRITE_PERMISSION_CODE -> permissionRequestResultHandling(grantResults, "writing")
+        }
     }
 
     // ----------------
@@ -128,6 +128,7 @@ class MainActivity : FragmentActivity() {
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
             var nDismissedImages = 0
             val itemCount: Int = data?.clipData?.itemCount!!
+
             for (i in 0 until itemCount) {
 
                 // retrieve uri and resolve into bitmap
@@ -137,11 +138,14 @@ class MainActivity : FragmentActivity() {
                 // crop image
                 val croppedImage: Bitmap? = Cropper(image!!).getCroppedImage()
 
+                // bind uri and image to ImageCash in case of valid crop, else increment nDismissedImages
                 if (croppedImage != null)
                     ImageCash[imageUri] = croppedImage
                 else
                     nDismissedImages += 1
             }
+
+            // start ExaminationActivity in case of at least 1 successful crop, otherwise return to image selection screen
             if (nDismissedImages != itemCount)
                 startExaminationActivity(nDismissedImages)
             else
