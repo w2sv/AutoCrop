@@ -38,6 +38,9 @@ private fun saveCroppedAndDeleteOriginal(imageUri: Uri,
 class ExaminationActivity : AppCompatActivity() {
     private lateinit var imageSlider: ViewPager
     private lateinit var sliderAdapter: ImageSliderAdapter
+    companion object{
+        var disableProcedureDialog = false
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,10 +71,12 @@ class ExaminationActivity : AppCompatActivity() {
 
         // set toolbar button onClickListeners
         save_all_button.setOnClickListener{
+            disableProcedureDialog = true
             AsyncSaveAllOnClickExecutor(progressBar, sliderAdapter, this, contentResolver).execute()
         }
 
         dismiss_all_button.setOnClickListener{
+            disableProcedureDialog = true
             sliderAdapter.returnToMainActivity()
         }
     }
@@ -157,7 +162,8 @@ class ImageSliderAdapter(private val context: Context,
         container.addView(this, position)
 
         this.setOnClickListener{
-            ProcedureDialog(context, cr, imageSlider, position, this@ImageSliderAdapter, container).show(fm, "procedure")
+            if (!ExaminationActivity.disableProcedureDialog)
+                ProcedureDialog(context, cr, imageSlider, position, this@ImageSliderAdapter, container).show(fm, "procedure")
         }
     }
 
