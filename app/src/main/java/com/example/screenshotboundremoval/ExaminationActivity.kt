@@ -39,7 +39,7 @@ class ExaminationActivity : AppCompatActivity() {
     private lateinit var imageSlider: ViewPager
     private lateinit var sliderAdapter: ImageSliderAdapter
     companion object{
-        var disableProcedureDialog = false
+        var disableSavingButtons = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,15 +71,15 @@ class ExaminationActivity : AppCompatActivity() {
 
         // set toolbar button onClickListeners
         save_all_button.setOnClickListener{
-            if (!disableProcedureDialog){
-                disableProcedureDialog = true
+            if (!disableSavingButtons){
+                disableSavingButtons = true
                 AsyncSaveAllOnClickExecutor(progressBar, sliderAdapter, this, contentResolver).execute()
             }
         }
 
         dismiss_all_button.setOnClickListener{
-            if (!disableProcedureDialog){
-                disableProcedureDialog = true
+            if (!disableSavingButtons){
+                disableSavingButtons = true
                 sliderAdapter.returnToMainActivity()
             }
         }
@@ -146,7 +146,7 @@ class ImageSliderAdapter(private val context: Context,
     }
 
     fun returnToMainActivity(){
-        ExaminationActivity.disableProcedureDialog = false
+        ExaminationActivity.disableSavingButtons = false
         val intent = Intent(context, MainActivity::class.java).
             apply{this.putExtra(N_SAVED_CROPS, savedCrops)}
         startActivity(context, intent, null)
@@ -167,7 +167,7 @@ class ImageSliderAdapter(private val context: Context,
         container.addView(this, position)
 
         this.setOnClickListener{
-            if (!ExaminationActivity.disableProcedureDialog)
+            if (!ExaminationActivity.disableSavingButtons)
                 ProcedureDialog(context, cr, imageSlider, position, this@ImageSliderAdapter, container).show(fm, "procedure")
         }
     }
