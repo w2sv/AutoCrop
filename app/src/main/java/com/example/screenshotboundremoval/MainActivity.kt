@@ -15,7 +15,6 @@ import processing.android.PFragment
 
 
 // TODO: deletion of viewpager items
-//  abort google images cropping error
 //  compatibility with older apis
 
 // TODO: consecutive elaboration: watermark removal by means of vae implemented in tensorflow lite

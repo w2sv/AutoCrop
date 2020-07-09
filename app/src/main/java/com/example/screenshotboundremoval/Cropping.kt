@@ -11,41 +11,55 @@ class Cropper(private val image: Bitmap){
     private val lastRowInd: Int = image.height - 1
     private val sampleStep: Int = width / PIXEL_COMPARISONS_PER_ROW
 
-    private val croppingBoundPairCandidates: MutableList<BorderPair> = mutableListOf()
+    private fun getCroppingBorderPairCandidates(): List<BorderPair> {
+        val croppingBorderPairCandidates: MutableList<BorderPair> = mutableListOf()
 
-    private fun getStartInd(queryStartInd: Int){
-        for (i in queryStartInd until lastRowInd-1){
-            if (!image.hasFluctuationThroughoutRow(i, sampleStep) && image.hasFluctuationThroughoutRow(i+1, sampleStep))
-                return getEndInd(i)
-        }
-        croppingBoundPairCandidates.add(BorderPair(queryStartInd, lastRowInd))
-    }
-
-    private fun getEndInd(borderStartInd: Int){
-        for (i in borderStartInd until lastRowInd-1){
-            if (image.hasFluctuationThroughoutRow(i, sampleStep) && !image.hasFluctuationThroughoutRow(i+1, sampleStep)){
-                croppingBoundPairCandidates.add(BorderPair(borderStartInd, i))
-                return getStartInd(i+1)
+        fun getCropStartInd(queryStartInd: Int){
+            fun getCropEndInd(borderStartInd: Int){
+                for (i in borderStartInd until lastRowInd-1){
+                    if (image.hasFluctuationThroughoutRow(i, sampleStep) && !image.hasFluctuationThroughoutRow(i+1, sampleStep)){
+                        croppingBorderPairCandidates.add(BorderPair(borderStartInd, i))
+                        return getCropStartInd(i+1)
+                    }
+                }
+                croppingBorderPairCandidates.add(BorderPair(borderStartInd, lastRowInd))
             }
+
+            for (i in queryStartInd until lastRowInd-1){
+                if (!image.hasFluctuationThroughoutRow(i, sampleStep) && image.hasFluctuationThroughoutRow(i+1, sampleStep))
+                    return getCropEndInd(i)
+            }
+            croppingBorderPairCandidates.add(BorderPair(queryStartInd, lastRowInd))
         }
-        croppingBoundPairCandidates.add(BorderPair(borderStartInd, lastRowInd))
+
+        getCropStartInd(0)
+        return croppingBorderPairCandidates.toList()
     }
 
-    private fun filterInCenterProximityVerticallyFluctuatingBorderPairs(): List<BorderPair> {
+
+    private fun filterInCenterProximityVerticallyFluctuatingBorderPairs(croppingBorderPairCandidates: List<BorderPair>): List<BorderPair> {
         val WIDTH_QUERY_OFFSET_PERCENTAGE: Float = 0.4.toFloat()
 
         val horizontalQueryOffset: Int = (width * WIDTH_QUERY_OFFSET_PERCENTAGE).toInt()
-        return croppingBoundPairCandidates.filter{ borderPair -> (horizontalQueryOffset..width-horizontalQueryOffset).all{ image.hasFluctuationThrougoutColumn(it, borderPair.first, borderPair.second - borderPair.first) } }
+        return croppingBorderPairCandidates.filter{ borderPair -> (horizontalQueryOffset..width-horizontalQueryOffset).all{ image.hasFluctuationThrougoutColumn(it, borderPair.first, borderPair.second - borderPair.first) } }
     }
 
     fun getCroppedImage(): Bitmap?{
-        getStartInd(0)
-        var inCenterProximityVerticallyFluctuatingBorderPairs: List<BorderPair>? =  null
-        if (croppingBoundPairCandidates.size > 1)
-            inCenterProximityVerticallyFluctuatingBorderPairs = filterInCenterProximityVerticallyFluctuatingBorderPairs()
-        val finalCroppingBorderCandidates = if(!inCenterProximityVerticallyFluctuatingBorderPairs.isNullOrEmpty()) inCenterProximityVerticallyFluctuatingBorderPairs else croppingBoundPairCandidates
+        // get raw border pair candidates
+        val borderPairCandidates: List<BorderPair> = getCroppingBorderPairCandidates()
+
+        // discard cropping borders limiting crop with non-fluctuating columns in horizontal center vicinity
+        // if more than one border pair candidate found
+        var filteredCandidates: List<BorderPair>? =  null
+        if (borderPairCandidates.size > 1)
+            filteredCandidates = filterInCenterProximityVerticallyFluctuatingBorderPairs(borderPairCandidates)
+        val finalCroppingBorderCandidates = if(!filteredCandidates.isNullOrEmpty()) filteredCandidates else borderPairCandidates
+
+        // find cropping border pair of maximal crop height
         val croppingBorders: BorderPair = finalCroppingBorderCandidates.maxBy { it.second - it.first }!!
         val validCrop: Boolean = croppingBorders != Pair(0, lastRowInd)
+
+        // return null if image to be returned equaling original one
         return if(validCrop) Bitmap.createBitmap(
             image,
             0,
