@@ -7,7 +7,7 @@ import android.graphics.Bitmap
  * y -> row index
  */
 
-fun Bitmap.hasFluctuationThroughoutRow(x: Int, sampleStep: Int): Boolean = !(sampleStep until this.width-1 step sampleStep).all { this.getPixel(it, x) == this.getPixel(it - sampleStep, x) }
+fun Bitmap.hasFluctuationThroughoutRow(y: Int, sampleStep: Int): Boolean = !(sampleStep until this.width-1 step sampleStep).all { this.getPixel(it, y) == this.getPixel(it - sampleStep, y) }
 
 fun Bitmap.hasFluctuationThrougoutColumn(x: Int, y: Int, candidateHeight: Int): Boolean{
     val step: Int = (candidateHeight + y) / 4
