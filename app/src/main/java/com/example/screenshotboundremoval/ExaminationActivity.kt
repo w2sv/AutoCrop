@@ -167,7 +167,10 @@ class ImageSliderAdapter(private val context: Context,
         }
     }
 
-    override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {}
+    override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
+        println(position)
+        container.removeViewAt(position)
+    }
 }
 
 /**
