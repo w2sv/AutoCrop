@@ -71,13 +71,17 @@ class ExaminationActivity : AppCompatActivity() {
 
         // set toolbar button onClickListeners
         save_all_button.setOnClickListener{
-            disableProcedureDialog = true
-            AsyncSaveAllOnClickExecutor(progressBar, sliderAdapter, this, contentResolver).execute()
+            if (!disableProcedureDialog){
+                disableProcedureDialog = true
+                AsyncSaveAllOnClickExecutor(progressBar, sliderAdapter, this, contentResolver).execute()
+            }
         }
 
         dismiss_all_button.setOnClickListener{
-            disableProcedureDialog = true
-            sliderAdapter.returnToMainActivity()
+            if (!disableProcedureDialog){
+                disableProcedureDialog = true
+                sliderAdapter.returnToMainActivity()
+            }
         }
     }
 
@@ -142,6 +146,7 @@ class ImageSliderAdapter(private val context: Context,
     }
 
     fun returnToMainActivity(){
+        ExaminationActivity.disableProcedureDialog = false
         val intent = Intent(context, MainActivity::class.java).
             apply{this.putExtra(N_SAVED_CROPS, savedCrops)}
         startActivity(context, intent, null)
