@@ -1,4 +1,4 @@
-package com.example.screenshotboundremoval
+package com.bunsenbrenner.screenshotboundremoval
 
 import android.content.Intent
 import android.os.Bundle
@@ -16,5 +16,10 @@ class WelcomeScreenActivity: AppCompatActivity(){
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
             finish()
         }, 2000)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        hideSystemUI(window)
     }
 }

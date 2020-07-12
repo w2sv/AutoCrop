@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.screenshotboundremoval">
+    package="com.bunsenbrenner.screenshotboundremoval">
 
     <!-- External Storage Read Permission -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

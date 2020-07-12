@@ -1,4 +1,4 @@
-package com.example.screenshotboundremoval
+package com.bunsenbrenner.screenshotboundremoval
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -11,6 +11,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -32,7 +33,11 @@ private fun saveCroppedAndDeleteOriginal(imageUri: Uri,
                                          context: Context,
                                          cr: ContentResolver){
     imageUri.deleteUnderlyingResource(context)
-    saveCroppedImage(cr, croppedImage, imageUri.getRealPath(context))
+    saveCroppedImage(
+        cr,
+        croppedImage,
+        imageUri.getRealPath(context)
+    )
 }
 
 class ExaminationActivity : AppCompatActivity() {
@@ -40,6 +45,11 @@ class ExaminationActivity : AppCompatActivity() {
     private lateinit var sliderAdapter: ImageSliderAdapter
     companion object{
         var disableSavingButtons = false
+    }
+
+    override fun onStart() {
+        super.onStart()
+        hideSystemUI(window)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,25 +65,44 @@ class ExaminationActivity : AppCompatActivity() {
         // if applicable display message informing about images which couldn't be cropped
         intent.getIntExtra(N_DISMISSED_IMAGES, 0).run{
             when (this){
-                1 -> displayMessage("Couldn't find cropping bounds for 1 image", this@ExaminationActivity)
-                in 1..Int.MAX_VALUE -> displayMessage("Couldn't find cropping bounds for $this images", this@ExaminationActivity)
+                1 -> displayMessage(
+                    "Couldn't find cropping bounds for 1 image",
+                    this@ExaminationActivity
+                )
+                in 1..Int.MAX_VALUE -> displayMessage(
+                    "Couldn't find cropping bounds for $this images",
+                    this@ExaminationActivity
+                )
             }
         }
 
         // initialize image slider
         imageSlider = findViewById(R.id.slide)
         imageSlider.apply{
-            this.setPageTransformer(true, ZoomOutPageTransformer())
-            sliderAdapter = ImageSliderAdapter(this@ExaminationActivity, supportFragmentManager, contentResolver, imageSlider, pageIndication)
+            this.setPageTransformer(true,
+                ZoomOutPageTransformer()
+            )
+            sliderAdapter =
+                ImageSliderAdapter(
+                    this@ExaminationActivity,
+                    supportFragmentManager,
+                    contentResolver,
+                    imageSlider,
+                    pageIndication
+                )
             this.adapter = sliderAdapter
         }
-
 
         // set toolbar button onClickListeners
         save_all_button.setOnClickListener{
             if (!disableSavingButtons){
                 disableSavingButtons = true
-                AsyncSaveAllOnClickExecutor(progressBar, sliderAdapter, this, contentResolver).execute()
+                AsyncSaveAllOnClickExecutor(
+                    progressBar,
+                    sliderAdapter,
+                    this,
+                    contentResolver
+                ).execute()
             }
         }
 
@@ -83,6 +112,11 @@ class ExaminationActivity : AppCompatActivity() {
                 sliderAdapter.returnToMainActivity()
             }
         }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        hideSystemUI(window)
     }
 
     /**
@@ -103,7 +137,12 @@ class ExaminationActivity : AppCompatActivity() {
 
         override fun doInBackground(vararg params: Void?): Void? {
             for (i in 0 until sliderAdapter.count){
-                saveCroppedAndDeleteOriginal(sliderAdapter.imageUris[i], sliderAdapter.croppedImages[i], context, contentResolver)
+                saveCroppedAndDeleteOriginal(
+                    sliderAdapter.imageUris[i],
+                    sliderAdapter.croppedImages[i],
+                    context,
+                    contentResolver
+                )
                 sliderAdapter.savedCrops += 1
             }
             return null
@@ -128,8 +167,10 @@ class ImageSliderAdapter(private val context: Context,
                          private val cr: ContentResolver,
                          private val imageSlider: ViewPager,
                          val pageIndication: TextView): PagerAdapter(){
-    val croppedImages: MutableList<Bitmap> = ImageCash.values().toMutableList()
-    val imageUris: MutableList<Uri> = ImageCash.keys().toMutableList().also { ImageCash.clear() }
+    val croppedImages: MutableList<Bitmap> = ImageCash.values()
+        .toMutableList()
+    val imageUris: MutableList<Uri> = ImageCash.keys()
+        .toMutableList().also { ImageCash.clear() }
     var savedCrops: Int = 0
 
     init {
@@ -161,15 +202,41 @@ class ImageSliderAdapter(private val context: Context,
 
     override fun isViewFromObject(view: View, obj: Any): Boolean = view == obj
 
-    override fun instantiateItem(container: ViewGroup, position: Int): ImageView = ImageView(context).apply{
-        this.scaleType = ImageView.ScaleType.FIT_CENTER
-        this.setImageBitmap(croppedImages[position])
-        container.addView(this, position)
+    class ViewPagerImageView(context: Context,
+                             private val contentResolver: ContentResolver,
+                             private val imageSlider: ViewPager,
+                             private val position: Int,
+                             private val imageSliderAdapter: ImageSliderAdapter,
+                             private val container: ViewGroup,
+                             private val fragmentManager: FragmentManager): ImageView(context){
 
-        this.setOnClickListener{
-            if (!ExaminationActivity.disableSavingButtons)
-                ProcedureDialog(context, cr, imageSlider, position, this@ImageSliderAdapter, container).show(fm, "procedure")
+        override fun onTouchEvent(event: MotionEvent?): Boolean {
+            if (event?.action == MotionEvent.ACTION_UP && (event.eventTime - event.downTime) < 100){
+                if (!ExaminationActivity.disableSavingButtons)
+                    ProcedureDialog(
+                        context,
+                        contentResolver,
+                        imageSlider,
+                        position,
+                        imageSliderAdapter,
+                        container
+                    ).show(fragmentManager, "procedure")
+            }
+            return true
         }
+    }
+
+    override fun instantiateItem(container: ViewGroup, position: Int): ImageView = ViewPagerImageView(
+        context,
+        cr,
+        imageSlider,
+        position,
+        this,
+        container,
+        fm).apply {
+            this.scaleType = ImageView.ScaleType.FIT_CENTER
+            this.setImageBitmap(croppedImages[position])
+            container.addView(this, position)
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {}
@@ -236,7 +303,12 @@ class ProcedureDialog(private val activityContext: Context,
     // ---------------
     private inner class SaveButtonOnClickListener: DialogInterface.OnClickListener{
         override fun onClick(dialog: DialogInterface?, which: Int){
-            saveCroppedAndDeleteOriginal(imageUri, croppedImage, activityContext, cr)
+            saveCroppedAndDeleteOriginal(
+                imageUri,
+                croppedImage,
+                activityContext,
+                cr
+            )
             imageSliderAdapter.savedCrops += 1
             postButtonPress()
         }

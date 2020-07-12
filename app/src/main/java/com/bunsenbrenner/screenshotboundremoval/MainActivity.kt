@@ -1,13 +1,17 @@
-package com.example.screenshotboundremoval
+package com.bunsenbrenner.screenshotboundremoval
 
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Point
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.view.MotionEvent
+import android.view.View
+import android.view.Window
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -15,7 +19,6 @@ import processing.android.PFragment
 
 
 // TODO: deletion of viewpager items
-//  compatibility with older apis
 
 // TODO: consecutive elaboration: watermark removal by means of vae implemented in tensorflow lite
 //  possibly orientation change enabling
@@ -39,22 +42,35 @@ class MainActivity : FragmentActivity() {
         Manifest.permission.READ_EXTERNAL_STORAGE to READ_PERMISSION_CODE
     )
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onStart() {
+        super.onStart()
+        hideSystemUI(window)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        hideSystemUI(window)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         //initialize PixelField on first creation/redraw and bind to PFragment anew on activity restart
         if (pixelField == null){
-            val dm = DisplayMetrics()
-            windowManager.defaultDisplay.getMetrics(dm)
-            pixelField = PixelField(dm.widthPixels, dm.heightPixels)
+            Point().run {
+                windowManager.defaultDisplay.getRealSize(this)
+                pixelField = PixelField(this.x, this.y)
+            }
         }
         else
             pixelField!!.redraw()
 
-        val fragment = PFragment(pixelField)
-        val frameLayout = findViewById<FrameLayout>(R.id.canvas_container)
-        fragment.setView(frameLayout, this)
+        PFragment(pixelField).run {
+            val frameLayout = findViewById<FrameLayout>(R.id.canvas_container)
+            this.setView(frameLayout, this@MainActivity)
+        }
+
 
         // display saving result if present
         intent.getIntExtra(N_SAVED_CROPS, -1).run{
@@ -141,7 +157,9 @@ class MainActivity : FragmentActivity() {
                 val image: Bitmap? = BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri))
 
                 // crop image
-                val croppedImage: Bitmap? = Cropper(image!!).getCroppedImage()
+                val croppedImage: Bitmap? = Cropper(
+                    image!!
+                ).getCroppedImage()
 
                 // bind uri and image to ImageCash in case of valid crop, else increment nDismissedImages
                 if (croppedImage != null)

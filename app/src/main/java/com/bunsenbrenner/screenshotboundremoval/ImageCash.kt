@@ -1,4 +1,4 @@
-package com.example.screenshotboundremoval
+package com.bunsenbrenner.screenshotboundremoval
 
 import android.graphics.Bitmap
 import android.net.Uri

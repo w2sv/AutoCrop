@@ -1,4 +1,4 @@
-package com.example.screenshotboundremoval
+package com.bunsenbrenner.screenshotboundremoval
 
 import android.graphics.Bitmap
 
@@ -18,18 +18,33 @@ class Cropper(private val image: Bitmap){
             fun getCropEndInd(borderStartInd: Int){
                 for (i in borderStartInd until lastRowInd-1){
                     if (image.hasFluctuationThroughoutRow(i, sampleStep) && !image.hasFluctuationThroughoutRow(i+1, sampleStep)){
-                        croppingBorderPairCandidates.add(BorderPair(borderStartInd, i))
+                        croppingBorderPairCandidates.add(
+                            BorderPair(
+                                borderStartInd,
+                                i
+                            )
+                        )
                         return getCropStartInd(i+1)
                     }
                 }
-                croppingBorderPairCandidates.add(BorderPair(borderStartInd, lastRowInd))
+                croppingBorderPairCandidates.add(
+                    BorderPair(
+                        borderStartInd,
+                        lastRowInd
+                    )
+                )
             }
 
             for (i in queryStartInd until lastRowInd-1){
                 if (!image.hasFluctuationThroughoutRow(i, sampleStep) && image.hasFluctuationThroughoutRow(i+1, sampleStep))
                     return getCropEndInd(i)
             }
-            croppingBorderPairCandidates.add(BorderPair(queryStartInd, lastRowInd))
+            croppingBorderPairCandidates.add(
+                BorderPair(
+                    queryStartInd,
+                    lastRowInd
+                )
+            )
         }
 
         getCropStartInd(0)

@@ -1,4 +1,4 @@
-package com.example.screenshotboundremoval;
+package com.bunsenbrenner.screenshotboundremoval;
 
 import processing.core.PApplet;
 
