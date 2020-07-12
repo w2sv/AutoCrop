@@ -12,6 +12,7 @@ import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
+import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -34,6 +35,13 @@ class MainActivity : FragmentActivity() {
         private const val WRITE_PERMISSION_CODE = 47
 
         var pixelField: PixelField? = null
+
+        fun initializePixelField(windowManager: WindowManager){
+            Point().run {
+                windowManager.defaultDisplay.getRealSize(this)
+                pixelField = PixelField(this.x, this.y)
+            }
+        }
     }
 
     private var nRequiredPermissions: Int = -1
@@ -56,21 +64,13 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //initialize PixelField on first creation/redraw and bind to PFragment anew on activity restart
-        if (pixelField == null){
-            Point().run {
-                windowManager.defaultDisplay.getRealSize(this)
-                pixelField = PixelField(this.x, this.y)
-            }
-        }
-        else
-            pixelField!!.redraw()
-
         PFragment(pixelField).run {
-            val frameLayout = findViewById<FrameLayout>(R.id.canvas_container)
-            this.setView(frameLayout, this@MainActivity)
+            this.setView(findViewById<FrameLayout>(R.id.canvas_container), this@MainActivity)
         }
 
+        //initialize PixelField on first creation/redraw and bind to PFragment anew on activity restart
+        if (pixelField != null)
+            pixelField!!.redraw()
 
         // display saving result if present
         intent.getIntExtra(N_SAVED_CROPS, -1).run{
