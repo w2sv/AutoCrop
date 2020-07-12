@@ -1,5 +1,6 @@
 package com.bunsenbrenner.screenshotboundremoval
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ContentResolver
@@ -20,6 +21,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.content.ContextCompat.startActivity
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
@@ -40,7 +43,7 @@ private fun saveCroppedAndDeleteOriginal(imageUri: Uri,
     )
 }
 
-class ExaminationActivity : AppCompatActivity() {
+class ExaminationActivity : FragmentActivity() {
     private lateinit var imageSlider: ViewPager
     private lateinit var sliderAdapter: ImageSliderAdapter
     companion object{
@@ -251,7 +254,7 @@ class ProcedureDialog(private val activityContext: Context,
                       private val imageSlider: ViewPager,
                       private val position: Int,
                       private val imageSliderAdapter: ImageSliderAdapter,
-                      private val container: ViewGroup) : AppCompatDialogFragment(){
+                      private val container: ViewGroup) : DialogFragment(){
 
     val imageUri: Uri = imageSliderAdapter.imageUris[position]
     val croppedImage: Bitmap = imageSliderAdapter.croppedImages[position]

@@ -11,6 +11,11 @@ class WelcomeScreenActivity: AppCompatActivity(){
         hideSystemUI(window)
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        hideSystemUI(window)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -22,10 +27,5 @@ class WelcomeScreenActivity: AppCompatActivity(){
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
             finish()
         }, 2000)
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        hideSystemUI(window)
     }
 }
