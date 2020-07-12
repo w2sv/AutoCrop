@@ -18,8 +18,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
@@ -214,7 +212,7 @@ class ImageSliderAdapter(private val context: Context,
                              private val fragmentManager: FragmentManager): ImageView(context){
 
         override fun onTouchEvent(event: MotionEvent?): Boolean {
-            if (event?.action == MotionEvent.ACTION_UP && (event.eventTime - event.downTime) < 100){
+            if (event?.action == MotionEvent.ACTION_UP && (event.eventTime - event.downTime) < 150){
                 if (!ExaminationActivity.disableSavingButtons)
                     ProcedureDialog(
                         context,
