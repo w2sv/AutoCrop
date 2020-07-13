@@ -62,6 +62,7 @@ class ExaminationActivity : FragmentActivity() {
         setContentView(R.layout.activity_examination)
         val progressBar: ProgressBar = findViewById(R.id.indeterminateBar)
         val pageIndication: TextView = findViewById(R.id.page_indication)
+        val titleTextView: TextView = findViewById(R.id.title_text_view)
 
         // if applicable display message informing about images which couldn't be cropped
         intent.getIntExtra(N_DISMISSED_IMAGES, 0).run{
@@ -89,7 +90,8 @@ class ExaminationActivity : FragmentActivity() {
                     supportFragmentManager,
                     contentResolver,
                     imageSlider,
-                    pageIndication
+                    pageIndication,
+                    titleTextView
                 )
             this.adapter = sliderAdapter
         }
@@ -167,7 +169,8 @@ class ImageSliderAdapter(private val context: Context,
                          private val fm: FragmentManager,
                          private val cr: ContentResolver,
                          private val imageSlider: ViewPager,
-                         val pageIndication: TextView): PagerAdapter(){
+                         val pageIndication: TextView,
+                         val titleTextView: TextView): PagerAdapter(){
     val croppedImages: MutableList<Bitmap> = ImageCash.values()
         .toMutableList()
     val imageUris: MutableList<Uri> = ImageCash.keys()
@@ -296,7 +299,16 @@ class ProcedureDialog(private val activityContext: Context,
 
         val pages: Int = imageSliderAdapter.count
         val newDisplayPosition: Int = newPosition + 1
-        imageSliderAdapter.pageIndication.setText(if (imageSliderAdapter.count > 0) "$newDisplayPosition/$pages  " else "69/420 ")
+
+        imageSliderAdapter.run {
+            if (this.count == 0){
+                this.titleTextView.visibility = View.VISIBLE
+                this.pageIndication.setText("69/420 ")
+            }
+            else
+                this.pageIndication.setText("$newDisplayPosition/$pages  ")
+        }
+
     }
 
     // ---------------

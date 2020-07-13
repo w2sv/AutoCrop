@@ -6,11 +6,24 @@
     android:background="@android:color/background_dark"
     android:orientation="vertical">
 
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/slide"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/black" />
+
+    <TextView
+        android:id="@+id/title_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="42sp"
+        android:textColor="@color/magenta"
+        android:textStyle="bold"
+        android:text="@string/app_name"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:visibility="invisible" />
 
     <ProgressBar
         style="?android:progressBarStyle"
