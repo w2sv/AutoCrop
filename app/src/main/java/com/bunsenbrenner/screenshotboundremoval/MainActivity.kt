@@ -69,7 +69,9 @@ class MainActivity : FragmentActivity() {
         }
 
         //initialize PixelField on first creation/redraw and bind to PFragment anew on activity restart
-        if (pixelField != null)
+        if (pixelField == null)
+            initializePixelField(windowManager)
+        else
             pixelField!!.redraw()
 
         // display saving result if present

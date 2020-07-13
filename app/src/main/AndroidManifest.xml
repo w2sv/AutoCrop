@@ -9,8 +9,8 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/brudineletten"
-        android:label="@string/app_name"
         android:roundIcon="@mipmap/brudineletten_round"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/CustomAppTheme.NoActionBar">
 
@@ -39,9 +39,8 @@
         <activity
             android:name=".ExaminationActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomAppTheme.NoActionBar">
-
-        android:parentActivityName=".MainActivity">
+            android:theme="@style/CustomAppTheme.NoActionBar"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
