@@ -74,6 +74,7 @@ class MainActivity : FragmentActivity() {
         else
             pixelField!!.redraw()
 
+
         // display saving result if present
         intent.getIntExtra(N_SAVED_CROPS, -1).run{
             when(this){
@@ -96,6 +97,7 @@ class MainActivity : FragmentActivity() {
      * enable exiting of app on back press
      */
     override fun onBackPressed() {
+        println("BackPressed")
         finishAffinity()
     }
 
@@ -175,6 +177,10 @@ class MainActivity : FragmentActivity() {
                 startExaminationActivity(nDismissedImages)
             else
                 allImagesDismissedOutput(itemCount != 1)
+        }
+        else{
+            println(resultCode)
+            println(requestCode)
         }
     }
 
