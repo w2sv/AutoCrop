@@ -25,6 +25,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.toolbar.*
+import java.util.*
+import kotlin.math.abs
 
 
 const val N_SAVED_CROPS: String = "com.example.screenshotboundremoval.N_SAVED_CROPS"
@@ -206,7 +208,7 @@ class ImageSliderAdapter(private val context: Context,
 
     override fun isViewFromObject(view: View, obj: Any): Boolean = view == obj
 
-    class ViewPagerImageView(context: Context,
+    inner class ViewPagerImageView(context: Context,
                              private val contentResolver: ContentResolver,
                              private val imageSlider: ViewPager,
                              private val position: Int,
@@ -214,17 +216,36 @@ class ImageSliderAdapter(private val context: Context,
                              private val container: ViewGroup,
                              private val fragmentManager: FragmentManager): ImageView(context){
 
+        private var startX: Float = 0.toFloat()
+        private var startY: Float = 0.toFloat()
+
+        val CLICK_MANHATTEN_NORM_THRESHOLD: Int = 100
+
         override fun onTouchEvent(event: MotionEvent?): Boolean {
-            if (event?.action == MotionEvent.ACTION_UP && (event.eventTime - event.downTime) < 100){
-                if (!ExaminationActivity.disableSavingButtons)
-                    ProcedureDialog(
-                        context,
-                        contentResolver,
-                        imageSlider,
-                        position,
-                        imageSliderAdapter,
-                        container
-                    ).show(fragmentManager, "procedure")
+
+            fun isClick(startX: Float,
+                        startY: Float,
+                        endX: Float,
+                        endY: Float): Boolean = (abs(startX - endX) + abs(startY - endY)) < CLICK_MANHATTEN_NORM_THRESHOLD
+
+            when (event?.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    startX = event.x
+                    startY = event.y
+                }
+
+                MotionEvent.ACTION_UP -> {
+
+                    if (isClick(startX, startY, event.x, event.y) && !ExaminationActivity.disableSavingButtons)
+                        ProcedureDialog(
+                            context,
+                            contentResolver,
+                            imageSlider,
+                            position,
+                            imageSliderAdapter,
+                            container
+                        ).show(fragmentManager, "procedure")
+                }
             }
             return true
         }

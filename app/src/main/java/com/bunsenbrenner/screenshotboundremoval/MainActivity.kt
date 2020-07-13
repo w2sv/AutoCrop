@@ -64,16 +64,15 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        PFragment(pixelField).run {
-            this.setView(findViewById<FrameLayout>(R.id.canvas_container), this@MainActivity)
-        }
-
         //initialize PixelField on first creation/redraw and bind to PFragment anew on activity restart
         if (pixelField == null)
             initializePixelField(windowManager)
         else
             pixelField!!.redraw()
 
+        PFragment(pixelField).run {
+            this.setView(findViewById<FrameLayout>(R.id.canvas_container), this@MainActivity)
+        }
 
         // display saving result if present
         intent.getIntExtra(N_SAVED_CROPS, -1).run{
