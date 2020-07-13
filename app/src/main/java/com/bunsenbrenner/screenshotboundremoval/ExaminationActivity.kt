@@ -212,7 +212,7 @@ class ImageSliderAdapter(private val context: Context,
                              private val fragmentManager: FragmentManager): ImageView(context){
 
         override fun onTouchEvent(event: MotionEvent?): Boolean {
-            if (event?.action == MotionEvent.ACTION_UP && (event.eventTime - event.downTime) < 80){
+            if (event?.action == MotionEvent.ACTION_UP && (event.eventTime - event.downTime) < 100){
                 if (!ExaminationActivity.disableSavingButtons)
                     ProcedureDialog(
                         context,
