@@ -77,7 +77,7 @@ class MainActivity : FragmentActivity() {
         // display saving result if present
         intent.getIntExtra(N_SAVED_CROPS, -1).run{
             when(this){
-                0 -> displayMessage("Didn't save anything", this@MainActivity)
+                0 -> displayMessage("Dismissed everything", this@MainActivity)
                 1 -> displayMessage("Saved 1 cropped image", this@MainActivity)
                 in 1..Int.MAX_VALUE -> displayMessage("Saved $this cropped images", this@MainActivity)
             }
