@@ -95,17 +95,16 @@ private class ViewPagerImageView(context: Context,
 
     private var startX: Float = 0.toFloat()
     private var startY: Float = 0.toFloat()
+    companion object{
+        private const val CLICK_MANHATTAN_NORM_THRESHOLD: Int = 100
+    }
 
-    val CLICK_MANHATTEN_NORM_THRESHOLD: Int = 100
+    private fun isClick(startX: Float,
+                        startY: Float,
+                        endX: Float,
+                        endY: Float): Boolean = (abs(startX - endX) + abs(startY - endY)) < CLICK_MANHATTAN_NORM_THRESHOLD
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-
-        fun isClick(startX: Float,
-                    startY: Float,
-                    endX: Float,
-                    endY: Float): Boolean = (abs(startX - endX) + abs(
-            startY - endY
-        )) < CLICK_MANHATTEN_NORM_THRESHOLD
 
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {

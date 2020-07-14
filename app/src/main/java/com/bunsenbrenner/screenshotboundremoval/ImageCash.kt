@@ -5,8 +5,11 @@ import android.net.Uri
 
 object ImageCash{
     private val cash: MutableMap<Uri, Bitmap> = mutableMapOf()
+
     fun clear() = cash.clear()
+
     fun keys(): MutableSet<Uri> = cash.keys
+
     fun values(): MutableCollection<Bitmap> = cash.values
 
     operator fun set(key: Uri, value: Bitmap){
