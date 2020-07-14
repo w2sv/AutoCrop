@@ -1,9 +1,12 @@
-package com.bunsenbrenner.screenshotboundremoval
+package com.bunsenbrenner.screenshotboundremoval.activities.welcomeScreen
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import com.bunsenbrenner.screenshotboundremoval.activities.main.MainActivity
+import com.bunsenbrenner.screenshotboundremoval.R
+import com.bunsenbrenner.screenshotboundremoval.hideSystemUI
 
 class WelcomeScreenActivity: AppCompatActivity(){
     override fun onStart() {
@@ -24,7 +27,10 @@ class WelcomeScreenActivity: AppCompatActivity(){
         Handler().postDelayed({
             MainActivity.initializePixelField(windowManager)
             startActivity(Intent(this, MainActivity::class.java))
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+            overridePendingTransition(
+                R.anim.fade_in,
+                R.anim.fade_out
+            )
             finish()
         }, 2000)
     }

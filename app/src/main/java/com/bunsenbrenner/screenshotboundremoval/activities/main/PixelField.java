@@ -1,4 +1,4 @@
-package com.bunsenbrenner.screenshotboundremoval;
+package com.bunsenbrenner.screenshotboundremoval.activities.main;
 
 import processing.core.PApplet;
 

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bunsenbrenner.screenshotboundremoval">
 
-    <!-- External Storage Read Permission -->
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -15,7 +16,7 @@
         android:theme="@style/CustomAppTheme.NoActionBar">
 
         <activity
-            android:name=".WelcomeScreenActivity"
+            android:name=".activities.welcomeScreen.WelcomeScreenActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +26,7 @@
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomAppTheme.NoActionBar">
             <intent-filter>
@@ -36,13 +37,13 @@
         </activity>
 
         <activity
-            android:name=".ExaminationActivity"
+            android:name=".activities.examination.ExaminationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomAppTheme.NoActionBar"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".activities.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".activities.main.MainActivity" />
         </activity>
     </application>
 

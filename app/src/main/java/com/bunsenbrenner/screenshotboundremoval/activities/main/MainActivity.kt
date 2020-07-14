@@ -1,4 +1,4 @@
-package com.bunsenbrenner.screenshotboundremoval
+package com.bunsenbrenner.screenshotboundremoval.activities.main
 
 import android.Manifest
 import android.content.Intent
@@ -8,13 +8,12 @@ import android.graphics.BitmapFactory
 import android.graphics.Point
 import android.net.Uri
 import android.os.Bundle
-import android.util.DisplayMetrics
-import android.view.MotionEvent
-import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
+import com.bunsenbrenner.screenshotboundremoval.*
+import com.bunsenbrenner.screenshotboundremoval.activities.examination.ExaminationActivity
+import com.bunsenbrenner.screenshotboundremoval.activities.examination.N_SAVED_CROPS
 import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
 
@@ -39,7 +38,11 @@ class MainActivity : FragmentActivity() {
         fun initializePixelField(windowManager: WindowManager){
             Point().run {
                 windowManager.defaultDisplay.getRealSize(this)
-                pixelField = PixelField(this.x, this.y)
+                pixelField =
+                    PixelField(
+                        this.x,
+                        this.y
+                    )
             }
         }
     }
@@ -66,7 +69,9 @@ class MainActivity : FragmentActivity() {
 
         //initialize PixelField on first creation/redraw and bind to PFragment anew on activity restart
         if (pixelField == null)
-            initializePixelField(windowManager)
+            initializePixelField(
+                windowManager
+            )
         else
             pixelField!!.redraw()
 
@@ -77,9 +82,18 @@ class MainActivity : FragmentActivity() {
         // display saving result if present
         intent.getIntExtra(N_SAVED_CROPS, -1).run{
             when(this){
-                0 -> displayMessage("Dismissed everything", this@MainActivity)
-                1 -> displayMessage("Saved 1 cropped image", this@MainActivity)
-                in 1..Int.MAX_VALUE -> displayMessage("Saved $this cropped images", this@MainActivity)
+                0 -> displayMessage(
+                    "Dismissed everything",
+                    this@MainActivity
+                )
+                1 -> displayMessage(
+                    "Saved 1 cropped image",
+                    this@MainActivity
+                )
+                in 1..Int.MAX_VALUE -> displayMessage(
+                    "Saved $this cropped images",
+                    this@MainActivity
+                )
             }
         }
 
@@ -120,7 +134,10 @@ class MainActivity : FragmentActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         fun permissionRequestResultHandling(grantResults: IntArray, requestDescription: String){
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)
-                displayMessage("You need to permit file $requestDescription in order\n for the app to work.", this)
+                displayMessage(
+                    "You need to permit file $requestDescription in order\n for the app to work.",
+                    this
+                )
             else
                 nRequiredPermissions --
         }
@@ -141,7 +158,9 @@ class MainActivity : FragmentActivity() {
         Intent(Intent.ACTION_PICK).run{
             this.type = "image/*"
             this.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            startActivityForResult(this, IMAGE_PICK_CODE)
+            startActivityForResult(this,
+                IMAGE_PICK_CODE
+            )
         }
     }
 
@@ -194,8 +213,14 @@ class MainActivity : FragmentActivity() {
 
     private fun allImagesDismissedOutput(attemptedForMultipleImages: Boolean){
         when(attemptedForMultipleImages){
-            true -> displayMessage("Couldn't find cropping bounds for \n any of the selected images", this)
-            false -> displayMessage("Couldn't find cropping bounds for selected image", this)
+            true -> displayMessage(
+                "Couldn't find cropping bounds for \n any of the selected images",
+                this
+            )
+            false -> displayMessage(
+                "Couldn't find cropping bounds for selected image",
+                this
+            )
         }
     }
 }

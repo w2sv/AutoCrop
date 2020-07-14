@@ -1,4 +1,4 @@
-package com.bunsenbrenner.screenshotboundremoval
+package com.bunsenbrenner.screenshotboundremoval.activities.examination
 
 import android.view.View
 import androidx.viewpager.widget.ViewPager

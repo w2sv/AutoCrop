@@ -1,4 +1,4 @@
-package com.bunsenbrenner.screenshotboundremoval
+package com.bunsenbrenner.screenshotboundremoval.activities.main
 
 import android.graphics.Bitmap
 
@@ -10,6 +10,17 @@ class Cropper(private val image: Bitmap){
     private val width: Int = image.width
     private val lastRowInd: Int = image.height - 1
     private val sampleStep: Int = width / PIXEL_COMPARISONS_PER_ROW
+
+     /*
+     * x -> column index
+     * y -> row index
+     */
+    private fun Bitmap.hasFluctuationThroughoutRow(y: Int, sampleStep: Int): Boolean = !(sampleStep until this.width-1 step sampleStep).all { this.getPixel(it, y) == this.getPixel(it - sampleStep, y) }
+
+    private fun Bitmap.hasFluctuationThroughoutColumn(x: Int, y: Int, candidateHeight: Int): Boolean{
+        val step: Int = (candidateHeight + y) / 4
+        return !(y + step until candidateHeight + y step step).all { this.getPixel(x, it) == this.getPixel(x, it - step)}
+    }
 
     private fun getCroppingBorderPairCandidates(): List<BorderPair> {
         val croppingBorderPairCandidates: MutableList<BorderPair> = mutableListOf()
@@ -51,12 +62,11 @@ class Cropper(private val image: Bitmap){
         return croppingBorderPairCandidates.toList()
     }
 
-
     private fun filterInCenterProximityVerticallyFluctuatingBorderPairs(croppingBorderPairCandidates: List<BorderPair>): List<BorderPair> {
         val WIDTH_QUERY_OFFSET_PERCENTAGE: Float = 0.4.toFloat()
 
         val horizontalQueryOffset: Int = (width * WIDTH_QUERY_OFFSET_PERCENTAGE).toInt()
-        return croppingBorderPairCandidates.filter{ borderPair -> (horizontalQueryOffset..width-horizontalQueryOffset).all{ image.hasFluctuationThrougoutColumn(it, borderPair.first, borderPair.second - borderPair.first) } }
+        return croppingBorderPairCandidates.filter{ borderPair -> (horizontalQueryOffset..width-horizontalQueryOffset).all{ image.hasFluctuationThroughoutColumn(it, borderPair.first, borderPair.second - borderPair.first) } }
     }
 
     fun getCroppedImage(): Bitmap?{
