@@ -16,7 +16,7 @@
         android:theme="@style/CustomAppTheme.NoActionBar">
 
         <activity
-            android:name=".activities.welcomeScreen.WelcomeScreenActivity"
+            android:name="com.autocrop.activities.welcome.WelcomeActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +26,7 @@
         </activity>
 
         <activity
-            android:name=".activities.main.MainActivity"
+            android:name="com.autocrop.activities.main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomAppTheme.NoActionBar">
             <intent-filter>
@@ -37,13 +37,13 @@
         </activity>
 
         <activity
-            android:name=".activities.examination.ExaminationActivity"
+            android:name="com.autocrop.activities.examination.ExaminationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CustomAppTheme.NoActionBar"
-            android:parentActivityName=".activities.main.MainActivity">
+            android:parentActivityName="com.autocrop.activities.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.main.MainActivity" />
+                android:value="com.autocrop.activities.main.MainActivity" />
         </activity>
     </application>
 
