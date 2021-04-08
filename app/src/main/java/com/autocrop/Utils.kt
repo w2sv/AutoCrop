@@ -7,6 +7,8 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.provider.MediaStore
+import android.provider.SyncStateContract
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.TextView
@@ -25,8 +27,31 @@ fun Uri.getRealPath(context: Context): String? =
 
 
 fun Uri.deleteUnderlyingResource(context: Context){
-    File(this.getRealPath(context)!!).canonicalFile.delete()
-    context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(File(this.getRealPath(context)!!))))
+    /* Reference: https://stackoverflow.com/questions/10716642/android-deleting-an-image?noredirect=1&lq=1 */
+
+    val LOG_TAG = "Image deletion"
+
+    val file = File(this.getRealPath(context)!!)
+
+    // delete file and log whether deletion successful
+    context.contentResolver.delete(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            MediaStore.Images.ImageColumns.DATA + "=?" ,
+            arrayOf(file.canonicalPath)
+    )
+
+    if (!file.exists()) {
+        println("successfully deleted ${file.canonicalFile}")
+        Log.d(LOG_TAG, "successfully deleted ${file.canonicalFile}")
+    }
+    else{
+        println("couldn't delete ${file.canonicalFile}")
+        Log.e(LOG_TAG, "couldn't delete ${file.canonicalFile}")
+    }
+
+    // update media gallery
+    context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)))
+    // context.contentResolver.notifyChange(Uri.fromFile(file), null)
 }
 
 
@@ -63,7 +88,8 @@ fun displayMessage(text: String, context: Context){
 // Layout
 // --------------------
 fun hideSystemUI(window: Window) {
-    window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+    window.decorView.systemUiVisibility = (
+            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
             // Set the content to appear under the system bars so that the
             // content doesn't resize when the system bars hide and show.
             or View.SYSTEM_UI_FLAG_LAYOUT_STABLE

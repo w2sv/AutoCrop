@@ -8,13 +8,14 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/brudineletten"
         android:roundIcon="@mipmap/brudineletten_round"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/CustomAppTheme.NoActionBar">
 
+        <!-- Activities -->
         <activity
             android:name="com.autocrop.activities.welcome.WelcomeActivity"
             android:screenOrientation="portrait">
