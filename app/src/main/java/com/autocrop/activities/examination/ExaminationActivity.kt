@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -15,6 +16,7 @@ import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.toolbar.*
 
 import com.autocrop.*
+import com.autocrop.activities.hideSystemUI
 import com.autocrop.activities.main.N_DISMISSED_IMAGES
 import com.bunsenbrenner.screenshotboundremoval.*
 
@@ -28,7 +30,7 @@ fun saveCroppedAndDeleteOriginal(
     context: Context,
     cr: ContentResolver) {
 
-    if (ExaminationActivity.deleteInputScreenshots)
+    if (ExaminationActivity.deleteInputScreenshots!!)
         imageUri.deleteUnderlyingResource(context)
 
     saveImage(
@@ -44,12 +46,12 @@ class ExaminationActivity : FragmentActivity() {
     private lateinit var sliderAdapter: ImageSliderAdapter
 
     companion object{
-        var deleteInputScreenshots: Boolean = true
-
+        var deleteInputScreenshots: Boolean? = null
         fun toggleDeleteInputScreenshots(){
-            deleteInputScreenshots = !deleteInputScreenshots
+            deleteInputScreenshots = !deleteInputScreenshots!!
         }
-        var disableSavingButtons: Boolean = true
+
+        var disableSavingButtons: Boolean = false
     }
 
     override fun onStart() {
@@ -120,9 +122,6 @@ class ExaminationActivity : FragmentActivity() {
         }
     }
 
-    /**
-     * display saving result message on back button press
-     */
     override fun onBackPressed() {
         sliderAdapter.returnToMainActivity()
     }

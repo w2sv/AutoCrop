@@ -35,9 +35,9 @@ class ProcedureDialog(
         return AlertDialog.Builder(this.activity).run {
             this
                 .setTitle(paddedMessage(*listOf(
-                    listOf("Save?"),
-                    listOf("Save and delete", "original screenshot?")
-                )[ExaminationActivity.deleteInputScreenshots.toInt()].toTypedArray()))
+                    listOf("Save crop?"),
+                    listOf("Save crop and delete", "original screenshot?")
+                )[ExaminationActivity.deleteInputScreenshots!!.toInt()].toTypedArray()))
                 .setNegativeButton("Yes", SaveButtonOnClickListener())  // vice-versa setting required for making yes appear first
                 .setPositiveButton("No", DismissButtonOnClickListener())
 

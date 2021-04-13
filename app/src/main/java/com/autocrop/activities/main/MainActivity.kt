@@ -1,7 +1,6 @@
 package com.autocrop.activities.main
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -9,15 +8,14 @@ import android.graphics.BitmapFactory
 import android.graphics.Point
 import android.net.Uri
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentActivity
 import com.autocrop.*
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
+import com.autocrop.activities.hideSystemUI
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
@@ -27,10 +25,7 @@ import processing.android.PFragment
 const val N_DISMISSED_IMAGES: String = "$PACKAGE_NAME.N_DISMISSED_IMAGES"
 
 
-
-
-
-class MainActivity : FragmentActivity() {
+class MainActivity: FragmentActivity() {
 
     companion object{
         val imageCash: MutableMap<Uri, Bitmap> = mutableMapOf()
@@ -59,6 +54,20 @@ class MainActivity : FragmentActivity() {
 
     override fun onBackPressed() {
         finishAffinity()
+    }
+
+    /**
+     * Writes set preferences to shared preferences
+     */
+    override fun onStop() {
+        super.onStop()
+
+        getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
+            .edit().putBoolean(
+                PreferencesKey.DELETE_SCREENSHOTS.name,
+                ExaminationActivity.deleteInputScreenshots!!
+            )
+            .apply()
     }
 
     // -----------------Permissions---------------------
@@ -96,14 +105,20 @@ class MainActivity : FragmentActivity() {
     ) {
         fun permissionRequestResultHandling(grantResults: IntArray, requestDescription: String){
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)
-                displayToast("You need to permit file $requestDescription in order", "for the app to work.")
+                displayToast(
+                    "You need to permit file $requestDescription in order",
+                    "for the app to work."
+                )
             else
                 nRequiredPermissions --
         }
 
         when (requestCode) {
             Code.READ_PERMISSION.ordinal -> permissionRequestResultHandling(grantResults, "reading")
-            Code.WRITE_PERMISSION.ordinal -> permissionRequestResultHandling(grantResults, "writing")
+            Code.WRITE_PERMISSION.ordinal -> permissionRequestResultHandling(
+                grantResults,
+                "writing"
+            )
         }
 
         if (nRequiredPermissions == 0)
@@ -129,15 +144,17 @@ class MainActivity : FragmentActivity() {
         fun displaySavingResultToast(nSavedCrops: Int){
             when(nSavedCrops){
                 0 -> displayToast("Dismissed everything")
-                1 -> displayToast(*listOf(
+                1 -> displayToast(
+                    *listOf(
                         listOf("Saved 1 crop"),
                         listOf("Saved 1 crop and deleted", "corresponding screenshot")
-                    )[ExaminationActivity.deleteInputScreenshots.toInt()].toTypedArray()
+                    )[ExaminationActivity.deleteInputScreenshots!!.toInt()].toTypedArray()
                 )
-                in 2..Int.MAX_VALUE -> displayToast(*listOf(
-                        listOf("Saved $this crops"),
-                        listOf("Saved $this crops and deleted", "corresponding screenshots")
-                    )[ExaminationActivity.deleteInputScreenshots.toInt()].toTypedArray()
+                in 2..Int.MAX_VALUE -> displayToast(
+                    *listOf(
+                        listOf("Saved $nSavedCrops crops"),
+                        listOf("Saved $nSavedCrops crops and deleted", "corresponding screenshots")
+                    )[ExaminationActivity.deleteInputScreenshots!!.toInt()].toTypedArray()
                 )
             }
         }
@@ -151,7 +168,27 @@ class MainActivity : FragmentActivity() {
             }
 
             menu_button.setOnClickListener {
-                openOptionsMenu()
+                // set ExaminationActivity.deleteInputScreenshots with corresponding value
+                // from shared preferences
+                ExaminationActivity.deleteInputScreenshots = getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
+                    .getBoolean(PreferencesKey.DELETE_SCREENSHOTS.name, true)
+
+                PopupMenu(this, it).run {
+                    this.menuInflater.inflate(R.menu.main, this.menu)
+                    this.menu.findItem(R.id.delete_input_screenshots).setChecked(ExaminationActivity.deleteInputScreenshots!!)
+
+                    this.setOnMenuItemClickListener{ item ->
+                        when (item.itemId) {
+                            R.id.delete_input_screenshots -> {
+                                // toggle flag within ExaminationActivity, as well as check mark
+                                ExaminationActivity.toggleDeleteInputScreenshots()
+                                item.setChecked(ExaminationActivity.deleteInputScreenshots!!)
+                            }
+                        }
+                        persistMenuAfterItemClick(item)
+                    }
+                    this.show()
+                }
             }
         }
 
@@ -164,55 +201,6 @@ class MainActivity : FragmentActivity() {
     }
 
         // ------------Options Menu---------------
-
-    private enum class PreferencesKey{
-        DELETE_SCREENSHOTS
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-
-        // retrieve delete screenshots preference from shared preferences with default=true,
-        // forward to ExaminationActivity, set check value correspondingly
-        getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
-            .getBoolean(PreferencesKey.DELETE_SCREENSHOTS.name, true).run {
-                ExaminationActivity.deleteInputScreenshots = this
-                menu.findItem(R.id.delete_input_screenshots)!!.setChecked(this)
-            }
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW)
-        item.setActionView(View(this))
-        item.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                return false
-            }
-
-            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                return false
-            }
-        })
-
-        when (item.itemId) {
-            R.id.delete_input_screenshots -> {
-                // toggle flag within ExaminationActivity, check mark
-                ExaminationActivity.toggleDeleteInputScreenshots()
-                item.setChecked(ExaminationActivity.deleteInputScreenshots)
-
-                // insert value into shared preferences
-                getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
-                    .edit().putBoolean(PreferencesKey.DELETE_SCREENSHOTS.name, ExaminationActivity.deleteInputScreenshots)
-                    .apply()
-
-                return false
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
 
     private fun pickImageFromGallery() {
         Intent(Intent.ACTION_PICK).run{

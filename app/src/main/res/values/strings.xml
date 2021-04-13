@@ -4,5 +4,5 @@
     <string name="saving">Save All</string>
     <string name="dismissing">Dismiss All</string>
 
-    <string name="delete_screenshots_menu_item">Delete input screenshots</string>
+    <string name="delete_screenshots_menu_item_title">Delete input screenshots</string>
 </resources>
