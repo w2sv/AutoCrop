@@ -26,7 +26,6 @@ const val N_DISMISSED_IMAGES: String = "$PACKAGE_NAME.N_DISMISSED_IMAGES"
 
 
 class MainActivity: FragmentActivity() {
-
     companion object{
         val imageCash: MutableMap<Uri, Bitmap> = mutableMapOf()
 
@@ -57,7 +56,7 @@ class MainActivity: FragmentActivity() {
     }
 
     /**
-     * Writes set preferences to shared preferences
+     * Writes preferences to shared preferences
      */
     override fun onStop() {
         super.onStop()
@@ -173,6 +172,7 @@ class MainActivity: FragmentActivity() {
                 ExaminationActivity.deleteInputScreenshots = getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
                     .getBoolean(PreferencesKey.DELETE_SCREENSHOTS.name, true)
 
+                // inflate popup menu
                 PopupMenu(this, it).run {
                     this.menuInflater.inflate(R.menu.main, this.menu)
                     this.menu.findItem(R.id.delete_input_screenshots).setChecked(ExaminationActivity.deleteInputScreenshots!!)
