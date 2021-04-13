@@ -12,28 +12,37 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.viewpager.widget.ViewPager
+import com.autocrop.paddedMessage
+import com.autocrop.toInt
+
 
 /**
  * class accounting for procedure dialog message display on screen touch,
  * defining respective procedure effects
  */
-class ProcedureDialog(private val activityContext: Context,
-                      private val cr: ContentResolver,
-                      private val imageSlider: ViewPager,
-                      private val position: Int,
-                      private val imageSliderAdapter: ImageSliderAdapter,
-                      private val container: ViewGroup) : DialogFragment(){
+class ProcedureDialog(
+    private val activityContext: Context,
+    private val cr: ContentResolver,
+    private val imageSlider: ViewPager,
+    private val position: Int,
+    private val imageSliderAdapter: ImageSliderAdapter,
+    private val container: ViewGroup) : DialogFragment(){
 
     val imageUri: Uri = imageSliderAdapter.imageUris[position]
     val croppedImage: Bitmap = imageSliderAdapter.croppedImages[position]
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(this.activity)
-        builder
-            .setTitle("Save and delete original screenshot?")
-            .setNegativeButton("Yes", SaveButtonOnClickListener())  // vice-versa setting required for making yes appear first
-            .setPositiveButton("No", DismissButtonOnClickListener())
-        return builder.create()
+        return AlertDialog.Builder(this.activity).run {
+            this
+                .setTitle(paddedMessage(*listOf(
+                    listOf("Save?"),
+                    listOf("Save and delete", "original screenshot?")
+                )[ExaminationActivity.deleteInputScreenshots.toInt()].toTypedArray()))
+                .setNegativeButton("Yes", SaveButtonOnClickListener())  // vice-versa setting required for making yes appear first
+                .setPositiveButton("No", DismissButtonOnClickListener())
+
+            this.create()
+        }
     }
 
     /**

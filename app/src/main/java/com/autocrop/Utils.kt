@@ -1,5 +1,6 @@
 package com.autocrop
 
+import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -16,49 +17,55 @@ import android.widget.Toast
 import java.io.File
 
 
+fun Boolean.toInt(): Int = this.compareTo(false)
+
+
 // ------------------
 // Uri
 // ------------------
-fun Uri.getRealPath(context: Context): String? =
-    context.contentResolver.query(this, arrayOf(MediaStore.Images.Media.DATA), null, null, null).run {
-        this!!.moveToFirst()
-        this.getString(this.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
-    }
-
-
 fun Uri.deleteUnderlyingResource(context: Context){
     /* Reference: https://stackoverflow.com/questions/10716642/android-deleting-an-image?noredirect=1&lq=1 */
 
-    val LOG_TAG = "Image deletion"
-
     val file = File(this.getRealPath(context)!!)
 
-    // delete file and log whether deletion successful
-    context.contentResolver.delete(
+    // delete file and update media gallery
+    if (android.os.Build.VERSION.SDK_INT <= 29){
+        context.contentResolver.delete(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             MediaStore.Images.ImageColumns.DATA + "=?" ,
             arrayOf(file.canonicalPath)
-    )
-
-    if (!file.exists()) {
-        println("successfully deleted ${file.canonicalFile}")
-        Log.d(LOG_TAG, "successfully deleted ${file.canonicalFile}")
+        )
     }
-    else{
-        println("couldn't delete ${file.canonicalFile}")
+    else
+        // https://developer.android.com/training/data-storage/use-cases
+        throw NotImplementedError("File deletion for API > 29 yet to be implemented")
+
+    // log deletion success
+    val LOG_TAG = "ImageDeletion"
+
+    if (file.exists())
         Log.e(LOG_TAG, "couldn't delete ${file.canonicalFile}")
-    }
-
-    // update media gallery
-    context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)))
-    // context.contentResolver.notifyChange(Uri.fromFile(file), null)
+    else
+        Log.i(LOG_TAG, "successfully deleted ${file.canonicalFile}")
 }
+
+
+fun Uri.getRealPath(context: Context): String? =
+    context.contentResolver.query(
+        this, arrayOf(MediaStore.Images.Media.DATA),
+        null,
+        null,
+        null)
+        .run {
+            this!!.moveToFirst()
+            this.getString(this.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
+        }
 
 
 // -------------------
 // Image Saving
 // -------------------
-fun saveCroppedImage(contentResolver: ContentResolver, croppedImage: Bitmap, title: String?){
+fun saveImage(contentResolver: ContentResolver, croppedImage: Bitmap, title: String?){
     MediaStore.Images.Media.insertImage(
         contentResolver,
         croppedImage,
@@ -71,16 +78,22 @@ fun saveCroppedImage(contentResolver: ContentResolver, croppedImage: Bitmap, tit
 // -------------------
 // Toast
 // -------------------
-fun displayMessage(text: String, context: Context){
-    val toast = Toast.makeText(context, " $text ", Toast.LENGTH_LONG).apply {
-        this.view.setBackgroundColor(Color.parseColor("darkgray"))
-    }
+fun paddedMessage(vararg row: String): String = " ${row.joinToString(" \n ")} "
 
-    (toast.view.findViewById<View>(android.R.id.message) as TextView).apply {
-        this.setTextColor(Color.parseColor("white"))
-    }
 
-    toast.show()
+fun Activity.displayToast(vararg row: String) {
+    Toast.makeText(
+        this@displayToast,
+        paddedMessage(*row),
+        Toast.LENGTH_LONG
+    ).apply{
+        this.view!!.setBackgroundColor(Color.parseColor("darkgray"))
+        (this.view.findViewById<View>(android.R.id.message) as TextView).apply {
+            this.setTextColor(Color.parseColor("white"))
+        }
+
+        this.show()
+    }
 }
 
 

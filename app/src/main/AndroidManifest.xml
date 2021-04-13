@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- package name not to be touched (due to app already having been uploaded to playstore) -->
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bunsenbrenner.screenshotboundremoval">
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
+    <!-- setting requestLegacyExternalStorage to true effectuates opting out of
+         scoped storage for API 29 = Android 10 to enable external storage writing
+         Reference: https://developer.android.com/training/data-storage/use-cases#modify-delete-media -->
     <application
+        android:requestLegacyExternalStorage="true"
         android:allowBackup="false"
         android:icon="@mipmap/brudineletten"
         android:roundIcon="@mipmap/brudineletten_round"

@@ -24,7 +24,7 @@ class WelcomeActivity: AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.welcome_screen)
+        setContentView(R.layout.activity_welcome)
 
         Handler().postDelayed({
             MainActivity.initializePixelField(windowManager)

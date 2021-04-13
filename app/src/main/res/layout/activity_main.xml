@@ -21,4 +21,13 @@
         android:textColor="@android:color/darker_gray"
         android:layout_centerInParent="true" />
 
+    <ImageButton
+        android:id="@+id/menu_button"
+        android:background="@android:color/transparent"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        style="?android:attr/actionOverflowButtonStyle" />
+
+
 </RelativeLayout>

@@ -19,7 +19,8 @@ import com.autocrop.activities.main.N_DISMISSED_IMAGES
 import com.bunsenbrenner.screenshotboundremoval.*
 
 
-const val N_SAVED_CROPS: String = "com.example.screenshotboundremoval.N_SAVED_CROPS"
+const val N_SAVED_CROPS: String = "$PACKAGE_NAME.N_SAVED_CROPS"
+
 
 fun saveCroppedAndDeleteOriginal(
     imageUri: Uri,
@@ -27,8 +28,10 @@ fun saveCroppedAndDeleteOriginal(
     context: Context,
     cr: ContentResolver) {
 
-    imageUri.deleteUnderlyingResource(context)
-    saveCroppedImage(
+    if (ExaminationActivity.deleteInputScreenshots)
+        imageUri.deleteUnderlyingResource(context)
+
+    saveImage(
         cr,
         croppedImage,
         imageUri.getRealPath(context)
@@ -39,8 +42,14 @@ fun saveCroppedAndDeleteOriginal(
 class ExaminationActivity : FragmentActivity() {
     private lateinit var imageSlider: ViewPager
     private lateinit var sliderAdapter: ImageSliderAdapter
+
     companion object{
-        var disableSavingButtons = false
+        var deleteInputScreenshots: Boolean = true
+
+        fun toggleDeleteInputScreenshots(){
+            deleteInputScreenshots = !deleteInputScreenshots
+        }
+        var disableSavingButtons: Boolean = true
     }
 
     override fun onStart() {
@@ -67,14 +76,8 @@ class ExaminationActivity : FragmentActivity() {
         // if applicable display message informing about images which couldn't be cropped
         intent.getIntExtra(N_DISMISSED_IMAGES, 0).run{
             when (this){
-                1 -> displayMessage(
-                    "Couldn't find cropping bounds for 1 image",
-                    this@ExaminationActivity
-                )
-                in 1..Int.MAX_VALUE -> displayMessage(
-                    "Couldn't find cropping bounds for $this images",
-                    this@ExaminationActivity
-                )
+                1 -> displayToast("Couldn't find cropping bounds for 1 image")
+                in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for $this images")
             }
         }
 
