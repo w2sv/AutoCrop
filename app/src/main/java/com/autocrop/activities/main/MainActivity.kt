@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Point
 import android.net.Uri
 import android.os.Bundle
+import android.provider.DocumentsContract
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.appcompat.widget.PopupMenu
@@ -16,10 +17,16 @@ import com.autocrop.*
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.activities.hideSystemUI
+import com.autocrop.utils.displayToast
+import com.autocrop.utils.pathDocument
+import com.autocrop.utils.toInt
+import com.autocrop.utils.persistMenuAfterItemClick
+import com.bunsenbrenner.screenshotboundremoval.BuildConfig
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 import processing.android.PFragment
+import java.io.File
 
 
 const val N_DISMISSED_IMAGES: String = "$PACKAGE_NAME.N_DISMISSED_IMAGES"
@@ -67,7 +74,7 @@ class MainActivity: FragmentActivity() {
             getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
                 .edit().putBoolean(
                     PreferencesKey.DELETE_SCREENSHOTS.name,
-                    ExaminationActivity.deleteInputScreenshots!!
+                    GlobalParameters.deleteInputScreenshots!!
                 )
                 .apply()
         }
@@ -76,7 +83,9 @@ class MainActivity: FragmentActivity() {
     // -----------------Permissions---------------------
 
     private enum class Code{
-        IMAGE_PICK,
+        IMAGE_SELECTION,
+        DIRECTORY_SELECTION,
+
         READ_PERMISSION,
         WRITE_PERMISSION
     }
@@ -151,18 +160,18 @@ class MainActivity: FragmentActivity() {
                     *listOf(
                         listOf("Saved 1 crop"),
                         listOf("Saved 1 crop and deleted", "corresponding screenshot")
-                    )[ExaminationActivity.deleteInputScreenshots!!.toInt()].toTypedArray()
+                    )[GlobalParameters.deleteInputScreenshots!!.toInt()].toTypedArray()
                 )
                 in 2..Int.MAX_VALUE -> displayToast(
                     *listOf(
                         listOf("Saved $nSavedCrops crops"),
                         listOf("Saved $nSavedCrops crops and deleted", "corresponding screenshots")
-                    )[ExaminationActivity.deleteInputScreenshots!!.toInt()].toTypedArray()
+                    )[GlobalParameters.deleteInputScreenshots!!.toInt()].toTypedArray()
                 )
             }
         }
 
-        fun setButtonOnclickListeners(){
+        fun setButtonOnClickListeners(){
             image_selection_button.setOnClickListener {
                 requestActivityPermissions()
 
@@ -174,19 +183,27 @@ class MainActivity: FragmentActivity() {
                 // inflate popup menu
                 PopupMenu(this, it).run {
                     this.menuInflater.inflate(R.menu.main, this.menu)
-                    this.menu.findItem(R.id.delete_input_screenshots).setChecked(ExaminationActivity.deleteInputScreenshots!!)
+                    this.menu.findItem(R.id.main_menu_item_delete_input_screenshots).setChecked(
+                        GlobalParameters.deleteInputScreenshots!!
+                    )
 
                     this.setOnMenuItemClickListener{ item ->
                         alteredPreferences = true
 
                         when (item.itemId) {
-                            R.id.delete_input_screenshots -> {
-                                // toggle flag within ExaminationActivity, as well as check mark
-                                ExaminationActivity.toggleDeleteInputScreenshots()
-                                item.setChecked(ExaminationActivity.deleteInputScreenshots!!)
+                            R.id.main_menu_item_delete_input_screenshots -> {
+                                // toggle GlobalParameters flag, as well as check mark
+                                GlobalParameters.toggleDeleteInputScreenshots()
+                                item.setChecked(GlobalParameters.deleteInputScreenshots!!)
+
+                                persistMenuAfterItemClick(item)
+                            }
+
+                            R.id.main_menu_item_select_save_directory -> {
+                                selectSaveDestinationDirectory()
                             }
                         }
-                        persistMenuAfterItemClick(item)
+                        true
                     }
                     this.show()
                 }
@@ -198,15 +215,15 @@ class MainActivity: FragmentActivity() {
 
         // set ExaminationActivity.deleteInputScreenshots with corresponding value
         // from shared preferences
-        ExaminationActivity.deleteInputScreenshots = getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
-            .getBoolean(PreferencesKey.DELETE_SCREENSHOTS.name, true)
+        GlobalParameters.deleteInputScreenshots = getSharedPreferences(
+            PREFERENCES_INSTANCE_NAME,
+            0
+        ).getBoolean(PreferencesKey.DELETE_SCREENSHOTS.name, true)
 
         setPixelField()
         displaySavingResultToast(intent.getIntExtra(N_SAVED_CROPS, -1))
-        setButtonOnclickListeners()
+        setButtonOnClickListeners()
     }
-
-        // ------------Options Menu---------------
 
     private fun pickImageFromGallery() {
         Intent(Intent.ACTION_PICK).run{
@@ -214,40 +231,96 @@ class MainActivity: FragmentActivity() {
             this.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             startActivityForResult(
                 this,
-                Code.IMAGE_PICK.ordinal
+                Code.IMAGE_SELECTION.ordinal
+            )
+        }
+    }
+
+    private fun selectSaveDestinationDirectory(){
+        with(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)) {
+            this.addCategory(Intent.CATEGORY_DEFAULT)
+
+            this.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            this.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            this.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+
+            startActivityForResult(
+                Intent.createChooser(
+                    this,
+                    "Modify directory"),
+                Code.DIRECTORY_SELECTION.ordinal
             )
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        fun validRequest(): Boolean = resultCode == RESULT_OK && requestCode == Code.IMAGE_PICK.ordinal
+        if (resultCode == RESULT_OK){
+            when (requestCode) {
+                Code.IMAGE_SELECTION.ordinal -> {
+                    val nSelectedImages: Int = data?.clipData?.itemCount!!
 
-        if (validRequest()){
-            val nSelectedImages: Int = data?.clipData?.itemCount!!
+                    for (i in 0 until nSelectedImages) {
 
-            for (i in 0 until nSelectedImages) {
+                        // retrieve uri and resolve into bitmap
+                        val imageUri: Uri = data.clipData?.getItemAt(i)?.uri!!
+                        val image: Bitmap? = BitmapFactory.decodeStream(
+                            contentResolver.openInputStream(
+                                imageUri
+                            )
+                        )
 
-                // retrieve uri and resolve into bitmap
-                val imageUri: Uri = data.clipData?.getItemAt(i)?.uri!!
-                val image: Bitmap? = BitmapFactory.decodeStream(
-                    contentResolver.openInputStream(
-                        imageUri
-                    )
-                )
+                        // attempt to crop image, add uri-crop mapping to image cash if successful
+                        croppedImage(image!!).run {
+                            if (this != null)
+                                imageCash[imageUri] = this
+                        }
+                    }
 
-                // attempt to crop image, add uri-crop mapping to image cash if successful
-                croppedImage(image!!).run {
-                    if (this != null)
-                        imageCash[imageUri] = this
+                    // start ExaminationActivity in case of at least 1 successful crop,
+                    // otherwise return to image selection screen
+                    if (imageCash.isNotEmpty())
+                        startExaminationActivity(nSelectedImages - imageCash.size)
+                    else
+                        allImagesDismissedOutput(nSelectedImages > 1)
+                }
+
+                Code.DIRECTORY_SELECTION.ordinal -> {
+                    fun persistDirectoryPermissions(uri: Uri) {
+                        fun loadSavedDirectory() : Uri? = contentResolver.persistedUriPermissions.firstOrNull()?.uri
+
+                        val existing = loadSavedDirectory()
+                        if (existing != null) {
+                            // Release existing directory when new one is granted
+                            contentResolver.releasePersistableUriPermission(existing, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                            contentResolver.releasePersistableUriPermission(existing, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+                        }
+                        contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                        contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+
+                    val documentUri: Uri = data?.data!!.run {
+                        // persistDirectoryPermissions(this)
+                        this.pathSegments.forEach { println(it) }
+
+                        DocumentsContract.buildDocumentUriUsingTree(
+                            this,
+                            DocumentsContract.getTreeDocumentId(this)
+                        )
+                    }.also {
+                        println(it)
+                        // persistDirectoryPermissions(it)
+                    }
+
+                    GlobalParameters.saveDirectoryPath = documentUri.pathDocument(this)
+                        .also {
+                            println(it)
+                            if (BuildConfig.DEBUG && (!(File(it).exists() || !File(it).isDirectory))) {
+                                error("Assertion failed")
+                            }
+                        }
                 }
             }
-
-            // start ExaminationActivity in case of at least 1 successful crop,
-            // otherwise return to image selection screen
-            if (imageCash.isNotEmpty())
-                startExaminationActivity(nSelectedImages - imageCash.size)
-            else
-                allImagesDismissedOutput(nSelectedImages > 1)
         }
     }
 

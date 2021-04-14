@@ -6,9 +6,13 @@
     android:layout_width="wrap_content">
 
     <item
-        android:id="@+id/delete_input_screenshots"
-        android:title="@string/delete_screenshots_menu_item_title"
-        android:titleCondensed="@string/delete_screenshots_menu_item_title"
+        android:id="@+id/main_menu_item_delete_input_screenshots"
+        android:title="@string/menu_item_title_delete_input_screenshots"
+        android:titleCondensed="@string/menu_item_title_delete_input_screenshots"
         android:checkable="true"/>
+
+    <item
+        android:id="@+id/main_menu_item_select_save_directory"
+        android:title="@string/menu_item_title_modify_save_directory"/>
 
 </menu>

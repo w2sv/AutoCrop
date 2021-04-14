@@ -7,48 +7,27 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager.widget.ViewPager
-import kotlinx.android.synthetic.main.toolbar.*
-
 import com.autocrop.*
 import com.autocrop.activities.hideSystemUI
 import com.autocrop.activities.main.N_DISMISSED_IMAGES
+import com.autocrop.utils.displayToast
 import com.bunsenbrenner.screenshotboundremoval.*
+import kotlinx.android.synthetic.main.toolbar.*
+import java.io.FileOutputStream
 
 
 const val N_SAVED_CROPS: String = "$PACKAGE_NAME.N_SAVED_CROPS"
 
 
-fun saveImageAndDeleteScreenshotIfApplicable(
-    imageUri: Uri,
-    croppedImage: Bitmap,
-    context: Context,
-    cr: ContentResolver) {
-
-    // delete screenshot if applicable
-    if (ExaminationActivity.deleteInputScreenshots!!)
-        imageUri.deleteUnderlyingResource(context)
-
-    // save image under original file path
-    saveImage(
-        cr,
-        croppedImage,
-        imageUri.getRealPath(context)
-    )
-}
-
-
 class ExaminationActivity : FragmentActivity() {
     companion object{
-        var deleteInputScreenshots: Boolean? = null
-        fun toggleDeleteInputScreenshots(){
-            deleteInputScreenshots = !deleteInputScreenshots!!
-        }
-
         var toolbarButtonsEnabled: Boolean = true
     }
 
@@ -155,7 +134,8 @@ private class AsyncSaveAllOnClickExecutor(
     val progressBar: ProgressBar,
     val sliderAdapter: ImageSliderAdapter,
     val context: Context,
-    val contentResolver: ContentResolver): AsyncTask<Void, Void, Void?>() {
+    val contentResolver: ContentResolver
+): AsyncTask<Void, Void, Void?>() {
 
     override fun onPreExecute() {
         super.onPreExecute()

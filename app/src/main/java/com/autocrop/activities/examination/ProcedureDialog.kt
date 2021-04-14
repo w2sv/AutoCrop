@@ -12,8 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.viewpager.widget.ViewPager
-import com.autocrop.paddedMessage
-import com.autocrop.toInt
+import com.autocrop.GlobalParameters
+import com.autocrop.utils.paddedMessage
+import com.autocrop.utils.toInt
 
 
 /**
@@ -37,7 +38,7 @@ class ProcedureDialog(
                 .setTitle(paddedMessage(*listOf(
                     listOf("Save crop?"),
                     listOf("Save crop and delete", "original screenshot?")
-                )[ExaminationActivity.deleteInputScreenshots!!.toInt()].toTypedArray()))
+                )[GlobalParameters.deleteInputScreenshots!!.toInt()].toTypedArray()))
                 .setNegativeButton("Yes", SaveButtonOnClickListener())  // vice-versa setting required for making yes appear first
                 .setPositiveButton("No", DismissButtonOnClickListener())
 
