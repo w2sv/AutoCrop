@@ -51,7 +51,7 @@ class ImageSliderAdapter(private val context: Context,
     }
 
     fun returnToMainActivity(){
-        ExaminationActivity.disableSavingButtons = false
+        ExaminationActivity.toolbarButtonsEnabled = false
         val intent = Intent(
             context,
             MainActivity::class.java
@@ -115,7 +115,7 @@ private class ViewPagerImageView(context: Context,
 
             MotionEvent.ACTION_UP -> {
 
-                if (isClick(startX, startY, event.x, event.y) && !ExaminationActivity.disableSavingButtons)
+                if (isClick(startX, startY, event.x, event.y) && ExaminationActivity.toolbarButtonsEnabled)
                     ProcedureDialog(
                         context,
                         contentResolver,

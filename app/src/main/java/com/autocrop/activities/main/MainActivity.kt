@@ -55,18 +55,22 @@ class MainActivity: FragmentActivity() {
         finishAffinity()
     }
 
+    var alteredPreferences: Boolean = false
+
     /**
      * Writes preferences to shared preferences
      */
     override fun onStop() {
         super.onStop()
 
-        getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
-            .edit().putBoolean(
-                PreferencesKey.DELETE_SCREENSHOTS.name,
-                ExaminationActivity.deleteInputScreenshots!!
-            )
-            .apply()
+        if (alteredPreferences){
+            getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
+                .edit().putBoolean(
+                    PreferencesKey.DELETE_SCREENSHOTS.name,
+                    ExaminationActivity.deleteInputScreenshots!!
+                )
+                .apply()
+        }
     }
 
     // -----------------Permissions---------------------
@@ -124,7 +128,7 @@ class MainActivity: FragmentActivity() {
             return pickImageFromGallery()
     }
 
-    // ------------Lifetime stages---------------
+    // ------------Lifecycle stages---------------
 
     override fun onStart() {
         super.onStart()
@@ -167,17 +171,14 @@ class MainActivity: FragmentActivity() {
             }
 
             menu_button.setOnClickListener {
-                // set ExaminationActivity.deleteInputScreenshots with corresponding value
-                // from shared preferences
-                ExaminationActivity.deleteInputScreenshots = getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
-                    .getBoolean(PreferencesKey.DELETE_SCREENSHOTS.name, true)
-
                 // inflate popup menu
                 PopupMenu(this, it).run {
                     this.menuInflater.inflate(R.menu.main, this.menu)
                     this.menu.findItem(R.id.delete_input_screenshots).setChecked(ExaminationActivity.deleteInputScreenshots!!)
 
                     this.setOnMenuItemClickListener{ item ->
+                        alteredPreferences = true
+
                         when (item.itemId) {
                             R.id.delete_input_screenshots -> {
                                 // toggle flag within ExaminationActivity, as well as check mark
@@ -194,6 +195,11 @@ class MainActivity: FragmentActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // set ExaminationActivity.deleteInputScreenshots with corresponding value
+        // from shared preferences
+        ExaminationActivity.deleteInputScreenshots = getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
+            .getBoolean(PreferencesKey.DELETE_SCREENSHOTS.name, true)
 
         setPixelField()
         displaySavingResultToast(intent.getIntExtra(N_SAVED_CROPS, -1))

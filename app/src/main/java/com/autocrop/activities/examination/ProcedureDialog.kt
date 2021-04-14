@@ -93,7 +93,7 @@ class ProcedureDialog(
     private inner class SaveButtonOnClickListener:
         DialogInterface.OnClickListener {
         override fun onClick(dialog: DialogInterface?, which: Int){
-            saveCroppedAndDeleteOriginal(
+            saveImageAndDeleteScreenshotIfApplicable(
                 imageUri,
                 croppedImage,
                 activityContext,
