@@ -2,7 +2,6 @@ package com.autocrop.activities.examination
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Bitmap
@@ -15,6 +14,7 @@ import androidx.viewpager.widget.ViewPager
 import com.autocrop.GlobalParameters
 import com.autocrop.utils.paddedMessage
 import com.autocrop.utils.toInt
+import com.bunsenbrenner.screenshotboundremoval.R
 
 
 /**
@@ -23,14 +23,13 @@ import com.autocrop.utils.toInt
  */
 class ProcedureDialog(
     private val activityContext: Context,
-    private val cr: ContentResolver,
     private val imageSlider: ViewPager,
     private val position: Int,
     private val imageSliderAdapter: ImageSliderAdapter,
     private val container: ViewGroup) : DialogFragment(){
 
     val imageUri: Uri = imageSliderAdapter.imageUris[position]
-    val croppedImage: Bitmap = imageSliderAdapter.croppedImages[position]
+    val croppedImage: Bitmap = imageSliderAdapter.croppedImages[position].first
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(this.activity).run {
@@ -43,6 +42,28 @@ class ProcedureDialog(
                 .setPositiveButton("No", DismissButtonOnClickListener())
 
             this.create()
+        }
+    }
+
+    // ---------------OnClickListeners---------------------
+
+    private inner class SaveButtonOnClickListener:
+        DialogInterface.OnClickListener {
+        override fun onClick(dialog: DialogInterface?, which: Int){
+            saveImageAndDeleteScreenshotIfApplicable(
+                imageUri,
+                croppedImage,
+                activityContext
+            )
+            imageSliderAdapter.savedCrops += 1
+            postButtonPress()
+        }
+    }
+
+    private inner class DismissButtonOnClickListener:
+        DialogInterface.OnClickListener {
+        override fun onClick(dialog: DialogInterface?, which: Int) {
+            postButtonPress()
         }
     }
 
@@ -75,39 +96,21 @@ class ProcedureDialog(
         imageSlider.setCurrentItem(newPosition, true)
 
         val pages: Int = imageSliderAdapter.count
-        val newDisplayPosition: Int = newPosition + 1
 
         imageSliderAdapter.run {
-            if (this.count == 0){
-                this.titleTextView.visibility = View.VISIBLE
-                this.pageIndication.setText("69/420 ")
+            if (this.count > 0){
+                this.textViews.pageIndication.text = getString(R.string.text_view_page_indication, newPosition + 1, pages)
+                this.textViews.retentionPercentage.text = getString(
+                    R.string.text_view_retention_percentage,
+                    imageSliderAdapter.croppedImages[newPosition].second
+                )
             }
-            else
-                this.pageIndication.setText("$newDisplayPosition/$pages  ")
+            else{
+                this.textViews.retentionPercentage.visibility = View.INVISIBLE
+                this.textViews.pageIndication.text = getString(R.string.text_view_page_indication, 69, 420)
+                this.textViews.appTitle.visibility = View.VISIBLE
+            }
         }
 
-    }
-
-    // ---------------
-    // ON CLICK LISTENERS
-    // ---------------
-    private inner class SaveButtonOnClickListener:
-        DialogInterface.OnClickListener {
-        override fun onClick(dialog: DialogInterface?, which: Int){
-            saveImageAndDeleteScreenshotIfApplicable(
-                imageUri,
-                croppedImage,
-                activityContext
-            )
-            imageSliderAdapter.savedCrops += 1
-            postButtonPress()
-        }
-    }
-
-    private inner class DismissButtonOnClickListener:
-        DialogInterface.OnClickListener {
-        override fun onClick(dialog: DialogInterface?, which: Int) {
-            postButtonPress()
-        }
     }
 }

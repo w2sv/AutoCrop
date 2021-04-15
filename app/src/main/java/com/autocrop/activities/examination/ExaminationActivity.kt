@@ -1,14 +1,9 @@
 package com.autocrop.activities.examination
 
-import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.ActivityInfo
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -19,11 +14,17 @@ import com.autocrop.activities.hideSystemUI
 import com.autocrop.activities.main.N_DISMISSED_IMAGES
 import com.autocrop.utils.displayToast
 import com.bunsenbrenner.screenshotboundremoval.*
-import kotlinx.android.synthetic.main.toolbar.*
-import java.io.FileOutputStream
+import kotlinx.android.synthetic.main.toolbar_examination_activity.*
 
 
 const val N_SAVED_CROPS: String = "$PACKAGE_NAME.N_SAVED_CROPS"
+
+
+data class TextViews(
+    val retentionPercentage: TextView,
+    val pageIndication: TextView,
+    val appTitle: TextView
+)
 
 
 class ExaminationActivity : FragmentActivity() {
@@ -39,9 +40,13 @@ class ExaminationActivity : FragmentActivity() {
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
         setContentView(R.layout.activity_examination)
+
         val progressBar: ProgressBar = findViewById(R.id.indeterminateBar)
-        val pageIndication: TextView = findViewById(R.id.page_indication)
-        val titleTextView: TextView = findViewById(R.id.title_text_view)
+        val textViews = TextViews(
+            findViewById(R.id.retention_percentage),
+            findViewById(R.id.page_indication),
+            findViewById(R.id.title_text_view)
+        )
 
         fun initializeImageSlider(){
             imageSlider = findViewById(R.id.slide)
@@ -54,10 +59,8 @@ class ExaminationActivity : FragmentActivity() {
                     ImageSliderAdapter(
                         this@ExaminationActivity,
                         supportFragmentManager,
-                        contentResolver,
                         imageSlider,
-                        pageIndication,
-                        titleTextView
+                        textViews
                     )
                 this.adapter = sliderAdapter
             }
@@ -101,7 +104,9 @@ class ExaminationActivity : FragmentActivity() {
 
         initializeImageSlider()
         setToolbarButtonOnClickListeners()
-        displayDismissedImagesToastIfApplicable(intent.getIntExtra(N_DISMISSED_IMAGES, 0))
+        displayDismissedImagesToastIfApplicable(
+            intent.getIntExtra(N_DISMISSED_IMAGES, 0)
+        )
     }
 
     override fun onStart() {
@@ -119,7 +124,7 @@ class ExaminationActivity : FragmentActivity() {
     }
 
     /**
-     * Resets toolbarButtonsEnabled flag
+     * Resets toolbarButtons
      */
     override fun onStop() {
         super.onStop()
@@ -145,7 +150,7 @@ private class AsyncSaveAllOnClickExecutor(
         for (i in 0 until sliderAdapter.count){
             saveImageAndDeleteScreenshotIfApplicable(
                 sliderAdapter.imageUris[i],
-                sliderAdapter.croppedImages[i],
+                sliderAdapter.croppedImages[i].first,
                 context
             )
             sliderAdapter.savedCrops += 1

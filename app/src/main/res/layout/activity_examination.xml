@@ -6,7 +6,6 @@
     android:background="@android:color/background_dark"
     android:orientation="vertical">
 
-
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/slide"
         android:layout_width="match_parent"
@@ -36,6 +35,6 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar_examination_activity" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

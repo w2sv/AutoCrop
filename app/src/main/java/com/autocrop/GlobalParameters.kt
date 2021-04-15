@@ -1,6 +1,5 @@
 package com.autocrop
 
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -35,5 +34,5 @@ object GlobalParameters {
     val cropSaveDirPath: String
         get() = "$DEFAULT_CROP_DESTINATION_PATH${listOf("", "${File.separator}AutoCropped")[saveToAutocropDir.toInt()]}"
 
-    val imageCash: MutableMap<Uri, Bitmap> = mutableMapOf()
+    val imageCash: MutableMap<Uri, CropWithRetentionPercentage> = mutableMapOf()
 }
