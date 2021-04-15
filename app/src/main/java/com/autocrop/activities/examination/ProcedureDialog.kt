@@ -99,15 +99,12 @@ class ProcedureDialog(
 
         imageSliderAdapter.run {
             if (this.count > 0){
-                this.textViews.pageIndication.text = getString(R.string.text_view_page_indication, newPosition + 1, pages)
-                this.textViews.retentionPercentage.text = getString(
-                    R.string.text_view_retention_percentage,
-                    imageSliderAdapter.croppedImages[newPosition].second
-                )
+                textViews.setRetentionPercentageText(imageSliderAdapter.croppedImages[newPosition].second)
+                textViews.setPageIndicationText(newPosition + 1, pages)
             }
             else{
                 this.textViews.retentionPercentage.visibility = View.INVISIBLE
-                this.textViews.pageIndication.text = getString(R.string.text_view_page_indication, 69, 420)
+                textViews.setPageIndicationText(69, 420)
                 this.textViews.appTitle.visibility = View.VISIBLE
             }
         }

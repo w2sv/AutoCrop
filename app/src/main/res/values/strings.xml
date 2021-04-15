@@ -7,7 +7,4 @@
     <string name="main_menu_item_delete_input_screenshots">Delete input screenshots</string>
     <string name="main_menu_item_save_to_autocrop_folder">Save to AutoCrop folder</string>
 
-    <string name="text_view_retention_percentage">$d% retained</string>
-    <string name="text_view_page_indication">%1$d/%2$d</string>
-
 </resources>

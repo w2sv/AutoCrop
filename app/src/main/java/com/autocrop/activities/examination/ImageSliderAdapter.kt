@@ -43,15 +43,15 @@ class ImageSliderAdapter(
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
 
-                textViews.retentionPercentage.text = Resources.getSystem().getString(R.string.text_view_retention_percentage, croppedImages[position].second)
-                textViews.pageIndication.text = Resources.getSystem().getString(R.string.text_view_page_indication, position + 1, count)
+                textViews.setRetentionPercentageText(croppedImages[position].second)
+                textViews.setPageIndicationText(position + 1, count)
             }
         }
 
         imageSlider.addOnPageChangeListener(PageChangeListener())
 
-        textViews.retentionPercentage.text = Resources.getSystem().getString(R.string.text_view_retention_percentage, croppedImages[0].second)
-        textViews.pageIndication.text = Resources.getSystem().getString(R.string.text_view_page_indication, 1, count)
+        textViews.setRetentionPercentageText(croppedImages[0].second)
+        textViews.setPageIndicationText(1, count)
     }
 
     fun returnToMainActivity(){

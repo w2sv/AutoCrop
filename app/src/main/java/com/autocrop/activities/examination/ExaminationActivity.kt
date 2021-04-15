@@ -23,8 +23,11 @@ const val N_SAVED_CROPS: String = "$PACKAGE_NAME.N_SAVED_CROPS"
 data class TextViews(
     val retentionPercentage: TextView,
     val pageIndication: TextView,
-    val appTitle: TextView
-)
+    val appTitle: TextView) {
+
+    fun setPageIndicationText(page: Int, of: Int){ pageIndication.text = "$page/$of" }
+    fun setRetentionPercentageText(percentage: Int){ retentionPercentage.text = "$percentage% retained" }
+}
 
 
 class ExaminationActivity : FragmentActivity() {
