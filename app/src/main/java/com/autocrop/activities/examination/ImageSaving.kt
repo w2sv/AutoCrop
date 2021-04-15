@@ -30,7 +30,7 @@ fun saveImageAndDeleteScreenshotIfApplicable(
 }
 
 
-fun saveImage(context: Context, image: Bitmap, title: String){
+private fun saveImage(context: Context, image: Bitmap, title: String){
     // https://stackoverflow.com/a/10124040
     // https://stackoverflow.com/a/59536115
 
