@@ -16,9 +16,7 @@ import com.autocrop.*
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.activities.hideSystemUI
-import com.autocrop.utils.displayToast
-import com.autocrop.utils.toInt
-import com.autocrop.utils.persistMenuAfterItemClick
+import com.autocrop.utils.*
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
@@ -66,19 +64,14 @@ class MainActivity: FragmentActivity() {
         super.onStop()
 
         if (alteredPreferences){
-            getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
-                .edit().putBoolean(
-                    PreferencesKey.DELETE_SCREENSHOTS.name,
-                    GlobalParameters.deleteInputScreenshots
-                )
-                .apply()
-
-            getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
-                .edit().putBoolean(
-                    PreferencesKey.SAVE_TO_AUTOCROP_DIR.name,
-                    GlobalParameters.saveToAutocropDir
-                )
-                .apply()
+            writeSharedPreferencesBool(
+                PreferencesKey.DELETE_SCREENSHOTS,
+                GlobalParameters.deleteInputScreenshots
+            )
+            writeSharedPreferencesBool(
+                PreferencesKey.SAVE_TO_AUTOCROP_FOLDER,
+                GlobalParameters.saveToAutocropDir
+            )
         }
     }
 
@@ -188,7 +181,7 @@ class MainActivity: FragmentActivity() {
                     // set checks
                     this.menu.findItem(R.id.main_menu_item_delete_input_screenshots).isChecked =
                         GlobalParameters.deleteInputScreenshots
-                    this.menu.findItem(R.id.main_menu_item_save_to_autocrop_dir).isChecked =
+                    this.menu.findItem(R.id.main_menu_item_save_to_autocrop_folder).isChecked =
                         GlobalParameters.saveToAutocropDir
 
                     // set item onClickListeners
@@ -205,7 +198,7 @@ class MainActivity: FragmentActivity() {
                             }
 
                             // saving to dedicated directory
-                            R.id.main_menu_item_save_to_autocrop_dir -> {
+                            R.id.main_menu_item_save_to_autocrop_folder -> {
                                 GlobalParameters.toggleSaveToDedicatedDir()
                                 item.isChecked = GlobalParameters.saveToAutocropDir
 
@@ -222,17 +215,15 @@ class MainActivity: FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // set ExaminationActivity.deleteInputScreenshots with corresponding value
-        // from shared preferences
-        GlobalParameters.deleteInputScreenshots = getSharedPreferences(
-            PREFERENCES_INSTANCE_NAME,
-            0
-        ).getBoolean(PreferencesKey.DELETE_SCREENSHOTS.name, true)
-
-        GlobalParameters.saveToAutocropDir = getSharedPreferences(
-            PREFERENCES_INSTANCE_NAME,
-            0
-        ).getBoolean(PreferencesKey.SAVE_TO_AUTOCROP_DIR.name, false)
+        // beset GlobalParameters from shared preferences
+        GlobalParameters.deleteInputScreenshots = getSharedPreferencesBool(
+            PreferencesKey.DELETE_SCREENSHOTS,
+            false
+        )
+        GlobalParameters.saveToAutocropDir = getSharedPreferencesBool(
+            PreferencesKey.SAVE_TO_AUTOCROP_FOLDER,
+            false
+        )
 
         setPixelField()
         displaySavingResultToast(intent.getIntExtra(N_SAVED_CROPS, -1))
@@ -267,7 +258,7 @@ class MainActivity: FragmentActivity() {
                         )
 
                         // attempt to crop image, add uri-crop mapping to image cash if successful
-                        croppedImage(image!!).run {
+                        with(croppedImage(image!!)) {
                             if (this != null)
                                 GlobalParameters.imageCash[imageUri] = this
                         }

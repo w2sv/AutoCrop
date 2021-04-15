@@ -7,6 +7,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import com.autocrop.GlobalParameters
+import com.autocrop.PREFERENCES_INSTANCE_NAME
+import com.autocrop.PreferencesKey
 
 
 fun paddedMessage(vararg row: String): String = " ${row.joinToString(" \n ")} "
@@ -42,6 +45,22 @@ fun Activity.persistMenuAfterItemClick(item: MenuItem): Boolean{
     })
 
     return false
+}
+
+
+fun Activity.getSharedPreferencesBool(key: PreferencesKey, defaultValue: Boolean): Boolean = getSharedPreferences(
+    PREFERENCES_INSTANCE_NAME,
+    0
+).getBoolean(key.name, defaultValue)
+
+
+fun Activity.writeSharedPreferencesBool(key: PreferencesKey, value: Boolean){
+    getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
+        .edit().putBoolean(
+            key.name,
+            value
+        )
+        .apply()
 }
 
 

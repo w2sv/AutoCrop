@@ -5,6 +5,6 @@
     <string name="dismissing">Dismiss All</string>
 
     <string name="main_menu_item_delete_input_screenshots">Delete input screenshots</string>
-    <string name="main_menu_item_save_to_autocrop_dir">Save to particular directory</string>
+    <string name="main_menu_item_save_to_autocrop_folder">Save to AutoCrop folder</string>
 
 </resources>
