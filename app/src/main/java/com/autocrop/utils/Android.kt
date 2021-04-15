@@ -2,6 +2,7 @@ package com.autocrop.utils
 
 import android.app.Activity
 import android.graphics.Color
+import android.os.Build
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
@@ -42,3 +43,6 @@ fun Activity.persistMenuAfterItemClick(item: MenuItem): Boolean{
 
     return false
 }
+
+
+fun apiLowerEquals(apiNumber: Int): Boolean = Build.VERSION.SDK_INT <= apiNumber

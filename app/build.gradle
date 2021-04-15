@@ -14,6 +14,7 @@ android {
         versionCode 3
         versionName "1.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
     }
     buildTypes {
         release {

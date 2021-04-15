@@ -7,30 +7,16 @@ import android.util.Log
 import java.io.File
 
 
-fun Uri.pathDocument(context: Context): String{
-    val DOCUMENT_STR = "/document/"
-
-    fun convertDelimiters(s: String): String = s.replaceMultiple("%3A", "%2F", newValue = "/").replace("%20", " ")
-
-    toString().run {
-        val subStr: String = this.slice(this.indexOf(DOCUMENT_STR) + DOCUMENT_STR.length..this.lastIndex)
-
-        subStr.removePrefix("primary").run {
-            if (this.length != subStr.length)
-                return "/${context.filesDir.absolutePath.substringBefore("Android/data/com.bunsenbrenner.screenshotboundremoval")}/${convertDelimiters(this)}"
-        }
-
-        return "/storage/${convertDelimiters(subStr)}"
-    }
-}
-
-fun Uri.deleteUnderlyingMediaFile(context: Context){
+fun Uri.deleteUnderlyingMediaFile(context: Context)
+{
     /* Reference: https://stackoverflow.com/questions/10716642/android-deleting-an-image?noredirect=1&lq=1 */
 
-    val file = File(this.pathMediaFile(context))
+    val LOG_TAG = "ImageDeletion"
+
+    val file = File(this.imageFilePath(context))
 
     // delete file and update media gallery
-    if (android.os.Build.VERSION.SDK_INT <= 29){
+    if (apiLowerEquals(29)){
         context.contentResolver.delete(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             MediaStore.Images.ImageColumns.DATA + "=?",
@@ -39,11 +25,9 @@ fun Uri.deleteUnderlyingMediaFile(context: Context){
     }
     else
         // https://developer.android.com/training/data-storage/use-cases
-        throw NotImplementedError("File deletion for API > 29 yet to be implemented")
+        throw NotImplementedError("File deletion for API >= 30 yet to be implemented")
 
     // log deletion success
-    val LOG_TAG = "ImageDeletion"
-
     if (file.exists())
         Log.e(LOG_TAG, "couldn't delete ${file.canonicalFile}")
     else
@@ -51,7 +35,7 @@ fun Uri.deleteUnderlyingMediaFile(context: Context){
 }
 
 
-fun Uri.pathMediaFile(context: Context): String =
+fun Uri.imageFilePath(context: Context): String =
     context.contentResolver.query(
         this, arrayOf(MediaStore.Images.Media.DATA),
         null,
@@ -63,4 +47,4 @@ fun Uri.pathMediaFile(context: Context): String =
         }
 
 
-fun Uri.nameMediaFile(context: Context): String = pathMediaFile(context).split('/').last()
+fun Uri.imageFileName(context: Context): String = imageFilePath(context).split('/').last()

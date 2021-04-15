@@ -81,8 +81,7 @@ class ExaminationActivity : FragmentActivity() {
                     AsyncSaveAllOnClickExecutor(
                         progressBar,
                         sliderAdapter,
-                        this,
-                        contentResolver
+                        this
                     ).execute()
                 }
             }
@@ -133,8 +132,7 @@ class ExaminationActivity : FragmentActivity() {
 private class AsyncSaveAllOnClickExecutor(
     val progressBar: ProgressBar,
     val sliderAdapter: ImageSliderAdapter,
-    val context: Context,
-    val contentResolver: ContentResolver
+    val context: Context
 ): AsyncTask<Void, Void, Void?>() {
 
     override fun onPreExecute() {
@@ -148,8 +146,7 @@ private class AsyncSaveAllOnClickExecutor(
             saveImageAndDeleteScreenshotIfApplicable(
                 sliderAdapter.imageUris[i],
                 sliderAdapter.croppedImages[i],
-                context,
-                contentResolver
+                context
             )
             sliderAdapter.savedCrops += 1
         }

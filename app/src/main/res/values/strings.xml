@@ -4,7 +4,7 @@
     <string name="saving">Save All</string>
     <string name="dismissing">Dismiss All</string>
 
-    <string name="menu_item_title_delete_input_screenshots">Delete input screenshots</string>
-    <string name="menu_item_title_modify_save_directory">Modify save directory</string>
+    <string name="main_menu_item_delete_input_screenshots">Delete input screenshots</string>
+    <string name="main_menu_item_save_to_autocrop_dir">Save to particular directory</string>
 
 </resources>

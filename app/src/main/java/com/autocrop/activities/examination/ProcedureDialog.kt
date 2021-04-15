@@ -38,7 +38,7 @@ class ProcedureDialog(
                 .setTitle(paddedMessage(*listOf(
                     listOf("Save crop?"),
                     listOf("Save crop and delete", "original screenshot?")
-                )[GlobalParameters.deleteInputScreenshots!!.toInt()].toTypedArray()))
+                )[GlobalParameters.deleteInputScreenshots.toInt()].toTypedArray()))
                 .setNegativeButton("Yes", SaveButtonOnClickListener())  // vice-versa setting required for making yes appear first
                 .setPositiveButton("No", DismissButtonOnClickListener())
 
@@ -97,8 +97,7 @@ class ProcedureDialog(
             saveImageAndDeleteScreenshotIfApplicable(
                 imageUri,
                 croppedImage,
-                activityContext,
-                cr
+                activityContext
             )
             imageSliderAdapter.savedCrops += 1
             postButtonPress()

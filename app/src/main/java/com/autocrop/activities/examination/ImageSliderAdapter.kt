@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.autocrop.GlobalParameters
 import kotlin.math.abs
 
 import com.autocrop.activities.main.MainActivity
@@ -31,10 +32,10 @@ class ImageSliderAdapter(private val context: Context,
                          val pageIndication: TextView,
                          val titleTextView: TextView
 ): PagerAdapter(){
-    val croppedImages: MutableList<Bitmap> = MainActivity.imageCash.values
+    val croppedImages: MutableList<Bitmap> = GlobalParameters.imageCash.values
         .toMutableList()
-    val imageUris: MutableList<Uri> = MainActivity.imageCash.keys
-        .toMutableList().also { MainActivity.imageCash.clear() }
+    val imageUris: MutableList<Uri> = GlobalParameters.imageCash.keys
+        .toMutableList().also { GlobalParameters.imageCash.clear() }
     var savedCrops: Int = 0
 
     init {

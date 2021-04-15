@@ -7,12 +7,13 @@
 
     <item
         android:id="@+id/main_menu_item_delete_input_screenshots"
-        android:title="@string/menu_item_title_delete_input_screenshots"
-        android:titleCondensed="@string/menu_item_title_delete_input_screenshots"
+        android:title="@string/main_menu_item_delete_input_screenshots"
+        android:titleCondensed="@string/main_menu_item_delete_input_screenshots"
         android:checkable="true"/>
 
     <item
-        android:id="@+id/main_menu_item_select_save_directory"
-        android:title="@string/menu_item_title_modify_save_directory"/>
+        android:id="@+id/main_menu_item_save_to_autocrop_dir"
+        android:title="@string/main_menu_item_save_to_autocrop_dir"
+        android:checkable="true"/>
 
 </menu>
