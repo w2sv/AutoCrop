@@ -3,10 +3,7 @@ package com.autocrop.activities.main
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Point
-import android.net.Uri
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.FrameLayout
@@ -14,7 +11,6 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentActivity
 import com.autocrop.*
 import com.autocrop.activities.cropping.CroppingActivity
-import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.activities.hideSystemUI
 import com.autocrop.utils.*
@@ -23,9 +19,6 @@ import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 import processing.android.PFragment
-
-
-const val N_DISMISSED_IMAGES: String = "$PACKAGE_NAME.N_DISMISSED_IMAGES"
 
 
 class MainActivity : FragmentActivity() {
@@ -154,6 +147,16 @@ class MainActivity : FragmentActivity() {
             }
         }
 
+        fun displayAllImagesDismissedOutput(selectedMultiple: Boolean) {
+            when (selectedMultiple) {
+                true -> displayToast(
+                    "Couldn't find cropping bounds for",
+                    "any of the selected images"
+                )
+                false -> displayToast("Couldn't find cropping bounds for selected image")
+            }
+        }
+
         fun besetGlobalParameters() {
             GlobalParameters.deleteInputScreenshots = getSharedPreferencesBool(
                 SharedPreferencesKey.DELETE_SCREENSHOTS,
@@ -220,7 +223,12 @@ class MainActivity : FragmentActivity() {
         setContentView(R.layout.activity_main)
 
         setPixelField()
-        displaySavingResultToast(intent.getIntExtra(N_SAVED_CROPS, -1))
+        with(intent.getIntExtra(N_SAVED_CROPS, -1)) {
+            if (this != -1)
+                displaySavingResultToast(this)
+            else if (selectedMultipleImages != null)
+                displayAllImagesDismissedOutput(selectedMultipleImages!!)
+        }
         besetGlobalParameters()
         setButtonOnClickListeners()
     }
@@ -236,11 +244,17 @@ class MainActivity : FragmentActivity() {
         }
     }
 
+    private var selectedMultipleImages: Boolean? = null
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 Code.IMAGE_SELECTION_INTENT.ordinal -> {
-                    for (i in 0 until data?.clipData?.itemCount!!)
+                    val nSelectedImages: Int = data?.clipData?.itemCount!!.also {
+                        selectedMultipleImages = it > 1
+                    }
+
+                    for (i in 0 until nSelectedImages)
                         GlobalParameters.selectedImageUris.add(data.clipData?.getItemAt(i)?.uri!!)
 
                     startActivity(
@@ -253,7 +267,7 @@ class MainActivity : FragmentActivity() {
 
     // -------------------Follow-up actions-------------------
 
-    var alteredPreferences: Boolean = false
+    private var alteredPreferences: Boolean = false
 
     /**
      * Writes preferences to shared preferences

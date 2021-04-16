@@ -10,64 +10,77 @@ import android.util.Log
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.autocrop.GlobalParameters
+import com.autocrop.PACKAGE_NAME
 import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.activities.main.N_DISMISSED_IMAGES
+import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.croppedImage
-import com.autocrop.utils.android.displayToast
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlin.math.roundToInt
 
 
-class CroppingActivity: AppCompatActivity(){
+const val N_DISMISSED_IMAGES_IDENTIFIER: String = "$PACKAGE_NAME.N_DISMISSED_IMAGES"
+
+
+interface OnTaskCompleted {
+    fun onTaskCompleted()
+}
+
+
+class CroppingActivity : AppCompatActivity(), OnTaskCompleted {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_cropping)
         val progressBar: ProgressBar = findViewById(R.id.croppingProgressBar)
 
-        val nSelectedImages: Int = GlobalParameters.selectedImageUris.size
-
-        val task = Cropper(
+        Cropper(
             contentResolver,
-            progressBar
+            progressBar,
+            this
         ).execute()
+    }
 
-        if (task.status == AsyncTask.Status.FINISHED){
-            Log.i("CroppingActivity", "Received ending of async task")
+    override fun onTaskCompleted() {
+        Log.i("CroppingActivity", "Async Cropping task finished")
 
-            // start ExaminationActivity in case of at least 1 successful crop,
-            // otherwise return to image selection screen
-            if (GlobalParameters.imageCash.isNotEmpty())
-                startExaminationActivity(nSelectedImages - GlobalParameters.imageCash.size)
-            else
-                allImagesDismissedOutput(nSelectedImages > 1)
+        val nSelectedImages: Int = GlobalParameters.selectedImageUris.size.also {
+            GlobalParameters.selectedImageUris.clear()
         }
+
+        // start ExaminationActivity in case of at least 1 successful crop,
+        // otherwise return to image selection screen
+        if (GlobalParameters.imageCash.isNotEmpty())
+            startExaminationActivity(nSelectedImages - GlobalParameters.imageCash.size)
+        else
+            startMainActivity()
     }
 
     private fun startExaminationActivity(nDismissedCrops: Int) {
         startActivity(
             Intent(this, ExaminationActivity::class.java).putExtra(
-                N_DISMISSED_IMAGES,
+                N_DISMISSED_IMAGES_IDENTIFIER,
                 nDismissedCrops
             )
         )
     }
 
-    private fun allImagesDismissedOutput(attemptedForMultipleImages: Boolean) {
-        when (attemptedForMultipleImages) {
-            true -> displayToast("Couldn't find cropping bounds for", "any of the selected images")
-            false -> displayToast("Couldn't find cropping bounds for selected image")
-        }
+    private fun startMainActivity() {
+        startActivity(
+            Intent(this, MainActivity::class.java)
+        )
     }
 }
 
 
 class Cropper(
     private val contentResolver: ContentResolver,
-    private val progressBar: ProgressBar): AsyncTask<Void, Void, Void?>() {
+    private val progressBar: ProgressBar,
+    private val listener: OnTaskCompleted
+) : AsyncTask<Void, Void, Void?>() {
 
     override fun doInBackground(vararg params: Void?): Void? {
-        val step: Int = (100.toFloat() / GlobalParameters.selectedImageUris.size.toFloat()).roundToInt()
+        val progressBarStep: Int =
+            (100.toFloat() / GlobalParameters.selectedImageUris.size.toFloat()).roundToInt()
 
         GlobalParameters.selectedImageUris.forEach {
             val image: Bitmap? = BitmapFactory.decodeStream(
@@ -80,7 +93,8 @@ class Cropper(
                     GlobalParameters.imageCash[it] = this
             }
 
-            progressBar.progress += step
+            // advance progress bar
+            progressBar.progress += progressBarStep
         }
 
         return null
@@ -89,8 +103,6 @@ class Cropper(
     override fun onPostExecute(result: Void?) {
         super.onPostExecute(result)
 
-        Log.i("AsyncCropping", "Cropping finished, status=${status}")
-
-        GlobalParameters.selectedImageUris.clear()
+        listener.onTaskCompleted()
     }
 }

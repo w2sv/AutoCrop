@@ -8,10 +8,10 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager.widget.ViewPager
 import com.autocrop.*
+import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
 import com.autocrop.activities.examination.imageslider.ImageSliderAdapter
 import com.autocrop.activities.examination.imageslider.ZoomOutPageTransformer
 import com.autocrop.activities.hideSystemUI
-import com.autocrop.activities.main.N_DISMISSED_IMAGES
 import com.autocrop.utils.android.displayToast
 import com.bunsenbrenner.screenshotboundremoval.*
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
@@ -114,7 +114,7 @@ class ExaminationActivity : FragmentActivity() {
         initializeImageSlider()
         setToolbarButtonOnClickListeners()
         displayDismissedImagesToastIfApplicable(
-            intent.getIntExtra(N_DISMISSED_IMAGES, 0)
+            intent.getIntExtra(N_DISMISSED_IMAGES_IDENTIFIER, 0)
         )
     }
 
@@ -129,7 +129,7 @@ class ExaminationActivity : FragmentActivity() {
     }
 
     override fun onBackPressed() {
-        if (backPressedOnce){
+        if (backPressedOnce) {
             super.onBackPressed()
             sliderAdapter.returnToMainActivity()
             return

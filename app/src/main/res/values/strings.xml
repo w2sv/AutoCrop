@@ -5,7 +5,7 @@
 
         <!-- Text -->
 
-    <string name="image_selection_button_text">Select Images</string>
+    <string name="image_selection_button_text">SELECT IMAGES</string>
     <string name="save_all_button_text">Save All</string>
     <string name="dismiss_all_button_text">Dismiss All</string>
 
