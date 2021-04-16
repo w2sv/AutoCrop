@@ -13,6 +13,7 @@ import android.widget.FrameLayout
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentActivity
 import com.autocrop.*
+import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.activities.hideSystemUI
@@ -239,53 +240,18 @@ class MainActivity : FragmentActivity() {
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 Code.IMAGE_SELECTION_INTENT.ordinal -> {
-                    val nSelectedImages: Int = data?.clipData?.itemCount!!
+                    for (i in 0 until data?.clipData?.itemCount!!)
+                        GlobalParameters.selectedImageUris.add(data.clipData?.getItemAt(i)?.uri!!)
 
-                    for (i in 0 until nSelectedImages) {
-
-                        // retrieve uri and resolve into bitmap
-                        val imageUri: Uri = data.clipData?.getItemAt(i)?.uri!!
-                        val image: Bitmap? = BitmapFactory.decodeStream(
-                            contentResolver.openInputStream(
-                                imageUri
-                            )
-                        )
-
-                        // attempt to crop image, add uri-crop mapping to image cash if successful
-                        with(croppedImage(image!!)) {
-                            if (this != null)
-                                GlobalParameters.imageCash[imageUri] = this
-                        }
-                    }
-
-                    // start ExaminationActivity in case of at least 1 successful crop,
-                    // otherwise return to image selection screen
-                    if (GlobalParameters.imageCash.isNotEmpty())
-                        startExaminationActivity(nSelectedImages - GlobalParameters.imageCash.size)
-                    else
-                        allImagesDismissedOutput(nSelectedImages > 1)
+                    startActivity(
+                        Intent(this, CroppingActivity::class.java)
+                    )
                 }
             }
         }
     }
 
     // -------------------Follow-up actions-------------------
-
-    private fun startExaminationActivity(dismissedCrops: Int) {
-        startActivity(
-            Intent(this, ExaminationActivity::class.java).putExtra(
-                N_DISMISSED_IMAGES,
-                dismissedCrops
-            )
-        )
-    }
-
-    private fun allImagesDismissedOutput(attemptedForMultipleImages: Boolean) {
-        when (attemptedForMultipleImages) {
-            true -> displayToast("Couldn't find cropping bounds for", "any of the selected images")
-            false -> displayToast("Couldn't find cropping bounds for selected image")
-        }
-    }
 
     var alteredPreferences: Boolean = false
 

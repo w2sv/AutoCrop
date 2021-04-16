@@ -9,6 +9,7 @@ import kotlin.properties.Delegates
 
 
 object GlobalParameters {
+    var selectedImageUris: MutableList<Uri> = mutableListOf()
     val imageCash: MutableMap<Uri, CropWithRetentionPercentage> = mutableMapOf()
 
     var deleteInputScreenshots by Delegates.notNull<Boolean>()

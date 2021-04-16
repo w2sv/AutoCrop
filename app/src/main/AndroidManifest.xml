@@ -44,6 +44,17 @@
         </activity>
 
         <activity
+            android:name="com.autocrop.activities.cropping.CroppingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseAppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name="com.autocrop.activities.examination.ExaminationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BaseAppTheme"
