@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination
+package com.autocrop.activities.examination.imageslider
 
 import android.view.View
 import androidx.viewpager.widget.ViewPager

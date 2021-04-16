@@ -17,6 +17,11 @@ import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.activities.hideSystemUI
 import com.autocrop.utils.*
+import com.autocrop.utils.android.SharedPreferencesKey
+import com.autocrop.utils.android.writeSharedPreferencesBool
+import com.autocrop.utils.android.getSharedPreferencesBool
+import com.autocrop.utils.android.displayToast
+import com.autocrop.utils.android.persistMenuAfterItemClick
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
@@ -27,6 +32,7 @@ const val N_DISMISSED_IMAGES: String = "$PACKAGE_NAME.N_DISMISSED_IMAGES"
 
 
 class MainActivity: FragmentActivity() {
+
     companion object{
 
         // ----------Pixel Field---------------
@@ -44,6 +50,13 @@ class MainActivity: FragmentActivity() {
         }
     }
 
+    private enum class Code{
+        IMAGE_SELECTION,
+
+        READ_PERMISSION,
+        WRITE_PERMISSION
+    }
+
     // ----------------Generic behaviour----------------
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -51,38 +64,14 @@ class MainActivity: FragmentActivity() {
         hideSystemUI(window)
     }
 
+    /**
+     * Exits app
+     */
     override fun onBackPressed() {
         finishAffinity()
     }
 
-    var alteredPreferences: Boolean = false
-
-    /**
-     * Writes preferences to shared preferences
-     */
-    override fun onStop() {
-        super.onStop()
-
-        if (alteredPreferences){
-            writeSharedPreferencesBool(
-                PreferencesKey.DELETE_SCREENSHOTS,
-                GlobalParameters.deleteInputScreenshots
-            )
-            writeSharedPreferencesBool(
-                PreferencesKey.SAVE_TO_AUTOCROP_FOLDER,
-                GlobalParameters.saveToAutocropDir
-            )
-        }
-    }
-
     // -----------------Permissions---------------------
-
-    private enum class Code{
-        IMAGE_SELECTION,
-
-        READ_PERMISSION,
-        WRITE_PERMISSION
-    }
 
     private var nRequiredPermissions: Int = -1
     private val permission2Code: Map<String, Code> = mapOf(
@@ -120,7 +109,10 @@ class MainActivity: FragmentActivity() {
         }
 
         when (requestCode) {
-            Code.READ_PERMISSION.ordinal -> permissionRequestResultHandling(grantResults, "reading")
+            Code.READ_PERMISSION.ordinal -> permissionRequestResultHandling(
+                grantResults,
+                "reading"
+            )
             Code.WRITE_PERMISSION.ordinal -> permissionRequestResultHandling(
                 grantResults,
                 "writing"
@@ -165,7 +157,19 @@ class MainActivity: FragmentActivity() {
             }
         }
 
+        fun besetGlobalParameters(){
+            GlobalParameters.deleteInputScreenshots = getSharedPreferencesBool(
+                SharedPreferencesKey.DELETE_SCREENSHOTS,
+                false
+            )
+            GlobalParameters.saveToAutocropDir = getSharedPreferencesBool(
+                SharedPreferencesKey.SAVE_TO_AUTOCROP_FOLDER,
+                false
+            )
+        }
+
         fun setButtonOnClickListeners(){
+            // image selection button
             image_selection_button.setOnClickListener {
                 requestActivityPermissions()
 
@@ -173,7 +177,9 @@ class MainActivity: FragmentActivity() {
                     pickImageFromGallery()
             }
 
+            // menu button
             menu_button.setOnClickListener {
+
                 // inflate popup menu
                 PopupMenu(this, it).run {
                     this.menuInflater.inflate(R.menu.activity_main, this.menu)
@@ -215,18 +221,9 @@ class MainActivity: FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // beset GlobalParameters from shared preferences
-        GlobalParameters.deleteInputScreenshots = getSharedPreferencesBool(
-            PreferencesKey.DELETE_SCREENSHOTS,
-            false
-        )
-        GlobalParameters.saveToAutocropDir = getSharedPreferencesBool(
-            PreferencesKey.SAVE_TO_AUTOCROP_FOLDER,
-            false
-        )
-
         setPixelField()
         displaySavingResultToast(intent.getIntExtra(N_SAVED_CROPS, -1))
+        besetGlobalParameters()
         setButtonOnClickListeners()
     }
 
@@ -290,6 +287,27 @@ class MainActivity: FragmentActivity() {
         when(attemptedForMultipleImages){
             true -> displayToast("Couldn't find cropping bounds for", "any of the selected images")
             false -> displayToast("Couldn't find cropping bounds for selected image")
+        }
+    }
+
+    var alteredPreferences: Boolean = false
+
+    /**
+     * Writes preferences to shared preferences
+     * in case of them having been altered
+     */
+    override fun onStop() {
+        super.onStop()
+
+        if (alteredPreferences){
+            writeSharedPreferencesBool(
+                SharedPreferencesKey.DELETE_SCREENSHOTS,
+                GlobalParameters.deleteInputScreenshots
+            )
+            writeSharedPreferencesBool(
+                SharedPreferencesKey.SAVE_TO_AUTOCROP_FOLDER,
+                GlobalParameters.saveToAutocropDir
+            )
         }
     }
 }

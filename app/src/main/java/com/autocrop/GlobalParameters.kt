@@ -8,10 +8,9 @@ import java.io.File
 import kotlin.properties.Delegates
 
 
-private val DEFAULT_CROP_DESTINATION_PATH: String = Environment.DIRECTORY_PICTURES
-
-
 object GlobalParameters {
+    val imageCash: MutableMap<Uri, CropWithRetentionPercentage> = mutableMapOf()
+
     var deleteInputScreenshots by Delegates.notNull<Boolean>()
     var saveToAutocropDir by Delegates.notNull<Boolean>()
 
@@ -32,7 +31,5 @@ object GlobalParameters {
     }
 
     val cropSaveDirPath: String
-        get() = "$DEFAULT_CROP_DESTINATION_PATH${listOf("", "${File.separator}AutoCropped")[saveToAutocropDir.toInt()]}"
-
-    val imageCash: MutableMap<Uri, CropWithRetentionPercentage> = mutableMapOf()
+        get() = "${Environment.DIRECTORY_PICTURES}${listOf("", "${File.separator}AutoCropped")[saveToAutocropDir.toInt()]}"
 }

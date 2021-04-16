@@ -1,14 +1,14 @@
-package com.autocrop.utils
+package com.autocrop.utils.android
 
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import com.autocrop.utils.android.apiLowerEquals
 import java.io.File
 
 
-fun Uri.deleteUnderlyingMediaFile(context: Context)
-{
+fun Uri.deleteUnderlyingImageFile(context: Context) {
     /* Reference: https://stackoverflow.com/questions/10716642/android-deleting-an-image?noredirect=1&lq=1 */
 
     val LOG_TAG = "ImageDeletion"

@@ -9,9 +9,9 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import com.autocrop.GlobalParameters
-import com.autocrop.utils.apiLowerEquals
-import com.autocrop.utils.deleteUnderlyingMediaFile
-import com.autocrop.utils.imageFileName
+import com.autocrop.utils.android.apiLowerEquals
+import com.autocrop.utils.android.deleteUnderlyingImageFile
+import com.autocrop.utils.android.imageFileName
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -26,25 +26,26 @@ fun saveImageAndDeleteScreenshotIfApplicable(
 
     // delete screenshot if applicable
     if (GlobalParameters.deleteInputScreenshots)
-        uri.deleteUnderlyingMediaFile(context)
+        uri.deleteUnderlyingImageFile(context)
 }
 
 
-private fun saveImage(context: Context, image: Bitmap, title: String){
+private fun saveImage(context: Context, image: Bitmap, title: String) {
     // https://stackoverflow.com/a/10124040
     // https://stackoverflow.com/a/59536115
 
     val LOG_TAG = "ImageSaving"
 
-    val (fileOutputStream: OutputStream, imageFileUri: Uri) = if (apiLowerEquals(29)){
+    val (fileOutputStream: OutputStream, imageFileUri: Uri) = if (apiLowerEquals(29)) {
         File(
-            Environment.getExternalStoragePublicDirectory(GlobalParameters.cropSaveDirPath).toString(),
+            Environment.getExternalStoragePublicDirectory(GlobalParameters.cropSaveDirPath)
+                .toString(),
             title
         ).run {
             Pair(FileOutputStream(this), Uri.fromFile(this))
         }
 
-    } else{
+    } else {
         // TODO test
         val imageFileUri: Uri = context.contentResolver.insert(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -59,7 +60,7 @@ private fun saveImage(context: Context, image: Bitmap, title: String){
     }
 
     // write image
-    with(fileOutputStream){
+    with(fileOutputStream) {
         image.compress(Bitmap.CompressFormat.JPEG, 100, this)
         this.close()
 

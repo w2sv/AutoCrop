@@ -10,9 +10,11 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager.widget.ViewPager
 import com.autocrop.*
+import com.autocrop.activities.examination.imageslider.ImageSliderAdapter
+import com.autocrop.activities.examination.imageslider.ZoomOutPageTransformer
 import com.autocrop.activities.hideSystemUI
 import com.autocrop.activities.main.N_DISMISSED_IMAGES
-import com.autocrop.utils.displayToast
+import com.autocrop.utils.android.displayToast
 import com.bunsenbrenner.screenshotboundremoval.*
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
 
@@ -20,7 +22,7 @@ import kotlinx.android.synthetic.main.toolbar_examination_activity.*
 const val N_SAVED_CROPS: String = "$PACKAGE_NAME.N_SAVED_CROPS"
 
 
-data class TextViews(
+data class ExaminationActivityTextViews(
     val retentionPercentage: TextView,
     val pageIndication: TextView,
     val appTitle: TextView) {
@@ -45,7 +47,7 @@ class ExaminationActivity : FragmentActivity() {
         setContentView(R.layout.activity_examination)
 
         val progressBar: ProgressBar = findViewById(R.id.indeterminateBar)
-        val textViews = TextViews(
+        val textViews = ExaminationActivityTextViews(
             findViewById(R.id.retention_percentage),
             findViewById(R.id.page_indication),
             findViewById(R.id.title_text_view)
@@ -84,7 +86,7 @@ class ExaminationActivity : FragmentActivity() {
 
             save_all_button.setOnClickListener{
                 if (toolbarButtonsEnabled()){
-                    AsyncSaveAllOnClickExecutor(
+                    CropEntiretySaver(
                         progressBar,
                         sliderAdapter,
                         this
@@ -133,38 +135,5 @@ class ExaminationActivity : FragmentActivity() {
         super.onStop()
 
         toolbarButtonsEnabled = true
-    }
-}
-
-
-private class AsyncSaveAllOnClickExecutor(
-    val progressBar: ProgressBar,
-    val sliderAdapter: ImageSliderAdapter,
-    val context: Context
-): AsyncTask<Void, Void, Void?>() {
-
-    override fun onPreExecute() {
-        super.onPreExecute()
-
-        progressBar.visibility = View.VISIBLE
-    }
-
-    override fun doInBackground(vararg params: Void?): Void? {
-        for (i in 0 until sliderAdapter.count){
-            saveImageAndDeleteScreenshotIfApplicable(
-                sliderAdapter.imageUris[i],
-                sliderAdapter.croppedImages[i].first,
-                context
-            )
-            sliderAdapter.savedCrops += 1
-        }
-        return null
-    }
-
-    override fun onPostExecute(result: Void?) {
-        super.onPostExecute(result)
-
-        progressBar.visibility = View.INVISIBLE
-        sliderAdapter.returnToMainActivity()
     }
 }
