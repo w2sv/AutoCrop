@@ -1,33 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
+    <!-- Pixel Field Container -->
+
     <FrameLayout
         android:id="@+id/canvas_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="828dp" />
+
+    <!-- Buttons -->
+
+        <!-- Image Selection -->
 
     <Button
         android:id="@+id/image_selection_button"
-        android:background="@drawable/button_image_selection"
         style="@style/Base.Widget.AppCompat.Button.Colored"
+        android:background="@drawable/button_image_selection"
+
         android:layout_width="136dp"
         android:layout_height="143dp"
-        android:text="@string/image_selection"
-        android:textColor="@android:color/darker_gray"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+
+        android:fontFamily="sans-serif"
+        android:textSize="16sp"
+        android:text="@string/image_selection_button_text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@android:color/darker_gray"/>
+
+        <!-- Menu Inflation -->
 
     <ImageButton
         android:id="@+id/menu_button"
-        android:background="@android:color/transparent"
+        style="?android:attr/actionOverflowButtonStyle"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_alignParentEnd="true"
-        style="?android:attr/actionOverflowButtonStyle" />
-
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/main_activity_menu_inflation_button_description" />
 
 </RelativeLayout>

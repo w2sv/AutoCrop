@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:background="@color/magenta"
-    android:elevation="4dp"
-    android:theme="@style/ToolbarTextAppearance">
+    android:elevation="4dp">
+
+    <!-- Button -->
+
+        <!-- Save All -->
 
     <Button
         android:id="@+id/save_all_button"
@@ -12,9 +16,11 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@android:color/transparent"
-        android:text="@string/saving"
+        android:text="@string/save_all_button_text"
         android:textColor="@android:color/white"
         android:translationX="-10dp"/>
+
+        <!-- Dismiss All -->
 
     <Button
         android:id="@+id/dismiss_all_button"
@@ -22,9 +28,26 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:background="@android:color/transparent"
-        android:text="@string/dismissing"
+        android:text="@string/dismiss_all_button_text"
         android:textColor="@android:color/white"
         android:translationX="-45dp" />
+
+    <!-- Text View -->
+
+        <!-- Retention Percentage -->
+
+    <TextView
+        android:id="@+id/retention_percentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:textColor="@color/green"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        android:translationX="-45dp"
+        android:visibility="visible" />
+
+        <!-- Page Indication -->
 
     <TextView
         android:id="@+id/page_indication"
@@ -35,17 +58,5 @@
         android:textSize="14sp"
         android:textStyle="italic"
         android:translationX="-10dp" />
-
-    <TextView
-        android:id="@+id/retention_percentage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="23% retained"
-        android:textColor="@color/green"
-        android:textSize="14sp"
-        android:textStyle="italic"
-        android:translationX="-45dp"
-        android:visibility="visible" />
 
 </androidx.appcompat.widget.Toolbar>

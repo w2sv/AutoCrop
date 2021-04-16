@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
-
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
 
     <item
         android:id="@+id/main_menu_item_delete_input_screenshots"
-        android:title="@string/main_menu_item_delete_input_screenshots"
-        android:titleCondensed="@string/main_menu_item_delete_input_screenshots"
+        android:title="@string/delete_input_screenshots_menu_item_text"
+        android:titleCondensed="@string/delete_input_screenshots_menu_item_text"
         android:checkable="true"/>
 
     <item
         android:id="@+id/main_menu_item_save_to_autocrop_folder"
-        android:title="@string/main_menu_item_save_to_autocrop_folder"
+        android:title="@string/save_to_autocrop_folder_menu_item_text"
         android:checkable="true"/>
-
 </menu>

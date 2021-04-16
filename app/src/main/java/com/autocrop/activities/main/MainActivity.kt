@@ -176,7 +176,7 @@ class MainActivity: FragmentActivity() {
             menu_button.setOnClickListener {
                 // inflate popup menu
                 PopupMenu(this, it).run {
-                    this.menuInflater.inflate(R.menu.main, this.menu)
+                    this.menuInflater.inflate(R.menu.activity_main, this.menu)
 
                     // set checks
                     this.menu.findItem(R.id.main_menu_item_delete_input_screenshots).isChecked =

@@ -1,18 +1,23 @@
 <resources>
 
-    <style name="CustomAppTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar">
+    <!-- App Theme -->
+
+    <style name="BaseAppTheme" parent="Theme.AppCompat.NoActionBar">
+
+        <item name="android:windowBackground">@android:color/black</item>
+
+        <!-- disable all caps -->
+
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+
+        <!-- enable fullscreen mode -->
+
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">true</item>
 
-        <item name="android:windowBackground">@android:color/black</item>
-
-    </style>
-
-    <style name="ToolbarTextAppearance">
-        <item name="textAllCaps">false</item>
-        <item name="android:textAllCaps">false</item>
     </style>
 
 </resources>

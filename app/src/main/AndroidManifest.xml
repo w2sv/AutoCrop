@@ -17,9 +17,9 @@
         android:allowBackup="false"
         android:icon="@mipmap/brudineletten"
         android:roundIcon="@mipmap/brudineletten_round"
-        android:label="@string/app_name"
+        android:label="@string/app_title"
         android:supportsRtl="true"
-        android:theme="@style/CustomAppTheme.NoActionBar">
+        android:theme="@style/BaseAppTheme">
 
         <!-- Activities -->
         <activity
@@ -35,7 +35,7 @@
         <activity
             android:name="com.autocrop.activities.main.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomAppTheme.NoActionBar">
+            android:theme="@style/BaseAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,12 +46,13 @@
         <activity
             android:name="com.autocrop.activities.examination.ExaminationActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomAppTheme.NoActionBar"
+            android:theme="@style/BaseAppTheme"
             android:parentActivityName="com.autocrop.activities.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.autocrop.activities.main.MainActivity" />
         </activity>
+
     </application>
 
 </manifest>
