@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
-import com.autocrop.utils.android.apiLowerEquals
 import java.io.File
 
 
@@ -16,15 +15,14 @@ fun Uri.deleteUnderlyingImageFile(context: Context) {
     val file = File(this.imageFilePath(context))
 
     // delete file and update media gallery
-    if (apiLowerEquals(29)){
+    if (apiLowerEquals(29)) {
         context.contentResolver.delete(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             MediaStore.Images.ImageColumns.DATA + "=?",
             arrayOf(file.canonicalPath)
         )
-    }
-    else
-        // https://developer.android.com/training/data-storage/use-cases
+    } else
+    // https://developer.android.com/training/data-storage/use-cases
         throw NotImplementedError("File deletion for API >= 30 yet to be implemented")
 
     // log deletion success
@@ -42,9 +40,9 @@ fun Uri.imageFilePath(context: Context): String =
         null,
         null
     ).run {
-            this!!.moveToFirst()
-            this.getString(this.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))!!
-        }
+        this!!.moveToFirst()
+        this.getString(this.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))!!
+    }
 
 
 fun Uri.imageFileName(context: Context): String = imageFilePath(context).split('/').last()

@@ -1,10 +1,8 @@
 package com.autocrop.activities.examination
 
-import android.content.Context
 import android.content.pm.ActivityInfo
-import android.os.AsyncTask
 import android.os.Bundle
-import android.view.View
+import android.os.Handler
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
@@ -25,15 +23,21 @@ const val N_SAVED_CROPS: String = "$PACKAGE_NAME.N_SAVED_CROPS"
 data class ExaminationActivityTextViews(
     val retentionPercentage: TextView,
     val pageIndication: TextView,
-    val appTitle: TextView) {
+    val appTitle: TextView
+) {
 
-    fun setPageIndicationText(page: Int, of: Int){ pageIndication.text = "$page/$of" }
-    fun setRetentionPercentageText(percentage: Int){ retentionPercentage.text = "$percentage% retained" }
+    fun setPageIndicationText(page: Int, of: Int) {
+        pageIndication.text = "$page/$of"
+    }
+
+    fun setRetentionPercentageText(percentage: Int) {
+        retentionPercentage.text = "$percentage% retained"
+    }
 }
 
 
 class ExaminationActivity : FragmentActivity() {
-    companion object{
+    companion object {
         var toolbarButtonsEnabled: Boolean = true
     }
 
@@ -53,9 +57,9 @@ class ExaminationActivity : FragmentActivity() {
             findViewById(R.id.title_text_view)
         )
 
-        fun initializeImageSlider(){
+        fun initializeImageSlider() {
             imageSlider = findViewById(R.id.slide)
-            imageSlider.apply{
+            imageSlider.apply {
                 this.setPageTransformer(
                     true,
                     ZoomOutPageTransformer()
@@ -71,21 +75,21 @@ class ExaminationActivity : FragmentActivity() {
             }
         }
 
-        fun setToolbarButtonOnClickListeners(){
+        fun setToolbarButtonOnClickListeners() {
 
             /**
              * Inherently sets toolbarButtonsEnabled to false if true
              */
-            fun toolbarButtonsEnabled(): Boolean{
-                if (toolbarButtonsEnabled){
+            fun toolbarButtonsEnabled(): Boolean {
+                if (toolbarButtonsEnabled) {
                     toolbarButtonsEnabled = false
                     return !toolbarButtonsEnabled
                 }
                 return toolbarButtonsEnabled
             }
 
-            save_all_button.setOnClickListener{
-                if (toolbarButtonsEnabled()){
+            save_all_button.setOnClickListener {
+                if (toolbarButtonsEnabled()) {
                     CropEntiretySaver(
                         progressBar,
                         sliderAdapter,
@@ -94,14 +98,14 @@ class ExaminationActivity : FragmentActivity() {
                 }
             }
 
-            dismiss_all_button.setOnClickListener{
+            dismiss_all_button.setOnClickListener {
                 if (toolbarButtonsEnabled())
                     sliderAdapter.returnToMainActivity()
             }
         }
 
-        fun displayDismissedImagesToastIfApplicable(nDismissedImages: Int){
-            when (nDismissedImages){
+        fun displayDismissedImagesToastIfApplicable(nDismissedImages: Int) {
+            when (nDismissedImages) {
                 1 -> displayToast("Couldn't find cropping bounds for 1 image")
                 in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for $this images")
             }
@@ -125,8 +129,20 @@ class ExaminationActivity : FragmentActivity() {
     }
 
     override fun onBackPressed() {
-        sliderAdapter.returnToMainActivity()
+        if (backPressedOnce){
+            super.onBackPressed()
+            sliderAdapter.returnToMainActivity()
+            return
+        }
+
+        backPressedOnce = true
+        displayToast("Another back press will lead", "to return to main screen")
+
+        Handler().postDelayed({ backPressedOnce = false }, 2500)
     }
+
+    private var backPressedOnce: Boolean = false
+
 
     /**
      * Resets toolbarButtons

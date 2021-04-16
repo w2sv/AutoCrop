@@ -17,11 +17,7 @@ import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.activities.hideSystemUI
 import com.autocrop.utils.*
-import com.autocrop.utils.android.SharedPreferencesKey
-import com.autocrop.utils.android.writeSharedPreferencesBool
-import com.autocrop.utils.android.getSharedPreferencesBool
-import com.autocrop.utils.android.displayToast
-import com.autocrop.utils.android.persistMenuAfterItemClick
+import com.autocrop.utils.android.*
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
@@ -31,14 +27,14 @@ import processing.android.PFragment
 const val N_DISMISSED_IMAGES: String = "$PACKAGE_NAME.N_DISMISSED_IMAGES"
 
 
-class MainActivity: FragmentActivity() {
+class MainActivity : FragmentActivity() {
 
-    companion object{
+    companion object {
 
         // ----------Pixel Field---------------
 
         var pixelField: PixelField? = null
-        fun initializePixelField(windowManager: WindowManager){
+        fun initializePixelField(windowManager: WindowManager) {
             Point().run {
                 windowManager.defaultDisplay.getRealSize(this)
                 pixelField =
@@ -50,8 +46,8 @@ class MainActivity: FragmentActivity() {
         }
     }
 
-    private enum class Code{
-        IMAGE_SELECTION,
+    private enum class Code {
+        IMAGE_SELECTION_INTENT,
 
         READ_PERMISSION,
         WRITE_PERMISSION
@@ -79,12 +75,12 @@ class MainActivity: FragmentActivity() {
         Manifest.permission.READ_EXTERNAL_STORAGE to Code.READ_PERMISSION
     )
 
-    private fun requestActivityPermissions(){
+    private fun requestActivityPermissions() {
         nRequiredPermissions = 0
 
-        fun checkPermission(permission: String){
-            if (checkSelfPermission(permission) == PackageManager.PERMISSION_DENIED){
-                nRequiredPermissions ++
+        fun checkPermission(permission: String) {
+            if (checkSelfPermission(permission) == PackageManager.PERMISSION_DENIED) {
+                nRequiredPermissions++
                 requestPermissions(arrayOf(permission), permission2Code[permission]!!.ordinal)
             }
         }
@@ -98,14 +94,14 @@ class MainActivity: FragmentActivity() {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        fun permissionRequestResultHandling(grantResults: IntArray, requestDescription: String){
+        fun permissionRequestResultHandling(grantResults: IntArray, requestDescription: String) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)
                 displayToast(
                     "You need to permit file $requestDescription in order",
                     "for the app to work."
                 )
             else
-                nRequiredPermissions --
+                nRequiredPermissions--
         }
 
         when (requestCode) {
@@ -131,7 +127,7 @@ class MainActivity: FragmentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        fun setPixelField(){
+        fun setPixelField() {
             pixelField?.redraw() ?: initializePixelField(windowManager)
 
             PFragment(pixelField).run {
@@ -139,8 +135,8 @@ class MainActivity: FragmentActivity() {
             }
         }
 
-        fun displaySavingResultToast(nSavedCrops: Int){
-            when(nSavedCrops){
+        fun displaySavingResultToast(nSavedCrops: Int) {
+            when (nSavedCrops) {
                 0 -> displayToast("Dismissed everything")
                 1 -> displayToast(
                     *listOf(
@@ -157,7 +153,7 @@ class MainActivity: FragmentActivity() {
             }
         }
 
-        fun besetGlobalParameters(){
+        fun besetGlobalParameters() {
             GlobalParameters.deleteInputScreenshots = getSharedPreferencesBool(
                 SharedPreferencesKey.DELETE_SCREENSHOTS,
                 false
@@ -168,7 +164,7 @@ class MainActivity: FragmentActivity() {
             )
         }
 
-        fun setButtonOnClickListeners(){
+        fun setButtonOnClickListeners() {
             // image selection button
             image_selection_button.setOnClickListener {
                 requestActivityPermissions()
@@ -191,13 +187,14 @@ class MainActivity: FragmentActivity() {
                         GlobalParameters.saveToAutocropDir
 
                     // set item onClickListeners
-                    this.setOnMenuItemClickListener{ item ->
+                    this.setOnMenuItemClickListener { item ->
                         alteredPreferences = true
 
                         when (item.itemId) {
                             // input screenshot deleting
                             R.id.main_menu_item_delete_input_screenshots -> {
-                                GlobalParameters.deleteInputScreenshots = !GlobalParameters.deleteInputScreenshots
+                                GlobalParameters.deleteInputScreenshots =
+                                    !GlobalParameters.deleteInputScreenshots
                                 item.isChecked = GlobalParameters.deleteInputScreenshots
 
                                 persistMenuAfterItemClick(item)
@@ -228,20 +225,20 @@ class MainActivity: FragmentActivity() {
     }
 
     private fun pickImageFromGallery() {
-        Intent(Intent.ACTION_PICK).run{
+        Intent(Intent.ACTION_PICK).run {
             this.type = "image/*"
             this.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             startActivityForResult(
                 this,
-                Code.IMAGE_SELECTION.ordinal
+                Code.IMAGE_SELECTION_INTENT.ordinal
             )
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK) {
             when (requestCode) {
-                Code.IMAGE_SELECTION.ordinal -> {
+                Code.IMAGE_SELECTION_INTENT.ordinal -> {
                     val nSelectedImages: Int = data?.clipData?.itemCount!!
 
                     for (i in 0 until nSelectedImages) {
@@ -274,7 +271,7 @@ class MainActivity: FragmentActivity() {
 
     // -------------------Follow-up actions-------------------
 
-    private fun startExaminationActivity(dismissedCrops: Int){
+    private fun startExaminationActivity(dismissedCrops: Int) {
         startActivity(
             Intent(this, ExaminationActivity::class.java).putExtra(
                 N_DISMISSED_IMAGES,
@@ -283,8 +280,8 @@ class MainActivity: FragmentActivity() {
         )
     }
 
-    private fun allImagesDismissedOutput(attemptedForMultipleImages: Boolean){
-        when(attemptedForMultipleImages){
+    private fun allImagesDismissedOutput(attemptedForMultipleImages: Boolean) {
+        when (attemptedForMultipleImages) {
             true -> displayToast("Couldn't find cropping bounds for", "any of the selected images")
             false -> displayToast("Couldn't find cropping bounds for selected image")
         }
@@ -299,7 +296,7 @@ class MainActivity: FragmentActivity() {
     override fun onStop() {
         super.onStop()
 
-        if (alteredPreferences){
+        if (alteredPreferences) {
             writeSharedPreferencesBool(
                 SharedPreferencesKey.DELETE_SCREENSHOTS,
                 GlobalParameters.deleteInputScreenshots
