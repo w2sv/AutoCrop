@@ -9,6 +9,9 @@ import android.widget.TextView
 import android.widget.Toast
 
 
+fun intentExtraIdentifier(name: String): String = "com.autocrop.$name"
+
+
 // -----------------Build Version Checking-----------------
 
 fun apiLowerEquals(apiNumber: Int): Boolean = Build.VERSION.SDK_INT <= apiNumber

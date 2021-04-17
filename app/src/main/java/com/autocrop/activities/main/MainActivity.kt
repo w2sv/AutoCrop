@@ -11,6 +11,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentActivity
 import com.autocrop.*
 import com.autocrop.activities.cropping.CroppingActivity
+import com.autocrop.activities.cropping.DismissedImagesQuantity
 import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.activities.hideSystemUI
 import com.autocrop.utils.*
@@ -19,6 +20,9 @@ import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 import processing.android.PFragment
+
+
+val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String = intentExtraIdentifier("selected_image_uri_strings")
 
 
 class MainActivity : FragmentActivity() {
@@ -38,13 +42,17 @@ class MainActivity : FragmentActivity() {
                     )
             }
         }
-    }
 
-    private enum class Code {
-        IMAGE_SELECTION_INTENT,
+        // -------------Codes---------------
 
-        READ_PERMISSION,
-        WRITE_PERMISSION
+        private enum class PermissionCode {
+            READ,
+            WRITE
+        }
+
+        private enum class IntentCode{
+            IMAGE_SELECTION
+        }
     }
 
     // ----------------Generic behaviour----------------
@@ -64,9 +72,9 @@ class MainActivity : FragmentActivity() {
     // -----------------Permissions---------------------
 
     private var nRequiredPermissions: Int = -1
-    private val permission2Code: Map<String, Code> = mapOf(
-        Manifest.permission.WRITE_EXTERNAL_STORAGE to Code.WRITE_PERMISSION,
-        Manifest.permission.READ_EXTERNAL_STORAGE to Code.READ_PERMISSION
+    private val permission2Code: Map<String, PermissionCode> = mapOf(
+        Manifest.permission.WRITE_EXTERNAL_STORAGE to PermissionCode.WRITE,
+        Manifest.permission.READ_EXTERNAL_STORAGE to PermissionCode.READ
     )
 
     private fun requestActivityPermissions() {
@@ -99,18 +107,19 @@ class MainActivity : FragmentActivity() {
         }
 
         when (requestCode) {
-            Code.READ_PERMISSION.ordinal -> permissionRequestResultHandling(
+            PermissionCode.READ.ordinal -> permissionRequestResultHandling(
                 grantResults,
                 "reading"
             )
-            Code.WRITE_PERMISSION.ordinal -> permissionRequestResultHandling(
+            PermissionCode.WRITE.ordinal -> permissionRequestResultHandling(
                 grantResults,
                 "writing"
             )
         }
 
+        // directly go into image selection after permission granting
         if (nRequiredPermissions == 0)
-            return pickImageFromGallery()
+            return selectImages()
     }
 
     // ------------Lifecycle stages---------------
@@ -129,31 +138,44 @@ class MainActivity : FragmentActivity() {
             }
         }
 
-        fun displaySavingResultToast(nSavedCrops: Int) {
-            when (nSavedCrops) {
-                0 -> displayToast("Dismissed everything")
-                1 -> displayToast(
-                    *listOf(
-                        listOf("Saved 1 crop"),
-                        listOf("Saved 1 crop and deleted", "corresponding screenshot")
-                    )[GlobalParameters.deleteInputScreenshots.toInt()].toTypedArray()
-                )
-                in 2..Int.MAX_VALUE -> displayToast(
-                    *listOf(
-                        listOf("Saved $nSavedCrops crops"),
-                        listOf("Saved $nSavedCrops crops and deleted", "corresponding screenshots")
-                    )[GlobalParameters.deleteInputScreenshots.toInt()].toTypedArray()
-                )
+        fun displayPreviousActivityResultToast(){
+            fun displaySavingResultToast(nSavedCrops: Int) {
+                when (nSavedCrops) {
+                    0 -> displayToast("Dismissed everything")
+                    1 -> displayToast(
+                        *listOf(
+                            listOf("Saved 1 crop"),
+                            listOf("Saved 1 crop and deleted", "corresponding screenshot")
+                        )[GlobalParameters.deleteInputScreenshots.toInt()].toTypedArray()
+                    )
+                    in 2..Int.MAX_VALUE -> displayToast(
+                        *listOf(
+                            listOf("Saved $nSavedCrops crops"),
+                            listOf("Saved $nSavedCrops crops and deleted", "corresponding screenshots")
+                        )[GlobalParameters.deleteInputScreenshots.toInt()].toTypedArray()
+                    )
+                }
             }
-        }
 
-        fun displayAllImagesDismissedOutput(selectedMultiple: Boolean) {
-            when (selectedMultiple) {
-                true -> displayToast(
-                    "Couldn't find cropping bounds for",
-                    "any of the selected images"
-                )
-                false -> displayToast("Couldn't find cropping bounds for selected image")
+            fun displayAllImagesDismissedToast(dismissedImagesQuantity: DismissedImagesQuantity) {
+                when (dismissedImagesQuantity) {
+                    DismissedImagesQuantity.Multiple -> displayToast(
+                        "Couldn't find cropping bounds for",
+                        "any of the selected images"
+                    )
+                    DismissedImagesQuantity.One -> displayToast("Couldn't find cropping bounds for selected image")
+                }
+            }
+
+            with(intent.getIntExtra(N_SAVED_CROPS, -1)) {
+                if (this != -1)
+                    displaySavingResultToast(this)
+                else{
+                    with(intent.getEnumExtra<DismissedImagesQuantity>()){
+                        if (this != null)
+                            displayAllImagesDismissedToast(this)
+                    }
+                }
             }
         }
 
@@ -174,7 +196,7 @@ class MainActivity : FragmentActivity() {
                 requestActivityPermissions()
 
                 if (nRequiredPermissions == 0)
-                    pickImageFromGallery()
+                    selectImages()
             }
 
             // menu button
@@ -223,49 +245,46 @@ class MainActivity : FragmentActivity() {
         setContentView(R.layout.activity_main)
 
         setPixelField()
-        with(intent.getIntExtra(N_SAVED_CROPS, -1)) {
-            if (this != -1)
-                displaySavingResultToast(this)
-            else if (selectedMultipleImages != null)
-                displayAllImagesDismissedOutput(selectedMultipleImages!!)
-        }
         besetGlobalParameters()
         setButtonOnClickListeners()
+        displayPreviousActivityResultToast()
     }
 
-    private fun pickImageFromGallery() {
+    private fun selectImages() {
         Intent(Intent.ACTION_PICK).run {
             this.type = "image/*"
             this.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             startActivityForResult(
                 this,
-                Code.IMAGE_SELECTION_INTENT.ordinal
+                IntentCode.IMAGE_SELECTION.ordinal
             )
         }
     }
 
-    private var selectedMultipleImages: Boolean? = null
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK) {
             when (requestCode) {
-                Code.IMAGE_SELECTION_INTENT.ordinal -> {
-                    val nSelectedImages: Int = data?.clipData?.itemCount!!.also {
-                        selectedMultipleImages = it > 1
+                IntentCode.IMAGE_SELECTION.ordinal -> {
+
+                    fun startCroppingActivity(imageUriStrings: Array<String>){
+                        startActivity(
+                            Intent(this, CroppingActivity::class.java)
+                                .putExtra(
+                                    SELECTED_IMAGE_URI_STRINGS_IDENTIFIER,
+                                    imageUriStrings
+                                )
+                        )
                     }
 
-                    for (i in 0 until nSelectedImages)
-                        GlobalParameters.selectedImageUris.add(data.clipData?.getItemAt(i)?.uri!!)
-
-                    startActivity(
-                        Intent(this, CroppingActivity::class.java)
+                    val nSelectedImages: Int = data?.clipData?.itemCount!!
+                    startCroppingActivity(imageUriStrings = (0 until nSelectedImages).map {
+                            data.clipData?.getItemAt(it)?.uri!!.toString()
+                        }.toTypedArray()
                     )
                 }
             }
         }
     }
-
-    // -------------------Follow-up actions-------------------
 
     private var alteredPreferences: Boolean = false
 

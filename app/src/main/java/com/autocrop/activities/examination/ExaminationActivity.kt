@@ -13,11 +13,12 @@ import com.autocrop.activities.examination.imageslider.ImageSliderAdapter
 import com.autocrop.activities.examination.imageslider.ZoomOutPageTransformer
 import com.autocrop.activities.hideSystemUI
 import com.autocrop.utils.android.displayToast
+import com.autocrop.utils.android.intentExtraIdentifier
 import com.bunsenbrenner.screenshotboundremoval.*
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
 
 
-const val N_SAVED_CROPS: String = "$PACKAGE_NAME.N_SAVED_CROPS"
+val N_SAVED_CROPS: String = intentExtraIdentifier("n_saved_crops")
 
 
 data class ExaminationActivityTextViews(

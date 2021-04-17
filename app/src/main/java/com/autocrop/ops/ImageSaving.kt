@@ -38,7 +38,7 @@ private fun saveImage(context: Context, image: Bitmap, title: String) {
 
     val (fileOutputStream: OutputStream, imageFileUri: Uri) = if (apiLowerEquals(29)) {
         File(
-            Environment.getExternalStoragePublicDirectory(GlobalParameters.cropSaveDirPath)
+            Environment.getExternalStoragePublicDirectory(GlobalParameters.relativeCropSaveDirPath)
                 .toString(),
             title
         ).run {
@@ -51,7 +51,7 @@ private fun saveImage(context: Context, image: Bitmap, title: String) {
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             ContentValues().apply {
                 this.put(MediaStore.MediaColumns.DISPLAY_NAME, title)
-                this.put(MediaStore.MediaColumns.RELATIVE_PATH, GlobalParameters.cropSaveDirPath)
+                this.put(MediaStore.MediaColumns.RELATIVE_PATH, GlobalParameters.relativeCropSaveDirPath)
                 this.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
             }
         )!!
