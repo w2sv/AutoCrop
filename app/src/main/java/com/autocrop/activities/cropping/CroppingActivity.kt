@@ -20,6 +20,7 @@ import com.autocrop.utils.android.intentExtraIdentifier
 import com.autocrop.utils.toInt
 import com.autocrop.utils.android.putExtra
 import com.bunsenbrenner.screenshotboundremoval.R
+import kotlinx.android.synthetic.main.activity_cropping.*
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
@@ -122,6 +123,12 @@ class CroppingActivity : AppCompatActivity(), AsyncTaskCompletionListener {
         println("Called")
 
         return startMainActivity(putDismissedImagesQuantity = false)
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        cropping_progress_bar.progress = 0
     }
 }
 
