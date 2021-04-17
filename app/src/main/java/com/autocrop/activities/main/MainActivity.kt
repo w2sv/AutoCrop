@@ -63,7 +63,7 @@ class MainActivity : FragmentActivity() {
     }
 
     /**
-     * Exits app
+     * Triggers app exiting
      */
     override fun onBackPressed() {
         finishAffinity()
