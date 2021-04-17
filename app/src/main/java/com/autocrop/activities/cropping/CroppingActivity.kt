@@ -9,6 +9,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.autocrop.GlobalParameters
 import com.autocrop.activities.examination.ExaminationActivity
@@ -38,6 +39,7 @@ enum class DismissedImagesQuantity{
 
 interface AsyncTaskCompletionListener {
     fun onTaskCompleted()
+    fun onTaskCancelled()
 }
 
 
@@ -49,7 +51,8 @@ class CroppingActivity : AppCompatActivity(), AsyncTaskCompletionListener {
 
         // set layout, retrieve views
         setContentView(R.layout.activity_cropping)
-        val progressBar: ProgressBar = findViewById(R.id.croppingProgressBar)
+        val progressBar: ProgressBar = findViewById(R.id.cropping_progress_bar)
+        val currentImageNumberTextView: TextView = findViewById(R.id.cropping_current_image_number_text_view)
 
         // convert passed image uri strings back to uris, set nSelectedImages
         val imageUris: List<Uri> = intent.getStringArrayExtra(SELECTED_IMAGE_URI_STRINGS_IDENTIFIER)!!.map {
@@ -63,6 +66,7 @@ class CroppingActivity : AppCompatActivity(), AsyncTaskCompletionListener {
             imageUris,
             contentResolver,
             progressBar,
+            currentImageNumberTextView,
             this
         ).execute()
     }
@@ -83,22 +87,41 @@ class CroppingActivity : AppCompatActivity(), AsyncTaskCompletionListener {
             )
         }
 
-        fun startMainActivity() {
-            startActivity(
-                Intent(this, MainActivity::class.java).putExtra(
-                    DismissedImagesQuantity.fromOrdinal(
-                        (nSelectedImages > 1).toInt()
-                    )
-                )
-            )
-        }
-
         // start ExaminationActivity in case of at least 1 successful crop,
         // otherwise return to MainActivity
         if (GlobalParameters.imageCash.isNotEmpty())
             startExaminationActivity(nSelectedImages - GlobalParameters.imageCash.size)
         else
-            startMainActivity()
+            startMainActivity(putDismissedImagesQuantity = true)
+    }
+
+    private fun startMainActivity(putDismissedImagesQuantity: Boolean) {
+        startActivity(
+            Intent(this, MainActivity::class.java).apply {
+                if (putDismissedImagesQuantity)
+                    this.putExtra(
+                        DismissedImagesQuantity.fromOrdinal(
+                            (nSelectedImages > 1).toInt()
+                        )
+                    )
+            }
+        )
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+        GlobalParameters.imageCash.clear()
+        println("Called")
+
+        return startMainActivity(putDismissedImagesQuantity = false)
+    }
+
+    override fun onTaskCancelled() {
+        GlobalParameters.imageCash.clear()
+        println("Called")
+
+        return startMainActivity(putDismissedImagesQuantity = false)
     }
 }
 
@@ -107,35 +130,62 @@ class Cropper(
     private val imageUris: List<Uri>,
     private val contentResolver: ContentResolver,
     private val progressBar: ProgressBar,
+    private val currentImageNumberTextView: TextView,
     private val taskCompletionListener: AsyncTaskCompletionListener
     ) : AsyncTask<Void, Void, Void?>() {
 
+    private fun setCurrentImageNumberTextViewText(imageNumber: Int){
+        currentImageNumberTextView.text = "$imageNumber/${imageUris.size}"
+    }
+
+    override fun onPreExecute() {
+        super.onPreExecute()
+
+        setCurrentImageNumberTextViewText(0)
+    }
+
     /**
      * Loads images represented by uris, crops and binds them to imageCash if successful,
-     * advances progress bar accordingly
+     * advances views accordingly
      */
     override fun doInBackground(vararg params: Void?): Void? {
-        val progressBarStep: Int =
-            (100.toFloat() / imageUris.size.toFloat()).roundToInt()
+        val (progressBarIntStep: Int, progressBarDecimalStep: Float) = (
+                    progressBar.max.toFloat() / imageUris.size.toFloat()
+                ).run{ Pair(this.toInt(), this - this.toInt()) }
 
-        imageUris.forEach {
+        var decimalStepSum = 0f
 
+        imageUris.forEachIndexed { index, uri ->
             // load image as bitmap
             val image: Bitmap = BitmapFactory.decodeStream(
-                contentResolver.openInputStream(it)
+                contentResolver.openInputStream(uri)
             )!!
 
             // attempt to crop image, add uri-crop mapping to image cash if successful
             with(croppedImage(image)) {
                 if (this != null)
-                    GlobalParameters.imageCash[it] = this
+                    GlobalParameters.imageCash[uri] = this
             }
 
+            setCurrentImageNumberTextViewText(index + 1)
+
             // advance progress bar
-            progressBar.progress += progressBarStep
+            progressBar.progress += progressBarIntStep
+
+            decimalStepSum += progressBarDecimalStep
+            if (decimalStepSum >= 1){
+                progressBar.progress += 1
+                decimalStepSum -= 1
+            }
         }
 
         return null
+    }
+
+    override fun onCancelled() {
+        super.onCancelled()
+
+        return taskCompletionListener.onTaskCancelled()
     }
 
     /**

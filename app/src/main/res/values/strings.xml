@@ -1,20 +1,20 @@
 <resources>
     <string name="app_title">AutoCrop</string>
 
+    <!-- Views -->
+    <string name="cropping_ornament_text">Cropping…</string>
+
     <!-- Button -->
 
         <!-- Text -->
-
     <string name="image_selection_button_text">SELECT IMAGES</string>
     <string name="save_all_button_text">Save All</string>
     <string name="dismiss_all_button_text">Dismiss All</string>
 
         <!-- Description -->
-
     <string name="main_activity_menu_inflation_button_description">"Inflates settings menu"</string>
 
     <!-- Menu Item Text -->
-
     <string name="delete_input_screenshots_menu_item_text">Delete input screenshots</string>
     <string name="save_to_autocrop_folder_menu_item_text">Save to AutoCrop folder</string>
 

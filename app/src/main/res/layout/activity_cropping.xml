@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_marginBottom="80dp"
+
+        android:text="@string/cropping_ornament_text"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimary">
+    </TextView>
+
     <ProgressBar
-        android:id="@+id/croppingProgressBar"
+        android:id="@+id/cropping_progress_bar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:layout_centerInParent="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+
         android:max="100"
-        android:progress="0"/>
+        android:progress="0"
+        android:progressDrawable="@drawable/progress_bar_cropping_activity_progress"/>
+
+    <TextView
+        android:id="@+id/cropping_current_image_number_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_marginTop="70dp"
+
+        android:textSize="17sp">
+
+    </TextView>
 
 </RelativeLayout>

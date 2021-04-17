@@ -108,7 +108,7 @@ class ExaminationActivity : FragmentActivity() {
         fun displayDismissedImagesToastIfApplicable(nDismissedImages: Int) {
             when (nDismissedImages) {
                 1 -> displayToast("Couldn't find cropping bounds for 1 image")
-                in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for $this images")
+                in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for $nDismissedImages images")
             }
         }
 
