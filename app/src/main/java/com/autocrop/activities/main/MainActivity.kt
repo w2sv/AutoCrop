@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Point
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.appcompat.widget.PopupMenu
@@ -17,7 +16,6 @@ import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.activities.hideSystemUI
 import com.autocrop.utils.*
 import com.autocrop.utils.android.*
-import com.bunsenbrenner.screenshotboundremoval.BuildConfig
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
@@ -134,8 +132,14 @@ class MainActivity : FragmentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        fun initializeTimberIfDebugging(){
+            if (debuggingMode())
+                Timber.plant(DebugTree())
+        }
+
         fun setPixelField() {
-            pixelField?.redraw() ?: initializePixelField(windowManager)
+            pixelField?.redraw().also { Timber.i("Redrew pixel field")} ?:
+            initializePixelField(windowManager).also{ Timber.i("Initialized pixel field") }
 
             PFragment(pixelField).run {
                 this.setView(findViewById<FrameLayout>(R.id.canvas_container), this@MainActivity)
@@ -174,6 +178,8 @@ class MainActivity : FragmentActivity() {
                 }
             }
 
+            // display either saving result toast if returning from examination activity or all images dismissed
+            // toast if returning from cropping activity or nothing if none of the former applying
             with(intent.getIntExtra(N_SAVED_CROPS, -1)) {
                 if (this != -1)
                     displaySavingResultToast(this)
@@ -186,17 +192,17 @@ class MainActivity : FragmentActivity() {
             }
         }
 
-        fun besetGlobalParameters() {
+        fun besetGlobalParametersFromSharedPreferences() {
             GlobalParameters.deleteInputScreenshots = getSharedPreferencesBool(
                 SharedPreferencesKey.DELETE_SCREENSHOTS,
                 false
             )
+            Timber.i("Set GlobalParameters.deleteInputScreenshots to ${GlobalParameters.deleteInputScreenshots}")
+
             GlobalParameters.saveToAutocropDir = getSharedPreferencesBool(
-                SharedPreferencesKey.SAVE_TO_AUTOCROP_FOLDER,
+                SharedPreferencesKey.SAVE_TO_AUTOCROP_DIR,
                 false
             )
-
-            Timber.i("Set GlobalParameters.deleteInputScreenshots to ${GlobalParameters.deleteInputScreenshots}")
             Timber.i("Set GlobalParameters.saveToAutocropDir to ${GlobalParameters.saveToAutocropDir}")
         }
 
@@ -229,8 +235,9 @@ class MainActivity : FragmentActivity() {
                         when (item.itemId) {
                             // input screenshot deleting
                             R.id.main_menu_item_delete_input_screenshots -> {
-                                GlobalParameters.deleteInputScreenshots =
-                                    !GlobalParameters.deleteInputScreenshots
+                                GlobalParameters.deleteInputScreenshots = !GlobalParameters.deleteInputScreenshots
+                                Timber.i("Toggled GlobalParameters.deleteInputScreenshots to ${GlobalParameters.deleteInputScreenshots}")
+
                                 item.isChecked = GlobalParameters.deleteInputScreenshots
 
                                 persistMenuAfterItemClick(item)
@@ -239,6 +246,8 @@ class MainActivity : FragmentActivity() {
                             // saving to dedicated directory
                             R.id.main_menu_item_save_to_autocrop_folder -> {
                                 GlobalParameters.toggleSaveToDedicatedDir()
+                                Timber.i("Toggled GlobalParameters.saveToAutoCropDir to ${GlobalParameters.saveToAutocropDir}")
+
                                 item.isChecked = GlobalParameters.saveToAutocropDir
 
                                 persistMenuAfterItemClick(item)
@@ -254,11 +263,9 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (debuggingMode())
-            Timber.plant(DebugTree())
-
+        initializeTimberIfDebugging()
         setPixelField()
-        besetGlobalParameters()
+        besetGlobalParametersFromSharedPreferences()
         setButtonOnClickListeners()
         displayPreviousActivityResultToast()
     }
@@ -314,7 +321,7 @@ class MainActivity : FragmentActivity() {
                 GlobalParameters.deleteInputScreenshots
             )
             writeSharedPreferencesBool(
-                SharedPreferencesKey.SAVE_TO_AUTOCROP_FOLDER,
+                SharedPreferencesKey.SAVE_TO_AUTOCROP_DIR,
                 GlobalParameters.saveToAutocropDir
             )
         }

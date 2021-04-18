@@ -17,6 +17,7 @@ import com.autocrop.activities.examination.ExaminationActivityTextViews
 import com.autocrop.activities.examination.N_SAVED_CROPS
 
 import com.autocrop.activities.main.MainActivity
+import timber.log.Timber
 
 
 /**
@@ -34,7 +35,9 @@ class ImageSliderAdapter(
     val croppedImages: MutableList<CropWithRetentionPercentage> = GlobalParameters.imageCash.values
         .toMutableList()
     val imageUris: MutableList<Uri> = GlobalParameters.imageCash.keys
-        .toMutableList().also { GlobalParameters.imageCash.clear() }
+        .toMutableList().also {
+            GlobalParameters.clearImageCash()
+        }
     var savedCrops: Int = 0
 
     init {

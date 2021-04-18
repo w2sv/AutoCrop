@@ -5,7 +5,7 @@ import android.os.AsyncTask
 import android.view.View
 import android.widget.ProgressBar
 import com.autocrop.activities.examination.imageslider.ImageSliderAdapter
-import com.autocrop.ops.saveImageAndDeleteScreenshotIfApplicable
+import com.autocrop.ops.saveCropAndDeleteScreenshotIfApplicable
 
 
 // TODO: deal with context leaking fields
@@ -30,9 +30,9 @@ class CropEntiretySaver(
      */
     override fun doInBackground(vararg params: Void?): Void? {
         for (i in 0 until sliderAdapter.count){
-            saveImageAndDeleteScreenshotIfApplicable(
-                sliderAdapter.imageUris[i],
+            saveCropAndDeleteScreenshotIfApplicable(
                 sliderAdapter.croppedImages[i].first,
+                sliderAdapter.imageUris[i],
                 context
             )
             sliderAdapter.savedCrops += 1

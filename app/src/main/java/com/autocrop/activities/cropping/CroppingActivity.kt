@@ -15,13 +15,13 @@ import com.autocrop.GlobalParameters
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.SELECTED_IMAGE_URI_STRINGS_IDENTIFIER
-import com.autocrop.activities.main.croppedImage
+import com.autocrop.ops.croppedImage
 import com.autocrop.utils.android.intentExtraIdentifier
 import com.autocrop.utils.toInt
 import com.autocrop.utils.android.putExtra
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_cropping.*
-import kotlin.math.roundToInt
+import timber.log.Timber
 import kotlin.properties.Delegates
 
 
@@ -40,12 +40,12 @@ enum class DismissedImagesQuantity{
 
 interface AsyncTaskCompletionListener {
     fun onTaskCompleted()
-    fun onTaskCancelled()
 }
 
 
 class CroppingActivity : AppCompatActivity(), AsyncTaskCompletionListener {
-    var nSelectedImages by Delegates.notNull<Int>()
+    private var nSelectedImages by Delegates.notNull<Int>()
+    private lateinit var croppingTask: Cropper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,13 +63,13 @@ class CroppingActivity : AppCompatActivity(), AsyncTaskCompletionListener {
         }
 
         // execute async cropping task
-        Cropper(
+        croppingTask = Cropper(
             imageUris,
             contentResolver,
             progressBar,
             currentImageNumberTextView,
             this
-        ).execute()
+        ).also { it.execute() }
     }
 
     /**
@@ -77,7 +77,7 @@ class CroppingActivity : AppCompatActivity(), AsyncTaskCompletionListener {
      * of the selected images has been successfully cropped
      */
     override fun onTaskCompleted() {
-        Log.i(this::class.toString(), "Async Cropping task finished")
+        Timber.i("Async Cropping task finished")
 
         fun startExaminationActivity(nDismissedCrops: Int) {
             startActivity(
@@ -110,21 +110,17 @@ class CroppingActivity : AppCompatActivity(), AsyncTaskCompletionListener {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-
-        GlobalParameters.imageCash.clear()
-        println("Called")
-
-        return startMainActivity(putDismissedImagesQuantity = false)
-    }
-
-    override fun onTaskCancelled() {
-        GlobalParameters.imageCash.clear()
-        println("Called")
+        croppingTask.cancel(false).also {
+            Timber.i(listOf("Couldn't cancel cropping task", "Cropping task successfully cancelled")[it.toInt()])
+        }
+        GlobalParameters.clearImageCash()
 
         return startMainActivity(putDismissedImagesQuantity = false)
     }
 
+    /**
+     * Resets progress bar progress
+     */
     override fun onStop() {
         super.onStop()
 
@@ -187,12 +183,6 @@ class Cropper(
         }
 
         return null
-    }
-
-    override fun onCancelled() {
-        super.onCancelled()
-
-        return taskCompletionListener.onTaskCancelled()
     }
 
     /**

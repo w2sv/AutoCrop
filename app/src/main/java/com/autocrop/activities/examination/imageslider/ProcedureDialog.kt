@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.viewpager.widget.ViewPager
 import com.autocrop.GlobalParameters
-import com.autocrop.ops.saveImageAndDeleteScreenshotIfApplicable
+import com.autocrop.ops.saveCropAndDeleteScreenshotIfApplicable
 import com.autocrop.utils.android.paddedMessage
 import com.autocrop.utils.toInt
 
@@ -58,9 +58,9 @@ class ProcedureDialog(
     private inner class SaveButtonOnClickListener :
         DialogInterface.OnClickListener {
         override fun onClick(dialog: DialogInterface?, which: Int) {
-            saveImageAndDeleteScreenshotIfApplicable(
-                imageUri,
+            saveCropAndDeleteScreenshotIfApplicable(
                 croppedImage,
+                imageUri,
                 activityContext
             )
             imageSliderAdapter.savedCrops += 1

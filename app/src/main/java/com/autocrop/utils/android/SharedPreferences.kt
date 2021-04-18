@@ -1,16 +1,16 @@
 package com.autocrop.utils.android
 
 import android.app.Activity
-
+import timber.log.Timber
 
 
 enum class SharedPreferencesKey{
     DELETE_SCREENSHOTS,
-    SAVE_TO_AUTOCROP_FOLDER
+    SAVE_TO_AUTOCROP_DIR
 }
 
 
-const val PREFERENCES_INSTANCE_NAME: String = "autocrop_preferences"
+private const val PREFERENCES_INSTANCE_NAME: String = "autocrop_preferences"
 
 
 fun Activity.getSharedPreferencesBool(key: SharedPreferencesKey, defaultValue: Boolean): Boolean = getSharedPreferences(
@@ -19,6 +19,9 @@ fun Activity.getSharedPreferencesBool(key: SharedPreferencesKey, defaultValue: B
 ).getBoolean(key.name, defaultValue)
 
 
+/**
+ * Logs value to have been written to key
+ */
 fun Activity.writeSharedPreferencesBool(key: SharedPreferencesKey, value: Boolean){
     getSharedPreferences(PREFERENCES_INSTANCE_NAME, 0)
         .edit().putBoolean(
@@ -26,4 +29,5 @@ fun Activity.writeSharedPreferencesBool(key: SharedPreferencesKey, value: Boolea
             value
         )
         .apply()
+        .also { Timber.i("Wrote $value to sharedPreferences.${key.name}") }
 }
