@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.viewpager.widget.ViewPager
 import com.autocrop.GlobalParameters
-import com.autocrop.activities.examination.saveImageAndDeleteScreenshotIfApplicable
+import com.autocrop.ops.saveImageAndDeleteScreenshotIfApplicable
 import com.autocrop.utils.android.paddedMessage
 import com.autocrop.utils.toInt
 

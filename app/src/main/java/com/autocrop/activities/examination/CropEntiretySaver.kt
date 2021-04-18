@@ -5,6 +5,7 @@ import android.os.AsyncTask
 import android.view.View
 import android.widget.ProgressBar
 import com.autocrop.activities.examination.imageslider.ImageSliderAdapter
+import com.autocrop.ops.saveImageAndDeleteScreenshotIfApplicable
 
 
 // TODO: deal with context leaking fields

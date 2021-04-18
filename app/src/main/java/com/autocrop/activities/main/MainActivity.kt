@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Point
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.appcompat.widget.PopupMenu
@@ -16,10 +17,13 @@ import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.activities.hideSystemUI
 import com.autocrop.utils.*
 import com.autocrop.utils.android.*
+import com.bunsenbrenner.screenshotboundremoval.BuildConfig
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 import processing.android.PFragment
+import timber.log.Timber
+import timber.log.Timber.DebugTree
 
 
 val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String = intentExtraIdentifier("selected_image_uri_strings")
@@ -151,7 +155,10 @@ class MainActivity : FragmentActivity() {
                     in 2..Int.MAX_VALUE -> displayToast(
                         *listOf(
                             listOf("Saved $nSavedCrops crops"),
-                            listOf("Saved $nSavedCrops crops and deleted", "corresponding screenshots")
+                            listOf(
+                                "Saved $nSavedCrops crops and deleted",
+                                "corresponding screenshots"
+                            )
                         )[GlobalParameters.deleteInputScreenshots.toInt()].toTypedArray()
                     )
                 }
@@ -188,6 +195,9 @@ class MainActivity : FragmentActivity() {
                 SharedPreferencesKey.SAVE_TO_AUTOCROP_FOLDER,
                 false
             )
+
+            Timber.i("Set GlobalParameters.deleteInputScreenshots to ${GlobalParameters.deleteInputScreenshots}")
+            Timber.i("Set GlobalParameters.saveToAutocropDir to ${GlobalParameters.saveToAutocropDir}")
         }
 
         fun setButtonOnClickListeners() {
@@ -244,6 +254,9 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        if (debuggingMode())
+            Timber.plant(DebugTree())
+
         setPixelField()
         besetGlobalParameters()
         setButtonOnClickListeners()
@@ -266,7 +279,7 @@ class MainActivity : FragmentActivity() {
             when (requestCode) {
                 IntentCode.IMAGE_SELECTION.ordinal -> {
 
-                    fun startCroppingActivity(imageUriStrings: Array<String>){
+                    fun startCroppingActivity(imageUriStrings: Array<String>) {
                         startActivity(
                             Intent(this, CroppingActivity::class.java)
                                 .putExtra(
@@ -276,8 +289,8 @@ class MainActivity : FragmentActivity() {
                         )
                     }
 
-                    val nSelectedImages: Int = data?.clipData?.itemCount!!
-                    startCroppingActivity(imageUriStrings = (0 until nSelectedImages).map {
+                    startCroppingActivity(
+                        imageUriStrings = (0 until data?.clipData?.itemCount!!).map {
                             data.clipData?.getItemAt(it)?.uri!!.toString()
                         }.toTypedArray()
                     )

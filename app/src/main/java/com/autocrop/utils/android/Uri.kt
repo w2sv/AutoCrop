@@ -4,38 +4,40 @@ import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import timber.log.Timber
 import java.io.File
 
 
 fun Uri.deleteUnderlyingImageFile(context: Context) {
-    /* Reference: https://stackoverflow.com/questions/10716642/android-deleting-an-image?noredirect=1&lq=1 */
-
-    val LOG_TAG = "ImageDeletion"
+    /* References:
+        https://stackoverflow.com/questions/10716642/android-deleting-an-image?noredirect=1&lq=1
+        https://developer.android.com/training/data-storage/use-cases#modify-delete-media */
 
     val file = File(this.imageFilePath(context))
 
     // delete file and update media gallery
-    if (apiLowerEquals(29)) {
-        context.contentResolver.delete(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            MediaStore.Images.ImageColumns.DATA + "=?",
-            arrayOf(file.canonicalPath)
-        )
-    } else
-    // https://developer.android.com/training/data-storage/use-cases
-        throw NotImplementedError("File deletion for API >= 30 yet to be implemented")
+    context.contentResolver.delete(
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+        MediaStore.Images.ImageColumns.DATA + "=?",
+        arrayOf(file.canonicalPath)
+    )
 
-    // log deletion success
-    if (file.exists())
-        Log.e(LOG_TAG, "couldn't delete ${file.canonicalFile}")
-    else
-        Log.i(LOG_TAG, "successfully deleted ${file.canonicalFile}")
+    // log deletion success if debugging
+    if (debuggingMode()){
+        with(file.canonicalFile.absolutePath){
+            if (file.exists())
+                Timber.e("Deletion of $this failed")
+            else
+                Timber.e("Successfully deleted $this")
+        }
+    }
 }
 
 
 fun Uri.imageFilePath(context: Context): String =
     context.contentResolver.query(
-        this, arrayOf(MediaStore.Images.Media.DATA),
+        this,
+        arrayOf(MediaStore.Images.Media.DATA),
         null,
         null,
         null

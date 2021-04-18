@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import com.bunsenbrenner.screenshotboundremoval.BuildConfig
 
 
 fun intentExtraIdentifier(name: String): String = "com.autocrop.$name"
@@ -14,6 +15,7 @@ fun intentExtraIdentifier(name: String): String = "com.autocrop.$name"
 
 // -----------------Build Version Checking-----------------
 
+fun debuggingMode(): Boolean = BuildConfig.DEBUG
 fun apiLowerEquals(apiNumber: Int): Boolean = Build.VERSION.SDK_INT <= apiNumber
 
 

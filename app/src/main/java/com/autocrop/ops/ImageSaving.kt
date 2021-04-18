@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination
+package com.autocrop.ops
 
 import android.content.ContentValues
 import android.content.Context
@@ -12,6 +12,7 @@ import com.autocrop.GlobalParameters
 import com.autocrop.utils.android.apiLowerEquals
 import com.autocrop.utils.android.deleteUnderlyingImageFile
 import com.autocrop.utils.android.imageFileName
+import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -34,8 +35,6 @@ private fun saveImage(context: Context, image: Bitmap, title: String) {
     // https://stackoverflow.com/a/10124040
     // https://stackoverflow.com/a/59536115
 
-    val LOG_TAG = "ImageSaving"
-
     val (fileOutputStream: OutputStream, imageFileUri: Uri) = if (apiLowerEquals(29)) {
         File(
             Environment.getExternalStoragePublicDirectory(GlobalParameters.relativeCropSaveDirPath)
@@ -46,7 +45,6 @@ private fun saveImage(context: Context, image: Bitmap, title: String) {
         }
 
     } else {
-        // TODO test
         val imageFileUri: Uri = context.contentResolver.insert(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             ContentValues().apply {
@@ -64,7 +62,7 @@ private fun saveImage(context: Context, image: Bitmap, title: String) {
         image.compress(Bitmap.CompressFormat.JPEG, 100, this)
         this.close()
 
-        Log.i(LOG_TAG, "Saved image to ${imageFileUri.path}")
+        Timber.i("Saved image to ${imageFileUri.path}")
     }
 
     // trigger refreshing of gallery
