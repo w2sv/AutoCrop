@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +23,7 @@ import com.autocrop.utils.android.putExtra
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_cropping.*
 import timber.log.Timber
+import java.lang.ref.WeakReference
 import kotlin.properties.Delegates
 
 
@@ -64,12 +66,12 @@ class CroppingActivity : AppCompatActivity(), AsyncTaskCompletionListener {
 
         // execute async cropping task
         croppingTask = Cropper(
-            imageUris,
+            nSelectedImages,
             contentResolver,
-            progressBar,
-            currentImageNumberTextView,
+            WeakReference(progressBar),
+            WeakReference(currentImageNumberTextView),
             this
-        ).also { it.execute() }
+        ).also { it.execute(*imageUris.toTypedArray()) }
     }
 
     /**
@@ -130,59 +132,68 @@ class CroppingActivity : AppCompatActivity(), AsyncTaskCompletionListener {
 
 
 class Cropper(
-    private val imageUris: List<Uri>,
+    private val nSelectedImages: Int,
     private val contentResolver: ContentResolver,
-    private val progressBar: ProgressBar,
-    private val currentImageNumberTextView: TextView,
+    private val progressBar: WeakReference<ProgressBar>,
+    private val currentImageNumberTextView: WeakReference<TextView>,
     private val taskCompletionListener: AsyncTaskCompletionListener
-    ) : AsyncTask<Void, Void, Void?>() {
+    ) : AsyncTask<Uri, Pair<Int, Int>, Void?>() {
 
-    private fun setCurrentImageNumberTextViewText(imageNumber: Int){
-        currentImageNumberTextView.text = "$imageNumber/${imageUris.size}"
+    private fun TextView.setCurrentImageNumberText(imageOrdinal: Int){
+        this.text = "$imageOrdinal/$nSelectedImages"
     }
 
     override fun onPreExecute() {
         super.onPreExecute()
 
-        setCurrentImageNumberTextViewText(0)
+        currentImageNumberTextView.get()!!.setCurrentImageNumberText(0)
     }
 
     /**
      * Loads images represented by uris, crops and binds them to imageCash if successful,
      * advances views accordingly
      */
-    override fun doInBackground(vararg params: Void?): Void? {
-        val (progressBarIntStep: Int, progressBarDecimalStep: Float) = (
-                    progressBar.max.toFloat() / imageUris.size.toFloat()
-                ).run{ Pair(this.toInt(), this - this.toInt()) }
-
+    override fun doInBackground(vararg params: Uri): Void? {
         var decimalStepSum = 0f
 
-        imageUris.forEachIndexed { index, uri ->
-            // load image as bitmap
-            val image: Bitmap = BitmapFactory.decodeStream(
-                contentResolver.openInputStream(uri)
-            )!!
+        val (progressBarIntStep: Int, progressBarDecimalStep: Float) = (
+                progressBar.get()!!.max.toFloat() / nSelectedImages.toFloat()
+                ).run{ Pair(this.toInt(), this - this.toInt()) }
 
-            // attempt to crop image, add uri-crop mapping to image cash if successful
-            with(croppedImage(image)) {
-                if (this != null)
-                    GlobalParameters.imageCash[uri] = this
+        params.forEachIndexed {
+            index, uri -> if (!this.isCancelled) {
+                val image: Bitmap = BitmapFactory.decodeStream(
+                    contentResolver.openInputStream(uri)
+                )!!
+
+                // attempt to crop image, add uri-crop mapping to image cash if successful
+                with(croppedImage(image)) {
+                    if (this != null)
+                        GlobalParameters.imageCash[uri] = this
+                }
             }
 
-            setCurrentImageNumberTextViewText(index + 1)
-
-            // advance progress bar
-            progressBar.progress += progressBarIntStep
-
             decimalStepSum += progressBarDecimalStep
-            if (decimalStepSum >= 1){
-                progressBar.progress += 1
-                decimalStepSum -= 1
+            with(Pair(index + 1, progressBarIntStep + (decimalStepSum >= 1).toInt())){
+                if (this.second > progressBarIntStep)
+                    decimalStepSum -= 1
+
+                publishProgress(this)
             }
         }
 
         return null
+    }
+
+    override fun onProgressUpdate(vararg values: Pair<Int, Int>) {
+        with(values[0]){
+            currentImageNumberTextView.get()?.setCurrentImageNumberText(this.first)
+
+            // advance progress bar
+            progressBar.get()?.let {
+                it.progress += this.second
+            }
+        }
     }
 
     /**
