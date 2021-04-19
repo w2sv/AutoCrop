@@ -1,4 +1,4 @@
-package com.autocrop.ops
+package com.autocrop.activities.cropping
 
 import android.graphics.Bitmap
 import com.autocrop.CropWithRetentionPercentage

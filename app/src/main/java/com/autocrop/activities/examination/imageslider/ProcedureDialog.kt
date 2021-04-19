@@ -63,7 +63,7 @@ class ProcedureDialog(
                 imageUri,
                 activityContext
             )
-            imageSliderAdapter.savedCrops += 1
+            imageSliderAdapter.nSavedCrops += 1
             postButtonPress()
         }
     }
@@ -82,8 +82,8 @@ class ProcedureDialog(
      */
     private fun postButtonPress() {
         imageSliderAdapter.apply {
-            if (this.count == 1)
-                this.returnToMainActivity()
+            // if (this.count == 1)
+                // activityContext.returnToMainActivity()
         }
 
         imageSlider.apply {

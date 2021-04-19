@@ -7,8 +7,6 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +14,6 @@ import com.autocrop.GlobalParameters
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.SELECTED_IMAGE_URI_STRINGS_IDENTIFIER
-import com.autocrop.ops.croppedImage
 import com.autocrop.utils.android.intentExtraIdentifier
 import com.autocrop.utils.toInt
 import com.autocrop.utils.android.putExtra
@@ -58,11 +55,13 @@ class CroppingActivity : AppCompatActivity(), AsyncTaskCompletionListener {
         val currentImageNumberTextView: TextView = findViewById(R.id.cropping_current_image_number_text_view)
 
         // convert passed image uri strings back to uris, set nSelectedImages
-        val imageUris: List<Uri> = intent.getStringArrayExtra(SELECTED_IMAGE_URI_STRINGS_IDENTIFIER)!!.map {
+        val imageUris: Array<Uri> = intent.getStringArrayExtra(SELECTED_IMAGE_URI_STRINGS_IDENTIFIER)!!.map {
             Uri.parse(it)
-        }.also {
-            nSelectedImages = it.size
         }
+            .toTypedArray()
+            .also {
+                nSelectedImages = it.size
+            }
 
         // execute async cropping task
         croppingTask = Cropper(
@@ -71,7 +70,9 @@ class CroppingActivity : AppCompatActivity(), AsyncTaskCompletionListener {
             WeakReference(progressBar),
             WeakReference(currentImageNumberTextView),
             this
-        ).also { it.execute(*imageUris.toTypedArray()) }
+        ).also {
+            it.execute(*imageUris)
+        }
     }
 
     /**

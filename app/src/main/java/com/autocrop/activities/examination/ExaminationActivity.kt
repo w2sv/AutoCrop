@@ -1,10 +1,12 @@
 package com.autocrop.activities.examination
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager.widget.ViewPager
 import com.autocrop.*
@@ -12,10 +14,12 @@ import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
 import com.autocrop.activities.examination.imageslider.ImageSliderAdapter
 import com.autocrop.activities.examination.imageslider.ZoomOutPageTransformer
 import com.autocrop.activities.hideSystemUI
+import com.autocrop.activities.main.MainActivity
 import com.autocrop.utils.android.displayToast
 import com.autocrop.utils.android.intentExtraIdentifier
 import com.bunsenbrenner.screenshotboundremoval.*
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
+import java.lang.ref.WeakReference
 
 
 val N_SAVED_CROPS: String = intentExtraIdentifier("n_saved_crops")
@@ -43,7 +47,6 @@ class ExaminationActivity : FragmentActivity() {
     }
 
     private lateinit var imageSlider: ViewPager
-    private lateinit var sliderAdapter: ImageSliderAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,20 +63,16 @@ class ExaminationActivity : FragmentActivity() {
 
         fun initializeImageSlider() {
             imageSlider = findViewById(R.id.slide)
-            imageSlider.apply {
-                this.setPageTransformer(
-                    true,
-                    ZoomOutPageTransformer()
-                )
-                sliderAdapter =
-                    ImageSliderAdapter(
-                        this@ExaminationActivity,
-                        supportFragmentManager,
-                        imageSlider,
-                        textViews
-                    )
-                this.adapter = sliderAdapter
-            }
+            imageSlider.setPageTransformer(
+                true,
+                ZoomOutPageTransformer()
+            )
+            imageSlider.adapter = ImageSliderAdapter(
+                this,
+                supportFragmentManager,
+                imageSlider,
+                textViews
+            )
         }
 
         fun setToolbarButtonOnClickListeners() {
@@ -91,17 +90,16 @@ class ExaminationActivity : FragmentActivity() {
 
             save_all_button.setOnClickListener {
                 if (toolbarButtonsEnabled()) {
-                    CropEntiretySaver(
-                        progressBar,
-                        sliderAdapter,
-                        this
-                    ).execute()
+//                    CropEntiretySaver(
+//                        WeakReference(progressBar),
+//                        WeakReference(this)
+//                    ).execute()
                 }
             }
 
             dismiss_all_button.setOnClickListener {
                 if (toolbarButtonsEnabled())
-                    sliderAdapter.returnToMainActivity()
+                    returnToMainActivity()
             }
         }
 
@@ -115,7 +113,7 @@ class ExaminationActivity : FragmentActivity() {
         initializeImageSlider()
         setToolbarButtonOnClickListeners()
         displayDismissedImagesToastIfApplicable(
-            intent.getIntExtra(N_DISMISSED_IMAGES_IDENTIFIER, 0)
+            nDismissedImages = intent.getIntExtra(N_DISMISSED_IMAGES_IDENTIFIER, 0)
         )
     }
 
@@ -129,21 +127,20 @@ class ExaminationActivity : FragmentActivity() {
         hideSystemUI(window)
     }
 
+    private var backPressedOnce: Boolean = false
+
     override fun onBackPressed() {
         if (backPressedOnce) {
-            super.onBackPressed()
-            sliderAdapter.returnToMainActivity()
+
+            returnToMainActivity()
             return
         }
 
         backPressedOnce = true
-        displayToast("Another back press will lead", "to return to main screen")
+        displayToast("Tap again to return to main screen")
 
         Handler().postDelayed({ backPressedOnce = false }, 2500)
     }
-
-    private var backPressedOnce: Boolean = false
-
 
     /**
      * Resets toolbarButtons
@@ -152,5 +149,16 @@ class ExaminationActivity : FragmentActivity() {
         super.onStop()
 
         toolbarButtonsEnabled = true
+    }
+
+    private fun returnToMainActivity(){
+        toolbarButtonsEnabled = false
+
+//        startActivity(
+//            Intent(
+//            this,
+//                MainActivity::class.java
+//            ).putExtra(N_SAVED_CROPS, imageSlider.adapter.nSavedCrops)
+//        )
     }
 }

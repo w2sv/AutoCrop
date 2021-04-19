@@ -38,7 +38,7 @@ class ImageSliderAdapter(
         .toMutableList().also {
             GlobalParameters.clearImageCash()
         }
-    var savedCrops: Int = 0
+    var nSavedCrops: Int = 0
 
     init {
         // change page indication text view on slide execution
@@ -55,16 +55,6 @@ class ImageSliderAdapter(
 
         textViews.setRetentionPercentageText(croppedImages[0].second)
         textViews.setPageIndicationText(1, count)
-    }
-
-    fun returnToMainActivity(){
-        ExaminationActivity.toolbarButtonsEnabled = false
-        val intent = Intent(
-            context,
-            MainActivity::class.java
-        ).
-            apply{this.putExtra(N_SAVED_CROPS, savedCrops)}
-        ContextCompat.startActivity(context, intent, null)
     }
 
     // -----------------
