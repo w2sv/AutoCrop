@@ -13,7 +13,7 @@ import java.lang.ref.WeakReference
 class CropEntiretySaver(
     private val progressBar: WeakReference<ProgressBar>,
     private val context: WeakReference<Context>,
-    private val taskFinishedListener: SaveAllCropsTaskFinishedListener
+    private val onTaskFinished: () -> Unit
 ): AsyncTask<Pair<Uri, Bitmap>, Void, Void?>() {
 
     /**
@@ -46,6 +46,6 @@ class CropEntiretySaver(
         super.onPostExecute(result)
 
         progressBar.get()!!.visibility = View.INVISIBLE
-        taskFinishedListener.onTaskFinished()
+        onTaskFinished()
     }
 }
