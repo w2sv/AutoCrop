@@ -19,6 +19,7 @@ import com.autocrop.crop
 import com.autocrop.retentionPercentage
 import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
+import timber.log.Timber
 import kotlin.math.abs
 
 
