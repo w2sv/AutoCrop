@@ -27,7 +27,7 @@ val N_SAVED_CROPS: String = intentExtraIdentifier("n_saved_crops")
 
 interface ImageActionImpacted{
     fun incrementNSavedCrops()
-    fun returnToMainActivity()
+    fun returnToMainActivityOnExhaustedSlider()
 }
 
 
@@ -36,12 +36,14 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
         nSavedCrops += 1
     }
 
-    override fun returnToMainActivity(){
-        textViews.retentionPercentage.visibility = View.INVISIBLE
-        textViews.setPageIndicationText(69)
-        textViews.appTitle.visibility = View.VISIBLE
+    override fun returnToMainActivityOnExhaustedSlider(){
+        with(textViews){
+            this.appTitle.visibility = View.VISIBLE
+            this.retentionPercentage.visibility = View.INVISIBLE
+            this.setPageIndicationText(69, 420)
+        }
 
-        toMainActivity()
+        returnToMainActivity()
     }
 
     private lateinit var imageSlider: ViewPager2
@@ -57,13 +59,14 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
 
     var toolbarButtonsEnabled: Boolean = true
 
+
     inner class TextViews(
         val retentionPercentage: TextView,
-        private val pageIndication: TextView,
+        val pageIndication: TextView,
         val appTitle: TextView) {
 
-        fun setPageIndicationText(page: Int) {
-            pageIndication.text = "$page/${croppedImagesWithRetentionPercentages.size}"
+        fun setPageIndicationText(page: Int, nTotalPages: Int = croppedImagesWithRetentionPercentages.size) {
+            pageIndication.text = "$page/${nTotalPages}"
         }
 
         fun setRetentionPercentageText(percentage: Int) {
@@ -103,7 +106,7 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
                 this,
                 this.supportFragmentManager,
                 this
-            )
+            ) { toolbarButtonsEnabled }
         }
 
         fun setToolbarButtonOnClickListeners() {
@@ -123,7 +126,7 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
                     CropEntiretySaver(
                         WeakReference(progressBar),
                         WeakReference(this),
-                        onTaskFinished = this::toMainActivity
+                        onTaskFinished = this::returnToMainActivity
                     ).execute(*(imageUris zip croppedImagesWithRetentionPercentages.map { it.first }).toTypedArray())
 
                     nSavedCrops += croppedImagesWithRetentionPercentages.size
@@ -132,7 +135,7 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
 
             dismiss_all_button.setOnClickListener {
                 if (toolbarButtonsEnabled())
-                    toMainActivity()
+                    returnToMainActivity()
             }
         }
 
@@ -169,7 +172,7 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
         }
 
         else if (backPressedOnce) {
-            return toMainActivity()
+            return returnToMainActivity()
         }
 
         backPressedOnce = true
@@ -178,7 +181,7 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
         Handler().postDelayed({ backPressedOnce = false }, 2500)
     }
 
-    private fun toMainActivity(){
+    private fun returnToMainActivity(){
         toolbarButtonsEnabled = false
 
         startActivity(

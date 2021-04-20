@@ -41,7 +41,8 @@ class ImageSliderAdapter(
     private val imageSlider: ViewPager2,
     private val context: Context,
     private val fragmentManager: FragmentManager,
-    private val imageActionImpacted: ImageActionImpacted): RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
+    private val imageActionImpacted: ImageActionImpacted,
+    private val buttonsEnabled: () -> Boolean): RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
     override fun onConductedImageAction(sliderPosition: Int, incrementNSavedCrops: Boolean) {
         if (incrementNSavedCrops)
@@ -49,7 +50,7 @@ class ImageSliderAdapter(
 
         if(itemCount == 1) {
             imageSlider.removeViewAt(sliderPosition)
-            return imageActionImpacted.returnToMainActivity()
+            return imageActionImpacted.returnToMainActivityOnExhaustedSlider()
         }
 
         this.imageUris.removeAt(sliderPosition)
@@ -78,7 +79,7 @@ class ImageSliderAdapter(
                     when (event?.action) {
                         MotionEvent.ACTION_DOWN -> startCoordinates = event.coordinates()
                         MotionEvent.ACTION_UP -> {
-                            if (isClick(event.coordinates()))
+                            if (isClick(event.coordinates()) && buttonsEnabled())
                                 ProcedureDialog(
                                     adapterPosition,
                                     imageUris[adapterPosition],
