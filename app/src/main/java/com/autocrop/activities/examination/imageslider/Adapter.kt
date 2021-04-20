@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.autocrop.CropWithRetentionPercentage
+import com.autocrop.GlobalParameters
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ImageActionImpacted
 import com.autocrop.utils.toInt
@@ -35,8 +36,8 @@ interface ImageActionListener{
 
 
 class ImageSliderAdapter(
-    private val imageUris: MutableList<Uri>,
-    private val croppedImagesWithRetentionPercentages: MutableList<CropWithRetentionPercentage>,
+//    private val imageUris: MutableList<Uri>,
+//    private val croppedImagesWithRetentionPercentages: MutableList<CropWithRetentionPercentage>,
     private val textViews: ExaminationActivity.TextViews,
     private val imageSlider: ViewPager2,
     private val context: Context,
@@ -53,13 +54,12 @@ class ImageSliderAdapter(
             return imageActionImpacted.returnToMainActivityOnExhaustedSlider()
         }
 
-        this.imageUris.removeAt(sliderPosition)
-        this.croppedImagesWithRetentionPercentages.removeAt(sliderPosition)
+        GlobalParameters.cropBundleList.removeAt(sliderPosition)
 
         this.notifyItemRemoved(sliderPosition) // immediately updates itemCount
 
         val newPosition = listOf(sliderPosition, sliderPosition - 1)[(sliderPosition == itemCount).toInt()]
-        textViews.setRetentionPercentageText(croppedImagesWithRetentionPercentages[newPosition].second)
+        textViews.setRetentionPercentageText(GlobalParameters.cropBundleList[newPosition].third)
         textViews.setPageIndicationText(newPosition + 1)
     }
 
@@ -82,8 +82,6 @@ class ImageSliderAdapter(
                             if (isClick(event.coordinates()) && buttonsEnabled())
                                 ProcedureDialog(
                                     adapterPosition,
-                                    imageUris[adapterPosition],
-                                    croppedImagesWithRetentionPercentages[adapterPosition].first,
                                     context,
                                     this@ImageSliderAdapter
                                 )
@@ -110,7 +108,7 @@ class ImageSliderAdapter(
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
 
-                textViews.setRetentionPercentageText(croppedImagesWithRetentionPercentages[position].second)
+                textViews.setRetentionPercentageText(GlobalParameters.cropBundleList[position].third)
                 textViews.setPageIndicationText(position + 1)
             }
 
@@ -123,7 +121,7 @@ class ImageSliderAdapter(
     // -----------------
     // OVERRIDES
     // -----------------
-    override fun getItemCount(): Int = croppedImagesWithRetentionPercentages.size
+    override fun getItemCount(): Int = GlobalParameters.cropBundleList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -134,6 +132,6 @@ class ImageSliderAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.cropImageView.setImageBitmap(croppedImagesWithRetentionPercentages[position].first)
+        holder.cropImageView.setImageBitmap(GlobalParameters.cropBundleList[position].second)
     }
 }

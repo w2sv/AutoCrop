@@ -23,8 +23,6 @@ import com.autocrop.utils.toInt
  */
 class ProcedureDialog(
     private val position: Int,
-    private val imageUri: Uri,
-    private val croppedImage: Bitmap,
     private val activityContext: Context,
     private val imageActionListener: ImageActionListener) : DialogFragment() {
 
@@ -55,8 +53,8 @@ class ProcedureDialog(
                     object: DialogInterface.OnClickListener{
                         override fun onClick(dialog: DialogInterface, which: Int){
                             saveCropAndDeleteScreenshotIfApplicable(
-                                croppedImage,
-                                imageUri,
+                                GlobalParameters.cropBundleList[position].second,
+                                GlobalParameters.cropBundleList[position].first,
                                 activityContext
                             )
                             imageActionListener.onConductedImageAction(

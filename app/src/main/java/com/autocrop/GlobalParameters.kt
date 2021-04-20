@@ -1,5 +1,6 @@
 package com.autocrop
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -10,13 +11,13 @@ import kotlin.properties.Delegates
 
 
 object GlobalParameters {
-    val imageCash: MutableMap<Uri, CropWithRetentionPercentage> = mutableMapOf()
+    val cropBundleList: MutableList<Triple<Uri, Bitmap, Int>> = mutableListOf()
 
     /**
      * Conducts additional logging
      */
-    fun clearImageCash(){
-        imageCash.clear().also { Timber.i("Cleared image cash") }
+    fun clearCropBundleList(){
+        cropBundleList.clear().also { Timber.i("Cleared image cash") }
     }
 
     var deleteInputScreenshots by Delegates.notNull<Boolean>()

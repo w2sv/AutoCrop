@@ -93,8 +93,8 @@ class CroppingActivity : AppCompatActivity(), AsyncTaskCompletionListener {
 
         // start ExaminationActivity in case of at least 1 successful crop,
         // otherwise return to MainActivity
-        if (GlobalParameters.imageCash.isNotEmpty())
-            startExaminationActivity(nSelectedImages - GlobalParameters.imageCash.size)
+        if (GlobalParameters.cropBundleList.isNotEmpty())
+            startExaminationActivity(nSelectedImages - GlobalParameters.cropBundleList.size)
         else
             startMainActivity(putDismissedImagesQuantity = true)
     }
@@ -116,7 +116,7 @@ class CroppingActivity : AppCompatActivity(), AsyncTaskCompletionListener {
         croppingTask.cancel(false).also {
             Timber.i(listOf("Couldn't cancel cropping task", "Cropping task successfully cancelled")[it.toInt()])
         }
-        GlobalParameters.clearImageCash()
+        GlobalParameters.clearCropBundleList()
 
         return startMainActivity(putDismissedImagesQuantity = false)
     }
@@ -170,7 +170,9 @@ class Cropper(
                 // attempt to crop image, add uri-crop mapping to image cash if successful
                 with(croppedImage(image)) {
                     if (this != null)
-                        GlobalParameters.imageCash[uri] = this
+                        GlobalParameters.cropBundleList.add(
+                            Triple(uri, this.first, this.second)
+                        )
                 }
             }
 

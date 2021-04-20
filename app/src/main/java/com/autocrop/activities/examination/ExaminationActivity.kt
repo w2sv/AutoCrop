@@ -48,13 +48,6 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
 
     private lateinit var imageSlider: ViewPager2
 
-    // TODO
-    val croppedImagesWithRetentionPercentages: MutableList<CropWithRetentionPercentage> = GlobalParameters.imageCash.values
-        .toMutableList()
-    val imageUris: MutableList<Uri> = GlobalParameters.imageCash.keys
-        .toMutableList().also {
-            GlobalParameters.clearImageCash()
-        }
     var nSavedCrops: Int = 0
 
     var toolbarButtonsEnabled: Boolean = true
@@ -65,7 +58,7 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
         val pageIndication: TextView,
         val appTitle: TextView) {
 
-        fun setPageIndicationText(page: Int, nTotalPages: Int = croppedImagesWithRetentionPercentages.size) {
+        fun setPageIndicationText(page: Int, nTotalPages: Int = GlobalParameters.cropBundleList.size) {
             pageIndication.text = "$page/${nTotalPages}"
         }
 
@@ -89,7 +82,7 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
             findViewById(R.id.page_indication),
             findViewById(R.id.title_text_view)
         ).apply {
-            this.setRetentionPercentageText(croppedImagesWithRetentionPercentages[0].second)
+            this.setRetentionPercentageText(GlobalParameters.cropBundleList[0].third)
             this.setPageIndicationText(1)
         }
 
@@ -99,8 +92,6 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
 //                ZoomOutPageTransformer()
 //            )
             imageSlider.adapter = ImageSliderAdapter(
-                imageUris,
-                croppedImagesWithRetentionPercentages,
                 textViews,
                 imageSlider,
                 this,
@@ -127,9 +118,9 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
                         WeakReference(progressBar),
                         WeakReference(this),
                         onTaskFinished = this::returnToMainActivity
-                    ).execute(*(imageUris zip croppedImagesWithRetentionPercentages.map { it.first }).toTypedArray())
+                    ).execute()
 
-                    nSavedCrops += croppedImagesWithRetentionPercentages.size
+                    nSavedCrops += GlobalParameters.cropBundleList.size
                 }
             }
 
@@ -161,6 +152,12 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         hideSystemUI(window)
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        GlobalParameters.clearCropBundleList()
     }
 
     private var backPressedOnce: Boolean = false
