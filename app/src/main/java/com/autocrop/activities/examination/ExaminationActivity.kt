@@ -82,7 +82,7 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
             findViewById(R.id.page_indication),
             findViewById(R.id.title_text_view)
         ).apply {
-            this.setRetentionPercentageText(GlobalParameters.cropBundleList[0].third)
+            this.setRetentionPercentageText(GlobalParameters.cropBundleList[0].retentionPercentage())
             this.setPageIndicationText(1)
         }
 

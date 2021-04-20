@@ -1,8 +1,8 @@
 package com.autocrop.activities.examination.imageslider
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -12,32 +12,25 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import com.autocrop.CropWithRetentionPercentage
 import com.autocrop.GlobalParameters
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ImageActionImpacted
+import com.autocrop.crop
+import com.autocrop.retentionPercentage
 import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
-import timber.log.Timber
 import kotlin.math.abs
 
 
 private fun manhattenNorm(a: Point, b: Point): Int = abs(a.x - b.x) + abs(a.y - b.y)
 
 
-/**
- *  Class holding both cropped images and corresponding uris,
- *  defining sliding/image displaying behavior and inherent side effects such as
- *      the page indication updating
- */
 interface ImageActionListener{
     fun onConductedImageAction(sliderPosition: Int, incrementNSavedCrops: Boolean)
 }
 
 
 class ImageSliderAdapter(
-//    private val imageUris: MutableList<Uri>,
-//    private val croppedImagesWithRetentionPercentages: MutableList<CropWithRetentionPercentage>,
     private val textViews: ExaminationActivity.TextViews,
     private val imageSlider: ViewPager2,
     private val context: Context,
@@ -59,10 +52,11 @@ class ImageSliderAdapter(
         this.notifyItemRemoved(sliderPosition) // immediately updates itemCount
 
         val newPosition = listOf(sliderPosition, sliderPosition - 1)[(sliderPosition == itemCount).toInt()]
-        textViews.setRetentionPercentageText(GlobalParameters.cropBundleList[newPosition].third)
+        textViews.setRetentionPercentageText(GlobalParameters.cropBundleList[newPosition].retentionPercentage())
         textViews.setPageIndicationText(newPosition + 1)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     inner class ViewHolder(view: ImageView) : RecyclerView.ViewHolder(view) {
         val cropImageView: ImageView = view.findViewById(R.id.slide_item_image_view_examination_activity)
 
@@ -86,7 +80,6 @@ class ImageSliderAdapter(
                                     this@ImageSliderAdapter
                                 )
                                     .show(fragmentManager, "procedure")
-                                    .also{Timber.i("Registered click")}
                         }
                     }
                     return true
@@ -108,7 +101,7 @@ class ImageSliderAdapter(
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
 
-                textViews.setRetentionPercentageText(GlobalParameters.cropBundleList[position].third)
+                textViews.setRetentionPercentageText(GlobalParameters.cropBundleList[position].retentionPercentage())
                 textViews.setPageIndicationText(position + 1)
             }
 
@@ -132,6 +125,6 @@ class ImageSliderAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.cropImageView.setImageBitmap(GlobalParameters.cropBundleList[position].second)
+        holder.cropImageView.setImageBitmap(GlobalParameters.cropBundleList[position].crop())
     }
 }

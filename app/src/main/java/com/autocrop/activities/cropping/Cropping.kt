@@ -1,7 +1,6 @@
 package com.autocrop.activities.cropping
 
 import android.graphics.Bitmap
-import com.autocrop.CropWithRetentionPercentage
 import kotlin.math.roundToInt
 
 
@@ -9,7 +8,7 @@ private typealias BorderPair = Pair<Int, Int>
 private const val PIXEL_COMPARISONS_PER_ROW: Int = 5
 
 
-fun croppedImage(image: Bitmap): CropWithRetentionPercentage?{
+fun croppedImage(image: Bitmap): Pair<Bitmap, Int>?{
     val lastRowIndex: Int = image.height - 1
 
     // get raw border pair candidates

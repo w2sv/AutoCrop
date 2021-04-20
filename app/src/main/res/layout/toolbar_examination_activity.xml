@@ -9,29 +9,29 @@
 
     <!-- Button -->
 
-        <!-- Save All -->
-
-    <Button
-        android:id="@+id/save_all_button"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@android:color/transparent"
-        android:text="@string/save_all_button_text"
-        android:textColor="@android:color/white"
-        android:translationX="-10dp"/>
-
         <!-- Dismiss All -->
 
     <Button
         android:id="@+id/dismiss_all_button"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_gravity="start"
         android:background="@android:color/transparent"
         android:text="@string/dismiss_all_button_text"
         android:textColor="@android:color/white"
-        android:translationX="-45dp" />
+        android:translationX="-10dp" />
+
+        <!-- Save All -->
+
+    <Button
+        android:id="@+id/save_all_button"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent"
+        android:text="@string/save_all_button_text"
+        android:textColor="@android:color/white"
+        android:translationX="-45dp"/>
 
     <!-- Text View -->
 

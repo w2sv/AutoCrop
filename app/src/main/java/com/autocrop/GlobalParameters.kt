@@ -10,8 +10,14 @@ import java.io.File
 import kotlin.properties.Delegates
 
 
+typealias CropBundle = Triple<Uri, Bitmap, Int>
+fun CropBundle.screenshotUri(): Uri = this.first
+fun CropBundle.crop(): Bitmap = this.second
+fun CropBundle.retentionPercentage(): Int = this.third
+
+
 object GlobalParameters {
-    val cropBundleList: MutableList<Triple<Uri, Bitmap, Int>> = mutableListOf()
+    val cropBundleList: MutableList<CropBundle> = mutableListOf()
 
     /**
      * Conducts additional logging

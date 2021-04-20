@@ -12,7 +12,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.viewpager.widget.ViewPager
 import com.autocrop.GlobalParameters
+import com.autocrop.crop
 import com.autocrop.ops.saveCropAndDeleteScreenshotIfApplicable
+import com.autocrop.screenshotUri
 import com.autocrop.utils.android.paddedMessage
 import com.autocrop.utils.toInt
 
@@ -38,7 +40,7 @@ class ProcedureDialog(
                     )
                 )
                 .setNegativeButton(
-                    "No",
+                    "No, remove",
                     object: DialogInterface.OnClickListener{
                         override fun onClick(dialog: DialogInterface, which: Int){
                             imageActionListener.onConductedImageAction(
@@ -53,8 +55,8 @@ class ProcedureDialog(
                     object: DialogInterface.OnClickListener{
                         override fun onClick(dialog: DialogInterface, which: Int){
                             saveCropAndDeleteScreenshotIfApplicable(
-                                GlobalParameters.cropBundleList[position].second,
-                                GlobalParameters.cropBundleList[position].first,
+                                GlobalParameters.cropBundleList[position].crop(),
+                                GlobalParameters.cropBundleList[position].screenshotUri(),
                                 activityContext
                             )
                             imageActionListener.onConductedImageAction(
