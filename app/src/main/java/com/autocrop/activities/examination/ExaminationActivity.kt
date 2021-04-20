@@ -2,17 +2,16 @@ package com.autocrop.activities.examination
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.*
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
 import com.autocrop.activities.examination.imageslider.ImageSliderAdapter
-import com.autocrop.activities.examination.imageslider.ZoomOutPageTransformer
 import com.autocrop.activities.hideSystemUI
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.utils.android.displayToast
@@ -25,28 +24,39 @@ import java.lang.ref.WeakReference
 val N_SAVED_CROPS: String = intentExtraIdentifier("n_saved_crops")
 
 
-data class ExaminationActivityTextViews(
-    val retentionPercentage: TextView,
-    val pageIndication: TextView,
-    val appTitle: TextView
-) {
-
-    fun setPageIndicationText(page: Int, of: Int) {
-        pageIndication.text = "$page/$of"
-    }
-
-    fun setRetentionPercentageText(percentage: Int) {
-        retentionPercentage.text = "$percentage% retained"
-    }
+interface SaveAllCropsTaskFinishedListener{
+    fun onTaskFinished()
 }
 
 
-class ExaminationActivity : FragmentActivity() {
-    companion object {
-        var toolbarButtonsEnabled: Boolean = true
+class ExaminationActivity : FragmentActivity(), SaveAllCropsTaskFinishedListener {
+    private lateinit var imageSlider: ViewPager2
+
+    // TODO
+    val croppedImagesWithRetentionPercentages: MutableList<CropWithRetentionPercentage> = GlobalParameters.imageCash.values
+        .toMutableList()
+    val imageUris: MutableList<Uri> = GlobalParameters.imageCash.keys
+        .toMutableList().also {
+            GlobalParameters.clearImageCash()
+        }
+    var nSavedCrops: Int = 0
+
+    var toolbarButtonsEnabled: Boolean = true
+
+    inner class ResponsiveTextViews(
+        private val retentionPercentage: TextView,
+        private val pageIndication: TextView) {
+
+        fun setPageIndicationText(page: Int) {
+            pageIndication.text = "$page/${croppedImagesWithRetentionPercentages.size}"
+        }
+
+        fun setRetentionPercentageText(percentage: Int) {
+            retentionPercentage.text = "$percentage% retained"
+        }
     }
 
-    private lateinit var imageSlider: ViewPager
+    lateinit var textViews: ResponsiveTextViews
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,22 +65,24 @@ class ExaminationActivity : FragmentActivity() {
         setContentView(R.layout.activity_examination)
 
         val progressBar: ProgressBar = findViewById(R.id.indeterminateBar)
-        val textViews = ExaminationActivityTextViews(
+        val appTitleTextView: TextView = findViewById(R.id.title_text_view)
+
+        textViews = ResponsiveTextViews(
             findViewById(R.id.retention_percentage),
-            findViewById(R.id.page_indication),
-            findViewById(R.id.title_text_view)
-        )
+            findViewById(R.id.page_indication)
+        ).apply {
+            this.setRetentionPercentageText(croppedImagesWithRetentionPercentages[0].second)
+            this.setPageIndicationText(1)
+        }
 
         fun initializeImageSlider() {
-            imageSlider = findViewById(R.id.slide)
-            imageSlider.setPageTransformer(
-                true,
-                ZoomOutPageTransformer()
-            )
+            imageSlider = findViewById(R.id.view_pager)
+//            imageSlider.setPageTransformer(
+//                ZoomOutPageTransformer()
+//            )
             imageSlider.adapter = ImageSliderAdapter(
-                this,
-                supportFragmentManager,
                 imageSlider,
+                croppedImagesWithRetentionPercentages,
                 textViews
             )
         }
@@ -81,19 +93,21 @@ class ExaminationActivity : FragmentActivity() {
              * Inherently sets toolbarButtonsEnabled to false if true
              */
             fun toolbarButtonsEnabled(): Boolean {
-                if (toolbarButtonsEnabled) {
-                    toolbarButtonsEnabled = false
-                    return !toolbarButtonsEnabled
+                return toolbarButtonsEnabled.also {
+                    if (toolbarButtonsEnabled)
+                        toolbarButtonsEnabled = !toolbarButtonsEnabled
                 }
-                return toolbarButtonsEnabled
             }
 
             save_all_button.setOnClickListener {
                 if (toolbarButtonsEnabled()) {
-//                    CropEntiretySaver(
-//                        WeakReference(progressBar),
-//                        WeakReference(this)
-//                    ).execute()
+                    CropEntiretySaver(
+                        WeakReference(progressBar),
+                        WeakReference(this),
+                        this
+                    ).execute(*(imageUris zip croppedImagesWithRetentionPercentages.map { it.first }).toTypedArray())
+
+                    nSavedCrops += croppedImagesWithRetentionPercentages.size
                 }
             }
 
@@ -142,23 +156,18 @@ class ExaminationActivity : FragmentActivity() {
         Handler().postDelayed({ backPressedOnce = false }, 2500)
     }
 
-    /**
-     * Resets toolbarButtons
-     */
-    override fun onStop() {
-        super.onStop()
-
-        toolbarButtonsEnabled = true
-    }
-
     private fun returnToMainActivity(){
         toolbarButtonsEnabled = false
 
-//        startActivity(
-//            Intent(
-//            this,
-//                MainActivity::class.java
-//            ).putExtra(N_SAVED_CROPS, imageSlider.adapter.nSavedCrops)
-//        )
+        startActivity(
+            Intent(
+            this,
+                MainActivity::class.java
+            ).putExtra(N_SAVED_CROPS, nSavedCrops)
+        )
+    }
+
+    override fun onTaskFinished(){
+        returnToMainActivity()
     }
 }
