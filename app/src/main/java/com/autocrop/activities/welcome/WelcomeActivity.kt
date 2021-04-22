@@ -3,13 +3,12 @@ package com.autocrop.activities.welcome
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import com.autocrop.activities.SystemUIHider
-
+import com.autocrop.activities.SystemUiHidingAppCompatActivity
 import com.autocrop.activities.main.MainActivity
 import com.bunsenbrenner.screenshotboundremoval.R
 
 
-class WelcomeActivity: SystemUIHider() {
+class WelcomeActivity : SystemUiHidingAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)

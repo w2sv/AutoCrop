@@ -45,9 +45,8 @@
         android:textColor="@color/green"
         android:textSize="14sp"
         android:textStyle="italic"
-        android:translationX="-70dp"
-        android:visibility="visible"
-        tools:text="45% retained" />
+        android:translationX="-55dp"
+        android:visibility="visible" />
 
         <!-- Page Indication -->
 

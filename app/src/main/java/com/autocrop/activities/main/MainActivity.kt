@@ -8,8 +8,8 @@ import android.os.Bundle
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.appcompat.widget.PopupMenu
-import androidx.fragment.app.FragmentActivity
 import com.autocrop.*
+import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.cropping.DismissedImagesQuantity
 import com.autocrop.activities.examination.N_SAVED_CROPS
@@ -24,10 +24,11 @@ import timber.log.Timber
 import timber.log.Timber.DebugTree
 
 
-val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String = intentExtraIdentifier("selected_image_uri_strings")
+val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String =
+    intentExtraIdentifier("selected_image_uri_strings")
 
 
-class MainActivity : FragmentActivity() {
+class MainActivity : SystemUiHidingFragmentActivity() {
 
     companion object {
 
@@ -35,12 +36,13 @@ class MainActivity : FragmentActivity() {
 
         var pixelField: PixelField? = null
         fun initializePixelField(windowManager: WindowManager) {
-            Point().run {
-                windowManager.defaultDisplay.getRealSize(this)
-                pixelField =
-                    PixelField(
-                        this.x,
-                        this.y
+            with(Point()) {
+                windowManager.defaultDisplay.getRealSize(this).also {
+                    Timber.i("Screen resolution: $this")
+                }
+                pixelField = PixelField(
+                        x,
+                        y
                     )
             }
         }
@@ -52,17 +54,12 @@ class MainActivity : FragmentActivity() {
             WRITE
         }
 
-        private enum class IntentCode{
+        private enum class IntentCode {
             IMAGE_SELECTION
         }
     }
 
     // ----------------Generic behaviour----------------
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        hideSystemUI(window)
-    }
 
     /**
      * Triggers app exiting
@@ -126,27 +123,20 @@ class MainActivity : FragmentActivity() {
 
     // ------------Lifecycle stages---------------
 
-    override fun onStart() {
-        super.onStart()
-        hideSystemUI(window)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        fun initializeTimberIfDebugging(){
-            if (debuggingMode())
-                Timber.plant(DebugTree())
-        }
 
         fun setPixelField() {
-            pixelField?.redraw().also { Timber.i("Redrew pixel field")} ?:
-            initializePixelField(windowManager).also{ Timber.i("Initialized pixel field") }
+            pixelField?.redraw()
+                .also { Timber.i("Redrew pixel field") }
+            ?: initializePixelField(windowManager)
+                .also { Timber.i("Initialized pixel field") }
 
             PFragment(pixelField).run {
-                this.setView(findViewById<FrameLayout>(R.id.canvas_container), this@MainActivity)
+                setView(findViewById<FrameLayout>(R.id.canvas_container), this@MainActivity)
             }
         }
 
-        fun displayPreviousActivityResultToast(){
+        fun displayPreviousActivityResultToast() {
             fun displaySavingResultToast(nSavedCrops: Int) {
                 when (nSavedCrops) {
                     0 -> displayToast("Dismissed everything")
@@ -183,8 +173,8 @@ class MainActivity : FragmentActivity() {
             with(intent.getIntExtra(N_SAVED_CROPS, -1)) {
                 if (this != -1)
                     displaySavingResultToast(this)
-                else{
-                    with(intent.getEnumExtra<DismissedImagesQuantity>()){
+                else {
+                    with(intent.getEnumExtra<DismissedImagesQuantity>()) {
                         if (this != null)
                             displayAllImagesDismissedToast(this)
                     }
@@ -235,7 +225,8 @@ class MainActivity : FragmentActivity() {
                         when (item.itemId) {
                             // input screenshot deleting
                             R.id.main_menu_item_delete_input_screenshots -> {
-                                GlobalParameters.deleteInputScreenshots = !GlobalParameters.deleteInputScreenshots
+                                GlobalParameters.deleteInputScreenshots =
+                                    !GlobalParameters.deleteInputScreenshots
                                 Timber.i("Toggled GlobalParameters.deleteInputScreenshots to ${GlobalParameters.deleteInputScreenshots}")
 
                                 item.isChecked = GlobalParameters.deleteInputScreenshots
@@ -245,7 +236,7 @@ class MainActivity : FragmentActivity() {
 
                             // saving to dedicated directory
                             R.id.main_menu_item_save_to_autocrop_folder -> {
-                                GlobalParameters.toggleSaveToDedicatedDir()
+                                GlobalParameters.toggleSaveToAutocropDir()
                                 Timber.i("Toggled GlobalParameters.saveToAutoCropDir to ${GlobalParameters.saveToAutocropDir}")
 
                                 item.isChecked = GlobalParameters.saveToAutocropDir
@@ -263,7 +254,8 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initializeTimberIfDebugging()
+        if (debuggingMode())
+            Timber.plant(DebugTree())
         setPixelField()
         besetGlobalParametersFromSharedPreferences()
         setButtonOnClickListeners()
@@ -282,6 +274,8 @@ class MainActivity : FragmentActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 IntentCode.IMAGE_SELECTION.ordinal -> {
@@ -309,7 +303,7 @@ class MainActivity : FragmentActivity() {
     private var alteredPreferences: Boolean = false
 
     /**
-     * Writes preferences to shared preferences
+     * Writes set preferences to shared preferences
      * in case of them having been altered
      */
     override fun onStop() {

@@ -7,6 +7,7 @@ import android.os.AsyncTask
 import android.view.View
 import android.widget.ProgressBar
 import com.autocrop.GlobalParameters
+import com.autocrop.cropBundleList
 import com.autocrop.ops.saveCropAndDeleteScreenshotIfApplicable
 import java.lang.ref.WeakReference
 
@@ -18,7 +19,7 @@ class CropEntiretySaver(
 ): AsyncTask<Void, Void, Void?>() {
 
     /**
-     * Renders circular progress bar visible
+     * Renders progress bar visible
      */
     override fun onPreExecute() {
         super.onPreExecute()
@@ -27,10 +28,11 @@ class CropEntiretySaver(
     }
 
     /**
-     * Saves images
+     * Calls saveCropAndDeleteScreenshotIfApplicable for every crop remaining
+     * in cropBundleList
      */
     override fun doInBackground(vararg params: Void): Void? {
-        for ((uri, bitmap, _) in GlobalParameters.cropBundleList){
+        for ((uri, bitmap, _) in cropBundleList){
             saveCropAndDeleteScreenshotIfApplicable(
                 bitmap,
                 uri,
@@ -41,7 +43,7 @@ class CropEntiretySaver(
     }
 
     /**
-     * Renders circular progress bar invisible
+     * Hides progress bar
      */
     override fun onPostExecute(result: Void?) {
         super.onPostExecute(result)

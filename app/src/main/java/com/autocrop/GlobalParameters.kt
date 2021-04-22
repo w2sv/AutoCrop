@@ -1,7 +1,5 @@
 package com.autocrop
 
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import com.autocrop.utils.toInt
@@ -10,51 +8,56 @@ import java.io.File
 import kotlin.properties.Delegates
 
 
-typealias CropBundle = Triple<Uri, Bitmap, Int>
-fun CropBundle.screenshotUri(): Uri = this.first
-fun CropBundle.crop(): Bitmap = this.second
-fun CropBundle.retentionPercentage(): Int = this.third
-
-
+/**
+ * Singleton encapsulating entirety of parameters directly set by user
+ * having a pseudo-global impact
+ */
 object GlobalParameters {
-    val cropBundleList: MutableList<CropBundle> = mutableListOf()
 
-    /**
-     * Conducts additional logging
-     */
-    fun clearCropBundleList(){
-        cropBundleList.clear().also { Timber.i("Cleared image cash") }
-    }
+    // ---------------deleteInputScreenshots-------------
 
     var deleteInputScreenshots by Delegates.notNull<Boolean>()
+
+    // -------------saveToAutocropDir--------------------
+
     var saveToAutocropDir by Delegates.notNull<Boolean>()
+    private var autoCropDirExistenceAsserted: Boolean = false
+
+    /**
+     * Equals {Environment.DIRECTORY_PICTURES} or {Environment.DIRECTORY_PICTURES + autocrop_dirname}
+     * if saveToAutocropDir set to true
+     */
+    val relativeCropSaveDirPath: String
+        get() = "${Environment.DIRECTORY_PICTURES}${
+            listOf(
+                "",
+                "${File.separator}AutoCropped"
+            )[saveToAutocropDir.toInt()]
+        }"
 
     /**
      * Creates AutoCrop dir in external storage pictures directory if saveToAutocropDir
      * true after toggling, dir not yet existent and Version < Q, beginning from which
      * directories are created automatically
      */
-    fun toggleSaveToDedicatedDir(){
+    fun toggleSaveToAutocropDir() {
         saveToAutocropDir = !saveToAutocropDir
 
-        if (saveToAutocropDir){
-            // TODO: test automatic dir creation starting from Q
-
+        if (saveToAutocropDir) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !autoCropDirExistenceAsserted)
                 with(
                     File(
-                        Environment.getExternalStoragePublicDirectory(relativeCropSaveDirPath).toString()
+                        Environment.getExternalStoragePublicDirectory(relativeCropSaveDirPath)
+                            .toString()
                     )
-                ){
+                ) {
                     if (!this.exists())
-                        this.mkdir().also { Timber.i("Created ${this.absolutePath}") }
+                        this.mkdir().also {
+                            Timber.i("Created ${this.absolutePath}")
+                        }
 
-                    autoCropDirExistenceAsserted = true }
+                    autoCropDirExistenceAsserted = true
+                }
         }
     }
-
-    private var autoCropDirExistenceAsserted: Boolean = false
-
-    val relativeCropSaveDirPath: String
-        get() = "${Environment.DIRECTORY_PICTURES}${listOf("", "${File.separator}AutoCropped")[saveToAutocropDir.toInt()]}"
 }

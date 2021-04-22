@@ -2,22 +2,22 @@ package com.autocrop.activities.examination
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.autocrop.*
+import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
 import com.autocrop.activities.examination.imageslider.ImageSliderAdapter
-import com.autocrop.activities.hideSystemUI
 import com.autocrop.activities.main.MainActivity
+import com.autocrop.clearCropBundleList
+import com.autocrop.cropBundleList
+import com.autocrop.retentionPercentage
 import com.autocrop.utils.android.displayToast
 import com.autocrop.utils.android.intentExtraIdentifier
-import com.bunsenbrenner.screenshotboundremoval.*
+import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
 import java.lang.ref.WeakReference
 
@@ -25,108 +25,97 @@ import java.lang.ref.WeakReference
 val N_SAVED_CROPS: String = intentExtraIdentifier("n_saved_crops")
 
 
-interface ImageActionImpacted{
+interface ImageActionReactionsPossessor {
     fun incrementNSavedCrops()
     fun returnToMainActivityOnExhaustedSlider()
 }
 
 
-class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
-    override fun incrementNSavedCrops(){
-        nSavedCrops += 1
-    }
+class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactionsPossessor {
+    private lateinit var imageSlider: ViewPager2
+    private lateinit var textViews: TextViews
 
-    override fun returnToMainActivityOnExhaustedSlider(){
-        with(textViews){
-            this.appTitle.visibility = View.VISIBLE
-            this.retentionPercentage.visibility = View.INVISIBLE
-            this.setPageIndicationText(69, 420)
+    private var nSavedCrops: Int = 0
+    private var buttonsEnabled: Boolean = true
+
+    inner class TextViews{
+        val retentionPercentage: TextView = findViewById(R.id.retention_percentage)
+        private val pageIndication: TextView = findViewById(R.id.page_indication)
+        val appTitle: TextView = findViewById(R.id.title_text_view)
+
+        init{
+            retentionPercentage.translationX -= (cropBundleList.size.toString().length - 1).let {
+                it * 25 + it * 6
+            }
+            setPageIndicationText(1)
+            setRetentionPercentageText(cropBundleList[0].retentionPercentage())
         }
 
-        returnToMainActivity()
-    }
-
-    private lateinit var imageSlider: ViewPager2
-
-    var nSavedCrops: Int = 0
-
-    var toolbarButtonsEnabled: Boolean = true
-
-
-    inner class TextViews(
-        val retentionPercentage: TextView,
-        val pageIndication: TextView,
-        val appTitle: TextView) {
-
-        fun setPageIndicationText(page: Int, nTotalPages: Int = GlobalParameters.cropBundleList.size) {
-            pageIndication.text = "$page/${nTotalPages}"
+        fun setPageIndicationText(page: Int, nTotalPages: Int = cropBundleList.size) {
+            pageIndication.text = getString(R.string.fracture_text, page, nTotalPages)
         }
 
         fun setRetentionPercentageText(percentage: Int) {
-            retentionPercentage.text = "$percentage% retained"
+            retentionPercentage.text = getString(R.string.examination_activity_retention_percentage_text, percentage)
+        }
+
+        fun renderAppTitleVisible(){
+            appTitle.visibility = View.VISIBLE
         }
     }
-
-    lateinit var textViews: TextViews
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
-        setContentView(R.layout.activity_examination)
-
-        val progressBar: ProgressBar = findViewById(R.id.indeterminateBar)
-
-        textViews = TextViews(
-            findViewById(R.id.retention_percentage),
-            findViewById(R.id.page_indication),
-            findViewById(R.id.title_text_view)
-        ).apply {
-            this.setRetentionPercentageText(GlobalParameters.cropBundleList[0].retentionPercentage())
-            this.setPageIndicationText(1)
-        }
-
-        fun initializeImageSlider() {
-            imageSlider = findViewById(R.id.view_pager)
+        fun initializeImageSlider(textViews: TextViews) {
+            imageSlider = findViewById<ViewPager2>(R.id.view_pager).apply{
+                adapter = ImageSliderAdapter(
+                    textViews,
+                    this,
+                    this@ExaminationActivity,
+                    this@ExaminationActivity.supportFragmentManager,
+                    this@ExaminationActivity
+                ) { buttonsEnabled }
+            }
 //            imageSlider.setPageTransformer(
 //                ZoomOutPageTransformer()
 //            )
-            imageSlider.adapter = ImageSliderAdapter(
-                textViews,
-                imageSlider,
-                this,
-                this.supportFragmentManager,
-                this
-            ) { toolbarButtonsEnabled }
         }
 
-        fun setToolbarButtonOnClickListeners() {
+        fun setToolbarButtonOnClickListeners(progressBar: ProgressBar) {
 
             /**
              * Inherently sets toolbarButtonsEnabled to false if true
              */
             fun toolbarButtonsEnabled(): Boolean {
-                return toolbarButtonsEnabled.also {
-                    if (toolbarButtonsEnabled)
-                        toolbarButtonsEnabled = !toolbarButtonsEnabled
+                return buttonsEnabled.also {
+                    if (buttonsEnabled)
+                        buttonsEnabled = !buttonsEnabled
                 }
             }
 
             save_all_button.setOnClickListener {
                 if (toolbarButtonsEnabled()) {
+                    imageSlider.removeAllViews().also {
+                        textViews.renderAppTitleVisible()
+                    }
                     CropEntiretySaver(
                         WeakReference(progressBar),
                         WeakReference(this),
                         onTaskFinished = this::returnToMainActivity
                     ).execute()
 
-                    nSavedCrops += GlobalParameters.cropBundleList.size
+                    nSavedCrops += cropBundleList.size
                 }
             }
 
             dismiss_all_button.setOnClickListener {
-                if (toolbarButtonsEnabled())
+                if (toolbarButtonsEnabled()){
+                    imageSlider.removeAllViews().also {
+                        textViews.renderAppTitleVisible()
+                    }
                     returnToMainActivity()
+                }
             }
         }
 
@@ -137,55 +126,81 @@ class ExaminationActivity : FragmentActivity(), ImageActionImpacted {
             }
         }
 
-        initializeImageSlider()
-        setToolbarButtonOnClickListeners()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
+        setContentView(R.layout.activity_examination)
+        textViews = TextViews()
+
+        initializeImageSlider(textViews)
+        setToolbarButtonOnClickListeners(progressBar = findViewById(R.id.indeterminateBar))
         displayDismissedImagesToastIfApplicable(
-            nDismissedImages = intent.getIntExtra(N_DISMISSED_IMAGES_IDENTIFIER, 0)
+            nDismissedImages = intent.getIntExtra(
+                N_DISMISSED_IMAGES_IDENTIFIER,
+                0
+            )
         )
     }
 
-    override fun onStart() {
-        super.onStart()
-        hideSystemUI(window)
+    // -----------------ImageActionReactionsPossessor overrides-----------------
+
+    override fun incrementNSavedCrops() {
+        nSavedCrops += 1
     }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        hideSystemUI(window)
-    }
+    override fun returnToMainActivityOnExhaustedSlider() {
+        with(textViews) {
+            renderAppTitleVisible()
+            retentionPercentage.visibility = View.INVISIBLE
+            setPageIndicationText(69, 420)
+        }
 
-    override fun onStop() {
-        super.onStop()
-
-        GlobalParameters.clearCropBundleList()
+        return returnToMainActivity()
     }
 
     private var backPressedOnce: Boolean = false
 
+    /**
+     * Blocked throughout the process of saving all crops,
+     * otherwise asks for second one as confirmation;
+     *
+     * Results in return to main activity
+     */
     override fun onBackPressed() {
-        if (!toolbarButtonsEnabled){
+        val resetDuration: Long = 2500
+
+        // block if saving all / dismissing all
+        if (!buttonsEnabled) {
             displayToast("Please wait until crops", "have been saved")
             return
         }
 
-        else if (backPressedOnce) {
+        // return to main activity if already pressed once
+        else if (backPressedOnce)
             return returnToMainActivity()
-        }
 
+        // display confirmation prompt toast, set backPressedOnce to true;
+        // schedule concurrent reset after reset duration
         backPressedOnce = true
         displayToast("Tap again to return to main screen")
 
-        Handler().postDelayed({ backPressedOnce = false }, 2500)
+        Handler().postDelayed(
+            { backPressedOnce = false },
+            resetDuration
+        )
     }
 
-    private fun returnToMainActivity(){
-        toolbarButtonsEnabled = false
+    /**
+     * Clears remaining cropBundle elements contained within cropBundleList
+     */
+    private fun returnToMainActivity() {
+        buttonsEnabled = false
 
         startActivity(
             Intent(
-            this,
+                this,
                 MainActivity::class.java
             ).putExtra(N_SAVED_CROPS, nSavedCrops)
-        )
+        ).also {
+            clearCropBundleList()
+        }
     }
 }
