@@ -10,6 +10,8 @@ private typealias BorderPairs = List<BorderPair>
 private const val N_PIXEL_COMPARISONS_PER_ROW: Int = 5
 private const val N_PIXEL_COMPARISONS_PER_COLUMN: Int = 4
 
+private const val UPPER_BOUND_MARGIN: Int = -1
+
 
 fun croppedImage(image: Bitmap): Pair<Bitmap, Int>?{
     val lastRowIndex: Int = image.height - 1
@@ -26,7 +28,7 @@ fun croppedImage(image: Bitmap): Pair<Bitmap, Int>?{
     }!!
 
     val y: Int = croppingBorders.first
-    val height: Int = croppingBorders.second - y
+    val height: Int = croppingBorders.second - y + UPPER_BOUND_MARGIN
 
     return Pair(
         Bitmap.createBitmap(
@@ -45,29 +47,28 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
 
     val croppingBorderPairCandidates: MutableList<BorderPair> = mutableListOf()
 
-    fun getCropStartInd(queryStartInd: Int){
-        fun getCropEndInd(borderStartInd: Int){
-            var precedingRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(borderStartInd, sampleStep)
+    fun getLowerBoundIndex(queryStartInd: Int){
+        fun getUpperBoundIndex(lowerBoundIndex: Int){
+            var precedingRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(lowerBoundIndex, sampleStep)
 
-            for (i in borderStartInd + 1 until lastRowIndex - 1){
+            for (i in lowerBoundIndex + 1 until lastRowIndex - 1){
                 val currentRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(i, sampleStep)
 
                 if (precedingRowHasFluctuation && !currentRowHasFluctuation){
                     croppingBorderPairCandidates.add(
                         BorderPair(
-                            borderStartInd,
+                            lowerBoundIndex,
                             i
                         )
                     )
-
-                    return getCropStartInd(i + 1)
+                    return getLowerBoundIndex(i + 1)
                 }
                 precedingRowHasFluctuation = currentRowHasFluctuation
             }
 
             croppingBorderPairCandidates.add(
                 BorderPair(
-                    borderStartInd,
+                    lowerBoundIndex,
                     lastRowIndex
                 )
             )
@@ -79,12 +80,12 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
             val currentRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(i + 1, sampleStep)
 
             if (!precedingRowHasFluctuation && currentRowHasFluctuation)
-                return getCropEndInd(i + 1)
+                return getUpperBoundIndex(i + 1)
             precedingRowHasFluctuation = currentRowHasFluctuation
         }
     }
 
-    getCropStartInd(0)
+    getLowerBoundIndex(0)
     return croppingBorderPairCandidates.toList()
 }
 
