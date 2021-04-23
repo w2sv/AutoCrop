@@ -14,15 +14,15 @@ private const val N_PIXEL_COMPARISONS_PER_COLUMN: Int = 4
 fun croppedImage(image: Bitmap): Pair<Bitmap, Int>?{
     val lastRowIndex: Int = image.height - 1
 
-    var borderPairCandidates: BorderPairs = getCroppingBorderPairCandidates(image, lastRowIndex).apply {
-        if (isEmpty())
-            return null
-    }
+    var borderPairCandidates: BorderPairs = getCroppingBorderPairCandidates(image, lastRowIndex)
 
     // discard cropping borders limiting crop with non-fluctuating columns in horizontal center vicinity
     // if more than one border pair candidate found
     if (borderPairCandidates.size > 1)
         borderPairCandidates = borderPairCandidates.filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(image)
+
+    if (borderPairCandidates.isEmpty())
+        return null
 
     // find cropping border pair of maximal crop height
     val croppingBorders: BorderPair = borderPairCandidates.maxBy {
@@ -51,7 +51,7 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
 
     fun getCropStartInd(queryStartInd: Int){
         fun getCropEndInd(borderStartInd: Int){
-            for (i in borderStartInd until lastRowIndex-1){
+            for (i in borderStartInd until lastRowIndex - 1){
                 if (image.hasFluctuationThroughoutRow(i, sampleStep) && !image.hasFluctuationThroughoutRow(i + 1, sampleStep)){
                     croppingBorderPairCandidates.add(
                         BorderPair(
@@ -59,7 +59,7 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
                             i
                         )
                     )
-                    return getCropStartInd(i + 1)
+                    return getCropStartInd(i+1)
                 }
             }
             croppingBorderPairCandidates.add(
@@ -84,8 +84,8 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
  * x -> column index
  * y -> row index
  */
-private fun Bitmap.hasFluctuationThroughoutRow(y: Int, sampleStep: Int): Boolean = (sampleStep until width-1 step sampleStep).all {
-     getPixel(it, y) != getPixel(it - sampleStep, y)
+private fun Bitmap.hasFluctuationThroughoutRow(y: Int, sampleStep: Int): Boolean = !(sampleStep until width - 1 step sampleStep).all {
+     getPixel(it, y) == getPixel(it - sampleStep, y)
 }
 
 
@@ -106,7 +106,7 @@ private fun BorderPairs.filterInCenterProximityExclusivelyVerticallyFluctuatingO
 private fun Bitmap.hasFluctuationThroughoutColumn(x: Int, y: Int, candidateHeight: Int): Boolean{
     val step: Int = (candidateHeight + y) / N_PIXEL_COMPARISONS_PER_COLUMN
 
-    return (y + step until candidateHeight + y step step).all {
-        getPixel(x, it) != getPixel(x, it - step)
+    return !(y + step until candidateHeight + y step step).all {
+        getPixel(x, it) == getPixel(x, it - step)
     }
 }
