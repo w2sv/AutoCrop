@@ -6,11 +6,12 @@ import kotlin.math.roundToInt
 
 private typealias BorderPair = Pair<Int, Int>
 private typealias BorderPairs = List<BorderPair>
+private typealias BorderPairCandidates = MutableList<BorderPair>
 
 private const val N_PIXEL_COMPARISONS_PER_ROW: Int = 5
 private const val N_PIXEL_COMPARISONS_PER_COLUMN: Int = 4
 
-private const val UPPER_BOUND_MARGIN: Int = -1
+private const val UPPER_BOUND_MARGIN: Int = 1
 
 
 fun croppedImage(image: Bitmap): Pair<Bitmap, Int>?{
@@ -28,7 +29,7 @@ fun croppedImage(image: Bitmap): Pair<Bitmap, Int>?{
     }!!
 
     val y: Int = croppingBorders.first
-    val height: Int = croppingBorders.second - y + UPPER_BOUND_MARGIN
+    val height: Int = croppingBorders.second - y - UPPER_BOUND_MARGIN
 
     return Pair(
         Bitmap.createBitmap(
@@ -44,55 +45,58 @@ fun croppedImage(image: Bitmap): Pair<Bitmap, Int>?{
 
 private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): BorderPairs {
     val sampleStep: Int = image.width / N_PIXEL_COMPARISONS_PER_ROW
+    fun searchRange(startIndex: Int): IntRange = (startIndex until lastRowIndex)
 
-    val croppingBorderPairCandidates: MutableList<BorderPair> = mutableListOf()
-
-    fun getLowerBoundIndex(queryStartInd: Int){
-        fun getUpperBoundIndex(lowerBoundIndex: Int){
+    fun getLowerBoundIndex(queryStartInd: Int, candidates: BorderPairCandidates = mutableListOf()): BorderPairCandidates{
+        fun getUpperBoundIndex(lowerBoundIndex: Int, candidates: BorderPairCandidates): BorderPairCandidates{
             var precedingRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(lowerBoundIndex, sampleStep)
 
-            for (i in lowerBoundIndex + 1 until lastRowIndex - 1){
+            for (i in searchRange(lowerBoundIndex + 1)){
                 val currentRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(i, sampleStep)
 
                 if (precedingRowHasFluctuation && !currentRowHasFluctuation){
-                    croppingBorderPairCandidates.add(
+                    candidates.add(
                         BorderPair(
                             lowerBoundIndex,
                             i
                         )
                     )
-                    return getLowerBoundIndex(i + 1)
+                    return getLowerBoundIndex(i + 1, candidates)
                 }
                 precedingRowHasFluctuation = currentRowHasFluctuation
             }
 
-            croppingBorderPairCandidates.add(
+            candidates.add(
                 BorderPair(
                     lowerBoundIndex,
                     lastRowIndex
                 )
             )
+            return candidates
         }
 
         var precedingRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(queryStartInd, sampleStep)
 
-        for (i in queryStartInd + 1 until lastRowIndex - 1){
+        for (i in searchRange(queryStartInd + 1)){
             val currentRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(i + 1, sampleStep)
 
             if (!precedingRowHasFluctuation && currentRowHasFluctuation)
-                return getUpperBoundIndex(i + 1)
+                return getUpperBoundIndex(i + 1, candidates)
             precedingRowHasFluctuation = currentRowHasFluctuation
         }
+
+        return candidates
     }
 
-    getLowerBoundIndex(0)
-    return croppingBorderPairCandidates.toList()
+    return getLowerBoundIndex(0)
+        .toList()
 }
 
- /*
- * x -> column index
- * y -> row index
- */
+
+/*
+* x -> column index
+* y -> row index
+*/
 private fun Bitmap.hasFluctuationThroughoutRow(y: Int, sampleStep: Int): Boolean = !(sampleStep until width - 1 step sampleStep).all {
      getPixel(it, y) == getPixel(it - sampleStep, y)
 }
