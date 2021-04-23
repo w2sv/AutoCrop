@@ -14,15 +14,11 @@ private const val N_PIXEL_COMPARISONS_PER_COLUMN: Int = 4
 fun croppedImage(image: Bitmap): Pair<Bitmap, Int>?{
     val lastRowIndex: Int = image.height - 1
 
-    var borderPairCandidates: BorderPairs = getCroppingBorderPairCandidates(image, lastRowIndex)
-
-    // discard cropping borders limiting crop with non-fluctuating columns in horizontal center vicinity
-    // if more than one border pair candidate found
-    if (borderPairCandidates.size > 1)
-        borderPairCandidates = borderPairCandidates.filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(image)
-
-    if (borderPairCandidates.isEmpty())
-        return null
+    val borderPairCandidates: BorderPairs = getCroppingBorderPairCandidates(image, lastRowIndex)
+        .filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(image)
+        .also { if (it.isEmpty())
+            return null
+        }
 
     // find cropping border pair of maximal crop height
     val croppingBorders: BorderPair = borderPairCandidates.maxBy {
