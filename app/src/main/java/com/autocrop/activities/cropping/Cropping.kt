@@ -47,17 +47,24 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
 
     fun getCropStartInd(queryStartInd: Int){
         fun getCropEndInd(borderStartInd: Int){
-            for (i in borderStartInd until lastRowIndex - 1){
-                if (image.hasFluctuationThroughoutRow(i, sampleStep) && !image.hasFluctuationThroughoutRow(i + 1, sampleStep)){
+            var precedingRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(borderStartInd, sampleStep)
+
+            for (i in borderStartInd + 1 until lastRowIndex - 1){
+                val currentRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(i, sampleStep)
+
+                if (precedingRowHasFluctuation && !currentRowHasFluctuation){
                     croppingBorderPairCandidates.add(
                         BorderPair(
                             borderStartInd,
                             i
                         )
                     )
-                    return getCropStartInd(i+1)
+
+                    return getCropStartInd(i + 1)
                 }
+                precedingRowHasFluctuation = currentRowHasFluctuation
             }
+
             croppingBorderPairCandidates.add(
                 BorderPair(
                     borderStartInd,
@@ -66,9 +73,14 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
             )
         }
 
-        for (i in queryStartInd until lastRowIndex - 1){
-            if (!image.hasFluctuationThroughoutRow(i, sampleStep) && image.hasFluctuationThroughoutRow(i + 1, sampleStep))
+        var precedingRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(queryStartInd, sampleStep)
+
+        for (i in queryStartInd + 1 until lastRowIndex - 1){
+            val currentRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(i + 1, sampleStep)
+
+            if (!precedingRowHasFluctuation && currentRowHasFluctuation)
                 return getCropEndInd(i + 1)
+            precedingRowHasFluctuation = currentRowHasFluctuation
         }
     }
 
