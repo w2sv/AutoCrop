@@ -29,8 +29,8 @@ fun croppedImage(image: Bitmap): Pair<Bitmap, Int>?{
         it.second - it.first
     }!!
 
-    val y: Int = croppingBorders.first + 1
-    val height: Int = croppingBorders.second - 2 - y
+    val y: Int = croppingBorders.first
+    val height: Int = croppingBorders.second - y
 
     return Pair(
         Bitmap.createBitmap(
@@ -72,7 +72,7 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
 
         for (i in queryStartInd until lastRowIndex - 1){
             if (!image.hasFluctuationThroughoutRow(i, sampleStep) && image.hasFluctuationThroughoutRow(i + 1, sampleStep))
-                return getCropEndInd(i)
+                return getCropEndInd(i + 1)
         }
     }
 
