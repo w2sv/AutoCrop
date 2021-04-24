@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.autocrop.activities.cropping.cropping.croppedImage
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.SELECTED_IMAGE_URI_STRINGS_IDENTIFIER

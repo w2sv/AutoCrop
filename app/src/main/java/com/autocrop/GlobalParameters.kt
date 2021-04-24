@@ -60,4 +60,8 @@ object GlobalParameters {
                 }
         }
     }
+
+    // -------------indentedCropping--------------------
+
+    var indentedCropping: Boolean = true
 }

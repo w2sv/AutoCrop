@@ -1,12 +1,20 @@
-package com.autocrop.activities.cropping
+/*
+* x -> column index
+* y -> row index
+*/
+
+
+package com.autocrop.activities.cropping.cropping.manners
 
 import android.graphics.Bitmap
 import kotlin.math.roundToInt
 
+typealias BorderPair = Pair<Int, Int>
+fun BorderPair.difference(): Int = second - first
 
-private typealias BorderPair = Pair<Int, Int>
 private typealias BorderPairs = List<BorderPair>
 private typealias BorderPairCandidates = MutableList<BorderPair>
+typealias BitmapWithRetentionPercentage = Pair<Bitmap, Int>
 
 private const val N_PIXEL_COMPARISONS_PER_ROW: Int = 5
 private const val N_PIXEL_COMPARISONS_PER_COLUMN: Int = 4
@@ -14,10 +22,8 @@ private const val N_PIXEL_COMPARISONS_PER_COLUMN: Int = 4
 private const val UPPER_BOUND_MARGIN: Int = 1
 
 
-fun croppedImage(image: Bitmap): Pair<Bitmap, Int>?{
-    val lastRowIndex: Int = image.height - 1
-
-    val borderPairCandidates: BorderPairs = getCroppingBorderPairCandidates(image, lastRowIndex)
+fun continuouslyCroppedImage(image: Bitmap): BitmapWithRetentionPercentage?{
+    val borderPairCandidates: BorderPairs = getCroppingBorderPairCandidates(image, image.height - 1)
         .filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(image)
         .also { if (it.isEmpty())
             return null
@@ -47,8 +53,8 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
     val sampleStep: Int = image.width / N_PIXEL_COMPARISONS_PER_ROW
     fun searchRange(startIndex: Int): IntRange = (startIndex until lastRowIndex)
 
-    fun getLowerBoundIndex(queryStartInd: Int, candidates: BorderPairCandidates = mutableListOf()): BorderPairCandidates{
-        fun getUpperBoundIndex(lowerBoundIndex: Int, candidates: BorderPairCandidates): BorderPairCandidates{
+    fun getLowerBoundIndex(queryStartInd: Int, candidates: BorderPairCandidates): BorderPairCandidates {
+        fun getUpperBoundIndex(lowerBoundIndex: Int, candidates: BorderPairCandidates): BorderPairCandidates {
             var precedingRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(lowerBoundIndex, sampleStep)
 
             for (i in searchRange(lowerBoundIndex + 1)){
@@ -88,17 +94,13 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
         return candidates
     }
 
-    return getLowerBoundIndex(0)
+    return getLowerBoundIndex(0, mutableListOf())
         .toList()
 }
 
 
-/*
-* x -> column index
-* y -> row index
-*/
 private fun Bitmap.hasFluctuationThroughoutRow(y: Int, sampleStep: Int): Boolean = !(sampleStep until width - 1 step sampleStep).all {
-     getPixel(it, y) == getPixel(it - sampleStep, y)
+    getPixel(it, y) == getPixel(it - sampleStep, y)
 }
 
 
