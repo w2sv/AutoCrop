@@ -63,5 +63,5 @@ object GlobalParameters {
 
     // -------------indentedCropping--------------------
 
-    var indentedCropping: Boolean = true
+    var indentedCropping: Boolean = false
 }

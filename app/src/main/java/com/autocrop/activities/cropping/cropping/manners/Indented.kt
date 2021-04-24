@@ -11,6 +11,7 @@ private data class IndentedCropBorders(
     val y: BorderPair
 ){ fun nEnclosedPixels(): Int = x.difference() * y.difference() }
 
+
 private typealias IndentedCropBordersList = List<IndentedCropBorders>
 private typealias IndentedCropBordersCandidates = MutableList<IndentedCropBorders>
 
@@ -38,26 +39,6 @@ fun indentedlyCroppedImage(image: Bitmap): BitmapWithRetentionPercentage?{
             (nEnclosedPixels().toFloat() / (image.width * image.height).toFloat() * 100f).roundToInt()
         )
     }
-}
-
-
-private fun BorderPair.confirmedX(image: Bitmap, y: Int): Boolean{
-    val step: Int = max(difference() / N_BORDER_CONFIRMATION_PIXEL_COMPARISONS, 1)
-    return (
-        (first + step until second step step).all {
-            image.getPixel(it - step, y) != image.getPixel(it, y)
-        }
-    )
-}
-
-
-private fun BorderPair.confirmedY(image: Bitmap, x: Int): Boolean{
-    val step: Int = max(difference() / N_BORDER_CONFIRMATION_PIXEL_COMPARISONS, 1)
-    return (
-        (first + step until second step step).all {
-            image.getPixel(x, it - step) == image.getPixel(x, it)
-        }
-    )
 }
 
 
@@ -132,3 +113,23 @@ private fun Bitmap.hasNoFluctuationOverXSubsequentPixelsInCurrentRowAndFluctuati
     stepOperation(xPreceding, 1).run {
         getPixel(xPreceding, y) == getPixel(this, y) && getPixel(xPreceding, y + 1) != getPixel(this, y + 1)
     }
+
+
+private fun BorderPair.confirmedX(image: Bitmap, y: Int): Boolean{
+    val step: Int = max(difference() / N_BORDER_CONFIRMATION_PIXEL_COMPARISONS, 1)
+    return (
+            (first + step until second step step).all {
+                image.getPixel(it - step, y) != image.getPixel(it, y)
+            }
+            )
+}
+
+
+private fun BorderPair.confirmedY(image: Bitmap, x: Int): Boolean{
+    val step: Int = max(difference() / N_BORDER_CONFIRMATION_PIXEL_COMPARISONS, 1)
+    return (
+            (first + step until second step step).all {
+                image.getPixel(x, it - step) == image.getPixel(x, it)
+            }
+            )
+}
