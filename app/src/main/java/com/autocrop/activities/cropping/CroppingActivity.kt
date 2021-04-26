@@ -113,7 +113,9 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
                         )
                     )
             }
-        )
+        ).also {
+            finishAndRemoveTask()
+        }
     }
 
     override fun onBackPressed() {
@@ -127,7 +129,7 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
         }
         clearCropBundleList()
 
-        return startMainActivity(putDismissedImagesQuantity = false)
+        startMainActivity(putDismissedImagesQuantity = false)
     }
 
     /**

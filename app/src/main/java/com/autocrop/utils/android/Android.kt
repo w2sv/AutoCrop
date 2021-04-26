@@ -2,9 +2,11 @@ package com.autocrop.utils.android
 
 import android.app.Activity
 import android.graphics.Color
+import android.graphics.Point
 import android.os.Build
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import com.bunsenbrenner.screenshotboundremoval.BuildConfig
@@ -56,4 +58,9 @@ fun Activity.persistMenuAfterItemClick(item: MenuItem): Boolean{
     })
 
     return false
+}
+
+
+fun screenResolution(windowManager: WindowManager): Point = Point().apply {
+    windowManager.defaultDisplay.getRealSize(this)
 }

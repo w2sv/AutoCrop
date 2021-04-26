@@ -3,9 +3,7 @@ package com.autocrop.activities.main
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Point
 import android.os.Bundle
-import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.appcompat.widget.PopupMenu
 import com.autocrop.*
@@ -13,7 +11,6 @@ import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.cropping.DismissedImagesQuantity
 import com.autocrop.activities.examination.N_SAVED_CROPS
-import com.autocrop.activities.hideSystemUI
 import com.autocrop.utils.*
 import com.autocrop.utils.android.*
 import com.bunsenbrenner.screenshotboundremoval.R
@@ -21,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 import processing.android.PFragment
 import timber.log.Timber
-import timber.log.Timber.DebugTree
+import kotlin.properties.Delegates
 
 
 val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String =
@@ -35,16 +32,10 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         // ----------Pixel Field---------------
 
         var pixelField: PixelField? = null
-        fun initializePixelField(windowManager: WindowManager) {
-            with(Point()) {
-                windowManager.defaultDisplay.getRealSize(this).also {
-                    Timber.i("Screen resolution: $this")
-                }
-                pixelField = PixelField(
-                        x,
-                        y
-                    )
-            }
+
+        fun initializePixelField() {
+            pixelField = PixelField()
+            pixelField!!.redraw()
         }
 
         // -------------Codes---------------
@@ -70,7 +61,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
     // -----------------Permissions---------------------
 
-    private var nRequiredPermissions: Int = -1
+    private var nRequiredPermissions by Delegates.notNull<Int>()
     private val permission2Code: Map<String, PermissionCode> = mapOf(
         Manifest.permission.WRITE_EXTERNAL_STORAGE to PermissionCode.WRITE,
         Manifest.permission.READ_EXTERNAL_STORAGE to PermissionCode.READ
@@ -95,25 +86,14 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        fun permissionRequestResultHandling(grantResults: IntArray, requestDescription: String) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED)
-                displayToast(
-                    "You need to permit file $requestDescription in order",
-                    "for the app to work."
-                )
-            else
+        with(grantResults[0]){
+            if (this == PackageManager.PERMISSION_GRANTED)
                 nRequiredPermissions--
-        }
-
-        when (requestCode) {
-            PermissionCode.READ.ordinal -> permissionRequestResultHandling(
-                grantResults,
-                "reading"
-            )
-            PermissionCode.WRITE.ordinal -> permissionRequestResultHandling(
-                grantResults,
-                "writing"
-            )
+            else
+                displayToast(
+                    "You need to permit file ${listOf("reading", "writing")[(this == PermissionCode.WRITE.ordinal).toInt()]}",
+                    "in order for the app to work"
+                )
         }
 
         // directly go into image selection after permission granting
@@ -124,15 +104,15 @@ class MainActivity : SystemUiHidingFragmentActivity() {
     // ------------Lifecycle stages---------------
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         fun setPixelField() {
-            pixelField?.redraw()
-                .also { Timber.i("Redrew pixel field") }
-            ?: initializePixelField(windowManager)
-                .also { Timber.i("Initialized pixel field") }
+            if (pixelField == null)
+                initializePixelField().also {
+                    Timber.i("Reinitialized pixel field")
+                }
 
-            PFragment(pixelField).run {
+            with(PFragment(pixelField)){
                 setView(findViewById<FrameLayout>(R.id.canvas_container), this@MainActivity)
+                Timber.i("Set PFragment hosting pixel field")
             }
         }
 
@@ -182,20 +162,6 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             }
         }
 
-        fun besetGlobalParametersFromSharedPreferences() {
-            GlobalParameters.deleteInputScreenshots = getSharedPreferencesBool(
-                SharedPreferencesKey.DELETE_SCREENSHOTS,
-                false
-            )
-            Timber.i("Set GlobalParameters.deleteInputScreenshots to ${GlobalParameters.deleteInputScreenshots}")
-
-            GlobalParameters.saveToAutocropDir = getSharedPreferencesBool(
-                SharedPreferencesKey.SAVE_TO_AUTOCROP_DIR,
-                false
-            )
-            Timber.i("Set GlobalParameters.saveToAutocropDir to ${GlobalParameters.saveToAutocropDir}")
-        }
-
         fun setButtonOnClickListeners() {
             // image selection button
             image_selection_button.setOnClickListener {
@@ -207,7 +173,6 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
             // menu button
             menu_button.setOnClickListener {
-
                 // inflate popup menu
                 PopupMenu(this, it).run {
                     this.menuInflater.inflate(R.menu.activity_main, this.menu)
@@ -220,15 +185,10 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
                     // set item onClickListeners
                     this.setOnMenuItemClickListener { item ->
-                        alteredPreferences = true
-
                         when (item.itemId) {
                             // input screenshot deleting
                             R.id.main_menu_item_delete_input_screenshots -> {
-                                GlobalParameters.deleteInputScreenshots =
-                                    !GlobalParameters.deleteInputScreenshots
-                                Timber.i("Toggled GlobalParameters.deleteInputScreenshots to ${GlobalParameters.deleteInputScreenshots}")
-
+                                GlobalParameters.toggle(Parameter.DELETE_INPUT_SCREENSHOTS)
                                 item.isChecked = GlobalParameters.deleteInputScreenshots
 
                                 persistMenuAfterItemClick(item)
@@ -236,8 +196,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
                             // saving to dedicated directory
                             R.id.main_menu_item_save_to_autocrop_folder -> {
-                                GlobalParameters.toggleSaveToAutocropDir()
-                                Timber.i("Toggled GlobalParameters.saveToAutoCropDir to ${GlobalParameters.saveToAutocropDir}")
+                                GlobalParameters.toggle(Parameter.SAVE_TO_AUTOCROP_DIR)
 
                                 item.isChecked = GlobalParameters.saveToAutocropDir
 
@@ -253,11 +212,12 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        if (debuggingMode())
-            Timber.plant(DebugTree())
         setPixelField()
-        besetGlobalParametersFromSharedPreferences()
+
+        if (!GlobalParameters.initialized)
+            GlobalParameters.besetFromSharedPreferences(this)
+        globalParametersOnActivityCreation = GlobalParameters.clone()
+
         setButtonOnClickListeners()
         displayPreviousActivityResultToast()
     }
@@ -300,7 +260,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         }
     }
 
-    private var alteredPreferences: Boolean = false
+    private lateinit var globalParametersOnActivityCreation: Array<Boolean>
 
     /**
      * Writes set preferences to shared preferences
@@ -309,15 +269,9 @@ class MainActivity : SystemUiHidingFragmentActivity() {
     override fun onStop() {
         super.onStop()
 
-        if (alteredPreferences) {
-            writeSharedPreferencesBool(
-                SharedPreferencesKey.DELETE_SCREENSHOTS,
-                GlobalParameters.deleteInputScreenshots
-            )
-            writeSharedPreferencesBool(
-                SharedPreferencesKey.SAVE_TO_AUTOCROP_DIR,
-                GlobalParameters.saveToAutocropDir
-            )
-        }
+        GlobalParameters.writeToSharedPreferences(
+            globalParametersOnActivityCreation,
+            this
+        )
     }
 }

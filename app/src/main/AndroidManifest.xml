@@ -12,56 +12,44 @@
     <!-- setting requestLegacyExternalStorage to true effectuates opting out of
          scoped storage for API 29 = Android 10 to enable external storage writing
          Reference: https://developer.android.com/training/data-storage/use-cases#modify-delete-media -->
+
+    <!--Reference: https://developer.android.com/guide/topics/manifest/application-element -->
     <application
-        android:requestLegacyExternalStorage="true"
-        android:allowBackup="false"
+        android:label="@string/app_title"
+
         android:icon="@mipmap/brudineletten"
         android:roundIcon="@mipmap/brudineletten_round"
-        android:label="@string/app_title"
-        android:supportsRtl="true"
-        android:theme="@style/BaseAppTheme">
+        android:theme="@style/BaseAppTheme"
+
+        android:requestLegacyExternalStorage="true"
+        android:allowBackup="false"
+        android:supportsRtl="true">
 
         <!-- Activities -->
         <activity
             android:name="com.autocrop.activities.welcome.WelcomeActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
+            <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
+
         </activity>
 
         <activity
             android:name="com.autocrop.activities.main.MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/BaseAppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name="com.autocrop.activities.cropping.CroppingActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/BaseAppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name="com.autocrop.activities.examination.ExaminationActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/BaseAppTheme"
-            android:parentActivityName="com.autocrop.activities.main.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.autocrop.activities.main.MainActivity" />
+            android:screenOrientation="portrait">
         </activity>
 
     </application>

@@ -1,33 +1,33 @@
 package com.autocrop.activities.main;
 
+import android.graphics.Point;
+
 import processing.core.PApplet;
 
 
 public class PixelField extends PApplet {
-    private final float NOISE_INC_PER_PIXEL = (float)0.1;
-    private final float NOISE_INC_PER_FRAME = (float)0.2;
+    private static final float NOISE_INC_PER_PIXEL = 0.1f;
+    private static final float NOISE_INC_PER_FRAME = 0.2f;
+    private static final int NOISE_SAMPLING_PIXEL_STEP = 5;
 
-    private final int NOISE_SAMPLING_PIXEL_STEP = 4;
+    private static Integer canvas_width, canvas_height = null;
 
-    private float z_off = 0;
+    private float z_off = 0f;
 
-    private int canvas_width, canvas_height;
-
-    private int find_divisible_canvas_dim(int screen_dim){
-        if (screen_dim % NOISE_SAMPLING_PIXEL_STEP == 0)
-            return screen_dim;
-        else{
-            for (int i = 1; i < NOISE_SAMPLING_PIXEL_STEP; i++){
-                if ((screen_dim + i) % NOISE_SAMPLING_PIXEL_STEP == 0)
-                    return screen_dim + i;
-            }
-        }
-        return -1;
+    public static void find_canvas_dimensions(Point screen_resolution){
+        canvas_width = find_divisible_canvas_dim(screen_resolution.x);
+        canvas_height = find_divisible_canvas_dim(screen_resolution.y);
     }
 
-    PixelField(int screen_width, int screen_height){
-        canvas_width = find_divisible_canvas_dim(screen_width);
-        canvas_height = find_divisible_canvas_dim(screen_height);
+    private static int find_divisible_canvas_dim(int screen_dimension){
+        if (screen_dimension % NOISE_SAMPLING_PIXEL_STEP == 0)
+            return screen_dimension;
+
+        for (int i = 1; i < NOISE_SAMPLING_PIXEL_STEP; i++){
+            if ((screen_dimension + i) % NOISE_SAMPLING_PIXEL_STEP == 0)
+                return screen_dimension + i;
+        }
+        throw new java.lang.RuntimeException("Couldn't find appropriate canvas dimension");
     }
 
     public void settings() {

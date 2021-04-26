@@ -19,6 +19,7 @@ import com.autocrop.utils.android.displayToast
 import com.autocrop.utils.android.intentExtraIdentifier
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
 
@@ -174,8 +175,11 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         }
 
         // return to main activity if already pressed once
-        else if (backPressedOnce)
-            return returnToMainActivity()
+        else if (backPressedOnce){
+            return returnToMainActivity().also {
+                Timber.i("Returning to main activity on second back press")
+            }
+        }
 
         // display confirmation prompt toast, set backPressedOnce to true;
         // schedule concurrent reset after reset duration
@@ -194,13 +198,14 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
     private fun returnToMainActivity() {
         buttonsEnabled = false
 
-        startActivity(
+        return startActivity(
             Intent(
                 this,
                 MainActivity::class.java
             ).putExtra(N_SAVED_CROPS, nSavedCrops)
         ).also {
             clearCropBundleList()
+            finishAndRemoveTask()
         }
     }
 }
