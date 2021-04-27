@@ -12,9 +12,9 @@
         android:useLevel="false">
 
         <gradient
-            android:centerColor="@color/wineRed"
+            android:centerColor="@color/wine_red"
             android:centerY="0.5"
-            android:endColor="@color/brudiPink"
+            android:endColor="@color/brudi_pink"
             android:startColor="@color/magenta"
             android:type="sweep"
             android:useLevel="false" />

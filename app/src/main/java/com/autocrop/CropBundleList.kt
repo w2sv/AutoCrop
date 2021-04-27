@@ -6,10 +6,12 @@ import timber.log.Timber
 
 
 typealias CropBundle = Triple<Uri, Bitmap, Int>
-fun CropBundle.screenshotUri(): Uri = this.first
-fun CropBundle.crop(): Bitmap = this.second
-fun CropBundle.retentionPercentage(): Int = this.third
-
+val CropBundle.screenshotUri: Uri
+    get() = first
+val CropBundle.crop: Bitmap
+    get() = second
+val CropBundle.retentionPercentage: Int
+    get() = third
 
 val cropBundleList: MutableList<CropBundle> = mutableListOf()
 

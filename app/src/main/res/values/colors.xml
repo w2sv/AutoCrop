@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
-    <color name="brudiPink">#FF3F7F</color>
+    <color name="light_green">#008577</color>
+    <color name="dark_green">#00574B</color>
+    <color name="leef_green">#0ca63c</color>
+
+    <color name="brudi_pink">#FF3F7F</color>
+    <color name="saturated_pink">#D81B60</color>
     <color name="magenta">#7F1F3F</color>
-    <color name="wineRed">#B00020</color>
-    <color name="green">#0ca63c</color>
+    <color name="saturated_magenta">#911945</color>
+    <color name="wine_red">#B00020</color>
 </resources>

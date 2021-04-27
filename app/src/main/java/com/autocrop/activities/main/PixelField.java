@@ -3,6 +3,7 @@ package com.autocrop.activities.main;
 import android.graphics.Point;
 
 import processing.core.PApplet;
+import timber.log.Timber;
 
 
 public class PixelField extends PApplet {
@@ -30,11 +31,20 @@ public class PixelField extends PApplet {
         throw new java.lang.RuntimeException("Couldn't find appropriate canvas dimension");
     }
 
-    public void settings() {
+    public void settings(){
         size(canvas_width, canvas_height + NOISE_SAMPLING_PIXEL_STEP * 2, P2D);
     }
 
+    public void setup(){
+        draw_pixel_field();
+        Timber.i("Run PixelField.setup");
+    }
+
     public void draw() {
+        draw_pixel_field();
+    }
+
+    private void draw_pixel_field(){
         loadPixels();
         float y_off = 0;
 

@@ -31,11 +31,10 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
         // ----------Pixel Field---------------
 
-        var pixelField: PixelField? = null
+        private var pixelField: PixelField? = null
 
         fun initializePixelField() {
             pixelField = PixelField()
-            pixelField!!.redraw()
         }
 
         // -------------Codes---------------
@@ -90,9 +89,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             if (this == PackageManager.PERMISSION_GRANTED){
                 nRequiredPermissions--
 
-                // directly go into image selection after permission granting
-                if (nRequiredPermissions == 0)
-                    return selectImages()
+                selectImagesIfPermissionsGranted()
             }
             else
                 displayToast(
@@ -100,6 +97,11 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                     "in order for the app to work"
                 )
         }
+    }
+
+    private fun selectImagesIfPermissionsGranted(){
+        if (nRequiredPermissions == 0)
+            return selectImages()
     }
 
     // ------------Lifecycle stages---------------
@@ -167,9 +169,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             // image selection button
             image_selection_button.setOnClickListener {
                 requestActivityPermissions()
-
-                if (nRequiredPermissions == 0)
-                    selectImages()
+                selectImagesIfPermissionsGranted()
             }
 
             // menu button
@@ -274,5 +274,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             userPreferencesOnActivityCreation,
             getDefaultSharedPreferences()
         )
+
+        pixelField = null
     }
 }

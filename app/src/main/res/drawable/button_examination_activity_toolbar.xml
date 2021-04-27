@@ -7,7 +7,7 @@
                 android:width="1.5dip"
                 android:color="@android:color/black" />
 
-            <solid android:color="@color/wineRed" />
+            <solid android:color="@color/wine_red" />
 
             <corners
                 android:bottomLeftRadius="12.0dip"

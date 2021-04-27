@@ -46,8 +46,8 @@ class ImageActionQueryDialog(
                     "Yes"
                 ) { _, _ ->
                     saveCropAndDeleteScreenshotIfApplicable(
-                        cropBundleList[sliderPositionIndex].crop(),
-                        cropBundleList[sliderPositionIndex].screenshotUri(),
+                        cropBundleList[sliderPositionIndex].crop,
+                        cropBundleList[sliderPositionIndex].screenshotUri,
                         activityContext
                     )
                     imageActionListener.onConductedImageAction(

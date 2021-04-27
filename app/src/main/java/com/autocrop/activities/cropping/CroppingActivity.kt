@@ -110,9 +110,7 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
                         DismissedImagesQuantity[(nSelectedImages > 1).toInt()]
                     )
             }
-        ).also {
-            finishAndRemoveTask()
-        }
+        )
     }
 
     override fun onBackPressed() {
@@ -136,6 +134,9 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
         super.onStop()
 
         cropping_progress_bar.progress = 0
+
+        finishAndRemoveTask()
+        applicationContext.cacheDir.deleteRecursively()
     }
 }
 

@@ -49,7 +49,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                 it * 25 + it * 6
             }
             setPageIndicationText(1)
-            setRetentionPercentageText(cropBundleList[0].retentionPercentage())
+            setRetentionPercentageText(cropBundleList[0].retentionPercentage)
         }
 
         fun setPageIndicationText(page: Int, nTotalPages: Int = cropBundleList.size) {
@@ -206,9 +206,15 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                 this,
                 MainActivity::class.java
             ).putExtra(N_SAVED_CROPS, nSavedCrops)
-        ).also {
-            clearCropBundleList()
-            finishAndRemoveTask()
-        }
+        )
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        clearCropBundleList()
+
+        finishAndRemoveTask()
+        applicationContext.cacheDir.deleteRecursively()
     }
 }

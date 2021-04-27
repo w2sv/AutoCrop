@@ -51,7 +51,7 @@ class ImageSliderAdapter(
 
         val newPosition =
             listOf(sliderPosition, sliderPosition - 1)[(sliderPosition == itemCount).toInt()]
-        textViews.setRetentionPercentageText(cropBundleList[newPosition].retentionPercentage())
+        textViews.setRetentionPercentageText(cropBundleList[newPosition].retentionPercentage)
         textViews.setPageIndicationText(newPosition + 1)
     }
 
@@ -97,7 +97,7 @@ class ImageSliderAdapter(
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
 
-                textViews.setRetentionPercentageText(cropBundleList[position].retentionPercentage())
+                textViews.setRetentionPercentageText(cropBundleList[position].retentionPercentage)
                 textViews.setPageIndicationText(position + 1)
             }
 
@@ -115,6 +115,6 @@ class ImageSliderAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.cropImageView.setImageBitmap(cropBundleList[position].crop())
+        holder.cropImageView.setImageBitmap(cropBundleList[position].crop)
     }
 }

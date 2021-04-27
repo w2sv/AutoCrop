@@ -13,7 +13,7 @@ class CropEntiretySaver(
     private val progressBar: WeakReference<ProgressBar>,
     private val context: WeakReference<Context>,
     private val onTaskFinished: () -> Unit
-): AsyncTask<Void, Void, Void?>() {
+) : AsyncTask<Void, Void, Void?>() {
 
     /**
      * Renders progress bar visible
@@ -29,7 +29,7 @@ class CropEntiretySaver(
      * in cropBundleList
      */
     override fun doInBackground(vararg params: Void): Void? {
-        for ((uri, bitmap, _) in cropBundleList){
+        for ((uri, bitmap, _) in cropBundleList) {
             saveCropAndDeleteScreenshotIfApplicable(
                 bitmap,
                 uri,
