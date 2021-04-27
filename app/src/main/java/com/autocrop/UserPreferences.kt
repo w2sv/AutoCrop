@@ -3,6 +3,7 @@ package com.autocrop
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Environment
+import com.autocrop.activities.cropping.DismissedImagesQuantity
 import com.autocrop.utils.android.writeBoolean
 import com.autocrop.utils.toInt
 import timber.log.Timber
@@ -13,15 +14,10 @@ enum class PreferenceParameter {
     DeleteInputScreenshots,
     SaveToAutocropDir;
 
-    companion object {
-        fun nameFromOrdinal(ordinal: Int): String =
-            values().first { it.ordinal == ordinal }.name
-
-        val nElements: Int
+    companion object{
+        operator fun get(ordinal: Int): PreferenceParameter = values()[ordinal]
+        val size: Int
             get() = values().size
-
-        fun fromOrdinal(ordinal: Int): PreferenceParameter =
-            values().first { it.ordinal == ordinal }
     }
 }
 
@@ -60,8 +56,8 @@ object UserPreferences {
             PreferenceParameter.SaveToAutocropDir to true
         )
 
-        values = Array(PreferenceParameter.nElements) {
-            PreferenceParameter.fromOrdinal(it).run {
+        values = Array(PreferenceParameter.size) {
+            PreferenceParameter[it].run {
                 defaultSharedPreferences.getBoolean(
                     this.name,
                     parameterToDefaultValue[this]!!
@@ -80,10 +76,10 @@ object UserPreferences {
             with(valuePair) {
                 if (first != second)
                     defaultSharedPreferences.writeBoolean(
-                        PreferenceParameter.nameFromOrdinal(index),
+                        PreferenceParameter[index].name,
                         first
                     ).also {
-                        Timber.i("Set SharedPreferences.${PreferenceParameter.nameFromOrdinal(index)} to $first")
+                        Timber.i("Set SharedPreferences.${PreferenceParameter[index].name} to $first")
                     }
             }
         }

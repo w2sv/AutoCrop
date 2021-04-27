@@ -68,6 +68,9 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        /**
+         * ViewPager2 Reference: https://medium.com/swlh/android-infinite-auto-image-slider-using-view-pager-2-android-studio-java-a0e450dec071
+         */
         fun initializeImageSlider(textViews: TextViews) {
             imageSlider = findViewById<ViewPager2>(R.id.view_pager).apply{
                 adapter = ImageSliderAdapter(

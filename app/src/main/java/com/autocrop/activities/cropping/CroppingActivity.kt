@@ -32,9 +32,8 @@ enum class DismissedImagesQuantity {
     One,
     Multiple;
 
-    companion object {
-        fun fromOrdinal(ordinal: Int): DismissedImagesQuantity =
-            values().first { it.ordinal == ordinal }
+    companion object{
+        operator fun get(ordinal: Int): DismissedImagesQuantity = values()[ordinal]
     }
 }
 
@@ -108,9 +107,7 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
             Intent(this, MainActivity::class.java).apply {
                 if (putDismissedImagesQuantity)
                     this.putExtra(
-                        DismissedImagesQuantity.fromOrdinal(
-                            (nSelectedImages > 1).toInt()
-                        )
+                        DismissedImagesQuantity[(nSelectedImages > 1).toInt()]
                     )
             }
         ).also {
