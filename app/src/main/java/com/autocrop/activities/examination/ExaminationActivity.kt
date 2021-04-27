@@ -11,6 +11,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
 import com.autocrop.activities.examination.imageslider.ImageSliderAdapter
+import com.autocrop.activities.examination.imageslider.CubeOutPageTransformer
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearCropBundleList
 import com.autocrop.cropBundleList
@@ -81,9 +82,9 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                     this@ExaminationActivity
                 ) { buttonsEnabled }
             }
-//            imageSlider.setPageTransformer(
-//                ZoomOutPageTransformer()
-//            )
+            imageSlider.setPageTransformer(
+                CubeOutPageTransformer()
+            )
         }
 
         fun setToolbarButtonOnClickListeners(progressBar: ProgressBar) {

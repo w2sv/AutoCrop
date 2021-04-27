@@ -47,7 +47,7 @@ class ImageSliderAdapter(
 
         cropBundleList.removeAt(sliderPosition)
 
-        this.notifyItemRemoved(sliderPosition) // immediately updates itemCount
+        notifyItemRemoved(sliderPosition) // immediately updates itemCount
 
         val newPosition =
             listOf(sliderPosition, sliderPosition - 1)[(sliderPosition == itemCount).toInt()]
@@ -89,6 +89,10 @@ class ImageSliderAdapter(
                 }
             })
         }
+    }
+
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
     }
 
     init {
