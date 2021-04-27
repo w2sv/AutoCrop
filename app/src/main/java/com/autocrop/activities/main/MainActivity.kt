@@ -87,18 +87,19 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         grantResults: IntArray
     ) {
         with(grantResults[0]){
-            if (this == PackageManager.PERMISSION_GRANTED)
+            if (this == PackageManager.PERMISSION_GRANTED){
                 nRequiredPermissions--
+
+                // directly go into image selection after permission granting
+                if (nRequiredPermissions == 0)
+                    return selectImages()
+            }
             else
                 displayToast(
                     "You need to permit file ${listOf("reading", "writing")[(this == PermissionCode.WRITE.ordinal).toInt()]}",
                     "in order for the app to work"
                 )
         }
-
-        // directly go into image selection after permission granting
-        if (nRequiredPermissions == 0)
-            return selectImages()
     }
 
     // ------------Lifecycle stages---------------
@@ -124,7 +125,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                         *listOf(
                             listOf("Saved 1 crop"),
                             listOf("Saved 1 crop and deleted", "corresponding screenshot")
-                        )[GlobalParameters.deleteInputScreenshots.toInt()].toTypedArray()
+                        )[UserPreferences.deleteInputScreenshots.toInt()].toTypedArray()
                     )
                     in 2..Int.MAX_VALUE -> displayToast(
                         *listOf(
@@ -133,7 +134,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                                 "Saved $nSavedCrops crops and deleted",
                                 "corresponding screenshots"
                             )
-                        )[GlobalParameters.deleteInputScreenshots.toInt()].toTypedArray()
+                        )[UserPreferences.deleteInputScreenshots.toInt()].toTypedArray()
                     )
                 }
             }
@@ -179,26 +180,26 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
                     // set checks
                     this.menu.findItem(R.id.main_menu_item_delete_input_screenshots).isChecked =
-                        GlobalParameters.deleteInputScreenshots
+                        UserPreferences.deleteInputScreenshots
                     this.menu.findItem(R.id.main_menu_item_save_to_autocrop_folder).isChecked =
-                        GlobalParameters.saveToAutocropDir
+                        UserPreferences.saveToAutocropDir
 
                     // set item onClickListeners
                     this.setOnMenuItemClickListener { item ->
                         when (item.itemId) {
                             // input screenshot deleting
                             R.id.main_menu_item_delete_input_screenshots -> {
-                                GlobalParameters.toggle(Parameter.DELETE_INPUT_SCREENSHOTS)
-                                item.isChecked = GlobalParameters.deleteInputScreenshots
+                                UserPreferences.toggle(PreferenceParameter.DeleteInputScreenshots)
+                                item.isChecked = UserPreferences.deleteInputScreenshots
 
                                 persistMenuAfterItemClick(item)
                             }
 
                             // saving to dedicated directory
                             R.id.main_menu_item_save_to_autocrop_folder -> {
-                                GlobalParameters.toggle(Parameter.SAVE_TO_AUTOCROP_DIR)
+                                UserPreferences.toggle(PreferenceParameter.SaveToAutocropDir)
 
-                                item.isChecked = GlobalParameters.saveToAutocropDir
+                                item.isChecked = UserPreferences.saveToAutocropDir
 
                                 persistMenuAfterItemClick(item)
                             }
@@ -214,9 +215,9 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         setContentView(R.layout.activity_main)
         setPixelField()
 
-        if (!GlobalParameters.initialized)
-            GlobalParameters.besetFromSharedPreferences(this)
-        globalParametersOnActivityCreation = GlobalParameters.clone()
+        if (!UserPreferences.isInitialized)
+            UserPreferences.initialize(getDefaultSharedPreferences())
+        userPreferencesOnActivityCreation = UserPreferences.clone()
 
         setButtonOnClickListeners()
         displayPreviousActivityResultToast()
@@ -260,7 +261,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         }
     }
 
-    private lateinit var globalParametersOnActivityCreation: Array<Boolean>
+    private lateinit var userPreferencesOnActivityCreation: Array<Boolean>
 
     /**
      * Writes set preferences to shared preferences
@@ -269,9 +270,9 @@ class MainActivity : SystemUiHidingFragmentActivity() {
     override fun onStop() {
         super.onStop()
 
-        GlobalParameters.writeToSharedPreferences(
-            globalParametersOnActivityCreation,
-            this
+        UserPreferences.writeToSharedPreferences(
+            userPreferencesOnActivityCreation,
+            getDefaultSharedPreferences()
         )
     }
 }

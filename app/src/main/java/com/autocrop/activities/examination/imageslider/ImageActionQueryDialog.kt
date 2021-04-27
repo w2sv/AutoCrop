@@ -5,7 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import com.autocrop.GlobalParameters
+import com.autocrop.UserPreferences
 import com.autocrop.crop
 import com.autocrop.cropBundleList
 import com.autocrop.ops.saveCropAndDeleteScreenshotIfApplicable
@@ -31,7 +31,7 @@ class ImageActionQueryDialog(
                         *listOf(
                             listOf("Save crop?"),
                             listOf("Save crop and delete", "original screenshot?")
-                        )[GlobalParameters.deleteInputScreenshots.toInt()].toTypedArray()
+                        )[UserPreferences.deleteInputScreenshots.toInt()].toTypedArray()
                     )
                 )
                 .setNegativeButton(

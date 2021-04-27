@@ -42,7 +42,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
     inner class TextViews{
         val retentionPercentage: TextView = findViewById(R.id.retention_percentage)
         private val pageIndication: TextView = findViewById(R.id.page_indication)
-        val appTitle: TextView = findViewById(R.id.title_text_view)
+        private val appTitle: TextView = findViewById(R.id.title_text_view)
 
         init{
             retentionPercentage.translationX -= (cropBundleList.size.toString().length - 1).let {

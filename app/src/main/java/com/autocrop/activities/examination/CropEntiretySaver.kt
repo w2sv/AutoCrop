@@ -1,12 +1,9 @@
 package com.autocrop.activities.examination
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.AsyncTask
 import android.view.View
 import android.widget.ProgressBar
-import com.autocrop.GlobalParameters
 import com.autocrop.cropBundleList
 import com.autocrop.ops.saveCropAndDeleteScreenshotIfApplicable
 import java.lang.ref.WeakReference
