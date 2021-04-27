@@ -38,7 +38,7 @@ class WelcomeActivity : SystemUiHidingAppCompatActivity() {
                         R.anim.fade_in,
                         R.anim.fade_out
                     )
-                    finish()
+                    finishAndRemoveTask()
                 }
             },
             2500

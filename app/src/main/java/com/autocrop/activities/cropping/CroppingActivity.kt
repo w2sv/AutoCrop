@@ -136,7 +136,6 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
         cropping_progress_bar.progress = 0
 
         finishAndRemoveTask()
-        applicationContext.cacheDir.deleteRecursively()
     }
 }
 

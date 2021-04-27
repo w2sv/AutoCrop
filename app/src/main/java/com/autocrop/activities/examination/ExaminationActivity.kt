@@ -216,6 +216,5 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         clearCropBundleList()
 
         finishAndRemoveTask()
-        applicationContext.cacheDir.deleteRecursively()
     }
 }
