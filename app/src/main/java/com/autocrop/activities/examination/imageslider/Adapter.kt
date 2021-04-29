@@ -28,11 +28,11 @@ interface ImageActionListener {
 
 class ImageSliderAdapter(
     private val textViews: ExaminationActivity.TextViews,
-    private val imageSlider: ViewPager2,
+    imageSlider: ViewPager2,
     private val context: Context,
     private val fragmentManager: FragmentManager,
     private val imageActionReactionsPossessor: ImageActionReactionsPossessor,
-    private val buttonsEnabled: () -> Boolean
+    private val displayingExitScreen: () -> Boolean
 ) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
     init {
@@ -67,7 +67,7 @@ class ImageSliderAdapter(
                     when (event?.action) {
                         MotionEvent.ACTION_DOWN -> startCoordinates = event.coordinates()
                         MotionEvent.ACTION_UP -> {
-                            if (isClick(event.coordinates()) && buttonsEnabled())
+                            if (isClick(event.coordinates()) && !displayingExitScreen())
                                 ImageActionQueryDialog(
                                     adapterPosition,
                                     context,

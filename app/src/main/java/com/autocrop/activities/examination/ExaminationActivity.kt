@@ -43,7 +43,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
     private lateinit var toolbar: Toolbar
 
     private var nSavedCrops: Int = 0
-    private var buttonsEnabled: Boolean = true
+    private var displayingExitScreen: Boolean = false
 
     inner class TextViews {
         private val retentionPercentage: TextView = findViewById(R.id.retention_percentage)
@@ -85,7 +85,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                     this@ExaminationActivity,
                     this@ExaminationActivity.supportFragmentManager,
                     this@ExaminationActivity
-                ) { buttonsEnabled }
+                ) { displayingExitScreen }
             }
             imageSlider.setPageTransformer(
                 CubeOutPageTransformer()
@@ -93,35 +93,20 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         }
 
         fun setToolbarButtonOnClickListeners(progressBar: ProgressBar) {
-
-            /**
-             * Inherently sets toolbarButtonsEnabled to false if true
-             */
-            fun toolbarButtonsEnabled(): Boolean {
-                return buttonsEnabled.also {
-                    if (buttonsEnabled)
-                        buttonsEnabled = !buttonsEnabled
-                }
-            }
-
             save_all_button.setOnClickListener {
-                if (toolbarButtonsEnabled()) {
-                    imageSlider.removeAllViews().also {
-                        textViews.renderAppTitleVisible()
-                    }
-                    CropEntiretySaver(
-                        WeakReference(progressBar),
-                        WeakReference(this),
-                        onTaskFinished = this::returnToMainActivity
-                    ).execute()
+                preExitScreen()
 
-                    nSavedCrops += cropBundleList.size
-                }
+                CropEntiretySaver(
+                    WeakReference(progressBar),
+                    WeakReference(this),
+                    onTaskFinished = this::returnToMainActivity
+                )
+                    .execute()
+                nSavedCrops += cropBundleList.size
             }
 
             dismiss_all_button.setOnClickListener {
-                if (toolbarButtonsEnabled())
-                    exitActivity()
+                exitActivity()
             }
         }
 
@@ -177,7 +162,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         val resetDuration: Long = 2500
 
         // block if saving all / dismissing all
-        if (!buttonsEnabled) {
+        if (displayingExitScreen) {
             displayToast("Please wait until crops", "have been saved")
             return
         }
@@ -204,8 +189,6 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
      * Clears remaining cropBundle elements contained within cropBundleList
      */
     private fun returnToMainActivity() {
-        buttonsEnabled = false
-
         return startActivity(
             Intent(
                 this,
