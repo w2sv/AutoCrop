@@ -87,9 +87,6 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                     this@ExaminationActivity
                 ) { displayingExitScreen }
             }
-            imageSlider.setPageTransformer(
-                CubeOutPageTransformer()
-            )
         }
 
         fun setToolbarButtonOnClickListeners(progressBar: ProgressBar) {

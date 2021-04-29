@@ -19,6 +19,7 @@ import com.autocrop.cropBundleList
 import com.autocrop.utils.manhattanNorm
 import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
+import timber.log.Timber
 
 
 interface ImageActionListener {
@@ -28,7 +29,7 @@ interface ImageActionListener {
 
 class ImageSliderAdapter(
     private val textViews: ExaminationActivity.TextViews,
-    imageSlider: ViewPager2,
+    private val viewPager2: ViewPager2,
     private val context: Context,
     private val fragmentManager: FragmentManager,
     private val imageActionReactionsPossessor: ImageActionReactionsPossessor,
@@ -36,7 +37,7 @@ class ImageSliderAdapter(
 ) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
     init {
-        imageSlider.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+        viewPager2.registerOnPageChangeCallback(object : OnPageChangeCallback() {
 
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -44,6 +45,10 @@ class ImageSliderAdapter(
                 textViews.setPageDependentTexts(position)
             }
         })
+
+        viewPager2.setPageTransformer(
+            CubeOutPageTransformer()
+        )
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -97,19 +102,21 @@ class ImageSliderAdapter(
     override fun getItemCount(): Int = cropBundleList.size
 
     override fun onConductedImageAction(sliderPosition: Int, incrementNSavedCrops: Boolean) {
-
         // trigger imageActionReactionsPossessor downstream actions
         if (incrementNSavedCrops)
             imageActionReactionsPossessor.incrementNSavedCrops()
 
-        if (itemCount == 1) {
+        if (itemCount == 1)
             return imageActionReactionsPossessor.exitActivity()
-        }
 
         cropBundleList.removeAt(sliderPosition).also {
             notifyItemRemoved(sliderPosition) // updates itemCount
+            notifyDataSetChanged()
         }
 
-        textViews.setPageDependentTexts(pageIndex = listOf(sliderPosition, sliderPosition - 1)[(sliderPosition == itemCount).toInt()])
+        viewPager2.setCurrentItem(viewPager2.currentItem, true)
+        textViews.setPageDependentTexts(pageIndex = viewPager2.currentItem)
+
+        Timber.i("!Slider Position: $sliderPosition; Current item: ${viewPager2.currentItem}")
     }
 }

@@ -41,7 +41,7 @@ class WelcomeActivity : SystemUiHidingAppCompatActivity() {
                     finish()
                 }
             },
-            2500
+            500  // TODO
         )
     }
 }
