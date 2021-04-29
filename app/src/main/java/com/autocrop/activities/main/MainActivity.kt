@@ -248,7 +248,9 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                                     SELECTED_IMAGE_URI_STRINGS_IDENTIFIER,
                                     imageUriStrings
                                 )
-                        )
+                        ).also {
+                            onExit()
+                        }
                     }
 
                     startCroppingActivity(
@@ -267,9 +269,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
      * Writes set preferences to shared preferences
      * in case of them having been altered
      */
-    override fun onStop() {
-        super.onStop()
-
+    private fun onExit() {
         UserPreferences.writeToSharedPreferences(
             userPreferencesOnActivityCreation,
             getDefaultSharedPreferences()

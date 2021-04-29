@@ -12,6 +12,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2
+import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
 import com.autocrop.activities.examination.imageslider.ImageSliderAdapter
@@ -156,8 +157,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         textViews.renderAppTitleVisible()
     }
 
-    private var backPressedOnce: Boolean = false
-
+    private val backPressHandler = BackPressHandler()
     /**
      * Blocked throughout the process of saving all crops,
      * otherwise asks for second one as confirmation;
@@ -165,7 +165,6 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
      * Results in return to main activity
      */
     override fun onBackPressed() {
-        val resetDuration: Long = 2500
 
         // block if saving all / dismissing all
         if (displayingExitScreen) {
@@ -174,21 +173,14 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         }
 
         // return to main activity if already pressed once
-        else if (backPressedOnce) {
+        else if (backPressHandler.pressedOnce) {
             return returnToMainActivity().also {
                 Timber.i("Returning to main activity on second back press")
             }
         }
 
-        // display confirmation prompt toast, set backPressedOnce to true;
-        // schedule concurrent reset after reset duration
-        backPressedOnce = true
-        displayToast("Tap again to return to main screen")
-
-        Handler().postDelayed(
-            { backPressedOnce = false },
-            resetDuration
-        )
+        backPressHandler.onPress()
+        displayToast("Tap again to return to home screen")
     }
 
     /**
@@ -200,12 +192,12 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                 this,
                 MainActivity::class.java
             ).putExtra(N_SAVED_CROPS, nSavedCrops)
-        )
+        ).also {
+            onExit()
+        }
     }
 
-    override fun onStop() {
-        super.onStop()
-
+    private fun onExit(){
         clearCropBundleList()
         finishAndRemoveTask()
     }

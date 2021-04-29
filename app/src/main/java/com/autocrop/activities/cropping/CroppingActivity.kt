@@ -10,11 +10,13 @@ import android.os.Bundle
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.SELECTED_IMAGE_URI_STRINGS_IDENTIFIER
 import com.autocrop.clearCropBundleList
 import com.autocrop.cropBundleList
+import com.autocrop.utils.android.displayToast
 import com.autocrop.utils.android.intentExtraIdentifier
 import com.autocrop.utils.android.putExtra
 import com.autocrop.utils.toInt
@@ -113,28 +115,24 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
         )
     }
 
-    override fun onBackPressed() {
-        croppingTask.cancel(false).also {
-            Timber.i(
-                listOf(
-                    "Couldn't cancel cropping task",
-                    "Cropping task successfully cancelled"
-                )[it.toInt()]
-            )
-        }
-        clearCropBundleList()
+    private val backPressHandler = BackPressHandler()
 
-        startMainActivity(putDismissedImagesQuantity = false)
+    override fun onBackPressed() {
+        if (backPressHandler.pressedOnce){
+            croppingTask.cancel(false)
+            clearCropBundleList()
+
+            return startMainActivity(putDismissedImagesQuantity = false)
+        }
+
+        backPressHandler.onPress()
+        displayToast("Tap again to cancel cropping")
     }
 
-    /**
-     * Resets progress bar progress
-     */
     override fun onStop() {
         super.onStop()
 
         cropping_progress_bar.progress = 0
-
         finishAndRemoveTask()
     }
 }
