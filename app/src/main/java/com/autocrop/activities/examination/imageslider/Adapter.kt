@@ -16,7 +16,6 @@ import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ImageActionReactionsPossessor
 import com.autocrop.crop
 import com.autocrop.cropBundleList
-import com.autocrop.retentionPercentage
 import com.autocrop.utils.manhattanNorm
 import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
@@ -32,27 +31,19 @@ class ImageSliderAdapter(
     private val imageSlider: ViewPager2,
     private val context: Context,
     private val fragmentManager: FragmentManager,
-    private val imageActionImpacted: ImageActionReactionsPossessor,
+    private val imageActionReactionsPossessor: ImageActionReactionsPossessor,
     private val buttonsEnabled: () -> Boolean
 ) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
-    override fun onConductedImageAction(sliderPosition: Int, incrementNSavedCrops: Boolean) {
-        if (incrementNSavedCrops)
-            imageActionImpacted.incrementNSavedCrops()
+    init {
+        imageSlider.registerOnPageChangeCallback(object : OnPageChangeCallback() {
 
-        if (itemCount == 1) {
-            imageSlider.removeViewAt(sliderPosition)
-            return imageActionImpacted.returnToMainActivityOnExhaustedSlider()
-        }
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
 
-        cropBundleList.removeAt(sliderPosition)
-
-        notifyItemRemoved(sliderPosition) // immediately updates itemCount
-
-        val newPosition =
-            listOf(sliderPosition, sliderPosition - 1)[(sliderPosition == itemCount).toInt()]
-        textViews.setRetentionPercentageText(cropBundleList[newPosition].retentionPercentage)
-        textViews.setPageIndicationText(newPosition + 1)
+                textViews.setPageDependentTexts(position)
+            }
+        })
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -91,25 +82,6 @@ class ImageSliderAdapter(
         }
     }
 
-    override fun onViewDetachedFromWindow(holder: ViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-    }
-
-    init {
-        imageSlider.registerOnPageChangeCallback(object : OnPageChangeCallback() {
-
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-
-                textViews.setRetentionPercentageText(cropBundleList[position].retentionPercentage)
-                textViews.setPageIndicationText(position + 1)
-            }
-
-        })
-    }
-
-    override fun getItemCount(): Int = cropBundleList.size
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context)
@@ -120,5 +92,24 @@ class ImageSliderAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.cropImageView.setImageBitmap(cropBundleList[position].crop)
+    }
+
+    override fun getItemCount(): Int = cropBundleList.size
+
+    override fun onConductedImageAction(sliderPosition: Int, incrementNSavedCrops: Boolean) {
+
+        // trigger imageActionReactionsPossessor downstream actions
+        if (incrementNSavedCrops)
+            imageActionReactionsPossessor.incrementNSavedCrops()
+
+        if (itemCount == 1) {
+            return imageActionReactionsPossessor.exitActivity()
+        }
+
+        cropBundleList.removeAt(sliderPosition).also {
+            notifyItemRemoved(sliderPosition) // updates itemCount
+        }
+
+        textViews.setPageDependentTexts(pageIndex = listOf(sliderPosition, sliderPosition - 1)[(sliderPosition == itemCount).toInt()])
     }
 }

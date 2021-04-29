@@ -1,17 +1,21 @@
+/**
+ * ViewPager2 Reference: https://medium.com/swlh/android-infinite-auto-image-slider-using-view-pager-2-android-studio-java-a0e450dec071
+ */
+
 package com.autocrop.activities.examination
 
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
-import com.autocrop.activities.examination.imageslider.ImageSliderAdapter
 import com.autocrop.activities.examination.imageslider.CubeOutPageTransformer
+import com.autocrop.activities.examination.imageslider.ImageSliderAdapter
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearCropBundleList
 import com.autocrop.cropBundleList
@@ -29,39 +33,43 @@ val N_SAVED_CROPS: String = intentExtraIdentifier("n_saved_crops")
 
 interface ImageActionReactionsPossessor {
     fun incrementNSavedCrops()
-    fun returnToMainActivityOnExhaustedSlider()
+    fun exitActivity()
 }
 
 
 class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactionsPossessor {
     private lateinit var imageSlider: ViewPager2
     private lateinit var textViews: TextViews
+    private lateinit var toolbar: Toolbar
 
     private var nSavedCrops: Int = 0
     private var buttonsEnabled: Boolean = true
 
-    inner class TextViews{
-        val retentionPercentage: TextView = findViewById(R.id.retention_percentage)
+    inner class TextViews {
+        private val retentionPercentage: TextView = findViewById(R.id.retention_percentage)
         private val pageIndication: TextView = findViewById(R.id.page_indication)
         private val appTitle: TextView = findViewById(R.id.title_text_view)
 
-        init{
+        init {
             retentionPercentage.translationX -= (cropBundleList.size.toString().length - 1).let {
                 it * 25 + it * 6
             }
-            setPageIndicationText(1)
-            setRetentionPercentageText(cropBundleList[0].retentionPercentage)
+            setPageDependentTexts(0)
         }
 
-        fun setPageIndicationText(page: Int, nTotalPages: Int = cropBundleList.size) {
-            pageIndication.text = getString(R.string.fracture_text, page, nTotalPages)
+        fun setPageDependentTexts(pageIndex: Int) {
+            retentionPercentage.text = getString(
+                R.string.examination_activity_retention_percentage_text,
+                cropBundleList[pageIndex].retentionPercentage
+            )
+            pageIndication.text = getString(
+                R.string.fracture_text,
+                pageIndex + 1,
+                cropBundleList.size
+            )
         }
 
-        fun setRetentionPercentageText(percentage: Int) {
-            retentionPercentage.text = getString(R.string.examination_activity_retention_percentage_text, percentage)
-        }
-
-        fun renderAppTitleVisible(){
+        fun renderAppTitleVisible() {
             appTitle.visibility = View.VISIBLE
         }
     }
@@ -69,11 +77,8 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        /**
-         * ViewPager2 Reference: https://medium.com/swlh/android-infinite-auto-image-slider-using-view-pager-2-android-studio-java-a0e450dec071
-         */
         fun initializeImageSlider(textViews: TextViews) {
-            imageSlider = findViewById<ViewPager2>(R.id.view_pager).apply{
+            imageSlider = findViewById<ViewPager2>(R.id.view_pager).apply {
                 adapter = ImageSliderAdapter(
                     textViews,
                     this,
@@ -115,12 +120,8 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
             }
 
             dismiss_all_button.setOnClickListener {
-                if (toolbarButtonsEnabled()){
-                    imageSlider.removeAllViews().also {
-                        textViews.renderAppTitleVisible()
-                    }
-                    returnToMainActivity()
-                }
+                if (toolbarButtonsEnabled())
+                    exitActivity()
             }
         }
 
@@ -131,9 +132,10 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
             }
         }
 
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
-        setContentView(R.layout.activity_examination)
-        textViews = TextViews()
+        setContentView(R.layout.activity_examination).also {
+            textViews = TextViews()
+            toolbar = findViewById(R.id.toolbar)
+        }
 
         initializeImageSlider(textViews)
         setToolbarButtonOnClickListeners(progressBar = findViewById(R.id.indeterminateBar))
@@ -151,14 +153,16 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         nSavedCrops += 1
     }
 
-    override fun returnToMainActivityOnExhaustedSlider() {
-        with(textViews) {
-            renderAppTitleVisible()
-            retentionPercentage.visibility = View.INVISIBLE
-            setPageIndicationText(69, 420)
-        }
+    override fun exitActivity() {
+        preExitScreen()
+        returnToMainActivity()
+    }
 
-        return returnToMainActivity()
+    private fun preExitScreen(){
+        imageSlider.removeAllViews()
+
+        toolbar.visibility = View.GONE
+        textViews.renderAppTitleVisible()
     }
 
     private var backPressedOnce: Boolean = false
@@ -179,7 +183,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         }
 
         // return to main activity if already pressed once
-        else if (backPressedOnce){
+        else if (backPressedOnce) {
             return returnToMainActivity().also {
                 Timber.i("Returning to main activity on second back press")
             }
@@ -214,7 +218,6 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         super.onStop()
 
         clearCropBundleList()
-
         finishAndRemoveTask()
     }
 }
