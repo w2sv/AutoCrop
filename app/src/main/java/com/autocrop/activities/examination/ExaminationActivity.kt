@@ -14,7 +14,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
-import com.autocrop.activities.examination.imageslider.CubeOutPageTransformer
 import com.autocrop.activities.examination.imageslider.ImageSliderAdapter
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearCropBundleList
@@ -38,7 +37,7 @@ interface ImageActionReactionsPossessor {
 
 
 class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactionsPossessor {
-    private lateinit var imageSlider: ViewPager2
+    private lateinit var viewPager2: ViewPager2
     private lateinit var textViews: TextViews
     private lateinit var toolbar: Toolbar
 
@@ -57,15 +56,25 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
             setPageDependentTexts(0)
         }
 
-        fun setPageDependentTexts(pageIndex: Int) {
-            retentionPercentage.text = getString(
-                R.string.examination_activity_retention_percentage_text,
-                cropBundleList[pageIndex].retentionPercentage
-            )
+        fun setPageDependentTexts(pageIndex: Int = viewPager2.currentItem) {
+            with (pageIndex){
+                setPageIndication(this)
+                setRetentionPercentage(this)
+            }
+        }
+
+        fun setPageIndication(pageIndex: Int = viewPager2.currentItem, itemCount: Int = cropBundleList.size){
             pageIndication.text = getString(
                 R.string.fracture_text,
                 pageIndex + 1,
-                cropBundleList.size
+                itemCount
+            )
+        }
+
+        fun setRetentionPercentage(pageIndex: Int){
+            retentionPercentage.text = getString(
+                R.string.examination_activity_retention_percentage_text,
+                cropBundleList[pageIndex].retentionPercentage
             )
         }
 
@@ -78,7 +87,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         super.onCreate(savedInstanceState)
 
         fun initializeImageSlider(textViews: TextViews) {
-            imageSlider = findViewById<ViewPager2>(R.id.view_pager).apply {
+            viewPager2 = findViewById<ViewPager2>(R.id.view_pager).apply {
                 adapter = ImageSliderAdapter(
                     textViews,
                     this,
@@ -141,7 +150,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
     }
 
     private fun preExitScreen(){
-        imageSlider.removeAllViews()
+        viewPager2.removeAllViews()
 
         toolbar.visibility = View.GONE
         textViews.renderAppTitleVisible()

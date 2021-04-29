@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ImageActionReactionsPossessor
 import com.autocrop.crop
@@ -19,7 +20,6 @@ import com.autocrop.cropBundleList
 import com.autocrop.utils.manhattanNorm
 import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
-import timber.log.Timber
 
 
 interface ImageActionListener {
@@ -36,19 +36,44 @@ class ImageSliderAdapter(
     private val displayingExitScreen: () -> Boolean
 ) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
+    private var removeIndex: Int? = null
+
     init {
-        viewPager2.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+        with(viewPager2) {
+            registerOnPageChangeCallback(object : OnPageChangeCallback() {
 
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
 
-                textViews.setPageDependentTexts(position)
+                    if (removeIndex == null)
+                        textViews.setPageDependentTexts()
+                }
+
+                override fun onPageScrollStateChanged(state: Int) {
+                    super.onPageScrollStateChanged(state)
+
+                    if (state == SCROLL_STATE_IDLE && removeIndex != null) {
+                        with(removeIndex!!) {
+                            cropBundleList.removeAt(this)
+                            notifyItemRemoved(this)
+                        }
+
+                        removeIndex = null
+                    }
+                }
+            })
+
+            /**
+             * Reference: https://www.loginworks.com/blogs/how-to-make-awesome-transition-effects-using-pagetransformer-in-android/
+             */
+            setPageTransformer { view: View, position: Float ->
+                with(view) {
+                    pivotX = listOf(0f, width.toFloat())[(position < 0f).toInt()]
+                    pivotY = height * 0.5f
+                    rotationY = 90f * position
+                }
             }
-        })
-
-        viewPager2.setPageTransformer(
-            CubeOutPageTransformer()
-        )
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -109,14 +134,20 @@ class ImageSliderAdapter(
         if (itemCount == 1)
             return imageActionReactionsPossessor.exitActivity()
 
-        cropBundleList.removeAt(sliderPosition).also {
-            notifyItemRemoved(sliderPosition) // updates itemCount
-            notifyDataSetChanged()
+        val (subsequentDisplayPageIndex: Int, newPageIndex: Int) = if (sliderPosition == cropBundleList.lastIndex)
+            (sliderPosition - 1).run {
+                Pair(this, this)
+            }
+        else
+            Pair(sliderPosition + 1, sliderPosition)
+
+        viewPager2.setCurrentItem(subsequentDisplayPageIndex, true)
+
+        with(textViews) {
+            setRetentionPercentage(subsequentDisplayPageIndex)
+            setPageIndication(newPageIndex, cropBundleList.lastIndex)
         }
 
-        viewPager2.setCurrentItem(viewPager2.currentItem, true)
-        textViews.setPageDependentTexts(pageIndex = viewPager2.currentItem)
-
-        Timber.i("!Slider Position: $sliderPosition; Current item: ${viewPager2.currentItem}")
+        removeIndex = sliderPosition
     }
 }
