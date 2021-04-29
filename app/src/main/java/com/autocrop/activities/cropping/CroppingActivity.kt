@@ -126,7 +126,7 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
         }
 
         backPressHandler.onPress()
-        displayToast("Tap again to cancel cropping")
+        displayToast("Tap again to cancel")
     }
 
     override fun onStop() {

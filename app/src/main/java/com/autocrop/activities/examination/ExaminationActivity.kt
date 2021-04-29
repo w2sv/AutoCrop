@@ -117,13 +117,6 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
             }
         }
 
-        fun displayDismissedImagesToastIfApplicable(nDismissedImages: Int) {
-            when (nDismissedImages) {
-                1 -> displayToast("Couldn't find cropping bounds for 1 image")
-                in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for $nDismissedImages images")
-            }
-        }
-
         setContentView(R.layout.activity_examination).also {
             textViews = TextViews()
             toolbar = findViewById(R.id.toolbar)
@@ -131,12 +124,20 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         initializeImageSlider(textViews)
         setToolbarButtonOnClickListeners(progressBar = findViewById(R.id.indeterminateBar))
-        displayDismissedImagesToastIfApplicable(
-            nDismissedImages = intent.getIntExtra(
-                N_DISMISSED_IMAGES_IDENTIFIER,
-                0
-            )
-        )
+    }
+
+    override fun onStart(){
+        super.onStart()
+
+        with(intent.getIntExtra(
+            N_DISMISSED_IMAGES_IDENTIFIER,
+            0)){
+
+            when (this) {
+                1 -> displayToast("Couldn't find cropping bounds for 1 image")
+                in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for $this images")
+            }
+        }
     }
 
     // -----------------ImageActionReactionsPossessor overrides-----------------

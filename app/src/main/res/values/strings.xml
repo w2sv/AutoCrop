@@ -17,7 +17,7 @@
     <string name="main_activity_menu_inflation_button_description">"Inflates settings menu"</string>
 
     <!-- Menu Item Text -->
-    <string name="delete_input_screenshots_menu_item_text">Delete input screenshots</string>
-    <string name="save_to_autocrop_folder_menu_item_text">Save to AutoCrop folder</string>
+    <string name="delete_input_screenshots_menu_item_text">Delete screenshots</string>
+    <string name="save_to_autocrop_folder_menu_item_text">Save to AutoCropped folder</string>
 
 </resources>

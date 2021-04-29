@@ -119,52 +119,6 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             }
         }
 
-        fun displayPreviousActivityResultToast() {
-            fun displaySavingResultToast(nSavedCrops: Int) {
-                when (nSavedCrops) {
-                    0 -> displayToast("Dismissed everything")
-                    1 -> displayToast(
-                        *listOf(
-                            listOf("Saved 1 crop"),
-                            listOf("Saved 1 crop and deleted", "corresponding screenshot")
-                        )[UserPreferences.deleteInputScreenshots.toInt()].toTypedArray()
-                    )
-                    in 2..Int.MAX_VALUE -> displayToast(
-                        *listOf(
-                            listOf("Saved $nSavedCrops crops"),
-                            listOf(
-                                "Saved $nSavedCrops crops and deleted",
-                                "corresponding screenshots"
-                            )
-                        )[UserPreferences.deleteInputScreenshots.toInt()].toTypedArray()
-                    )
-                }
-            }
-
-            fun displayAllImagesDismissedToast(dismissedImagesQuantity: DismissedImagesQuantity) {
-                when (dismissedImagesQuantity) {
-                    DismissedImagesQuantity.Multiple -> displayToast(
-                        "Couldn't find cropping bounds for",
-                        "any of the selected images"
-                    )
-                    DismissedImagesQuantity.One -> displayToast("Couldn't find cropping bounds for selected image")
-                }
-            }
-
-            // display either saving result toast if returning from examination activity or all images dismissed
-            // toast if returning from cropping activity or nothing if none of the former applying
-            with(intent.getIntExtra(N_SAVED_CROPS, -1)) {
-                if (this != -1)
-                    displaySavingResultToast(this)
-                else {
-                    with(intent.getEnumExtra<DismissedImagesQuantity>()) {
-                        if (this != null)
-                            displayAllImagesDismissedToast(this)
-                    }
-                }
-            }
-        }
-
         fun setButtonOnClickListeners() {
             // image selection button
             image_selection_button.setOnClickListener {
@@ -220,7 +174,54 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         userPreferencesOnActivityCreation = UserPreferences.clone()
 
         setButtonOnClickListeners()
-        displayPreviousActivityResultToast()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        fun displaySavingResultToast(nSavedCrops: Int) {
+            when (nSavedCrops) {
+                0 -> displayToast("Dismissed everything")
+                1 -> displayToast(
+                    *listOf(
+                        listOf("Saved 1 crop"),
+                        listOf("Saved 1 crop and deleted", "corresponding screenshot")
+                    )[UserPreferences.deleteInputScreenshots.toInt()].toTypedArray()
+                )
+                in 2..Int.MAX_VALUE -> displayToast(
+                    *listOf(
+                        listOf("Saved $nSavedCrops crops"),
+                        listOf(
+                            "Saved $nSavedCrops crops and deleted",
+                            "corresponding screenshots"
+                        )
+                    )[UserPreferences.deleteInputScreenshots.toInt()].toTypedArray()
+                )
+            }
+        }
+
+        fun displayAllImagesDismissedToast(dismissedImagesQuantity: DismissedImagesQuantity) {
+            when (dismissedImagesQuantity) {
+                DismissedImagesQuantity.Multiple -> displayToast(
+                    "Couldn't find cropping bounds for",
+                    "any of the selected images"
+                )
+                DismissedImagesQuantity.One -> displayToast("Couldn't find cropping bounds for selected image")
+            }
+        }
+
+        // display either saving result toast if returning from examination activity or all images dismissed
+        // toast if returning from cropping activity or nothing if none of the former applying
+        with(intent.getIntExtra(N_SAVED_CROPS, -1)) {
+            if (this != -1)
+                displaySavingResultToast(this)
+            else {
+                with(intent.getEnumExtra<DismissedImagesQuantity>()) {
+                    if (this != null)
+                        displayAllImagesDismissedToast(this)
+                }
+            }
+        }
     }
 
     private fun selectImages() {
