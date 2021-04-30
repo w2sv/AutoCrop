@@ -57,8 +57,8 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
             setPageDependentTexts(0)
         }
 
-        fun setPageDependentTexts(pageIndex: Int = viewPager2.currentItem) {
-            with (pageIndex){
+        fun setPageDependentTexts(cropBundleElementIndex: Int) {
+            with (cropBundleElementIndex){
                 setPageIndication(this)
                 setRetentionPercentage(this)
             }
@@ -89,13 +89,17 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         fun initializeImageSlider(textViews: TextViews) {
             viewPager2 = findViewById<ViewPager2>(R.id.view_pager).apply {
-                adapter = ImageSliderAdapter(
-                    textViews,
-                    this,
-                    this@ExaminationActivity,
-                    this@ExaminationActivity.supportFragmentManager,
-                    this@ExaminationActivity
-                ) { displayingExitScreen }
+                with(
+                    ImageSliderAdapter(
+                        textViews,
+                        this,
+                        this@ExaminationActivity,
+                        this@ExaminationActivity.supportFragmentManager,
+                        this@ExaminationActivity
+                    ) { displayingExitScreen }){
+                    adapter = this
+                    setCurrentItem(startItemIndex, false)
+                }
             }
         }
 

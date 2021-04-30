@@ -20,6 +20,7 @@ import com.autocrop.cropBundleList
 import com.autocrop.utils.manhattanNorm
 import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
+import timber.log.Timber
 
 
 interface ImageActionListener {
@@ -37,6 +38,11 @@ class ImageSliderAdapter(
 ) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
     private var removeIndex: Int? = null
+    private var newlySetIndex: Int = 0
+
+    val startItemIndex: Int = (Int.MAX_VALUE / 2).run {
+        this - cropBundleElementIndex(this)
+    }
 
     init {
         with(viewPager2) {
@@ -46,16 +52,22 @@ class ImageSliderAdapter(
                     super.onPageSelected(position)
 
                     if (removeIndex == null)
-                        textViews.setPageDependentTexts()
+                        textViews.setPageDependentTexts(cropBundleElementIndex(position))
                 }
 
                 override fun onPageScrollStateChanged(state: Int) {
                     super.onPageScrollStateChanged(state)
 
                     if (state == SCROLL_STATE_IDLE && removeIndex != null) {
+                        Timber.i("4REKTUM; removeIndex: $removeIndex; newlySetIndex: $newlySetIndex")
+
                         with(removeIndex!!) {
-                            cropBundleList.removeAt(this)
-                            notifyItemRemoved(this)
+                            cropBundleList.removeAt(cropBundleElementIndex(this))
+
+                            (newlySetIndex - 20..newlySetIndex + 20).forEach {
+                                if (it != newlySetIndex)
+                                    notifyItemChanged(it)
+                            }
                         }
 
                         removeIndex = null
@@ -112,6 +124,8 @@ class ImageSliderAdapter(
         }
     }
 
+    private fun cropBundleElementIndex(viewItemIndex: Int): Int = viewItemIndex % cropBundleList.size
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context)
@@ -121,33 +135,34 @@ class ImageSliderAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.cropImageView.setImageBitmap(cropBundleList[position].crop)
+        holder.cropImageView.setImageBitmap(cropBundleList[cropBundleElementIndex(position)].crop)
     }
 
-    override fun getItemCount(): Int = cropBundleList.size
+    override fun getItemCount(): Int = if (cropBundleList.size > 1) Int.MAX_VALUE else 1
 
     override fun onConductedImageAction(sliderPosition: Int, incrementNSavedCrops: Boolean) {
         // trigger imageActionReactionsPossessor downstream actions
         if (incrementNSavedCrops)
             imageActionReactionsPossessor.incrementNSavedCrops()
 
-        if (itemCount == 1)
+        if (cropBundleList.size == 1)
             return imageActionReactionsPossessor.exitActivity()
 
-        val (subsequentDisplayPageIndex: Int, newPageIndex: Int) = if (sliderPosition == cropBundleList.lastIndex)
-            (sliderPosition - 1).run {
-                Pair(this, this)
-            }
-        else
-            Pair(sliderPosition + 1, sliderPosition)
+        val (subsequentDisplayPageIndex: Int, newPageIndex: Int) = (cropBundleElementIndex(sliderPosition)).run {
+            if (this == cropBundleList.lastIndex)
+                Pair(sliderPosition - 1, this - 1)
+            else
+                Pair(sliderPosition + 1, this)
+        }
 
         viewPager2.setCurrentItem(subsequentDisplayPageIndex, true)
 
         with(textViews) {
-            setRetentionPercentage(subsequentDisplayPageIndex)
+            setRetentionPercentage(cropBundleElementIndex(subsequentDisplayPageIndex))
             setPageIndication(newPageIndex, cropBundleList.lastIndex)
         }
 
         removeIndex = sliderPosition
+        newlySetIndex = subsequentDisplayPageIndex
     }
 }
