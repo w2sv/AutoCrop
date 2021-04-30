@@ -64,7 +64,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
             }
         }
 
-        fun setPageIndication(pageIndex: Int = viewPager2.currentItem, itemCount: Int = cropBundleList.size){
+        fun setPageIndication(pageIndex: Int, itemCount: Int = cropBundleList.size){
             pageIndication.text = getString(
                 R.string.fracture_text,
                 pageIndex + 1,
