@@ -5,6 +5,7 @@
     <string name="cropping_ornament_text">Cropping…</string>
     <string name="fracture_text">%1$d/%2$d</string>
     <string name="examination_activity_retention_percentage_text">%1$d%% retained</string>
+    <string name="processing_crops">Processing crops…</string>
 
     <!-- Button -->
 

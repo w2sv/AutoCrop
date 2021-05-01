@@ -6,11 +6,14 @@ import android.view.View
 import android.widget.ProgressBar
 import com.autocrop.cropBundleList
 import com.autocrop.ops.saveCropAndDeleteScreenshotIfApplicable
+import com.autocrop.utils.android.hide
+import com.autocrop.utils.android.show
 import java.lang.ref.WeakReference
 
 
 class CropEntiretySaver(
     private val progressBar: WeakReference<ProgressBar>,
+    private val textViews: WeakReference<ExaminationActivity.TextViews>,
     private val context: WeakReference<Context>,
     private val onTaskFinished: () -> Unit
 ) : AsyncTask<Void, Void, Void?>() {
@@ -21,7 +24,8 @@ class CropEntiretySaver(
     override fun onPreExecute() {
         super.onPreExecute()
 
-        progressBar.get()!!.visibility = View.VISIBLE
+        textViews.get()!!.saveAll.show()
+        progressBar.get()!!.show()
     }
 
     /**
@@ -45,7 +49,13 @@ class CropEntiretySaver(
     override fun onPostExecute(result: Void?) {
         super.onPostExecute(result)
 
-        progressBar.get()!!.visibility = View.INVISIBLE
+        progressBar.get()!!.hide()
+
+        with(textViews.get()!!) {
+            saveAll.hide()
+            appTitle.hide()
+        }
+
         onTaskFinished()
     }
 }

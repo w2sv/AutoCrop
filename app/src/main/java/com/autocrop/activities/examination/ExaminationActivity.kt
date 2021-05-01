@@ -24,7 +24,9 @@ import com.autocrop.clearCropBundleList
 import com.autocrop.cropBundleList
 import com.autocrop.retentionPercentage
 import com.autocrop.utils.android.displayToast
+import com.autocrop.utils.android.hide
 import com.autocrop.utils.android.intentExtraIdentifier
+import com.autocrop.utils.android.show
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
 import java.lang.ref.WeakReference
@@ -50,17 +52,16 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
     inner class TextViews {
         private val retentionPercentage: TextView = findViewById(R.id.retention_percentage)
         private val pageIndication: TextView = findViewById(R.id.page_indication)
-        private val appTitle: TextView = findViewById(R.id.title_text_view)
+
+        val appTitle: TextView = findViewById(R.id.title_text_view)
+        val saveAll: TextView = findViewById(R.id.processing_crops_text_view)
 
         init {
             retentionPercentage.translationX -= (cropBundleList.size.toString().length - 1).let {
                 it * 25 + it * 6
             }
-            setPageDependentTexts(0)
-        }
 
-        fun setPageDependentTexts(cropBundleElementIndex: Int) {
-            with (cropBundleElementIndex){
+            with (0){
                 setPageIndication(this)
                 setRetentionPercentage(this)
             }
@@ -79,10 +80,6 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                 R.string.examination_activity_retention_percentage_text,
                 cropBundleList[pageIndex].retentionPercentage
             )
-        }
-
-        fun renderAppTitleVisible() {
-            appTitle.visibility = View.VISIBLE
         }
     }
 
@@ -109,10 +106,11 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         fun setToolbarButtonOnClickListeners(progressBar: ProgressBar) {
             save_all_button.setOnClickListener {
                 fun saveAll(){
-                    preExitScreen()
+                    preExitScreen(showAppTitle = false)
 
                     CropEntiretySaver(
                         WeakReference(progressBar),
+                        WeakReference(textViews),
                         WeakReference(this),
                         onTaskFinished = this::returnToMainActivity
                     )
@@ -176,11 +174,12 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         returnToMainActivity()
     }
 
-    private fun preExitScreen(){
+    private fun preExitScreen(showAppTitle: Boolean = true){
         viewPager2.removeAllViews()
+        toolbar.hide()
 
-        toolbar.visibility = View.GONE
-        textViews.renderAppTitleVisible()
+        if (showAppTitle)
+            textViews.appTitle.show()
     }
 
     private val backPressHandler = BackPressHandler()

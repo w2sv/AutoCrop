@@ -44,10 +44,10 @@ fun paddedMessage(vararg row: String): String = " ${row.joinToString(" \n ")} "
 
 // -----------------Menu Persisting-----------------
 
-fun Activity.persistMenuAfterItemClick(item: MenuItem): Boolean{
-    item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW)
-    item.setActionView(View(this))
-    item.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+fun Activity.persistMenuAfterItemClick(item: MenuItem): Boolean = item.run {
+    setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW)
+    actionView = View(this@persistMenuAfterItemClick)
+    setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
         override fun onMenuItemActionExpand(item: MenuItem): Boolean {
             return false
         }
@@ -57,10 +57,20 @@ fun Activity.persistMenuAfterItemClick(item: MenuItem): Boolean{
         }
     })
 
-    return false
+    false
 }
 
 
 fun screenResolution(windowManager: WindowManager): Point = Point().apply {
     windowManager.defaultDisplay.getRealSize(this)
+}
+
+
+fun View.show(){
+    visibility = View.VISIBLE
+}
+
+
+fun View.hide(){
+    visibility = View.GONE
 }
