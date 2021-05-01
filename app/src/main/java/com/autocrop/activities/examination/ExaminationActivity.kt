@@ -4,13 +4,17 @@
 
 package com.autocrop.activities.examination
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.DialogFragment
 import androidx.viewpager2.widget.ViewPager2
+import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
@@ -23,7 +27,6 @@ import com.autocrop.utils.android.displayToast
 import com.autocrop.utils.android.intentExtraIdentifier
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
-import timber.log.Timber
 import java.lang.ref.WeakReference
 
 
@@ -105,15 +108,34 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         fun setToolbarButtonOnClickListeners(progressBar: ProgressBar) {
             save_all_button.setOnClickListener {
-                preExitScreen()
+                fun saveAll(){
+                    preExitScreen()
 
-                CropEntiretySaver(
-                    WeakReference(progressBar),
-                    WeakReference(this),
-                    onTaskFinished = this::returnToMainActivity
-                )
-                    .execute()
-                nSavedCrops += cropBundleList.size
+                    CropEntiretySaver(
+                        WeakReference(progressBar),
+                        WeakReference(this),
+                        onTaskFinished = this::returnToMainActivity
+                    )
+                        .execute()
+                    nSavedCrops += cropBundleList.size
+                }
+
+                if (UserPreferences.deleteInputScreenshots){
+                    class SaveAllConfirmationDialog: DialogFragment() {
+                        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = AlertDialog.Builder(this.activity)
+                            .run {
+                                setTitle("Save all crops and delete corresponding screenshots?")
+                                setNegativeButton("No") { _, _ -> }
+                                setPositiveButton("Yes") { _, _ -> saveAll() }
+                            }
+                            .create()
+                    }
+
+                    SaveAllConfirmationDialog().show(supportFragmentManager, "Save all confirmation dialog")
+                }
+
+                else
+                    saveAll()
             }
 
             dismiss_all_button.setOnClickListener {
