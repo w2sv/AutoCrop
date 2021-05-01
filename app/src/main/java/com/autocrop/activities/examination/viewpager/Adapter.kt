@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.imageslider
+package com.autocrop.activities.examination.viewpager
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -121,7 +121,7 @@ class ImageSliderAdapter(
                         MotionEvent.ACTION_DOWN -> startCoordinates = event.coordinates()
                         MotionEvent.ACTION_UP -> {
                             if (isClick(event.coordinates()) && !displayingExitScreen())
-                                ImageActionQueryDialog(
+                                CropProcedureQueryDialog(
                                     adapterPosition,
                                     context,
                                     this@ImageSliderAdapter

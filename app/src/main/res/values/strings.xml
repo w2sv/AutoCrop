@@ -6,6 +6,7 @@
     <string name="fracture_text">%1$d/%2$d</string>
     <string name="examination_activity_retention_percentage_text">%1$d%% retained</string>
     <string name="processing_crops">Processing crops…</string>
+    <string name="couldnt_find_any_cropping_bounds">Couldn\'t find cropping bounds for%1$s the selected image%2$s</string>
 
     <!-- Button -->
 

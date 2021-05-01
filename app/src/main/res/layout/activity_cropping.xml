@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/cropping_text_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -36,7 +37,31 @@
         android:layout_marginTop="70dp"
 
         android:textSize="17sp">
+    </TextView>
 
+    <TextView
+        android:id="@+id/couldnt_find_cropping_bounds_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="X"
+        android:gravity="center"
+        android:textSize="80sp"
+        android:layout_marginBottom="200dp"
+        android:textColor="@color/saturated_magenta"
+        android:visibility="gone">
+    </TextView>
+
+    <TextView
+        android:id="@+id/couldnt_find_cropping_bounds_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minLines="3"
+        android:text="@string/couldnt_find_any_cropping_bounds"
+        android:gravity="center"
+        android:textSize="22sp"
+        android:paddingHorizontal="40dp"
+        android:textColor="@color/saturated_magenta"
+        android:visibility="gone">
     </TextView>
 
 </RelativeLayout>

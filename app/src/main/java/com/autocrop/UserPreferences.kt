@@ -3,7 +3,6 @@ package com.autocrop
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Environment
-import com.autocrop.activities.cropping.DismissedImagesQuantity
 import com.autocrop.utils.android.writeBoolean
 import com.autocrop.utils.toInt
 import timber.log.Timber

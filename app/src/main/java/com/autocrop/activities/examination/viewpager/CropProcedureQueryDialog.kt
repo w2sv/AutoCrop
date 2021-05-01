@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.imageslider
+package com.autocrop.activities.examination.viewpager
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -18,7 +18,7 @@ import com.autocrop.utils.toInt
  * Class accounting for procedure dialog message display on screen touch,
  * defining respective procedure effects
  */
-class ImageActionQueryDialog(
+class CropProcedureQueryDialog(
     private val sliderPositionIndex: Int,
     private val activityContext: Context,
     private val imageActionListener: ImageActionListener) : DialogFragment() {
@@ -30,7 +30,7 @@ class ImageActionQueryDialog(
                     paddedMessage(
                         *listOf(
                             listOf("Save crop?"),
-                            listOf("Save crop and delete", "original screenshot?")
+                            listOf("Save crop and", "delete screenshot?")
                         )[UserPreferences.deleteInputScreenshots.toInt()].toTypedArray()
                     )
                 )

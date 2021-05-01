@@ -8,7 +8,6 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
@@ -18,7 +17,7 @@ import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
-import com.autocrop.activities.examination.imageslider.ImageSliderAdapter
+import com.autocrop.activities.examination.viewpager.ImageSliderAdapter
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearCropBundleList
 import com.autocrop.cropBundleList
@@ -143,8 +142,8 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         fun displayCouldntFindCroppingBoundsToast(nDismissedImages: Int){
             when (nDismissedImages) {
-                1 -> displayToast("Couldn't find cropping bounds for 1 image")
-                in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for $nDismissedImages images")
+                1 -> displayToast("Couldn't find cropping bounds for", "1 image")
+                in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for", "$nDismissedImages images")
             }
         }
 
@@ -203,7 +202,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         }
 
         backPressHandler.onPress()
-        displayToast("Tap again to return to home screen")
+        displayToast("Tap again to return to main screen")
     }
 
     /**

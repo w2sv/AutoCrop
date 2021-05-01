@@ -53,7 +53,7 @@ class CropEntiretySaver(
 
         with(textViews.get()!!) {
             saveAll.hide()
-            appTitle.hide()
+            appTitle.show()
         }
 
         onTaskFinished()

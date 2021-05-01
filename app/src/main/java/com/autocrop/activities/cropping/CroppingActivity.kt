@@ -7,18 +7,19 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Handler
+import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.examination.ExaminationActivity
+import com.autocrop.activities.hideSystemUI
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.SELECTED_IMAGE_URI_STRINGS_IDENTIFIER
 import com.autocrop.clearCropBundleList
 import com.autocrop.cropBundleList
-import com.autocrop.utils.android.displayToast
-import com.autocrop.utils.android.intentExtraIdentifier
-import com.autocrop.utils.android.putExtra
+import com.autocrop.utils.android.*
 import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_cropping.*
@@ -30,16 +31,6 @@ import kotlin.properties.Delegates
 val N_DISMISSED_IMAGES_IDENTIFIER: String = intentExtraIdentifier("n_dismissed_images")
 
 
-enum class DismissedImagesQuantity {
-    One,
-    Multiple;
-
-    companion object{
-        operator fun get(ordinal: Int): DismissedImagesQuantity = values()[ordinal]
-    }
-}
-
-
 interface CroppingCompletionListener {
     fun onTaskCompleted()
 }
@@ -49,14 +40,29 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
     private var nSelectedImages by Delegates.notNull<Int>()
     private lateinit var croppingTask: Cropper
 
+    inner class Views{
+        val progressBar: ProgressBar = findViewById(R.id.cropping_progress_bar)
+        val currentImageNumberText: TextView = findViewById(R.id.cropping_current_image_number_text_view)
+        val croppingText: TextView = findViewById(R.id.cropping_text_view)
+
+        val couldntFindCroppingBoundsText: TextView = findViewById(R.id.couldnt_find_cropping_bounds_text_view)
+        val couldntFindCroppingBoundsIcon: TextView = findViewById(R.id.couldnt_find_cropping_bounds_icon)
+
+        val croppingViews: List<View>
+            get() = listOf(progressBar, currentImageNumberText, croppingText)
+
+        val couldntFindCroppingBoundsViews: List<View>
+            get() = listOf(couldntFindCroppingBoundsText, couldntFindCroppingBoundsIcon)
+    }
+
+    lateinit var views: Views
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // set layout, retrieve views
         setContentView(R.layout.activity_cropping)
-        val progressBar: ProgressBar = findViewById(R.id.cropping_progress_bar)
-        val currentImageNumberTextView: TextView =
-            findViewById(R.id.cropping_current_image_number_text_view)
+        views = Views()
 
         // convert passed image uri strings back to uris, set nSelectedImages
         val imageUris: Array<Uri> =
@@ -72,8 +78,8 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
         croppingTask = Cropper(
             nSelectedImages,
             WeakReference(this),
-            WeakReference(progressBar),
-            WeakReference(currentImageNumberTextView),
+            WeakReference(views.progressBar),
+            WeakReference(views.currentImageNumberText),
             this
         ).also {
             it.execute(*imageUris)
@@ -87,42 +93,69 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
     override fun onTaskCompleted() {
         Timber.i("Async Cropping task finished")
 
-        fun startExaminationActivity(nDismissedCrops: Int) {
-            startActivity(
-                Intent(this, ExaminationActivity::class.java).putExtra(
-                    N_DISMISSED_IMAGES_IDENTIFIER,
-                    nDismissedCrops
-                )
-            )
-        }
-
         // start ExaminationActivity in case of at least 1 successful crop,
         // otherwise return to MainActivity
         if (cropBundleList.isNotEmpty())
             startExaminationActivity(nSelectedImages - cropBundleList.size)
-        else
-            startMainActivity(putDismissedImagesQuantity = true)
+        else{
+            Handler().postDelayed(
+                {
+                    hideSystemUI(window)
+
+                    with(views) {
+                        croppingViews.forEach {
+                            it.hide()
+                        }
+
+                        couldntFindCroppingBoundsText.text =
+                            R.string.couldnt_find_any_cropping_bounds.run {
+                                if (nSelectedImages > 1)
+                                    getString(this, " any of", "s")
+                                else
+                                    getString(this, "", "")
+                            }
+
+                        couldntFindCroppingBoundsViews.forEach {
+                            it.show()
+                        }
+
+                        Handler().postDelayed(
+                            { startMainActivity() },
+                            3000
+                        )
+                    }
+                },
+                300
+            )
+        }
     }
 
-    private fun startMainActivity(putDismissedImagesQuantity: Boolean) {
+    private fun startExaminationActivity(nDismissedCrops: Int) {
         startActivity(
-            Intent(this, MainActivity::class.java).apply {
-                if (putDismissedImagesQuantity)
-                    this.putExtra(
-                        DismissedImagesQuantity[(nSelectedImages > 1).toInt()]
-                    )
-            }
+            Intent(this, ExaminationActivity::class.java).putExtra(
+                N_DISMISSED_IMAGES_IDENTIFIER,
+                nDismissedCrops
+            )
+        )
+    }
+
+    private fun startMainActivity() {
+        startActivity(
+            Intent(this, MainActivity::class.java)
         )
     }
 
     private val backPressHandler = BackPressHandler()
 
     override fun onBackPressed() {
+        if (croppingTask.status == AsyncTask.Status.FINISHED)
+            return
+
         if (backPressHandler.pressedOnce){
             croppingTask.cancel(false)
             clearCropBundleList()
 
-            return startMainActivity(putDismissedImagesQuantity = false)
+            return startMainActivity()
         }
 
         backPressHandler.onPress()
@@ -152,7 +185,7 @@ class Cropper(
     override fun onPreExecute() {
         super.onPreExecute()
 
-        imageOrdinalTextView.get()!!.setImageOrdinalText(0)
+        setImageOrdinalText(0)
     }
 
     /**
@@ -203,7 +236,7 @@ class Cropper(
      */
     override fun onProgressUpdate(vararg imageOrdinalWithProgressBarStep: Pair<Int, Int>) {
         with(imageOrdinalWithProgressBarStep[0]) {
-            imageOrdinalTextView.get()?.setImageOrdinalText(first)
+            setImageOrdinalText(first)
 
             // advance progress bar
             progressBar.get()?.let {
@@ -221,7 +254,7 @@ class Cropper(
         taskCompletionListener.onTaskCompleted()
     }
 
-    private fun TextView.setImageOrdinalText(imageOrdinal: Int) {
-        text = context.getString(R.string.fracture_text, imageOrdinal, nSelectedImages)
+    private fun setImageOrdinalText(imageOrdinal: Int) {
+        imageOrdinalTextView.get()!!.text = context.get()!!.getString(R.string.fracture_text, imageOrdinal, nSelectedImages)
     }
 }

@@ -9,8 +9,8 @@ import androidx.appcompat.widget.PopupMenu
 import com.autocrop.*
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.CroppingActivity
-import com.autocrop.activities.cropping.DismissedImagesQuantity
 import com.autocrop.activities.examination.N_SAVED_CROPS
+import com.autocrop.activities.hideSystemUI
 import com.autocrop.utils.*
 import com.autocrop.utils.android.*
 import com.bunsenbrenner.screenshotboundremoval.R
@@ -128,14 +128,15 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
             // menu button
             menu_button.setOnClickListener {
+
                 // inflate popup menu
                 PopupMenu(this, it).run {
-                    this.menuInflater.inflate(R.menu.activity_main, this.menu)
+                    menuInflater.inflate(R.menu.activity_main, menu)
 
                     // set checks
-                    this.menu.findItem(R.id.main_menu_item_delete_input_screenshots).isChecked =
+                    menu.findItem(R.id.main_menu_item_delete_input_screenshots).isChecked =
                         UserPreferences.deleteInputScreenshots
-                    this.menu.findItem(R.id.main_menu_item_save_to_autocrop_folder).isChecked =
+                    menu.findItem(R.id.main_menu_item_save_to_autocrop_folder).isChecked =
                         UserPreferences.saveToAutocropDir
 
                     // set item onClickListeners
@@ -160,7 +161,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                         }
                         false
                     }
-                    this.show()
+                    show()
                 }
             }
         }
@@ -187,27 +188,11 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                 }
             }
 
-            fun displayAllImagesDismissedToast(dismissedImagesQuantity: DismissedImagesQuantity) {
-                when (dismissedImagesQuantity) {
-                    DismissedImagesQuantity.Multiple -> displayToast(
-                        "Couldn't find cropping bounds for",
-                        "any of the selected images"
-                    )
-                    DismissedImagesQuantity.One -> displayToast("Couldn't find cropping bounds for selected image")
-                }
-            }
-
             // display either saving result toast if returning from examination activity or all images dismissed
             // toast if returning from cropping activity or nothing if none of the former applying
             with(intent.getIntExtra(N_SAVED_CROPS, -1)) {
                 if (this != -1)
                     displaySavingResultToast(this)
-                else {
-                    with(intent.getEnumExtra<DismissedImagesQuantity>()) {
-                        if (this != null)
-                            displayAllImagesDismissedToast(this)
-                    }
-                }
             }
         }
 
