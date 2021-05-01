@@ -6,7 +6,6 @@ package com.autocrop.activities.examination
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -87,7 +86,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fun initializeImageSlider(textViews: TextViews) {
+        fun initializeViewPager(textViews: TextViews) {
             viewPager2 = findViewById<ViewPager2>(R.id.view_pager).apply {
                 with(
                     ImageSliderAdapter(
@@ -122,27 +121,26 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
             }
         }
 
+        fun displayCouldntFindCroppingBoundsToast(nDismissedImages: Int){
+            when (nDismissedImages) {
+                1 -> displayToast("Couldn't find cropping bounds for 1 image")
+                in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for $nDismissedImages images")
+            }
+        }
+
         setContentView(R.layout.activity_examination).also {
             textViews = TextViews()
             toolbar = findViewById(R.id.toolbar)
         }
 
-        initializeImageSlider(textViews)
+        initializeViewPager(textViews)
         setToolbarButtonOnClickListeners(progressBar = findViewById(R.id.indeterminateBar))
-    }
-
-    override fun onStart(){
-        super.onStart()
-
-        with(intent.getIntExtra(
-            N_DISMISSED_IMAGES_IDENTIFIER,
-            0)){
-
-            when (this) {
-                1 -> displayToast("Couldn't find cropping bounds for 1 image")
-                in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for $this images")
-            }
-        }
+        displayCouldntFindCroppingBoundsToast(
+            intent.getIntExtra(
+                N_DISMISSED_IMAGES_IDENTIFIER,
+                0
+            )
+        )
     }
 
     // -----------------ImageActionReactionsPossessor overrides-----------------
@@ -180,9 +178,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         // return to main activity if already pressed once
         else if (backPressHandler.pressedOnce) {
-            return returnToMainActivity().also {
-                Timber.i("Returning to main activity on second back press")
-            }
+            return returnToMainActivity()
         }
 
         backPressHandler.onPress()
