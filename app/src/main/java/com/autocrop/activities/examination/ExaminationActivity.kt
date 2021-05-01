@@ -98,6 +98,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                         this@ExaminationActivity
                     ) { displayingExitScreen }){
                     adapter = this
+
                     setCurrentItem(startItemIndex, false)
                 }
             }

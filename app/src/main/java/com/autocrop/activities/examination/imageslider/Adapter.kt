@@ -17,11 +17,9 @@ import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ImageActionReactionsPossessor
 import com.autocrop.crop
 import com.autocrop.cropBundleList
-import com.autocrop.screenshotUri
 import com.autocrop.utils.manhattanNorm
 import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
-import timber.log.Timber
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -40,10 +38,12 @@ class ImageSliderAdapter(
     private val displayingExitScreen: () -> Boolean
 ) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
+    private val indices: MutableList<Int> = cropBundleList.indices.toMutableList()
+
     private var removeDataElementIndex: Int? = null
 
-    private var rotationDistance = 0
-    private var setPosition by Delegates.notNull<Int>()
+    private var replacementViewItemIndex by Delegates.notNull<Int>()
+    private var dataRotationDistance by Delegates.notNull<Int>()
 
     val startItemIndex: Int = (Int.MAX_VALUE / 2).run {
         this - dataElementIndex(this)
@@ -56,26 +56,31 @@ class ImageSliderAdapter(
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
 
-                    // if (removeDataElementIndex == null)
-                    with(dataElementIndex(position)){
-                        textViews.setRetentionPercentage(this)
-                        textViews.setPageIndication(dataElementIndex(this))
-                    }
+                    if (removeDataElementIndex == null)
+                        with(dataElementIndex(position)){
+                            textViews.setRetentionPercentage(this)
+                            textViews.setPageIndication(indices[this])
+                        }
                 }
 
                 override fun onPageScrollStateChanged(state: Int) {
                     super.onPageScrollStateChanged(state)
 
                     if (state == SCROLL_STATE_IDLE && removeDataElementIndex != null) {
-                        cropBundleList.removeAt(removeDataElementIndex!!)
-                        Collections.rotate(cropBundleList, rotationDistance)
+                        val resetMargin = 3
 
-                        val resetItemMargin = 4
-                        with (setPosition){
-                            listOf((this - resetItemMargin until this), (this + 1..this + resetItemMargin)).flatten().forEach {
-                                notifyItemChanged(it)
-                            }
+                        cropBundleList.removeAt(removeDataElementIndex!!)
+                        Collections.rotate(cropBundleList, dataRotationDistance)
+
+                        with (replacementViewItemIndex){
+                            listOf(
+                                (this - resetMargin until this),
+                                (this + 1..this + resetMargin)
+                            )
+                                .flatten()
+                                .forEach { notifyItemChanged(it) }
                         }
+
                         removeDataElementIndex = null
                     }
                 }
@@ -154,24 +159,26 @@ class ImageSliderAdapter(
         if (cropBundleList.size == 1)
             return imageActionReactionsPossessor.exitActivity()
 
-        val dataElementIndex: Int = dataElementIndex(position)
+        removeDataElementIndex = dataElementIndex(position)
 
-        val (subsequentDisplayPageIndex: Int, newPageIndex: Int) =
-            if (dataElementIndex == cropBundleList.lastIndex)
-                Pair(position - 1, dataElementIndex - 1)
+        val (replacementDataElementIndexPostRemoval: Int, replacementViewItemIndex: Int) = (removeDataElementIndex!!).run {
+            if (this == cropBundleList.lastIndex)
+                Pair(this - 1, position - 1)
             else
-                Pair(position + 1, dataElementIndex)
-
-        viewPager2.setCurrentItem(subsequentDisplayPageIndex, true)
-
-        with(textViews) {
-            setRetentionPercentage(dataElementIndex(subsequentDisplayPageIndex))
-            setPageIndication(newPageIndex, cropBundleList.lastIndex)
+                Pair(this, position + 1)
         }
 
-        removeDataElementIndex = dataElementIndex
-        setPosition = subsequentDisplayPageIndex
+        viewPager2.setCurrentItem(replacementViewItemIndex, true)
+        dataRotationDistance = (replacementViewItemIndex % cropBundleList.lastIndex) - replacementDataElementIndexPostRemoval
 
-        rotationDistance = (subsequentDisplayPageIndex % cropBundleList.lastIndex) - newPageIndex
+        indices.remove(indices.lastIndex)
+        Collections.rotate(indices, dataRotationDistance)
+
+        with(textViews) {
+            setRetentionPercentage(dataElementIndex(replacementViewItemIndex))
+            setPageIndication(indices[replacementDataElementIndexPostRemoval], cropBundleList.lastIndex)
+        }
+
+        this.replacementViewItemIndex = replacementViewItemIndex
     }
 }
