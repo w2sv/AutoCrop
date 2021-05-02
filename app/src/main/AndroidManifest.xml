@@ -19,7 +19,7 @@
 
         android:icon="@mipmap/brudineletten"
         android:roundIcon="@mipmap/brudineletten_round"
-        android:theme="@style/BaseAppTheme"
+        android:theme="@style/AppTheme"
 
         android:requestLegacyExternalStorage="true"
         android:allowBackup="false"

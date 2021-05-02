@@ -17,24 +17,14 @@
         android:background="@android:color/black"
 
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:overScrollMode="never"/>
+        android:layout_height="match_parent" />
 
     <!-- App title background text view -->
 
     <TextView
-        android:id="@+id/title_text_view"
-
-        android:layout_width="match_parent"
+        style="@style/AppTitleTextView"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-
-        android:textSize="42sp"
-        android:textColor="@color/magenta"
-        android:textStyle="bold"
-        android:text="@string/app_title"
+        android:layout_width="match_parent"
 
         android:visibility="gone" />
 
