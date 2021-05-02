@@ -21,7 +21,7 @@ fun Activity.displayToast(message: String) {
             findViewById<TextView>(android.R.id.message).apply {
                 setTextColor(Color.parseColor("white"))
                 gravity = Gravity.CENTER
-                with(Pair(20, 0)) {
+                with(Pair(14, 0)) {
                     setPadding(first, second, first, second)
                 }
             }
