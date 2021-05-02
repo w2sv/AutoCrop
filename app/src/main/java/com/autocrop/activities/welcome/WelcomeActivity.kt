@@ -6,7 +6,7 @@ import android.os.Handler
 import com.autocrop.activities.SystemUiHidingAppCompatActivity
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.PixelField
-import com.autocrop.utils.android.debuggingMode
+import com.autocrop.utils.android.debuggingModeEnabled
 import com.autocrop.utils.android.screenResolution
 import com.bunsenbrenner.screenshotboundremoval.R
 import timber.log.Timber
@@ -16,7 +16,7 @@ class WelcomeActivity : SystemUiHidingAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (debuggingMode())
+        if (debuggingModeEnabled())
             Timber.plant(Timber.DebugTree())
 
         setContentView(R.layout.activity_welcome)

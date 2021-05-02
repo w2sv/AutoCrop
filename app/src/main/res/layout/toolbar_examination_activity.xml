@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@android:color/transparent"
-        android:text="@string/dismiss_all_button_text"
+        android:text="@string/dismiss_all_button"
         android:textColor="@android:color/white"
         android:translationX="-10dp" />
 
@@ -29,7 +29,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:background="@android:color/transparent"
-        android:text="@string/save_all_button_text"
+        android:text="@string/save_all_button"
         android:textColor="@android:color/white"
         android:translationX="-45dp"/>
 

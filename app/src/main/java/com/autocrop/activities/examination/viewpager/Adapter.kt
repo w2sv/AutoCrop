@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -126,7 +127,7 @@ class ImageSliderAdapter(
                                     context,
                                     this@ImageSliderAdapter
                                 )
-                                    .show(fragmentManager, "procedure")
+                                    .show(fragmentManager, "File io query dialog")
                         }
                     }
                     return true

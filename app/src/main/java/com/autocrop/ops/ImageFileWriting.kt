@@ -87,7 +87,7 @@ private fun Uri.deleteUnderlyingImageFile(context: Context) {
     )
 
     // log deletion success if debugging
-    if (debuggingMode()){
+    if (debuggingModeEnabled()){
         with(file.canonicalFile.absolutePath){
             if (file.exists())
                 Timber.e("Deletion of $this failed")

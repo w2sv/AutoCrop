@@ -9,6 +9,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -40,22 +41,34 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
     private var nSelectedImages by Delegates.notNull<Int>()
     private lateinit var croppingTask: Cropper
 
+    private lateinit var views: Views
+
     inner class Views{
         val progressBar: ProgressBar = findViewById(R.id.cropping_progress_bar)
-        val currentImageNumberText: TextView = findViewById(R.id.cropping_current_image_number_text_view)
-        val croppingText: TextView = findViewById(R.id.cropping_text_view)
+        private val currentImageNumberText: TextView = findViewById(R.id.cropping_current_image_number_text_view)
+        fun setCurrentImageNumberText(currentImageNumber: Int){
+            currentImageNumberText.text = getString(R.string.fracture, currentImageNumber, nSelectedImages)
+        }
 
-        val couldntFindCroppingBoundsText: TextView = findViewById(R.id.couldnt_find_cropping_bounds_text_view)
-        val couldntFindCroppingBoundsIcon: TextView = findViewById(R.id.couldnt_find_cropping_bounds_icon)
+        private val croppingText: TextView = findViewById(R.id.cropping_text_view)
 
         val croppingViews: List<View>
             get() = listOf(progressBar, currentImageNumberText, croppingText)
+        
+        private val croppingFailureText: TextView = findViewById(R.id.cropping_failure_text_view)
+        fun setCroppingFailureText(attemptedMultipleImages: Boolean){
+            croppingFailureText.text = R.string.cropping_failure.run {
+                if (attemptedMultipleImages)
+                    getString(this, " any of", "s")
+                else
+                    getString(this, "", "")
+            }
+        }
+        private val croppingFailureIcon: ImageView = findViewById(R.id.cropping_failure_error_icon)
 
-        val couldntFindCroppingBoundsViews: List<View>
-            get() = listOf(couldntFindCroppingBoundsText, couldntFindCroppingBoundsIcon)
+        val croppingFailureViews: List<View>
+            get() = listOf(croppingFailureText, croppingFailureIcon)
     }
-
-    lateinit var views: Views
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +92,7 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
             nSelectedImages,
             WeakReference(this),
             WeakReference(views.progressBar),
-            WeakReference(views.currentImageNumberText),
+            views::setCurrentImageNumberText,
             this
         ).also {
             it.execute(*imageUris)
@@ -107,15 +120,9 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
                             it.hide()
                         }
 
-                        couldntFindCroppingBoundsText.text =
-                            R.string.couldnt_find_any_cropping_bounds.run {
-                                if (nSelectedImages > 1)
-                                    getString(this, " any of", "s")
-                                else
-                                    getString(this, "", "")
-                            }
+                        setCroppingFailureText(nSelectedImages > 1)
 
-                        couldntFindCroppingBoundsViews.forEach {
+                        croppingFailureViews.forEach {
                             it.show()
                         }
 
@@ -175,7 +182,7 @@ class Cropper(
     private val nSelectedImages: Int,
     private val context: WeakReference<Context>,
     private val progressBar: WeakReference<ProgressBar>,
-    private val imageOrdinalTextView: WeakReference<TextView>,
+    private val setCurrentImageViewText: (Int) -> Unit,
     private val taskCompletionListener: CroppingCompletionListener
 ) : AsyncTask<Uri, Pair<Int, Int>, Void?>() {
 
@@ -185,7 +192,7 @@ class Cropper(
     override fun onPreExecute() {
         super.onPreExecute()
 
-        setImageOrdinalText(0)
+        setCurrentImageViewText(0)
     }
 
     /**
@@ -236,7 +243,7 @@ class Cropper(
      */
     override fun onProgressUpdate(vararg imageOrdinalWithProgressBarStep: Pair<Int, Int>) {
         with(imageOrdinalWithProgressBarStep[0]) {
-            setImageOrdinalText(first)
+            setCurrentImageViewText(first)
 
             // advance progress bar
             progressBar.get()?.let {
@@ -252,9 +259,5 @@ class Cropper(
         super.onPostExecute(result)
 
         taskCompletionListener.onTaskCompleted()
-    }
-
-    private fun setImageOrdinalText(imageOrdinal: Int) {
-        imageOrdinalTextView.get()!!.text = context.get()!!.getString(R.string.fracture_text, imageOrdinal, nSelectedImages)
     }
 }

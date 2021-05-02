@@ -1,4 +1,4 @@
 package com.autocrop.utils
 
 
-fun Boolean.toInt(): Int = this.compareTo(false)
+fun Boolean.toInt(): Int = compareTo(false)

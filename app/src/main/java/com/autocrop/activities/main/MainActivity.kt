@@ -93,8 +93,8 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             }
             else
                 displayToast(
-                    "You need to permit file ${listOf("reading", "writing")[(this == PermissionCode.WRITE.ordinal).toInt()]}",
-                    "in order for the app to work"
+                    "You need to permit file ${listOf("reading", "writing")[(this == PermissionCode.WRITE.ordinal).toInt()]}\n" +
+                            "in order for the app to work"
                 )
         }
     }
@@ -171,19 +171,16 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                 when (nSavedCrops) {
                     0 -> displayToast("Dismissed everything")
                     1 -> displayToast(
-                        *listOf(
-                            listOf("Saved 1 crop"),
-                            listOf("Saved 1 crop and deleted", "corresponding screenshot")
-                        )[UserPreferences.deleteInputScreenshots.toInt()].toTypedArray()
+                        listOf(
+                            "Saved 1 crop",
+                            "Saved 1 crop and deleted\ncorresponding screenshot"
+                        )[UserPreferences.deleteInputScreenshots.toInt()]
                     )
                     in 2..Int.MAX_VALUE -> displayToast(
-                        *listOf(
-                            listOf("Saved $nSavedCrops crops"),
-                            listOf(
-                                "Saved $nSavedCrops crops and deleted",
-                                "corresponding screenshots"
-                            )
-                        )[UserPreferences.deleteInputScreenshots.toInt()].toTypedArray()
+                        listOf(
+                            "Saved $nSavedCrops crops",
+                            "Saved $nSavedCrops crops and deleted\ncorresponding screenshots"
+                        )[UserPreferences.deleteInputScreenshots.toInt()]
                     )
                 }
             }

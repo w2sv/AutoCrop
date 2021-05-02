@@ -4,11 +4,8 @@ import android.app.Activity
 import android.content.SharedPreferences
 
 
-private const val DEFAULT_PREFERENCES_INSTANCE_NAME: String = "default"
-
-
 fun Activity.getDefaultSharedPreferences(): SharedPreferences = getSharedPreferences(
-    DEFAULT_PREFERENCES_INSTANCE_NAME,
+    "default",
     0
 )
 

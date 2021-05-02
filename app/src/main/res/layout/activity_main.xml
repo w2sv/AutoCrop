@@ -27,7 +27,7 @@
         android:layout_centerInParent="true"
 
         android:fontFamily="sans-serif"
-        android:text="@string/image_selection_button_text"
+        android:text="@string/image_selection_button"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@android:color/darker_gray"/>
 

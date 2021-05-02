@@ -68,7 +68,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         fun setPageIndication(pageIndex: Int, itemCount: Int = cropBundleList.size){
             pageIndication.text = getString(
-                R.string.fracture_text,
+                R.string.fracture,
                 pageIndex + 1,
                 itemCount
             )
@@ -76,7 +76,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         fun setRetentionPercentage(pageIndex: Int){
             retentionPercentage.text = getString(
-                R.string.examination_activity_retention_percentage_text,
+                R.string.examination_activity_retention_percentage,
                 cropBundleList[pageIndex].retentionPercentage
             )
         }
@@ -87,18 +87,18 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         fun initializeViewPager(textViews: TextViews) {
             viewPager2 = findViewById<ViewPager2>(R.id.view_pager).apply {
-                with(
-                    ImageSliderAdapter(
-                        textViews,
-                        this,
-                        this@ExaminationActivity,
-                        this@ExaminationActivity.supportFragmentManager,
-                        this@ExaminationActivity
-                    ) { displayingExitScreen }){
-                    adapter = this
+                adapter = ImageSliderAdapter(
+                    textViews,
+                    this,
+                    this@ExaminationActivity,
+                    this@ExaminationActivity.supportFragmentManager,
+                    this@ExaminationActivity
+                ) { displayingExitScreen }
 
-                    setCurrentItem(startItemIndex, false)
-                }
+                setCurrentItem(
+                    (adapter as ImageSliderAdapter).startItemIndex,
+                    false
+                )
             }
         }
 
@@ -125,7 +125,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                                 setNegativeButton("No") { _, _ -> }
                                 setPositiveButton("Yes") { _, _ -> saveAll() }
                             }
-                            .create()
+                                .create()
                     }
 
                     SaveAllConfirmationDialog().show(supportFragmentManager, "Save all confirmation dialog")
@@ -142,8 +142,8 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         fun displayCouldntFindCroppingBoundsToast(nDismissedImages: Int){
             when (nDismissedImages) {
-                1 -> displayToast("Couldn't find cropping bounds for", "1 image")
-                in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for", "$nDismissedImages images")
+                1 -> displayToast("Couldn't find cropping bounds for\n1 image")
+                in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for\$nDismissedImages images")
             }
         }
 
@@ -192,7 +192,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         // block if saving all / dismissing all
         if (displayingExitScreen) {
-            displayToast("Please wait until crops", "have been saved")
+            displayToast("Please wait until crops\nhave been saved")
             return
         }
 
