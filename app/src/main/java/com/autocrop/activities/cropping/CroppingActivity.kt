@@ -21,6 +21,7 @@ import com.autocrop.activities.main.SELECTED_IMAGE_URI_STRINGS_IDENTIFIER
 import com.autocrop.clearCropBundleList
 import com.autocrop.cropBundleList
 import com.autocrop.utils.android.*
+import com.autocrop.utils.forceUnwrapped
 import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_cropping.*

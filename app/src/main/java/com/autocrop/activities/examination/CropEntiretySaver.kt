@@ -2,11 +2,10 @@ package com.autocrop.activities.examination
 
 import android.content.Context
 import android.os.AsyncTask
-import android.view.View
 import android.widget.ProgressBar
 import com.autocrop.cropBundleList
 import com.autocrop.ops.saveCropAndDeleteScreenshotIfApplicable
-import com.autocrop.utils.android.forceUnwrapped
+import com.autocrop.utils.forceUnwrapped
 import com.autocrop.utils.android.hide
 import com.autocrop.utils.android.show
 import java.lang.ref.WeakReference
