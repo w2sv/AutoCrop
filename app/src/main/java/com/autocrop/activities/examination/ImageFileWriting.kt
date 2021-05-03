@@ -1,4 +1,4 @@
-package com.autocrop.ops
+package com.autocrop.activities.examination
 
 import android.content.ContentValues
 import android.content.Context
