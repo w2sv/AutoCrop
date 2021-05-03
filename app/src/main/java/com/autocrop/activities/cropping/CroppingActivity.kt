@@ -183,8 +183,7 @@ class Cropper(
     private val context: WeakReference<Context>,
     private val progressBar: WeakReference<ProgressBar>,
     private val setCurrentImageViewText: (Int) -> Unit,
-    private val taskCompletionListener: CroppingCompletionListener
-) : AsyncTask<Uri, Pair<Int, Int>, Void?>() {
+    private val taskCompletionListener: CroppingCompletionListener) : AsyncTask<Uri, Pair<Int, Int>, Void?>() {
 
     /**
      * Initializes imageOrdinalTextView text
@@ -204,12 +203,18 @@ class Cropper(
         var decimalStepSum = 0f
 
         val (progressBarIntStep: Int, progressBarDecimalStep: Float) = (
-                progressBar.get()!!.max.toFloat() / nSelectedImages.toFloat()
-                ).run { Pair(this.toInt(), this - this.toInt()) }
+                progressBar.forceUnwrapped().max.toFloat() / nSelectedImages.toFloat()
+            )
+            .run {
+                toInt()
+                    .let {
+                        Pair(it, this - it)
+                    }
+            }
 
         params.forEachIndexed { index, uri ->
             val image: Bitmap = BitmapFactory.decodeStream(
-                context.get()!!.contentResolver.openInputStream(uri)
+                context.forceUnwrapped().contentResolver.openInputStream(uri)
             )!!
 
             // attempt to crop image, add uri-crop mapping to image cash if successful
@@ -246,9 +251,7 @@ class Cropper(
             setCurrentImageViewText(first)
 
             // advance progress bar
-            progressBar.get()?.let {
-                it.progress += second
-            }
+            progressBar.forceUnwrapped().progress += second
         }
     }
 

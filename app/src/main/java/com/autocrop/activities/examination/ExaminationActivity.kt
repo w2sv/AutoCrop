@@ -52,7 +52,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         private val retentionPercentage: TextView = findViewById(R.id.retention_percentage)
         private val pageIndication: TextView = findViewById(R.id.page_indication)
 
-        val appTitle: TextView = findViewById(R.id.title_text_view)
+        val appTitle: TextView = findViewById(R.id.examination_activity_title_text_view)
         val saveAll: TextView = findViewById(R.id.processing_crops_text_view)
 
         init {

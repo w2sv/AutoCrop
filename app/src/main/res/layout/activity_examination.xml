@@ -23,6 +23,7 @@
 
     <TextView
         style="@style/AppTitleTextView"
+        android:id="@+id/examination_activity_title_text_view"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
 
