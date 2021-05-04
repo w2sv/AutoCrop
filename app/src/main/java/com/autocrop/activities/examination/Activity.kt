@@ -107,7 +107,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                 fun saveAll(){
                     preExitScreen(showAppTitle = false)
 
-                    CropEntiretySaver(
+                    CropSaver(
                         WeakReference(progressBar),
                         WeakReference(textViews),
                         WeakReference(this),

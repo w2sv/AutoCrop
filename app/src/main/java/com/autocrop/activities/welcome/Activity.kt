@@ -12,7 +12,7 @@ import com.bunsenbrenner.screenshotboundremoval.R
 import timber.log.Timber
 
 
-class WelcomeActivity : SystemUiHidingAppCompatActivity() {
+class Activity : SystemUiHidingAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

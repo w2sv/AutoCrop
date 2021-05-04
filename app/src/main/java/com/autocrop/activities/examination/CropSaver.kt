@@ -4,14 +4,13 @@ import android.content.Context
 import android.os.AsyncTask
 import android.widget.ProgressBar
 import com.autocrop.cropBundleList
-import com.autocrop.ops.saveCropAndDeleteScreenshotIfApplicable
-import com.autocrop.utils.forceUnwrapped
 import com.autocrop.utils.android.hide
 import com.autocrop.utils.android.show
+import com.autocrop.utils.forceUnwrapped
 import java.lang.ref.WeakReference
 
 
-class CropEntiretySaver(
+class CropSaver(
     private val progressBar: WeakReference<ProgressBar>,
     private val textViews: WeakReference<ExaminationActivity.TextViews>,
     private val context: WeakReference<Context>,

@@ -6,9 +6,9 @@ import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.autocrop.UserPreferences
+import com.autocrop.activities.examination.saveCropAndDeleteScreenshotIfApplicable
 import com.autocrop.crop
 import com.autocrop.cropBundleList
-import com.autocrop.ops.saveCropAndDeleteScreenshotIfApplicable
 import com.autocrop.screenshotUri
 import com.autocrop.utils.toInt
 
