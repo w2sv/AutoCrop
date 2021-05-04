@@ -22,6 +22,7 @@ import com.autocrop.activities.examination.ImageActionReactionsPossessor
 import com.autocrop.crop
 import com.autocrop.cropBundleList
 import com.autocrop.utils.manhattanNorm
+import com.autocrop.utils.smallerEquals
 import com.autocrop.utils.smallerThan
 import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
@@ -49,7 +50,7 @@ class ImageSliderAdapter(
 
     private var dataTailIndex: Index = cropBundleList.lastIndex
 
-    fun Index.rotated(distance: Int, collectionSize: Int): Int =
+    private fun Index.rotated(distance: Int, collectionSize: Int): Int =
         plus(distance).run{
             if (smallerThan(0)){
                 (collectionSize - abs(this) % collectionSize) % collectionSize
@@ -85,27 +86,27 @@ class ImageSliderAdapter(
                     super.onPageScrollStateChanged(state)
 
                     val resetMargin = 3
+                    val dataSizePostRemoval: Int = cropBundleList.lastIndex
 
                     if (state == SCROLL_STATE_IDLE && removeDataElementIndex != null) {
 
                         with(removeDataElementIndex!!){
-                            if (equals(dataTailIndex)){
-                                dataTailIndex = (if (equals(0))
-                                    cropBundleList.lastIndex
-                                else
-                                    dataTailIndex) - 1
-                            }
+                            if (equals(dataTailIndex))
+//                                dataTailIndex = dataTailIndex.rotated(-1, dataSizePostRemoval)
+//                                    .also {
+//                                        Timber.i("Rotated tail index to: $it")
+//                                    }
 
                             cropBundleList.removeAt(this)
                         }
 
                         Collections.rotate(cropBundleList, dataRotationDistance)
-                        dataTailIndex = dataTailIndex.rotated(dataRotationDistance, cropBundleList.size)
+                        // dataTailIndex = dataTailIndex.rotated(dataRotationDistance, cropBundleList.size)
 
                         with (replacementViewItemIndex){
                             listOf(
-                                (this - resetMargin until this),
-                                (this + 1..this + resetMargin)
+                                (minus(resetMargin) until this),
+                                (plus(1)..this + resetMargin)
                             )
                                 .flatten()
                                 .forEach { notifyItemChanged(it) }
@@ -196,18 +197,31 @@ class ImageSliderAdapter(
             return imageActionReactionsPossessor.exitActivity()
 
         removeDataElementIndex = dataElementIndex(position)
+
+        val dataSizePostRemoval: Int = cropBundleList.lastIndex
         val lastIndexPostRemoval: Int = cropBundleList.lastIndex - 1
 
         val (replacementDataElementIndexPostRemoval: Int, replacementViewItemIndex) = (removeDataElementIndex!!).run {
             if (equals(dataTailIndex))
-                Pair((minus(1)).run{ if (smallerThan(0)) lastIndexPostRemoval else this }, position - 1).also {
-                    Timber.i("Removing at data tail")
-                }
+                Pair(
+                    rotated(-1, dataSizePostRemoval),
+                    position - 1
+                )
+                    .also {
+                        Timber.i("Removing at tail index")
+                    }
             else
-                Pair(if (this <= lastIndexPostRemoval) this else minus(1), position + 1)
+                Pair(
+                    if (smallerEquals(lastIndexPostRemoval))
+                        this
+                    else
+                        rotated(-1, dataSizePostRemoval)
+                            .also {
+                                  Timber.i("Rotated replacementDataElementIndexPostRemoval")
+                            },
+                    position + 1
+                )
         }
-
-        val dataSizePostRemoval: Int = cropBundleList.lastIndex
 
         viewPager2.setCurrentItem(replacementViewItemIndex, true)
         dataRotationDistance = (replacementViewItemIndex % dataSizePostRemoval) - replacementDataElementIndexPostRemoval
