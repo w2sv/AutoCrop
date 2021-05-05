@@ -21,14 +21,12 @@ import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ImageActionReactionsPossessor
 import com.autocrop.crop
 import com.autocrop.cropBundleList
-import com.autocrop.utils.manhattanNorm
-import com.autocrop.utils.smallerEquals
-import com.autocrop.utils.smallerThan
-import com.autocrop.utils.toInt
+import com.autocrop.utils.*
 import com.bunsenbrenner.screenshotboundremoval.R
 import timber.log.Timber
 import java.util.*
 import kotlin.math.abs
+import kotlin.math.min
 import kotlin.properties.Delegates
 
 
@@ -39,6 +37,15 @@ interface ImageActionListener {
 
 private typealias Index = Int
 
+private fun Index.rotated(distance: Int, collectionSize: Int): Int =
+    plus(distance).run{
+        if (smallerThan(0)){
+            (collectionSize - abs(this) % collectionSize) % collectionSize
+        }
+        else
+            rem(collectionSize)
+    }
+
 
 class ImageSliderAdapter(
     private val textViews: ExaminationActivity.TextViews,
@@ -48,16 +55,8 @@ class ImageSliderAdapter(
     private val imageActionReactionsPossessor: ImageActionReactionsPossessor,
     private val displayingExitScreen: () -> Boolean) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
+    private var dataTailHash: Int = cropBundleList.last().hashCode()
     private var dataTailIndex: Index = cropBundleList.lastIndex
-
-    private fun Index.rotated(distance: Int, collectionSize: Int): Int =
-        plus(distance).run{
-            if (smallerThan(0)){
-                (collectionSize - abs(this) % collectionSize) % collectionSize
-            }
-            else
-                rem(collectionSize)
-        }
 
     private var removeDataElementIndex: Index? = null
 
@@ -66,6 +65,10 @@ class ImageSliderAdapter(
 
     val startItemIndex: Int = (Int.MAX_VALUE / 2).run {
         this - dataElementIndex(this)
+    }
+
+    companion object{
+        private const val VIEW_ITEM_RESET_MARGIN: Int = 3
     }
 
     init {
@@ -85,28 +88,18 @@ class ImageSliderAdapter(
                 override fun onPageScrollStateChanged(state: Int) {
                     super.onPageScrollStateChanged(state)
 
-                    val resetMargin = 3
-                    val dataSizePostRemoval: Int = cropBundleList.lastIndex
-
                     if (state == SCROLL_STATE_IDLE && removeDataElementIndex != null) {
-
-                        with(removeDataElementIndex!!){
-                            if (equals(dataTailIndex))
-//                                dataTailIndex = dataTailIndex.rotated(-1, dataSizePostRemoval)
-//                                    .also {
-//                                        Timber.i("Rotated tail index to: $it")
-//                                    }
-
-                            cropBundleList.removeAt(this)
-                        }
+                        cropBundleList.removeAt(removeDataElementIndex!!)
 
                         Collections.rotate(cropBundleList, dataRotationDistance)
-                        // dataTailIndex = dataTailIndex.rotated(dataRotationDistance, cropBundleList.size)
+                        dataTailIndex = cropBundleList.indexOfFirst { it.hashCode() == dataTailHash }.also {
+                            Timber.i("New data tail index: $it")
+                        }
 
                         with (replacementViewItemIndex){
                             listOf(
-                                (minus(resetMargin) until this),
-                                (plus(1)..this + resetMargin)
+                                (minus(VIEW_ITEM_RESET_MARGIN) until this),
+                                (plus(1)..plus(VIEW_ITEM_RESET_MARGIN))
                             )
                                 .flatten()
                                 .forEach { notifyItemChanged(it) }
@@ -157,7 +150,7 @@ class ImageSliderAdapter(
                                     context,
                                     this@ImageSliderAdapter
                                 )
-                                    .show(fragmentManager, "File io query dialog")
+                                    .show(fragmentManager, "File procedure query dialog")
                         }
                     }
                     return true
@@ -182,13 +175,19 @@ class ImageSliderAdapter(
 
     override fun getItemCount(): Int = if (cropBundleList.size > 1) Int.MAX_VALUE else 1
 
-    private fun pageIndex(dataElementIndex: Index): Index =
-        if (dataElementIndex > dataTailIndex)
-            dataElementIndex - dataTailIndex
+    private fun pageIndex(dataElementIndex: Index): Index{
+        val headIndex: Index = dataTailIndex.rotated(1, cropBundleList.size)
+
+        return if (headIndex <= dataElementIndex)
+            dataElementIndex - headIndex
         else
-            cropBundleList.lastIndex - dataTailIndex + dataElementIndex
+            cropBundleList.lastIndex - headIndex + dataElementIndex + 1
+    }
+
+    private fun removingAtDataTail(): Boolean = cropBundleList[removeDataElementIndex!!].hashCode() == dataTailHash
 
     override fun onConductedImageAction(position: Int, incrementNSavedCrops: Boolean) {
+
         // trigger imageActionReactionsPossessor downstream actions
         if (incrementNSavedCrops)
             imageActionReactionsPossessor.incrementNSavedCrops()
@@ -201,29 +200,30 @@ class ImageSliderAdapter(
         val dataSizePostRemoval: Int = cropBundleList.lastIndex
         val lastIndexPostRemoval: Int = cropBundleList.lastIndex - 1
 
-        val (replacementDataElementIndexPostRemoval: Int, replacementViewItemIndex) = (removeDataElementIndex!!).run {
-            if (equals(dataTailIndex))
-                Pair(
-                    rotated(-1, dataSizePostRemoval),
-                    position - 1
-                )
-                    .also {
-                        Timber.i("Removing at tail index")
-                    }
-            else
-                Pair(
-                    if (smallerEquals(lastIndexPostRemoval))
-                        this
-                    else
-                        rotated(-1, dataSizePostRemoval)
-                            .also {
-                                  Timber.i("Rotated replacementDataElementIndexPostRemoval")
-                            },
-                    position + 1
-                )
-        }
+        val (replacementDataElementIndexPostRemoval: Int, replacementViewItemIndex) =
+            (removeDataElementIndex!!).run {
+                if (removingAtDataTail())
+                    Pair(
+                        rotated(-1, dataSizePostRemoval),
+                        position - 1
+                    )
+                        .also {
+                            Timber.i("Removing at tail index")
+                        }
+                else
+                    Pair(
+                        min(this, lastIndexPostRemoval),
+                        position + 1
+                    )
+                        .also {
+                            if (it.first == lastIndexPostRemoval)
+                                Timber.i("Set to lastIndexPostRemoval")
+                        }
+            }
 
         viewPager2.setCurrentItem(replacementViewItemIndex, true)
+
+        dataTailHash = cropBundleList.at(removeDataElementIndex!! - 1).hashCode()
         dataRotationDistance = (replacementViewItemIndex % dataSizePostRemoval) - replacementDataElementIndexPostRemoval
 
         with(textViews) {
