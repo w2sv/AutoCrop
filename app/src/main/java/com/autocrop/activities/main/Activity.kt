@@ -10,7 +10,6 @@ import com.autocrop.*
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
-import com.autocrop.activities.hideSystemUI
 import com.autocrop.utils.*
 import com.autocrop.utils.android.*
 import com.bunsenbrenner.screenshotboundremoval.R
@@ -31,11 +30,11 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
         // ----------Pixel Field---------------
 
-        private var pixelField: PixelField? = null
-
-        fun initializePixelField() {
-            pixelField = PixelField()
-        }
+//        private var pixelField: PixelField? = null
+//
+//        fun initializePixelField() {
+//            pixelField = PixelField()
+//        }
 
         // -------------Codes---------------
 
@@ -108,12 +107,11 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         fun setPixelField() {
-            if (pixelField == null)
-                initializePixelField().also {
-                    Timber.i("Reinitialized pixel field")
-                }
-
-            with(PFragment(pixelField)){
+            with(PFragment(
+                ParticleFlowField(
+                    screenResolution(windowManager)
+                )
+            )){
                 setView(findViewById<FrameLayout>(R.id.canvas_container), this@MainActivity)
                 Timber.i("Set PFragment hosting pixel field")
             }
@@ -256,7 +254,5 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             userPreferencesOnActivityCreation,
             getDefaultSharedPreferences()
         )
-
-        pixelField = null
     }
 }
