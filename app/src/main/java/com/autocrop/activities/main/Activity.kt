@@ -14,8 +14,8 @@ import com.autocrop.utils.*
 import com.autocrop.utils.android.*
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
 import processing.android.PFragment
+import processing.core.PApplet
 import timber.log.Timber
 import kotlin.properties.Delegates
 
@@ -27,16 +27,6 @@ val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String =
 class MainActivity : SystemUiHidingFragmentActivity() {
 
     companion object {
-
-        // ----------Pixel Field---------------
-
-//        private var pixelField: PixelField? = null
-//
-//        fun initializePixelField() {
-//            pixelField = PixelField()
-//        }
-
-        // -------------Codes---------------
 
         private enum class PermissionCode {
             READ,
@@ -85,16 +75,15 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         grantResults: IntArray
     ) {
         with(grantResults[0]){
-            if (this == PackageManager.PERMISSION_GRANTED){
+            if (equals(PackageManager.PERMISSION_GRANTED)){
                 nRequiredPermissions--
 
-                selectImagesIfPermissionsGranted()
+                return selectImagesIfPermissionsGranted()
             }
-            else
-                displayToast(
-                    "You need to permit file ${listOf("reading", "writing")[(this == PermissionCode.WRITE.ordinal).toInt()]}\n" +
-                            "in order for the app to work"
-                )
+            displayToast(
+                "You need to permit file ${listOf("reading", "writing")[(equals(PermissionCode.WRITE.ordinal)).toInt()]}\n" +
+                        "in order for the app to work"
+            )
         }
     }
 
@@ -105,16 +94,20 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
     // ------------Lifecycle stages---------------
 
+    lateinit var flowFieldPApplet: PApplet
+
     override fun onCreate(savedInstanceState: Bundle?) {
         fun setPixelField() {
-            with(PFragment(
-                ParticleFlowField(
+            if (!this::flowFieldPApplet.isInitialized)
+                flowFieldPApplet = FlowFieldPApplet(
                     screenResolution(windowManager)
-                )
-            )){
-                setView(findViewById<FrameLayout>(R.id.canvas_container), this@MainActivity)
-                Timber.i("Set PFragment hosting pixel field")
-            }
+                ).also {
+                    Timber.i("Initialized flowFieldPApplet")
+                }
+
+            PFragment(flowFieldPApplet).setView(
+                findViewById<FrameLayout>(R.id.canvas_container), this
+            )
         }
 
         fun setButtonOnClickListeners() {
@@ -186,7 +179,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             // display either saving result toast if returning from examination activity or all images dismissed
             // toast if returning from cropping activity or nothing if none of the former applying
             with(intent.getIntExtra(N_SAVED_CROPS, -1)) {
-                if (this != -1)
+                if (!equals(-1))
                     displaySavingResultToast(this)
             }
         }
@@ -205,8 +198,8 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
     private fun selectImages() {
         Intent(Intent.ACTION_PICK).run {
-            this.type = "image/*"
-            this.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            type = "image/*"
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             startActivityForResult(
                 this,
                 IntentCode.IMAGE_SELECTION.ordinal

@@ -5,10 +5,11 @@ import android.graphics.Point;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import processing.core.PVector;
 
 
-public class ParticleFlowField extends PApplet {
+public class FlowFieldPApplet extends PApplet {
     private class FlowField {
         PVector[] vectors;
         int cols, rows;
@@ -18,8 +19,8 @@ public class ParticleFlowField extends PApplet {
 
         FlowField(int _resolution) {
             resolution = _resolution;
-            cols = floor((float)width / (float)_resolution) + 1;
-            rows = floor((float)height / (float)_resolution) + 1;
+            cols = floor((float)width / (float)resolution) + 1;
+            rows = floor((float)height / (float)resolution) + 1;
             vectors = new PVector[cols * rows];
         }
 
@@ -37,27 +38,26 @@ public class ParticleFlowField extends PApplet {
 
                     xoff += inc;
                 }
-                yoff += inc;
             }
             zoff += 0.004;
         }
 
-        void display() {
-            for (int y = 0; y < rows; y++) {
-                for (int x = 0; x < cols; x++) {
-                    int index = x + y * cols;
-                    PVector v = vectors[index];
-
-                    stroke(0, 0, 0, 40);
-                    strokeWeight(30);
-                    pushMatrix();
-                    translate(x * resolution, y * resolution);
-                    rotate(v.heading());
-                    line(0, 0, resolution, 0);
-                    popMatrix();
-                }
-            }
-        }
+//        void display() {
+//            for (int y = 0; y < rows; y++) {
+//                for (int x = 0; x < cols; x++) {
+//                    int index = x + y * cols;
+//                    PVector v = vectors[index];
+//
+//                    stroke(0, 0, 0, 40);
+//                    strokeWeight(30);
+//                    pushMatrix();
+//                    translate(x * resolution, y * resolution);
+//                    rotate(v.heading());
+//                    line(0, 0, resolution, 0);
+//                    popMatrix();
+//                }
+//            }
+//        }
     }
 
     private class Particle {
@@ -93,10 +93,10 @@ public class ParticleFlowField extends PApplet {
         }
 
         void show() {
-            stroke(139, 0, 0, 5); // first -> color, second -> alpha; 139
-            strokeWeight(5);
+            stroke(139, 0, 0, 18);
+            strokeWeight(2);
             line(pos.x, pos.y, previousPos.x, previousPos.y);
-            //point(pos.x, pos.y);
+            point(pos.x, pos.y);
             updatePreviousPos();
         }
 
@@ -137,9 +137,7 @@ public class ParticleFlowField extends PApplet {
     FlowField flowfield;
     ArrayList<Particle> particles;
 
-    boolean debug = false;
-
-    public ParticleFlowField(Point screen_resolution) {
+    public FlowFieldPApplet(Point screen_resolution) {
         width = screen_resolution.x;
         height = screen_resolution.y;
     }
@@ -166,9 +164,6 @@ public class ParticleFlowField extends PApplet {
 
     public void draw() {
         flowfield.update();
-
-        if (debug)
-            flowfield.display();
 
         for (Particle p : particles) {
             p.follow(flowfield);
