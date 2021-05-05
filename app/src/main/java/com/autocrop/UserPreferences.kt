@@ -106,15 +106,13 @@ object UserPreferences {
             )[saveToAutocropDir.toInt()]
         }"
 
-    private var autoCropDirExistenceAsserted: Boolean = false
-
     /**
      * Creates AutoCrop dir in external storage pictures directory if saveToAutocropDir
      * true after toggling, dir not yet existent and Version < Q, beginning from which
      * directories are created automatically
      */
     private fun saveToAutocropDirTogglingEcho() {
-        if (saveToAutocropDir && !autoCropDirExistenceAsserted && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+        if (saveToAutocropDir && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
             with(
                 File(
                     Environment.getExternalStoragePublicDirectory(relativeCropSaveDirPath)
@@ -125,8 +123,6 @@ object UserPreferences {
                     mkdir().also {
                         Timber.i("Created $absolutePath")
                     }
-
-                autoCropDirExistenceAsserted = true
             }
     }
 }
