@@ -6,12 +6,12 @@
 
     <item
         android:id="@+id/main_menu_item_delete_input_screenshots"
-        android:title="@string/delete_input_screenshots_menu_item_text"
-        android:titleCondensed="@string/delete_input_screenshots_menu_item_text"
+        android:title="@string/menu_item_delete_input_screenshots"
+        android:titleCondensed="@string/menu_item_delete_input_screenshots"
         android:checkable="true"/>
 
     <item
         android:id="@+id/main_menu_item_save_to_autocrop_folder"
-        android:title="@string/save_to_autocrop_folder_menu_item_text"
+        android:title="@string/menu_item_save_to_autocrop_folder"
         android:checkable="true"/>
 </menu>

@@ -1,13 +1,21 @@
 package com.autocrop.utils
 
+import java.lang.ref.WeakReference
 
-fun Boolean.toInt(): Int = this.compareTo(false)
 
-fun String.replaceMultiple(vararg oldValue: String, newValue: String): String = this.run{
-    var copy: String = this
+fun Boolean.toInt(): Int = compareTo(false)
 
-    oldValue.forEach {
-        copy = copy.replace(it, newValue)
-    }
-    copy
+fun <T> WeakReference<T>.forceUnwrapped(): T {
+    return get()!!
 }
+
+fun Int.smallerThan(other: Int): Boolean = compareTo(other) == -1
+fun Int.biggerThan(other: Int): Boolean = compareTo(other) == 1
+fun Int.smallerEquals(other: Int): Boolean = compareTo(other).run { equals(0) || equals(-1) }
+fun Int.biggerEquals(other: Int): Boolean = compareTo(other).run { equals(0) || equals(1) }
+
+fun <T> Collection<T>.at(index: Int): T =
+    if (index < 0)
+        elementAt(size + index)
+    else
+        elementAt(index)

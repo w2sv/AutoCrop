@@ -1,4 +1,4 @@
-package com.autocrop.ops
+package com.autocrop.activities.examination
 
 import android.content.ContentValues
 import android.content.Context
@@ -7,7 +7,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import com.autocrop.GlobalParameters
+import com.autocrop.UserPreferences
 import com.autocrop.utils.android.*
 import timber.log.Timber
 import java.io.File
@@ -23,7 +23,7 @@ fun saveCropAndDeleteScreenshotIfApplicable(
     crop.save(context, screenshotUri.imageFileName(context))
 
     // delete screenshot if applicable
-    if (GlobalParameters.deleteInputScreenshots)
+    if (UserPreferences.deleteInputScreenshots)
         screenshotUri.deleteUnderlyingImageFile(context)
 }
 
@@ -38,7 +38,7 @@ private fun Bitmap.save(context: Context, title: String){
     // set file output stream and target file uri
     val (fileOutputStream: OutputStream, imageFileUri: Uri) = if (apiLowerEquals(29)) {
         File(
-            Environment.getExternalStoragePublicDirectory(GlobalParameters.relativeCropSaveDirPath)
+            Environment.getExternalStoragePublicDirectory(UserPreferences.relativeCropSaveDirPath)
                 .toString(),
             title
         ).run {
@@ -50,7 +50,7 @@ private fun Bitmap.save(context: Context, title: String){
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             ContentValues().apply {
                 this.put(MediaStore.MediaColumns.DISPLAY_NAME, title)
-                this.put(MediaStore.MediaColumns.RELATIVE_PATH, GlobalParameters.relativeCropSaveDirPath)
+                this.put(MediaStore.MediaColumns.RELATIVE_PATH, UserPreferences.relativeCropSaveDirPath)
                 this.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
             }
         )!!
@@ -87,7 +87,7 @@ private fun Uri.deleteUnderlyingImageFile(context: Context) {
     )
 
     // log deletion success if debugging
-    if (debuggingMode()){
+    if (debuggingModeEnabled()){
         with(file.canonicalFile.absolutePath){
             if (file.exists())
                 Timber.e("Deletion of $this failed")

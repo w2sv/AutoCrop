@@ -11,7 +11,7 @@ private typealias BorderPairCandidates = MutableList<BorderPair>
 private const val N_PIXEL_COMPARISONS_PER_ROW: Int = 5
 private const val N_PIXEL_COMPARISONS_PER_COLUMN: Int = 4
 
-private const val UPPER_BOUND_MARGIN: Int = 1
+private const val UPPER_BOUND_MARGIN: Int = 2
 
 
 fun croppedImage(image: Bitmap): Pair<Bitmap, Int>?{
@@ -28,7 +28,7 @@ fun croppedImage(image: Bitmap): Pair<Bitmap, Int>?{
         it.second - it.first
     }!!
 
-    val y: Int = croppingBorders.first
+    val y: Int = croppingBorders.first + 1
     val height: Int = croppingBorders.second - y - UPPER_BOUND_MARGIN
 
     return Pair(

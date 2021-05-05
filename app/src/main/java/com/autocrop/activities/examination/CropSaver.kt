@@ -1,22 +1,21 @@
 package com.autocrop.activities.examination
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.AsyncTask
-import android.view.View
 import android.widget.ProgressBar
-import com.autocrop.GlobalParameters
 import com.autocrop.cropBundleList
-import com.autocrop.ops.saveCropAndDeleteScreenshotIfApplicable
+import com.autocrop.utils.android.hide
+import com.autocrop.utils.android.show
+import com.autocrop.utils.forceUnwrapped
 import java.lang.ref.WeakReference
 
 
-class CropEntiretySaver(
+class CropSaver(
     private val progressBar: WeakReference<ProgressBar>,
+    private val textViews: WeakReference<ExaminationActivity.TextViews>,
     private val context: WeakReference<Context>,
     private val onTaskFinished: () -> Unit
-): AsyncTask<Void, Void, Void?>() {
+) : AsyncTask<Void, Void, Void?>() {
 
     /**
      * Renders progress bar visible
@@ -24,7 +23,8 @@ class CropEntiretySaver(
     override fun onPreExecute() {
         super.onPreExecute()
 
-        progressBar.get()!!.visibility = View.VISIBLE
+        textViews.forceUnwrapped().saveAll.show()
+        progressBar.forceUnwrapped().show()
     }
 
     /**
@@ -32,11 +32,11 @@ class CropEntiretySaver(
      * in cropBundleList
      */
     override fun doInBackground(vararg params: Void): Void? {
-        for ((uri, bitmap, _) in cropBundleList){
+        for ((uri, bitmap, _) in cropBundleList) {
             saveCropAndDeleteScreenshotIfApplicable(
                 bitmap,
                 uri,
-                context.get()!!
+                context.forceUnwrapped()
             )
         }
         return null
@@ -48,7 +48,13 @@ class CropEntiretySaver(
     override fun onPostExecute(result: Void?) {
         super.onPostExecute(result)
 
-        progressBar.get()!!.visibility = View.INVISIBLE
+        progressBar.forceUnwrapped().hide()
+
+        with(textViews.forceUnwrapped()) {
+            saveAll.hide()
+            appTitle.show()
+        }
+
         onTaskFinished()
     }
 }

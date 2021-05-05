@@ -10,7 +10,8 @@
     <FrameLayout
         android:id="@+id/canvas_container"
         android:layout_width="match_parent"
-        android:layout_height="828dp" />
+        android:layout_height="match_parent"
+        android:background="@color/saturated_magenta"/>
 
     <!-- Buttons -->
 
@@ -26,7 +27,7 @@
         android:layout_centerInParent="true"
 
         android:fontFamily="sans-serif"
-        android:text="@string/image_selection_button_text"
+        android:text="@string/image_selection_button"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@android:color/darker_gray"/>
 

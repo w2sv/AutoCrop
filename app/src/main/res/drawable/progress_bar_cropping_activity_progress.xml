@@ -7,7 +7,7 @@
 
                 <gradient
                     android:startColor="@color/magenta"
-                    android:endColor="@color/colorPrimary"
+                    android:endColor="@color/light_green"
                     android:angle="180"/>
             </shape>
         </clip>

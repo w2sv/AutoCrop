@@ -2,9 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/background_dark"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <!-- Toolbar -->
 
@@ -19,33 +17,49 @@
         android:background="@android:color/black"
 
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:overScrollMode="never"/>
+        android:layout_height="match_parent" />
 
     <!-- App title background text view -->
 
     <TextView
-        android:id="@+id/title_text_view"
+        style="@style/AppTitleTextView"
+        android:id="@+id/examination_activity_title_text_view"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+
+        android:visibility="gone" />
+
+    <!-- PROCESSING CROPS SUB SCREEN -->
+
+        <!-- Text view -->
+
+    <TextView
+        android:id="@+id/processing_crops_text_view"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="42sp"
+        android:layout_marginBottom="80dp"
+        android:gravity="center"
+
+        android:textSize="30sp"
         android:textColor="@color/magenta"
         android:textStyle="bold"
-        android:text="@string/app_title"
-        android:layout_centerInParent="true"
-        android:gravity="center"
+        android:text="@string/crops_processing_in_progress"
+
         android:visibility="invisible" />
 
-    <!-- Save all circular progress bar -->
+        <!-- Circular progress bar -->
 
     <ProgressBar
         style="?android:progressBarStyle"
         android:id="@+id/indeterminateBar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="140dp"
+
         android:indeterminateDrawable="@drawable/progress_bar_circular_save_all_crops"
         android:indeterminateDuration="@android:integer/config_longAnimTime"
-        android:visibility="invisible" />
+
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

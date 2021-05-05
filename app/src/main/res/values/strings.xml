@@ -2,22 +2,24 @@
     <string name="app_title">AutoCrop</string>
 
     <!-- Views -->
-    <string name="cropping_ornament_text">Cropping…</string>
-    <string name="fracture_text">%1$d/%2$d</string>
-    <string name="examination_activity_retention_percentage_text">%1$d%% retained</string>
+    <string name="cropping_in_progress">Cropping…</string>
+    <string name="fracture">%1$d/%2$d</string>
+    <string name="examination_activity_retention_percentage">%1$d%% retained</string>
+    <string name="crops_processing_in_progress">Processing crops…</string>
+    <string name="cropping_failure">Couldn\'t find cropping bounds for%1$s the selected image%2$s</string>
 
     <!-- Button -->
 
         <!-- Text -->
-    <string name="image_selection_button_text">SELECT IMAGES</string>
-    <string name="save_all_button_text">Save All</string>
-    <string name="dismiss_all_button_text">Dismiss All</string>
+    <string name="image_selection_button">SELECT IMAGES</string>
+    <string name="save_all_button">Save All</string>
+    <string name="dismiss_all_button">Dismiss All</string>
 
         <!-- Description -->
     <string name="main_activity_menu_inflation_button_description">"Inflates settings menu"</string>
 
     <!-- Menu Item Text -->
-    <string name="delete_input_screenshots_menu_item_text">Delete input screenshots</string>
-    <string name="save_to_autocrop_folder_menu_item_text">Save to AutoCrop folder</string>
+    <string name="menu_item_delete_input_screenshots">Delete screenshots</string>
+    <string name="menu_item_save_to_autocrop_folder">Save to AutoCropped folder</string>
 
 </resources>
