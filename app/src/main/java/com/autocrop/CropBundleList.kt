@@ -13,7 +13,9 @@ val CropBundle.crop: Bitmap
 val CropBundle.retentionPercentage: Int
     get() = third
 
+
 val cropBundleList: MutableList<CropBundle> = mutableListOf()
+
 
 /**
  * Conducts additional logging

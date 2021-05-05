@@ -58,7 +58,7 @@ object UserPreferences {
         values = Array(PreferenceParameter.size) {
             PreferenceParameter[it].run {
                 defaultSharedPreferences.getBoolean(
-                    this.name,
+                    name,
                     parameterToDefaultValue[this]!!
                 )
             }
