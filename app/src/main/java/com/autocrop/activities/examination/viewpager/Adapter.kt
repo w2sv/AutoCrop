@@ -59,16 +59,16 @@ class ImageSliderAdapter(
     private var dataTailIndex: Index = cropBundleList.lastIndex
 
     private var removeDataElementIndex: Index? = null
-
     private var replacementViewItemIndex by Delegates.notNull<Index>()
     private var dataRotationDistance by Delegates.notNull<Int>()
 
-    val startItemIndex: Int = (Int.MAX_VALUE / 2).run {
-        this - dataElementIndex(this)
+    val startItemIndex: Int = (N_VIEWS / 2).run {
+        minus(dataElementIndex(this))
     }
 
     companion object{
         private const val VIEW_ITEM_RESET_MARGIN: Int = 3
+        private const val N_VIEWS: Int = Int.MAX_VALUE
     }
 
     init {
@@ -173,7 +173,7 @@ class ImageSliderAdapter(
         holder.cropImageView.setImageBitmap(cropBundleList[dataElementIndex(position)].crop)
     }
 
-    override fun getItemCount(): Int = if (cropBundleList.size > 1) Int.MAX_VALUE else 1
+    override fun getItemCount(): Int = if (cropBundleList.size > 1) N_VIEWS else 1
 
     private fun pageIndex(dataElementIndex: Index): Index{
         val headIndex: Index = dataTailIndex.rotated(1, cropBundleList.size)
