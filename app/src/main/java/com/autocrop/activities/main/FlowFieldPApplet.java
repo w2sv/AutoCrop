@@ -1,13 +1,16 @@
+/*
+ * Core graphical algorithm by Daniel Shiffman @ https://thecodingtrain.com/CodingChallenges/024-perlinnoiseflowfield.html
+ */
+
 package com.autocrop.activities.main;
 
-import android.graphics.Color;
 import android.graphics.Point;
 
 import java.util.ArrayList;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import processing.core.PVector;
-import timber.log.Timber;
 
 
 public class FlowFieldPApplet extends PApplet {
@@ -16,18 +19,24 @@ public class FlowFieldPApplet extends PApplet {
 
     final float PARTICLE_STROKE_WEIGHT = 2;
 
+    final int MAGENTA = color(199, 32, 65);
+    final int LIGHT_MAGENTA = color(199, 10, 89);
+    final int DARK_RED = color(153, 15, 36);
+
+    final int[] COLORS = {MAGENTA, LIGHT_MAGENTA, DARK_RED};
+
+    int particleColor = MAGENTA;
     final int ALPHA = 18;
 
-    final int MAGENTA = color(199, 32, 65, ALPHA);
-    final int RED = color(139, 0, 0, ALPHA);
-    final int LEAF_GREEN = color(4, 145, 82, ALPHA);
+    final float PARTICLE_START_VELOCITY_LOWER_BOUND = 5;
+    final float PARTICLE_START_VELOCITY_UPPER_BOUND = 7;
 
-    final int[] COLORS = {MAGENTA, RED, LEAF_GREEN};
+    final float PARTICLE_VELOCITY_MAX_LOWER_BOUND = 12;
+    final float PARTICLE_VELOCITY_MAX_UPPER_BOUND = 18;
 
-    int particleColor = RED;
+    final int FRAMES_PER_FADING_STEP = 3;
 
-    final float PARTICLE_VELOCITY_LOWER_BOUND = 12;
-    final float PARTICLE_VELOCITY_UPPER_BOUND = 18;
+    PGraphics canvas;
 
     private class FlowField {
         PVector[] vectors;
@@ -78,13 +87,17 @@ public class FlowFieldPApplet extends PApplet {
         private float maxSpeed;
 
         Particle() {
-            maxSpeed = random(PARTICLE_VELOCITY_LOWER_BOUND, PARTICLE_VELOCITY_UPPER_BOUND);
+            maxSpeed = random(PARTICLE_VELOCITY_MAX_LOWER_BOUND, PARTICLE_VELOCITY_MAX_UPPER_BOUND);
 
             pos = new PVector(random(width), random(height));
             previousPos = pos.copy();
 
-            vel = new PVector(0, 0);
+            vel = new PVector(randomStartVelocity(), randomStartVelocity());
             acc = new PVector(0, 0);
+        }
+
+        private float randomStartVelocity(){
+            return random(PARTICLE_START_VELOCITY_LOWER_BOUND, PARTICLE_START_VELOCITY_UPPER_BOUND);
         }
 
         void update() {
@@ -127,10 +140,10 @@ public class FlowFieldPApplet extends PApplet {
         }
 
         private void show() {
-            stroke(particleColor);
-            strokeWeight(PARTICLE_STROKE_WEIGHT);
-            line(pos.x, pos.y, previousPos.x, previousPos.y);
-            point(pos.x, pos.y);  // ?
+            canvas.stroke(particleColor, ALPHA);
+            canvas.strokeWeight(PARTICLE_STROKE_WEIGHT);
+            canvas.line(pos.x, pos.y, previousPos.x, previousPos.y);
+            canvas.point(pos.x, pos.y);  // ?
             updatePreviousPos();
         }
     }
@@ -141,14 +154,20 @@ public class FlowFieldPApplet extends PApplet {
     public FlowFieldPApplet(Point screen_resolution) {
         width = screen_resolution.x;
         height = screen_resolution.y;
+
+        canvas = createGraphics(width, height);
     }
 
     public void settings() {
         size(width, height, P2D);
     }
 
-    public void setup() {
+    private void setBackground(){
         background(0);
+    }
+
+    public void setup() {
+        setBackground();
 
         flowfield = new FlowField(FLOW_FIELD_RESOLUTION);
         flowfield.update();
@@ -159,24 +178,57 @@ public class FlowFieldPApplet extends PApplet {
         }
     }
 
-    final int SECONDS_BETWEEN_COLOR_CHANGE = 5;
-    int blockedSecond = -1;
+    public void draw(){
+        setBackground();
+        changeColorIfApplicable();
 
-    public void draw() {
+        canvas.beginDraw();
+
+        if (frameCount % FRAMES_PER_FADING_STEP == 0)
+            fadePixels();
+
         flowfield.update();
-
-        int second = second();
-        if (second != blockedSecond && second % SECONDS_BETWEEN_COLOR_CHANGE == 0){
-            blockedSecond = second;
-            particleColor = COLORS[floor(random(0, COLORS.length))];
-
-            Timber.i("Selected new color");
-        }
 
         for (Particle p : particles) {
             flowfield.affect(p);
             p.update();
             p.show();
         }
+
+        canvas.endDraw();
+        image(canvas, 0, 0);
+    }
+
+    final int SECONDS_BETWEEN_COLOR_CHANGE = 5;
+    int blockedSecond = -1;
+
+    private void changeColorIfApplicable(){
+        int second = second();
+        if (second != blockedSecond && second % SECONDS_BETWEEN_COLOR_CHANGE == 0){
+            blockedSecond = second;
+            particleColor = COLORS[floor(random(0, COLORS.length))];
+        }
+    }
+
+    /**
+     * By benja @ https://forum.processing.org/two/discussion/13189/a-better-way-to-fade
+     */
+    private void fadePixels() {
+        canvas.loadPixels();
+
+        // iterate over pixels
+        for (int i = 0; i < canvas.pixels.length; i++) {
+
+            // get alpha value
+            int alpha = (canvas.pixels[i] >> 24) & 0xFF;
+
+            // reduce alpha value
+            alpha = max(0, alpha - 1);
+
+            // assign color with new alpha-value
+            canvas.pixels[i] = alpha << 24 | (canvas.pixels[i]) & 0xFFFFFF;
+        }
+
+        canvas.updatePixels();
     }
 }
