@@ -1,11 +1,13 @@
 package com.autocrop.activities.main;
 
+import android.graphics.Color;
 import android.graphics.Point;
 
 import java.util.ArrayList;
 
 import processing.core.PApplet;
 import processing.core.PVector;
+import timber.log.Timber;
 
 
 public class FlowFieldPApplet extends PApplet {
@@ -13,7 +15,16 @@ public class FlowFieldPApplet extends PApplet {
     final int N_PARTICLES = 800;
 
     final float PARTICLE_STROKE_WEIGHT = 2;
+
     final int ALPHA = 18;
+
+    final int MAGENTA = color(199, 32, 65, ALPHA);
+    final int RED = color(139, 0, 0, ALPHA);
+    final int LEAF_GREEN = color(4, 145, 82, ALPHA);
+
+    final int[] COLORS = {MAGENTA, RED, LEAF_GREEN};
+
+    int particleColor = RED;
 
     final float PARTICLE_VELOCITY_LOWER_BOUND = 12;
     final float PARTICLE_VELOCITY_UPPER_BOUND = 18;
@@ -116,7 +127,7 @@ public class FlowFieldPApplet extends PApplet {
         }
 
         private void show() {
-            stroke(139, 0, 0, ALPHA);
+            stroke(particleColor);
             strokeWeight(PARTICLE_STROKE_WEIGHT);
             line(pos.x, pos.y, previousPos.x, previousPos.y);
             point(pos.x, pos.y);  // ?
@@ -148,8 +159,19 @@ public class FlowFieldPApplet extends PApplet {
         }
     }
 
+    final int SECONDS_BETWEEN_COLOR_CHANGE = 5;
+    int blockedSecond = -1;
+
     public void draw() {
         flowfield.update();
+
+        int second = second();
+        if (second != blockedSecond && second % SECONDS_BETWEEN_COLOR_CHANGE == 0){
+            blockedSecond = second;
+            particleColor = COLORS[floor(random(0, COLORS.length))];
+
+            Timber.i("Selected new color");
+        }
 
         for (Particle p : particles) {
             flowfield.affect(p);
