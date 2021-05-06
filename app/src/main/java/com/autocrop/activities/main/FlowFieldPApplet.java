@@ -5,11 +5,19 @@ import android.graphics.Point;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
-import processing.core.PGraphics;
 import processing.core.PVector;
 
 
 public class FlowFieldPApplet extends PApplet {
+    final int FLOW_FIELD_RESOLUTION = 90;
+    final int N_PARTICLES = 800;
+
+    final float PARTICLE_STROKE_WEIGHT = 2;
+    final int ALPHA = 18;
+
+    final float PARTICLE_VELOCITY_LOWER_BOUND = 12;
+    final float PARTICLE_VELOCITY_UPPER_BOUND = 18;
+
     private class FlowField {
         PVector[] vectors;
         int cols, rows;
@@ -42,95 +50,77 @@ public class FlowFieldPApplet extends PApplet {
             zoff += 0.004;
         }
 
-//        void display() {
-//            for (int y = 0; y < rows; y++) {
-//                for (int x = 0; x < cols; x++) {
-//                    int index = x + y * cols;
-//                    PVector v = vectors[index];
-//
-//                    stroke(0, 0, 0, 40);
-//                    strokeWeight(30);
-//                    pushMatrix();
-//                    translate(x * resolution, y * resolution);
-//                    rotate(v.heading());
-//                    line(0, 0, resolution, 0);
-//                    popMatrix();
-//                }
-//            }
-//        }
+        void affect(Particle particle){
+            int x = floor(particle.pos.x / resolution);
+            int y = floor(particle.pos.y / resolution);
+            int index = x + y * cols;
+
+            particle.acc.add(vectors[index]);
+        }
     }
 
     private class Particle {
         PVector pos;
-        PVector vel;
         PVector acc;
-        PVector previousPos;
-        float maxSpeed;
+        private PVector vel;
+        private PVector previousPos;
+        private float maxSpeed;
 
-        Particle(PVector start, float maxspeed) {
-            maxSpeed = maxspeed;
-            pos = start;
+        Particle() {
+            maxSpeed = random(PARTICLE_VELOCITY_LOWER_BOUND, PARTICLE_VELOCITY_UPPER_BOUND);
+
+            pos = new PVector(random(width), random(height));
+            previousPos = pos.copy();
+
             vel = new PVector(0, 0);
             acc = new PVector(0, 0);
-            previousPos = pos.copy();
-        }
-
-        void run() {
-            update();
-            edges();
-            show();
         }
 
         void update() {
-            pos.add(vel);
             vel.limit(maxSpeed);
+            pos.add(vel);
+            keepWithinBounds();
+
             vel.add(acc);
             acc.mult(0);
         }
 
-        void applyForce(PVector force) {
-            acc.add(force);
-        }
+        private void keepWithinBounds() {
+            boolean changedCoordinate = false;
 
-        void show() {
-            stroke(139, 0, 0, 18);
-            strokeWeight(2);
-            line(pos.x, pos.y, previousPos.x, previousPos.y);
-            point(pos.x, pos.y);
-            updatePreviousPos();
-        }
-
-        void edges() {
             if (pos.x > width) {
                 pos.x = 0;
-                updatePreviousPos();
+                changedCoordinate = true;
             }
-            if (pos.x < 0) {
+            else if (pos.x < 0) {
                 pos.x = width;
-                updatePreviousPos();
+                changedCoordinate = true;
             }
+
             if (pos.y > height) {
                 pos.y = 0;
-                updatePreviousPos();
+                changedCoordinate = true;
             }
-            if (pos.y < 0) {
+            else if (pos.y < 0) {
                 pos.y = height;
-                updatePreviousPos();
+                changedCoordinate = true;
             }
+
+            if (changedCoordinate)
+                updatePreviousPos();
         }
 
-        void updatePreviousPos() {
+        private void updatePreviousPos() {
             previousPos.x = pos.x;
             previousPos.y = pos.y;
         }
 
-        void follow(FlowField flowfield) {
-            int x = floor(pos.x / flowfield.resolution);
-            int y = floor(pos.y / flowfield.resolution);
-            int index = x + y * flowfield.cols;
-
-            PVector force = flowfield.vectors[index];
-            applyForce(force);
+        private void show() {
+            stroke(139, 0, 0, ALPHA);
+            strokeWeight(PARTICLE_STROKE_WEIGHT);
+            line(pos.x, pos.y, previousPos.x, previousPos.y);
+            point(pos.x, pos.y);  // ?
+            updatePreviousPos();
         }
     }
 
@@ -149,16 +139,12 @@ public class FlowFieldPApplet extends PApplet {
     public void setup() {
         background(0);
 
-        final int FLOW_FIELD_RESOLUTION = 90;
-        final int N_PARTICLES = 800;
-
         flowfield = new FlowField(FLOW_FIELD_RESOLUTION);
         flowfield.update();
 
         particles = new ArrayList<>();
         for (int i = 0; i < N_PARTICLES; i++) {
-            PVector start = new PVector(random(width), random(height));
-            particles.add(new Particle(start, random(10, 15)));
+            particles.add(new Particle());
         }
     }
 
@@ -166,8 +152,9 @@ public class FlowFieldPApplet extends PApplet {
         flowfield.update();
 
         for (Particle p : particles) {
-            p.follow(flowfield);
-            p.run();
+            flowfield.affect(p);
+            p.update();
+            p.show();
         }
     }
 }
