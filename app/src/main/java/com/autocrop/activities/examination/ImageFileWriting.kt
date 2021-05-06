@@ -100,7 +100,6 @@ private fun Uri.deleteUnderlyingImageFile(context: Context) {
 
 private fun Uri.imageFileName(context: Context): String = imageFilePath(context).split('/').last()
 
-
 private fun Uri.imageFilePath(context: Context): String =
     context.contentResolver.query(
         this,
@@ -108,7 +107,7 @@ private fun Uri.imageFilePath(context: Context): String =
         null,
         null,
         null
-    ).run {
-        this!!.moveToFirst()
-        this.getString(this.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))!!
+    )!!.run {
+        moveToFirst()
+        getString(getColumnIndexOrThrow(MediaStore.Images.Media.DATA))!!
     }
