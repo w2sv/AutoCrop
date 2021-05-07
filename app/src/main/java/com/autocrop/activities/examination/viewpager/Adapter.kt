@@ -184,8 +184,6 @@ class ImageSliderAdapter(
             cropBundleList.lastIndex - headIndex + dataElementIndex + 1
     }
 
-    private fun removingAtDataTail(): Boolean = cropBundleList[removeDataElementIndex!!].hashCode() == dataTailHash
-
     override fun onConductedImageAction(position: Int, incrementNSavedCrops: Boolean) {
 
         // trigger imageActionReactionsPossessor downstream actions
@@ -196,30 +194,31 @@ class ImageSliderAdapter(
             return imageActionReactionsPossessor.exitActivity()
 
         removeDataElementIndex = dataElementIndex(position)
+        val removingAtDataTail: Boolean = cropBundleList[removeDataElementIndex!!].hashCode() == dataTailHash
 
-        val dataSizePostRemoval: Int = cropBundleList.lastIndex
-        val lastIndexPostRemoval: Int = cropBundleList.lastIndex - 1
+        val dataSizePostRemoval: Int = cropBundleList.size - 1
 
         val (replacementDataElementIndexPostRemoval: Int, replacementViewItemIndex) =
             (removeDataElementIndex!!).run {
-                if (removingAtDataTail())
+                if (removingAtDataTail)
                     Pair(
                         rotated(-1, dataSizePostRemoval),
                         position - 1
                     )
                         .also {
                             dataTailHash = cropBundleList.at(minus(1)).hashCode()
-                            Timber.i("Removing at tail index")
+                            Timber.i("Removing at tail index | Set new dataTailHash")
                         }
                 else
                     Pair(
-                        min(this, lastIndexPostRemoval),
+                        if (equals(cropBundleList.lastIndex))
+                            0.also {
+                                Timber.i("3Set replacementDataElementIndexPostRemoval to lastIndexPostRemoval")
+                            }
+                        else
+                            this,
                         position + 1
                     )
-                        .also {
-                            if (it.first == lastIndexPostRemoval)
-                                Timber.i("Set to lastIndexPostRemoval")
-                        }
             }
 
         viewPager2.setCurrentItem(replacementViewItemIndex, true)
@@ -228,7 +227,15 @@ class ImageSliderAdapter(
 
         with(textViews) {
             setRetentionPercentage(dataElementIndex(replacementViewItemIndex))
-            setPageIndication(pageIndex(replacementDataElementIndexPostRemoval), dataSizePostRemoval)
+            setPageIndication(
+                pageIndex(removeDataElementIndex!!).run {
+                    if(removingAtDataTail)
+                        minus(1)
+                    else
+                        this
+                },
+                dataSizePostRemoval
+            )
         }
 
         this.replacementViewItemIndex = replacementViewItemIndex
