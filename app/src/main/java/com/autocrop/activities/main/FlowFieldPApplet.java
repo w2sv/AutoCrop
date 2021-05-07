@@ -11,10 +11,11 @@ import java.util.ArrayList;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
+import timber.log.Timber;
 
 
 public class FlowFieldPApplet extends PApplet {
-    final int FLOW_FIELD_RESOLUTION = 90;
+    final int FLOW_FIELD_RESOLUTION = 200;
     final int N_PARTICLES = 800;
 
     final float PARTICLE_STROKE_WEIGHT = 2;
@@ -25,8 +26,9 @@ public class FlowFieldPApplet extends PApplet {
 
     final int[] COLORS = {MAGENTA, LIGHT_MAGENTA, DARK_RED};
 
-    int particleColor = MAGENTA;
-    final int ALPHA = 18;
+    int particleColor;
+    int alpha = 55;
+    final int MIN_ALPHA = 35;
 
     final float PARTICLE_START_VELOCITY_LOWER_BOUND = 5;
     final float PARTICLE_START_VELOCITY_UPPER_BOUND = 7;
@@ -140,7 +142,7 @@ public class FlowFieldPApplet extends PApplet {
         }
 
         private void show() {
-            canvas.stroke(particleColor, ALPHA);
+            canvas.stroke(particleColor, alpha);
             canvas.strokeWeight(PARTICLE_STROKE_WEIGHT);
             canvas.line(pos.x, pos.y, previousPos.x, previousPos.y);
             canvas.point(pos.x, pos.y);  // ?
@@ -168,6 +170,7 @@ public class FlowFieldPApplet extends PApplet {
 
     public void setup() {
         setBackground();
+        setParticleColorRandomly();
 
         flowfield = new FlowField(FLOW_FIELD_RESOLUTION);
         flowfield.update();
@@ -197,16 +200,33 @@ public class FlowFieldPApplet extends PApplet {
 
         canvas.endDraw();
         image(canvas, 0, 0);
+
+        graduallyDecreaseAlphaIfApplicable();
+    }
+
+    final int MILLISECONDS_PER_ALPHA_DECREASE = 400;
+    int decreaseCheckPoint = MILLISECONDS_PER_ALPHA_DECREASE;
+
+    private void graduallyDecreaseAlphaIfApplicable(){
+        if (alpha > MIN_ALPHA && millis() > decreaseCheckPoint){
+            alpha -= 1;
+            decreaseCheckPoint += MILLISECONDS_PER_ALPHA_DECREASE;
+            Timber.i("Decreased alpha");
+        }
     }
 
     final int SECONDS_BETWEEN_COLOR_CHANGE = 5;
     int blockedSecond = -1;
 
+    private void setParticleColorRandomly(){
+        particleColor = COLORS[floor(random(0, COLORS.length))];
+    }
+
     private void changeColorIfApplicable(){
         int second = second();
         if (second != blockedSecond && second % SECONDS_BETWEEN_COLOR_CHANGE == 0){
             blockedSecond = second;
-            particleColor = COLORS[floor(random(0, COLORS.length))];
+            setParticleColorRandomly();
         }
     }
 
