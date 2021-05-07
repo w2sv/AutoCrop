@@ -208,6 +208,7 @@ class ImageSliderAdapter(
                         position - 1
                     )
                         .also {
+                            dataTailHash = cropBundleList.at(minus(1)).hashCode()
                             Timber.i("Removing at tail index")
                         }
                 else
@@ -223,7 +224,6 @@ class ImageSliderAdapter(
 
         viewPager2.setCurrentItem(replacementViewItemIndex, true)
 
-        dataTailHash = cropBundleList.at(removeDataElementIndex!! - 1).hashCode()
         dataRotationDistance = (replacementViewItemIndex % dataSizePostRemoval) - replacementDataElementIndexPostRemoval
 
         with(textViews) {
