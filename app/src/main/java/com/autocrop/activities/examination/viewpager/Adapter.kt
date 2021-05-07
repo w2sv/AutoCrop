@@ -92,9 +92,7 @@ class ImageSliderAdapter(
                         cropBundleList.removeAt(removeDataElementIndex!!)
 
                         Collections.rotate(cropBundleList, dataRotationDistance)
-                        dataTailIndex = cropBundleList.indexOfFirst { it.hashCode() == dataTailHash }.also {
-                            Timber.i("New data tail index: $it")
-                        }
+                        dataTailIndex = cropBundleList.indexOfFirst { it.hashCode() == dataTailHash }
 
                         with (replacementViewItemIndex){
                             listOf(

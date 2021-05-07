@@ -42,10 +42,9 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
 
-        private val PERMISSION_2_DESCRIPTION: Map<String, String> = mapOf(
-            REQUIRED_PERMISSIONS[0] to "writing",
-            REQUIRED_PERMISSIONS[1] to "reading"
-        )
+        private val PERMISSION_2_DESCRIPTION: Map<String, String> = listOf("writing", "reading")
+            .mapIndexed { index, s -> REQUIRED_PERMISSIONS[index] to s }
+            .toMap()
 
         private val PERMISSION_2_CODE: Map<String, PermissionCode> =
             REQUIRED_PERMISSIONS
@@ -250,7 +249,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                     with(data?.clipData){
                         startCroppingActivity(
                             imageUriStrings = (0 until this?.itemCount!!).map {
-                                this.getItemAt(it)?.uri!!.toString()
+                                getItemAt(it)?.uri!!.toString()
                             }.toTypedArray()
                         )
                     }
