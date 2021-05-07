@@ -1,6 +1,7 @@
 package com.autocrop.utils.android
 
 import android.app.Activity
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.view.Gravity
 import android.view.MenuItem
@@ -40,3 +41,7 @@ fun Activity.persistMenuAfterItemClick(item: MenuItem): Boolean = item.run {
     })
     false
 }
+
+
+fun Activity.permissionGranted(permission: String): Boolean =
+    checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED

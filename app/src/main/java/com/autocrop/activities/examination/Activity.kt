@@ -8,6 +8,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
@@ -210,12 +211,12 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
      */
     private fun returnToMainActivity() {
         return startActivity(
-            Intent(
-                this,
-                MainActivity::class.java
-            ).putExtra(N_SAVED_CROPS, nSavedCrops)
-        ).also {
-            onExit()
+                Intent(
+                    this,
+                    MainActivity::class.java
+                ).putExtra(N_SAVED_CROPS, nSavedCrops)
+            ).also {
+                onExit()
         }
     }
 

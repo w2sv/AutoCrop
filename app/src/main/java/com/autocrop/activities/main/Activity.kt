@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
 import processing.core.PApplet
 import timber.log.Timber
-import kotlin.properties.Delegates
 
 
 val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String =
@@ -29,44 +28,60 @@ class MainActivity : SystemUiHidingFragmentActivity() {
     companion object {
 
         private enum class PermissionCode {
+            WRITE,
             READ,
-            WRITE
+            MULTIPLE;
+
+            companion object{
+                operator fun get(index: Int): PermissionCode = values()[index]
+            }
         }
+
+        private val REQUIRED_PERMISSIONS: List<String> = listOf(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+
+        private val PERMISSION_2_DESCRIPTION: Map<String, String> = mapOf(
+            REQUIRED_PERMISSIONS[0] to "writing",
+            REQUIRED_PERMISSIONS[1] to "reading"
+        )
+
+        private val PERMISSION_2_CODE: Map<String, PermissionCode> =
+            REQUIRED_PERMISSIONS
+                .mapIndexed { index, s -> s to PermissionCode[index] }
+                .toMap()
 
         private enum class IntentCode {
             IMAGE_SELECTION
         }
     }
 
-    // ----------------Generic behaviour----------------
-
-    /**
-     * Triggers app exiting
-     */
-    override fun onBackPressed() {
-        finishAffinity()
-    }
-
     // -----------------Permissions---------------------
 
-    private var nRequiredPermissions by Delegates.notNull<Int>()
-    private val permission2Code: Map<String, PermissionCode> = mapOf(
-        Manifest.permission.WRITE_EXTERNAL_STORAGE to PermissionCode.WRITE,
-        Manifest.permission.READ_EXTERNAL_STORAGE to PermissionCode.READ
-    )
+    private val permission2IsGranted: MutableMap<String, Boolean> by lazy {
+        REQUIRED_PERMISSIONS
+            .associateWith { permissionGranted(it) }
+            .toMutableMap()
+    }
+
+    private val allPermissionsGranted: Boolean
+        get() = permission2IsGranted.values.all { it }
 
     private fun requestActivityPermissions() {
-        nRequiredPermissions = 0
-
-        fun checkPermission(permission: String) {
-            if (checkSelfPermission(permission) == PackageManager.PERMISSION_DENIED) {
-                nRequiredPermissions++
-                requestPermissions(arrayOf(permission), permission2Code[permission]!!.ordinal)
-            }
+        with(
+            REQUIRED_PERMISSIONS
+                .filter { permission2IsGranted[it] == false }
+                .toTypedArray()
+        ){
+            requestPermissions(
+                this,
+                if (size > 1)
+                    PermissionCode.MULTIPLE.ordinal
+                else
+                    PERMISSION_2_CODE[get(0)]!!.ordinal
+            )
         }
-
-        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
     override fun onRequestPermissionsResult(
@@ -74,22 +89,24 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        with(grantResults[0]){
-            if (equals(PackageManager.PERMISSION_GRANTED)){
-                nRequiredPermissions--
-
-                return selectImagesIfPermissionsGranted()
-            }
-            displayToast(
-                "You need to permit file ${listOf("reading", "writing")[(equals(PermissionCode.WRITE.ordinal)).toInt()]}\n" +
-                        "in order for the app to work"
+        if (grantResults.all { it == PackageManager.PERMISSION_DENIED })
+            return displayToast(
+                "You need to permit file reading and\n" +
+                        "writing in order for the app to work"
             )
-        }
-    }
 
-    private fun selectImagesIfPermissionsGranted(){
-        if (nRequiredPermissions == 0)
-            return selectImages()
+        (permissions zip grantResults.toTypedArray()).forEach {
+            if (it.second != PackageManager.PERMISSION_GRANTED)
+                displayToast(
+                    "You need to permit file ${PERMISSION_2_DESCRIPTION[it.first]}\n" +
+                            "in order for the app to work"
+                )
+            else
+                permission2IsGranted[it.first] = true
+        }
+
+        if (allPermissionsGranted)
+            selectImages()
     }
 
     // ------------Lifecycle stages---------------
@@ -98,7 +115,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         fun setPixelField() {
-            if (!this::flowFieldPApplet.isInitialized)
+            if (!::flowFieldPApplet.isInitialized)
                 flowFieldPApplet = FlowFieldPApplet(
                     screenResolution(windowManager)
                 ).also {
@@ -113,8 +130,10 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         fun setButtonOnClickListeners() {
             // image selection button
             image_selection_button.setOnClickListener {
-                requestActivityPermissions()
-                selectImagesIfPermissionsGranted()
+                if (!allPermissionsGranted)
+                    requestActivityPermissions()
+                else
+                    selectImages()
             }
 
             // menu button
@@ -131,7 +150,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                         UserPreferences.saveToAutocropDir
 
                     // set item onClickListeners
-                    this.setOnMenuItemClickListener { item ->
+                    setOnMenuItemClickListener { item ->
                         when (item.itemId) {
                             // input screenshot deleting
                             R.id.main_menu_item_delete_input_screenshots -> {
@@ -194,6 +213,8 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
         setButtonOnClickListeners()
         displayToasts()
+
+        Timber.i("Permission code to is granted: $permission2IsGranted")
     }
 
     private fun selectImages() {
@@ -226,14 +247,23 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                         }
                     }
 
-                    startCroppingActivity(
-                        imageUriStrings = (0 until data?.clipData?.itemCount!!).map {
-                            data.clipData?.getItemAt(it)?.uri!!.toString()
-                        }.toTypedArray()
-                    )
+                    with(data?.clipData){
+                        startCroppingActivity(
+                            imageUriStrings = (0 until this?.itemCount!!).map {
+                                this.getItemAt(it)?.uri!!.toString()
+                            }.toTypedArray()
+                        )
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * Triggers app exiting
+     */
+    override fun onBackPressed() {
+        finishAffinity()
     }
 
     private lateinit var userPreferencesOnActivityCreation: Array<Boolean>

@@ -49,9 +49,9 @@ private fun Bitmap.save(context: Context, title: String){
         val imageFileUri: Uri = context.contentResolver.insert(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             ContentValues().apply {
-                this.put(MediaStore.MediaColumns.DISPLAY_NAME, title)
-                this.put(MediaStore.MediaColumns.RELATIVE_PATH, UserPreferences.relativeCropSaveDirPath)
-                this.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
+                put(MediaStore.MediaColumns.DISPLAY_NAME, title)
+                put(MediaStore.MediaColumns.RELATIVE_PATH, UserPreferences.relativeCropSaveDirPath)
+                put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
             }
         )!!
 
@@ -61,7 +61,7 @@ private fun Bitmap.save(context: Context, title: String){
     // write image
     with(fileOutputStream) {
         this@save.compress(Bitmap.CompressFormat.JPEG, 100, this)
-        this.close()
+        close()
 
         Timber.i("Saved crop to ${imageFileUri.path}")
     }
@@ -77,7 +77,7 @@ private fun Bitmap.save(context: Context, title: String){
  *      https://developer.android.com/training/data-storage/use-cases#modify-delete-media
  */
 private fun Uri.deleteUnderlyingImageFile(context: Context) {
-    val file = File(this.imageFilePath(context))
+    val file = File(imageFilePath(context))
 
     // delete file and update media gallery
     context.contentResolver.delete(
