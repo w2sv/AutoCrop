@@ -4,12 +4,14 @@
 
 package com.autocrop.activities.examination
 
+import android.animation.ObjectAnimator
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
+import android.view.animation.DecelerateInterpolator
 import android.widget.ProgressBar
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
@@ -27,9 +29,13 @@ import com.autocrop.utils.android.displayToast
 import com.autocrop.utils.android.hide
 import com.autocrop.utils.android.intentExtraIdentifier
 import com.autocrop.utils.android.show
+import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
+import timber.log.Timber
 import java.lang.ref.WeakReference
+import kotlin.math.roundToInt
+import kotlin.properties.Delegates
 
 
 val N_SAVED_CROPS: String = intentExtraIdentifier("n_saved_crops")
@@ -41,10 +47,43 @@ interface ImageActionReactionsPossessor {
 }
 
 
+class PageIndicationSeekBarWrapper(val seekBar: SeekBar){
+    init{
+        with(seekBar){
+            progress = listOf(0, 50)[disabled.toInt()]
+            isEnabled = false
+        }
+    }
+
+    private val disabled: Boolean
+        get() = cropBundleList.size == 1
+
+    private var progressCoefficient by Delegates.notNull<Float>()
+
+    fun calculateProgressCoefficient(dataMagnitude: Int = cropBundleList.size){
+        progressCoefficient = seekBar.max.toFloat() / dataMagnitude.minus(1).toFloat()
+    }
+
+    fun indicatePage(pageIndex: Int){
+        if (!disabled)
+            setProgress((progressCoefficient * pageIndex).roundToInt().also { Timber.i("Progress: $it") })
+    }
+
+    fun setProgress(percentage: Int){
+        with(ObjectAnimator.ofInt(seekBar, "progress", percentage)){
+            duration = 100
+            interpolator = DecelerateInterpolator()
+            start()
+        }
+    }
+}
+
+
 class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactionsPossessor {
     private lateinit var viewPager2: ViewPager2
     private lateinit var textViews: TextViews
-    private lateinit var toolbar: Toolbar
+    private lateinit var toolBar: Toolbar
+    private lateinit var seekBarWrapper: PageIndicationSeekBarWrapper
 
     private var nSavedCrops: Int = 0
     private var displayingExitScreen: Boolean = false
@@ -90,6 +129,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
             viewPager2 = findViewById<ViewPager2>(R.id.view_pager).apply {
                 adapter = ImageSliderAdapter(
                     textViews,
+                    seekBarWrapper,
                     this,
                     this@ExaminationActivity,
                     this@ExaminationActivity.supportFragmentManager,
@@ -112,7 +152,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                         WeakReference(progressBar),
                         WeakReference(textViews),
                         WeakReference(this),
-                        onTaskFinished = this::returnToMainActivity
+                        onTaskFinished = ::returnToMainActivity
                     )
                         .execute()
                     nSavedCrops += cropBundleList.size
@@ -120,7 +160,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
                 if (UserPreferences.deleteInputScreenshots){
                     class SaveAllConfirmationDialog: DialogFragment() {
-                        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = AlertDialog.Builder(this.activity)
+                        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = AlertDialog.Builder(activity)
                             .run {
                                 setTitle("Save all crops and delete corresponding screenshots?")
                                 setNegativeButton("No") { _, _ -> }
@@ -128,7 +168,6 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                             }
                                 .create()
                     }
-
                     SaveAllConfirmationDialog().show(supportFragmentManager, "Save all confirmation dialog")
                 }
 
@@ -141,21 +180,22 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
             }
         }
 
-        fun displayCouldntFindCroppingBoundsToast(nDismissedImages: Int){
+        fun displayCropDismissalToast(nDismissedImages: Int){
             when (nDismissedImages) {
                 1 -> displayToast("Couldn't find cropping bounds for\n1 image")
-                in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for\$nDismissedImages images")
+                in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for\n$nDismissedImages images")
             }
         }
 
         setContentView(R.layout.activity_examination).also {
             textViews = TextViews()
-            toolbar = findViewById(R.id.toolbar)
+            toolBar = findViewById(R.id.toolbar)
+            seekBarWrapper = PageIndicationSeekBarWrapper(findViewById(R.id.page_indication_seek_bar))
         }
 
         initializeViewPager(textViews)
         setToolbarButtonOnClickListeners(progressBar = findViewById(R.id.indeterminateBar))
-        displayCouldntFindCroppingBoundsToast(
+        displayCropDismissalToast(
             intent.getIntExtra(
                 N_DISMISSED_IMAGES_IDENTIFIER,
                 0
@@ -176,7 +216,8 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
     private fun preExitScreen(showAppTitle: Boolean = true){
         viewPager2.removeAllViews()
-        toolbar.hide()
+        toolBar.hide()
+        seekBarWrapper.seekBar.hide()
 
         if (showAppTitle)
             textViews.appTitle.show()

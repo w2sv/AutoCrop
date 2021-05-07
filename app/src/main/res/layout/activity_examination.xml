@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,24 +15,45 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
-        android:background="@android:color/black"
-
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+
+        android:layout_height="match_parent"
+        android:background="@android:color/black">
+    </androidx.viewpager2.widget.ViewPager2>
+
+    <SeekBar
+        android:id="@+id/page_indication_seek_bar"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+
+        android:splitTrack="false"
+
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:theme="@style/SeekBarStyle"
+        android:thumb="@drawable/seekbar_tumb_examination_activity"
+
+        android:outlineProvider="paddedBounds"
+        android:progressTint="@android:color/transparent"
+        android:max="100"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </SeekBar>
 
     <!-- App title background text view -->
 
     <TextView
-        style="@style/AppTitleTextView"
         android:id="@+id/examination_activity_title_text_view"
-        android:layout_height="match_parent"
+        style="@style/AppTitleTextView"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
         android:visibility="gone" />
 
     <!-- PROCESSING CROPS SUB SCREEN -->
 
-        <!-- Text view -->
+    <!-- Text view -->
 
     <TextView
         android:id="@+id/processing_crops_text_view"
@@ -41,18 +63,18 @@
         android:layout_marginBottom="80dp"
         android:gravity="center"
 
-        android:textSize="30sp"
-        android:textColor="@color/magenta"
-        android:textStyle="bold"
         android:text="@string/crops_processing_in_progress"
+        android:textColor="@color/magenta"
+        android:textSize="30sp"
+        android:textStyle="bold"
 
         android:visibility="invisible" />
 
-        <!-- Circular progress bar -->
+    <!-- Circular progress bar -->
 
     <ProgressBar
-        style="?android:progressBarStyle"
         android:id="@+id/indeterminateBar"
+        style="?android:progressBarStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="140dp"

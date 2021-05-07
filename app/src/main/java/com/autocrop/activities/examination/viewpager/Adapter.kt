@@ -1,17 +1,16 @@
 package com.autocrop.activities.examination.viewpager
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.ActionBarDrawerToggle
+import android.widget.SeekBar
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -19,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ImageActionReactionsPossessor
+import com.autocrop.activities.examination.PageIndicationSeekBarWrapper
 import com.autocrop.crop
 import com.autocrop.cropBundleList
 import com.autocrop.utils.*
@@ -26,7 +26,7 @@ import com.bunsenbrenner.screenshotboundremoval.R
 import timber.log.Timber
 import java.util.*
 import kotlin.math.abs
-import kotlin.math.min
+import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
 
@@ -49,6 +49,7 @@ private fun Index.rotated(distance: Int, collectionSize: Int): Int =
 
 class ImageSliderAdapter(
     private val textViews: ExaminationActivity.TextViews,
+    private val seekBarWrapper: PageIndicationSeekBarWrapper,
     private val viewPager2: ViewPager2,
     private val context: Context,
     private val fragmentManager: FragmentManager,
@@ -62,16 +63,18 @@ class ImageSliderAdapter(
     private var replacementViewItemIndex by Delegates.notNull<Index>()
     private var dataRotationDistance by Delegates.notNull<Int>()
 
-    val startItemIndex: Int = (N_VIEWS / 2).run {
-        minus(dataElementIndex(this))
-    }
-
     companion object{
         private const val VIEW_ITEM_RESET_MARGIN: Int = 3
         private const val N_VIEWS: Int = Int.MAX_VALUE
     }
 
+    val startItemIndex: Int = (N_VIEWS / 2).run {
+        minus(dataElementIndex(this))
+    }
+
     init {
+        seekBarWrapper.calculateProgressCoefficient()
+
         with(viewPager2) {
             registerOnPageChangeCallback(object : OnPageChangeCallback() {
 
@@ -81,7 +84,11 @@ class ImageSliderAdapter(
                     if (removeDataElementIndex == null)
                         with(dataElementIndex(position)){
                             textViews.setRetentionPercentage(this)
-                            textViews.setPageIndication(pageIndex(this))
+
+                            with(pageIndex(this)){
+                                textViews.setPageIndication(this)
+                                seekBarWrapper.indicatePage(this)
+                            }
                         }
                 }
 
@@ -223,17 +230,27 @@ class ImageSliderAdapter(
 
         dataRotationDistance = (replacementViewItemIndex % dataSizePostRemoval) - replacementDataElementIndexPostRemoval
 
+        val newPageIndex: Int = pageIndex(removeDataElementIndex!!).run {
+            if(removingAtDataTail)
+                minus(1)
+            else
+                this
+        }
+
         with(textViews) {
             setRetentionPercentage(dataElementIndex(replacementViewItemIndex))
             setPageIndication(
-                pageIndex(removeDataElementIndex!!).run {
-                    if(removingAtDataTail)
-                        minus(1)
-                    else
-                        this
-                },
+                newPageIndex,
                 dataSizePostRemoval
             )
+        }
+
+        with(seekBarWrapper){
+            calculateProgressCoefficient(dataSizePostRemoval)
+            if (dataSizePostRemoval > 1)
+                indicatePage(newPageIndex)
+            else
+                setProgress(50)
         }
 
         this.replacementViewItemIndex = replacementViewItemIndex
