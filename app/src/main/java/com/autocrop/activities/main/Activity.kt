@@ -54,6 +54,11 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         private enum class IntentCode {
             IMAGE_SELECTION
         }
+
+        val MENU_ITEM_ID_2_PREFERENCE_PARAMETER: Map<Int, PreferenceParameter> = mapOf(
+            R.id.main_menu_item_delete_input_screenshots to PreferenceParameter.DeleteInputScreenshots,
+            R.id.main_menu_item_save_to_autocrop_folder to PreferenceParameter.SaveToAutocropDir
+        )
     }
 
     // -----------------Permissions---------------------
@@ -137,38 +142,22 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
             // menu button
             menu_button.setOnClickListener {
-
                 // inflate popup menu
                 PopupMenu(this, it).run {
                     menuInflater.inflate(R.menu.activity_main, menu)
 
                     // set checks
-                    menu.findItem(R.id.main_menu_item_delete_input_screenshots).isChecked =
-                        UserPreferences.deleteInputScreenshots
-                    menu.findItem(R.id.main_menu_item_save_to_autocrop_folder).isChecked =
-                        UserPreferences.saveToAutocropDir
+                    MENU_ITEM_ID_2_PREFERENCE_PARAMETER.entries.forEach { entry ->
+                        menu.findItem(entry.key).isChecked = UserPreferences[entry.value]
+                    }
 
                     // set item onClickListeners
                     setOnMenuItemClickListener { item ->
-                        when (item.itemId) {
-                            // input screenshot deleting
-                            R.id.main_menu_item_delete_input_screenshots -> {
-                                UserPreferences.toggle(PreferenceParameter.DeleteInputScreenshots)
-                                item.isChecked = UserPreferences.deleteInputScreenshots
-
-                                persistMenuAfterItemClick(item)
-                            }
-
-                            // saving to dedicated directory
-                            R.id.main_menu_item_save_to_autocrop_folder -> {
-                                UserPreferences.toggle(PreferenceParameter.SaveToAutocropDir)
-
-                                item.isChecked = UserPreferences.saveToAutocropDir
-
-                                persistMenuAfterItemClick(item)
-                            }
+                        item.run {
+                            UserPreferences.toggle(MENU_ITEM_ID_2_PREFERENCE_PARAMETER[itemId]!!)
+                            isChecked = !isChecked
+                            persistMenuAfterItemClick(this)
                         }
-                        false
                     }
                     show()
                 }
@@ -177,20 +166,22 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
         fun displayToasts(){
             fun displaySavingResultToast(nSavedCrops: Int) {
-                when (nSavedCrops) {
-                    0 -> displayToast("Dismissed everything")
-                    1 -> displayToast(
-                        listOf(
-                            "Saved 1 crop",
-                            "Saved 1 crop and deleted\ncorresponding screenshot"
-                        )[UserPreferences.deleteInputScreenshots.toInt()]
-                    )
-                    in 2..Int.MAX_VALUE -> displayToast(
-                        listOf(
-                            "Saved $nSavedCrops crops",
-                            "Saved $nSavedCrops crops and deleted\ncorresponding screenshots"
-                        )[UserPreferences.deleteInputScreenshots.toInt()]
-                    )
+                with(UserPreferences.deleteInputScreenshots.toInt()){
+                    when (nSavedCrops) {
+                        0 -> displayToast("Dismissed everything")
+                        1 -> displayToast(
+                            listOf(
+                                "Saved 1 crop",
+                                "Saved 1 crop and deleted\ncorresponding screenshot"
+                            )[this]
+                        )
+                        in 2..Int.MAX_VALUE -> displayToast(
+                            listOf(
+                                "Saved $nSavedCrops crops",
+                                "Saved $nSavedCrops crops and deleted\ncorresponding screenshots"
+                            )[this]
+                        )
+                    }
                 }
             }
 
@@ -199,6 +190,9 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             with(intent.getIntExtra(N_SAVED_CROPS, -1)) {
                 if (!equals(-1))
                     displaySavingResultToast(this)
+                        .also {
+                            intent.removeExtra(N_SAVED_CROPS)
+                        }
             }
         }
 
@@ -212,8 +206,6 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
         setButtonOnClickListeners()
         displayToasts()
-
-        Timber.i("Permission code to is granted: $permission2IsGranted")
     }
 
     private fun selectImages() {

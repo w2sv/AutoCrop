@@ -209,12 +209,13 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         initializeViewPager(textViews)
         setToolbarButtonOnClickListeners(progressBar = findViewById(R.id.indeterminateBar))
-        displayCropDismissalToast(
-            intent.getIntExtra(
-                N_DISMISSED_IMAGES_IDENTIFIER,
-                0
-            )
-        )
+        with(intent.getIntExtra(N_DISMISSED_IMAGES_IDENTIFIER, 0)){
+            if (!equals(0))
+                displayCropDismissalToast(this)
+                    .also {
+                        intent.removeExtra(N_DISMISSED_IMAGES_IDENTIFIER)
+                    }
+        }
     }
 
     // -----------------ImageActionReactionsPossessor overrides-----------------
