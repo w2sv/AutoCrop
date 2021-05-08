@@ -18,6 +18,7 @@ import com.autocrop.activities.main.SELECTED_IMAGE_URI_STRINGS_IDENTIFIER
 import com.autocrop.clearCropBundleList
 import com.autocrop.cropBundleList
 import com.autocrop.utils.android.*
+import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_cropping.*
 import timber.log.Timber
@@ -140,12 +141,14 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
                 nDismissedCrops
             )
         )
+        proceedTransitionAnimation()
     }
 
     private fun startMainActivity() {
         startActivity(
             Intent(this, MainActivity::class.java)
         )
+        returnTransitionAnimation()
     }
 
     private val backPressHandler = BackPressHandler()

@@ -12,6 +12,7 @@ import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.utils.*
 import com.autocrop.utils.android.*
+import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
@@ -165,17 +166,17 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         }
 
         fun displayToasts(){
-            fun displaySavingResultToast(nSavedCrops: Int) {
+            fun displaySavingResultSnackbar(nSavedCrops: Int) {
                 with(UserPreferences.deleteInputScreenshots.toInt()){
                     when (nSavedCrops) {
-                        0 -> displayToast("Dismissed everything")
-                        1 -> displayToast(
+                        0 -> displaySnackbar("Dismissed everything")
+                        1 -> displaySnackbar(
                             listOf(
                                 "Saved 1 crop",
                                 "Saved 1 crop and deleted\ncorresponding screenshot"
                             )[this]
                         )
-                        in 2..Int.MAX_VALUE -> displayToast(
+                        in 2..Int.MAX_VALUE -> displaySnackbar(
                             listOf(
                                 "Saved $nSavedCrops crops",
                                 "Saved $nSavedCrops crops and deleted\ncorresponding screenshots"
@@ -189,7 +190,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             // toast if returning from cropping activity or nothing if none of the former applying
             with(intent.getIntExtra(N_SAVED_CROPS, -1)) {
                 if (!equals(-1))
-                    displaySavingResultToast(this)
+                    displaySavingResultSnackbar(this)
                         .also {
                             intent.removeExtra(N_SAVED_CROPS)
                         }
@@ -234,6 +235,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                                     imageUriStrings
                                 )
                         ).also {
+                            proceedTransitionAnimation()
                             onExit()
                         }
                     }

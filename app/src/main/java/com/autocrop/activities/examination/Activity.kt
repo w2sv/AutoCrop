@@ -27,11 +27,9 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearCropBundleList
 import com.autocrop.cropBundleList
 import com.autocrop.retentionPercentage
-import com.autocrop.utils.android.displayToast
-import com.autocrop.utils.android.hide
-import com.autocrop.utils.android.intentExtraIdentifier
-import com.autocrop.utils.android.show
+import com.autocrop.utils.android.*
 import com.autocrop.utils.toInt
+import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
 import timber.log.Timber
@@ -95,6 +93,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
     private var nSavedCrops: Int = 0
     private var displayingExitScreen: Boolean = false
+    private var savingAll: Boolean = false
 
     inner class TextViews {
         private val retentionPercentage: TextView = findViewById(R.id.retention_percentage)
@@ -148,7 +147,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                     this@ExaminationActivity,
                     this@ExaminationActivity.supportFragmentManager,
                     this@ExaminationActivity
-                ) { displayingExitScreen }
+                )
 
                 setCurrentItem(
                     (adapter as ImageSliderAdapter).startItemIndex,
@@ -160,6 +159,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         fun setToolbarButtonOnClickListeners(progressBar: ProgressBar) {
             save_all_button.setOnClickListener {
                 fun saveAll(){
+                    savingAll = true
                     preExitScreen(showAppTitle = false)
 
                     CropSaver(
@@ -195,9 +195,11 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         }
 
         fun displayCropDismissalToast(nDismissedImages: Int){
-            when (nDismissedImages) {
-                1 -> displayToast("Couldn't find cropping bounds for\n1 image")
-                in 2..Int.MAX_VALUE -> displayToast("Couldn't find cropping bounds for\n$nDismissedImages images")
+            with(R.color.saturated_magenta){
+                when (nDismissedImages) {
+                    1 -> displaySnackbar("Couldn't find cropping bounds for\n1 image", this)
+                    in 2..Int.MAX_VALUE -> displaySnackbar("Couldn't find cropping bounds for\n$nDismissedImages images", this)
+                }
             }
         }
 
@@ -230,6 +232,8 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
     }
 
     private fun preExitScreen(showAppTitle: Boolean = true){
+        displayingExitScreen = true
+
         viewPager2.removeAllViews()
         toolBar.hide()
         seekBar.hide()
@@ -249,7 +253,8 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         // block if saving all / dismissing all
         if (displayingExitScreen) {
-            displayToast("Please wait until crops\nhave been saved")
+            if (savingAll)
+                displayToast("Please wait until crops\nhave been saved")
             return
         }
 
@@ -272,7 +277,11 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                     MainActivity::class.java
                 ).putExtra(N_SAVED_CROPS, nSavedCrops)
             ).also {
-                onExit()
+                if (displayingExitScreen)
+                    restartTransitionAnimation()
+                else
+                    proceedTransitionAnimation()
+            onExit()
         }
     }
 

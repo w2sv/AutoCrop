@@ -21,16 +21,16 @@
         android:background="@android:color/black">
     </androidx.viewpager2.widget.ViewPager2>
 
+    <!-- https://en.proft.me/2018/02/5/decorating-seekbar-android/ -->
     <com.autocrop.activities.examination.PageIndicationSeekBar
         android:id="@+id/page_indication_seek_bar"
         android:layout_width="100dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
 
         android:splitTrack="false"
 
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="20dp"
-        android:theme="@style/SeekBarStyle"
         android:thumb="@drawable/seekbar_tumb_examination_activity"
 
         android:outlineProvider="paddedBounds"

@@ -6,6 +6,7 @@ import android.os.Handler
 import com.autocrop.activities.SystemUiHidingAppCompatActivity
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.utils.android.debuggingModeEnabled
+import com.autocrop.utils.android.restartTransitionAnimation
 import com.bunsenbrenner.screenshotboundremoval.R
 import timber.log.Timber
 
@@ -26,13 +27,9 @@ class Activity : SystemUiHidingAppCompatActivity() {
                         this,
                         MainActivity::class.java
                     )
-                ).also {
-                    overridePendingTransition(
-                        R.anim.fade_in,
-                        R.anim.fade_out
-                    )
-                    finish()
-                }
+                )
+                restartTransitionAnimation()
+                finish()
             },
             500  // TODO
         )

@@ -49,8 +49,7 @@ class ImageSliderAdapter(
     private val viewPager2: ViewPager2,
     private val context: Context,
     private val fragmentManager: FragmentManager,
-    private val imageActionReactionsPossessor: ImageActionReactionsPossessor,
-    private val displayingExitScreen: () -> Boolean) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
+    private val imageActionReactionsPossessor: ImageActionReactionsPossessor) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
     private var dataTailHash: Int = cropBundleList.last().hashCode()
     private var dataTailIndex: Index = cropBundleList.lastIndex
@@ -145,7 +144,7 @@ class ImageSliderAdapter(
                     when (event?.action) {
                         MotionEvent.ACTION_DOWN -> startCoordinates = event.coordinates()
                         MotionEvent.ACTION_UP -> {
-                            if (isClick(event.coordinates()) && !displayingExitScreen())
+                            if (isClick(event.coordinates()))
                                 CropProcedureQueryDialog(
                                     adapterPosition,
                                     context,
