@@ -223,7 +223,6 @@ class ImageSliderAdapter(
             }
 
         viewPager2.setCurrentItem(replacementViewItemIndex, true)
-
         dataRotationDistance = (replacementViewItemIndex % dataSizePostRemoval) - replacementDataElementIndexPostRemoval
 
         val newPageIndex: Int = pageIndex(removeDataElementIndex!!).run {
