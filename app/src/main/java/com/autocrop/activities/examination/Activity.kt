@@ -7,12 +7,14 @@ package com.autocrop.activities.examination
 import android.animation.ObjectAnimator
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.animation.DecelerateInterpolator
 import android.widget.ProgressBar
-import android.widget.SeekBar
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
 import androidx.viewpager2.widget.ViewPager2
@@ -47,30 +49,36 @@ interface ImageActionReactionsPossessor {
 }
 
 
-class PageIndicationSeekBarWrapper(val seekBar: SeekBar){
-    init{
-        with(seekBar){
-            progress = listOf(0, 50)[disabled.toInt()]
-            isEnabled = false
-        }
+class PageIndicationSeekBar(context: Context, attr: AttributeSet): AppCompatSeekBar(context, attr){
+    companion object{
+        const val PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE: Int = 50
     }
 
-    private val disabled: Boolean
-        get() = cropBundleList.size == 1
+    private var indicateLastPage: Boolean = cropBundleList.size == 1
+
+    init{
+        progress = listOf(0, PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE)[indicateLastPage.toInt()]
+        isEnabled = false
+    }
 
     private var progressCoefficient by Delegates.notNull<Float>()
 
     fun calculateProgressCoefficient(dataMagnitude: Int = cropBundleList.size){
-        progressCoefficient = seekBar.max.toFloat() / dataMagnitude.minus(1).toFloat()
+        if (dataMagnitude == 1)
+            indicateLastPage = true.also {
+                displayProgress(PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE)
+            }
+        else
+            progressCoefficient = max.toFloat() / dataMagnitude.minus(1).toFloat()
     }
 
     fun indicatePage(pageIndex: Int){
-        if (!disabled)
-            setProgress((progressCoefficient * pageIndex).roundToInt().also { Timber.i("Progress: $it") })
+        if (!indicateLastPage)
+            displayProgress((progressCoefficient * pageIndex).roundToInt().also { Timber.i("Progress: $it") })
     }
 
-    fun setProgress(percentage: Int){
-        with(ObjectAnimator.ofInt(seekBar, "progress", percentage)){
+    private fun displayProgress(percentage: Int){
+        with(ObjectAnimator.ofInt(this, "progress", percentage)){
             duration = 100
             interpolator = DecelerateInterpolator()
             start()
@@ -83,7 +91,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
     private lateinit var viewPager2: ViewPager2
     private lateinit var textViews: TextViews
     private lateinit var toolBar: Toolbar
-    private lateinit var seekBarWrapper: PageIndicationSeekBarWrapper
+    private lateinit var seekBar: PageIndicationSeekBar
 
     private var nSavedCrops: Int = 0
     private var displayingExitScreen: Boolean = false
@@ -95,8 +103,14 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         val appTitle: TextView = findViewById(R.id.examination_activity_title_text_view)
         val saveAll: TextView = findViewById(R.id.processing_crops_text_view)
 
+        /**
+         * Adjusts x translation of retentionPercentage view wrt initial
+         * length of page indication view text
+         *
+         * Initializes page dependent texts
+         */
         init {
-            retentionPercentage.translationX -= (cropBundleList.size.toString().length - 1).let {
+            retentionPercentage.translationX -= (cropBundleList.size.toString().lastIndex).let {
                 it * 25 + it * 6
             }
 
@@ -129,7 +143,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
             viewPager2 = findViewById<ViewPager2>(R.id.view_pager).apply {
                 adapter = ImageSliderAdapter(
                     textViews,
-                    seekBarWrapper,
+                    seekBar,
                     this,
                     this@ExaminationActivity,
                     this@ExaminationActivity.supportFragmentManager,
@@ -190,7 +204,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         setContentView(R.layout.activity_examination).also {
             textViews = TextViews()
             toolBar = findViewById(R.id.toolbar)
-            seekBarWrapper = PageIndicationSeekBarWrapper(findViewById(R.id.page_indication_seek_bar))
+            seekBar = findViewById(R.id.page_indication_seek_bar)
         }
 
         initializeViewPager(textViews)
@@ -217,7 +231,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
     private fun preExitScreen(showAppTitle: Boolean = true){
         viewPager2.removeAllViews()
         toolBar.hide()
-        seekBarWrapper.seekBar.hide()
+        seekBar.hide()
 
         if (showAppTitle)
             textViews.appTitle.show()

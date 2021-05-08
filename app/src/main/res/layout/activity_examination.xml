@@ -21,7 +21,7 @@
         android:background="@android:color/black">
     </androidx.viewpager2.widget.ViewPager2>
 
-    <SeekBar
+    <com.autocrop.activities.examination.PageIndicationSeekBar
         android:id="@+id/page_indication_seek_bar"
         android:layout_width="100dp"
         android:layout_height="60dp"
@@ -39,7 +39,7 @@
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-    </SeekBar>
+    </com.autocrop.activities.examination.PageIndicationSeekBar>
 
     <!-- App title background text view -->
 
