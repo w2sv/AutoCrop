@@ -1,6 +1,7 @@
 package com.autocrop.utils.android
 
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.view.Gravity
@@ -8,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.bunsenbrenner.screenshotboundremoval.R
 import com.google.android.material.snackbar.Snackbar
@@ -45,9 +47,9 @@ fun Activity.displaySnackbar(message: String, textColorId: Int = R.color.light_g
         .apply{
             with(view){
                 findViewById<TextView>(com.google.android.material.R.id.snackbar_text).apply {
-                    maxLines = 2
-                    textAlignment = View.TEXT_ALIGNMENT_CENTER
                     setTextColor(resources.getColor(textColorId))
+                    textAlignment = View.TEXT_ALIGNMENT_CENTER
+                    maxLines = 2
                 }
             }
         }
@@ -82,4 +84,16 @@ fun Activity.returnTransitionAnimation(){
 
 fun Activity.restartTransitionAnimation(){
     Animatoo.animateFade(this)
+}
+
+
+val Activity.launchedFromHistory: Boolean
+    get() = intent.flags == (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY)
+
+
+fun Activity.snackbarArgument(extraName: String, defaultValue: Int): Int? = intent.getIntExtra(extraName, defaultValue).run {
+    if (!launchedFromHistory && !equals(defaultValue))
+        this
+    else
+        null
 }

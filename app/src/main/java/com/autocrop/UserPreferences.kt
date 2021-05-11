@@ -112,17 +112,25 @@ object UserPreferences {
      * directories are created automatically
      */
     private fun saveToAutocropDirTogglingEcho() {
-        if (saveToAutocropDir && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
-            with(
-                File(
-                    Environment.getExternalStoragePublicDirectory(relativeCropSaveDirPath)
-                        .toString()
-                )
-            ) {
-                if (!exists())
-                    mkdir().also {
-                        Timber.i("Created $absolutePath")
-                    }
-            }
+        if (saveToAutocropDir)
+            makeAutoCroppedDirIfApplicable()
+    }
+
+    fun makeAutoCroppedDirIfApplicable(): Boolean{
+        with(
+            File(
+                Environment.getExternalStoragePublicDirectory(relativeCropSaveDirPath)
+                    .toString()
+            )
+        ) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !exists())
+                return mkdir().also {
+                    if (it)
+                        Timber.i("Created AutoCropped directory under $absolutePath")
+                    else
+                        Timber.i("Couldn't create AutoCropped directory")
+                }
+        }
+        return false
     }
 }

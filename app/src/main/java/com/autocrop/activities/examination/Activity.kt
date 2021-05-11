@@ -195,7 +195,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         }
 
         fun displayCropDismissalToast(nDismissedImages: Int){
-            with(R.color.saturated_magenta){
+            with(R.color.magenta){
                 when (nDismissedImages) {
                     1 -> displaySnackbar("Couldn't find cropping bounds for\n1 image", this)
                     in 2..Int.MAX_VALUE -> displaySnackbar("Couldn't find cropping bounds for\n$nDismissedImages images", this)
@@ -211,12 +211,8 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         initializeViewPager(textViews)
         setToolbarButtonOnClickListeners(progressBar = findViewById(R.id.indeterminateBar))
-        with(intent.getIntExtra(N_DISMISSED_IMAGES_IDENTIFIER, 0)){
-            if (!equals(0))
-                displayCropDismissalToast(this)
-                    .also {
-                        intent.removeExtra(N_DISMISSED_IMAGES_IDENTIFIER)
-                    }
+        snackbarArgument(N_DISMISSED_IMAGES_IDENTIFIER, 0)?.let {
+            displayCropDismissalToast(it)
         }
     }
 

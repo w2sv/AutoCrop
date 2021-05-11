@@ -12,7 +12,6 @@ import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.utils.*
 import com.autocrop.utils.android.*
-import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
@@ -116,7 +115,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
     // ------------Lifecycle stages---------------
 
-    lateinit var flowFieldPApplet: PApplet
+    private lateinit var flowFieldPApplet: PApplet
 
     override fun onCreate(savedInstanceState: Bundle?) {
         fun setPixelField() {
@@ -165,35 +164,23 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             }
         }
 
-        fun displayToasts(){
-            fun displaySavingResultSnackbar(nSavedCrops: Int) {
-                with(UserPreferences.deleteInputScreenshots.toInt()){
-                    when (nSavedCrops) {
-                        0 -> displaySnackbar("Dismissed everything")
-                        1 -> displaySnackbar(
-                            listOf(
-                                "Saved 1 crop",
-                                "Saved 1 crop and deleted\ncorresponding screenshot"
-                            )[this]
-                        )
-                        in 2..Int.MAX_VALUE -> displaySnackbar(
-                            listOf(
-                                "Saved $nSavedCrops crops",
-                                "Saved $nSavedCrops crops and deleted\ncorresponding screenshots"
-                            )[this]
-                        )
-                    }
+        fun displaySavingResultSnackbar(nSavedCrops: Int) {
+            with(UserPreferences.deleteInputScreenshots.toInt()){
+                when (nSavedCrops) {
+                    0 -> displaySnackbar("Dismissed everything")
+                    1 -> displaySnackbar(
+                        listOf(
+                            "Saved 1 crop",
+                            "Saved 1 crop and deleted\ncorresponding screenshot"
+                        )[this]
+                    )
+                    in 2..Int.MAX_VALUE -> displaySnackbar(
+                        listOf(
+                            "Saved $nSavedCrops crops",
+                            "Saved $nSavedCrops crops and deleted\ncorresponding screenshots"
+                        )[this]
+                    )
                 }
-            }
-
-            // display either saving result toast if returning from examination activity or all images dismissed
-            // toast if returning from cropping activity or nothing if none of the former applying
-            with(intent.getIntExtra(N_SAVED_CROPS, -1)) {
-                if (!equals(-1))
-                    displaySavingResultSnackbar(this)
-                        .also {
-                            intent.removeExtra(N_SAVED_CROPS)
-                        }
             }
         }
 
@@ -206,7 +193,9 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         userPreferencesOnActivityCreation = UserPreferences.clone()
 
         setButtonOnClickListeners()
-        displayToasts()
+        snackbarArgument(N_SAVED_CROPS, -1)?.let {
+            displaySavingResultSnackbar(it)
+        }
     }
 
     private fun selectImages() {

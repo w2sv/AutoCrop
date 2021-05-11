@@ -9,4 +9,5 @@
     <color name="magenta">#7F1F3F</color>
     <color name="saturated_magenta">#911945</color>
     <color name="wine_red">#B00020</color>
+    <color name="dark_gray">#2f353b</color>
 </resources>

@@ -11,6 +11,7 @@ import com.autocrop.UserPreferences
 import com.autocrop.utils.android.*
 import timber.log.Timber
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.OutputStream
 
@@ -35,39 +36,49 @@ fun saveCropAndDeleteScreenshotIfApplicable(
  */
 private fun Bitmap.save(context: Context, title: String){
 
-    // set file output stream and target file uri
-    val (fileOutputStream: OutputStream, imageFileUri: Uri) = if (apiLowerEquals(29)) {
-        File(
-            Environment.getExternalStoragePublicDirectory(UserPreferences.relativeCropSaveDirPath)
-                .toString(),
-            title
-        ).run {
-            Pair(FileOutputStream(this), Uri.fromFile(this))
+    try{
+        // set file output stream and target file uri
+        val (fileOutputStream: OutputStream, imageFileUri: Uri) = if (apiLowerEquals(29)) {
+            File(
+                Environment.getExternalStoragePublicDirectory(UserPreferences.relativeCropSaveDirPath)
+                    .toString(),
+                title
+            ).run {
+                Pair(FileOutputStream(this), Uri.fromFile(this))
+            }
+
+        } else {
+            val imageFileUri: Uri = context.contentResolver.insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, title)
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, UserPreferences.relativeCropSaveDirPath)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
+                }
+            )!!
+
+            Pair(context.contentResolver.openOutputStream(imageFileUri)!!, imageFileUri)
         }
 
-    } else {
-        val imageFileUri: Uri = context.contentResolver.insert(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, title)
-                put(MediaStore.MediaColumns.RELATIVE_PATH, UserPreferences.relativeCropSaveDirPath)
-                put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
-            }
-        )!!
+        // write image
+        with(fileOutputStream) {
+            this@save.compress(Bitmap.CompressFormat.JPEG, 100, this)
+            close()
 
-        Pair(context.contentResolver.openOutputStream(imageFileUri)!!, imageFileUri)
+            Timber.i("Saved crop to ${imageFileUri.path}")
+        }
+
+        // trigger refreshing of gallery
+        context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, imageFileUri))
+    } catch (e: FileNotFoundException){
+        if (UserPreferences.saveToAutocropDir && UserPreferences.makeAutoCroppedDirIfApplicable())
+            return save(context, title)
+                .also {
+                    Timber.i("Recreated AutoCropped dir")
+                }
+        else
+            throw e
     }
-
-    // write image
-    with(fileOutputStream) {
-        this@save.compress(Bitmap.CompressFormat.JPEG, 100, this)
-        close()
-
-        Timber.i("Saved crop to ${imageFileUri.path}")
-    }
-
-    // trigger refreshing of gallery
-    context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, imageFileUri))
 }
 
 
