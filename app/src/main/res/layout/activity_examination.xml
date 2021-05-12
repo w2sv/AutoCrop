@@ -35,6 +35,8 @@
 
         android:outlineProvider="paddedBounds"
         android:progressTint="@android:color/transparent"
+
+        android:progressBackgroundTint="@color/magenta"
         android:max="100"
 
         app:layout_constraintEnd_toEndOf="parent"

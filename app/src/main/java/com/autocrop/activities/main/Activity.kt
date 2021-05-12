@@ -193,10 +193,13 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         userPreferencesOnActivityCreation = UserPreferences.clone()
 
         setButtonOnClickListeners()
-        snackbarArgument(N_SAVED_CROPS, -1)?.let {
+        snackbarArgument(displayedSnackbar, N_SAVED_CROPS, -1)?.let {
             displaySavingResultSnackbar(it)
+            displayedSnackbar = true
         }
     }
+
+    private var displayedSnackbar: Boolean = false
 
     private fun selectImages() {
         Intent(Intent.ACTION_PICK).run {

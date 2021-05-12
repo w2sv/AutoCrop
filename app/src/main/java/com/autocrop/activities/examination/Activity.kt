@@ -29,7 +29,6 @@ import com.autocrop.cropBundleList
 import com.autocrop.retentionPercentage
 import com.autocrop.utils.android.*
 import com.autocrop.utils.toInt
-import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
 import timber.log.Timber
@@ -47,21 +46,22 @@ interface ImageActionReactionsPossessor {
 }
 
 
-class PageIndicationSeekBar(context: Context, attr: AttributeSet): AppCompatSeekBar(context, attr){
-    companion object{
+class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
+    AppCompatSeekBar(context, attr) {
+    companion object {
         const val PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE: Int = 50
     }
 
     private var indicateLastPage: Boolean = cropBundleList.size == 1
 
-    init{
+    init {
         progress = listOf(0, PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE)[indicateLastPage.toInt()]
         isEnabled = false
     }
 
     private var progressCoefficient by Delegates.notNull<Float>()
 
-    fun calculateProgressCoefficient(dataMagnitude: Int = cropBundleList.size){
+    fun calculateProgressCoefficient(dataMagnitude: Int = cropBundleList.size) {
         if (dataMagnitude == 1)
             indicateLastPage = true.also {
                 displayProgress(PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE)
@@ -70,13 +70,14 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet): AppCompatSeek
             progressCoefficient = max.toFloat() / dataMagnitude.minus(1).toFloat()
     }
 
-    fun indicatePage(pageIndex: Int){
+    fun indicatePage(pageIndex: Int) {
         if (!indicateLastPage)
-            displayProgress((progressCoefficient * pageIndex).roundToInt().also { Timber.i("Progress: $it") })
+            displayProgress(
+                (progressCoefficient * pageIndex).roundToInt().also { Timber.i("Progress: $it") })
     }
 
-    private fun displayProgress(percentage: Int){
-        with(ObjectAnimator.ofInt(this, "progress", percentage)){
+    private fun displayProgress(percentage: Int) {
+        with(ObjectAnimator.ofInt(this, "progress", percentage)) {
             duration = 100
             interpolator = DecelerateInterpolator()
             start()
@@ -113,13 +114,13 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                 it * 25 + it * 6
             }
 
-            with (0){
+            with(0) {
                 setPageIndication(this)
                 setRetentionPercentage(this)
             }
         }
 
-        fun setPageIndication(pageIndex: Int, itemCount: Int = cropBundleList.size){
+        fun setPageIndication(pageIndex: Int, itemCount: Int = cropBundleList.size) {
             pageIndication.text = getString(
                 R.string.fracture,
                 pageIndex + 1,
@@ -127,7 +128,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
             )
         }
 
-        fun setRetentionPercentage(pageIndex: Int){
+        fun setRetentionPercentage(pageIndex: Int) {
             retentionPercentage.text = getString(
                 R.string.examination_activity_retention_percentage,
                 cropBundleList[pageIndex].retentionPercentage
@@ -158,7 +159,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         fun setToolbarButtonOnClickListeners(progressBar: ProgressBar) {
             save_all_button.setOnClickListener {
-                fun saveAll(){
+                fun saveAll() {
                     savingAll = true
                     preExitScreen(showAppTitle = false)
 
@@ -172,20 +173,22 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
                     nSavedCrops += cropBundleList.size
                 }
 
-                if (UserPreferences.deleteInputScreenshots){
-                    class SaveAllConfirmationDialog: DialogFragment() {
-                        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = AlertDialog.Builder(activity)
-                            .run {
-                                setTitle("Save all crops and delete corresponding screenshots?")
-                                setNegativeButton("No") { _, _ -> }
-                                setPositiveButton("Yes") { _, _ -> saveAll() }
-                            }
+                if (UserPreferences.deleteInputScreenshots) {
+                    class SaveAllConfirmationDialog : DialogFragment() {
+                        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+                            AlertDialog.Builder(activity)
+                                .run {
+                                    setTitle("Save all crops and delete corresponding screenshots?")
+                                    setNegativeButton("No") { _, _ -> }
+                                    setPositiveButton("Yes") { _, _ -> saveAll() }
+                                }
                                 .create()
                     }
-                    SaveAllConfirmationDialog().show(supportFragmentManager, "Save all confirmation dialog")
-                }
-
-                else
+                    SaveAllConfirmationDialog().show(
+                        supportFragmentManager,
+                        "Save all confirmation dialog"
+                    )
+                } else
                     saveAll()
             }
 
@@ -194,11 +197,14 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
             }
         }
 
-        fun displayCropDismissalToast(nDismissedImages: Int){
-            with(R.color.magenta){
+        fun displayCropDismissalToast(nDismissedImages: Int) {
+            with(R.color.magenta) {
                 when (nDismissedImages) {
                     1 -> displaySnackbar("Couldn't find cropping bounds for\n1 image", this)
-                    in 2..Int.MAX_VALUE -> displaySnackbar("Couldn't find cropping bounds for\n$nDismissedImages images", this)
+                    in 2..Int.MAX_VALUE -> displaySnackbar(
+                        "Couldn't find cropping bounds for\n$nDismissedImages images",
+                        this
+                    )
                 }
             }
         }
@@ -211,10 +217,13 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
 
         initializeViewPager(textViews)
         setToolbarButtonOnClickListeners(progressBar = findViewById(R.id.indeterminateBar))
-        snackbarArgument(N_DISMISSED_IMAGES_IDENTIFIER, 0)?.let {
+        snackbarArgument(displayedSnackbar, N_DISMISSED_IMAGES_IDENTIFIER, 0)?.let {
             displayCropDismissalToast(it)
+            displayedSnackbar = true
         }
     }
+
+    private var displayedSnackbar: Boolean = false
 
     // -----------------ImageActionReactionsPossessor overrides-----------------
 
@@ -227,7 +236,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
         returnToMainActivity()
     }
 
-    private fun preExitScreen(showAppTitle: Boolean = true){
+    private fun preExitScreen(showAppTitle: Boolean = true) {
         displayingExitScreen = true
 
         viewPager2.removeAllViews()
@@ -239,6 +248,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
     }
 
     private val backPressHandler = BackPressHandler()
+
     /**
      * Blocked throughout the process of saving all crops,
      * otherwise asks for second one as confirmation;
@@ -268,20 +278,20 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(), ImageActionReactio
      */
     private fun returnToMainActivity() {
         return startActivity(
-                Intent(
-                    this,
-                    MainActivity::class.java
-                ).putExtra(N_SAVED_CROPS, nSavedCrops)
-            ).also {
-                if (displayingExitScreen)
-                    restartTransitionAnimation()
-                else
-                    proceedTransitionAnimation()
+            Intent(
+                this,
+                MainActivity::class.java
+            ).putExtra(N_SAVED_CROPS, nSavedCrops)
+        ).also {
+            if (displayingExitScreen)
+                restartTransitionAnimation()
+            else
+                proceedTransitionAnimation()
             onExit()
         }
     }
 
-    private fun onExit(){
+    private fun onExit() {
         clearCropBundleList()
         finishAndRemoveTask()
     }

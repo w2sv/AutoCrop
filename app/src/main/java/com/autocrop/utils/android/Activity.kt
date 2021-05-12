@@ -47,7 +47,7 @@ fun Activity.displaySnackbar(message: String, textColorId: Int = R.color.light_g
         .apply{
             with(view){
                 findViewById<TextView>(com.google.android.material.R.id.snackbar_text).apply {
-                    setTextColor(resources.getColor(textColorId))
+                    setTextColor(resources.getColor(textColorId, theme))
                     textAlignment = View.TEXT_ALIGNMENT_CENTER
                     maxLines = 2
                 }
@@ -87,13 +87,11 @@ fun Activity.restartTransitionAnimation(){
 }
 
 
-val Activity.launchedFromHistory: Boolean
-    get() = intent.flags == (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY)
-
-
-fun Activity.snackbarArgument(extraName: String, defaultValue: Int): Int? = intent.getIntExtra(extraName, defaultValue).run {
-    if (!launchedFromHistory && !equals(defaultValue))
-        this
-    else
-        null
-}
+// TODO
+fun Activity.snackbarArgument(alreadyDisplayed: Boolean, extraName: String, defaultValue: Int): Int? =
+    intent.getIntExtra(extraName, defaultValue).run {
+        if (!alreadyDisplayed && !equals(defaultValue))
+            this
+        else
+            null
+    }
