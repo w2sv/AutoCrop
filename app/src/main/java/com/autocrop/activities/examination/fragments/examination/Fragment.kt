@@ -74,7 +74,7 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
 }
 
 
-class ExaminationFragment : ExaminationActivityFragment(), CropActionReactionsPossessor {
+class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examination_examination), CropActionReactionsPossessor {
     private lateinit var viewPager2: ViewPager2
     private lateinit var textViews: TextViews
     private lateinit var toolBar: Toolbar
@@ -117,12 +117,6 @@ class ExaminationFragment : ExaminationActivityFragment(), CropActionReactionsPo
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?): View =
-        inflater.inflate(R.layout.activity_examination_front, container, false)
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         fun initializeViewPager(textViews: TextViews) {
             viewPager2 = view.findViewById<ViewPager2>(R.id.view_pager).apply {
@@ -145,7 +139,7 @@ class ExaminationFragment : ExaminationActivityFragment(), CropActionReactionsPo
         fun setToolbarButtonOnClickListeners() {
             save_all_button.setOnClickListener {
                 fun saveAll(){
-                    return activity.invokeBackCard(true)
+                    return activity.invokeSaveAllFragment()
                 }
 
                 if (UserPreferences.deleteInputScreenshots) {
@@ -189,6 +183,6 @@ class ExaminationFragment : ExaminationActivityFragment(), CropActionReactionsPo
     }
 
     override fun exitActivity() {
-        return activity.invokeBackCard(false)
+        return activity.invokeAppTitleFragment(true)
     }
 }

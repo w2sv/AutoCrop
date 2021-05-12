@@ -6,14 +6,18 @@ package com.autocrop.activities.examination
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.animation.AnimationSet
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
-import com.autocrop.activities.examination.fragments.aftermath.AftermathFragment
+import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
+import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
+import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearCropBundleList
 import com.autocrop.utils.android.*
+import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
 
 
@@ -51,23 +55,45 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
         }
     }
 
-    fun invokeBackCard(displaySaveAllScreen: Boolean) {
-        aftermathFragment = AftermathFragment(displaySaveAllScreen)
+    private val saveAllFragment: Lazy<ExaminationActivityFragment> = lazy { SaveAllFragment() }
+    private val appTitleFragment: Lazy<ExaminationActivityFragment> = lazy { AppTitleFragment() }
 
+    private fun invokeFragment(lazyFragment: Lazy<ExaminationActivityFragment>, animations: Array<Int>){
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(
-                R.animator.card_flip_right_in,
-                R.animator.card_flip_right_out,
-                R.animator.card_flip_left_in,
-                R.animator.card_flip_left_out
+                animations[0],
+                animations[1]
             )
-            .replace(R.id.container, aftermathFragment)
+            .replace(R.id.container, lazyFragment.value)
             .addToBackStack(null)
             .commit()
     }
 
-    private lateinit var aftermathFragment: AftermathFragment
+    fun invokeSaveAllFragment() {
+        invokeFragment(
+            saveAllFragment,
+            flipRightAnimations
+        )
+    }
+
+    fun invokeAppTitleFragment(flipRight: Boolean){
+        invokeFragment(
+            appTitleFragment,
+            arrayOf(
+                arrayOf(
+                    R.animator.card_flip_left_in,
+                    R.animator.card_flip_left_out
+                ),
+                flipRightAnimations
+            )[flipRight.toInt()]
+        )
+    }
+
+    private val flipRightAnimations: Array<Int> = arrayOf(
+        R.animator.card_flip_right_in,
+        R.animator.card_flip_right_out
+    )
 
     /**
      * Blocked throughout the process of saving all crops,
@@ -76,21 +102,17 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
      * Results in return to main activity
      */
     override fun onBackPressed() {
-
-        // block if saving all / dismissing all
-        if (aftermathFragment.isVisible) {
-            if (aftermathFragment.displayingSaveAllScreen)
+        when{
+            appTitleFragment.isInitialized() -> Unit
+            saveAllFragment.isInitialized() -> {
                 displayToast("Please wait until crops\nhave been saved")
-            return
+            }
+            backPressHandler.pressedOnce -> returnToMainActivity()
+            else -> {
+                backPressHandler.onPress()
+                displayToast("Tap again to return to main screen")
+            }
         }
-
-        // return to main activity if already pressed once
-        else if (backPressHandler.pressedOnce) {
-            return returnToMainActivity()
-        }
-
-        backPressHandler.onPress()
-        displayToast("Tap again to return to main screen")
     }
 
     private val backPressHandler = BackPressHandler()
@@ -99,21 +121,18 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
      * Clears remaining cropBundle elements contained within cropBundleList
      */
     fun returnToMainActivity() {
-        return startActivity(
+        startActivity(
             Intent(
                 this,
                 MainActivity::class.java
             ).putExtra(N_SAVED_CROPS, nSavedCrops)
-        ).also {
-            if (aftermathFragment.displayingSaveAllScreen)
-                restartTransitionAnimation()
-            else
-                proceedTransitionAnimation()
-            onExit()
-        }
-    }
+        )
 
-    private fun onExit() {
+        if (appTitleFragment.isInitialized())
+            restartTransitionAnimation()
+        else
+            proceedTransitionAnimation()
+
         clearCropBundleList()
         finishAndRemoveTask()
     }

@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.aftermath
+package com.autocrop.activities.examination.fragments.saveall
 
 import android.content.Context
 import android.os.AsyncTask
@@ -12,21 +12,9 @@ import java.lang.ref.WeakReference
 
 
 class CropSaver(
-    private val progressBar: WeakReference<ProgressBar>,
-    private val textViews: WeakReference<AftermathFragment.TextViews>,
     private val context: WeakReference<Context>,
     private val onTaskFinished: () -> Unit
 ) : AsyncTask<Void, Void, Void?>() {
-
-    /**
-     * Renders progress bar visible
-     */
-    override fun onPreExecute() {
-        super.onPreExecute()
-
-        textViews.forceUnwrapped().saveAll.show()
-        progressBar.forceUnwrapped().show()
-    }
 
     /**
      * Calls saveCropAndDeleteScreenshotIfApplicable for every crop remaining
@@ -48,13 +36,6 @@ class CropSaver(
      */
     override fun onPostExecute(result: Void?) {
         super.onPostExecute(result)
-
-        progressBar.forceUnwrapped().hide()
-
-        with(textViews.forceUnwrapped()) {
-            saveAll.hide()
-            appTitle.show()
-        }
 
         onTaskFinished()
     }

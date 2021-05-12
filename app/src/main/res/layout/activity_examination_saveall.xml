@@ -3,16 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/examination_activity_title_text_view"
-        style="@style/AppTitleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:visibility="gone" />
-
-    <!-- PROCESSING CROPS SUB SCREEN -->
-
     <!-- Text view -->
 
     <TextView
@@ -26,9 +16,7 @@
         android:text="@string/crops_processing_in_progress"
         android:textColor="@color/magenta"
         android:textSize="30sp"
-        android:textStyle="bold"
-
-        android:visibility="invisible" />
+        android:textStyle="bold" />
 
     <!-- Circular progress bar -->
 
@@ -40,8 +28,6 @@
         android:layout_marginTop="140dp"
 
         android:indeterminateDrawable="@drawable/progress_bar_circular_save_all_crops"
-        android:indeterminateDuration="@android:integer/config_longAnimTime"
-
-        android:visibility="gone" />
+        android:indeterminateDuration="@android:integer/config_longAnimTime" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
