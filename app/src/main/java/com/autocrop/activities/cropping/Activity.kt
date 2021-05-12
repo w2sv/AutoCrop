@@ -18,7 +18,6 @@ import com.autocrop.activities.main.SELECTED_IMAGE_URI_STRINGS_IDENTIFIER
 import com.autocrop.clearCropBundleList
 import com.autocrop.cropBundleList
 import com.autocrop.utils.android.*
-import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_cropping.*
 import timber.log.Timber
@@ -40,20 +39,23 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
 
     private lateinit var views: Views
 
-    inner class Views{
+    inner class Views {
         val progressBar: ProgressBar = findViewById(R.id.cropping_progress_bar)
-        private val currentImageNumberText: TextView = findViewById(R.id.cropping_current_image_number_text_view)
-        fun setCurrentImageNumberText(currentImageNumber: Int){
-            currentImageNumberText.text = getString(R.string.fracture, currentImageNumber, nSelectedImages)
+        private val currentImageNumberText: TextView =
+            findViewById(R.id.cropping_current_image_number_text_view)
+
+        fun setCurrentImageNumberText(currentImageNumber: Int) {
+            currentImageNumberText.text =
+                getString(R.string.fracture, currentImageNumber, nSelectedImages)
         }
 
         private val croppingText: TextView = findViewById(R.id.cropping_text_view)
 
         val croppingViews: List<View>
             get() = listOf(progressBar, currentImageNumberText, croppingText)
-        
+
         private val croppingFailureText: TextView = findViewById(R.id.cropping_failure_text_view)
-        fun setCroppingFailureText(attemptedMultipleImages: Boolean){
+        fun setCroppingFailureText(attemptedMultipleImages: Boolean) {
             croppingFailureText.text = R.string.cropping_failure.run {
                 if (attemptedMultipleImages)
                     getString(this, " any of", "s")
@@ -61,6 +63,7 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
                     getString(this, "", "")
             }
         }
+
         private val croppingFailureIcon: ImageView = findViewById(R.id.cropping_failure_error_icon)
 
         val croppingFailureViews: List<View>
@@ -107,7 +110,7 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
         // otherwise return to MainActivity
         if (cropBundleList.isNotEmpty())
             startExaminationActivity(nSelectedImages - cropBundleList.size)
-        else{
+        else {
             Handler().postDelayed(
                 {
                     hideSystemUI(window)
@@ -157,7 +160,7 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
         if (croppingTask.status == AsyncTask.Status.FINISHED)
             return
 
-        if (backPressHandler.pressedOnce){
+        if (backPressHandler.pressedOnce) {
             croppingTask.cancel(false)
             clearCropBundleList()
 

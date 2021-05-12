@@ -6,7 +6,6 @@ package com.autocrop.activities.examination
 
 import android.content.Intent
 import android.os.Bundle
-import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
@@ -45,11 +44,12 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
                 .commit()
         }
 
-        snackbarArgument(displayedSnackbar, N_DISMISSED_IMAGES_IDENTIFIER, 0)?.let {
+        retrieveSnackbarArgument(intent, N_DISMISSED_IMAGES_IDENTIFIER, 0)?.let {
             displayCropDismissalToast(it)
-            displayedSnackbar = true
         }
     }
+
+    val retrieveSnackbarArgument = SnackbarArgumentRetriever()
 
     fun invokeBackCard(displaySaveAllScreen: Boolean) {
         aftermathFragment = AftermathFragment(displaySaveAllScreen)

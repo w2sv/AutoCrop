@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.widget.PopupMenu
-import androidx.fragment.app.FragmentActivity
 import com.autocrop.PreferenceParameter
 import com.autocrop.UserPreferences
 import com.autocrop.activities.SystemUiHidingFragmentActivity
@@ -194,13 +193,12 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         userPreferencesOnActivityCreation = UserPreferences.clone()
 
         setButtonOnClickListeners()
-        snackbarArgument(displayedSnackbar, N_SAVED_CROPS, -1)?.let {
+        retrieveSnackbarArgument(intent, N_SAVED_CROPS, -1)?.let {
             displaySavingResultSnackbar(it)
-            displayedSnackbar = true
         }
     }
 
-    private var displayedSnackbar: Boolean = false
+    val retrieveSnackbarArgument = SnackbarArgumentRetriever()
 
     private fun selectImages() {
         Intent(Intent.ACTION_PICK).run {
