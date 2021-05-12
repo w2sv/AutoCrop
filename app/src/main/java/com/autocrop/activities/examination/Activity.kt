@@ -22,6 +22,7 @@ import com.bunsenbrenner.screenshotboundremoval.R
 
 
 val N_SAVED_CROPS: String = intentExtraIdentifier("n_saved_crops")
+private typealias LazyExaminationActivityFragment = Lazy<ExaminationActivityFragment>
 
 
 class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_examination) {
@@ -55,20 +56,8 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
         }
     }
 
-    private val saveAllFragment: Lazy<ExaminationActivityFragment> = lazy { SaveAllFragment() }
-    private val appTitleFragment: Lazy<ExaminationActivityFragment> = lazy { AppTitleFragment() }
-
-    private fun invokeFragment(lazyFragment: Lazy<ExaminationActivityFragment>, animations: Array<Int>){
-        supportFragmentManager
-            .beginTransaction()
-            .setCustomAnimations(
-                animations[0],
-                animations[1]
-            )
-            .replace(R.id.container, lazyFragment.value)
-            .addToBackStack(null)
-            .commit()
-    }
+    private val saveAllFragment: LazyExaminationActivityFragment = lazy { SaveAllFragment() }
+    private val appTitleFragment: LazyExaminationActivityFragment = lazy { AppTitleFragment() }
 
     fun invokeSaveAllFragment() {
         invokeFragment(
@@ -94,6 +83,18 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
         R.animator.card_flip_right_in,
         R.animator.card_flip_right_out
     )
+
+    private fun invokeFragment(lazyFragment: LazyExaminationActivityFragment, animations: Array<Int>){
+        supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(
+                animations[0],
+                animations[1]
+            )
+            .replace(R.id.container, lazyFragment.value)
+            .addToBackStack(null)
+            .commit()
+    }
 
     /**
      * Blocked throughout the process of saving all crops,
