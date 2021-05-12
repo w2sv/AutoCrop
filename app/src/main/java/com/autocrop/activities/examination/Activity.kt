@@ -17,6 +17,7 @@ import com.autocrop.activities.examination.fragments.examination.ExaminationFrag
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearCropBundleList
 import com.autocrop.utils.android.*
+import com.autocrop.utils.getByBoolean
 import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
 
@@ -69,13 +70,13 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
     fun invokeAppTitleFragment(flipRight: Boolean){
         invokeFragment(
             appTitleFragment,
-            arrayOf(
+            listOf(
                 arrayOf(
                     R.animator.card_flip_left_in,
                     R.animator.card_flip_left_out
                 ),
                 flipRightAnimations
-            )[flipRight.toInt()]
+            ).getByBoolean(flipRight)
         )
     }
 

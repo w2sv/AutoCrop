@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Environment
 import com.autocrop.utils.android.writeBoolean
+import com.autocrop.utils.getByBoolean
 import com.autocrop.utils.toInt
 import timber.log.Timber
 import java.io.File
@@ -103,7 +104,7 @@ object UserPreferences {
             listOf(
                 "",
                 "${File.separator}AutoCropped"
-            )[saveToAutocroppedDir.toInt()]
+            ).getByBoolean(saveToAutocroppedDir)
         }"
 
     /**

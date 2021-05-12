@@ -10,6 +10,7 @@ import com.autocrop.activities.examination.saveCropAndDeleteScreenshotIfApplicab
 import com.autocrop.crop
 import com.autocrop.cropBundleList
 import com.autocrop.screenshotUri
+import com.autocrop.utils.getByBoolean
 import com.autocrop.utils.toInt
 
 
@@ -29,7 +30,7 @@ class CropProcedureQueryDialog(
                 listOf(
                     "Save crop?",
                     "Save crop and\ndelete screenshot?"
-                )[UserPreferences.deleteInputScreenshots.toInt()]
+                ).getByBoolean(UserPreferences.deleteInputScreenshots)
             )
 
             setNegativeButton(

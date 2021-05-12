@@ -20,6 +20,7 @@ import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.examination.viewpager.ImageSliderAdapter
 import com.autocrop.cropBundleList
 import com.autocrop.retentionPercentage
+import com.autocrop.utils.getByBoolean
 import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
@@ -43,7 +44,7 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
     private var indicateLastPage: Boolean = cropBundleList.size == 1
 
     init {
-        progress = listOf(0, PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE)[indicateLastPage.toInt()]
+        progress = listOf(0, PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE).getByBoolean(indicateLastPage)
         isEnabled = false
     }
 

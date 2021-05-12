@@ -12,6 +12,7 @@ import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.utils.android.*
+import com.autocrop.utils.getByBoolean
 import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
@@ -166,20 +167,20 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         }
 
         fun displaySavingResultSnackbar(nSavedCrops: Int) {
-            with(UserPreferences.deleteInputScreenshots.toInt()) {
+            with(UserPreferences.deleteInputScreenshots) {
                 when (nSavedCrops) {
                     0 -> displaySnackbar("Dismissed everything")
                     1 -> displaySnackbar(
                         listOf(
                             "Saved 1 crop",
                             "Saved 1 crop and deleted\ncorresponding screenshot"
-                        )[this]
+                        ).getByBoolean(this)
                     )
                     in 2..Int.MAX_VALUE -> displaySnackbar(
                         listOf(
                             "Saved $nSavedCrops crops",
                             "Saved $nSavedCrops crops and deleted\ncorresponding screenshots"
-                        )[this]
+                        ).getByBoolean(this)
                     )
                 }
             }
