@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.viewpager
+package com.autocrop.activities.examination.cardfragments.front.viewpager
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
-import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.activities.examination.ImageActionReactionsPossessor
-import com.autocrop.activities.examination.PageIndicationSeekBar
+import com.autocrop.activities.examination.cardfragments.front.CardFrontFragment
+import com.autocrop.activities.examination.cardfragments.front.CropActionReactionsPossessor
+import com.autocrop.activities.examination.cardfragments.front.PageIndicationSeekBar
 import com.autocrop.crop
 import com.autocrop.cropBundleList
 import com.autocrop.utils.*
@@ -44,12 +44,12 @@ private fun Index.rotated(distance: Int, collectionSize: Int): Int =
 
 
 class ImageSliderAdapter(
-    private val textViews: ExaminationActivity.TextViews,
+    private val textViews: CardFrontFragment.TextViews,
     private val seekBar: PageIndicationSeekBar,
     private val viewPager2: ViewPager2,
     private val context: Context,
     private val fragmentManager: FragmentManager,
-    private val imageActionReactionsPossessor: ImageActionReactionsPossessor) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
+    private val cropActionReactionsPossessor: CropActionReactionsPossessor) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
     private var dataTailHash: Int = cropBundleList.last().hashCode()
     private var dataTailIndex: Index = cropBundleList.lastIndex
@@ -188,10 +188,10 @@ class ImageSliderAdapter(
 
         // trigger imageActionReactionsPossessor downstream actions
         if (incrementNSavedCrops)
-            imageActionReactionsPossessor.incrementNSavedCrops()
+            cropActionReactionsPossessor.incrementNSavedCrops()
 
         if (cropBundleList.size == 1)
-            return imageActionReactionsPossessor.exitActivity()
+            return cropActionReactionsPossessor.exitActivity()
 
         removeDataElementIndex = dataElementIndex(position)
         val removingAtDataTail: Boolean = cropBundleList[removeDataElementIndex!!].hashCode() == dataTailHash

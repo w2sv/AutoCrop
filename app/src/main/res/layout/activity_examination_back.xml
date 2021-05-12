@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/examination_activity_title_text_view"
+        style="@style/AppTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:visibility="gone" />
+
+    <!-- PROCESSING CROPS SUB SCREEN -->
+
+    <!-- Text view -->
+
+    <TextView
+        android:id="@+id/processing_crops_text_view"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="80dp"
+        android:gravity="center"
+
+        android:text="@string/crops_processing_in_progress"
+        android:textColor="@color/magenta"
+        android:textSize="30sp"
+        android:textStyle="bold"
+
+        android:visibility="invisible" />
+
+    <!-- Circular progress bar -->
+
+    <ProgressBar
+        android:id="@+id/indeterminateBar"
+        style="?android:progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="140dp"
+
+        android:indeterminateDrawable="@drawable/progress_bar_circular_save_all_crops"
+        android:indeterminateDuration="@android:integer/config_longAnimTime"
+
+        android:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

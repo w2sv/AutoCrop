@@ -1,8 +1,10 @@
-package com.autocrop.activities.examination
+package com.autocrop.activities.examination.cardfragments.back
 
 import android.content.Context
 import android.os.AsyncTask
 import android.widget.ProgressBar
+import com.autocrop.activities.examination.ExaminationActivity
+import com.autocrop.activities.examination.saveCropAndDeleteScreenshotIfApplicable
 import com.autocrop.cropBundleList
 import com.autocrop.utils.android.hide
 import com.autocrop.utils.android.show
@@ -12,7 +14,7 @@ import java.lang.ref.WeakReference
 
 class CropSaver(
     private val progressBar: WeakReference<ProgressBar>,
-    private val textViews: WeakReference<ExaminationActivity.TextViews>,
+    private val textViews: WeakReference<CardBackFragment.TextViews>,
     private val context: WeakReference<Context>,
     private val onTaskFinished: () -> Unit
 ) : AsyncTask<Void, Void, Void?>() {
