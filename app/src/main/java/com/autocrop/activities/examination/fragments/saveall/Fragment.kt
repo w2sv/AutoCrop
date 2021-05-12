@@ -16,11 +16,14 @@ class SaveAllFragment : ExaminationActivityFragment(R.layout.activity_examinatio
     }
 
     private fun saveAll() {
-        activity.nSavedCrops += cropBundleList.size
-
         CropSaver(
             WeakReference(activity),
-            onTaskFinished = { activity.invokeAppTitleFragment(false) }
+            onTaskFinished = {
+                with(activity){
+                    nSavedCrops += cropBundleList.size
+                    invokeAppTitleFragment(false)
+                }
+            }
         )
             .execute()
     }
