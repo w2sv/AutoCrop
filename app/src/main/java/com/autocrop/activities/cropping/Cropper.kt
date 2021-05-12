@@ -42,7 +42,7 @@ class Cropper(
             .run {
                 toInt()
                     .let {
-                        Pair(it, this - it)
+                        Pair(it, minus(it))
                     }
             }
 
@@ -57,22 +57,23 @@ class Cropper(
                 // exit loop if task got cancelled
                 if (this@Cropper.isCancelled)
                     return null
-                else if (this != null)
-                    cropBundleList.add(
-                        Triple(uri, first, second)
-                    )
+                else
+                    this?.let {
+                        cropBundleList.add(
+                            Triple(uri, first, second)
+                        )
+                    }
             }
 
             // advance progress bar, image ordinal text view
             decimalStepSum += progressBarDecimalStep
             with(Pair(index + 1, progressBarIntStep + (decimalStepSum >= 1).toInt())) {
-                if (this.second > progressBarIntStep)
+                if (second > progressBarIntStep)
                     decimalStepSum -= 1
 
                 publishProgress(this)
             }
         }
-
         return null
     }
 
