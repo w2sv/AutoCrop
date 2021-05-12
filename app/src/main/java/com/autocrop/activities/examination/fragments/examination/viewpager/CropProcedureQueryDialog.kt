@@ -11,7 +11,6 @@ import com.autocrop.crop
 import com.autocrop.cropBundleList
 import com.autocrop.screenshotUri
 import com.autocrop.utils.getByBoolean
-import com.autocrop.utils.toInt
 
 
 /**

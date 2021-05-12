@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
-import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
 import com.autocrop.activities.examination.fragments.examination.CropActionReactionsPossessor
+import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
 import com.autocrop.activities.examination.fragments.examination.PageIndicationSeekBar
 import com.autocrop.crop
 import com.autocrop.cropBundleList
@@ -34,11 +34,10 @@ interface ImageActionListener {
 private typealias Index = Int
 
 private fun Index.rotated(distance: Int, collectionSize: Int): Int =
-    plus(distance).run{
-        if (smallerThan(0)){
+    plus(distance).run {
+        if (smallerThan(0)) {
             (collectionSize - abs(this) % collectionSize) % collectionSize
-        }
-        else
+        } else
             rem(collectionSize)
     }
 
@@ -49,7 +48,8 @@ class ImageSliderAdapter(
     private val viewPager2: ViewPager2,
     private val context: Context,
     private val fragmentManager: FragmentManager,
-    private val cropActionReactionsPossessor: CropActionReactionsPossessor) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
+    private val cropActionReactionsPossessor: CropActionReactionsPossessor
+) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
     private var dataTailHash: Int = cropBundleList.last().hashCode()
     private var dataTailIndex: Index = cropBundleList.lastIndex
@@ -58,7 +58,7 @@ class ImageSliderAdapter(
     private var replacementViewItemIndex by Delegates.notNull<Index>()
     private var dataRotationDistance by Delegates.notNull<Int>()
 
-    companion object{
+    companion object {
         private const val VIEW_ITEM_RESET_MARGIN: Int = 3
         private const val N_VIEWS: Int = Int.MAX_VALUE
     }
@@ -77,10 +77,10 @@ class ImageSliderAdapter(
                     super.onPageSelected(position)
 
                     if (removeDataElementIndex == null)
-                        with(dataElementIndex(position)){
+                        with(dataElementIndex(position)) {
                             textViews.setRetentionPercentage(this)
 
-                            with(pageIndex(this)){
+                            with(pageIndex(this)) {
                                 textViews.setPageIndication(this)
                                 seekBar.indicatePage(this)
                             }
@@ -94,9 +94,10 @@ class ImageSliderAdapter(
                         cropBundleList.removeAt(removeDataElementIndex!!)
 
                         Collections.rotate(cropBundleList, dataRotationDistance)
-                        dataTailIndex = cropBundleList.indexOfFirst { it.hashCode() == dataTailHash }
+                        dataTailIndex =
+                            cropBundleList.indexOfFirst { it.hashCode() == dataTailHash }
 
-                        with (replacementViewItemIndex){
+                        with(replacementViewItemIndex) {
                             listOf(
                                 (minus(VIEW_ITEM_RESET_MARGIN) until this),
                                 (plus(1)..plus(VIEW_ITEM_RESET_MARGIN))
@@ -175,7 +176,7 @@ class ImageSliderAdapter(
 
     override fun getItemCount(): Int = if (cropBundleList.size > 1) N_VIEWS else 1
 
-    private fun pageIndex(dataElementIndex: Index): Index{
+    private fun pageIndex(dataElementIndex: Index): Index {
         val headIndex: Index = dataTailIndex.rotated(1, cropBundleList.size)
 
         return if (headIndex <= dataElementIndex)
@@ -194,7 +195,8 @@ class ImageSliderAdapter(
             return cropActionReactionsPossessor.exitActivity()
 
         removeDataElementIndex = dataElementIndex(position)
-        val removingAtDataTail: Boolean = cropBundleList[removeDataElementIndex!!].hashCode() == dataTailHash
+        val removingAtDataTail: Boolean =
+            cropBundleList[removeDataElementIndex!!].hashCode() == dataTailHash
 
         val dataSizePostRemoval: Int = cropBundleList.size - 1
 
@@ -222,10 +224,11 @@ class ImageSliderAdapter(
             }
 
         viewPager2.setCurrentItem(replacementViewItemIndex, true)
-        dataRotationDistance = (replacementViewItemIndex % dataSizePostRemoval) - replacementDataElementIndexPostRemoval
+        dataRotationDistance =
+            (replacementViewItemIndex % dataSizePostRemoval) - replacementDataElementIndexPostRemoval
 
         val newPageIndex: Int = pageIndex(removeDataElementIndex!!).run {
-            if(removingAtDataTail)
+            if (removingAtDataTail)
                 minus(1)
             else
                 this
@@ -239,7 +242,7 @@ class ImageSliderAdapter(
             )
         }
 
-        with(seekBar){
+        with(seekBar) {
             calculateProgressCoefficient(dataSizePostRemoval)
             indicatePage(newPageIndex)
         }

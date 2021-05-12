@@ -6,19 +6,17 @@ package com.autocrop.activities.examination
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.animation.AnimationSet
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
-import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
+import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearCropBundleList
 import com.autocrop.utils.android.*
 import com.autocrop.utils.getByBoolean
-import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
 
 
@@ -67,7 +65,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
         )
     }
 
-    fun invokeAppTitleFragment(flipRight: Boolean){
+    fun invokeAppTitleFragment(flipRight: Boolean) {
         invokeFragment(
             appTitleFragment,
             listOf(
@@ -85,7 +83,10 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
         R.animator.card_flip_right_out
     )
 
-    private fun invokeFragment(lazyFragment: LazyExaminationActivityFragment, animations: Array<Int>){
+    private fun invokeFragment(
+        lazyFragment: LazyExaminationActivityFragment,
+        animations: Array<Int>
+    ) {
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(
@@ -104,7 +105,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
      * Results in return to main activity
      */
     override fun onBackPressed() {
-        when{
+        when {
             appTitleFragment.isInitialized() -> Unit
             saveAllFragment.isInitialized() -> {
                 displayToast("Please wait until crops\nhave been saved")

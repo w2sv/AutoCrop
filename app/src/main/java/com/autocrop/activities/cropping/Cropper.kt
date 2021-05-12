@@ -38,7 +38,7 @@ class Cropper(
 
         val (progressBarIntStep: Int, progressBarDecimalStep: Float) = (
                 progressBar.forceUnwrapped().max.toFloat() / nSelectedImages.toFloat()
-            )
+                )
             .run {
                 toInt()
                     .let {
@@ -57,7 +57,6 @@ class Cropper(
                 // exit loop if task got cancelled
                 if (this@Cropper.isCancelled)
                     return null
-
                 else if (this != null)
                     cropBundleList.add(
                         Triple(uri, first, second)
