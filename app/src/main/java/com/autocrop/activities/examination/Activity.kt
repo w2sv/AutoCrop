@@ -26,18 +26,6 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fun displayCropDismissalToast(nDismissedImages: Int) {
-            with(R.color.magenta) {
-                when (nDismissedImages) {
-                    1 -> displaySnackbar("Couldn't find cropping bounds for\n1 image", this)
-                    in 2..Int.MAX_VALUE -> displaySnackbar(
-                        "Couldn't find cropping bounds for\n$nDismissedImages images",
-                        this
-                    )
-                }
-            }
-        }
-
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .add(R.id.container, ExaminationFragment())
@@ -50,6 +38,18 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
     }
 
     val retrieveSnackbarArgument = SnackbarArgumentRetriever()
+
+    private fun displayCropDismissalToast(nDismissedImages: Int) {
+        with(R.color.magenta) {
+            when (nDismissedImages) {
+                1 -> displaySnackbar("Couldn't find cropping bounds for\n1 image", this)
+                in 2..Int.MAX_VALUE -> displaySnackbar(
+                    "Couldn't find cropping bounds for\n$nDismissedImages images",
+                    this
+                )
+            }
+        }
+    }
 
     fun invokeBackCard(displaySaveAllScreen: Boolean) {
         aftermathFragment = AftermathFragment(displaySaveAllScreen)
@@ -68,9 +68,6 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
     }
 
     private lateinit var aftermathFragment: AftermathFragment
-    private var displayedSnackbar: Boolean = false
-
-    private val backPressHandler = BackPressHandler()
 
     /**
      * Blocked throughout the process of saving all crops,
@@ -95,6 +92,8 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
         backPressHandler.onPress()
         displayToast("Tap again to return to main screen")
     }
+
+    private val backPressHandler = BackPressHandler()
 
     /**
      * Clears remaining cropBundle elements contained within cropBundleList
