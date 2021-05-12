@@ -6,23 +6,16 @@ package com.autocrop.activities.examination
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
+import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
-import com.autocrop.activities.examination.cardfragments.back.CardBackFragment
-import com.autocrop.activities.examination.cardfragments.front.CardFrontFragment
+import com.autocrop.activities.examination.fragments.aftermath.AftermathFragment
+import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearCropBundleList
-import com.autocrop.cropBundleList
-import com.autocrop.retentionPercentage
 import com.autocrop.utils.android.*
 import com.bunsenbrenner.screenshotboundremoval.R
-import kotlinx.android.synthetic.main.toolbar_examination_activity.*
 
 
 val N_SAVED_CROPS: String = intentExtraIdentifier("n_saved_crops")
@@ -49,7 +42,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
         setContentView(R.layout.activity_examination)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .add(R.id.container, CardFrontFragment())
+                .add(R.id.container, ExaminationFragment())
                 .commit()
         }
 
@@ -60,7 +53,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
     }
 
     fun invokeBackCard(displaySaveAllScreen: Boolean) {
-        cardBackFragment = CardBackFragment(displaySaveAllScreen)
+        aftermathFragment = AftermathFragment(displaySaveAllScreen)
 
         supportFragmentManager
             .beginTransaction()
@@ -70,12 +63,12 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
                 R.animator.card_flip_left_in,
                 R.animator.card_flip_left_out
             )
-            .replace(R.id.container, cardBackFragment)
+            .replace(R.id.container, aftermathFragment)
             .addToBackStack(null)
             .commit()
     }
 
-    private lateinit var cardBackFragment: CardBackFragment
+    private lateinit var aftermathFragment: AftermathFragment
     private var displayedSnackbar: Boolean = false
 
     private val backPressHandler = BackPressHandler()
@@ -89,8 +82,8 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
     override fun onBackPressed() {
 
         // block if saving all / dismissing all
-        if (cardBackFragment.isVisible) {
-            if (cardBackFragment.displayingSaveAllScreen)
+        if (aftermathFragment.isVisible) {
+            if (aftermathFragment.displayingSaveAllScreen)
                 displayToast("Please wait until crops\nhave been saved")
             return
         }
@@ -114,7 +107,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
                 MainActivity::class.java
             ).putExtra(N_SAVED_CROPS, nSavedCrops)
         ).also {
-            if (cardBackFragment.displayingSaveAllScreen)
+            if (aftermathFragment.displayingSaveAllScreen)
                 restartTransitionAnimation()
             else
                 proceedTransitionAnimation()

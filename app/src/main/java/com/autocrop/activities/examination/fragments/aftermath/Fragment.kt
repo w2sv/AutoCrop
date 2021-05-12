@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.cardfragments.back
+package com.autocrop.activities.examination.fragments.aftermath
 
 import android.os.Bundle
 import android.os.Handler
@@ -7,14 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isVisible
-import com.autocrop.activities.examination.cardfragments.ExaminationActivityFragment
+import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.cropBundleList
 import com.autocrop.utils.android.show
 import com.bunsenbrenner.screenshotboundremoval.R
 import java.lang.ref.WeakReference
 
 
-class CardBackFragment(private val displaySaveAllScreen: Boolean) : ExaminationActivityFragment() {
+class AftermathFragment(private val displaySaveAllScreen: Boolean) : ExaminationActivityFragment() {
     inner class TextViews {
         val appTitle: TextView = findViewById(R.id.examination_activity_title_text_view)
         val saveAll: TextView = findViewById(R.id.processing_crops_text_view)

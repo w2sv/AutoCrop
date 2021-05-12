@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.cardfragments
+package com.autocrop.activities.examination.fragments
 
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -10,6 +10,4 @@ abstract class ExaminationActivityFragment: Fragment(){
         get() = super.getActivity()!! as ExaminationActivity
 
     fun <T: View> findViewById(id: Int): T = view!!.findViewById(id)
-
-    inner class TextViews
 }

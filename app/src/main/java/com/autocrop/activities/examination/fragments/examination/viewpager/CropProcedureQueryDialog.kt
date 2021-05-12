@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.cardfragments.front.viewpager
+package com.autocrop.activities.examination.fragments.examination.viewpager
 
 import android.app.AlertDialog
 import android.app.Dialog

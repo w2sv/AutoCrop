@@ -91,7 +91,7 @@ object UserPreferences {
 
     // -------------saveToAutocropDir--------------------
 
-    val saveToAutocropDir: Boolean
+    val saveToAutocroppedDir: Boolean
         get() = this[PreferenceParameter.SaveToAutocropDir]
 
     /**
@@ -103,7 +103,7 @@ object UserPreferences {
             listOf(
                 "",
                 "${File.separator}AutoCropped"
-            )[saveToAutocropDir.toInt()]
+            )[saveToAutocroppedDir.toInt()]
         }"
 
     /**
@@ -112,7 +112,7 @@ object UserPreferences {
      * directories are created automatically
      */
     private fun saveToAutocropDirTogglingEcho() {
-        if (saveToAutocropDir)
+        if (saveToAutocroppedDir)
             makeAutoCroppedDirIfApplicable()
     }
 
@@ -124,7 +124,7 @@ object UserPreferences {
             )
         ) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !exists())
-                return mkdir().also {
+                return mkdirs().also {
                     if (it)
                         Timber.i("Created AutoCropped directory under $absolutePath")
                     else

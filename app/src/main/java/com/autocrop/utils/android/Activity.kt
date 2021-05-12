@@ -87,6 +87,7 @@ fun Activity.restartTransitionAnimation(){
 }
 
 
+//
 // TODO
 fun Activity.snackbarArgument(alreadyDisplayed: Boolean, extraName: String, defaultValue: Int): Int? =
     intent.getIntExtra(extraName, defaultValue).run {

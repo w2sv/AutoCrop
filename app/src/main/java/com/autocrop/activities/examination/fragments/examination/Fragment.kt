@@ -1,7 +1,6 @@
-package com.autocrop.activities.examination.cardfragments.front
+package com.autocrop.activities.examination.fragments.examination
 
 import android.animation.ObjectAnimator
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -11,25 +10,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.UserPreferences
-import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.activities.examination.cardfragments.ExaminationActivityFragment
-import com.autocrop.activities.examination.cardfragments.back.CropSaver
-import com.autocrop.activities.examination.cardfragments.front.viewpager.ImageSliderAdapter
+import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
+import com.autocrop.activities.examination.fragments.examination.viewpager.ImageSliderAdapter
 import com.autocrop.cropBundleList
 import com.autocrop.retentionPercentage
 import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
 import timber.log.Timber
-import java.lang.ref.WeakReference
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
@@ -80,7 +74,7 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
 }
 
 
-class CardFrontFragment : ExaminationActivityFragment(), CropActionReactionsPossessor {
+class ExaminationFragment : ExaminationActivityFragment(), CropActionReactionsPossessor {
     private lateinit var viewPager2: ViewPager2
     private lateinit var textViews: TextViews
     private lateinit var toolBar: Toolbar
@@ -138,7 +132,7 @@ class CardFrontFragment : ExaminationActivityFragment(), CropActionReactionsPoss
                     this,
                     activity,
                     fragmentManager!!,
-                    this@CardFrontFragment
+                    this@ExaminationFragment
                 )
 
                 setCurrentItem(

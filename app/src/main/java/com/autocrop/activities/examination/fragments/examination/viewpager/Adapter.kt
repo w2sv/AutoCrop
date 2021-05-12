@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.cardfragments.front.viewpager
+package com.autocrop.activities.examination.fragments.examination.viewpager
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
-import com.autocrop.activities.examination.cardfragments.front.CardFrontFragment
-import com.autocrop.activities.examination.cardfragments.front.CropActionReactionsPossessor
-import com.autocrop.activities.examination.cardfragments.front.PageIndicationSeekBar
+import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
+import com.autocrop.activities.examination.fragments.examination.CropActionReactionsPossessor
+import com.autocrop.activities.examination.fragments.examination.PageIndicationSeekBar
 import com.autocrop.crop
 import com.autocrop.cropBundleList
 import com.autocrop.utils.*
@@ -44,7 +44,7 @@ private fun Index.rotated(distance: Int, collectionSize: Int): Int =
 
 
 class ImageSliderAdapter(
-    private val textViews: CardFrontFragment.TextViews,
+    private val textViews: ExaminationFragment.TextViews,
     private val seekBar: PageIndicationSeekBar,
     private val viewPager2: ViewPager2,
     private val context: Context,
