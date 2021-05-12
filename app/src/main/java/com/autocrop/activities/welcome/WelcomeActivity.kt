@@ -31,7 +31,7 @@ class WelcomeActivity : SystemUiHidingAppCompatActivity() {
                 restartTransitionAnimation()
                 finish()
             },
-            500  // TODO
+            1500
         )
     }
 }
