@@ -130,10 +130,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
             ).putExtra(N_SAVED_CROPS, nSavedCrops)
         )
 
-        if (appTitleFragment.isInitialized())
-            restartTransitionAnimation()
-        else
-            proceedTransitionAnimation()
+        returnTransitionAnimation()
 
         clearCropBundleList()
         finishAndRemoveTask()
