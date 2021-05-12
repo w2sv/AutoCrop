@@ -2,43 +2,27 @@ package com.autocrop.activities
 
 import android.view.View
 import android.view.Window
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 
 
-// TODO
-abstract class SystemUiHidingFragmentActivity : FragmentActivity() {
+abstract class SystemUiHidingFragmentActivity(layoutId: Int) : FragmentActivity(layoutId) {
+    private fun hideSystemUI() {
+        hideSystemUI(window)
+    }
+
     override fun onStart() {
         super.onStart()
-        hideSystemUI(window)
+        hideSystemUI()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        hideSystemUI(window)
+        hideSystemUI()
     }
 
     override fun onResume() {
         super.onResume()
-        hideSystemUI(window)
-    }
-}
-
-
-abstract class SystemUiHidingAppCompatActivity : AppCompatActivity() {
-    override fun onStart() {
-        super.onStart()
-        hideSystemUI(window)
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        hideSystemUI(window)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        hideSystemUI(window)
+        hideSystemUI()
     }
 }
 

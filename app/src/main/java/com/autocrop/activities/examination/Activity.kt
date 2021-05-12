@@ -21,7 +21,7 @@ import com.bunsenbrenner.screenshotboundremoval.R
 val N_SAVED_CROPS: String = intentExtraIdentifier("n_saved_crops")
 
 
-class ExaminationActivity : SystemUiHidingFragmentActivity() {
+class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_examination) {
     var nSavedCrops: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +39,6 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
             }
         }
 
-        setContentView(R.layout.activity_examination)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .add(R.id.container, ExaminationFragment())

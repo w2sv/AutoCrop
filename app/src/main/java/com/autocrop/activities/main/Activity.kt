@@ -6,12 +6,14 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.widget.PopupMenu
-import com.autocrop.*
+import androidx.fragment.app.FragmentActivity
+import com.autocrop.PreferenceParameter
+import com.autocrop.UserPreferences
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
-import com.autocrop.utils.*
 import com.autocrop.utils.android.*
+import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
@@ -23,7 +25,7 @@ val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String =
     intentExtraIdentifier("selected_image_uri_strings")
 
 
-class MainActivity : SystemUiHidingFragmentActivity() {
+class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
     companion object {
 
@@ -32,7 +34,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             READ,
             MULTIPLE;
 
-            companion object{
+            companion object {
                 operator fun get(index: Int): PermissionCode = values()[index]
             }
         }
@@ -77,7 +79,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             REQUIRED_PERMISSIONS
                 .filter { permission2IsGranted[it] == false }
                 .toTypedArray()
-        ){
+        ) {
             requestPermissions(
                 this,
                 if (size > 1)
@@ -165,7 +167,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         }
 
         fun displaySavingResultSnackbar(nSavedCrops: Int) {
-            with(UserPreferences.deleteInputScreenshots.toInt()){
+            with(UserPreferences.deleteInputScreenshots.toInt()) {
                 when (nSavedCrops) {
                     0 -> displaySnackbar("Dismissed everything")
                     1 -> displaySnackbar(
@@ -185,7 +187,6 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         }
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         setPixelField()
 
         if (!UserPreferences.isInitialized)
@@ -232,7 +233,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                         }
                     }
 
-                    with(data?.clipData){
+                    with(data?.clipData) {
                         startCroppingActivity(
                             imageUriStrings = (0 until this?.itemCount!!).map {
                                 getItemAt(it)?.uri!!.toString()
