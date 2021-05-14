@@ -74,7 +74,10 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
 }
 
 
-class ExaminationFragment(private val longAutoScrollDelay: Boolean) : ExaminationActivityFragment(R.layout.activity_examination_examination),
+class ExaminationFragment(
+    private val conductAutoScroll: Boolean,
+    private val longAutoScrollDelay: Boolean
+) : ExaminationActivityFragment(R.layout.activity_examination_examination),
     CropActionReactionsPossessor {
     private lateinit var viewPager2: ViewPager2
     private lateinit var textViews: TextViews
@@ -129,6 +132,7 @@ class ExaminationFragment(private val longAutoScrollDelay: Boolean) : Examinatio
                     fragmentManager!!,
                     this@ExaminationFragment,
                     activity::displaySnackbar,
+                    conductAutoScroll,
                     longAutoScrollDelay
                 )
 

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
-import com.autocrop.UserPreferences
 import com.autocrop.activities.examination.fragments.examination.CropActionReactionsPossessor
 import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
 import com.autocrop.activities.examination.fragments.examination.PageIndicationSeekBar
@@ -45,9 +44,6 @@ private fun Index.rotated(distance: Int, collectionSize: Int): Int =
     }
 
 
-fun dataElementIndex(viewItemIndex: Int): Int = viewItemIndex % cropBundleList.size
-
-
 class ImageSliderAdapter(
     private val textViews: ExaminationFragment.TextViews,
     private val seekBar: PageIndicationSeekBar,
@@ -56,23 +52,25 @@ class ImageSliderAdapter(
     private val fragmentManager: FragmentManager,
     private val cropActionReactionsPossessor: CropActionReactionsPossessor,
     private val displaySnackbar: (String, Int, Int) -> Unit,
+    conductAutoScroll: Boolean,
     longAutoScrollDelay: Boolean
 ) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
     private var dataTailHash: Int = cropBundleList.last().hashCode()
     private var dataTailIndex: Index = cropBundleList.lastIndex
 
-    private var removeDataElementIndex: Index? = null
+    private var removeDataIndex: Index? = null
     private var replacementViewItemIndex by Delegates.notNull<Index>()
     private var dataRotationDistance by Delegates.notNull<Int>()
 
     companion object {
-        private const val VIEW_ITEM_RESET_MARGIN: Int = 3
         private const val N_VIEWS: Int = Int.MAX_VALUE
+
+        private fun dataIndex(pagerPosition: Int): Int = pagerPosition % cropBundleList.size
     }
 
     val startItemIndex: Int = (N_VIEWS / 2).run {
-        minus(dataElementIndex(this))
+        minus(dataIndex(this))
     }
 
     init {
@@ -84,8 +82,8 @@ class ImageSliderAdapter(
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
 
-                    if (removeDataElementIndex == null)
-                        with(dataElementIndex(position)) {
+                    if (removeDataIndex == null)
+                        with(dataIndex(position)) {
                             textViews.setRetentionPercentage(this)
 
                             with(pageIndex(this)) {
@@ -98,23 +96,25 @@ class ImageSliderAdapter(
                 override fun onPageScrollStateChanged(state: Int) {
                     super.onPageScrollStateChanged(state)
 
-                    if (state == SCROLL_STATE_IDLE && removeDataElementIndex != null) {
-                        cropBundleList.removeAt(removeDataElementIndex!!)
+                    if (state == SCROLL_STATE_IDLE && removeDataIndex != null) {
+                        cropBundleList.removeAt(removeDataIndex!!)
 
                         Collections.rotate(cropBundleList, dataRotationDistance)
                         dataTailIndex =
                             cropBundleList.indexOfFirst { it.hashCode() == dataTailHash }
 
                         with(replacementViewItemIndex) {
+                            val resetMargin = 3
+
                             listOf(
-                                (minus(VIEW_ITEM_RESET_MARGIN) until this),
-                                (plus(1)..plus(VIEW_ITEM_RESET_MARGIN))
+                                (minus(resetMargin) until this),
+                                (plus(1)..plus(resetMargin))
                             )
                                 .flatten()
                                 .forEach { notifyItemChanged(it) }
                         }
 
-                        removeDataElementIndex = null
+                        removeDataIndex = null
                     }
                 }
             })
@@ -147,7 +147,7 @@ class ImageSliderAdapter(
                                 handler.post(callback)
 
                                 if (conductedScrolls == cropBundleList.lastIndex)
-                                    cancelScrolling()
+                                    cancelScrolling(onScreenTouch = false)
                             }
                         },
                         if (longAutoScrollDelay) 1500L else 1250L,
@@ -156,7 +156,7 @@ class ImageSliderAdapter(
                 }
             }
 
-            if (UserPreferences.conductAutoScroll)
+            if (conductAutoScroll)
                 autoScroll()
         }
     }
@@ -164,9 +164,22 @@ class ImageSliderAdapter(
     lateinit var timer: Timer
     private var conductingAutoScroll: Boolean = false
 
-    private fun cancelScrolling(){
+    private fun cancelScrolling(onScreenTouch: Boolean){
         timer.cancel()
         conductingAutoScroll = false
+
+        if (onScreenTouch)
+            displaySnackbar(
+                "Cancelled auto scrolling",
+                R.color.light_green,
+                Snackbar.LENGTH_SHORT
+            )
+        else
+            displaySnackbar(
+                "Scrolled over all crops",
+                R.color.magenta,
+                Snackbar.LENGTH_SHORT
+            )
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -181,12 +194,7 @@ class ImageSliderAdapter(
 
                 override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                     if (conductingAutoScroll){
-                        cancelScrolling()
-                        displaySnackbar(
-                            "Cancelled auto scrolling",
-                            R.color.light_green,
-                            Snackbar.LENGTH_LONG
-                        )
+                        cancelScrolling(onScreenTouch = true)
                         return true
                     }
 
@@ -200,12 +208,17 @@ class ImageSliderAdapter(
                     when (event?.action) {
                         MotionEvent.ACTION_DOWN -> startCoordinates = event.coordinates()
                         MotionEvent.ACTION_UP -> if (isClick(event.coordinates()))
-                            CropProcedureQueryDialog(
-                                adapterPosition,
-                                context,
-                                this@ImageSliderAdapter
-                            )
-                                .show(fragmentManager, "File procedure query dialog")
+                            with(dataIndex(adapterPosition)){
+                                removeDataIndex = this
+
+                                CropProcedureQueryDialog(
+                                    adapterPosition,
+                                    this,
+                                    context,
+                                    this@ImageSliderAdapter
+                                )
+                                    .show(fragmentManager, "File procedure query dialog")
+                            }
                     }
                     return true
                 }
@@ -222,7 +235,7 @@ class ImageSliderAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.cropImageView.setImageBitmap(cropBundleList[dataElementIndex(position)].crop)
+        holder.cropImageView.setImageBitmap(cropBundleList[dataIndex(position)].crop)
     }
 
     override fun getItemCount(): Int = if (cropBundleList.size > 1) N_VIEWS else 1
@@ -245,14 +258,11 @@ class ImageSliderAdapter(
         if (cropBundleList.size == 1)
             return cropActionReactionsPossessor.exitActivity()
 
-        removeDataElementIndex = dataElementIndex(position)
-        val removingAtDataTail: Boolean =
-            cropBundleList[removeDataElementIndex!!].hashCode() == dataTailHash
-
+        val removingAtDataTail: Boolean = cropBundleList[removeDataIndex!!].hashCode() == dataTailHash
         val dataSizePostRemoval: Int = cropBundleList.size - 1
 
         val (replacementDataElementIndexPostRemoval: Int, replacementViewItemIndex) =
-            (removeDataElementIndex!!).run {
+            (removeDataIndex!!).run {
                 if (removingAtDataTail)
                     Pair(
                         rotated(-1, dataSizePostRemoval),
@@ -266,7 +276,7 @@ class ImageSliderAdapter(
                     Pair(
                         if (equals(cropBundleList.lastIndex))
                             0.also {
-                                Timber.i("3Set replacementDataElementIndexPostRemoval to lastIndexPostRemoval")
+                                Timber.i("Set replacementDataElementIndexPostRemoval to lastIndexPostRemoval")
                             }
                         else
                             this,
@@ -278,7 +288,7 @@ class ImageSliderAdapter(
         dataRotationDistance =
             (replacementViewItemIndex % dataSizePostRemoval) - replacementDataElementIndexPostRemoval
 
-        val newPageIndex: Int = pageIndex(removeDataElementIndex!!).run {
+        val newPageIndex: Int = pageIndex(removeDataIndex!!).run {
             if (removingAtDataTail)
                 minus(1)
             else
@@ -286,7 +296,7 @@ class ImageSliderAdapter(
         }
 
         with(textViews) {
-            setRetentionPercentage(dataElementIndex(replacementViewItemIndex))
+            setRetentionPercentage(dataIndex(replacementViewItemIndex))
             setPageIndication(
                 newPageIndex,
                 dataSizePostRemoval

@@ -53,7 +53,10 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
             supportFragmentManager.beginTransaction()
                 .add(
                     R.id.container,
-                    ExaminationFragment(nDismissedImages.run { notNull() && !equals(0) })
+                    ExaminationFragment(
+                        UserPreferences.conductAutoScroll && cropBundleList.size > 1,
+                        nDismissedImages.run { notNull() && !equals(0) }
+                    )
                 )
                 .commit()
         }
