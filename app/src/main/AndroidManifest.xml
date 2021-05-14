@@ -8,6 +8,7 @@
     <!-- Permissions -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name= "android.permission.INTERNET"/>
 
     <!-- setting requestLegacyExternalStorage to true effectuates opting out of
          scoped storage for API 29 = Android 10 to enable external storage writing
@@ -24,6 +25,10 @@
         android:requestLegacyExternalStorage="true"
         android:allowBackup="false"
         android:supportsRtl="true">
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1494255973790385~6108360503"/>
 
         <!-- Activities -->
         <activity

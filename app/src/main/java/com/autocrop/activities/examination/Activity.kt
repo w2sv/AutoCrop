@@ -7,6 +7,7 @@ package com.autocrop.activities.examination
 import android.content.Intent
 import android.os.Bundle
 import com.autocrop.activities.BackPressHandler
+import com.autocrop.activities.InterstitialAdWrapper
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
@@ -26,9 +27,17 @@ private typealias LazyExaminationActivityFragment = Lazy<ExaminationActivityFrag
 
 class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_examination) {
     var nSavedCrops: Int = 0
+    lateinit var adWrapper: InterstitialAdWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        adWrapper = InterstitialAdWrapper(
+            this,
+            "ca-app-pub-3940256099942544/1033173712",  // ca-app-pub-1494255973790385/5182678683
+            this::returnToMainActivity,
+            true
+        )
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -123,7 +132,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
     /**
      * Clears remaining cropBundle elements contained within cropBundleList
      */
-    fun returnToMainActivity() {
+    private fun returnToMainActivity() {
         startActivity(
             Intent(
                 this,
