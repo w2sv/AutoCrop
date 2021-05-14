@@ -6,14 +6,12 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.widget.PopupMenu
-import com.autocrop.PreferenceParameter
 import com.autocrop.UserPreferences
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.utils.android.*
 import com.autocrop.utils.getByBoolean
-import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
@@ -57,9 +55,9 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
             IMAGE_SELECTION
         }
 
-        val MENU_ITEM_ID_2_PREFERENCE_PARAMETER: Map<Int, PreferenceParameter> = mapOf(
-            R.id.main_menu_item_delete_input_screenshots to PreferenceParameter.DeleteInputScreenshots,
-            R.id.main_menu_item_save_to_autocrop_folder to PreferenceParameter.SaveToAutocropDir
+        val MENU_ITEM_ID_2_PREFERENCE_KEY: Map<Int, String> = mapOf(
+            R.id.main_menu_item_delete_input_screenshots to UserPreferences.Keys.deleteInputScreenshots,
+            R.id.main_menu_item_save_to_autocropped_dir to UserPreferences.Keys.saveToAutocroppedDir
         )
     }
 
@@ -149,14 +147,14 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
                     menuInflater.inflate(R.menu.activity_main, menu)
 
                     // set checks
-                    MENU_ITEM_ID_2_PREFERENCE_PARAMETER.entries.forEach { entry ->
-                        menu.findItem(entry.key).isChecked = UserPreferences[entry.value]
+                    MENU_ITEM_ID_2_PREFERENCE_KEY.entries.forEach { (key, value) ->
+                        menu.findItem(key).isChecked = UserPreferences[value]!!
                     }
 
                     // set item onClickListeners
                     setOnMenuItemClickListener { item ->
                         item.run {
-                            UserPreferences.toggle(MENU_ITEM_ID_2_PREFERENCE_PARAMETER[itemId]!!)
+                            UserPreferences.toggle(MENU_ITEM_ID_2_PREFERENCE_KEY[itemId]!!)
                             isChecked = !isChecked
                             persistMenuAfterItemClick(this)
                         }
@@ -190,8 +188,8 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         setPixelField()
 
         if (!UserPreferences.isInitialized)
-            UserPreferences.initialize(getDefaultSharedPreferences())
-        userPreferencesOnActivityCreation = UserPreferences.clone()
+            UserPreferences.init(getDefaultSharedPreferences())
+        userPreferencesOnActivityCreation = UserPreferences.values.toSet()
 
         setButtonOnClickListeners()
         retrieveSnackbarArgument(intent, N_SAVED_CROPS, -1)?.let {
@@ -251,7 +249,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         finishAffinity()
     }
 
-    private lateinit var userPreferencesOnActivityCreation: Array<Boolean>
+    private lateinit var userPreferencesOnActivityCreation: Set<Boolean>
 
     /**
      * Writes set preferences to shared preferences

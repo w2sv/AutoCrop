@@ -5,95 +5,70 @@ import android.os.Build
 import android.os.Environment
 import com.autocrop.utils.android.writeBoolean
 import com.autocrop.utils.getByBoolean
-import com.autocrop.utils.toInt
 import timber.log.Timber
 import java.io.File
-
-
-enum class PreferenceParameter {
-    DeleteInputScreenshots,
-    SaveToAutocropDir;
-
-    companion object{
-        operator fun get(ordinal: Int): PreferenceParameter = values()[ordinal]
-        val size: Int
-            get() = values().size
-    }
-}
+import java.util.*
 
 
 /**
  * Singleton encapsulating entirety of parameters set by user
  * having a global impact
  */
-object UserPreferences {
-    private lateinit var values: Array<Boolean>
-
-    val isInitialized: Boolean
-        get() = this::values.isInitialized
-
-    fun clone(): Array<Boolean> = values.clone()
-    operator fun get(parameter: PreferenceParameter): Boolean = values[parameter.ordinal]
-    private operator fun set(parameter: PreferenceParameter, value: Boolean) {
-        values[parameter.ordinal] = value.also {
-            Timber.i("Set GlobalParameters.${parameter.name} to $it")
-        }
+object UserPreferences: SortedMap<String, Boolean> by sortedMapOf(
+    Keys.deleteInputScreenshots to false,
+    Keys.saveToAutocroppedDir to true
+) {
+    object Keys{
+        const val deleteInputScreenshots: String = "DELETE_INPUT_SCREENSHOTS"
+        const val saveToAutocroppedDir: String = "SAVE_TO_AUTOCROPPED_DIR"
     }
 
-    fun toggle(parameter: PreferenceParameter) {
-        this[parameter] = !this[parameter]
-        Timber.i("Toggled ${parameter.name} to ${this[parameter]}")
+    val deleteInputScreenshots: Boolean
+        get() = get(Keys.deleteInputScreenshots)!!
+    val saveToAutocroppedDir: Boolean
+        get() = get(Keys.saveToAutocroppedDir)!!
 
-        when (parameter) {
-            PreferenceParameter.SaveToAutocropDir -> saveToAutocropDirTogglingEcho()
+    fun init(defaultSharedPreferences: SharedPreferences){
+        keys.forEach {
+            this[it] = defaultSharedPreferences.getBoolean(
+                it,
+                get(it)!!
+            )
+        }
+            .also {
+                Timber.i("Initialized Parameters")
+            }
+
+        isInitialized = true
+    }
+
+    var isInitialized: Boolean = false
+
+    fun toggle(key: String) {
+        this[key] = !this[key]!!
+        Timber.i("Toggled $key to ${this[key]}")
+
+        when (key) {
+            Keys.saveToAutocroppedDir -> saveToAutocropDirTogglingEcho()
             else -> Unit
         }
     }
 
-    fun initialize(defaultSharedPreferences: SharedPreferences) {
-        val parameterToDefaultValue: Map<PreferenceParameter, Boolean> = mapOf(
-            PreferenceParameter.DeleteInputScreenshots to false,
-            PreferenceParameter.SaveToAutocropDir to true
-        )
-
-        values = Array(PreferenceParameter.size) {
-            PreferenceParameter[it].run {
-                defaultSharedPreferences.getBoolean(
-                    name,
-                    parameterToDefaultValue[this]!!
-                )
-            }
-        }.also {
-            Timber.i("Initialized Parameters")
-        }
-    }
-
     fun writeToSharedPreferences(
-        previousValues: Array<Boolean>,
+        previousValues: Set<Boolean>,
         defaultSharedPreferences: SharedPreferences
     ) {
-        (values zip previousValues).forEachIndexed { index, valuePair ->
-            with(valuePair) {
+        (keys zip (previousValues zip values)).forEach {
+            with(it.second) {
                 if (first != second)
                     defaultSharedPreferences.writeBoolean(
-                        PreferenceParameter[index].name,
-                        first
-                    ).also {
-                        Timber.i("Set SharedPreferences.${PreferenceParameter[index].name} to $first")
-                    }
+                        it.first,
+                        second
+                    )
+                Timber.i("Set SharedPreferences.${it.first} to $second")
             }
         }
     }
-
-    // ---------------deleteInputScreenshots-------------
-
-    val deleteInputScreenshots: Boolean
-        get() = this[PreferenceParameter.DeleteInputScreenshots]
-
-    // -------------saveToAutocropDir--------------------
-
-    val saveToAutocroppedDir: Boolean
-        get() = this[PreferenceParameter.SaveToAutocropDir]
 
     /**
      * Equals {Environment.DIRECTORY_PICTURES} or {Environment.DIRECTORY_PICTURES + autocrop_dirname}
