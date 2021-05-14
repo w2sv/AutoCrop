@@ -14,4 +14,9 @@
         android:id="@+id/main_menu_item_save_to_autocropped_dir"
         android:title="@string/menu_item_save_to_autocrop_folder"
         android:checkable="true"/>
+
+    <item
+        android:id="@+id/main_menu_conduct_auto_scrolling"
+        android:title="@string/menu_item_conduct_auto_scrolling"
+        android:checkable="true"/>
 </menu>

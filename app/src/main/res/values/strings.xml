@@ -21,5 +21,6 @@
     <!-- Menu Item Text -->
     <string name="menu_item_delete_input_screenshots">Delete screenshots</string>
     <string name="menu_item_save_to_autocrop_folder">Save to AutoCropped folder</string>
+    <string name="menu_item_conduct_auto_scrolling">Enable auto scrolling</string>
 
 </resources>

@@ -3,6 +3,7 @@ package com.autocrop.activities.examination.fragments.examination.viewpager
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
+import com.autocrop.UserPreferences
 import com.autocrop.activities.examination.fragments.examination.CropActionReactionsPossessor
 import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
 import com.autocrop.activities.examination.fragments.examination.PageIndicationSeekBar
@@ -121,8 +123,44 @@ class ImageSliderAdapter(
                     rotationY = 90f * position
                 }
             }
+
+            fun autoScroll(){
+                val interval: Long = 1000
+
+                val handler = Handler()
+                val callback = Runnable{
+                    setCurrentItem(currentItem + 1, true)
+                }
+
+                timer = Timer().apply {
+                    schedule(
+                        object : TimerTask() {
+                            override fun run() {
+                                handler.post(callback)
+
+                                if (dataElementIndex(currentItem + 1) == 0)
+                                    cancel()
+                            }
+
+                            override fun cancel(): Boolean {
+                                conductingAutoScroll = false
+                                return super.cancel()
+                            }
+                        },
+                        interval,
+                        interval
+                    )
+                }
+                conductingAutoScroll = true
+            }
+
+            if (UserPreferences.conductAutoScroll)
+                autoScroll()
         }
     }
+
+    lateinit var timer: Timer
+    private var conductingAutoScroll: Boolean = false
 
     @SuppressLint("ClickableViewAccessibility")
     inner class ViewHolder(view: ImageView) : RecyclerView.ViewHolder(view) {
@@ -135,6 +173,11 @@ class ImageSliderAdapter(
                 private fun MotionEvent.coordinates(): Point = Point(x.toInt(), y.toInt())
 
                 override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                    if (conductingAutoScroll){
+                        timer.cancel()
+                        return true
+                    }
+
                     val clickIdentificationThreshold = 100
 
                     fun isClick(endCoordinates: Point): Boolean = manhattanNorm(
@@ -144,15 +187,13 @@ class ImageSliderAdapter(
 
                     when (event?.action) {
                         MotionEvent.ACTION_DOWN -> startCoordinates = event.coordinates()
-                        MotionEvent.ACTION_UP -> {
-                            if (isClick(event.coordinates()))
-                                CropProcedureQueryDialog(
-                                    adapterPosition,
-                                    context,
-                                    this@ImageSliderAdapter
-                                )
-                                    .show(fragmentManager, "File procedure query dialog")
-                        }
+                        MotionEvent.ACTION_UP -> if (isClick(event.coordinates()))
+                            CropProcedureQueryDialog(
+                                adapterPosition,
+                                context,
+                                this@ImageSliderAdapter
+                            )
+                                .show(fragmentManager, "File procedure query dialog")
                     }
                     return true
                 }

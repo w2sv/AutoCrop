@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
 import processing.core.PApplet
 import timber.log.Timber
-import java.util.*
 
 
 val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String =
@@ -58,7 +57,8 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
         val MENU_ITEM_ID_2_PREFERENCE_KEY: Map<Int, String> = mapOf(
             R.id.main_menu_item_delete_input_screenshots to UserPreferences.Keys.deleteInputScreenshots,
-            R.id.main_menu_item_save_to_autocropped_dir to UserPreferences.Keys.saveToAutocroppedDir
+            R.id.main_menu_item_save_to_autocropped_dir to UserPreferences.Keys.saveToAutocroppedDir,
+            R.id.main_menu_conduct_auto_scrolling to UserPreferences.Keys.conductAutoScrolling
         )
     }
 

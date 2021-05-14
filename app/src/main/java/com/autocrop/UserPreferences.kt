@@ -16,17 +16,21 @@ import java.util.*
  */
 object UserPreferences: SortedMap<String, Boolean> by sortedMapOf(
     Keys.deleteInputScreenshots to false,
-    Keys.saveToAutocroppedDir to true
+    Keys.saveToAutocroppedDir to true,
+    Keys.conductAutoScrolling to true
 ) {
     object Keys{
         const val deleteInputScreenshots: String = "DELETE_INPUT_SCREENSHOTS"
         const val saveToAutocroppedDir: String = "SAVE_TO_AUTOCROPPED_DIR"
+        const val conductAutoScrolling: String = "CONDUCT_AUTO_SCROLL"
     }
 
     val deleteInputScreenshots: Boolean
         get() = get(Keys.deleteInputScreenshots)!!
     val saveToAutocroppedDir: Boolean
         get() = get(Keys.saveToAutocroppedDir)!!
+    val conductAutoScroll: Boolean
+        get() = get(Keys.conductAutoScrolling)!!
 
     fun init(defaultSharedPreferences: SharedPreferences){
         keys.forEach {

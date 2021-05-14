@@ -5,10 +5,9 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatSeekBar
@@ -21,10 +20,10 @@ import com.autocrop.activities.examination.fragments.examination.viewpager.Image
 import com.autocrop.cropBundleList
 import com.autocrop.retentionPercentage
 import com.autocrop.utils.getByBoolean
-import com.autocrop.utils.toInt
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
 import timber.log.Timber
+import java.util.*
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
@@ -175,6 +174,39 @@ class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examin
 
         initializeViewPager(textViews)
         setToolbarButtonOnClickListeners()
+    }
+
+    lateinit var timer: Timer
+    var conductAutoScroll: Boolean = UserPreferences.conductAutoScroll
+
+    override fun onStart() {
+        super.onStart()
+
+//        if (conductAutoScroll)
+//            autoScroll()
+    }
+
+    private fun autoScroll(){
+        val interval: Long = 800
+
+        val handler = Handler()
+
+        timer = Timer().apply {
+            schedule(
+                object : TimerTask() {
+                    override fun run() {
+                        handler.post {
+                            if (conductAutoScroll)
+                                with(viewPager2) {
+                                    setCurrentItem(currentItem + 1, true)
+                                }
+                        }
+                    }
+                },
+                interval,
+                interval
+            )
+        }
     }
 
     // -----------------ImageActionReactionsPossessor overrides-----------------
