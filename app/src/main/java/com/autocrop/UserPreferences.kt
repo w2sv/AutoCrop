@@ -55,7 +55,7 @@ object UserPreferences: SortedMap<String, Boolean> by sortedMapOf(
     }
 
     fun writeToSharedPreferences(
-        previousValues: Set<Boolean>,
+        previousValues: List<Boolean>,
         defaultSharedPreferences: SharedPreferences
     ) {
         (keys zip (previousValues zip values)).forEach {

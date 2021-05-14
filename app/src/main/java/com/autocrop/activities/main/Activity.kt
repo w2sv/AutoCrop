@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
 import processing.core.PApplet
 import timber.log.Timber
+import java.util.*
 
 
 val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String =
@@ -189,7 +190,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
         if (!UserPreferences.isInitialized)
             UserPreferences.init(getDefaultSharedPreferences())
-        userPreferencesOnActivityCreation = UserPreferences.values.toSet()
+        userPreferencesOnActivityCreation = UserPreferences.values.toList()
 
         setButtonOnClickListeners()
         retrieveSnackbarArgument(intent, N_SAVED_CROPS, -1)?.let {
@@ -249,7 +250,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         finishAffinity()
     }
 
-    private lateinit var userPreferencesOnActivityCreation: Set<Boolean>
+    private lateinit var userPreferencesOnActivityCreation: List<Boolean>
 
     /**
      * Writes set preferences to shared preferences
