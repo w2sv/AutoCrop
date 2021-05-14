@@ -16,7 +16,6 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 
 
@@ -25,7 +24,7 @@ fun saveCropAndDeleteScreenshotIfApplicable(
     screenshotUri: Uri,
     context: Context
 ) {
-    crop.save(context)
+    crop.save(context, screenshotUri.cropFileName)
 
     // delete screenshot if applicable
     if (UserPreferences.deleteInputScreenshots)
@@ -38,10 +37,8 @@ fun saveCropAndDeleteScreenshotIfApplicable(
  *      https://stackoverflow.com/a/10124040
  *      https://stackoverflow.com/a/59536115
  */
-private fun Bitmap.save(context: Context){
-    val fileName: String = cropFileName()
-
-    try{
+private fun Bitmap.save(context: Context, fileName: String) {
+    try {
         // set file output stream and target file uri
         val (fileOutputStream: OutputStream, imageFileUri: Uri) = if (apiLowerEquals(29)) {
             File(
@@ -57,8 +54,11 @@ private fun Bitmap.save(context: Context){
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 ContentValues().apply {
                     put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                    put(MediaStore.MediaColumns.RELATIVE_PATH, UserPreferences.relativeCropSaveDirPath)
-                    put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
+                    put(
+                        MediaStore.MediaColumns.RELATIVE_PATH,
+                        UserPreferences.relativeCropSaveDirPath
+                    )
+                    put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
                 }
             )!!
 
@@ -74,9 +74,9 @@ private fun Bitmap.save(context: Context){
         }
         imageFileUri.notifyGalleryAboutFileModification(context)
 
-    } catch (e: FileNotFoundException){
+    } catch (e: FileNotFoundException) {
         if (UserPreferences.saveToAutocroppedDir && UserPreferences.makeAutoCroppedDirIfApplicable())
-            return save(context)
+            return save(context, fileName)
                 .also {
                     Timber.i("Recreated AutoCropped dir")
                 }
@@ -86,12 +86,17 @@ private fun Bitmap.save(context: Context){
 }
 
 
-private fun cropFileName(): String = "AutoCrop_${formattedDateTimeString()}.jpeg"
+private val Uri.cropFileName: String
+    get() = fileName
+        .replace(
+            "screenshot",
+            "AutoCrop",
+            true
+        )
 
-private fun formattedDateTimeString(): String = Calendar.getInstance().time.toFormattedString()
 
-private fun Date.toFormattedString(): String =
-    SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS", Locale.getDefault()).format(this)
+private val Uri.fileName: String
+    get() = File(path!!).name
 
 
 /**
@@ -111,12 +116,16 @@ private fun Uri.deleteUnderlyingImageFile(context: Context) {
             arrayOf(file.canonicalPath)
         )
         notifyGalleryAboutFileModification(this)
-        MediaScannerConnection.scanFile(context, arrayOf(file.toString()), arrayOf("image/*")) { _, _ -> }
+        MediaScannerConnection.scanFile(
+            context,
+            arrayOf(file.toString()),
+            arrayOf("image/*")
+        ) { _, _ -> }
     }
 
     // log deletion success if debugging
-    if (debuggingModeEnabled()){
-        with(file.canonicalFile.absolutePath){
+    if (debuggingModeEnabled()) {
+        with(file.canonicalFile.absolutePath) {
             if (file.exists())
                 Timber.e("Deletion of $this failed")
             else
@@ -126,7 +135,7 @@ private fun Uri.deleteUnderlyingImageFile(context: Context) {
 }
 
 
-private fun Uri.notifyGalleryAboutFileModification(context: Context){
+private fun Uri.notifyGalleryAboutFileModification(context: Context) {
     context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, this))
 }
 
