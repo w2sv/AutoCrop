@@ -5,7 +5,9 @@
 package com.autocrop.activities.examination
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.InterstitialAdWrapper
 import com.autocrop.activities.SystemUiHidingFragmentActivity
@@ -16,6 +18,7 @@ import com.autocrop.activities.examination.fragments.examination.ExaminationFrag
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearCropBundleList
+import com.autocrop.cropBundleList
 import com.autocrop.utils.android.*
 import com.autocrop.utils.getByBoolean
 import com.bunsenbrenner.screenshotboundremoval.R
@@ -45,14 +48,17 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
                 .commit()
         }
 
+        if (UserPreferences.conductAutoScroll && cropBundleList.size != 1)
+            displaySnackbar("Tap to cancel auto scrolling", R.color.light_green)
+
         retrieveSnackbarArgument(intent, N_DISMISSED_IMAGES_IDENTIFIER, 0)?.let {
-            displayCropDismissalToast(it)
+            displayCropDismissalSnackbar(it)
         }
     }
 
     val retrieveSnackbarArgument = SnackbarArgumentRetriever()
 
-    private fun displayCropDismissalToast(nDismissedImages: Int) {
+    private fun displayCropDismissalSnackbar(nDismissedImages: Int) {
         with(R.color.magenta) {
             when (nDismissedImages) {
                 1 -> displaySnackbar("Couldn't find cropping bounds for\n1 image", this)
@@ -117,12 +123,12 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
         when {
             appTitleFragment.isInitialized() -> Unit
             saveAllFragment.isInitialized() -> {
-                displayToast("Please wait until crops\nhave been saved")
+                displaySnackbar("Wait until crops have been saved", R.color.magenta)
             }
             backPressHandler.pressedOnce -> returnToMainActivity()
             else -> {
                 backPressHandler.onPress()
-                displayToast("Tap again to return to main screen")
+                displaySnackbar("Tap again to return to main screen", R.color.light_gray)
             }
         }
     }

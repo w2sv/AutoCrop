@@ -168,7 +168,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         fun displaySavingResultSnackbar(nSavedCrops: Int) {
             with(UserPreferences.deleteInputScreenshots) {
                 when (nSavedCrops) {
-                    0 -> displaySnackbar("Dismissed everything")
+                    0 -> displaySnackbar("Dismissed all crops")
                     1 -> displaySnackbar(
                         listOf(
                             "Saved 1 crop",

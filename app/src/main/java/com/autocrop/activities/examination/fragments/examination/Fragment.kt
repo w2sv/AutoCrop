@@ -5,7 +5,6 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.DecelerateInterpolator
@@ -19,6 +18,7 @@ import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.examination.viewpager.ImageSliderAdapter
 import com.autocrop.cropBundleList
 import com.autocrop.retentionPercentage
+import com.autocrop.utils.android.displaySnackbar
 import com.autocrop.utils.getByBoolean
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
@@ -74,7 +74,8 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
 }
 
 
-class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examination_examination), CropActionReactionsPossessor {
+class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examination_examination),
+    CropActionReactionsPossessor {
     private lateinit var viewPager2: ViewPager2
     private lateinit var textViews: TextViews
     private lateinit var toolBar: Toolbar
@@ -126,7 +127,8 @@ class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examin
                     this,
                     activity,
                     fragmentManager!!,
-                    this@ExaminationFragment
+                    this@ExaminationFragment,
+                    activity::displaySnackbar
                 )
 
                 setCurrentItem(
@@ -138,7 +140,7 @@ class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examin
 
         fun setToolbarButtonOnClickListeners() {
             save_all_button.setOnClickListener {
-                fun saveAll(){
+                fun saveAll() {
                     return activity.invokeSaveAllFragment()
                 }
 
@@ -149,7 +151,7 @@ class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examin
                                 .run {
                                     setTitle("Save all crops and delete corresponding screenshots?")
                                     setNegativeButton("No") { _, _ -> }
-                                    setPositiveButton("Yes") { _, _ ->  saveAll()}
+                                    setPositiveButton("Yes") { _, _ -> saveAll() }
                                 }
                                 .create()
                     }
@@ -174,39 +176,6 @@ class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examin
 
         initializeViewPager(textViews)
         setToolbarButtonOnClickListeners()
-    }
-
-    lateinit var timer: Timer
-    var conductAutoScroll: Boolean = UserPreferences.conductAutoScroll
-
-    override fun onStart() {
-        super.onStart()
-
-//        if (conductAutoScroll)
-//            autoScroll()
-    }
-
-    private fun autoScroll(){
-        val interval: Long = 800
-
-        val handler = Handler()
-
-        timer = Timer().apply {
-            schedule(
-                object : TimerTask() {
-                    override fun run() {
-                        handler.post {
-                            if (conductAutoScroll)
-                                with(viewPager2) {
-                                    setCurrentItem(currentItem + 1, true)
-                                }
-                        }
-                    }
-                },
-                interval,
-                interval
-            )
-        }
     }
 
     // -----------------ImageActionReactionsPossessor overrides-----------------

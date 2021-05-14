@@ -1,6 +1,7 @@
 package com.autocrop.activities.cropping
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
@@ -168,7 +169,7 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
         }
 
         backPressHandler.onPress()
-        displayToast("Tap again to cancel")
+        displaySnackbar("Tap again to cancel", R.color.light_gray)
     }
 
     override fun onStop() {

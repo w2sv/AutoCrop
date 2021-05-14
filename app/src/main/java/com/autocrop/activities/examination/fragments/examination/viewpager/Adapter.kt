@@ -50,7 +50,8 @@ class ImageSliderAdapter(
     private val viewPager2: ViewPager2,
     private val context: Context,
     private val fragmentManager: FragmentManager,
-    private val cropActionReactionsPossessor: CropActionReactionsPossessor
+    private val cropActionReactionsPossessor: CropActionReactionsPossessor,
+    private val displaySnackbar: (String, Int) -> Unit
 ) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
     private var dataTailHash: Int = cropBundleList.last().hashCode()
@@ -125,6 +126,8 @@ class ImageSliderAdapter(
             }
 
             fun autoScroll(){
+                conductingAutoScroll = true
+
                 val interval: Long = 1000
 
                 val handler = Handler()
@@ -139,19 +142,13 @@ class ImageSliderAdapter(
                                 handler.post(callback)
 
                                 if (dataElementIndex(currentItem + 1) == 0)
-                                    cancel()
-                            }
-
-                            override fun cancel(): Boolean {
-                                conductingAutoScroll = false
-                                return super.cancel()
+                                    cancelScrolling()
                             }
                         },
                         interval,
                         interval
                     )
                 }
-                conductingAutoScroll = true
             }
 
             if (UserPreferences.conductAutoScroll)
@@ -161,6 +158,11 @@ class ImageSliderAdapter(
 
     lateinit var timer: Timer
     private var conductingAutoScroll: Boolean = false
+
+    private fun cancelScrolling(){
+        timer.cancel()
+        conductingAutoScroll = false
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     inner class ViewHolder(view: ImageView) : RecyclerView.ViewHolder(view) {
@@ -174,7 +176,8 @@ class ImageSliderAdapter(
 
                 override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                     if (conductingAutoScroll){
-                        timer.cancel()
+                        cancelScrolling()
+                        displaySnackbar("Cancelled auto scrolling", R.color.light_green)
                         return true
                     }
 

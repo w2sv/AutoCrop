@@ -15,22 +15,22 @@ import java.util.*
  * having a global impact
  */
 object UserPreferences: SortedMap<String, Boolean> by sortedMapOf(
+    Keys.conductAutoScrolling to true,
     Keys.deleteInputScreenshots to false,
-    Keys.saveToAutocroppedDir to true,
-    Keys.conductAutoScrolling to true
+    Keys.saveToAutocroppedDir to false
 ) {
     object Keys{
+        const val conductAutoScrolling: String = "CONDUCT_AUTO_SCROLL"
         const val deleteInputScreenshots: String = "DELETE_INPUT_SCREENSHOTS"
         const val saveToAutocroppedDir: String = "SAVE_TO_AUTOCROPPED_DIR"
-        const val conductAutoScrolling: String = "CONDUCT_AUTO_SCROLL"
     }
 
+    val conductAutoScroll: Boolean
+        get() = get(Keys.conductAutoScrolling)!!
     val deleteInputScreenshots: Boolean
         get() = get(Keys.deleteInputScreenshots)!!
     val saveToAutocroppedDir: Boolean
         get() = get(Keys.saveToAutocroppedDir)!!
-    val conductAutoScroll: Boolean
-        get() = get(Keys.conductAutoScrolling)!!
 
     fun init(defaultSharedPreferences: SharedPreferences){
         keys.forEach {

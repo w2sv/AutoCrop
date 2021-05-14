@@ -10,4 +10,5 @@
     <color name="saturated_magenta">#911945</color>
     <color name="wine_red">#B00020</color>
     <color name="dark_gray">#2f353b</color>
+    <color name="light_gray">#c9c7c7</color>
 </resources>
