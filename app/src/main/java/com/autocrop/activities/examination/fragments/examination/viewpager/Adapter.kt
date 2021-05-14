@@ -22,6 +22,7 @@ import com.autocrop.crop
 import com.autocrop.cropBundleList
 import com.autocrop.utils.*
 import com.bunsenbrenner.screenshotboundremoval.R
+import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
 import java.util.*
 import kotlin.math.abs
@@ -44,6 +45,9 @@ private fun Index.rotated(distance: Int, collectionSize: Int): Int =
     }
 
 
+fun dataElementIndex(viewItemIndex: Int): Int = viewItemIndex % cropBundleList.size
+
+
 class ImageSliderAdapter(
     private val textViews: ExaminationFragment.TextViews,
     private val seekBar: PageIndicationSeekBar,
@@ -51,7 +55,8 @@ class ImageSliderAdapter(
     private val context: Context,
     private val fragmentManager: FragmentManager,
     private val cropActionReactionsPossessor: CropActionReactionsPossessor,
-    private val displaySnackbar: (String, Int) -> Unit
+    private val displaySnackbar: (String, Int, Int) -> Unit,
+    longAutoScrollDelay: Boolean
 ) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
     private var dataTailHash: Int = cropBundleList.last().hashCode()
@@ -127,12 +132,12 @@ class ImageSliderAdapter(
 
             fun autoScroll(){
                 conductingAutoScroll = true
-
-                val interval: Long = 1000
+                var conductedScrolls = 0
 
                 val handler = Handler()
                 val callback = Runnable{
                     setCurrentItem(currentItem + 1, true)
+                    conductedScrolls++
                 }
 
                 timer = Timer().apply {
@@ -141,12 +146,12 @@ class ImageSliderAdapter(
                             override fun run() {
                                 handler.post(callback)
 
-                                if (dataElementIndex(currentItem + 1) == 0)
+                                if (conductedScrolls == cropBundleList.lastIndex)
                                     cancelScrolling()
                             }
                         },
-                        interval,
-                        interval
+                        if (longAutoScrollDelay) 1500L else 1250L,
+                        1000
                     )
                 }
             }
@@ -177,7 +182,11 @@ class ImageSliderAdapter(
                 override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                     if (conductingAutoScroll){
                         cancelScrolling()
-                        displaySnackbar("Cancelled auto scrolling", R.color.light_green)
+                        displaySnackbar(
+                            "Cancelled auto scrolling",
+                            R.color.light_green,
+                            Snackbar.LENGTH_LONG
+                        )
                         return true
                     }
 
@@ -203,8 +212,6 @@ class ImageSliderAdapter(
             })
         }
     }
-
-    private fun dataElementIndex(viewItemIndex: Int): Int = viewItemIndex % cropBundleList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(

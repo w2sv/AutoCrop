@@ -5,7 +5,6 @@
 package com.autocrop.activities.examination
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
@@ -19,9 +18,14 @@ import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearCropBundleList
 import com.autocrop.cropBundleList
-import com.autocrop.utils.android.*
+import com.autocrop.utils.android.SnackbarArgumentRetriever
+import com.autocrop.utils.android.displaySnackbar
+import com.autocrop.utils.android.intentExtraIdentifier
+import com.autocrop.utils.android.returnTransitionAnimation
 import com.autocrop.utils.getByBoolean
+import com.autocrop.utils.notNull
 import com.bunsenbrenner.screenshotboundremoval.R
+import com.google.android.material.snackbar.Snackbar
 
 
 val N_SAVED_CROPS: String = intentExtraIdentifier("n_saved_crops")
@@ -30,7 +34,7 @@ private typealias LazyExaminationActivityFragment = Lazy<ExaminationActivityFrag
 
 class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_examination) {
     var nSavedCrops: Int = 0
-    lateinit var adWrapper: InterstitialAdWrapper
+    private lateinit var adWrapper: InterstitialAdWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,31 +46,45 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
             true
         )
 
+        val nDismissedImages: Int? =
+            retrieveSnackbarArgument(intent, N_DISMISSED_IMAGES_IDENTIFIER, 0)
+
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .add(R.id.container, ExaminationFragment())
+                .add(
+                    R.id.container,
+                    ExaminationFragment(nDismissedImages.run { notNull() && !equals(0) })
+                )
                 .commit()
         }
 
-        if (UserPreferences.conductAutoScroll && cropBundleList.size != 1)
-            displaySnackbar("Tap to cancel auto scrolling", R.color.light_green)
-
-        retrieveSnackbarArgument(intent, N_DISMISSED_IMAGES_IDENTIFIER, 0)?.let {
-            displayCropDismissalSnackbar(it)
+        with(nDismissedImages) {
+            if (notNull())
+                displayCropDismissalSnackbar(this!!)
+            else if (UserPreferences.conductAutoScroll && cropBundleList.size != 1)
+                displaySnackbar(
+                    "Tap screen to cancel auto scrolling",
+                    R.color.light_gray,
+                    Snackbar.LENGTH_SHORT
+                )
         }
     }
 
     val retrieveSnackbarArgument = SnackbarArgumentRetriever()
 
     private fun displayCropDismissalSnackbar(nDismissedImages: Int) {
-        with(R.color.magenta) {
-            when (nDismissedImages) {
-                1 -> displaySnackbar("Couldn't find cropping bounds for\n1 image", this)
-                in 2..Int.MAX_VALUE -> displaySnackbar(
-                    "Couldn't find cropping bounds for\n$nDismissedImages images",
-                    this
-                )
-            }
+        val textColorId: Int = R.color.magenta
+        val messageTemplate = "Couldn't find cropping bounds for\n%d image%c"
+
+        when (nDismissedImages) {
+            1 -> displaySnackbar(
+                messageTemplate.format(1, ""),
+                textColorId
+            )
+            in 2..Int.MAX_VALUE -> displaySnackbar(
+                messageTemplate.format(nDismissedImages, "s"),
+                textColorId
+            )
         }
     }
 
@@ -125,7 +143,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
             saveAllFragment.isInitialized() -> {
                 displaySnackbar("Wait until crops have been saved", R.color.magenta)
             }
-            backPressHandler.pressedOnce -> returnToMainActivity()
+            backPressHandler.pressedOnce -> exitActivity()
             else -> {
                 backPressHandler.onPress()
                 displaySnackbar("Tap again to return to main screen", R.color.light_gray)
@@ -134,6 +152,13 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
     }
 
     private val backPressHandler = BackPressHandler()
+
+    fun exitActivity() {
+        if (nSavedCrops == 0)
+            returnToMainActivity()
+        else
+            adWrapper.showAd()
+    }
 
     /**
      * Clears remaining cropBundle elements contained within cropBundleList

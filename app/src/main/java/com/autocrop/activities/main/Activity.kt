@@ -166,20 +166,24 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         }
 
         fun displaySavingResultSnackbar(nSavedCrops: Int) {
+            val textColorId: Int = R.color.light_green
+
             with(UserPreferences.deleteInputScreenshots) {
                 when (nSavedCrops) {
-                    0 -> displaySnackbar("Dismissed all crops")
+                    0 -> displaySnackbar("Dismissed all crops", textColorId)
                     1 -> displaySnackbar(
                         listOf(
                             "Saved 1 crop",
                             "Saved 1 crop and deleted\ncorresponding screenshot"
-                        ).getByBoolean(this)
+                        ).getByBoolean(this),
+                        textColorId
                     )
                     in 2..Int.MAX_VALUE -> displaySnackbar(
                         listOf(
                             "Saved $nSavedCrops crops",
                             "Saved $nSavedCrops crops and deleted\ncorresponding screenshots"
-                        ).getByBoolean(this)
+                        ).getByBoolean(this),
+                        textColorId
                     )
                 }
             }

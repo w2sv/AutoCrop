@@ -32,11 +32,11 @@ fun Activity.displayToast(message: String) {
     }
 }
 
-fun Activity.displaySnackbar(message: String, textColorId: Int = R.color.light_green){
+fun Activity.displaySnackbar(message: String, textColorId: Int, length: Int = Snackbar.LENGTH_LONG){
     Snackbar.make(
         findViewById(android.R.id.content),
         message,
-        Snackbar.LENGTH_LONG
+        length
     )
         .apply{
             with(view){

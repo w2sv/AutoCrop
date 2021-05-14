@@ -43,11 +43,13 @@ class CropProcedureQueryDialog(
             setPositiveButton(
                 "Yes"
             ) { _, _ ->
-                saveCropAndDeleteScreenshotIfApplicable(
-                    cropBundleList[sliderPositionIndex].crop,
-                    cropBundleList[sliderPositionIndex].screenshotUri,
-                    activityContext
-                )
+                with(dataElementIndex(sliderPositionIndex)){
+                    saveCropAndDeleteScreenshotIfApplicable(
+                        cropBundleList[this].crop,
+                        cropBundleList[this].screenshotUri,
+                        activityContext
+                    )
+                }
                 imageActionListener.onConductedImageAction(
                     sliderPositionIndex,
                     true

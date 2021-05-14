@@ -14,12 +14,12 @@ import java.util.*
  * Singleton encapsulating entirety of parameters set by user
  * having a global impact
  */
-object UserPreferences: SortedMap<String, Boolean> by sortedMapOf(
+object UserPreferences : SortedMap<String, Boolean> by sortedMapOf(
     Keys.conductAutoScrolling to true,
     Keys.deleteInputScreenshots to false,
-    Keys.saveToAutocroppedDir to false
+    Keys.saveToAutocroppedDir to true
 ) {
-    object Keys{
+    object Keys {
         const val conductAutoScrolling: String = "CONDUCT_AUTO_SCROLL"
         const val deleteInputScreenshots: String = "DELETE_INPUT_SCREENSHOTS"
         const val saveToAutocroppedDir: String = "SAVE_TO_AUTOCROPPED_DIR"
@@ -32,7 +32,7 @@ object UserPreferences: SortedMap<String, Boolean> by sortedMapOf(
     val saveToAutocroppedDir: Boolean
         get() = get(Keys.saveToAutocroppedDir)!!
 
-    fun init(defaultSharedPreferences: SharedPreferences){
+    fun init(defaultSharedPreferences: SharedPreferences) {
         keys.forEach {
             this[it] = defaultSharedPreferences.getBoolean(
                 it,
@@ -96,7 +96,7 @@ object UserPreferences: SortedMap<String, Boolean> by sortedMapOf(
             makeAutoCroppedDirIfApplicable()
     }
 
-    fun makeAutoCroppedDirIfApplicable(): Boolean{
+    fun makeAutoCroppedDirIfApplicable(): Boolean {
         with(
             File(
                 Environment.getExternalStoragePublicDirectory(relativeCropSaveDirPath)

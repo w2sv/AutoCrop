@@ -21,3 +21,5 @@ fun <T> Collection<T>.at(index: Int): T =
 
 fun <T> Collection<T>.getByBoolean(flag: Boolean): T = elementAt(flag.toInt())
 fun Boolean.toInt(): Int = compareTo(false)
+
+fun Any?.notNull(): Boolean = this != null
