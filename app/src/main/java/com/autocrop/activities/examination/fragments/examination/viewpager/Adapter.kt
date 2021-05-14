@@ -150,7 +150,7 @@ class ImageSliderAdapter(
                                     cancelScrolling(onScreenTouch = false)
                             }
                         },
-                        if (longAutoScrollDelay) 1500L else 1250L,
+                        if (longAutoScrollDelay) 1750L else 1250L,
                         1000
                     )
                 }
