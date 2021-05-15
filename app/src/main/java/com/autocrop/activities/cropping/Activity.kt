@@ -168,7 +168,7 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
         }
 
         backPressHandler.onPress()
-        displaySnackbar("Tap again to cancel", R.color.light_gray)
+        displaySnackbar("Tap again to cancel", TextColors.neutral)
     }
 
     override fun onStop() {

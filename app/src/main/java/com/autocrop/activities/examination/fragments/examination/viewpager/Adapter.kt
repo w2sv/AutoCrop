@@ -19,6 +19,7 @@ import com.autocrop.activities.examination.fragments.examination.PageIndicationS
 import com.autocrop.crop
 import com.autocrop.cropBundleList
 import com.autocrop.utils.*
+import com.autocrop.utils.android.TextColors
 import com.autocrop.utils.android.displaySnackbar
 import com.bunsenbrenner.screenshotboundremoval.R
 import com.google.android.material.snackbar.Snackbar
@@ -182,9 +183,10 @@ class ImageSliderAdapter(
                         Timber.i("Called onTouch")
 
                         scroller?.let {
-                            if (it.isRunning)
+                            if (it.isRunning){
                                 it.cancel(onScreenTouch = true)
-                            return true
+                                return true
+                            }
                         }
 
                         return super.onTouch(v, event)
@@ -337,19 +339,21 @@ private class Scroller(
     }
 
     fun cancel(onScreenTouch: Boolean) {
+        val textColor: Int = TextColors.successfullyCarriedOut
+
         timer.cancel()
         isRunning = false
 
         if (onScreenTouch)
             activity.displaySnackbar(
                 "Cancelled auto scrolling",
-                R.color.light_green,
+                textColor,
                 Snackbar.LENGTH_SHORT
             )
         else
             activity.displaySnackbar(
                 "Traversed all crops",
-                R.color.magenta,
+                textColor,
                 Snackbar.LENGTH_SHORT
             )
     }

@@ -32,16 +32,37 @@ fun Activity.displayToast(message: String) {
     }
 }
 
-fun Activity.displaySnackbar(message: String, textColorId: Int, length: Int = Snackbar.LENGTH_LONG){
+object TextColors {
+    const val neutral: Int = R.color.light_gray
+    const val successfullyCarriedOut: Int = R.color.light_green
+    const val urgent: Int = R.color.wine_red
+}
+
+
+object BackgroundColors{
+    const val bright: Int = R.color.light_gray
+}
+
+
+fun Activity.displaySnackbar(
+    message: String,
+    textColor: Int,
+    length: Int = Snackbar.LENGTH_LONG,
+    backgroundColor: Int? = null){
+
     Snackbar.make(
         findViewById(android.R.id.content),
         message,
         length
     )
         .apply{
+            backgroundColor?.let {
+                setBackgroundTint(resources.getColor(it, theme))
+            }
+
             with(view){
                 findViewById<TextView>(com.google.android.material.R.id.snackbar_text).apply {
-                    setTextColor(resources.getColor(textColorId, theme))
+                    setTextColor(resources.getColor(textColor, theme))
                     textAlignment = View.TEXT_ALIGNMENT_CENTER
                     maxLines = 2
                 }
