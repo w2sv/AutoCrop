@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Environment
 import com.autocrop.utils.android.writeBoolean
-import com.autocrop.utils.getByBoolean
 import timber.log.Timber
 import java.io.File
 import java.util.*
@@ -74,17 +73,13 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf(
         }
     }
 
-    /**
-     * Equals {Environment.DIRECTORY_PICTURES} or {Environment.DIRECTORY_PICTURES + autocrop_dirname}
-     * if saveToAutocropDir set to true
-     */
     val relativeCropSaveDirPath: String
-        get() = "${Environment.DIRECTORY_PICTURES}${
-            listOf(
-                "",
-                "${File.separator}AutoCropped"
-            ).getByBoolean(saveToAutocroppedDir)
-        }"
+        get() = Environment.DIRECTORY_PICTURES.run {
+            if (!saveToAutocroppedDir)
+                this
+            else
+                File(this, "AutoCropped").path
+        }
 
     val absoluteCropSaveDirPath: String
         get() = Environment.getExternalStoragePublicDirectory(relativeCropSaveDirPath).absolutePath
@@ -96,10 +91,10 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf(
      */
     private fun saveToAutocropDirTogglingEcho() {
         if (saveToAutocroppedDir)
-            makeAutoCroppedDirIfApplicable()
+            makeAutoCroppedDirIfRequired()
     }
 
-    fun makeAutoCroppedDirIfApplicable(): Boolean {
+    fun makeAutoCroppedDirIfRequired(): Boolean {
         with(File(absoluteCropSaveDirPath)) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !exists())
                 return mkdirs().also {

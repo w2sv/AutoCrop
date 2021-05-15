@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.media.MediaScannerConnection
 import android.net.Uri
-import android.os.Environment
 import android.provider.MediaStore
 import com.autocrop.UserPreferences
 import com.autocrop.utils.android.*
@@ -15,7 +14,6 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.OutputStream
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -74,7 +72,7 @@ private fun Bitmap.save(context: Context, fileName: String) {
         imageFileUri.notifyGalleryAboutFileModification(context)
 
     } catch (e: FileNotFoundException) {
-        if (UserPreferences.saveToAutocroppedDir && UserPreferences.makeAutoCroppedDirIfApplicable())
+        if (UserPreferences.saveToAutocroppedDir && UserPreferences.makeAutoCroppedDirIfRequired())
             return save(context, fileName)
                 .also {
                     Timber.i("Recreated AutoCropped dir")
