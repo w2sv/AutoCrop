@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.graphics.Point
 import android.view.MotionEvent
 import android.view.View
-import com.autocrop.utils.manhattanNorm
 import timber.log.Timber
+import kotlin.math.abs
 
 
 abstract class ImmersiveViewOnTouchListener: View.OnTouchListener {
@@ -38,3 +38,6 @@ abstract class ImmersiveViewOnTouchListener: View.OnTouchListener {
         ) < CLICK_IDENTIFICATION_THRESHOLD
     }
 }
+
+
+private fun manhattanNorm(a: Point, b: Point): Int = abs(a.x - b.x) + abs(a.y - b.y)
