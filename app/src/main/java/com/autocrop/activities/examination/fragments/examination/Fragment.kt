@@ -137,7 +137,7 @@ class ExaminationFragment(
                 )
 
                 setCurrentItem(
-                    (adapter as ImageSliderAdapter).startItemIndex,
+                    (adapter as ImageSliderAdapter).startPosition,
                     false
                 )
             }

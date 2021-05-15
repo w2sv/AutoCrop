@@ -17,7 +17,7 @@ import com.autocrop.utils.getByBoolean
  * Class accounting for procedure dialog message display on screen touch,
  * defining respective procedure effects
  */
-class CropProcedureQueryDialog(
+class CropProcedureDialog(
     private val pagerPosition: Int,
     private val dataElementIndex: Int,
     private val activityContext: Context,

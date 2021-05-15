@@ -57,7 +57,8 @@ class ImageSliderAdapter(
 ) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
 
     private var dataTailHash: Int = cropBundleList.last().hashCode()
-    private var dataTailIndex: Index = cropBundleList.lastIndex
+    private var cropBundleListTailIndex: Index = cropBundleList.lastIndex
+    private var cropBundleListHeadIndex: Index = 0
 
     private var removeDataIndex: Index? = null
     private var replacementViewItemIndex by Delegates.notNull<Index>()
@@ -69,7 +70,7 @@ class ImageSliderAdapter(
         private fun dataIndex(pagerPosition: Int): Int = pagerPosition % cropBundleList.size
     }
 
-    val startItemIndex: Int = (N_VIEWS / 2).run {
+    val startPosition: Int = (N_VIEWS / 2).run {
         minus(dataIndex(this))
     }
 
@@ -100,8 +101,8 @@ class ImageSliderAdapter(
                         cropBundleList.removeAt(removeDataIndex!!)
 
                         Collections.rotate(cropBundleList, dataRotationDistance)
-                        dataTailIndex =
-                            cropBundleList.indexOfFirst { it.hashCode() == dataTailHash }
+                        cropBundleListTailIndex = cropBundleList.indexOfFirst { it.hashCode() == dataTailHash }
+                        cropBundleListHeadIndex = cropBundleListTailIndex.rotated(1, cropBundleList.size)
 
                         with(replacementViewItemIndex) {
                             val resetMargin = 3
@@ -120,7 +121,10 @@ class ImageSliderAdapter(
             })
 
             /**
-             * Reference: https://www.loginworks.com/blogs/how-to-make-awesome-transition-effects-using-pagetransformer-in-android/
+             * Set Cube Out Page Transformer
+             *
+             * Reference: https://www.loginworks.com/blogs/how-to-make-awesome-transition-
+             * effects-using-pagetransformer-in-android/
              */
             setPageTransformer { view: View, position: Float ->
                 with(view) {
@@ -187,42 +191,49 @@ class ImageSliderAdapter(
         val cropImageView: ImageView =
             view.findViewById(R.id.slide_item_image_view_examination_activity)
 
+        /**
+         * Sets CropProcedureDialog inflating ImageView onTouchListener
+         */
         init {
-            cropImageView.setOnTouchListener(object : View.OnTouchListener {
-                private var startCoordinates = Point(-1, -1)
-                private fun MotionEvent.coordinates(): Point = Point(x.toInt(), y.toInt())
+            cropImageView.setOnTouchListener(
+                object : View.OnTouchListener {
+                    private var startCoordinates = Point(-1, -1)
 
-                override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                    if (conductingAutoScroll){
-                        cancelScrolling(onScreenTouch = true)
+                    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+
+                        // cancel scrolling if currently being conducted
+                        if (conductingAutoScroll){
+                            cancelScrolling(onScreenTouch = true)
+                            return true
+                        }
+
+                        when (event?.action) {
+                            MotionEvent.ACTION_DOWN -> startCoordinates = event.coordinates()
+                            MotionEvent.ACTION_UP -> if (isClick(event.coordinates()))
+                                with(dataIndex(adapterPosition)){
+                                    removeDataIndex = this
+
+                                    CropProcedureDialog(
+                                        adapterPosition,
+                                        this,
+                                        context,
+                                        this@ImageSliderAdapter
+                                    )
+                                        .show(fragmentManager, "Crop procedure dialog")
+                                }
+                        }
                         return true
                     }
 
-                    val clickIdentificationThreshold = 100
+                    private fun MotionEvent.coordinates(): Point = Point(x.toInt(), y.toInt())
 
-                    fun isClick(endCoordinates: Point): Boolean = manhattanNorm(
-                        startCoordinates,
-                        endCoordinates
-                    ) < clickIdentificationThreshold
+                    private fun isClick(endCoordinates: Point): Boolean{
+                        val clickIdentificationThreshold = 100
 
-                    when (event?.action) {
-                        MotionEvent.ACTION_DOWN -> startCoordinates = event.coordinates()
-                        MotionEvent.ACTION_UP -> if (isClick(event.coordinates()))
-                            with(dataIndex(adapterPosition)){
-                                removeDataIndex = this
-
-                                CropProcedureQueryDialog(
-                                    adapterPosition,
-                                    this,
-                                    context,
-                                    this@ImageSliderAdapter
-                                )
-                                    .show(fragmentManager, "File procedure query dialog")
-                            }
+                        return manhattanNorm(startCoordinates, endCoordinates) < clickIdentificationThreshold
                     }
-                    return true
                 }
-            })
+            )
         }
     }
 
@@ -240,14 +251,13 @@ class ImageSliderAdapter(
 
     override fun getItemCount(): Int = if (cropBundleList.size > 1) N_VIEWS else 1
 
-    private fun pageIndex(dataElementIndex: Index): Index {
-        val headIndex: Index = dataTailIndex.rotated(1, cropBundleList.size)
-
-        return if (headIndex <= dataElementIndex)
-            dataElementIndex - headIndex
-        else
-            cropBundleList.lastIndex - headIndex + dataElementIndex + 1
-    }
+    private fun pageIndex(dataElementIndex: Index): Index =
+        cropBundleListHeadIndex.run {
+            if (smallerEquals(dataElementIndex))
+                dataElementIndex - this
+            else
+                cropBundleList.lastIndex - this + dataElementIndex + 1
+        }
 
     override fun onConductedImageAction(position: Int, incrementNSavedCrops: Boolean) {
 
