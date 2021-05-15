@@ -18,7 +18,6 @@ import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.examination.viewpager.ImageSliderAdapter
 import com.autocrop.cropBundleList
 import com.autocrop.retentionPercentage
-import com.autocrop.utils.android.displaySnackbar
 import com.autocrop.utils.getByBoolean
 import com.bunsenbrenner.screenshotboundremoval.R
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
@@ -28,7 +27,7 @@ import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
 
-interface CropActionReactionsPossessor {
+interface PageDismissalImpacted {
     fun incrementNSavedCrops()
     fun exitActivity()
 }
@@ -78,7 +77,7 @@ class ExaminationFragment(
     private val conductAutoScroll: Boolean,
     private val longAutoScrollDelay: Boolean
 ) : ExaminationActivityFragment(R.layout.activity_examination_examination),
-    CropActionReactionsPossessor {
+    PageDismissalImpacted {
     private lateinit var viewPager2: ViewPager2
     private lateinit var textViews: TextViews
     private lateinit var toolBar: Toolbar
@@ -128,12 +127,10 @@ class ExaminationFragment(
                     textViews,
                     seekBar,
                     this,
-                    activity,
-                    fragmentManager!!,
-                    this@ExaminationFragment,
-                    activity::displaySnackbar,
                     conductAutoScroll,
-                    longAutoScrollDelay
+                    longAutoScrollDelay,
+                    this@ExaminationFragment,
+                    activity
                 )
 
                 setCurrentItem(

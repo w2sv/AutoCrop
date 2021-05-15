@@ -10,6 +10,7 @@ import com.autocrop.activities.examination.saveCropAndDeleteScreenshotIfApplicab
 import com.autocrop.crop
 import com.autocrop.cropBundleList
 import com.autocrop.screenshotUri
+import com.autocrop.utils.Index
 import com.autocrop.utils.getByBoolean
 
 
@@ -18,9 +19,9 @@ import com.autocrop.utils.getByBoolean
  * defining respective procedure effects
  */
 class CropProcedureDialog(
-    private val cropBundleListPosition: Int,
+    private val cropBundleListPosition: Index,
     private val activityContext: Context,
-    private val imageActionListener: ImageActionListener) : DialogFragment() {
+    private val cropActionListener: CropActionListener) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(activity).run {
@@ -34,7 +35,7 @@ class CropProcedureDialog(
             setNegativeButton(
                 "No, remove"
             ) { _, _ ->
-                imageActionListener.onConductedImageAction(
+                cropActionListener.onConductedImageAction(
                     cropBundleListPosition,
                     false
                 )
@@ -47,7 +48,7 @@ class CropProcedureDialog(
                     cropBundleList[cropBundleListPosition].screenshotUri,
                     activityContext
                 )
-                imageActionListener.onConductedImageAction(
+                cropActionListener.onConductedImageAction(
                     cropBundleListPosition,
                     true
                 )

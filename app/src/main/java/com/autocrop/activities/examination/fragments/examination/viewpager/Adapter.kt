@@ -1,7 +1,6 @@
 package com.autocrop.activities.examination.fragments.examination.viewpager
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Point
 import android.os.Handler
 import android.view.LayoutInflater
@@ -9,52 +8,39 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
 import com.autocrop.CropBundleList
-import com.autocrop.activities.examination.fragments.examination.CropActionReactionsPossessor
+import com.autocrop.activities.examination.fragments.examination.PageDismissalImpacted
 import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
 import com.autocrop.activities.examination.fragments.examination.PageIndicationSeekBar
 import com.autocrop.crop
 import com.autocrop.cropBundleList
 import com.autocrop.utils.*
+import com.autocrop.utils.android.displaySnackbar
 import com.bunsenbrenner.screenshotboundremoval.R
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
 import java.util.*
-import kotlin.math.abs
 import kotlin.properties.Delegates
 
 
-interface ImageActionListener {
+interface CropActionListener {
     fun onConductedImageAction(cropBundleListPosition: Index, incrementNSavedCrops: Boolean)
 }
-
-
-private typealias Index = Int
-
-private fun Index.rotated(distance: Int, collectionSize: Int): Int =
-    plus(distance).run {
-        if (smallerThan(0)) {
-            (collectionSize - abs(this) % collectionSize) % collectionSize
-        } else
-            rem(collectionSize)
-    }
 
 
 class ImageSliderAdapter(
     private val textViews: ExaminationFragment.TextViews,
     private val seekBar: PageIndicationSeekBar,
     private val viewPager2: ViewPager2,
-    private val context: Context,
-    private val fragmentManager: FragmentManager,
-    private val cropActionReactionsPossessor: CropActionReactionsPossessor,
-    private val displaySnackbar: (String, Int, Int) -> Unit,
     conductAutoScroll: Boolean,
-    longAutoScrollDelay: Boolean) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), ImageActionListener {
+    longAutoScrollDelay: Boolean,
+    private val pageDismissalImpacted: PageDismissalImpacted,
+    private val activity: FragmentActivity) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), CropActionListener {
 
     companion object {
         private const val MAX_VIEWS: Int = Int.MAX_VALUE
@@ -105,12 +91,12 @@ class ImageSliderAdapter(
             }
     }
 
-    private val extendedCropBundleList = ExtendedCropBundleList()
+    private val data = ExtendedCropBundleList()
 
     private var replacementViewPosition by Delegates.notNull<Index>()
 
     val startPosition: Int = (MAX_VIEWS / 2).run {
-        minus(extendedCropBundleList.correspondingPosition(this))
+        minus(data.correspondingPosition(this))
     }
 
     init {
@@ -122,11 +108,11 @@ class ImageSliderAdapter(
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
 
-                    if (!extendedCropBundleList.itemToBeRemoved)
-                        with(extendedCropBundleList.correspondingPosition(position)) {
+                    if (!data.itemToBeRemoved)
+                        with(data.correspondingPosition(position)) {
                             textViews.setRetentionPercentage(this)
 
-                            with(extendedCropBundleList.pageIndex(this)) {
+                            with(data.pageIndex(this)) {
                                 textViews.setPageIndication(this)
                                 seekBar.indicatePage(this)
                             }
@@ -136,19 +122,22 @@ class ImageSliderAdapter(
                 override fun onPageScrollStateChanged(state: Int) {
                     super.onPageScrollStateChanged(state)
 
-                    if (state == SCROLL_STATE_IDLE && extendedCropBundleList.itemToBeRemoved) {
-                        extendedCropBundleList.removeAtRemovePosition()
+                    if (state == SCROLL_STATE_IDLE && data.itemToBeRemoved) {
+                        data.removeAtRemovePosition()
+                        resetSurroundingPages()
+                    }
+                }
 
-                        with(replacementViewPosition) {
-                            val resetMargin = 3
+                private fun resetSurroundingPages(){
+                    with(replacementViewPosition) {
+                        val resetMargin = 3
 
-                            listOf(
-                                (minus(resetMargin) until this),
-                                (plus(1)..plus(resetMargin))
-                            )
-                                .flatten()
-                                .forEach { notifyItemChanged(it) }
-                        }
+                        listOf(
+                            (minus(resetMargin) until this),
+                            (plus(1)..plus(resetMargin))
+                        )
+                            .flatten()
+                            .forEach { notifyItemChanged(it) }
                     }
                 }
             })
@@ -183,7 +172,7 @@ class ImageSliderAdapter(
                             override fun run() {
                                 handler.post(callback)
 
-                                if (conductedScrolls == extendedCropBundleList.lastIndex)
+                                if (conductedScrolls == data.lastIndex)
                                     cancelScrolling(onScreenTouch = false)
                             }
                         },
@@ -206,14 +195,14 @@ class ImageSliderAdapter(
         conductingAutoScroll = false
 
         if (onScreenTouch)
-            displaySnackbar(
+            activity.displaySnackbar(
                 "Cancelled auto scrolling",
                 R.color.light_green,
                 Snackbar.LENGTH_SHORT
             )
         else
-            displaySnackbar(
-                "Scrolled over all crops",
+            activity.displaySnackbar(
+                "Traversed all crops",
                 R.color.magenta,
                 Snackbar.LENGTH_SHORT
             )
@@ -243,13 +232,13 @@ class ImageSliderAdapter(
                         when (event?.action) {
                             MotionEvent.ACTION_DOWN -> startCoordinates = event.coordinates()
                             MotionEvent.ACTION_UP -> if (isClick(event.coordinates()))
-                                with(extendedCropBundleList.correspondingPosition(adapterPosition)) {
+                                with(data.correspondingPosition(adapterPosition)) {
                                     CropProcedureDialog(
                                         this,
-                                        context,
+                                        activity,
                                         this@ImageSliderAdapter
                                     )
-                                        .show(fragmentManager, "Crop procedure dialog")
+                                        .show(activity.supportFragmentManager, "Crop procedure dialog")
                                 }
                         }
                         return true
@@ -280,40 +269,40 @@ class ImageSliderAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Index) {
         holder.cropImageView.setImageBitmap(
-            extendedCropBundleList[extendedCropBundleList.correspondingPosition(
+            data[data.correspondingPosition(
                 position
             )].crop
         )
     }
 
-    override fun getItemCount(): Int = if (extendedCropBundleList.size > 1) MAX_VIEWS else 1
+    override fun getItemCount(): Int = if (data.size > 1) MAX_VIEWS else 1
 
     override fun onConductedImageAction(cropBundleListPosition: Index, incrementNSavedCrops: Boolean) {
 
         // trigger imageActionReactionsPossessor downstream actions
         if (incrementNSavedCrops)
-            cropActionReactionsPossessor.incrementNSavedCrops()
+            pageDismissalImpacted.incrementNSavedCrops()
 
-        if (extendedCropBundleList.size == 1)
-            return cropActionReactionsPossessor.exitActivity()
+        if (data.size == 1)
+            return pageDismissalImpacted.exitActivity()
 
-        extendedCropBundleList.removePosition = cropBundleListPosition
+        data.removePosition = cropBundleListPosition
 
         val replacementCropBundleItemPositionPostRemoval: Index =
-            (extendedCropBundleList.removePosition!!).run {
-                if (extendedCropBundleList.removingAtTail)
+            (data.removePosition!!).run {
+                if (data.removingAtTail)
                     Pair(
-                        rotated(-1, extendedCropBundleList.sizePostRemoval),
+                        rotated(-1, data.sizePostRemoval),
                         viewPager2.currentItem - 1
                     )
                         .also {
-                            extendedCropBundleList.tailHash =
-                                extendedCropBundleList.at(minus(1)).hashCode()
+                            data.tailHash =
+                                data.at(minus(1)).hashCode()
                             Timber.i("Removing at tail index | Set new dataTailHash")
                         }
                 else
                     Pair(
-                        if (equals(extendedCropBundleList.lastIndex))
+                        if (equals(data.lastIndex))
                             0.also {
                                 Timber.i("Set replacementDataElementIndexPostRemoval to lastIndexPostRemoval")
                             }
@@ -329,13 +318,13 @@ class ImageSliderAdapter(
 
         // scroll to new view and set cropBundleList rotationDistance
         viewPager2.setCurrentItem(replacementViewPosition, true)
-        extendedCropBundleList.rotationDistance =
-            (replacementViewPosition % extendedCropBundleList.sizePostRemoval) - replacementCropBundleItemPositionPostRemoval
+        data.rotationDistance =
+            (replacementViewPosition % data.sizePostRemoval) - replacementCropBundleItemPositionPostRemoval
 
         // reset page dependent views
         val newPageIndex: Int =
-            extendedCropBundleList.pageIndex(extendedCropBundleList.removePosition!!).run {
-                if (extendedCropBundleList.removingAtTail)
+            data.pageIndex(data.removePosition!!).run {
+                if (data.removingAtTail)
                     minus(1)
                 else
                     this
@@ -343,18 +332,18 @@ class ImageSliderAdapter(
 
         with(textViews) {
             setRetentionPercentage(
-                extendedCropBundleList.correspondingPosition(
+                data.correspondingPosition(
                     replacementViewPosition
                 )
             )
             setPageIndication(
                 newPageIndex,
-                extendedCropBundleList.sizePostRemoval
+                data.sizePostRemoval
             )
         }
 
         with(seekBar) {
-            calculateProgressCoefficient(extendedCropBundleList.sizePostRemoval)
+            calculateProgressCoefficient(data.sizePostRemoval)
             indicatePage(newPageIndex)
         }
     }
