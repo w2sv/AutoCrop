@@ -5,32 +5,13 @@ import android.content.Intent
 import android.graphics.Color
 import android.view.Gravity
 import android.view.View
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.bunsenbrenner.screenshotboundremoval.R
 import com.google.android.material.snackbar.Snackbar
 
-
-fun Activity.displayToast(message: String) {
-    Toast.makeText(
-        this,
-        message,
-        Toast.LENGTH_LONG
-    ).apply {
-        with(view!!) {
-            setBackgroundColor(Color.parseColor("darkgray"))
-
-            findViewById<TextView>(android.R.id.message).apply {
-                setTextColor(Color.parseColor("white"))
-                gravity = Gravity.CENTER
-                with(Pair(14, 0)) {
-                    setPadding(first, second, first, second)
-                }
-            }
-        }
-        show()
-    }
-}
 
 object TextColors {
     const val neutral: Int = R.color.light_gray
@@ -41,6 +22,32 @@ object TextColors {
 
 object BackgroundColors{
     const val bright: Int = R.color.light_gray
+}
+
+
+fun Activity.displayToast(
+    message: String,
+    textColor: Int = TextColors.neutral,
+    length: Int = Toast.LENGTH_LONG) {
+
+    Toast.makeText(
+        this,
+        message,
+        length
+    ).apply {
+        with(view!!) {
+            setBackgroundColor(Color.parseColor("darkgray"))
+
+            findViewById<TextView>(android.R.id.message).apply {
+                setTextColor(resources.getColor(textColor, theme))
+                gravity = Gravity.CENTER
+                with(Pair(16, 0)) {
+                    setPadding(first, second, first, second)
+                }
+            }
+        }
+        show()
+    }
 }
 
 
@@ -70,6 +77,7 @@ fun Activity.displaySnackbar(
         }
         .show()
 }
+
 
 class SnackbarArgumentRetriever{
     private var retrieved: Boolean = false

@@ -16,7 +16,8 @@
     <string name="dismiss_all_button">Dismiss All</string>
 
         <!-- Description -->
-    <string name="main_activity_menu_inflation_button_description">"Inflates settings menu"</string>
+    <string name="main_activity_menu_inflation_button_description">Inflate settings menu</string>
+    <string name="main_activity_menu_screenshot_button_description">Capture screenshot</string>
 
     <!-- Menu Item Text -->
     <string name="menu_item_delete_input_screenshots">Delete screenshots</string>

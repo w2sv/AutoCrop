@@ -42,8 +42,7 @@ private fun Bitmap.save(context: Context, fileName: String) {
         // set file output stream and target file uri
         val (fileOutputStream: OutputStream, imageFileUri: Uri) = if (apiLowerEquals(29)) {
             File(
-                Environment.getExternalStoragePublicDirectory(UserPreferences.relativeCropSaveDirPath)
-                    .toString(),
+                UserPreferences.absoluteCropSaveDirPath,
                 fileName
             ).run {
                 Pair(FileOutputStream(this), Uri.fromFile(this))
@@ -117,7 +116,7 @@ private fun Uri.deleteUnderlyingImageFile(context: Context) {
         )
         notifyGalleryAboutFileModification(this)
         MediaScannerConnection.scanFile(
-            context,
+            this,
             arrayOf(file.toString()),
             arrayOf("image/*")
         ) { _, _ -> }

@@ -4,19 +4,29 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Environment
+import android.os.Handler
+import android.view.View
+import android.view.accessibility.AccessibilityEvent
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import com.autocrop.UserPreferences
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.utils.android.*
+import com.autocrop.utils.formattedDateTimeString
 import com.autocrop.utils.getByBoolean
 import com.bunsenbrenner.screenshotboundremoval.R
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
 import processing.core.PApplet
 import timber.log.Timber
+import java.io.File
 
 
 val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String =
@@ -116,7 +126,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
     // ------------Lifecycle stages---------------
 
-    private lateinit var flowFieldPApplet: PApplet
+    private lateinit var flowFieldPApplet: FlowFieldPApplet
 
     override fun onCreate(savedInstanceState: Bundle?) {
         fun setPixelField() {
@@ -163,6 +173,23 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
                     show()
                 }
             }
+
+            // screenshot button
+            screenshot_button.setOnClickListener {
+                flowFieldPApplet.canvas.save(
+                    File(
+                        picturesDirectoryPath,
+                        "AutoCrop${formattedDateTimeString()}.jpg"
+                    ).absolutePath
+                        .also { Timber.i("Saving flowfield canvas to $it") }
+                )
+
+                displayToast(
+                    "Saved Flowfield Image to\n${picturesDirectoryPath}",
+                    TextColors.successfullyCarriedOut,
+                    Toast.LENGTH_SHORT
+                )
+            }
         }
 
         fun displaySavingResultSnackbar(nSavedCrops: Int) {
@@ -185,6 +212,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
                         ).getByBoolean(this),
                         textColor
                     )
+                    else -> Unit
                 }
             }
         }

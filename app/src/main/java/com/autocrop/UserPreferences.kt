@@ -86,6 +86,9 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf(
             ).getByBoolean(saveToAutocroppedDir)
         }"
 
+    val absoluteCropSaveDirPath: String
+        get() = Environment.getExternalStoragePublicDirectory(relativeCropSaveDirPath).absolutePath
+
     /**
      * Creates AutoCrop dir in external storage pictures directory if saveToAutocropDir
      * true after toggling, dir not yet existent and Version < Q, beginning from which
@@ -97,12 +100,7 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf(
     }
 
     fun makeAutoCroppedDirIfApplicable(): Boolean {
-        with(
-            File(
-                Environment.getExternalStoragePublicDirectory(relativeCropSaveDirPath)
-                    .toString()
-            )
-        ) {
+        with(File(absoluteCropSaveDirPath)) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !exists())
                 return mkdirs().also {
                     if (it)
