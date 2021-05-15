@@ -14,14 +14,12 @@ val CropBundle.retentionPercentage: Int
     get() = third
 
 
-val cropBundleList: MutableList<CropBundle> = mutableListOf()
+typealias CropBundleList = MutableList<CropBundle>
 
-
-/**
- * Conducts additional logging
- */
-fun clearCropBundleList(){
-    cropBundleList.clear().also {
+fun CropBundleList.clearAndLog(){
+    clear().also {
         Timber.i("Cleared cropBundleList")
     }
 }
+
+val cropBundleList: CropBundleList = mutableListOf()

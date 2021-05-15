@@ -1,7 +1,6 @@
 package com.autocrop.activities.cropping
 
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
@@ -16,7 +15,7 @@ import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.hideSystemUI
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.SELECTED_IMAGE_URI_STRINGS_IDENTIFIER
-import com.autocrop.clearCropBundleList
+import com.autocrop.clearAndLog
 import com.autocrop.cropBundleList
 import com.autocrop.utils.android.*
 import com.bunsenbrenner.screenshotboundremoval.R
@@ -163,7 +162,7 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
 
         if (backPressHandler.pressedOnce) {
             croppingTask.cancel(false)
-            clearCropBundleList()
+            cropBundleList.clearAndLog()
 
             return startMainActivity()
         }

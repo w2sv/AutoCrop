@@ -18,11 +18,9 @@ import com.autocrop.utils.getByBoolean
  * defining respective procedure effects
  */
 class CropProcedureDialog(
-    private val pagerPosition: Int,
-    private val dataElementIndex: Int,
+    private val cropBundleListPosition: Int,
     private val activityContext: Context,
-    private val imageActionListener: ImageActionListener
-) : DialogFragment() {
+    private val imageActionListener: ImageActionListener) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(activity).run {
@@ -37,7 +35,7 @@ class CropProcedureDialog(
                 "No, remove"
             ) { _, _ ->
                 imageActionListener.onConductedImageAction(
-                    pagerPosition,
+                    cropBundleListPosition,
                     false
                 )
             }
@@ -45,12 +43,12 @@ class CropProcedureDialog(
                 "Yes"
             ) { _, _ ->
                 saveCropAndDeleteScreenshotIfApplicable(
-                    cropBundleList[dataElementIndex].crop,
-                    cropBundleList[dataElementIndex].screenshotUri,
+                    cropBundleList[cropBundleListPosition].crop,
+                    cropBundleList[cropBundleListPosition].screenshotUri,
                     activityContext
                 )
                 imageActionListener.onConductedImageAction(
-                    pagerPosition,
+                    cropBundleListPosition,
                     true
                 )
             }

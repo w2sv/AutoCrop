@@ -16,7 +16,7 @@ import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.clearCropBundleList
+import com.autocrop.clearAndLog
 import com.autocrop.cropBundleList
 import com.autocrop.utils.android.SnackbarArgumentRetriever
 import com.autocrop.utils.android.displaySnackbar
@@ -176,7 +176,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
 
         returnTransitionAnimation()
 
-        clearCropBundleList()
+        cropBundleList.clearAndLog()
         finishAndRemoveTask()
     }
 }
