@@ -1,7 +1,6 @@
 package com.autocrop.activities.examination.fragments.examination.viewpager
 
 import android.annotation.SuppressLint
-import android.graphics.Point
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -62,10 +61,10 @@ class ImageSliderAdapter(
         val removingAtTail: Boolean
             get() = removePosition!! == tailPosition
 
-        var rotationDistance by Delegates.notNull<Int>()
-
         val sizePostRemoval: Int
             get() = lastIndex
+
+        var rotationDistance by Delegates.notNull<Int>()
 
         fun removeAtRemovePosition() {
             removeAt(removePosition!!)
@@ -157,58 +156,16 @@ class ImageSliderAdapter(
             }
 
             if (conductAutoScroll)
-                autoScroll(longAutoScrollDelay)
+                scroller = Scroller(
+                    viewPager2,
+                    longAutoScrollDelay,
+                    cropBundleList.lastIndex,
+                    activity
+                )
         }
     }
 
-    lateinit var timer: Timer
-    private var conductingAutoScroll: Boolean = false
-
-    private fun autoScroll(longAutoScrollDelay: Boolean) {
-        conductingAutoScroll = true
-        var conductedScrolls = 0
-
-        val handler = Handler()
-        val callback = Runnable {
-            with(viewPager2){
-                setCurrentItem(currentItem + 1, true)
-            }
-            conductedScrolls++
-        }
-
-        timer = Timer().apply {
-            schedule(
-                object : TimerTask() {
-                    override fun run() {
-                        handler.post(callback)
-
-                        if (conductedScrolls == data.lastIndex)
-                            cancelScrolling(onScreenTouch = false)
-                    }
-                },
-                if (longAutoScrollDelay) 1750L else 1250L,
-                1000
-            )
-        }
-    }
-
-    private fun cancelScrolling(onScreenTouch: Boolean) {
-        timer.cancel()
-        conductingAutoScroll = false
-
-        if (onScreenTouch)
-            activity.displaySnackbar(
-                "Cancelled auto scrolling",
-                R.color.light_green,
-                Snackbar.LENGTH_SHORT
-            )
-        else
-            activity.displaySnackbar(
-                "Traversed all crops",
-                R.color.magenta,
-                Snackbar.LENGTH_SHORT
-            )
-    }
+    private var scroller: Scroller?
 
     @SuppressLint("ClickableViewAccessibility")
     inner class ViewHolder(view: ImageView) : RecyclerView.ViewHolder(view) {
@@ -224,8 +181,9 @@ class ImageSliderAdapter(
                     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                         Timber.i("Called onTouch")
 
-                        if (conductingAutoScroll) {
-                            cancelScrolling(onScreenTouch = true)
+                        scroller?.let {
+                            if (it.isRunning)
+                                it.cancel(onScreenTouch = true)
                             return true
                         }
 
@@ -338,5 +296,61 @@ class ImageSliderAdapter(
             calculateProgressCoefficient(data.sizePostRemoval)
             indicatePage(newPageIndex)
         }
+    }
+}
+
+
+private class Scroller(
+    viewPager2: ViewPager2,
+    longAutoScrollDelay: Boolean,
+    maxScrolls: Int,
+    private val activity: FragmentActivity){
+
+    private var timer: Timer
+    var isRunning: Boolean = true
+
+    init {
+        var conductedScrolls = 0
+
+        val handler = Handler()
+        val callback = Runnable {
+            with(viewPager2){
+                setCurrentItem(currentItem + 1, true)
+            }
+            conductedScrolls++
+        }
+
+        timer = Timer().apply {
+            schedule(
+                object : TimerTask() {
+                    override fun run() {
+                        handler.post(callback)
+
+                        if (conductedScrolls == maxScrolls)
+                            cancel(onScreenTouch = false)
+                    }
+                },
+                if (longAutoScrollDelay) 1750L else 1250L,
+                1000
+            )
+        }
+    }
+
+    fun cancel(onScreenTouch: Boolean) {
+        timer.cancel()
+        isRunning = false
+
+        if (onScreenTouch)
+            activity.displaySnackbar(
+                "Cancelled auto scrolling",
+                R.color.light_green,
+                Snackbar.LENGTH_SHORT
+            )
+        else
+            activity.displaySnackbar(
+                "Traversed all crops",
+                R.color.magenta,
+                Snackbar.LENGTH_SHORT
+            )
     }
 }
