@@ -14,8 +14,8 @@ import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
 import com.autocrop.CropBundleList
-import com.autocrop.activities.examination.fragments.examination.PageDismissalImpacted
 import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
+import com.autocrop.activities.examination.fragments.examination.PageDismissalImpacted
 import com.autocrop.activities.examination.fragments.examination.PageIndicationSeekBar
 import com.autocrop.crop
 import com.autocrop.cropBundleList
@@ -51,7 +51,8 @@ class ImageSliderAdapter(
         var tailPosition: Index = cropBundleList.lastIndex,
         var headPosition: Index = 0,
 
-        var removePosition: Index? = null) : CropBundleList by cropBundleList {
+        var removePosition: Index? = null
+    ) : CropBundleList by cropBundleList {
 
         fun correspondingPosition(pagerPosition: Int): Int = pagerPosition % size
 
@@ -104,7 +105,6 @@ class ImageSliderAdapter(
 
         with(viewPager2) {
             registerOnPageChangeCallback(object : OnPageChangeCallback() {
-
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
 
@@ -128,7 +128,7 @@ class ImageSliderAdapter(
                     }
                 }
 
-                private fun resetSurroundingPages(){
+                private fun resetSurroundingPages() {
                     with(replacementViewPosition) {
                         val resetMargin = 3
 
@@ -156,39 +156,41 @@ class ImageSliderAdapter(
                 }
             }
 
-            fun autoScroll() {
-                conductingAutoScroll = true
-                var conductedScrolls = 0
-
-                val handler = Handler()
-                val callback = Runnable {
-                    setCurrentItem(currentItem + 1, true)
-                    conductedScrolls++
-                }
-
-                timer = Timer().apply {
-                    schedule(
-                        object : TimerTask() {
-                            override fun run() {
-                                handler.post(callback)
-
-                                if (conductedScrolls == data.lastIndex)
-                                    cancelScrolling(onScreenTouch = false)
-                            }
-                        },
-                        if (longAutoScrollDelay) 1750L else 1250L,
-                        1000
-                    )
-                }
-            }
-
             if (conductAutoScroll)
-                autoScroll()
+                autoScroll(longAutoScrollDelay)
         }
     }
 
     lateinit var timer: Timer
     private var conductingAutoScroll: Boolean = false
+
+    private fun autoScroll(longAutoScrollDelay: Boolean) {
+        conductingAutoScroll = true
+        var conductedScrolls = 0
+
+        val handler = Handler()
+        val callback = Runnable {
+            with(viewPager2){
+                setCurrentItem(currentItem + 1, true)
+            }
+            conductedScrolls++
+        }
+
+        timer = Timer().apply {
+            schedule(
+                object : TimerTask() {
+                    override fun run() {
+                        handler.post(callback)
+
+                        if (conductedScrolls == data.lastIndex)
+                            cancelScrolling(onScreenTouch = false)
+                    }
+                },
+                if (longAutoScrollDelay) 1750L else 1250L,
+                1000
+            )
+        }
+    }
 
     private fun cancelScrolling(onScreenTouch: Boolean) {
         timer.cancel()
@@ -218,41 +220,27 @@ class ImageSliderAdapter(
          */
         init {
             cropImageView.setOnTouchListener(
-                object : View.OnTouchListener {
-                    private var startCoordinates = Point(-1, -1)
-
+                object : ImmersiveViewOnTouchListener() {
                     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                        Timber.i("Called onTouch")
 
-                        // cancel scrolling if currently being conducted
                         if (conductingAutoScroll) {
                             cancelScrolling(onScreenTouch = true)
                             return true
                         }
 
-                        when (event?.action) {
-                            MotionEvent.ACTION_DOWN -> startCoordinates = event.coordinates()
-                            MotionEvent.ACTION_UP -> if (isClick(event.coordinates()))
-                                with(data.correspondingPosition(adapterPosition)) {
-                                    CropProcedureDialog(
-                                        this,
-                                        activity,
-                                        this@ImageSliderAdapter
-                                    )
-                                        .show(activity.supportFragmentManager, "Crop procedure dialog")
-                                }
-                        }
-                        return true
+                        return super.onTouch(v, event)
                     }
 
-                    private fun MotionEvent.coordinates(): Point = Point(x.toInt(), y.toInt())
-
-                    private fun isClick(endCoordinates: Point): Boolean {
-                        val clickIdentificationThreshold = 100
-
-                        return manhattanNorm(
-                            startCoordinates,
-                            endCoordinates
-                        ) < clickIdentificationThreshold
+                    override fun onConfirmedTouch() {
+                        with(data.correspondingPosition(adapterPosition)) {
+                            CropProcedureDialog(
+                                this,
+                                activity,
+                                this@ImageSliderAdapter
+                            )
+                                .show(activity.supportFragmentManager, "Crop procedure dialog")
+                        }
                     }
                 }
             )
@@ -268,16 +256,20 @@ class ImageSliderAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Index) {
-        holder.cropImageView.setImageBitmap(
-            data[data.correspondingPosition(
-                position
-            )].crop
-        )
+        with(data){
+            holder.cropImageView.setImageBitmap(
+                get(correspondingPosition(position))
+                    .crop
+            )
+        }
     }
 
     override fun getItemCount(): Int = if (data.size > 1) MAX_VIEWS else 1
 
-    override fun onConductedImageAction(cropBundleListPosition: Index, incrementNSavedCrops: Boolean) {
+    override fun onConductedImageAction(
+        cropBundleListPosition: Index,
+        incrementNSavedCrops: Boolean
+    ) {
 
         // trigger imageActionReactionsPossessor downstream actions
         if (incrementNSavedCrops)
