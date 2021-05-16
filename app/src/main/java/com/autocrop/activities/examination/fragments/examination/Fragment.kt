@@ -139,7 +139,7 @@ class ExaminationFragment(
                 saveAll()
         }
 
-        dismiss_all_button.setOnClickListener {
+        discard_all_button.setOnClickListener {
             if (!viewPager2.imageSliderAdapter.scrolling)
                 exitActivity()
         }

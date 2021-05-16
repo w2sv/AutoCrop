@@ -13,7 +13,7 @@
         <!-- Text -->
     <string name="image_selection_button">SELECT IMAGES</string>
     <string name="save_all_button">Save All</string>
-    <string name="dismiss_all_button">Dismiss All</string>
+    <string name="discard_all_button">Discard All</string>
 
         <!-- Description -->
     <string name="main_activity_menu_inflation_button_description">Inflate settings menu</string>
