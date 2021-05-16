@@ -7,7 +7,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import com.bunsenbrenner.screenshotboundremoval.R
+import com.w2sv.autocrop.R
 import com.google.android.material.snackbar.Snackbar
 
 

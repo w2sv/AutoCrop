@@ -21,7 +21,7 @@ import com.autocrop.cropBundleList
 import com.autocrop.utils.android.*
 import com.autocrop.utils.getByBoolean
 import com.autocrop.utils.notNull
-import com.bunsenbrenner.screenshotboundremoval.R
+import com.w2sv.autocrop.R
 import com.google.android.material.snackbar.Snackbar
 
 

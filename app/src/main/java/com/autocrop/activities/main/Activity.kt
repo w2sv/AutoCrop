@@ -20,7 +20,7 @@ import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
 import com.autocrop.utils.getByBoolean
-import com.bunsenbrenner.screenshotboundremoval.R
+import com.w2sv.autocrop.R
 import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
 import timber.log.Timber

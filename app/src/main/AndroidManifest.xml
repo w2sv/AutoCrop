@@ -3,7 +3,7 @@
 <!-- package name not to be touched (due to app already having been uploaded to playstore) -->
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bunsenbrenner.screenshotboundremoval">
+    package="com.w2sv.autocrop">
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

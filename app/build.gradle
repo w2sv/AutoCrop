@@ -8,7 +8,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "com.bunsenbrenner.screenshotboundremoval"
+        applicationId "com.w2sv.autocrop"
         minSdkVersion 23
         targetSdkVersion 29
         versionCode 4

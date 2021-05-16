@@ -19,7 +19,7 @@ import com.autocrop.activities.examination.fragments.examination.viewpager.Image
 import com.autocrop.cropBundleList
 import com.autocrop.retentionPercentage
 import com.autocrop.utils.getByBoolean
-import com.bunsenbrenner.screenshotboundremoval.R
+import com.w2sv.autocrop.R
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
 import timber.log.Timber
 import java.util.*

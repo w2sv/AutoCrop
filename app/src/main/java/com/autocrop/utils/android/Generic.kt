@@ -1,7 +1,7 @@
 package com.autocrop.utils.android
 
 import android.os.Build
-import com.bunsenbrenner.screenshotboundremoval.BuildConfig
+import com.w2sv.autocrop.BuildConfig
 
 
 fun intentExtraIdentifier(name: String): String = "com.autocrop.$name"

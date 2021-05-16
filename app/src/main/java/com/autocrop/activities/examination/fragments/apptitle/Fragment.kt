@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
-import com.bunsenbrenner.screenshotboundremoval.R
+import com.w2sv.autocrop.R
 
 
 class AppTitleFragment : ExaminationActivityFragment(R.layout.activity_examination_apptitle) {

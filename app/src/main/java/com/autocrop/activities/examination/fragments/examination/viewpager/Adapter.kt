@@ -21,7 +21,7 @@ import com.autocrop.cropBundleList
 import com.autocrop.utils.*
 import com.autocrop.utils.android.TextColors
 import com.autocrop.utils.android.displaySnackbar
-import com.bunsenbrenner.screenshotboundremoval.R
+import com.w2sv.autocrop.R
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
 import java.util.*

@@ -18,7 +18,7 @@ import com.autocrop.activities.main.SELECTED_IMAGE_URI_STRINGS_IDENTIFIER
 import com.autocrop.clearAndLog
 import com.autocrop.cropBundleList
 import com.autocrop.utils.android.*
-import com.bunsenbrenner.screenshotboundremoval.R
+import com.w2sv.autocrop.R
 import kotlinx.android.synthetic.main.activity_cropping.*
 import timber.log.Timber
 import java.lang.ref.WeakReference

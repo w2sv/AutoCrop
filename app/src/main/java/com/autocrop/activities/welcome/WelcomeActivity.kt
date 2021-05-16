@@ -7,7 +7,7 @@ import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.utils.android.debuggingModeEnabled
 import com.autocrop.utils.android.restartTransitionAnimation
-import com.bunsenbrenner.screenshotboundremoval.R
+import com.w2sv.autocrop.R
 import com.google.android.gms.ads.MobileAds
 import timber.log.Timber
 
