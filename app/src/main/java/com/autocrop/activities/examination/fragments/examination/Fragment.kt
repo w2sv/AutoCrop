@@ -33,52 +33,15 @@ interface PageDismissalImpacted {
 }
 
 
-class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
-    AppCompatSeekBar(context, attr) {
-    companion object {
-        const val PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE: Int = 50
-    }
-
-    private var indicateLastPage: Boolean = cropBundleList.size == 1
-
-    init {
-        progress = listOf(0, PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE).getByBoolean(indicateLastPage)
-        isEnabled = false
-    }
-
-    private var progressCoefficient by Delegates.notNull<Float>()
-
-    fun calculateProgressCoefficient(dataMagnitude: Int = cropBundleList.size) {
-        if (dataMagnitude == 1)
-            indicateLastPage = true.also {
-                displayProgress(PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE)
-            }
-        else
-            progressCoefficient = max.toFloat() / dataMagnitude.minus(1).toFloat()
-    }
-
-    fun indicatePage(pageIndex: Int) {
-        if (!indicateLastPage)
-            displayProgress(
-                (progressCoefficient * pageIndex).roundToInt().also { Timber.i("Progress: $it") })
-    }
-
-    private fun displayProgress(percentage: Int) {
-        with(ObjectAnimator.ofInt(this, "progress", percentage)) {
-            duration = 100
-            interpolator = DecelerateInterpolator()
-            start()
-        }
-    }
-}
-
-
 class ExaminationFragment(
     private val conductAutoScroll: Boolean,
     private val longAutoScrollDelay: Boolean
 ) : ExaminationActivityFragment(R.layout.activity_examination_examination),
     PageDismissalImpacted {
+
     private lateinit var viewPager2: ViewPager2
+    private val ViewPager2.imageSliderAdapter: ImageSliderAdapter
+        get() = adapter as ImageSliderAdapter
     private lateinit var textViews: TextViews
     private lateinit var toolBar: Toolbar
     private lateinit var seekBar: PageIndicationSeekBar
@@ -121,55 +84,6 @@ class ExaminationFragment(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        fun initializeViewPager(textViews: TextViews) {
-            viewPager2 = view.findViewById<ViewPager2>(R.id.view_pager).apply {
-                adapter = ImageSliderAdapter(
-                    textViews,
-                    seekBar,
-                    this,
-                    conductAutoScroll,
-                    longAutoScrollDelay,
-                    this@ExaminationFragment,
-                    activity
-                )
-
-                setCurrentItem(
-                    (adapter as ImageSliderAdapter).startPosition,
-                    false
-                )
-            }
-        }
-
-        fun setToolbarButtonOnClickListeners() {
-            save_all_button.setOnClickListener {
-                fun saveAll() {
-                    return activity.invokeSaveAllFragment()
-                }
-
-                if (UserPreferences.deleteInputScreenshots) {
-                    class SaveAllConfirmationDialog : DialogFragment() {
-                        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-                            AlertDialog.Builder(activity)
-                                .run {
-                                    setTitle("Save all crops and delete corresponding screenshots?")
-                                    setNegativeButton("No") { _, _ -> }
-                                    setPositiveButton("Yes") { _, _ -> saveAll() }
-                                }
-                                .create()
-                    }
-                    SaveAllConfirmationDialog().show(
-                        fragmentManager!!,
-                        "Save all confirmation dialog"
-                    )
-                } else
-                    saveAll()
-            }
-
-            dismiss_all_button.setOnClickListener {
-                exitActivity()
-            }
-        }
-
         super.onViewCreated(view, savedInstanceState)
 
         textViews = TextViews()
@@ -180,6 +94,57 @@ class ExaminationFragment(
         setToolbarButtonOnClickListeners()
     }
 
+    private fun initializeViewPager(textViews: TextViews) {
+        viewPager2 = view!!.findViewById<ViewPager2>(R.id.view_pager).apply {
+            adapter = ImageSliderAdapter(
+                textViews,
+                seekBar,
+                this,
+                conductAutoScroll,
+                longAutoScrollDelay,
+                this@ExaminationFragment,
+                activity
+            )
+
+            setCurrentItem(
+                imageSliderAdapter.startPosition,
+                false
+            )
+        }
+    }
+
+    private fun setToolbarButtonOnClickListeners() {
+        save_all_button.setOnClickListener {
+            fun saveAll() {
+                if (!viewPager2.imageSliderAdapter.scrolling)
+                    return activity.invokeSaveAllFragment()
+            }
+
+            if (UserPreferences.deleteInputScreenshots) {
+                class SaveAllConfirmationDialog : DialogFragment() {
+                    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+                        AlertDialog.Builder(activity)
+                            .run {
+                                setTitle("Save all crops and delete corresponding screenshots?")
+                                setNegativeButton("No") { _, _ -> }
+                                setPositiveButton("Yes") { _, _ -> saveAll() }
+                            }
+                            .create()
+                }
+                SaveAllConfirmationDialog().show(
+                    fragmentManager!!,
+                    "Save all confirmation dialog"
+                )
+            } else
+                saveAll()
+        }
+
+        dismiss_all_button.setOnClickListener {
+            if (!viewPager2.imageSliderAdapter.scrolling)
+                exitActivity()
+        }
+    }
+
     // -----------------ImageActionReactionsPossessor overrides-----------------
 
     override fun incrementNSavedCrops() {
@@ -188,5 +153,45 @@ class ExaminationFragment(
 
     override fun exitActivity() {
         return activity.invokeAppTitleFragment(true)
+    }
+}
+
+
+class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
+    AppCompatSeekBar(context, attr) {
+    companion object {
+        const val PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE: Int = 50
+    }
+
+    private var indicateLastPage: Boolean = cropBundleList.size == 1
+
+    init {
+        progress = listOf(0, PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE).getByBoolean(indicateLastPage)
+        isEnabled = false
+    }
+
+    private var progressCoefficient by Delegates.notNull<Float>()
+
+    fun calculateProgressCoefficient(dataMagnitude: Int = cropBundleList.size) {
+        if (dataMagnitude == 1)
+            indicateLastPage = true.also {
+                displayProgress(PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE)
+            }
+        else
+            progressCoefficient = max.toFloat() / dataMagnitude.minus(1).toFloat()
+    }
+
+    fun indicatePage(pageIndex: Int) {
+        if (!indicateLastPage)
+            displayProgress(
+                (progressCoefficient * pageIndex).roundToInt().also { Timber.i("Progress: $it") })
+    }
+
+    private fun displayProgress(percentage: Int) {
+        with(ObjectAnimator.ofInt(this, "progress", percentage)) {
+            duration = 100
+            interpolator = DecelerateInterpolator()
+            start()
+        }
     }
 }

@@ -66,7 +66,10 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
 
         adWrapper = InterstitialAdWrapper(
             this,
-            "ca-app-pub-1494255973790385/5182678683",  // "ca-app-pub-3940256099942544/1033173712"
+            if (debuggingModeEnabled())
+                "ca-app-pub-3940256099942544/1033173712"
+            else
+                "ca-app-pub-1494255973790385/5182678683",
             this::returnToMainActivity,
             true
         )

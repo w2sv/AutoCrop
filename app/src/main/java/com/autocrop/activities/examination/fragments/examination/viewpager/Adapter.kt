@@ -168,6 +168,10 @@ class ImageSliderAdapter(
     }
 
     private var scroller: Scroller?
+    val scrolling: Boolean
+        get() = scroller.run {
+            notNull() && this!!.isRunning
+        }
 
     @SuppressLint("ClickableViewAccessibility")
     inner class ViewHolder(view: ImageView) : RecyclerView.ViewHolder(view) {
@@ -183,11 +187,9 @@ class ImageSliderAdapter(
                     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                         Timber.i("Called onTouch")
 
-                        scroller?.let {
-                            if (it.isRunning) {
-                                it.cancel(onScreenTouch = true)
-                                return true
-                            }
+                        if (scrolling) {
+                            scroller!!.cancel(onScreenTouch = true)
+                            return true
                         }
 
                         return super.onTouch(v, event)
@@ -330,7 +332,7 @@ private class Scroller(
                     override fun run() {
                         handler.post(callback)
 
-                        if (conductedScrolls == maxScrolls)
+                        if (conductedScrolls >= maxScrolls)
                             cancel(onScreenTouch = false)
                     }
                 },
