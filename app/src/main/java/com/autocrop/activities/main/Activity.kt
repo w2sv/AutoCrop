@@ -3,10 +3,19 @@ package com.autocrop.activities.main
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.view.Menu
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.MenuCompat
 import com.autocrop.UserPreferences
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.CroppingActivity
@@ -56,6 +65,16 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         )
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        menuInflater.inflate(R.menu.activity_main, menu)
+        MenuCompat.setGroupDividerEnabled(menu, true)
+
+        return super.onCreateOptionsMenu(menu)
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
     private fun setButtonOnClickListeners() {
         // image selection button
         image_selection_button.setOnClickListener {
@@ -81,6 +100,23 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
                 // set checks
                 menuItemToPreferenceKey.entries.forEach { (key, value) ->
                     menu.findItem(key).isChecked = UserPreferences[value]!!
+                }
+
+                // format group divider items
+                fun SpannableString.setCoveringSpan(what: Any){
+                    setSpan(what, 0, length, 0)
+                }
+
+                listOf(
+                    R.id.main_menu_examination_item_group_divider,
+                    R.id.main_menu_crop_saving_item_group_divider
+                ).forEach { group_divider_item_id ->
+                    with(menu.findItem(group_divider_item_id)){
+                        title = SpannableString(" ".repeat(6) + title).apply {
+                            setCoveringSpan(ForegroundColorSpan(resources.getColor(R.color.saturated_magenta, theme)))
+                            setCoveringSpan(StyleSpan(Typeface.ITALIC))
+                        }
+                    }
                 }
 
                 // set item onClickListeners

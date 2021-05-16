@@ -17,11 +17,14 @@
 
         <!-- Description -->
     <string name="main_activity_menu_inflation_button_description">Inflate settings menu</string>
-    <string name="main_activity_menu_screenshot_button_description">Capture screenshot</string>
+    <string name="main_activity_menu_screenshot_button_description">Capture Flow Field image</string>
 
     <!-- Menu Item Text -->
+    <string name="menu_item_examination_group">Examination</string>
+    <string name="menu_item_saving_group">Saving</string>
+
     <string name="menu_item_delete_input_screenshots">Delete screenshots</string>
-    <string name="menu_item_save_to_autocrop_folder">Save to AutoCropped folder</string>
-    <string name="menu_item_conduct_auto_scrolling">Enable auto scrolling</string>
+    <string name="menu_item_save_to_autocrop_folder">Use AutoCropped folder</string>
+    <string name="menu_item_conduct_auto_scrolling">Conduct auto scrolling</string>
 
 </resources>
