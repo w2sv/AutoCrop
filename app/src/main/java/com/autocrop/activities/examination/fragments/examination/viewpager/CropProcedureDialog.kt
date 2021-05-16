@@ -3,6 +3,7 @@ package com.autocrop.activities.examination.fragments.examination.viewpager
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
+import android.os.AsyncTask
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.autocrop.UserPreferences
@@ -21,7 +22,8 @@ import com.autocrop.utils.getByBoolean
 class CropProcedureDialog(
     private val cropBundleListPosition: Index,
     private val activityContext: Context,
-    private val cropActionListener: CropActionListener) : DialogFragment() {
+    private val cropActionListener: CropActionListener
+) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(activity).run {
@@ -33,7 +35,7 @@ class CropProcedureDialog(
             )
 
             setNegativeButton(
-                "No, remove"
+                "No, discard"
             ) { _, _ ->
                 cropActionListener.onConductedImageAction(
                     cropBundleListPosition,
@@ -43,10 +45,8 @@ class CropProcedureDialog(
             setPositiveButton(
                 "Yes"
             ) { _, _ ->
-                saveCropAndDeleteScreenshotIfApplicable(
-                    cropBundleList[cropBundleListPosition].crop,
-                    cropBundleList[cropBundleListPosition].screenshotUri,
-                    activityContext
+                AsyncSaver().execute(
+                    Pair(cropBundleListPosition, activityContext)
                 )
                 cropActionListener.onConductedImageAction(
                     cropBundleListPosition,
@@ -55,4 +55,18 @@ class CropProcedureDialog(
             }
             create()
         }
+}
+
+
+private class AsyncSaver : AsyncTask<Pair<Index, Context>, Void, Void?>() {
+    override fun doInBackground(vararg params: Pair<Index, Context>): Void? {
+        with(params.first()) {
+            saveCropAndDeleteScreenshotIfApplicable(
+                cropBundleList[first].crop,
+                cropBundleList[first].screenshotUri,
+                second
+            )
+        }
+        return null
+    }
 }

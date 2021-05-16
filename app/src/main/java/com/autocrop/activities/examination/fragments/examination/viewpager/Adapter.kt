@@ -40,7 +40,8 @@ class ImageSliderAdapter(
     conductAutoScroll: Boolean,
     longAutoScrollDelay: Boolean,
     private val pageDismissalImpacted: PageDismissalImpacted,
-    private val activity: FragmentActivity) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), CropActionListener {
+    private val activity: FragmentActivity
+) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>(), CropActionListener {
 
     companion object {
         private const val MAX_VIEWS: Int = Int.MAX_VALUE
@@ -183,7 +184,7 @@ class ImageSliderAdapter(
                         Timber.i("Called onTouch")
 
                         scroller?.let {
-                            if (it.isRunning){
+                            if (it.isRunning) {
                                 it.cancel(onScreenTouch = true)
                                 return true
                             }
@@ -216,7 +217,7 @@ class ImageSliderAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Index) {
-        with(data){
+        with(data) {
             holder.cropImageView.setImageBitmap(
                 get(correspondingPosition(position))
                     .crop
@@ -306,7 +307,8 @@ private class Scroller(
     viewPager2: ViewPager2,
     longAutoScrollDelay: Boolean,
     maxScrolls: Int,
-    private val activity: FragmentActivity){
+    private val activity: FragmentActivity
+) {
 
     private var timer: Timer
     var isRunning: Boolean = true
@@ -316,7 +318,7 @@ private class Scroller(
 
         val handler = Handler()
         val callback = Runnable {
-            with(viewPager2){
+            with(viewPager2) {
                 setCurrentItem(currentItem + 1, true)
             }
             conductedScrolls++
@@ -332,7 +334,7 @@ private class Scroller(
                             cancel(onScreenTouch = false)
                     }
                 },
-                if (longAutoScrollDelay) 1750L else 1250L,
+                if (longAutoScrollDelay) 1500L else 1000L,
                 1000
             )
         }

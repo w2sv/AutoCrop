@@ -36,17 +36,10 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        adWrapper = InterstitialAdWrapper(
-            this,
-            "ca-app-pub-3940256099942544/1033173712",  // ca-app-pub-1494255973790385/5182678683
-            this::returnToMainActivity,
-            true
-        )
-
         val nDismissedImages: Int? =
             retrieveSnackbarArgument(intent, N_DISMISSED_IMAGES_IDENTIFIER, 0)
-
-        val conductAutoScroll: Boolean = UserPreferences.conductAutoScroll && cropBundleList.size > 1
+        val conductAutoScroll: Boolean =
+            UserPreferences.conductAutoScroll && cropBundleList.size > 1
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -70,25 +63,29 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
                     Snackbar.LENGTH_SHORT
                 )
         }
+
+        adWrapper = InterstitialAdWrapper(
+            this,
+            "ca-app-pub-1494255973790385/5182678683",  // "ca-app-pub-3940256099942544/1033173712"
+            this::returnToMainActivity,
+            true
+        )
     }
 
     val retrieveSnackbarArgument = SnackbarArgumentRetriever()
 
     private fun displayCropDismissalSnackbar(nDismissedImages: Int) {
         val textColor: Int = TextColors.urgent
-        val backgroundColor: Int = BackgroundColors.bright
         val messageTemplate = "Couldn't find cropping bounds for\n%d image%s"
 
         when (nDismissedImages) {
             1 -> displaySnackbar(
                 messageTemplate.format(1, ""),
-                textColor,
-                backgroundColor = backgroundColor
+                textColor
             )
             in 2..Int.MAX_VALUE -> displaySnackbar(
                 messageTemplate.format(nDismissedImages, "s"),
-                textColor,
-                backgroundColor = backgroundColor
+                textColor
             )
         }
     }
@@ -148,8 +145,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
             saveAllFragment.isInitialized() -> {
                 displaySnackbar(
                     "Wait until crops have been saved",
-                    TextColors.urgent,
-                    backgroundColor = BackgroundColors.bright
+                    TextColors.urgent
                 )
             }
             backPressHandler.pressedOnce -> exitActivity()

@@ -16,10 +16,10 @@ class WelcomeActivity : SystemUiHidingFragmentActivity(R.layout.activity_welcome
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        MobileAds.initialize(this) {}
+
         if (debuggingModeEnabled())
             Timber.plant(Timber.DebugTree())
-
-        MobileAds.initialize(this) {}
 
         Handler().postDelayed(
             {

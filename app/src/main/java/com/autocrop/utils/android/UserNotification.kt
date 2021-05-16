@@ -5,10 +5,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.view.Gravity
 import android.view.View
-import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.bunsenbrenner.screenshotboundremoval.R
 import com.google.android.material.snackbar.Snackbar
 
@@ -16,19 +14,15 @@ import com.google.android.material.snackbar.Snackbar
 object TextColors {
     const val neutral: Int = R.color.light_gray
     const val successfullyCarriedOut: Int = R.color.light_green
-    const val urgent: Int = R.color.wine_red
-}
-
-
-object BackgroundColors{
-    const val bright: Int = R.color.light_gray
+    const val urgent: Int = R.color.saturated_magenta
 }
 
 
 fun Activity.displayToast(
     message: String,
     textColor: Int = TextColors.neutral,
-    length: Int = Toast.LENGTH_LONG) {
+    length: Int = Toast.LENGTH_LONG
+) {
 
     Toast.makeText(
         this,
@@ -55,19 +49,20 @@ fun Activity.displaySnackbar(
     message: String,
     textColor: Int,
     length: Int = Snackbar.LENGTH_LONG,
-    backgroundColor: Int? = null){
+    backgroundColor: Int? = null
+) {
 
     Snackbar.make(
         findViewById(android.R.id.content),
         message,
         length
     )
-        .apply{
+        .apply {
             backgroundColor?.let {
                 setBackgroundTint(resources.getColor(it, theme))
             }
 
-            with(view){
+            with(view) {
                 findViewById<TextView>(com.google.android.material.R.id.snackbar_text).apply {
                     setTextColor(resources.getColor(textColor, theme))
                     textAlignment = View.TEXT_ALIGNMENT_CENTER
@@ -79,7 +74,7 @@ fun Activity.displaySnackbar(
 }
 
 
-class SnackbarArgumentRetriever{
+class SnackbarArgumentRetriever {
     private var retrieved: Boolean = false
 
     operator fun invoke(intent: Intent, extraName: String, defaultValue: Int): Int? =

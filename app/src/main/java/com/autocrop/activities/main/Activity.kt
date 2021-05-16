@@ -3,18 +3,14 @@ package com.autocrop.activities.main
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.graphics.Typeface
-import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import android.view.Gravity
 import android.view.Menu
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuCompat
 import com.autocrop.UserPreferences
@@ -75,7 +71,6 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     private fun setButtonOnClickListeners() {
         // image selection button
         image_selection_button.setOnClickListener {
@@ -195,7 +190,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         }
 
         fun request() {
-            val dummyRequestCode: Int = -1
+            val dummyRequestCode = 420
 
             requestPermissions(
                 requiredPermissions
@@ -267,9 +262,19 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 IntentCode.IMAGE_SELECTION.ordinal -> {
+                    val cropImagesSelectionMax = 50
+
                     with(data?.clipData!!) {
+                        if (itemCount > cropImagesSelectionMax){
+                            displaySnackbar(
+                                "Can't crop more than $cropImagesSelectionMax images at a time",
+                                TextColors.urgent
+                            )
+                            return
+                        }
+
                         startCroppingActivity(
-                            imageUriStrings = (0 until this.itemCount)
+                            imageUriStrings = (0 until itemCount)
                                 .map { getItemAt(it)?.uri!!.toString() }
                                 .toTypedArray()
                         )
