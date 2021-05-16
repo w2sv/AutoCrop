@@ -69,7 +69,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
             if (debuggingModeEnabled())
                 "ca-app-pub-3940256099942544/1033173712"
             else
-                "ca-app-pub-1494255973790385/5182678683",
+                "ca-app-pub-1494255973790385/3566059279",
             this::returnToMainActivity,
             true
         )
