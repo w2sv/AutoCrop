@@ -7,15 +7,15 @@
 
     <!-- Pixel Field Container -->
 
-    <!-- Buttons -->
-
-        <!-- Image Selection -->
-
     <FrameLayout
         android:id="@+id/canvas_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/saturated_magenta" />
+        android:layout_height="match_parent" >
+    </FrameLayout>
+
+    <!-- Buttons -->
+
+        <!-- Image Selection -->
 
     <Button
         android:id="@+id/image_selection_button"
@@ -36,13 +36,16 @@
     <ImageButton
         android:id="@+id/menu_button"
         style="?android:attr/actionOverflowButtonStyle"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
+
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/main_activity_menu_inflation_button_description" />
+
+        <!-- Screenshot -->
 
     <ImageButton
         android:id="@+id/screenshot_button"

@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import android.view.Gravity
 import android.view.Menu
 import android.widget.FrameLayout
 import android.widget.Toast
