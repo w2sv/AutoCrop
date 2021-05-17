@@ -15,9 +15,9 @@ import java.util.*
  */
 object UserPreferences : SortedMap<String, Boolean> by sortedMapOf(
     Keys.conductAutoScrolling to true,
-    Keys.deleteInputScreenshots to false,
-    Keys.saveToAutocroppedDir to true
-) {
+    Keys.deleteInputScreenshots to true,
+    Keys.saveToAutocroppedDir to true) {
+
     object Keys {
         const val conductAutoScrolling: String = "CONDUCT_AUTO_SCROLL"
         const val deleteInputScreenshots: String = "DELETE_INPUT_SCREENSHOTS"
