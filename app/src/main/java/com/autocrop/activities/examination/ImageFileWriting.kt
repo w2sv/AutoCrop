@@ -20,8 +20,8 @@ import java.util.*
 fun saveCropAndDeleteScreenshotIfApplicable(
     crop: Bitmap,
     screenshotUri: Uri,
-    context: Context
-) {
+    context: Context) {
+
     crop.save(context, screenshotUri.cropFileName)
 
     // delete screenshot if applicable
