@@ -8,7 +8,6 @@ import android.content.Intent
 import android.os.Bundle
 import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
-import com.autocrop.activities.InterstitialAdWrapper
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
@@ -31,7 +30,6 @@ private typealias LazyExaminationActivityFragment = Lazy<ExaminationActivityFrag
 
 class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_examination) {
     var nSavedCrops: Int = 0
-    private lateinit var adWrapper: InterstitialAdWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,16 +61,6 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
                     Snackbar.LENGTH_SHORT
                 )
         }
-
-        adWrapper = InterstitialAdWrapper(
-            this,
-            if (debuggingModeEnabled())
-                "ca-app-pub-3940256099942544/1033173712"
-            else
-                "ca-app-pub-1494255973790385/3566059279",
-            this::returnToMainActivity,
-            true
-        )
     }
 
     val retrieveSnackbarArgument = SnackbarArgumentRetriever()
@@ -138,7 +126,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
 
     /**
      * Blocked throughout the process of saving all crops,
-     * otherwise asks for second one as confirmation;
+     * otherwise asks for confirmation through second back press;
      *
      * Results in return to main activity
      */
@@ -151,7 +139,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
                     TextColors.urgent
                 )
             }
-            backPressHandler.pressedOnce -> exitActivity()
+            backPressHandler.pressedOnce -> returnToMainActivity()
             else -> {
                 backPressHandler.onPress()
                 displaySnackbar(
@@ -164,17 +152,10 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
 
     private val backPressHandler = BackPressHandler()
 
-    fun exitActivity() {
-        if (nSavedCrops == 0)
-            returnToMainActivity()
-        else
-            adWrapper.showAd()
-    }
-
     /**
      * Clears remaining cropBundle elements contained within cropBundleList
      */
-    private fun returnToMainActivity() {
+    fun returnToMainActivity() {
         startActivity(
             Intent(
                 this,

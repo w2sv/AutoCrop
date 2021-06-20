@@ -16,7 +16,7 @@ class AppTitleFragment : ExaminationActivityFragment(R.layout.activity_examinati
 
     private fun conductDelayedReturnToMainActivity() {
         Handler().postDelayed(
-            activity::exitActivity,
+            activity::returnToMainActivity,
             1000
         )
     }

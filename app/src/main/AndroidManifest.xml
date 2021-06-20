@@ -8,7 +8,6 @@
     <!-- Permissions -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name= "android.permission.INTERNET"/>
 
     <!-- setting requestLegacyExternalStorage to true effectuates opting out of
          scoped storage for API 29 = Android 10 to enable external storage writing
