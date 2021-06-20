@@ -9,8 +9,8 @@ android {
         applicationId "com.w2sv.autocrop"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 5
-        versionName "2.0.0"
+        versionCode 6
+        versionName "2.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
     }
