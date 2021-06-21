@@ -8,11 +8,9 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import android.view.Menu
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.view.MenuCompat
 import com.autocrop.UserPreferences
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.CroppingActivity
@@ -20,6 +18,7 @@ import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
 import com.autocrop.utils.getByBoolean
+import com.autocrop.utils.setSpanHolistically
 import com.w2sv.autocrop.R
 import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
@@ -32,6 +31,8 @@ val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String =
 
 
 class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
+
+    private lateinit var userPreferencesOnActivityCreation: List<Boolean>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,25 +51,16 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
     private lateinit var flowFieldPApplet: FlowFieldPApplet
 
     private fun setPixelField() {
-        if (!::flowFieldPApplet.isInitialized)
+        if (!::flowFieldPApplet.isInitialized){
             flowFieldPApplet = FlowFieldPApplet(
                 screenResolution(windowManager)
-            ).also {
-                Timber.i("Initialized flowFieldPApplet")
-            }
+            )
+            Timber.i("Initialized flowFieldPApplet")
+        }
 
         PFragment(flowFieldPApplet).setView(
             findViewById<FrameLayout>(R.id.canvas_container), this
         )
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-
-        menuInflater.inflate(R.menu.activity_main, menu)
-        MenuCompat.setGroupDividerEnabled(menu, true)
-
-        return super.onCreateOptionsMenu(menu)
-
     }
 
     private fun setButtonOnClickListeners() {
@@ -80,7 +72,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
                 selectImages()
         }
 
-        // menu button
+        // menu inflation button
         menu_button.setOnClickListener {
 
             val menuItemToPreferenceKey: Map<Int, String> = mapOf(
@@ -89,28 +81,26 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
                 R.id.main_menu_conduct_auto_scrolling to UserPreferences.Keys.conductAutoScrolling
             )
 
+            val groupDividerItems: List<Int> = listOf(
+                R.id.main_menu_examination_item_group_divider,
+                R.id.main_menu_crop_saving_item_group_divider
+            )
+
             // inflate popup menu
             PopupMenu(this, it).run {
                 menuInflater.inflate(R.menu.activity_main, menu)
 
-                // set checks
+                // set checks from UserPreferences
                 menuItemToPreferenceKey.entries.forEach { (key, value) ->
                     menu.findItem(key).isChecked = UserPreferences[value]!!
                 }
 
                 // format group divider items
-                fun SpannableString.setCoveringSpan(what: Any){
-                    setSpan(what, 0, length, 0)
-                }
-
-                listOf(
-                    R.id.main_menu_examination_item_group_divider,
-                    R.id.main_menu_crop_saving_item_group_divider
-                ).forEach { group_divider_item_id ->
+                groupDividerItems.forEach { group_divider_item_id ->
                     with(menu.findItem(group_divider_item_id)){
                         title = SpannableString(" ".repeat(6) + title).apply {
-                            setCoveringSpan(ForegroundColorSpan(resources.getColor(R.color.saturated_magenta, theme)))
-                            setCoveringSpan(StyleSpan(Typeface.ITALIC))
+                            setSpanHolistically(ForegroundColorSpan(resources.getColor(R.color.saturated_magenta, theme)))
+                            setSpanHolistically(StyleSpan(Typeface.ITALIC))
                         }
                     }
                 }
@@ -123,17 +113,19 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
                         persistMenuAfterItemClick(this)
                     }
                 }
+
                 show()
             }
         }
 
-        // screenshot button
+        // flowfield screenshot button
         screenshot_button.setOnClickListener {
             flowFieldPApplet.canvas.save(
                 File(
                     picturesDirectoryPath,
-                    "AutoCrop${formattedDateTimeString()}.jpg"
-                ).absolutePath
+                    "flowfield${formattedDateTimeString()}.jpg"
+                )
+                    .absolutePath
                     .also { Timber.i("Saving flowfield canvas to $it") }
             )
 
@@ -315,6 +307,4 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
             getDefaultSharedPreferences()
         )
     }
-
-    private lateinit var userPreferencesOnActivityCreation: List<Boolean>
 }

@@ -159,6 +159,7 @@ class ExaminationFragment(
 
 class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
     AppCompatSeekBar(context, attr) {
+
     companion object {
         const val PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE: Int = 50
     }
