@@ -10,7 +10,7 @@
         android:enabled="false"/>
 
     <item
-        android:id="@+id/main_menu_conduct_auto_scrolling"
+        android:id="@+id/main_menu_item_conduct_auto_scrolling"
         android:title="@string/menu_item_conduct_auto_scrolling"
         android:checkable="true"/>
 

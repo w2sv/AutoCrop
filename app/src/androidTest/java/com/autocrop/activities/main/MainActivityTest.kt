@@ -2,24 +2,29 @@ package com.autocrop.activities.main
 
 import android.content.Intent
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.pressBackUnconditionally
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
-import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
-import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.RootMatchers.isPlatformPopup
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.autocrop.UserPreferences
 import com.w2sv.autocrop.R
-import org.hamcrest.CoreMatchers.*
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.equalTo
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+
+fun ViewInteraction.isPopupMenuItem(): ViewInteraction = inRoot(isPlatformPopup())
+
 
 /**
  * https://www.youtube.com/watch?v=deXEAAaznVY
@@ -46,10 +51,6 @@ class MainActivityTest {
         assertVisibility(R.id.canvas_container)
     }
 
-
-//    @get:Rule
-//    val intentsTestRule = IntentsTestRule(MainActivity::class.java)
-
     @Test
             /**
              * https://stackoverflow.com/a/44696077/12083276
@@ -57,6 +58,8 @@ class MainActivityTest {
              */
     fun imageSelectionButton(){
         val id: Int = R.id.image_selection_button
+
+        Intents.init()
 
         assertVisibility(id)
 
@@ -73,15 +76,15 @@ class MainActivityTest {
         onView(withId(id))
             .perform(click())
 
-//        Intents.init()
-//        intended(
-//            allOf(
-//                hasAction(equalTo(Intent.ACTION_ANSWER)),
-//                hasExtraWithKey(Intent.EXTRA_ALLOW_MULTIPLE),
-//                hasType("image/*")
-//            )
-//        )
-//        Intents.release()
+        intended(
+            allOf(
+                hasType("image/*"),
+                hasAction(Intent.ACTION_PICK),
+                hasExtraWithKey(Intent.EXTRA_ALLOW_MULTIPLE)
+            )
+        )
+
+        Intents.release()
     }
 
     @Test
@@ -92,21 +95,89 @@ class MainActivityTest {
     @Test
     fun menuInflationButton(){
         val buttonId: Int = R.id.menu_button
-        val menuId: Int = R.menu.activity_main
+        val menuItemTexts: List<Int> = listOf(
+            R.string.menu_item_conduct_auto_scrolling,
+            R.string.menu_item_delete_input_screenshots,
+            R.string.menu_item_save_to_autocrop_folder,
+            R.string.menu_item_examination_group,
+            R.string.menu_item_saving_group
+        )
+
+        fun assertItemInvisibility(){
+            menuItemTexts.forEach {
+                onView(
+                    withText(it)
+                )
+                    .check(doesNotExist())
+            }
+        }
 
         assertVisibility(buttonId)
-        onView(withId(menuId))
-            .check(doesNotExist())
+        assertItemInvisibility()
 
-        onView(withId(buttonId))
+        // inflate menu
+        val button = onView(withId(buttonId))
+
+        button
             .perform(click())
 
-        onView(
-            withText(R.string.menu_item_conduct_auto_scrolling)
-        )
-            .inRoot(
-                isPlatformPopup()
+        // assert item visibility
+        menuItemTexts.forEach {
+            onView(
+                withText(it)
             )
-            .check(matches(isDisplayed()))
+                .isPopupMenuItem()
+                .check(matches(isDisplayed()))
+        }
+
+        // assert menu perseverance after item clicking
+        menuItemTexts.forEach {
+            onView(
+                withText(it)
+            )
+                .isPopupMenuItem()
+                .perform(click())
+                .perform(click())
+        }
+
+        // assert menu closing upon clicking next to menu
+        button
+            .perform(click())
+        assertItemInvisibility()
+
+        // assert menu item check state being reflected within UserPreferences
+        val testUserPreferencesValue = false
+
+        val userPreferencesCopy: List<Boolean> = UserPreferences.values.toList()
+        UserPreferences.keys.forEach {
+            UserPreferences[it] = testUserPreferencesValue
+        }
+
+        (0 until UserPreferences.size).forEach {
+            onView(
+                withText(menuItemTexts[it])
+            )
+                .isPopupMenuItem()
+                .perform(click())
+        }
+
+        assertArrayEquals(
+            Array(UserPreferences.size){testUserPreferencesValue},
+            UserPreferences.values.toTypedArray()
+        )
+
+        // reset UserPreferences values
+        UserPreferences.keys.forEachIndexed { i, el ->
+            UserPreferences[el] = userPreferencesCopy[i]
+        }
+    }
+
+    @Test
+    fun appExitingOnBackpress(){
+        pressBackUnconditionally()
+
+        activityScenarioRule.scenario.onActivity {
+            assertEquals(it.isDestroyed, true)
+        }
     }
 }

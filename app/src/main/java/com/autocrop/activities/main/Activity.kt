@@ -78,7 +78,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
             val menuItemToPreferenceKey: Map<Int, String> = mapOf(
                 R.id.main_menu_item_delete_input_screenshots to UserPreferences.Keys.deleteInputScreenshots,
                 R.id.main_menu_item_save_to_autocropped_dir to UserPreferences.Keys.saveToAutocroppedDir,
-                R.id.main_menu_conduct_auto_scrolling to UserPreferences.Keys.conductAutoScrolling
+                R.id.main_menu_item_conduct_auto_scrolling to UserPreferences.Keys.conductAutoScrolling
             )
 
             val groupDividerItems: List<Int> = listOf(
@@ -98,7 +98,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
                 // format group divider items
                 groupDividerItems.forEach { group_divider_item_id ->
                     with(menu.findItem(group_divider_item_id)){
-                        title = SpannableString(" ".repeat(6) + title).apply {
+                        title = SpannableString(title).apply {
                             setSpanHolistically(ForegroundColorSpan(resources.getColor(R.color.saturated_magenta, theme)))
                             setSpanHolistically(StyleSpan(Typeface.ITALIC))
                         }
