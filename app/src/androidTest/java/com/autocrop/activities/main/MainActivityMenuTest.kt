@@ -31,8 +31,8 @@ class MenuTest {
 
     private val view = viewInteractionById(R.id.menu_button)
 
-    private fun inflateMenu() {
-        retryFlakyAction(700) {
+    private fun inflateMenu(timeout: Long = 700) {
+        retryFlakyAction(timeout) {
             view.perform(click())
         }
     }
@@ -68,7 +68,7 @@ class MenuTest {
     @Test
     @FlakyTest
     fun itemVisibilityAndMenuPersistingUponItemClicking() {
-        inflateMenu()
+        inflateMenu(1000)
 
         // assert item visibility
         with(menuTextIds) {
@@ -115,7 +115,7 @@ class MenuTest {
         )
     }
 
-    fun resetUserPreferences() {
+    private fun resetUserPreferences() {
         UserPreferences.keys.forEachIndexed { i, el ->
             UserPreferences[el] = userPreferencesCopy[i]
         }
