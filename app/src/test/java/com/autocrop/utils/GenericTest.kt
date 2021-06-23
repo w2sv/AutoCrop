@@ -1,8 +1,7 @@
-package utils
+package com.autocrop.utils
 
-import com.autocrop.utils.*
 import org.junit.Test
-import kotlin.test.*
+import kotlin.test.assertEquals
 
 
 internal class GenericTest {

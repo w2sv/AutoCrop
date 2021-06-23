@@ -1,7 +1,5 @@
-package utils
+package com.autocrop.utils
 
-import com.autocrop.utils.at
-import com.autocrop.utils.getByBoolean
 import org.junit.Test
 import kotlin.test.assertEquals
 

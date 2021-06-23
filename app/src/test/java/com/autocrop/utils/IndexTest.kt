@@ -1,6 +1,5 @@
-package utils
+package com.autocrop.utils
 
-import com.autocrop.utils.rotated
 import org.junit.Test
 import kotlin.test.assertEquals
 

@@ -1,9 +1,5 @@
-package utils
+package com.autocrop.utils
 
-import com.autocrop.utils.biggerEquals
-import com.autocrop.utils.biggerThan
-import com.autocrop.utils.smallerEquals
-import com.autocrop.utils.smallerThan
 import org.junit.Test
 import kotlin.test.assertEquals
 
