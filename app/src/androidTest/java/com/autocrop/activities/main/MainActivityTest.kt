@@ -2,7 +2,6 @@ package com.autocrop.activities.main
 
 import android.content.Intent
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.pressBackUnconditionally
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.matcher.ViewMatchers.isClickable
@@ -11,20 +10,14 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.filters.FlakyTest
 import androidx.test.filters.MediumTest
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-import assertTextContainment
-import assertVisibility
-import check
-import clickView
 import com.autocrop.UserPreferences
 import com.w2sv.autocrop.R
-import intentTester
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import retryFlakyAction
-import viewInteractionById
+import utils.*
 
 
 @RunWith(AndroidJUnit4ClassRunner::class)
@@ -67,7 +60,9 @@ class MainActivityTest {
         assertTextContainment(id, R.string.image_selection_button)
 
         // assert opening of gallery with multiple image selection intent
-        pressImageSelectionButton()
+        retryFlakyAction(700) {
+            clickView(id)
+        }
         intended(
             allOf(
                 hasType("image/*"),
@@ -75,15 +70,6 @@ class MainActivityTest {
                 hasExtraWithKey(Intent.EXTRA_ALLOW_MULTIPLE)
             )
         )
-    }
-
-    @Test
-    @FlakyTest
-    fun backpressInGallery() {
-        pressImageSelectionButton()
-        pressBackUnconditionally()
-
-        // TODO: assert proper restoring of activity layout
     }
 
     @Test
@@ -99,11 +85,5 @@ class MainActivityTest {
         activityScenarioRule.scenario.recreate()
 
         Assert.assertArrayEquals(targetValues, UserPreferences.values.toTypedArray())
-    }
-
-    private fun pressImageSelectionButton() {
-        retryFlakyAction(700) {
-            clickView(R.id.image_selection_button)
-        }
     }
 }

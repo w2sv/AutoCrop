@@ -1,10 +1,12 @@
+# Reference: https://www.raywenderlich.com/10562143-continuous-integration-for-android
+
 name: CI Workflow
-on: [push]
+on: [push, pull-request]
 
 jobs:
   build-and-test:
     name: Build and run tests
-    runs-on: ubuntu-latest
+    runs-on: macos-latest  # allows for hardware acceleration
     steps:
       - name: Checkout current repository in ubuntu's file system
         uses: actions/checkout@v1
@@ -15,9 +17,11 @@ jobs:
           java-version: 1.8
 
       - name: Unit tests
-        run: ./gradlew testDebugUnitTest
+        run: |
+          chmod +x gradlew
+          ./gradlew testDebugUnitTest
 
-      - name: Run instrumentation tests
+      - name: Instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
@@ -33,4 +37,3 @@ jobs:
         with:
           name: reports
           path: app/build/reports
-

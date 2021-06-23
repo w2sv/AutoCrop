@@ -8,17 +8,13 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.filters.FlakyTest
 import androidx.test.filters.MediumTest
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-import check
 import com.autocrop.UserPreferences
 import com.w2sv.autocrop.R
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import popupMenuItem
-import retryFlakyAction
-import viewInteractionById
-import viewInteractionByText
+import utils.*
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @MediumTest
