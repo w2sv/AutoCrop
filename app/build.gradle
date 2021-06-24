@@ -66,6 +66,7 @@ dependencies {
     // -----------------
     // System Tests
 
+    androidTestImplementation 'pl.pragmatists:JUnitParams:1.1.1'
     androidTestImplementation junit4
     androidTestImplementation junitExt
     androidTestImplementation('androidx.test:runner:1.3.0')

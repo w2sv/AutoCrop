@@ -14,7 +14,7 @@ import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import utils.*
+import utils.espresso.*
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @MediumTest

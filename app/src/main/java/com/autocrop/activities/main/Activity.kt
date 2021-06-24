@@ -122,7 +122,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         screenshot_button.setOnClickListener {
             flowFieldPApplet.canvas.save(
                 File(
-                    picturesDirectoryPath,
+                    picturesDir,
                     "flowfield${formattedDateTimeString()}.jpg"
                 )
                     .absolutePath
@@ -130,7 +130,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
             )
 
             displayToast(
-                "Saved Flowfield Image to\n${picturesDirectoryPath}",
+                "Saved Flowfield Image to\n${picturesDir}",
                 TextColors.successfullyCarriedOut,
                 Toast.LENGTH_SHORT
             )

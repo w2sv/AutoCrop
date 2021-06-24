@@ -1,6 +1,7 @@
 package com.autocrop.utils.android
 
 import android.os.Environment
+import java.io.File
 
 
-val picturesDirectoryPath: String = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).absolutePath
+val picturesDir: File = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)

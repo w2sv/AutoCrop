@@ -1,0 +1,1 @@
+adb push app/src/androidTest/resources /sdcard/Pictures/AndroidTestResources

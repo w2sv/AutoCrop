@@ -1,4 +1,5 @@
 # Reference: https://www.raywenderlich.com/10562143-continuous-integration-for-android
+# https://dev.to/ychescale9/running-android-emulators-on-ci-from-bitrise-io-to-github-actions-3j76
 
 name: CI Workflow
 on: [push, pull_request]
@@ -6,7 +7,7 @@ on: [push, pull_request]
 jobs:
   build-and-test:
     name: Build and run tests
-    runs-on: macos-latest  # allows for hardware acceleration
+    runs-on: macos-latest  # allows for hardware acceleration through HAXM
     steps:
       - name: Checkout current repository in ubuntu's file system
         uses: actions/checkout@v2

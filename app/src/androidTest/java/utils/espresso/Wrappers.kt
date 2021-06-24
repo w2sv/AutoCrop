@@ -1,4 +1,4 @@
-package utils
+package utils.espresso
 
 import android.os.SystemClock
 import androidx.test.espresso.PerformException

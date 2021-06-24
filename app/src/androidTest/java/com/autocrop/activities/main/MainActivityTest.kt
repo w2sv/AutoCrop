@@ -17,7 +17,7 @@ import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import utils.*
+import utils.espresso.*
 
 
 @RunWith(AndroidJUnit4ClassRunner::class)
@@ -85,5 +85,11 @@ class MainActivityTest {
         activityScenarioRule.scenario.recreate()
 
         Assert.assertArrayEquals(targetValues, UserPreferences.values.toTypedArray())
+    }
+
+    @Test
+    fun intent(){
+        activityScenarioRule.scenario.onActivity {
+        }
     }
 }
