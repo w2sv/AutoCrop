@@ -42,6 +42,8 @@ class MainActivityTest: UserPreferencesModifyingTest() {
     @Test
     @FlakyTest
     fun flowfieldCaptureButton() {
+        // TODO: debug
+
         with(viewInteractionById(R.id.flowfield_capture_button)) {
             check(isDisplayed())
             check(isClickable())

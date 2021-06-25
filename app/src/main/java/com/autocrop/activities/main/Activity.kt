@@ -13,11 +13,9 @@ import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import com.autocrop.UserPreferences
 import com.autocrop.activities.SystemUiHidingFragmentActivity
-import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
-import com.autocrop.utils.getByBoolean
 import com.autocrop.utils.setSpanHolistically
 import com.w2sv.autocrop.R
 import kotlinx.android.synthetic.main.activity_main.*
@@ -34,9 +32,15 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
     private lateinit var userPreferencesOnActivityCreation: List<Boolean>
 
+    /**
+     * - Sets flowfield
+     * - Initializes User Preferences
+     * - Sets button onClickListeners
+     * - Displays crop saving result snackbar if applicable
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setPixelField()
+        setFlowfield()
 
         if (!UserPreferences.isInitialized)
             UserPreferences.init(getDefaultSharedPreferences())
@@ -50,7 +54,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
     private lateinit var flowFieldPApplet: FlowFieldPApplet
 
-    private fun setPixelField() {
+    private fun setFlowfield() {
         if (!::flowFieldPApplet.isInitialized){
             flowFieldPApplet = FlowFieldPApplet(
                 screenResolution(windowManager)

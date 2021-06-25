@@ -2,7 +2,10 @@ package com.autocrop.activities
 
 import android.view.View
 import android.view.Window
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.FragmentActivity
+import com.autocrop.utils.android.apiLowerEquals
 
 
 abstract class SystemUiHidingFragmentActivity(layoutId: Int) : FragmentActivity(layoutId) {
@@ -28,14 +31,18 @@ abstract class SystemUiHidingFragmentActivity(layoutId: Int) : FragmentActivity(
 
 
 fun hideSystemUI(window: Window) {
-    window.decorView.systemUiVisibility = (
-        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        // Set the content to appear under the system bars so that the
-        // content doesn't resize when the system bars hide and show.
-        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        // Hide the nav bar and status bar
-        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        or View.SYSTEM_UI_FLAG_FULLSCREEN)
+    if (apiLowerEquals(29)){
+        window.decorView.systemUiVisibility = (
+            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            // Set the content to appear under the system bars so that the
+            // content doesn't resize when the system bars hide and show.
+            or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            // Hide the nav bar and status bar
+            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            or View.SYSTEM_UI_FLAG_FULLSCREEN)
+    }
+    else
+        window.setDecorFitsSystemWindows(false)
 }

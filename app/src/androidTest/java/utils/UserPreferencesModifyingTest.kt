@@ -5,6 +5,7 @@ import com.autocrop.UserPreferences
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
+import kotlin.test.assertEquals
 
 
 @RunWith(AndroidJUnit4ClassRunner::class)
@@ -23,7 +24,7 @@ abstract class UserPreferencesModifyingTest {
     }
 
     protected fun setUserPreferences(to: Array<Boolean>){
-        assert(to.size == 3)
+        assertEquals(to.size, UserPreferences.size)
 
         UserPreferences.keys.forEachIndexed { i, el ->
             UserPreferences[el] = to[i]
