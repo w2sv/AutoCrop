@@ -119,10 +119,12 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         }
 
         // flowfield screenshot button
-        screenshot_button.setOnClickListener {
+        makeDirIfRequired(flowfieldCapturesDestinationDir.absolutePath)
+
+        flowfield_capture_button.setOnClickListener {
             flowFieldPApplet.canvas.save(
                 File(
-                    picturesDir,
+                    flowfieldCapturesDestinationDir,
                     "flowfield${formattedDateTimeString()}.jpg"
                 )
                     .absolutePath
@@ -130,7 +132,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
             )
 
             displayToast(
-                "Saved Flowfield Image to\n${picturesDir}",
+                "Saved Flowfield Capture to\n${picturesDir}",
                 TextColors.successfullyCarriedOut,
                 Toast.LENGTH_SHORT
             )
@@ -162,7 +164,12 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         }
     }
 
-    val retrieveSnackbarArgument = SnackbarArgumentRetriever()
+    val flowfieldCapturesDestinationDir: File = File(
+        picturesDir,
+        "Flowfield-Captures"
+    )
+
+    private val retrieveSnackbarArgument = SnackbarArgumentRetriever()
 
     // -----------------Permissions---------------------
 

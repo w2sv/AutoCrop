@@ -49,7 +49,7 @@
         <!-- Screenshot -->
 
     <ImageButton
-        android:id="@+id/screenshot_button"
+        android:id="@+id/flowfield_capture_button"
         android:background="@drawable/ic_camera"
         android:backgroundTint="@android:color/darker_gray"
         android:layout_width="30dp"

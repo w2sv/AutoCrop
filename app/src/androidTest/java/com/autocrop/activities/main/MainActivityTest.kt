@@ -1,11 +1,11 @@
 package com.autocrop.activities.main
 
 import android.content.Intent
+import android.os.SystemClock
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
-import androidx.test.espresso.matcher.ViewMatchers.isClickable
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.filters.FlakyTest
 import androidx.test.filters.MediumTest
@@ -17,33 +17,45 @@ import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import utils.UserPreferencesModifyingTest
 import utils.espresso.*
+import kotlin.test.assertEquals
 
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @MediumTest
-class MainActivityTest {
+class MainActivityTest: UserPreferencesModifyingTest() {
 
     @get:Rule
     var activityScenarioRule = ActivityScenarioRule<MainActivity>(MainActivity::class.java)
 
     @Test
     fun layoutVisibility() {
-        assertVisibility(R.id.layout_activity_main)
+        assertCompleteVisibility(R.id.layout_activity_main)
     }
 
     @Test
     fun canvasContainerVisibility() {
-        assertVisibility(R.id.canvas_container)
+        assertCompleteVisibility(R.id.canvas_container)
     }
 
     @Test
     @FlakyTest
-    fun screenshotButton() {
-        with(viewInteractionById(R.id.screenshot_button)) {
+    fun flowfieldCaptureButton() {
+        with(viewInteractionById(R.id.flowfield_capture_button)) {
             check(isDisplayed())
             check(isClickable())
-            retryFlakyAction(200) { click() }
+
+            activityScenarioRule.scenario.onActivity {
+                with(it.flowfieldCapturesDestinationDir){
+                    fun nContainedFiles(): Int = listFiles()!!.size
+
+                    val nFilesPreNewCapture = nContainedFiles()
+                    retryFlakyAction(200) { click() }
+                    SystemClock.sleep(500)
+                    assertEquals(nFilesPreNewCapture + 1, nContainedFiles())
+                }
+            }
         }
     }
 
@@ -56,7 +68,7 @@ class MainActivityTest {
     fun imageSelectionButton() = intentTester {
         val id: Int = R.id.image_selection_button
 
-        assertVisibility(id)
+        assertCompleteVisibility(id)
         assertTextContainment(id, R.string.image_selection_button)
 
         // assert opening of gallery with multiple image selection intent
@@ -73,23 +85,15 @@ class MainActivityTest {
     }
 
     @Test
-    fun userPreferencesMaintenanceThroughoutAppDestruction() {
-        // TODO: assert test validity
+    fun userPreferencesPersistingThroughoutAppDestruction() {
+        val expectedUserPreferenceValues = UserPreferences
+            .values
+            .map { !it }
+            .toTypedArray()
 
-        val targetValues = arrayOf(true, true, false)
-
-        UserPreferences.keys.forEachIndexed { i, el ->
-            UserPreferences[el] = targetValues[i]
-        }
+        setUserPreferences(expectedUserPreferenceValues)
 
         activityScenarioRule.scenario.recreate()
-
-        Assert.assertArrayEquals(targetValues, UserPreferences.values.toTypedArray())
-    }
-
-    @Test
-    fun intent(){
-        activityScenarioRule.scenario.onActivity {
-        }
+        Assert.assertArrayEquals(expectedUserPreferenceValues, UserPreferences.values.toTypedArray())
     }
 }

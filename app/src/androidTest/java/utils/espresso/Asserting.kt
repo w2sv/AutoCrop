@@ -19,9 +19,9 @@ fun assertTextContainment(viewId: Int, text: Int) {
         )
 }
 
-fun assertVisibility(viewId: Int) {
+fun assertCompleteVisibility(viewId: Int) {
     Espresso.onView(ViewMatchers.withId(viewId))
-        .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
 }
 
 fun ViewInteraction.check(matcher: Matcher<View>) {

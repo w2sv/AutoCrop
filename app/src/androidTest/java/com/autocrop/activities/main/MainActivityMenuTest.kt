@@ -14,51 +14,30 @@ import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import utils.UserPreferencesModifyingTest
 import utils.espresso.*
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 @MediumTest
-class MenuTest {
+class MenuTest: UserPreferencesModifyingTest() {
 
     // TODO: make Nested class within MainActivityTest
 
     @get:Rule
     var activityScenarioRule = ActivityScenarioRule<MainActivity>(MainActivity::class.java)
 
-    private val view = viewInteractionById(R.id.menu_button)
-
-    private fun inflateMenu(timeout: Long = 700) {
-        retryFlakyAction(timeout) {
-            view.perform(click())
-        }
+    @Test
+    fun button() {
+        assertItemInvisibility()
+        buttonView.check(isDisplayed())
+        buttonView.check(isClickable())
     }
-
-    private val menuItemTextIds: List<Int> = listOf(
-        R.string.menu_item_conduct_auto_scrolling,
-        R.string.menu_item_delete_input_screenshots,
-        R.string.menu_item_save_to_autocrop_folder
-    )
-
-    private val menuDividerTextIds: List<Int> = listOf(
-        R.string.menu_item_examination_group,
-        R.string.menu_item_saving_group
-    )
-
-    private val menuTextIds: List<Int>
-        get() = menuItemTextIds + menuDividerTextIds
 
     private fun assertItemInvisibility() {
         menuTextIds.forEach {
             viewInteractionByText(it)
                 .check(ViewAssertions.doesNotExist())
         }
-    }
-
-    @Test
-    fun button() {
-        assertItemInvisibility()
-        view.check(isDisplayed())
-        view.check(isClickable())
     }
 
     @Test
@@ -82,7 +61,9 @@ class MenuTest {
     @Test
     @FlakyTest
     fun assertCheckReflectionWithinUserPreferences() {
-        setUserPreferencesToFalse()
+        val testUserPreferencesSetValue = false
+
+        setUserPreferences(Array(UserPreferences.size){testUserPreferencesSetValue})
         inflateMenu()
 
         menuItemTextIds.forEach {
@@ -95,27 +76,27 @@ class MenuTest {
             Array(UserPreferences.size) { !testUserPreferencesSetValue },
             UserPreferences.values.toTypedArray()
         )
-        resetUserPreferences()
     }
 
-    private val testUserPreferencesSetValue = false
+    private val buttonView = viewInteractionById(R.id.menu_button)
 
-    private fun setUserPreferencesToFalse() {
-        UserPreferences.keys.forEach {
-            UserPreferences[it] = testUserPreferencesSetValue
-        }
-
-        Assert.assertArrayEquals(
-            Array(UserPreferences.size) { testUserPreferencesSetValue },
-            UserPreferences.values.toTypedArray()
-        )
-    }
-
-    private fun resetUserPreferences() {
-        UserPreferences.keys.forEachIndexed { i, el ->
-            UserPreferences[el] = userPreferencesCopy[i]
+    private fun inflateMenu(timeout: Long = 700) {
+        retryFlakyAction(timeout) {
+            buttonView.perform(click())
         }
     }
 
-    private val userPreferencesCopy: List<Boolean> = UserPreferences.values.toList()
+    private val menuItemTextIds: List<Int> = listOf(
+        R.string.menu_item_conduct_auto_scrolling,
+        R.string.menu_item_delete_input_screenshots,
+        R.string.menu_item_save_to_autocrop_folder
+    )
+
+    private val menuDividerTextIds: List<Int> = listOf(
+        R.string.menu_item_examination_group,
+        R.string.menu_item_saving_group
+    )
+
+    private val menuTextIds: List<Int>
+        get() = menuItemTextIds + menuDividerTextIds
 }

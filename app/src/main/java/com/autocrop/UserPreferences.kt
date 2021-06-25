@@ -3,6 +3,7 @@ package com.autocrop
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Environment
+import com.autocrop.utils.android.makeDirIfRequired
 import com.autocrop.utils.android.writeBoolean
 import timber.log.Timber
 import java.io.File
@@ -31,6 +32,8 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf(
     val saveToAutocroppedDir: Boolean
         get() = get(Keys.saveToAutocroppedDir)!!
 
+    var isInitialized: Boolean = false
+
     fun init(defaultSharedPreferences: SharedPreferences) {
         keys.forEach {
             this[it] = defaultSharedPreferences.getBoolean(
@@ -38,14 +41,10 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf(
                 get(it)!!
             )
         }
-            .also {
-                Timber.i("Initialized Parameters")
-            }
+        Timber.i("Initialized Parameters")
 
         isInitialized = true
     }
-
-    var isInitialized: Boolean = false
 
     fun toggle(key: String) {
         this[key] = !this[key]!!
@@ -94,16 +93,7 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf(
             makeAutoCroppedDirIfRequired()
     }
 
-    fun makeAutoCroppedDirIfRequired(): Boolean {
-        with(File(absoluteCropSaveDirPath)) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !exists())
-                return mkdirs().also {
-                    if (it)
-                        Timber.i("Created AutoCropped directory under $absolutePath")
-                    else
-                        Timber.i("Couldn't create AutoCropped directory")
-                }
-        }
-        return false
-    }
+    fun makeAutoCroppedDirIfRequired(): Boolean =
+        makeDirIfRequired(absoluteCropSaveDirPath)
+
 }
