@@ -7,7 +7,7 @@ import com.autocrop.utils.android.picturesDir
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Assert.assertEquals
-import org.junit.Before
+import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
@@ -18,7 +18,10 @@ import java.io.File
 class CroppingTest {
 
     companion object{
-        val TEST_RESOURCES_DIR: File = File(picturesDir, "TestResources")
+        val TEST_RESOURCES_DIR: File = File(picturesDir, "AndroidTestResources")
+
+        val VALID_SCREENSHOTS_DIR: File = File(TEST_RESOURCES_DIR, "valid-screenshots")
+        val INVALID_SCREENSHOTS_DIR: File = File(TEST_RESOURCES_DIR, "invalid-screenshots")
     }
 
     /**
@@ -43,11 +46,7 @@ class CroppingTest {
             .split("\n")
             .map { s -> s.filter { !it.isWhitespace() } }
             .forEach {
-                with(
-                    croppedImage(
-                        loadTestScreenshot(it)
-                    )!!
-                ){
+                with(croppedImage(loadTestScreenshot(it, dir = VALID_SCREENSHOTS_DIR))!!){
                     println("$it, ${first.width}, ${first.height}, $second")
                 }
             }
@@ -57,6 +56,8 @@ class CroppingTest {
     fun paths(){
         assert(picturesDir.exists())
         assert(TEST_RESOURCES_DIR.exists())
+        assert(VALID_SCREENSHOTS_DIR.exists())
+        assert(INVALID_SCREENSHOTS_DIR.exists())
     }
 
     @Test
@@ -73,7 +74,14 @@ class CroppingTest {
         "Screenshot_2021-02-20-23-54-58-389_com.android.chrome.png, 720, 991, 69"
     ])
     fun croppedImageValidScreenshots(screenshotFileName: String, cropWidth: Int, cropHeight: Int, retentionPercentage: Int) {
-        with(croppedImage(loadTestScreenshot(screenshotFileName))!!){
+        with(
+            croppedImage(
+                loadTestScreenshot(
+                    screenshotFileName,
+                    dir = VALID_SCREENSHOTS_DIR
+                )
+            )!!
+        ){
             assertEquals(cropWidth, first.width)
             assertEquals(cropHeight, first.height)
 
@@ -81,12 +89,26 @@ class CroppingTest {
         }
     }
 
-//    @Test
-//    @Parameters(value = [])
-//    fun croppedImageInvalidScreenshots(screenshotsFileName: String){
-//        assertEquals(null, croppedImage(loadTestScreenshot(screenshotsFileName)))
-//    }
+    @Test
+    @Parameters(method = "invalidScreenshotsDirContent")
+    fun croppedImageInvalidScreenshots(screenshotsFile: File){
+        assertNull(
+            croppedImage(
+                loadTestScreenshot(
+                    screenshotsFile.name,
+                    dir = INVALID_SCREENSHOTS_DIR
+                )
+            )
+        )
+    }
 
-    private fun loadTestScreenshot(imageFileName: String): Bitmap =
-        BitmapFactory.decodeFile(File(TEST_RESOURCES_DIR, imageFileName).absolutePath)
+    fun invalidScreenshotsDirContent(): Array<out File> =
+        INVALID_SCREENSHOTS_DIR.listFiles()!!
+
+    private fun loadTestScreenshot(imageFileName: String, dir: File): Bitmap =
+        BitmapFactory
+            .decodeFile(
+                File(dir, imageFileName)
+                    .absolutePath
+            )
 }
