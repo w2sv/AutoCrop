@@ -132,7 +132,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
             )
 
             displayToast(
-                "Saved Flowfield Capture to\n${picturesDir}",
+                "Saved Flowfield Capture to\n${flowfieldCapturesDestinationDir}",
                 TextColors.successfullyCarriedOut,
                 Toast.LENGTH_SHORT
             )
