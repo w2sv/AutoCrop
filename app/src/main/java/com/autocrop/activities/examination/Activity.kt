@@ -18,7 +18,7 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearAndLog
 import com.autocrop.cropBundleList
 import com.autocrop.utils.android.*
-import com.autocrop.utils.getByBoolean
+import com.autocrop.utils.get
 import com.autocrop.utils.notNull
 import com.w2sv.autocrop.R
 import com.google.android.material.snackbar.Snackbar
@@ -100,7 +100,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
                     R.animator.card_flip_left_out
                 ),
                 flipRightAnimations
-            ).getByBoolean(flipRight)
+            )[flipRight]
         )
     }
 

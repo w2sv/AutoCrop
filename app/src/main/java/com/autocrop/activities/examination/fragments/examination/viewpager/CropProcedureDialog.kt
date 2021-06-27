@@ -12,7 +12,7 @@ import com.autocrop.crop
 import com.autocrop.cropBundleList
 import com.autocrop.screenshotUri
 import com.autocrop.utils.Index
-import com.autocrop.utils.getByBoolean
+import com.autocrop.utils.get
 
 
 /**
@@ -31,7 +31,7 @@ class CropProcedureDialog(
                 listOf(
                     "Save crop?",
                     "Save crop and\ndelete screenshot?"
-                ).getByBoolean(UserPreferences.deleteInputScreenshots)
+                )[UserPreferences.deleteInputScreenshots]
             )
 
             setNegativeButton(

@@ -16,7 +16,7 @@ internal class CollectionTest {
     fun getByBoolean(){
         val list = listOf(4, 5)
 
-        assertEquals(4, list.getByBoolean(false))
-        assertEquals(5, list.getByBoolean(true))
+        assertEquals(4, list[false])
+        assertEquals(5, list[true])
     }
 }

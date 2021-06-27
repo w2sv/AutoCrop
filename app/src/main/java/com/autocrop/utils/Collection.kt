@@ -6,4 +6,4 @@ fun <T> Collection<T>.at(index: Int): T =
     else
         elementAt(index)
 
-fun <T> Collection<T>.getByBoolean(flag: Boolean): T = elementAt(flag.toInt())
+operator fun <T> Collection<T>.get(flag: Boolean): T = elementAt(flag.toInt())

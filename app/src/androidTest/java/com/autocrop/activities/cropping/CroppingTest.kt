@@ -56,6 +56,7 @@ class CroppingTest {
     fun paths(){
         assert(picturesDir.exists())
         assert(TEST_RESOURCES_DIR.exists())
+
         assert(VALID_SCREENSHOTS_DIR.exists())
         assert(INVALID_SCREENSHOTS_DIR.exists())
     }

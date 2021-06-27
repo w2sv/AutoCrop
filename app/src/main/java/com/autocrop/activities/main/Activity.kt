@@ -13,10 +13,12 @@ import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import com.autocrop.UserPreferences
 import com.autocrop.activities.SystemUiHidingFragmentActivity
+import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
 import com.autocrop.utils.setSpanHolistically
+import com.autocrop.utils.get
 import com.w2sv.autocrop.R
 import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
@@ -30,23 +32,31 @@ val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String =
 
 class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
+    companion object{
+        const val CROP_IMAGES_SELECTION_MAX: Int = 50
+    }
+
     private lateinit var userPreferencesOnActivityCreation: List<Boolean>
 
     /**
      * - Sets flowfield
-     * - Initializes User Preferences
+     * - Initializes UserPreferences from shared preferences
      * - Sets button onClickListeners
-     * - Displays crop saving result snackbar if applicable
+     * - Displays crop saving results snackbar if applicable
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setFlowfield()
 
+        // initialize flow field if necessary; craft preferences value copy
         if (!UserPreferences.isInitialized)
             UserPreferences.init(getDefaultSharedPreferences())
         userPreferencesOnActivityCreation = UserPreferences.values.toList()
 
         setButtonOnClickListeners()
+
+        // display cropping saving results if applicable
         retrieveSnackbarArgument(intent, N_SAVED_CROPS, -1)?.let {
             displaySavingResultSnackbar(it)
         }
@@ -68,7 +78,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
     }
 
     private fun setButtonOnClickListeners() {
-        // image selection button
+        // -----------image selection button-----------
         image_selection_button.setOnClickListener {
             if (!permissionsHandler.allPermissionsGranted)
                 permissionsHandler.request()
@@ -76,7 +86,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
                 selectImages()
         }
 
-        // menu inflation button
+        // -----------menu inflation button-----------
         menu_button.setOnClickListener {
 
             val menuItemToPreferenceKey: Map<Int, String> = mapOf(
@@ -122,7 +132,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
             }
         }
 
-        // flowfield screenshot button
+        // -----------flowfield capture button-----------
         makeDirIfRequired(flowfieldCapturesDestinationDir.absolutePath)
 
         flowfield_capture_button.setOnClickListener {
@@ -144,28 +154,21 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
     }
 
     private fun displaySavingResultSnackbar(nSavedCrops: Int) {
-        val textColor: Int = TextColors.successfullyCarriedOut
-
-        with(UserPreferences.deleteInputScreenshots) {
+        displaySnackbar(
             when (nSavedCrops) {
-                0 -> displaySnackbar("Discarded all crops", textColor)
-                1 -> displaySnackbar(
-                    listOf(
-                        "Saved 1 crop",
-                        "Saved 1 crop and deleted\ncorresponding screenshot"
-                    ).getByBoolean(this),
-                    textColor
-                )
-                in 2..Int.MAX_VALUE -> displaySnackbar(
-                    listOf(
-                        "Saved $nSavedCrops crops",
-                        "Saved $nSavedCrops crops and deleted\ncorresponding screenshots"
-                    ).getByBoolean(this),
-                    textColor
-                )
-                else -> Unit
-            }
-        }
+                0 -> "Discarded all crops"
+                in 1..CROP_IMAGES_SELECTION_MAX -> {
+                    val numerusInterpolation: String = listOf("", "s")[nSavedCrops >= 2]
+
+                    return "Saved $nSavedCrops crop$numerusInterpolation".run {
+                        if (UserPreferences.deleteInputScreenshots)
+                            plus(" and deleted\n$nSavedCrops corresponding screenshot$numerusInterpolation")
+                    }
+                }
+                else -> ""
+            },
+            textColor = TextColors.successfullyCarriedOut
+        )
     }
 
     val flowfieldCapturesDestinationDir: File = File(
@@ -265,12 +268,10 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 IntentCode.IMAGE_SELECTION.ordinal -> {
-                    val cropImagesSelectionMax = 50
-
                     with(data?.clipData!!) {
-                        if (itemCount > cropImagesSelectionMax){
+                        if (itemCount > CROP_IMAGES_SELECTION_MAX){
                             displaySnackbar(
-                                "Can't crop more than $cropImagesSelectionMax images at a time",
+                                "Can't crop more than $CROP_IMAGES_SELECTION_MAX images at a time",
                                 TextColors.urgent
                             )
                             return
