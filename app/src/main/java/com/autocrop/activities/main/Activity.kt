@@ -52,6 +52,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         // initialize flow field if necessary; craft preferences value copy
         if (!UserPreferences.isInitialized)
             UserPreferences.init(getDefaultSharedPreferences())
+
         userPreferencesOnActivityCreation = UserPreferences.values.toList()
 
         setButtonOnClickListeners()

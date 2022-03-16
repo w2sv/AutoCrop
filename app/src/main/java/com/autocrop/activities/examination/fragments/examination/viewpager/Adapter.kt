@@ -86,7 +86,7 @@ class ImageSliderAdapter(
 
         fun pageIndex(cropBundlePosition: Index): Index =
             headPosition.run {
-                if (smallerEquals(cropBundlePosition))
+                if (this <= cropBundlePosition)
                     cropBundlePosition - this
                 else
                     lastIndex - this + cropBundlePosition + 1

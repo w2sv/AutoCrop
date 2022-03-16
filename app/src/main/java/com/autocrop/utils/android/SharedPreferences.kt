@@ -10,10 +10,9 @@ fun Activity.getDefaultSharedPreferences(): SharedPreferences = getSharedPrefere
 )
 
 
-fun SharedPreferences.writeBoolean(key: String, value: Boolean){
-    this.edit().putBoolean(
+fun SharedPreferences.writeBoolean(key: String, value: Boolean) =
+    edit().putBoolean(
         key,
         value
     )
         .apply()
-}

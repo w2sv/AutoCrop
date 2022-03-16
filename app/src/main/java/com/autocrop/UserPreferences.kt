@@ -93,7 +93,5 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf(
             makeAutoCroppedDirIfRequired()
     }
 
-    fun makeAutoCroppedDirIfRequired(): Boolean =
-        makeDirIfRequired(absoluteCropSaveDirPath)
-
+    fun makeAutoCroppedDirIfRequired(): Boolean = makeDirIfRequired(absoluteCropSaveDirPath)
 }

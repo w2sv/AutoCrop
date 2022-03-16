@@ -8,5 +8,6 @@ internal class GenericTest {
     @Test
     fun booleanToInt(){
         assertEquals(1, true.toInt())
+        assertEquals(0, false.toInt())
     }
 }

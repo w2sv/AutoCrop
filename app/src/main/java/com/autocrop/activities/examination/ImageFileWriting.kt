@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import com.autocrop.UserPreferences
 import com.autocrop.utils.android.*
@@ -38,7 +39,7 @@ fun saveCropAndDeleteScreenshotIfApplicable(
 private fun Bitmap.save(context: Context, fileName: String) {
     try {
         // set file output stream and target file uri
-        val (fileOutputStream: OutputStream, imageFileUri: Uri) = if (apiLowerEquals(29)) {
+        val (fileOutputStream: OutputStream, imageFileUri: Uri) = if (apiNotNewerThanQ) {
             File(
                 UserPreferences.absoluteCropSaveDirPath,
                 fileName
