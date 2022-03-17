@@ -343,22 +343,13 @@ private class Scroller(
     }
 
     fun cancel(onScreenTouch: Boolean) {
-        val textColor: Int = TextColors.successfullyCarriedOut
-
         timer.cancel()
         isRunning = false
 
-        if (onScreenTouch)
-            activity.displaySnackbar(
-                "Cancelled auto scrolling",
-                textColor,
-                Snackbar.LENGTH_SHORT
-            )
-        else
-            activity.displaySnackbar(
-                "Traversed all crops",
-                textColor,
-                Snackbar.LENGTH_SHORT
-            )
+        activity.displaySnackbar(
+            listOf("Traversed all crops", "Cancelled auto scrolling")[onScreenTouch],
+            TextColors.successfullyCarriedOut,
+            Snackbar.LENGTH_SHORT
+        )
     }
 }
