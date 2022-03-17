@@ -16,11 +16,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
-import utils.UserPreferencesModifyingTest
+import utils.UserPreferencesModifier
 import utils.espresso.*
 
 
-class MainActivityTest: UserPreferencesModifyingTest() {
+class MainActivityTest: UserPreferencesModifier() {
 
     @JvmField
     @RegisterExtension

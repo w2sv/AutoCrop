@@ -10,7 +10,7 @@ import org.junit.BeforeClass
  * Interface for test classes tampering with UserPreferences singleton,
  * taking care of restoring the respective original values on test wrap up
  */
-abstract class UserPreferencesModifyingTest {
+abstract class UserPreferencesModifier {
 
     private lateinit var userPreferencesOnTestStart: Array<Boolean>
 
