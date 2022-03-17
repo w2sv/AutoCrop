@@ -153,7 +153,6 @@ class MainActivityTest: UserPreferencesModifier() {
             private val menuItemTextIds: List<Int> = listOf(
                 R.string.menu_item_conduct_auto_scrolling,
                 R.string.menu_item_delete_input_screenshots,
-                R.string.menu_item_save_to_autocrop_folder
             )
             private val menuDividerTextIds: List<Int> = listOf(
                 R.string.menu_item_examination_group,

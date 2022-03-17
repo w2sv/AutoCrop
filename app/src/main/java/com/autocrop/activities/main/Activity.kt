@@ -15,10 +15,11 @@ import com.autocrop.UserPreferences
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.examination.N_SAVED_CROPS
+import com.autocrop.picturesDir
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
-import com.autocrop.utils.setSpanHolistically
 import com.autocrop.utils.get
+import com.autocrop.utils.setSpanHolistically
 import com.w2sv.autocrop.R
 import kotlinx.android.synthetic.main.activity_main.*
 import processing.android.PFragment
@@ -92,7 +93,6 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
             val menuItemToPreferenceKey: Map<Int, String> = mapOf(
                 R.id.main_menu_item_delete_input_screenshots to UserPreferences.Keys.deleteInputScreenshots,
-                R.id.main_menu_item_save_to_autocropped_dir to UserPreferences.Keys.saveToAutocroppedDir,
                 R.id.main_menu_item_conduct_auto_scrolling to UserPreferences.Keys.conductAutoScrolling
             )
 

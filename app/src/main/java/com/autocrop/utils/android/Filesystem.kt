@@ -1,11 +1,8 @@
 package com.autocrop.utils.android
 
-import android.os.Environment
 import timber.log.Timber
 import java.io.File
 
-
-val picturesDir: File = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
 
 /**
  * Returns:
