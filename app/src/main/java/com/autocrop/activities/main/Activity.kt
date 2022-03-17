@@ -37,6 +37,8 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         const val CROP_IMAGES_SELECTION_MAX: Int = 100
     }
 
+    lateinit var flowField: FlowField
+
     /**
      * - Sets flowfield
      * - Initializes UserPreferences from shared preferences
@@ -46,13 +48,18 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setFlowfield()
+        if (!::flowField.isInitialized)
+            flowField = FlowField()
+        flowField.setPFragment()
 
         // initialize UserPreferences if necessary
         if (!UserPreferences.isInitialized)
             UserPreferences.init(getSharedPreferences(UserPreferences.sharedPreferencesFileName))
 
-        setButtonOnClickListeners()
+        // set button onClickListeners
+        ImageSelection().setButtonOnClickListener()
+        setMenuInflationButtonCallback()
+        flowField.setCaptureButtonCallback()
 
         // display cropping saving results if applicable
         retrieveSnackbarArgument(intent, N_SAVED_CROPS, -1)?.let {
@@ -60,31 +67,69 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         }
     }
 
-    private lateinit var flowFieldPApplet: FlowFieldPApplet
+    inner class FlowField{
+        private val pApplet: FlowFieldPApplet = FlowFieldPApplet(
+            screenResolution(windowManager)
+        ).also { Timber.i("Initialized flowFieldPApplet") }
 
-    private fun setFlowfield() {
-        if (!::flowFieldPApplet.isInitialized){
-            flowFieldPApplet = FlowFieldPApplet(
-                screenResolution(windowManager)
+        fun setPFragment() {
+            PFragment(pApplet).setView(
+                findViewById<FrameLayout>(R.id.canvas_container), this@MainActivity
             )
-            Timber.i("Initialized flowFieldPApplet")
         }
 
-        PFragment(flowFieldPApplet).setView(
-            findViewById<FrameLayout>(R.id.canvas_container), this
+        val capturesDestinationDir: File = File(
+            picturesDir,
+            "Flowfield-Captures"
         )
+
+        fun setCaptureButtonCallback(){
+            makeDirIfRequired(capturesDestinationDir.absolutePath)
+
+            flowfield_capture_button.setOnClickListener {
+                pApplet.canvas.save(
+                    File(
+                        capturesDestinationDir,
+                        "flowfield${formattedDateTimeString()}.jpg"
+                    )
+                        .absolutePath
+                        .also { Timber.i("Saving flowfield canvas to $it") }
+                )
+
+                displayToast(
+                    "Saved Flowfield Capture to\n${capturesDestinationDir}",
+                    TextColors.successfullyCarriedOut,
+                    Toast.LENGTH_SHORT
+                )
+            }
+        }
     }
 
-    private fun setButtonOnClickListeners() {
-        // -----------image selection button-----------
-        image_selection_button.setOnClickListener {
-            if (!permissionsHandler.allPermissionsGranted)
-                permissionsHandler.request()
-            else
-                selectImages()
+    private inner class ImageSelection{
+        val intentCode = 1
+
+        fun setButtonOnClickListener(){
+            image_selection_button.setOnClickListener {
+                if (!permissionsHandler.allPermissionsGranted)
+                    permissionsHandler.request()
+                else
+                    selectImages()
+            }
         }
 
-        // -----------menu inflation button-----------
+        fun selectImages() {
+            Intent(Intent.ACTION_PICK).run {
+                type = "image/*"
+                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                startActivityForResult(
+                    this,
+                    intentCode
+                )
+            }
+        }
+    }
+
+    fun setMenuInflationButtonCallback(){
         menu_button.setOnClickListener {
 
             val menuItemToPreferenceKey: Map<Int, String> = mapOf(
@@ -98,7 +143,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
             )
 
             // inflate popup menu
-            PopupMenu(this, it).run {
+            PopupMenu(this@MainActivity, it).run {
                 menuInflater.inflate(R.menu.activity_main, menu)
 
                 // set checks from UserPreferences
@@ -128,26 +173,6 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
                 show()
             }
         }
-
-        // -----------flowfield capture button-----------
-        makeDirIfRequired(flowfieldCapturesDestinationDir.absolutePath)
-
-        flowfield_capture_button.setOnClickListener {
-            flowFieldPApplet.canvas.save(
-                File(
-                    flowfieldCapturesDestinationDir,
-                    "flowfield${formattedDateTimeString()}.jpg"
-                )
-                    .absolutePath
-                    .also { Timber.i("Saving flowfield canvas to $it") }
-            )
-
-            displayToast(
-                "Saved Flowfield Capture to\n${flowfieldCapturesDestinationDir}",
-                TextColors.successfullyCarriedOut,
-                Toast.LENGTH_SHORT
-            )
-        }
     }
 
     private fun displaySavingResultSnackbar(nSavedCrops: Int) {
@@ -167,11 +192,6 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
             textColor = TextColors.successfullyCarriedOut
         )
     }
-
-    val flowfieldCapturesDestinationDir: File = File(
-        picturesDir,
-        "Flowfield-Captures"
-    )
 
     private val retrieveSnackbarArgument = SnackbarArgumentRetriever()
 
@@ -228,7 +248,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
             }
 
             if (allPermissionsGranted)
-                selectImages()
+                ImageSelection().selectImages()
         }
     }
 
@@ -242,27 +262,12 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
     // -----------------ImageSelection---------------------
 
-    private enum class IntentCode {
-        IMAGE_SELECTION
-    }
-
-    private fun selectImages() {
-        Intent(Intent.ACTION_PICK).run {
-            type = "image/*"
-            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            startActivityForResult(
-                this,
-                IntentCode.IMAGE_SELECTION.ordinal
-            )
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RESULT_OK) {
             when (requestCode) {
-                IntentCode.IMAGE_SELECTION.ordinal -> {
+                ImageSelection().intentCode -> {
                     with(data?.clipData!!) {
                         if (itemCount > CROP_IMAGES_SELECTION_MAX){
                             displaySnackbar(

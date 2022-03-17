@@ -23,15 +23,14 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf() {
         get() = isNotEmpty()
 
     fun init(sharedPreferences: SharedPreferences) {
-        val defaultValue: Map<String, Boolean> = mapOf(
+        mapOf(
             Keys.conductAutoScrolling to true,
             Keys.deleteInputScreenshots to false
-        )
-
-        keys.forEach {
-            this[it] = sharedPreferences.getBoolean(it, defaultValue[it]!!)
+        ).forEach{ (key, defaultValue) ->
+            this[key] = sharedPreferences.getBoolean(key, defaultValue)
         }
-        Timber.i("Initialized Parameters")
+
+        Timber.i("Initialized UserPreferences")
     }
 
     /**

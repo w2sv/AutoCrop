@@ -41,22 +41,30 @@ class MainActivityTest: UserPreferencesModifier() {
         viewInteractionById(R.id.canvas_container).check(isCompletelyDisplayed())
     }
 
-    @Test
-    fun userPreferencesPersistThroughoutAppDestruction() {
-        UserPreferences
-            .values
-            .map { !it }
-            .toTypedArray().let{ expectedValues ->
-                // set UserPreferences to expected values
-                setUserPreferences(expectedValues)
+    @Nested
+    inner class UserPreferencesInteraction{
+        @Test
+        fun initialization() {
+            Assert.assertTrue(UserPreferences.isInitialized)
+        }
 
-                // recreate activity and assert
-                scenarioExtension.scenario.recreate()
-                Assert.assertArrayEquals(
-                    expectedValues,
-                    UserPreferences.values.toTypedArray()
-                )
-            }
+        @Test
+        fun persistThroughoutAppDestruction() {
+            UserPreferences
+                .values
+                .map { !it }
+                .toTypedArray().let{ expectedValues ->
+                    // set UserPreferences to expected values
+                    setUserPreferences(expectedValues)
+
+                    // recreate activity and assert
+                    scenarioExtension.scenario.recreate()
+                    Assert.assertArrayEquals(
+                        expectedValues,
+                        UserPreferences.values.toTypedArray()
+                    )
+                }
+        }
     }
 
     @Nested
@@ -77,14 +85,14 @@ class MainActivityTest: UserPreferencesModifier() {
             retryFlakyAction(5000) { clickView(id) }
 
             scenarioExtension.scenario.onActivity {
-                Assert.assertEquals(1, it.flowfieldCapturesDestinationDir.listFiles()!!.size)
+                Assert.assertEquals(1, it.flowField.capturesDestinationDir.listFiles()!!.size)
             }
         }
 
         @AfterEach
         fun clearCapturesDir(){
             scenarioExtension.scenario.onActivity{
-                it.flowfieldCapturesDestinationDir.listFiles()!!.forEach { file ->
+                it.flowField.capturesDestinationDir.listFiles()!!.forEach { file ->
                     file.deleteRecursively()
                 }
             }
