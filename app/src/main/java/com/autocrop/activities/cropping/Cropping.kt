@@ -24,7 +24,7 @@ fun croppedImage(image: Bitmap): Pair<Bitmap, Int>?{
         }
 
     // find cropping border pair of maximal crop height
-    val croppingBorders: BorderPair = borderPairCandidates.maxBy {
+    val croppingBorders: BorderPair = borderPairCandidates.maxByOrNull {
         it.second - it.first
     }!!
 

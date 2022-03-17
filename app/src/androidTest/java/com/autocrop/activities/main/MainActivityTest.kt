@@ -8,22 +8,16 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.filters.FlakyTest
-import androidx.test.filters.MediumTest
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.autocrop.UserPreferences
 import com.w2sv.autocrop.R
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import utils.UserPreferencesModifyingTest
 import utils.espresso.*
-import kotlin.test.assertEquals
 
 
-@RunWith(AndroidJUnit4ClassRunner::class)
-@MediumTest
 class MainActivityTest: UserPreferencesModifyingTest() {
 
     @get:Rule
@@ -55,7 +49,7 @@ class MainActivityTest: UserPreferencesModifyingTest() {
                     val nFilesPreNewCapture = nContainedFiles()
                     retryFlakyAction(200) { click() }
                     SystemClock.sleep(500)
-                    assertEquals(nFilesPreNewCapture + 1, nContainedFiles())
+                    Assert.assertEquals(nFilesPreNewCapture + 1, nContainedFiles())
                 }
             }
         }
