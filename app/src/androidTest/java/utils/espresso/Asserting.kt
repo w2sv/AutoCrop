@@ -6,6 +6,7 @@ import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers.not
 import utils.espresso.viewInteractionById
 
 fun assertTextContainment(viewId: Int, text: Int) {
@@ -19,11 +20,10 @@ fun assertTextContainment(viewId: Int, text: Int) {
         )
 }
 
-fun assertCompleteVisibility(viewId: Int) {
-    Espresso.onView(ViewMatchers.withId(viewId))
-        .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
-}
-
 fun ViewInteraction.check(matcher: Matcher<View>) {
     check(ViewAssertions.matches(matcher))
+}
+
+fun ViewInteraction.checkNot(matcher: Matcher<View>) {
+    check(ViewAssertions.matches(not(matcher)))
 }

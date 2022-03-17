@@ -1,23 +1,22 @@
 package utils
 
 import com.autocrop.UserPreferences
-import org.junit.After
+import org.junit.AfterClass
 import org.junit.Assert
-import org.junit.Before
+import org.junit.BeforeClass
 
 
+/**
+ * Interface for test classes tampering with UserPreferences singleton,
+ * taking care of restoring the respective original values on test wrap up
+ */
 abstract class UserPreferencesModifyingTest {
 
-    lateinit var userPreferencesOnTestStart: Array<Boolean>
+    private lateinit var userPreferencesOnTestStart: Array<Boolean>
 
-    @Before
+    @BeforeClass
     fun storeUserPreferences(){
         userPreferencesOnTestStart = UserPreferences.values.toTypedArray()
-    }
-
-    @After
-    fun restoreOriginalUserPreferences(){
-        setUserPreferences(userPreferencesOnTestStart)
     }
 
     protected fun setUserPreferences(to: Array<Boolean>){
@@ -26,5 +25,10 @@ abstract class UserPreferencesModifyingTest {
         UserPreferences.keys.forEachIndexed { i, el ->
             UserPreferences[el] = to[i]
         }
+    }
+
+    @AfterClass
+    fun restoreOriginalUserPreferences(){
+        setUserPreferences(userPreferencesOnTestStart)
     }
 }
