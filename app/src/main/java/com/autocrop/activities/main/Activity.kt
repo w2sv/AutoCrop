@@ -34,10 +34,8 @@ val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String =
 class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
     companion object{
-        const val CROP_IMAGES_SELECTION_MAX: Int = 50
+        const val CROP_IMAGES_SELECTION_MAX: Int = 100
     }
-
-    private lateinit var userPreferencesOnActivityCreation: List<Boolean>
 
     /**
      * - Sets flowfield
@@ -50,11 +48,9 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
         setFlowfield()
 
-        // initialize flow field if necessary; craft preferences value copy
+        // initialize UserPreferences if necessary
         if (!UserPreferences.isInitialized)
-            UserPreferences.init(getDefaultSharedPreferences())
-
-        userPreferencesOnActivityCreation = UserPreferences.values.toList()
+            UserPreferences.init(getSharedPreferences(UserPreferences.sharedPreferencesFileName))
 
         setButtonOnClickListeners()
 
@@ -242,9 +238,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
-    ) {
-        permissionsHandler.onRequestPermissionsResult(permissions, grantResults)
-    }
+    ) = permissionsHandler.onRequestPermissionsResult(permissions, grantResults)
 
     // -----------------ImageSelection---------------------
 
@@ -312,12 +306,6 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
     /**
      * Writes set preferences to shared preferences
-     * in case of them having been altered
      */
-    private fun onExit() {
-        UserPreferences.writeToSharedPreferences(
-            userPreferencesOnActivityCreation,
-            getDefaultSharedPreferences()
-        )
-    }
+    private fun onExit() = UserPreferences.writeToSharedPreferences(getSharedPreferences(UserPreferences.sharedPreferencesFileName))
 }
