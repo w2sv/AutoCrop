@@ -52,9 +52,7 @@ private fun Bitmap.save(context: Context, fileName: String) {
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 ContentValues().apply {
                     put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                    put(
-                        MediaStore.MediaColumns.RELATIVE_PATH,
-                        UserPreferences.relativeCropSaveDirPath
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, UserPreferences.relativeCropSaveDirPath
                     )
                     put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
                 }
