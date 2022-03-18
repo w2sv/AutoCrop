@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import com.autocrop.activities.examination.fragments.DownstreamExaminationActivityFragment
-import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.w2sv.autocrop.R
 
 
@@ -17,7 +16,7 @@ class AppTitleFragment : DownstreamExaminationActivityFragment(R.layout.activity
 
     private fun delayedReturnToMainActivity() {
         Handler().postDelayed(
-            activity::returnToMainActivity,
+            examinationActivity::returnToMainActivity,
             1000
         )
     }

@@ -16,7 +16,7 @@ class Cropper(
     private val context: WeakReference<Context>,
     private val progressBar: WeakReference<ProgressBar>,
     private val setCurrentImageViewText: (Int) -> Unit,
-    private val taskCompletionListener: CroppingCompletionListener
+    private val onTaskCompleted: () -> Unit
 ) : AsyncTask<Uri, Pair<Int, Int>, Void?>() {
 
     /**
@@ -95,6 +95,6 @@ class Cropper(
     override fun onPostExecute(result: Void?) {
         super.onPostExecute(result)
 
-        taskCompletionListener.onTaskCompleted()
+        onTaskCompleted()
     }
 }

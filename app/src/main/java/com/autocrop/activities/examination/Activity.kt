@@ -73,12 +73,12 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
     val appTitleFragment: Lazy<DownstreamExaminationActivityFragment> = lazy { AppTitleFragment() }
 
     /**
-     * Blocked throughout the process of saving all crops,
-     * otherwise asks for confirmation through second back press;
-     *
-     * Results in return to main activity
+     * Block backPress throughout the process of saving all crops,
+     * otherwise return to MainActivity after confirmation
      */
-    private val backPressHandler = BackPressHandler()
+    private val backPressHandler = BackPressHandler(this, "Tap again to return to main screen"){
+        returnToMainActivity()
+    }
 
     override fun onBackPressed() {
         when {
@@ -89,14 +89,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
                     TextColors.urgent
                 )
             }
-            backPressHandler.pressedOnce -> returnToMainActivity()
-            else -> {
-                backPressHandler.onPress()
-                displaySnackbar(
-                    "Tap again to return to main screen",
-                    TextColors.neutral
-                )
-            }
+            else -> backPressHandler()
         }
     }
 

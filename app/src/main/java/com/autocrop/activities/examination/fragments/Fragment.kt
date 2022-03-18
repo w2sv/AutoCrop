@@ -7,8 +7,15 @@ import com.w2sv.autocrop.R
 
 
 abstract class ExaminationActivityFragment(layoutId: Int): Fragment(layoutId){
-    val activity: ExaminationActivity
-        get() = super.getActivity()!! as ExaminationActivity
+    /**
+     * Retyped [androidx.fragment.app.Fragment.requireActivity]
+     */
+    val examinationActivity: ExaminationActivity
+        get() = super.requireActivity() as ExaminationActivity
 
-    fun <T: View> findViewById(id: Int): T = view!!.findViewById(id)
+
+    /**
+     * Convenience wrapper of [androidx.fragment.app.Fragment.requireView]
+     */
+    fun <T: View> findViewById(id: Int): T = requireView().findViewById(id)
 }

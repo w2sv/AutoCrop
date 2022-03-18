@@ -22,7 +22,6 @@ import com.autocrop.utils.get
 import com.w2sv.autocrop.R
 import kotlinx.android.synthetic.main.toolbar_examination_activity.*
 import timber.log.Timber
-import java.util.*
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
@@ -103,7 +102,7 @@ class ExaminationFragment(
                 conductAutoScroll,
                 longAutoScrollDelay,
                 this@ExaminationFragment,
-                activity
+                examinationActivity
             )
 
             setCurrentItem(
@@ -117,7 +116,7 @@ class ExaminationFragment(
         save_all_button.setOnClickListener {
             fun saveAll() {
                 if (!viewPager2.imageSliderAdapter.scrolling)
-                    with(activity){
+                    with(examinationActivity){
                         saveAllFragment.value.invoke(true, supportFragmentManager)
                     }
             }
@@ -150,10 +149,10 @@ class ExaminationFragment(
     // -----------------ImageActionReactionsPossessor overrides-----------------
 
     override fun incrementNSavedCrops() {
-        activity.nSavedCrops += 1
+        examinationActivity.nSavedCrops += 1
     }
 
-    override fun exitActivity() = activity.run {
+    override fun exitActivity() = examinationActivity.run {
         appTitleFragment.value.invoke(true, supportFragmentManager)
     }
 }

@@ -17,9 +17,9 @@ class SaveAllFragment : DownstreamExaminationActivityFragment(R.layout.activity_
 
     private fun saveAll() {
         CropSaver(
-            WeakReference(activity),
+            WeakReference(examinationActivity),
             onTaskFinished = {
-                with(activity){
+                with(examinationActivity){
                     nSavedCrops += cropBundleList.size
                     appTitleFragment.value.invoke(false, supportFragmentManager)
                 }

@@ -39,6 +39,8 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
     lateinit var flowField: FlowField
 
+    private val nSavedCropsRetriever = IntentExtraRetriever()
+
     /**
      * - Sets flowfield
      * - Initializes UserPreferences from shared preferences
@@ -62,8 +64,16 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         flowField.setCaptureButtonCallback()
 
         // display cropping saving results if applicable
-        retrieveSnackbarArgument(intent, N_SAVED_CROPS, -1)?.let {
-            displaySavingResultSnackbar(it)
+        nSavedCropsRetriever(intent, N_SAVED_CROPS, -1)?.let { nSavedCrops ->
+            displaySnackbar(
+                when (nSavedCrops) {
+                    0 -> "Discarded all crops"
+                    else -> listOf("", "s")[nSavedCrops >= 2].let { numerusInflection ->
+                        "Saved $nSavedCrops crop$numerusInflection" + listOf("", " and deleted\n$nSavedCrops corresponding screenshot$numerusInflection")[UserPreferences.deleteInputScreenshots]
+                    }
+                },
+                textColor = TextColors.successfullyCarriedOut
+            )
         }
     }
 
@@ -174,26 +184,6 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
             }
         }
     }
-
-    private fun displaySavingResultSnackbar(nSavedCrops: Int) {
-        displaySnackbar(
-            when (nSavedCrops) {
-                0 -> "Discarded all crops"
-                in 1..CROP_IMAGES_SELECTION_MAX -> {
-                    val numerusInterpolation: String = listOf("", "s")[nSavedCrops >= 2]
-
-                    return "Saved $nSavedCrops crop$numerusInterpolation".run {
-                        if (UserPreferences.deleteInputScreenshots)
-                            plus(" and deleted\n$nSavedCrops corresponding screenshot$numerusInterpolation")
-                    }
-                }
-                else -> ""
-            },
-            textColor = TextColors.successfullyCarriedOut
-        )
-    }
-
-    private val retrieveSnackbarArgument = IntentExtraRetriever()
 
     // -----------------Permissions---------------------
 

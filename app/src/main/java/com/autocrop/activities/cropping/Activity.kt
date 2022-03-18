@@ -28,12 +28,7 @@ import kotlin.properties.Delegates
 val N_DISMISSED_IMAGES_IDENTIFIER: String = intentExtraIdentifier("n_dismissed_images")
 
 
-interface CroppingCompletionListener {
-    fun onTaskCompleted()
-}
-
-
-class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
+class CroppingActivity : AppCompatActivity() {
     private var nSelectedImages by Delegates.notNull<Int>()
     private lateinit var croppingTask: Cropper
 
@@ -93,7 +88,7 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
             WeakReference(this),
             WeakReference(views.progressBar),
             views::setCurrentImageNumberText,
-            this
+            this::onTaskCompleted
         ).also {
             it.execute(*imageUris)
         }
@@ -103,11 +98,9 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
      * Starts either Examination- or MainActivity depending on whether or not any
      * of the selected images has been successfully cropped
      */
-    override fun onTaskCompleted() {
+    private fun onTaskCompleted() {
         Timber.i("Async Cropping task finished")
 
-        // start ExaminationActivity in case of at least 1 successful crop,
-        // otherwise return to MainActivity
         if (cropBundleList.isNotEmpty())
             startExaminationActivity(nSelectedImages - cropBundleList.size)
         else {
@@ -154,23 +147,24 @@ class CroppingActivity : AppCompatActivity(), CroppingCompletionListener {
         returnTransitionAnimation()
     }
 
-    private val backPressHandler = BackPressHandler()
+    /**
+     * Return to MainActivity on confirmed back press
+     */
+    private val backPressHandler = BackPressHandler(this, "Tap again to cancel") {
+        croppingTask.cancel(false)
+        cropBundleList.clearAndLog()
 
-    override fun onBackPressed() {
-        if (croppingTask.status == AsyncTask.Status.FINISHED)
-            return
-
-        if (backPressHandler.pressedOnce) {
-            croppingTask.cancel(false)
-            cropBundleList.clearAndLog()
-
-            return startMainActivity()
-        }
-
-        backPressHandler.onPress()
-        displaySnackbar("Tap again to cancel", TextColors.neutral)
+        startMainActivity()
     }
 
+    override fun onBackPressed() {
+        if (croppingTask.status != AsyncTask.Status.FINISHED)
+            return backPressHandler()
+    }
+
+    /**
+     * Reset progress bar progress on stop
+     */
     override fun onStop() {
         super.onStop()
 

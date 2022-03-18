@@ -5,8 +5,9 @@ import android.net.Uri
 import timber.log.Timber
 
 
-/* ---------CropBundleList------------ */
-
+//$$$$$$$$$$$$$$$$$$
+// CropBundleList $$
+//$$$$$$$$$$$$$$$$$$
 typealias CropBundleList = MutableList<CropBundle>
 
 fun CropBundleList.clearAndLog(){
@@ -18,8 +19,9 @@ fun CropBundleList.clearAndLog(){
 val cropBundleList: CropBundleList = mutableListOf()
 
 
-/* ---------CropBundle------------ */
-
+//$$$$$$$$$$$$$$
+// CropBundle $$
+//$$$$$$$$$$$$$$
 typealias CropBundle = Triple<Uri, Bitmap, Int>
 
 val CropBundle.screenshotUri: Uri
