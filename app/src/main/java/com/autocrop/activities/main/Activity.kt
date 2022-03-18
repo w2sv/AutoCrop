@@ -193,7 +193,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         )
     }
 
-    private val retrieveSnackbarArgument = SnackbarArgumentRetriever()
+    private val retrieveSnackbarArgument = IntentExtraRetriever()
 
     // -----------------Permissions---------------------
 

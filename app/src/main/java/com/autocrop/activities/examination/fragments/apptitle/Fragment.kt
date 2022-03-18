@@ -11,10 +11,10 @@ class AppTitleFragment : ExaminationActivityFragment(R.layout.activity_examinati
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        conductDelayedReturnToMainActivity()
+        delayedReturnToMainActivity()
     }
 
-    private fun conductDelayedReturnToMainActivity() {
+    private fun delayedReturnToMainActivity() {
         Handler().postDelayed(
             activity::returnToMainActivity,
             1000

@@ -37,8 +37,8 @@ class ExaminationFragment(
     private val conductAutoScroll: Boolean,
     private val longAutoScrollDelay: Boolean
 ) : ExaminationActivityFragment(R.layout.activity_examination_examination),
-    PageDismissalImpacted {
-
+    PageDismissalImpacted
+{
     private lateinit var viewPager2: ViewPager2
     private val ViewPager2.imageSliderAdapter: ImageSliderAdapter
         get() = adapter as ImageSliderAdapter
@@ -157,8 +157,7 @@ class ExaminationFragment(
 }
 
 
-class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
-    AppCompatSeekBar(context, attr) {
+class PageIndicationSeekBar(context: Context, attr: AttributeSet) : AppCompatSeekBar(context, attr) {
 
     companion object {
         const val PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE: Int = 50

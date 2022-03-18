@@ -1,7 +1,6 @@
 package com.autocrop.utils.android
 
 import android.app.Activity
-import android.content.Intent
 import android.graphics.Color
 import android.view.Gravity
 import android.view.View
@@ -71,18 +70,4 @@ fun Activity.displaySnackbar(
             }
         }
         .show()
-}
-
-
-class SnackbarArgumentRetriever {
-    private var retrieved: Boolean = false
-
-    operator fun invoke(intent: Intent, extraName: String, defaultValue: Int): Int? =
-        intent.getIntExtra(extraName, defaultValue).run {
-            if (!retrieved && !equals(defaultValue))
-                this
-                    .also { retrieved = true }
-            else
-                null
-        }
 }
