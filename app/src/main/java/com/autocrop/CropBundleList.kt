@@ -2,7 +2,7 @@ package com.autocrop
 
 import android.graphics.Bitmap
 import android.net.Uri
-import timber.log.Timber
+import com.autocrop.utils.logAfterwards
 
 
 //$$$$$$$$$$$$$$$$$$
@@ -10,11 +10,7 @@ import timber.log.Timber
 //$$$$$$$$$$$$$$$$$$
 typealias CropBundleList = MutableList<CropBundle>
 
-fun CropBundleList.clearAndLog(){
-    clear().also {
-        Timber.i("Cleared cropBundleList")
-    }
-}
+fun CropBundleList.clearAndLog() = logAfterwards("Cleared cropBundleList"){clear()}
 
 val cropBundleList: CropBundleList = mutableListOf()
 

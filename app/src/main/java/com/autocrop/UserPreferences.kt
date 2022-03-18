@@ -2,7 +2,7 @@ package com.autocrop
 
 import android.content.SharedPreferences
 import com.autocrop.utils.android.writeBoolean
-import timber.log.Timber
+import com.autocrop.utils.logAfterwards
 import java.util.*
 
 
@@ -22,15 +22,13 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf() {
     val isInitialized: Boolean
         get() = isNotEmpty()
 
-    fun init(sharedPreferences: SharedPreferences) {
+    fun init(sharedPreferences: SharedPreferences) = logAfterwards("Initialized UserPreferences") {
         mapOf(
             Keys.conductAutoScrolling to true,
             Keys.deleteInputScreenshots to false
         ).forEach{ (key, defaultValue) ->
             this[key] = sharedPreferences.getBoolean(key, defaultValue)
         }
-
-        Timber.i("Initialized UserPreferences")
     }
 
     /**
@@ -41,15 +39,13 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf() {
     val deleteInputScreenshots: Boolean
         get() = getValue(Keys.deleteInputScreenshots)
 
-    fun toggle(key: String) {
+    fun toggle(key: String) = logAfterwards("Toggled $key to ${this[key]}"){
         this[key] = !this[key]!!
-        Timber.i("Toggled $key to ${this[key]}")
     }
 
-    fun writeToSharedPreferences(sharedPreferences: SharedPreferences) {
+    fun writeToSharedPreferences(sharedPreferences: SharedPreferences) = logAfterwards("Wrote UserPreferences to sharedPreferences") {
         (keys zip values).forEach { (key, value) ->
             sharedPreferences.writeBoolean(key, value)
-            Timber.i("Set SharedPreferences.$key to $value")
         }
     }
 }

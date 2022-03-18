@@ -37,6 +37,10 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         const val CROP_IMAGES_SELECTION_MAX: Int = 100
     }
 
+    enum class IntentCodes{
+        IMAGE_SELECTION
+    }
+
     lateinit var flowField: FlowField
 
     private val nSavedCropsRetriever = IntentExtraRetriever()
@@ -59,9 +63,9 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
             UserPreferences.init(getSharedPreferences(UserPreferences.sharedPreferencesFileName))
 
         // set button onClickListeners
-        ImageSelection().setButtonOnClickListener()
-        setMenuInflationButtonCallback()
-        flowField.setCaptureButtonCallback()
+        setImageSelectionButtonOnClickListener()
+        setMenuInflationButtonOnClickListener()
+        flowField.setCaptureButtonOnClickListener()
 
         // display cropping saving results if applicable
         nSavedCropsRetriever(intent, N_SAVED_CROPS, -1)?.let { nSavedCrops ->
@@ -93,7 +97,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
             "Flowfield-Captures"
         )
 
-        fun setCaptureButtonCallback(){
+        fun setCaptureButtonOnClickListener(){
             makeDirIfRequired(capturesDestinationDir.absolutePath)
 
             flowfield_capture_button.setOnClickListener {
@@ -115,31 +119,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         }
     }
 
-    private inner class ImageSelection{
-        val intentCode = 1
-
-        fun setButtonOnClickListener(){
-            image_selection_button.setOnClickListener {
-                if (!permissionsHandler.allPermissionsGranted)
-                    permissionsHandler.request()
-                else
-                    selectImages()
-            }
-        }
-
-        fun selectImages() {
-            Intent(Intent.ACTION_PICK).run {
-                type = "image/*"
-                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                startActivityForResult(
-                    this,
-                    intentCode
-                )
-            }
-        }
-    }
-
-    fun setMenuInflationButtonCallback(){
+    fun setMenuInflationButtonOnClickListener(){
         menu_button.setOnClickListener {
 
             val menuItemToPreferenceKey: Map<Int, String> = mapOf(
@@ -185,8 +165,9 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         }
     }
 
-    // -----------------Permissions---------------------
-
+    //$$$$$$$$$$$$$$
+    // Permissions $
+    //$$$$$$$$$$$$$$
     private inner class PermissionsHandler{
         private val requiredPermissions: List<String> = listOf(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -238,7 +219,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
             }
 
             if (allPermissionsGranted)
-                ImageSelection().selectImages()
+                selectImages()
         }
     }
 
@@ -250,14 +231,35 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         grantResults: IntArray
     ) = permissionsHandler.onRequestPermissionsResult(permissions, grantResults)
 
-    // -----------------ImageSelection---------------------
+    //$$$$$$$$$$$$$$$$$$
+    // Image Selection $
+    //$$$$$$$$$$$$$$$$$$
+    private fun setImageSelectionButtonOnClickListener(){
+        image_selection_button.setOnClickListener {
+            if (!permissionsHandler.allPermissionsGranted)
+                permissionsHandler.request()
+            else
+                selectImages()
+        }
+    }
+
+    private fun selectImages() {
+        Intent(Intent.ACTION_PICK).run {
+            type = "image/*"
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            startActivityForResult(
+                this,
+                IntentCodes.IMAGE_SELECTION.ordinal
+            )
+        }
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RESULT_OK) {
             when (requestCode) {
-                ImageSelection().intentCode -> {
+                IntentCodes.IMAGE_SELECTION.ordinal -> {
                     with(data?.clipData!!) {
                         if (itemCount > CROP_IMAGES_SELECTION_MAX){
                             displaySnackbar(
@@ -278,8 +280,9 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         }
     }
 
-    // -----------------Exiting---------------------
-
+    //$$$$$$$$$$
+    // Exiting $
+    //$$$$$$$$$$
     private fun startCroppingActivity(imageUriStrings: Array<String>) {
         startActivity(
             Intent(this, CroppingActivity::class.java)
