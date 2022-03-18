@@ -117,7 +117,9 @@ class ExaminationFragment(
         save_all_button.setOnClickListener {
             fun saveAll() {
                 if (!viewPager2.imageSliderAdapter.scrolling)
-                    return activity.invokeSaveAllFragment()
+                    with(activity){
+                        saveAllFragment.value.invoke(true, supportFragmentManager)
+                    }
             }
 
             if (UserPreferences.deleteInputScreenshots) {
@@ -151,8 +153,8 @@ class ExaminationFragment(
         activity.nSavedCrops += 1
     }
 
-    override fun exitActivity() {
-        return activity.invokeAppTitleFragment(true)
+    override fun exitActivity() = activity.run {
+        appTitleFragment.value.invoke(true, supportFragmentManager)
     }
 }
 

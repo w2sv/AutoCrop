@@ -10,6 +10,7 @@ import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
+import com.autocrop.activities.examination.fragments.DownstreamExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
@@ -68,48 +69,8 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
             )
     }
 
-    private val saveAllFragment: Lazy<ExaminationActivityFragment> = lazy { SaveAllFragment() }
-    private val appTitleFragment: Lazy<ExaminationActivityFragment> = lazy { AppTitleFragment() }
-
-    fun invokeSaveAllFragment() {
-        invokeFragment(
-            saveAllFragment,
-            flipRightAnimations
-        )
-    }
-
-    fun invokeAppTitleFragment(flipRight: Boolean) {
-        invokeFragment(
-            appTitleFragment,
-            listOf(
-                arrayOf(
-                    R.animator.card_flip_left_in,
-                    R.animator.card_flip_left_out
-                ),
-                flipRightAnimations
-            )[flipRight]
-        )
-    }
-
-    private val flipRightAnimations: Array<Int> = arrayOf(
-        R.animator.card_flip_right_in,
-        R.animator.card_flip_right_out
-    )
-
-    private fun invokeFragment(
-        lazyFragment: Lazy<ExaminationActivityFragment>,
-        animations: Array<Int>
-    ) {
-        supportFragmentManager
-            .beginTransaction()
-            .setCustomAnimations(
-                animations[0],
-                animations[1]
-            )
-            .replace(R.id.container, lazyFragment.value)
-            .addToBackStack(null)
-            .commit()
-    }
+    val saveAllFragment: Lazy<DownstreamExaminationActivityFragment> = lazy { SaveAllFragment() }
+    val appTitleFragment: Lazy<DownstreamExaminationActivityFragment> = lazy { AppTitleFragment() }
 
     /**
      * Blocked throughout the process of saving all crops,

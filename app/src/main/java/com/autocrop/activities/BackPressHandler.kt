@@ -4,7 +4,9 @@ import android.os.Handler
 
 
 class BackPressHandler {
-    private val resetDuration: Long = 2500
+    companion object {
+        private const val RESET_DURATION: Long = 2500
+    }
 
     var pressedOnce: Boolean = false
 
@@ -13,7 +15,7 @@ class BackPressHandler {
 
         Handler().postDelayed(
             { pressedOnce = false },
-            resetDuration
+            RESET_DURATION
         )
     }
 }

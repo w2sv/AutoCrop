@@ -2,13 +2,13 @@ package com.autocrop.activities.examination.fragments.saveall
 
 import android.os.Bundle
 import android.view.View
-import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
+import com.autocrop.activities.examination.fragments.DownstreamExaminationActivityFragment
 import com.autocrop.cropBundleList
 import com.w2sv.autocrop.R
 import java.lang.ref.WeakReference
 
 
-class SaveAllFragment : ExaminationActivityFragment(R.layout.activity_examination_saveall) {
+class SaveAllFragment : DownstreamExaminationActivityFragment(R.layout.activity_examination_saveall) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -21,7 +21,7 @@ class SaveAllFragment : ExaminationActivityFragment(R.layout.activity_examinatio
             onTaskFinished = {
                 with(activity){
                     nSavedCrops += cropBundleList.size
-                    invokeAppTitleFragment(false)
+                    appTitleFragment.value.invoke(false, supportFragmentManager)
                 }
             }
         )
