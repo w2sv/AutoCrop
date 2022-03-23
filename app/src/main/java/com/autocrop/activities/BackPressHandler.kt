@@ -2,6 +2,7 @@ package com.autocrop.activities
 
 import android.app.Activity
 import android.os.Handler
+import android.os.Looper
 import com.autocrop.utils.android.TextColors
 import com.autocrop.utils.android.displaySnackbar
 
@@ -25,7 +26,7 @@ class BackPressHandler(
         if (!pressedOnce){
             pressedOnce = true
 
-            Handler().postDelayed(
+            Handler(Looper.getMainLooper()).postDelayed(
                 { pressedOnce = false },
                 RESET_DURATION
             )

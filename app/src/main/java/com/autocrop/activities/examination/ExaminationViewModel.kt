@@ -1,7 +1,6 @@
 package com.autocrop.activities.examination
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.autocrop.CropBundle
 import com.autocrop.CropBundleList
 import com.autocrop.cropBundleList
@@ -11,13 +10,6 @@ import com.autocrop.utils.rotated
 import com.autocrop.utils.get
 import java.util.*
 import kotlin.properties.Delegates
-
-
-class ExaminationViewModelFactory(private val conductAutoScroll: Boolean,
-                                  private val longAutoScrollDelay: Boolean):
-        ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = ExaminationViewModel(conductAutoScroll, longAutoScrollDelay) as T
-}
 
 
 class ExaminationViewModel(val conductAutoScroll: Boolean,
