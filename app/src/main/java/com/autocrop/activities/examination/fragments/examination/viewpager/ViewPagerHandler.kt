@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
+import com.autocrop.activities.examination.ViewPagerViewModel
 import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
 import com.autocrop.activities.examination.fragments.examination.PageIndicationSeekBar
 import com.autocrop.crop
@@ -35,6 +36,7 @@ class ViewPagerHandler(
     private val invokeAppTitleFragment: () -> Unit){
 
     var scroller: Scroller? = null
+    var blockPageDependentViewUpdating = false
 
     init {
         seekBar.calculateProgressCoefficient()
@@ -44,7 +46,7 @@ class ViewPagerHandler(
             adapter = CropPagerAdapter()
 
             setCurrentItem(
-                viewModel.viewPagerStartPosition,
+                viewModel.viewPager.startPosition,
                 false
             )
 
@@ -52,38 +54,19 @@ class ViewPagerHandler(
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
 
                 /**
-                 * Updates retentionPercentage, pageIndication and seekBar upon page change
+                 * Updates retentionPercentage, pageIndication and seekBar upon page change if not blocked
                  */
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
 
-                    if (!viewModel.cropBundleList.itemToBeRemoved)
-                        with(viewModel.cropBundleList.correspondingPosition(position)) {
-                            textViews.setRetentionPercentage(this)
+                    if (!blockPageDependentViewUpdating){
+                        viewModel.viewPager.dataSet.correspondingPosition(position).let{ dataSetPosition ->
+                            textViews.setRetentionPercentage(dataSetPosition)
 
-                            with(viewModel.cropBundleList.pageIndex(this)) {
-                                textViews.setPageIndication(this)
-                                seekBar.indicatePage(this)
+                            viewModel.viewPager.dataSet.pageIndex(dataSetPosition).let{ pageIndex ->
+                                textViews.setPageIndication(pageIndex)
+                                seekBar.indicatePage(pageIndex)
                             }
-                        }
-                }
-
-                /**
-                 * Removes cropBundle from cropBundleList and resets surrounding views within adapter
-                 * if applicable
-                 */
-                override fun onPageScrollStateChanged(state: Int) {
-                    super.onPageScrollStateChanged(state)
-
-                    if (state == ViewPager2.SCROLL_STATE_IDLE && viewModel.cropBundleList.itemToBeRemoved) {
-                        viewModel.cropBundleList.removeElement()
-
-                        // reset surrounding pages
-                        with(viewModel.cropBundleList.replacementViewPosition) {
-                            val resetMargin = 3
-
-                            (minus(resetMargin) until this) + (plus(1)..plus(resetMargin))
-                                .forEach { (adapter as CropPagerAdapter).notifyItemChanged(it) }
                         }
                     }
                 }
@@ -104,9 +87,9 @@ class ViewPagerHandler(
             }
 
             // instantiate Scroller if applicable
-            if (viewModel.conductAutoScroll)
+            if (viewModel.viewPager.conductAutoScroll)
                 scroller = Scroller(
-                    viewModel.longAutoScrollDelay,
+                    viewModel.viewPager.longAutoScrollDelay,
                     cropBundleList.lastIndex
                 )
         }
@@ -171,7 +154,7 @@ class ViewPagerHandler(
                             scroller?.run {
                                 if (isRunning) {
                                     cancel(true)
-                                    return true
+                                    return false
                                 }
                             }
                             return super.onTouch(v, event)
@@ -181,11 +164,11 @@ class ViewPagerHandler(
                          * Invoke CropProcedureDialog upon click
                          */
                         override fun onClick() {
-                            with(viewModel.cropBundleList.correspondingPosition(adapterPosition)){
+                            with(viewModel.viewPager.dataSet.correspondingPosition(adapterPosition)){
                                 CropProcedureDialog(
-                                    Pair(viewModel.cropBundleList[this].screenshotUri, viewModel.cropBundleList[this].crop),
+                                    Pair(viewModel.viewPager.dataSet[this].screenshotUri, viewModel.viewPager.dataSet[this].crop),
                                     viewPager2.context
-                                ) {incrementNSavedCrops -> onRemoveView(this, incrementNSavedCrops)}
+                                ) {incrementNSavedCrops -> removeView(this, incrementNSavedCrops)}
                                     .show(parentActivity.supportFragmentManager, "Crop procedure dialog")
                             }
                         }
@@ -209,39 +192,53 @@ class ViewPagerHandler(
          * Defines setting of crop wrt position
          */
         override fun onBindViewHolder(holder: CropViewHolder, position: Index) {
-            holder.cropView.setImageBitmap(viewModel.cropBundleList.atCorrespondingPosition(position).crop)
+            holder.cropView.setImageBitmap(viewModel.viewPager.dataSet.atCorrespondingPosition(position).crop)
         }
 
-        override fun getItemCount(): Int = listOf(1, ExaminationViewModel.MAX_VIEWS)[viewModel.cropBundleList.size > 1]
+        override fun getItemCount(): Int = listOf(1, ViewPagerViewModel.MAX_VIEWS)[viewModel.viewPager.dataSet.size > 1]
 
-        private fun onRemoveView(cropBundleListPosition: Index, incrementNSavedCrops: Boolean) {
+        private fun removeView(dataSetPosition: Index, incrementNSavedCrops: Boolean) {
 
             // increment nSavedCrops if applicable, triggers activity exit if cropBundleList exhausted
             if (incrementNSavedCrops)
                 viewModel.incrementNSavedCrops()
-            if (viewModel.cropBundleList.size == 1)
+            if (viewModel.viewPager.dataSet.size == 1)
                 return invokeAppTitleFragment()
 
-            viewModel.cropBundleList.removePosition = cropBundleListPosition
+            val (newDataSetPosition, newViewPosition) = viewModel.viewPager.dataSet.newPositionWithNewViewPosition(dataSetPosition, viewPager2.currentItem)
 
-            val replacementItemPositionPostRemoval = viewModel.cropBundleList.replacementItemPositionPostRemoval(viewPager2.currentItem)
+            // scroll to newViewPosition with blocked pageDependentViewUpdating
+            blockPageDependentViewUpdating = true
+            viewPager2.setCurrentItem(newViewPosition, true)
+            blockPageDependentViewUpdating = false
 
-            // scroll to new view and set cropBundleList rotationDistance
-            viewPager2.setCurrentItem(viewModel.cropBundleList.replacementViewPosition, true)
-            viewModel.cropBundleList.setNewRotationDistance(replacementItemPositionPostRemoval)
+            // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
+            // aligning with newViewPosition
+            viewModel.viewPager.dataSet.removeAt(dataSetPosition)
+            viewModel.viewPager.dataSet.rotateAndResetPositionTrackers(newViewPosition, newDataSetPosition)
 
-            // reset page dependent views
-            val newPageIndex = viewModel.cropBundleList.newPageIndex()
+            // update surrounding views
+            updateViewsAround(newViewPosition)
 
-            textViews.apply {
-                setRetentionPercentage(viewModel.cropBundleList.correspondingPosition(viewModel.cropBundleList.replacementViewPosition))
-                setPageIndication(newPageIndex, viewModel.cropBundleList.sizePostRemoval)
+            // update page dependent views
+            viewModel.viewPager.dataSet.pageIndexFromViewPosition(newViewPosition).let{ newPageIndex ->
+
+                textViews.apply {
+                    setRetentionPercentage(viewModel.viewPager.dataSet.correspondingPosition(newViewPosition))
+                    setPageIndication(newPageIndex, viewModel.viewPager.dataSet.size)
+                }
+
+                seekBar.apply {
+                    calculateProgressCoefficient(viewModel.viewPager.dataSet.size)
+                    indicatePage(newPageIndex)
+                }
             }
+        }
 
-            seekBar.apply {
-                calculateProgressCoefficient(viewModel.cropBundleList.sizePostRemoval)
-                indicatePage(newPageIndex)
-            }
+        private fun updateViewsAround(position: Index){
+            val resetMargin = 3
+
+            notifyItemRangeChanged(position - resetMargin, resetMargin * 2 + 1)
         }
     }
 }
