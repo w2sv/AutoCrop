@@ -6,12 +6,15 @@ package com.autocrop.activities.examination
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
 import com.autocrop.activities.examination.fragments.DownstreamExaminationActivityFragment
-import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
@@ -21,17 +24,17 @@ import com.autocrop.cropBundleList
 import com.autocrop.utils.android.*
 import com.autocrop.utils.get
 import com.autocrop.utils.notNull
-import com.w2sv.autocrop.R
 import com.google.android.material.snackbar.Snackbar
+import com.w2sv.autocrop.R
 
 
 val N_SAVED_CROPS: String = intentExtraIdentifier("n_saved_crops")
 
 
 class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_examination) {
-    var nSavedCrops: Int = 0
+    private lateinit var viewModel: ExaminationViewModel
 
-    val nDismissedImagesRetriever = IntentExtraRetriever()
+    private val nDismissedImagesRetriever = IntentExtraRetriever()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,15 +45,20 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
         val conductAutoScroll: Boolean =
             UserPreferences.conductAutoScroll && cropBundleList.size > 1
 
+        viewModel = ViewModelProvider(
+            this,
+            ExaminationViewModelFactory(
+                conductAutoScroll,
+                longAutoScrollDelay = nDismissedImages.notNull()
+            )
+        )[ExaminationViewModel::class.java]
+
         // --------commit ExaminationFragment if applicable
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .add(
                     R.id.container,
-                    ExaminationFragment(
-                        conductAutoScroll,
-                        longAutoScrollDelay = nDismissedImages.notNull()
-                    )
+                    ExaminationFragment()
                 )
                 .commit()
         }
@@ -80,17 +88,15 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
         returnToMainActivity()
     }
 
-    override fun onBackPressed() {
-        when {
-            appTitleFragment.isInitialized() -> Unit
-            saveAllFragment.isInitialized() -> {
-                displaySnackbar(
-                    "Wait until crops have been saved",
-                    TextColors.urgent
-                )
-            }
-            else -> backPressHandler()
+    override fun onBackPressed() = when {
+        appTitleFragment.isInitialized() -> Unit
+        saveAllFragment.isInitialized() -> {
+            displaySnackbar(
+                "Wait until crops have been saved",
+                TextColors.urgent
+            )
         }
+        else -> backPressHandler()
     }
 
     /**
@@ -101,7 +107,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
             Intent(
                 this,
                 MainActivity::class.java
-            ).putExtra(N_SAVED_CROPS, nSavedCrops)
+            ).putExtra(N_SAVED_CROPS, viewModel.nSavedCrops)
         )
 
         returnTransitionAnimation()

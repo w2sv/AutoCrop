@@ -19,8 +19,8 @@ import java.io.OutputStream
 
 
 fun saveCropAndDeleteScreenshotIfApplicable(
-    crop: Bitmap,
     screenshotUri: Uri,
+    crop: Bitmap,
     context: Context) {
 
     crop.save(context, screenshotUri.cropFileName)

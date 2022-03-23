@@ -27,8 +27,7 @@ import timber.log.Timber
 import java.io.File
 
 
-val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String =
-    intentExtraIdentifier("selected_image_uri_strings")
+val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String = intentExtraIdentifier("selected_image_uri_strings")
 
 
 class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {

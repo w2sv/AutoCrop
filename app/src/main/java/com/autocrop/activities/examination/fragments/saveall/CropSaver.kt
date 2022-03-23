@@ -23,8 +23,8 @@ class CropSaver(
     override fun doInBackground(vararg params: Void): Void? {
         for ((uri, bitmap, _) in cropBundleList) {
             saveCropAndDeleteScreenshotIfApplicable(
-                bitmap,
                 uri,
+                bitmap,
                 context.forceUnwrapped()
             )
         }

@@ -4,40 +4,39 @@ import android.annotation.SuppressLint
 import android.graphics.Point
 import android.view.MotionEvent
 import android.view.View
-import timber.log.Timber
+import com.autocrop.utils.logAfterwards
 import kotlin.math.abs
 
 
+/**
+ * Enables distinction between pulling up navigation bar and clicks
+ * whilst employing immersive view app layout
+ */
 abstract class ImmersiveViewOnTouchListener: View.OnTouchListener {
+
     companion object{
-        private const val CLICK_IDENTIFICATION_THRESHOLD: Int = 100
+        private fun isClick(touchEventStartPoint: Point, touchEventEndPoint: Point): Boolean{
+            val clickIdentificationCoordinateThreshold = 100
+
+            return manhattanNorm(touchEventStartPoint, touchEventEndPoint) < clickIdentificationCoordinateThreshold
+        }
     }
 
-    private var startCoordinates: Point = Point(-1, -1)
+    private var touchEventStartPoint: Point? = null
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        Timber.i("Called onTouch")
-
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean = logAfterwards("Called onTouch") {
         when (event?.action) {
-            MotionEvent.ACTION_DOWN -> startCoordinates = event.coordinates()
-            MotionEvent.ACTION_UP -> if (isClick(event.coordinates()))
-                onConfirmedTouch()
+            MotionEvent.ACTION_DOWN -> touchEventStartPoint = event.point
+            MotionEvent.ACTION_UP -> if (isClick(touchEventStartPoint!!, event.point)) onClick().also { touchEventStartPoint = null }
         }
         return true
     }
 
-    abstract fun onConfirmedTouch()
+    private val MotionEvent.point: Point
+        get() = Point(x.toInt(), y.toInt())
 
-    private fun MotionEvent.coordinates(): Point = Point(x.toInt(), y.toInt())
-
-    private fun isClick(endCoordinates: Point): Boolean {
-        return manhattanNorm(
-            startCoordinates,
-            endCoordinates
-        ) < CLICK_IDENTIFICATION_THRESHOLD
-    }
+    abstract fun onClick()
 }
-
 
 private fun manhattanNorm(a: Point, b: Point): Int = abs(a.x - b.x) + abs(a.y - b.y)
