@@ -168,7 +168,7 @@ class ViewPagerHandler(
                                 CropProcedureDialog(
                                     Pair(viewModel.viewPager.dataSet[this].screenshotUri, viewModel.viewPager.dataSet[this].crop),
                                     viewPager2.context
-                                ) {incrementNSavedCrops -> removeView(this, incrementNSavedCrops)}
+                                ) {incrementNSavedCrops -> onCropProcedureAction(this, incrementNSavedCrops)}
                                     .show(parentActivity.supportFragmentManager, "Crop procedure dialog")
                             }
                         }
@@ -197,14 +197,20 @@ class ViewPagerHandler(
 
         override fun getItemCount(): Int = listOf(1, ViewPagerViewModel.MAX_VIEWS)[viewModel.viewPager.dataSet.size > 1]
 
-        private fun removeView(dataSetPosition: Index, incrementNSavedCrops: Boolean) {
-
-            // increment nSavedCrops if applicable, triggers activity exit if cropBundleList exhausted
+        /**
+         * Increment nSavedCrops if applicable, triggers activity exit if cropBundleList
+         * about to be exhausted
+         */
+        private fun onCropProcedureAction(dataSetPosition: Index, incrementNSavedCrops: Boolean){
             if (incrementNSavedCrops)
                 viewModel.incrementNSavedCrops()
             if (viewModel.viewPager.dataSet.size == 1)
-                return invokeAppTitleFragment()
+                return parentActivity.appTitleFragment.value.invoke(false)
 
+            removeView(dataSetPosition)
+        }
+
+        private fun removeView(dataSetPosition: Index) {
             val (newDataSetPosition, newViewPosition) = viewModel.viewPager.dataSet.newPositionWithNewViewPosition(dataSetPosition, viewPager2.currentItem)
 
             // scroll to newViewPosition with blocked pageDependentViewUpdating

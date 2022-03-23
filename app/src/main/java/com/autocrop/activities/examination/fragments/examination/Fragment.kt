@@ -81,7 +81,7 @@ class ExaminationFragment() : ExaminationActivityFragment(R.layout.activity_exam
             viewModel,
             textViews,
             seekBar,
-        ){ examinationActivity.saveAllFragment.value.invoke(false) }
+        ){ examinationActivity.appTitleFragment.value.invoke(false) }
         setToolbarButtonOnClickListeners()
     }
 

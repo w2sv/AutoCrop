@@ -45,6 +45,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_exa
         val conductAutoScroll: Boolean =
             UserPreferences.conductAutoScroll && cropBundleList.size > 1
 
+        //----------retrieve ViewModel
         viewModel = ViewModelProvider(
             this,
             ExaminationViewModelFactory(
