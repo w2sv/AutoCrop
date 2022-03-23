@@ -44,7 +44,7 @@ class ViewPagerHandler(
             adapter = CropPagerAdapter()
 
             setCurrentItem(
-                viewModel.startPosition,
+                viewModel.viewPagerStartPosition,
                 false
             )
 
@@ -167,10 +167,15 @@ class ViewPagerHandler(
                         /**
                          * Cancel scroller upon touch if running
                          */
-                        override fun onTouch(v: View?, event: MotionEvent?): Boolean = scroller?.run {
-                            if (isRunning){ cancel(true)}
-                            false
-                        } ?: super.onTouch(v, event)
+                        override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                            scroller?.run {
+                                if (isRunning) {
+                                    cancel(true)
+                                    return true
+                                }
+                            }
+                            return super.onTouch(v, event)
+                        }
 
                         /**
                          * Invoke CropProcedureDialog upon click

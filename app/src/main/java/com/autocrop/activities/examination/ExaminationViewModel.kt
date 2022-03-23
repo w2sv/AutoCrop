@@ -15,22 +15,23 @@ import kotlin.properties.Delegates
 class ExaminationViewModel(val conductAutoScroll: Boolean,
                            val longAutoScrollDelay: Boolean): ViewModel(){
 
-    companion object {
-        const val MAX_VIEWS: Int = Int.MAX_VALUE
-    }
-
     var nSavedCrops = 0
+
     fun incrementNSavedCrops(by: Int = 1){
         nSavedCrops += by
     }
 
+    companion object {
+        const val MAX_VIEWS: Int = Int.MAX_VALUE
+    }
+
     val cropBundleList = ExtendedCropBundleList()
 
-    val startPosition: Int = (MAX_VIEWS / 2).run {
+    val viewPagerStartPosition: Int = (MAX_VIEWS / 2).run {
         minus(cropBundleList.correspondingPosition(this))
     }
 
-    data class ExtendedCropBundleList(
+    class ExtendedCropBundleList(
         var tailHash: Int = cropBundleList.last().hashCode(),
         var tailPosition: Index = cropBundleList.lastIndex,
         var headPosition: Index = 0,
@@ -88,7 +89,7 @@ class ExaminationViewModel(val conductAutoScroll: Boolean,
         }
 
         fun setNewRotationDistance(replacementItemPositionPostRemoval: Index){
-            (replacementViewPosition % sizePostRemoval) - replacementItemPositionPostRemoval
+            rotationDistance = (replacementViewPosition % sizePostRemoval) - replacementItemPositionPostRemoval
         }
 
         fun newPageIndex(): Int = pageIndex(removePosition!!).run {

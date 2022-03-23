@@ -12,7 +12,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.activities.hideSystemUI
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.SELECTED_IMAGE_URI_STRINGS_IDENTIFIER
 import com.autocrop.clearAndLog
