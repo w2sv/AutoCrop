@@ -52,20 +52,19 @@ class ViewPagerDataSet : CropBundleList by cropBundleList {
     // ----------------Element Removal
 
     fun newPositionWithNewViewPosition(position: Index, viewPosition: Index): Pair<Index, Index> {
+        val sizePostRemoval = lastIndex
+
         if (removingAtTail(position)){
             tailHash = at(position - 1).hashCode()
             return position.rotated(-1, sizePostRemoval) to viewPosition - 1
         }
-        return listOf(position, 0)[position == lastIndex] to viewPosition + 1
+        return listOf(position, 0)[position == sizePostRemoval] to viewPosition + 1
     }
 
     private fun removingAtTail(removePosition: Index): Boolean = removePosition == tailPosition
 
-    private val sizePostRemoval: Int
-        get() = lastIndex
-
     fun rotateAndResetPositionTrackers(newViewPosition: Index, positionPostRemoval: Index){
-        Collections.rotate(this, (newViewPosition % sizePostRemoval) - positionPostRemoval)
+        Collections.rotate(this, (newViewPosition % size) - positionPostRemoval)
 
         // reset position trackers
         with(indexOfFirst { it.hashCode() == tailHash }) {
