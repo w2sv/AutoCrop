@@ -36,7 +36,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
         ViewModelProvider(parentActivity)[ExaminationViewModel::class.java]
     }
 
-    var scroller: Scroller? = null
+    lateinit var scroller: Scroller
     var blockPageDependentViewUpdating = false
 
     init {
@@ -78,11 +78,10 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
             }
 
             // instantiate Scroller if applicable
-            if (viewModel.viewPager.conductAutoScroll)
-                scroller = Scroller(
-                    viewModel.viewPager.longAutoScrollDelay,
-                    cropBundleList.lastIndex
-                )
+            scroller = Scroller(viewModel.viewPager.longAutoScrollDelay, viewModel.viewPager.dataSet.lastIndex).apply {
+                if (viewModel.viewPager.conductAutoScroll)
+                    invoke()
+            }
         }
     }
 
@@ -95,25 +94,30 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
     /**
      * Class accounting for automatic scrolling at the start of crop examination
      */
-    inner class Scroller(longAutoScrollDelay: Boolean, maxScrolls: Int) {
-        var isRunning: Boolean = true
+    inner class Scroller(private val longAutoScrollDelay: Boolean, private val maxScrolls: Int) {
+        var isRunning: Boolean = false
         private var conductedScrolls = 0
-        private var timer: Timer = Timer().apply {
-            schedule(
-                object : TimerTask() {
-                    override fun run() {
-                        Handler(Looper.getMainLooper()).post {
-                            with(binding.viewPager) { setCurrentItem(currentItem + 1, true) }
-                            conductedScrolls++
-                        }
+        private lateinit var timer: Timer
 
-                        if (conductedScrolls == maxScrolls)
-                            cancel(onScreenTouch = false)
-                    }
-                },
-                listOf(1000L, 1500L)[longAutoScrollDelay],
-                1000L
-            )
+        fun invoke(){
+            isRunning = true
+            timer = Timer().apply {
+                schedule(
+                    object : TimerTask() {
+                        override fun run() {
+                            Handler(Looper.getMainLooper()).post {
+                                with(binding.viewPager) { setCurrentItem(currentItem + 1, true) }
+                                conductedScrolls++
+                            }
+
+                            if (conductedScrolls == maxScrolls)
+                                cancel(onScreenTouch = false)
+                        }
+                    },
+                    listOf(1000L, 1500L)[longAutoScrollDelay],
+                    1000L
+                )
+            }
         }
 
         /**
@@ -147,14 +151,12 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
                         /**
                          * Cancel scroller upon touch if running
                          */
-                        override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                            scroller?.run {
-                                if (isRunning) {
-                                    cancel(true)
-                                    return false
-                                }
-                            }
-                            return super.onTouch(v, event)
+                        override fun onTouch(v: View?, event: MotionEvent?): Boolean = scroller.run {
+                            if (isRunning)
+                                false
+                                    .also { cancel(true) }
+                            else
+                                super.onTouch(v, event)
                         }
 
                         /**
@@ -166,7 +168,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
                                     Pair(viewModel.viewPager.dataSet[this].screenshotUri, viewModel.viewPager.dataSet[this].crop),
                                     imageFileWritingContext = parentActivity
                                 ) {incrementNSavedCrops -> onCropProcedureAction(this, incrementNSavedCrops)}
-                                    .show(parentActivity.supportFragmentManager, "Crop procedure dialog")
+                                    .show(parentActivity.supportFragmentManager, CropProcedureDialog.TAG)
                             }
                         }
                     }
@@ -202,7 +204,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
             if (incrementNSavedCrops)
                 viewModel.incrementNSavedCrops()
             if (viewModel.viewPager.dataSet.size == 1)
-                return parentActivity.invoke(parentActivity.appTitleFragment, false)
+                return parentActivity.run { appTitleFragment.commit(true) }
 
             removeView(dataSetPosition)
         }

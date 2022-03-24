@@ -10,7 +10,7 @@ import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.w2sv.autocrop.R
 
 
-class AppTitleFragment : Fragment(R.layout.activity_examination_fragment_apptitle) {
+class AppTitleFragment : ExaminationActivityFragment(R.layout.activity_examination_fragment_apptitle) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -19,7 +19,7 @@ class AppTitleFragment : Fragment(R.layout.activity_examination_fragment_apptitl
 
     private fun delayedReturnToMainActivity() {
         Handler(Looper.getMainLooper()).postDelayed(
-            (activity as ExaminationActivity)::returnToMainActivity,
+            activity::returnToMainActivity,
             1000
         )
     }

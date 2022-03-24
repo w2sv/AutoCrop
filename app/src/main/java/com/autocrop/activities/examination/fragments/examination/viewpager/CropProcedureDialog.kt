@@ -52,4 +52,8 @@ class CropProcedureDialog(
             return null
         }
     }
+
+    companion object{
+        val TAG = ::CropProcedureDialog.javaClass.name
+    }
 }

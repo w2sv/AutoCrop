@@ -22,7 +22,7 @@ class SaveAllFragment : ExaminationActivityFragment(R.layout.activity_examinatio
     private fun saveAll() {
         CropSaver(WeakReference(activity)) {
             viewModel.incrementNSavedCrops(cropBundleList.size)
-            activity.invoke(activity.appTitleFragment, true)
+            with(activity){appTitleFragment.commit(true)}
         }
             .execute()
     }

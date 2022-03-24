@@ -52,40 +52,45 @@ class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examin
      */
     private fun setToolbarButtonOnClickListeners() {
 
-        fun runIfScrollerNotRunning(f: () -> Unit){
-            if (viewPagerHandler.scroller.run {this == null || !this.isRunning })
-                f()
-        }
-
-        fun showConfirmationDialog(title: String, positiveButtonClickListenerAction: () -> Unit){
-            object: DialogFragment() {
-                override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-                    AlertDialog.Builder(activity)
-                        .run {
-                            setTitle(title)
-                            setNegativeButton("No") { _, _ -> }
-                            setPositiveButton("Yes") { _, _ -> positiveButtonClickListenerAction() }
-                        }
-                        .create()
-            }.show(parentFragmentManager,"")
+        fun showConfirmationDialogIfScrollerNotRunning(title: String, positiveButtonOnClickListener: () -> Unit) {
+            if (!viewPagerHandler.scroller.isRunning)
+                CropEntiretyActionConfirmationDialogFragment(title, positiveButtonOnClickListener)
+                    .show(childFragmentManager, CropEntiretyActionConfirmationDialogFragment.TAG)
         }
 
         // ------------save_all_button
         binding.toolbar.saveAllButton.setOnClickListener {
-            runIfScrollerNotRunning {
-                showConfirmationDialog("Save all crops${listOf("", " and delete corresponding screenshots")[UserPreferences.deleteInputScreenshots]}?") {
-                    activity.invoke(activity.saveAllFragment, true)
-                }
+            showConfirmationDialogIfScrollerNotRunning(
+                "Save all crops${listOf("", " and delete corresponding screenshots")[UserPreferences.deleteInputScreenshots]}?") {
+                with(activity){saveAllFragment.commit(true)}
             }
         }
 
         // --------------discard_all_button
         binding.toolbar.discardAllButton.setOnClickListener {
-            runIfScrollerNotRunning {
-                showConfirmationDialog("Discard all crops?") {
-                    activity.invoke(activity.appTitleFragment, false)
-                }
+            showConfirmationDialogIfScrollerNotRunning("Discard all crops?") {
+                with(activity){appTitleFragment.commit(false)}
             }
         }
+    }
+
+}
+
+class CropEntiretyActionConfirmationDialogFragment(
+    private val title: String,
+    private val positiveButtonOnClickListener: () -> Unit)
+        : DialogFragment() {
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        AlertDialog.Builder(requireContext())
+            .run {
+                setTitle(title)
+                setNegativeButton("No") { _, _ -> }
+                setPositiveButton("Yes") { _, _ -> positiveButtonOnClickListener() }
+            }
+            .create()
+
+    companion object {
+        val TAG = ::CropEntiretyActionConfirmationDialogFragment.javaClass.name
     }
 }

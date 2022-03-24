@@ -80,10 +80,10 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
             )
     }
 
-    val saveAllFragment: Lazy<Fragment> = lazy { SaveAllFragment() }
-    val appTitleFragment: Lazy<Fragment> = lazy { AppTitleFragment() }
+    val saveAllFragment: Lazy<ExaminationActivityFragment> = lazy { SaveAllFragment() }
+    val appTitleFragment: Lazy<ExaminationActivityFragment> = lazy { AppTitleFragment() }
 
-    fun invoke(fragment: Lazy<Fragment>, flipRight: Boolean) {
+    fun Lazy<ExaminationActivityFragment>.commit(flipRight: Boolean){
         val animations = arrayOf(
             arrayOf(
                 R.animator.card_flip_left_in,
@@ -98,9 +98,9 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(animations[0], animations[1])
-            .replace(binding.container.id, fragment.value)
+            .replace(binding.container.id, value)
             .addToBackStack(null)
-            .setReorderingAllowed(true)
+            // .setReorderingAllowed(true)
             .commit()
     }
 
