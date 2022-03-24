@@ -36,7 +36,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
         ViewModelProvider(parentActivity)[ExaminationViewModel::class.java]
     }
 
-    lateinit var scroller: Scroller
+    val scroller: Scroller
     var blockPageDependentViewUpdating = false
 
     init {
