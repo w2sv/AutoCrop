@@ -18,7 +18,6 @@ import com.autocrop.clearAndLog
 import com.autocrop.cropBundleList
 import com.autocrop.utils.android.*
 import com.w2sv.autocrop.R
-import kotlinx.android.synthetic.main.activity_cropping.*
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import kotlin.properties.Delegates
@@ -167,7 +166,7 @@ class CroppingActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
 
-        cropping_progress_bar.progress = 0
+        // cropping_progress_bar.progress = 0 TODO
         finishAndRemoveTask()
     }
 }

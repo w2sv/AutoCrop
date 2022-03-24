@@ -8,7 +8,7 @@ import com.autocrop.activities.examination.fragments.DownstreamExaminationActivi
 import com.w2sv.autocrop.R
 
 
-class AppTitleFragment : DownstreamExaminationActivityFragment(R.layout.activity_examination_apptitle) {
+class AppTitleFragment : DownstreamExaminationActivityFragment(R.layout.activity_examination_fragment_apptitle) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

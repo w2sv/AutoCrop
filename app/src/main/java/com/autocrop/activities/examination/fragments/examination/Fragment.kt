@@ -6,37 +6,37 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatSeekBar
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.viewpager2.widget.ViewPager2
+import androidx.lifecycle.ViewModelProvider
 import com.autocrop.UserPreferences
+import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
+import com.autocrop.activities.examination.PageIndicationSeekBarModel
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.examination.viewpager.ViewPagerHandler
 import com.autocrop.cropBundleList
 import com.autocrop.retentionPercentage
 import com.autocrop.utils.get
 import com.w2sv.autocrop.R
-import kotlinx.android.synthetic.main.toolbar_examination_activity.*
-import timber.log.Timber
-import kotlin.math.roundToInt
-import kotlin.properties.Delegates
+import com.w2sv.autocrop.databinding.ActivityExaminationFragmentRootBinding
 
-
-class ExaminationFragment() : ExaminationActivityFragment(R.layout.activity_examination_examination){
+class ExaminationFragment() : ExaminationActivityFragment(R.layout.activity_examination_fragment_root){
 
     private val viewModel: ExaminationViewModel by activityViewModels<ExaminationViewModel>()
+
+    private var _binding: ActivityExaminationFragmentRootBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var viewPagerHandler: ViewPagerHandler
 
     private lateinit var textViews: TextViews
-    private lateinit var toolBar: Toolbar
-    private lateinit var seekBar: PageIndicationSeekBar
 
     inner class TextViews(private val retentionPercentage: TextView, private val pageIndication: TextView) {
         /**
@@ -68,19 +68,30 @@ class ExaminationFragment() : ExaminationActivityFragment(R.layout.activity_exam
         }
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = ActivityExaminationFragmentRootBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         textViews = TextViews(findViewById(R.id.retention_percentage), findViewById(R.id.page_indication))
-        toolBar = findViewById(R.id.toolbar)
-        seekBar = findViewById(R.id.page_indication_seek_bar)
 
         viewPagerHandler = ViewPagerHandler(
-            view.findViewById<ViewPager2>(R.id.view_pager),
+            binding.viewPager,
             examinationActivity,
-            viewModel,
             textViews,
-            seekBar,
+            binding.pageIndicationSeekBar,
         ){ examinationActivity.appTitleFragment.value.invoke(false) }
         setToolbarButtonOnClickListeners()
     }
@@ -109,7 +120,7 @@ class ExaminationFragment() : ExaminationActivityFragment(R.layout.activity_exam
         }
 
         // ------------save_all_button
-        save_all_button.setOnClickListener {
+        binding.toolbar.saveAllButton.setOnClickListener {
             runIfScrollerNotRunning {
                 showConfirmationDialog("Save all crops${listOf("", " and delete corresponding screenshots")[UserPreferences.deleteInputScreenshots]}?") {
                     examinationActivity.saveAllFragment.value.invoke(true)
@@ -118,7 +129,7 @@ class ExaminationFragment() : ExaminationActivityFragment(R.layout.activity_exam
         }
 
         // --------------discard_all_button
-        discard_all_button.setOnClickListener {
+        binding.toolbar.discardAllButton.setOnClickListener {
             runIfScrollerNotRunning {
                 showConfirmationDialog("Discard all crops?") {
                     examinationActivity.saveAllFragment.value.invoke(false)
@@ -128,38 +139,18 @@ class ExaminationFragment() : ExaminationActivityFragment(R.layout.activity_exam
     }
 }
 
-
 class PageIndicationSeekBar(context: Context, attr: AttributeSet) : AppCompatSeekBar(context, attr) {
-
-    companion object {
-        const val PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE: Int = 50
+    private val viewModel: PageIndicationSeekBarModel by lazy {
+        ViewModelProvider(context as ExaminationActivity)[ExaminationViewModel::class.java].viewPager.pageIndicationSeekBar
     }
-
-    private var indicateLastPage: Boolean = cropBundleList.size == 1
 
     init {
-        progress = listOf(0, PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE)[indicateLastPage]
-        isEnabled = false
+        progress = viewModel.pagePercentage(0, max)
+        isEnabled = false  // disables dragging of bar
     }
 
-    private var progressCoefficient by Delegates.notNull<Float>()
-
-    fun calculateProgressCoefficient(dataMagnitude: Int = cropBundleList.size) {
-        if (dataMagnitude == 1)
-            indicateLastPage = true.also {
-                displayProgress(PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE)
-            }
-        else
-            progressCoefficient = max.toFloat() / dataMagnitude.minus(1).toFloat()
-    }
-
-    fun indicatePage(pageIndex: Int) {
-        if (!indicateLastPage)
-            displayProgress((progressCoefficient * pageIndex).roundToInt())
-    }
-
-    private fun displayProgress(percentage: Int) {
-        with(ObjectAnimator.ofInt(this, "progress", percentage)) {
+    fun displayPage(pageIndex: Int) {
+        with(ObjectAnimator.ofInt(this, "progress", viewModel.pagePercentage(pageIndex, max))) {
             duration = 100
             interpolator = DecelerateInterpolator()
             start()

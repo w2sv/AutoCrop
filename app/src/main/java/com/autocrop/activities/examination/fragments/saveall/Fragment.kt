@@ -10,7 +10,7 @@ import com.w2sv.autocrop.R
 import java.lang.ref.WeakReference
 
 
-class SaveAllFragment : DownstreamExaminationActivityFragment(R.layout.activity_examination_saveall) {
+class SaveAllFragment : DownstreamExaminationActivityFragment(R.layout.activity_examination_fragment_saveall) {
     private val viewModel: ExaminationViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

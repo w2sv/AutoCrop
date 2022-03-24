@@ -8,11 +8,12 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
-import com.autocrop.activities.examination.ViewPagerViewModel
+import com.autocrop.activities.examination.ViewPagerModel
 import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
 import com.autocrop.activities.examination.fragments.examination.PageIndicationSeekBar
 import com.autocrop.crop
@@ -29,18 +30,21 @@ import java.util.*
 
 class ViewPagerHandler(
     private val viewPager2: ViewPager2,
-    private val parentActivity: ExaminationActivity,
-    private val viewModel: ExaminationViewModel,
     private val textViews: ExaminationFragment.TextViews,
     private val seekBar: PageIndicationSeekBar,
     private val invokeAppTitleFragment: () -> Unit){
+
+    private val parentActivity: ExaminationActivity
+        get() = viewPager2.context as ExaminationActivity
+
+    private val viewModel: ExaminationViewModel by lazy {
+        ViewModelProvider(parentActivity)[ExaminationViewModel::class.java]
+    }
 
     var scroller: Scroller? = null
     var blockPageDependentViewUpdating = false
 
     init {
-        seekBar.calculateProgressCoefficient()
-
         // instantiate adapter, display first crop
         viewPager2.apply {
             adapter = CropPagerAdapter()
@@ -65,7 +69,7 @@ class ViewPagerHandler(
 
                             viewModel.viewPager.dataSet.pageIndex(dataSetPosition).let{ pageIndex ->
                                 textViews.setPageIndication(pageIndex)
-                                seekBar.indicatePage(pageIndex)
+                                seekBar.displayPage(pageIndex)
                             }
                         }
                     }
@@ -195,7 +199,7 @@ class ViewPagerHandler(
             holder.cropView.setImageBitmap(viewModel.viewPager.dataSet.atCorrespondingPosition(position).crop)
         }
 
-        override fun getItemCount(): Int = listOf(1, ViewPagerViewModel.MAX_VIEWS)[viewModel.viewPager.dataSet.size > 1]
+        override fun getItemCount(): Int = listOf(1, ViewPagerModel.MAX_VIEWS)[viewModel.viewPager.dataSet.size > 1]
 
         /**
          * Increment nSavedCrops if applicable, triggers activity exit if cropBundleList
@@ -234,10 +238,7 @@ class ViewPagerHandler(
                     setPageIndication(newPageIndex, viewModel.viewPager.dataSet.size)
                 }
 
-                seekBar.apply {
-                    calculateProgressCoefficient(viewModel.viewPager.dataSet.size)
-                    indicatePage(newPageIndex)
-                }
+                seekBar.displayPage(newPageIndex)
             }
         }
 

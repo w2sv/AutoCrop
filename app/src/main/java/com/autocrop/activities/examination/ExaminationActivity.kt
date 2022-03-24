@@ -6,10 +6,7 @@ package com.autocrop.activities.examination
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.SystemUiHidingFragmentActivity
@@ -26,18 +23,24 @@ import com.autocrop.utils.get
 import com.autocrop.utils.notNull
 import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.R
+import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 
 
 val N_SAVED_CROPS: String = intentExtraIdentifier("n_saved_crops")
 
 
-class ExaminationActivity : SystemUiHidingFragmentActivity(R.layout.activity_examination) {
+class ExaminationActivity : SystemUiHidingFragmentActivity() {
     private lateinit var viewModel: ExaminationViewModel
 
     private val nDismissedImagesRetriever = IntentExtraRetriever()
 
+    private lateinit var binding: ActivityExaminationBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding = ActivityExaminationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // --------retrieve variables
         val nDismissedImages: Int? =

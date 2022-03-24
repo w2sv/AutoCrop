@@ -9,6 +9,7 @@ import com.autocrop.utils.at
 import com.autocrop.utils.get
 import com.autocrop.utils.rotated
 import java.util.*
+import kotlin.math.roundToInt
 
 
 class ExaminationViewModel(conductAutoScroll: Boolean,
@@ -19,17 +20,18 @@ class ExaminationViewModel(conductAutoScroll: Boolean,
         nSavedCrops += by
     }
 
-    val viewPager = ViewPagerViewModel(conductAutoScroll, longAutoScrollDelay)
+    val viewPager = ViewPagerModel(conductAutoScroll, longAutoScrollDelay)
 }
 
-class ViewPagerViewModel(val conductAutoScroll: Boolean,
-                         val longAutoScrollDelay: Boolean){
+class ViewPagerModel(val conductAutoScroll: Boolean,
+                     val longAutoScrollDelay: Boolean){
 
     companion object {
         const val MAX_VIEWS: Int = Int.MAX_VALUE
     }
 
     val dataSet = ViewPagerDataSet()
+    val pageIndicationSeekBar = PageIndicationSeekBarModel()
 
     val startPosition: Int = (MAX_VIEWS / 2).run {
         minus(dataSet.correspondingPosition(this))
@@ -83,4 +85,17 @@ class ViewPagerDataSet : CropBundleList by cropBundleList {
     }
 
     fun pageIndexFromViewPosition(viewPosition: Index): Index = pageIndex(correspondingPosition(viewPosition))
+}
+
+class PageIndicationSeekBarModel {
+
+    companion object {
+        const val PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE: Int = 50
+    }
+
+    fun pagePercentage(pageIndex: Int, max: Int): Int =
+        if (cropBundleList.size == 1)
+            PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE
+        else
+            (max.toFloat() / (cropBundleList.lastIndex).toFloat() * pageIndex).roundToInt()
 }

@@ -21,7 +21,7 @@ import com.autocrop.utils.formattedDateTimeString
 import com.autocrop.utils.get
 import com.autocrop.utils.setSpanHolistically
 import com.w2sv.autocrop.R
-import kotlinx.android.synthetic.main.activity_main.*
+import com.w2sv.autocrop.databinding.ActivityMainBinding
 import processing.android.PFragment
 import timber.log.Timber
 import java.io.File
@@ -30,7 +30,7 @@ import java.io.File
 val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String = intentExtraIdentifier("selected_image_uri_strings")
 
 
-class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
+class MainActivity : SystemUiHidingFragmentActivity() {
 
     companion object{
         const val CROP_IMAGES_SELECTION_MAX: Int = 100
@@ -44,6 +44,8 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
     private val nSavedCropsRetriever = IntentExtraRetriever()
 
+    private lateinit var binding: ActivityMainBinding
+
     /**
      * - Sets flowfield
      * - Initializes UserPreferences from shared preferences
@@ -52,6 +54,9 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (!::flowField.isInitialized)
             flowField = FlowField()
@@ -87,7 +92,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
 
         fun setPFragment() {
             PFragment(pApplet).setView(
-                findViewById<FrameLayout>(R.id.canvas_container), this@MainActivity
+                binding.canvasContainer, this@MainActivity
             )
         }
 
@@ -99,7 +104,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
         fun setCaptureButtonOnClickListener(){
             makeDirIfRequired(capturesDestinationDir.absolutePath)
 
-            flowfield_capture_button.setOnClickListener {
+            binding.flowfieldCaptureButton.setOnClickListener {
                 pApplet.canvas.save(
                     File(
                         capturesDestinationDir,
@@ -119,7 +124,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
     }
 
     fun setMenuInflationButtonOnClickListener(){
-        menu_button.setOnClickListener {
+        binding.menuButton.setOnClickListener {
 
             val menuItemToPreferenceKey: Map<Int, String> = mapOf(
                 R.id.main_menu_item_delete_input_screenshots to UserPreferences.Keys.deleteInputScreenshots,
@@ -234,7 +239,7 @@ class MainActivity : SystemUiHidingFragmentActivity(R.layout.activity_main) {
     // Image Selection $
     //$$$$$$$$$$$$$$$$$$
     private fun setImageSelectionButtonOnClickListener(){
-        image_selection_button.setOnClickListener {
+        binding.imageSelectionButton.setOnClickListener {
             if (!permissionsHandler.allPermissionsGranted)
                 permissionsHandler.request()
             else

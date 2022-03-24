@@ -4,11 +4,7 @@ import androidx.fragment.app.FragmentActivity
 import com.autocrop.utils.android.hideSystemUI
 
 
-abstract class SystemUiHidingFragmentActivity(layoutId: Int) : FragmentActivity(layoutId) {
-    private fun hideSystemUI() {
-        hideSystemUI(window)
-    }
-
+abstract class SystemUiHidingFragmentActivity : FragmentActivity() {
     override fun onStart() {
         super.onStart()
         hideSystemUI()
@@ -23,4 +19,6 @@ abstract class SystemUiHidingFragmentActivity(layoutId: Int) : FragmentActivity(
         super.onResume()
         hideSystemUI()
     }
+
+    private fun hideSystemUI() = hideSystemUI(window)
 }
