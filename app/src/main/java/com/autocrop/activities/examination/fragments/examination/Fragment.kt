@@ -18,55 +18,23 @@ import androidx.lifecycle.ViewModelProvider
 import com.autocrop.UserPreferences
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
-import com.autocrop.activities.examination.PageIndicationSeekBarModel
+import com.autocrop.activities.examination.ViewPagerModel
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.examination.viewpager.ViewPagerHandler
-import com.autocrop.cropBundleList
 import com.autocrop.retentionPercentage
 import com.autocrop.utils.get
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentRootBinding
 
-class ExaminationFragment() : ExaminationActivityFragment(R.layout.activity_examination_fragment_root){
+class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examination_fragment_root){
 
     private val viewModel: ExaminationViewModel by activityViewModels<ExaminationViewModel>()
 
-    private var _binding: ActivityExaminationFragmentRootBinding? = null
-    private val binding get() = _binding!!
-
     private lateinit var viewPagerHandler: ViewPagerHandler
 
-    private lateinit var textViews: TextViews
-
-    inner class TextViews(private val retentionPercentage: TextView, private val pageIndication: TextView) {
-        /**
-         * Adjusts x translation of retentionPercentage view wrt initial
-         * length of page indication view text
-         *
-         * Initializes page dependent texts
-         */
-        init {
-            retentionPercentage.translationX -= (cropBundleList.size.toString().lastIndex) * 31
-
-            setPageIndication(0)
-            setRetentionPercentage(0)
-        }
-
-        fun setPageIndication(pageIndex: Int, itemCount: Int = cropBundleList.size) {
-            pageIndication.text = getString(
-                R.string.fracture,
-                pageIndex + 1,
-                itemCount
-            )
-        }
-
-        fun setRetentionPercentage(pageIndex: Int) {
-            retentionPercentage.text = getString(
-                R.string.examination_activity_retention_percentage,
-                cropBundleList[pageIndex].retentionPercentage
-            )
-        }
-    }
+    protected var _binding: ActivityExaminationFragmentRootBinding? = null
+    protected val binding: ActivityExaminationFragmentRootBinding
+        get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,14 +53,7 @@ class ExaminationFragment() : ExaminationActivityFragment(R.layout.activity_exam
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        textViews = TextViews(findViewById(R.id.retention_percentage), findViewById(R.id.page_indication))
-
-        viewPagerHandler = ViewPagerHandler(
-            binding.viewPager,
-            examinationActivity,
-            textViews,
-            binding.pageIndicationSeekBar,
-        ){ examinationActivity.appTitleFragment.value.invoke(false) }
+        viewPagerHandler = ViewPagerHandler(binding)
         setToolbarButtonOnClickListeners()
     }
 
@@ -139,21 +100,52 @@ class ExaminationFragment() : ExaminationActivityFragment(R.layout.activity_exam
     }
 }
 
-class PageIndicationSeekBar(context: Context, attr: AttributeSet) : AppCompatSeekBar(context, attr) {
-    private val viewModel: PageIndicationSeekBarModel by lazy {
-        ViewModelProvider(context as ExaminationActivity)[ExaminationViewModel::class.java].viewPager.pageIndicationSeekBar
-    }
+interface ViewModelRetriever{
+    abstract val viewModel: ViewPagerModel
+}
 
+class ViewModelRetrieverImplementation(context: Context): ViewModelRetriever{
+    override val viewModel: ViewPagerModel by lazy {
+        ViewModelProvider(context as ExaminationActivity)[ExaminationViewModel::class.java].viewPager
+    }
+}
+
+class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
+    AppCompatSeekBar(context, attr),
+    ViewModelRetriever by ViewModelRetrieverImplementation(context)
+{
     init {
-        progress = viewModel.pagePercentage(0, max)
+        progress = viewModel.pageIndicationSeekBar.pagePercentage(0, max)
         isEnabled = false  // disables dragging of bar
     }
 
-    fun displayPage(pageIndex: Int) {
-        with(ObjectAnimator.ofInt(this, "progress", viewModel.pagePercentage(pageIndex, max))) {
+    fun update(dataSetPosition: Int) {
+        with(ObjectAnimator.ofInt(this, "progress", viewModel.pageIndicationSeekBar.pagePercentage(dataSetPosition, max))) {
             duration = 100
             interpolator = DecelerateInterpolator()
             start()
         }
     }
+}
+
+abstract class PageDependentTextView(context: Context, attr: AttributeSet, private val stringId: Int):
+    TextView(context, attr),
+    ViewModelRetriever by ViewModelRetrieverImplementation(context)
+{
+    fun updateText(viewPagerDataSetPosition: Int){
+        text = context.resources.getString(stringId, *formatArgs(viewPagerDataSetPosition).toTypedArray())
+    }
+    protected abstract fun formatArgs(viewPagerDataSetPosition: Int): List<Int>
+}
+
+class CropRetentionPercentageTextView(context: Context, attr: AttributeSet): PageDependentTextView(context, attr, R.string.examination_activity_retention_percentage){
+    init{
+        translationX -= (viewModel.dataSet.size.toString().lastIndex) * 31
+        updateText(0)
+    }
+    override fun formatArgs(viewPagerDataSetPosition: Int): List<Int> = listOf(viewModel.dataSet[viewPagerDataSetPosition].retentionPercentage)
+}
+
+class PageIndicationTextView(context: Context, attr: AttributeSet): PageDependentTextView(context, attr, R.string.fracture){
+    override fun formatArgs(viewPagerDataSetPosition: Int): List<Int> = listOf(viewModel.dataSet.pageIndex(viewPagerDataSetPosition) + 1, viewModel.dataSet.size)
 }

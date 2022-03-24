@@ -14,8 +14,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
 import com.autocrop.activities.examination.ViewPagerModel
-import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
-import com.autocrop.activities.examination.fragments.examination.PageIndicationSeekBar
 import com.autocrop.crop
 import com.autocrop.cropBundleList
 import com.autocrop.screenshotUri
@@ -26,16 +24,13 @@ import com.autocrop.utils.get
 import com.autocrop.utils.toInt
 import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.R
+import com.w2sv.autocrop.databinding.ActivityExaminationFragmentRootBinding
 import java.util.*
 
-class ViewPagerHandler(
-    private val viewPager2: ViewPager2,
-    private val textViews: ExaminationFragment.TextViews,
-    private val seekBar: PageIndicationSeekBar,
-    private val invokeAppTitleFragment: () -> Unit){
+class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBinding){
 
     private val parentActivity: ExaminationActivity
-        get() = viewPager2.context as ExaminationActivity
+        get() = binding.viewPager.context as ExaminationActivity
 
     private val viewModel: ExaminationViewModel by lazy {
         ViewModelProvider(parentActivity)[ExaminationViewModel::class.java]
@@ -46,7 +41,7 @@ class ViewPagerHandler(
 
     init {
         // instantiate adapter, display first crop
-        viewPager2.apply {
+        binding.viewPager.apply {
             adapter = CropPagerAdapter()
 
             setCurrentItem(
@@ -65,12 +60,9 @@ class ViewPagerHandler(
 
                     if (!blockPageDependentViewUpdating){
                         viewModel.viewPager.dataSet.correspondingPosition(position).let{ dataSetPosition ->
-                            textViews.setRetentionPercentage(dataSetPosition)
-
-                            viewModel.viewPager.dataSet.pageIndex(dataSetPosition).let{ pageIndex ->
-                                textViews.setPageIndication(pageIndex)
-                                seekBar.displayPage(pageIndex)
-                            }
+                            binding.toolbar.retentionPercentage.updateText(dataSetPosition)
+                            binding.toolbar.pageIndication.updateText(dataSetPosition)
+                            binding.pageIndicationSeekBar.update(dataSetPosition)
                         }
                     }
                 }
@@ -110,7 +102,7 @@ class ViewPagerHandler(
                 object : TimerTask() {
                     override fun run() {
                         Handler(Looper.getMainLooper()).post {
-                            with(viewPager2) { setCurrentItem(currentItem + 1, true) }
+                            with(binding.viewPager) { setCurrentItem(currentItem + 1, true) }
                             conductedScrolls++
                         }
 
@@ -171,7 +163,7 @@ class ViewPagerHandler(
                             with(viewModel.viewPager.dataSet.correspondingPosition(adapterPosition)){
                                 CropProcedureDialog(
                                     Pair(viewModel.viewPager.dataSet[this].screenshotUri, viewModel.viewPager.dataSet[this].crop),
-                                    viewPager2.context
+                                    binding.viewPager.context
                                 ) {incrementNSavedCrops -> onCropProcedureAction(this, incrementNSavedCrops)}
                                     .show(parentActivity.supportFragmentManager, "Crop procedure dialog")
                             }
@@ -215,11 +207,11 @@ class ViewPagerHandler(
         }
 
         private fun removeView(dataSetPosition: Index) {
-            val (newDataSetPosition, newViewPosition) = viewModel.viewPager.dataSet.newPositionWithNewViewPosition(dataSetPosition, viewPager2.currentItem)
+            val (newDataSetPosition, newViewPosition) = viewModel.viewPager.dataSet.newPositionWithNewViewPosition(dataSetPosition, binding.viewPager.currentItem)
 
             // scroll to newViewPosition with blocked pageDependentViewUpdating
             blockPageDependentViewUpdating = true
-            viewPager2.setCurrentItem(newViewPosition, true)
+            binding.viewPager.setCurrentItem(newViewPosition, true)
             blockPageDependentViewUpdating = false
 
             // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
@@ -230,16 +222,10 @@ class ViewPagerHandler(
             // update surrounding views
             updateViewsAround(newViewPosition)
 
-            // update page dependent views
-            viewModel.viewPager.dataSet.pageIndexFromViewPosition(newViewPosition).let{ newPageIndex ->
-
-                textViews.apply {
-                    setRetentionPercentage(viewModel.viewPager.dataSet.correspondingPosition(newViewPosition))
-                    setPageIndication(newPageIndex, viewModel.viewPager.dataSet.size)
-                }
-
-                seekBar.displayPage(newPageIndex)
-            }
+            // update views
+            binding.toolbar.retentionPercentage.updateText(newDataSetPosition)
+            binding.toolbar.pageIndication.updateText(newDataSetPosition)
+            binding.pageIndicationSeekBar.update(newDataSetPosition)
         }
 
         private fun updateViewsAround(position: Index){

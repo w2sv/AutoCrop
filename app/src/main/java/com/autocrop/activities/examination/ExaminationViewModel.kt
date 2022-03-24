@@ -31,7 +31,7 @@ class ViewPagerModel(val conductAutoScroll: Boolean,
     }
 
     val dataSet = ViewPagerDataSet()
-    val pageIndicationSeekBar = PageIndicationSeekBarModel()
+    val pageIndicationSeekBar = PageIndicationSeekBarModel(dataSet)
 
     val startPosition: Int = (MAX_VIEWS / 2).run {
         minus(dataSet.correspondingPosition(this))
@@ -87,15 +87,15 @@ class ViewPagerDataSet : CropBundleList by cropBundleList {
     fun pageIndexFromViewPosition(viewPosition: Index): Index = pageIndex(correspondingPosition(viewPosition))
 }
 
-class PageIndicationSeekBarModel {
+class PageIndicationSeekBarModel(private val viewPagerDataSet: ViewPagerDataSet) {
 
     companion object {
         const val PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE: Int = 50
     }
 
-    fun pagePercentage(pageIndex: Int, max: Int): Int =
-        if (cropBundleList.size == 1)
+    fun pagePercentage(dataSetPosition: Int, max: Int): Int =
+        if (viewPagerDataSet.size == 1)
             PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE
         else
-            (max.toFloat() / (cropBundleList.lastIndex).toFloat() * pageIndex).roundToInt()
+            (max.toFloat() / (viewPagerDataSet.lastIndex).toFloat() * viewPagerDataSet.pageIndex(dataSetPosition)).roundToInt()
 }
