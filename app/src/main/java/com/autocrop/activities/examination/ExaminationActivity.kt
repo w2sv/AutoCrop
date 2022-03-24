@@ -97,10 +97,10 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
 
         supportFragmentManager
             .beginTransaction()
-            // .setCustomAnimations(animations[0], animations[1])
-            .add(binding.container.id, fragment.value)
-//            .addToBackStack(null)
-//            .setReorderingAllowed(true)
+            .setCustomAnimations(animations[0], animations[1])
+            .replace(binding.container.id, fragment.value)
+            .addToBackStack(null)
+            .setReorderingAllowed(true)
             .commit()
     }
 
