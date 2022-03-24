@@ -22,7 +22,7 @@ class SaveAllFragment : DownstreamExaminationActivityFragment(R.layout.activity_
     private fun saveAll() {
         CropSaver(WeakReference(examinationActivity)) {
             viewModel.incrementNSavedCrops(cropBundleList.size)
-            examinationActivity.appTitleFragment.value.invoke(true)
+            examinationActivity.appTitleFragment.value.invoke(true, examinationActivity)
         }
             .execute()
     }

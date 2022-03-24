@@ -83,8 +83,6 @@ class ViewPagerDataSet : CropBundleList by cropBundleList {
         else
             lastIndex - this + position + 1
     }
-
-    fun pageIndexFromViewPosition(viewPosition: Index): Index = pageIndex(correspondingPosition(viewPosition))
 }
 
 class PageIndicationSeekBarModel(private val viewPagerDataSet: ViewPagerDataSet) {

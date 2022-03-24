@@ -201,7 +201,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
             if (incrementNSavedCrops)
                 viewModel.incrementNSavedCrops()
             if (viewModel.viewPager.dataSet.size == 1)
-                return parentActivity.appTitleFragment.value.invoke(false)
+                return parentActivity.appTitleFragment.value.invoke(false, parentActivity)
 
             removeView(dataSetPosition)
         }
