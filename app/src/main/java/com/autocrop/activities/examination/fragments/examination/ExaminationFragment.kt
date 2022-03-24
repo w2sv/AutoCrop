@@ -74,7 +74,7 @@ class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examin
         binding.toolbar.saveAllButton.setOnClickListener {
             runIfScrollerNotRunning {
                 showConfirmationDialog("Save all crops${listOf("", " and delete corresponding screenshots")[UserPreferences.deleteInputScreenshots]}?") {
-                    examinationActivity.saveAllFragment.value.invoke(true, examinationActivity)
+                    activity.invoke(activity.saveAllFragment, true)
                 }
             }
         }
@@ -83,7 +83,7 @@ class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examin
         binding.toolbar.discardAllButton.setOnClickListener {
             runIfScrollerNotRunning {
                 showConfirmationDialog("Discard all crops?") {
-                    examinationActivity.saveAllFragment.value.invoke(false, examinationActivity)
+                    activity.invoke(activity.appTitleFragment, false)
                 }
             }
         }

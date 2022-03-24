@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import com.autocrop.activities.examination.ExaminationViewModel
-import com.autocrop.activities.examination.fragments.DownstreamExaminationActivityFragment
+import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.cropBundleList
 import com.w2sv.autocrop.R
 import java.lang.ref.WeakReference
 
 
-class SaveAllFragment : DownstreamExaminationActivityFragment(R.layout.activity_examination_fragment_saveall) {
+class SaveAllFragment : ExaminationActivityFragment(R.layout.activity_examination_fragment_saveall) {
     private val viewModel: ExaminationViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -20,9 +20,9 @@ class SaveAllFragment : DownstreamExaminationActivityFragment(R.layout.activity_
     }
 
     private fun saveAll() {
-        CropSaver(WeakReference(examinationActivity)) {
+        CropSaver(WeakReference(activity)) {
             viewModel.incrementNSavedCrops(cropBundleList.size)
-            examinationActivity.appTitleFragment.value.invoke(true, examinationActivity)
+            activity.invoke(activity.appTitleFragment, true)
         }
             .execute()
     }

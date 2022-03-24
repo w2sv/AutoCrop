@@ -58,13 +58,8 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
 
-                    if (!blockPageDependentViewUpdating){
-                        viewModel.viewPager.dataSet.correspondingPosition(position).let{ dataSetPosition ->
-                            binding.toolbar.retentionPercentage.updateText(dataSetPosition)
-                            binding.toolbar.pageIndication.updateText(dataSetPosition)
-                            binding.pageIndicationSeekBar.update(dataSetPosition)
-                        }
-                    }
+                    if (!blockPageDependentViewUpdating)
+                        binding.updatePageDependentViews(viewModel.viewPager.dataSet.correspondingPosition(position))
                 }
             })
 
@@ -89,6 +84,12 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
                     cropBundleList.lastIndex
                 )
         }
+    }
+
+    private fun ActivityExaminationFragmentRootBinding.updatePageDependentViews(dataSetPosition: Index){
+        toolbar.retentionPercentage.updateText(dataSetPosition)
+        toolbar.pageIndication.updateText(dataSetPosition)
+        pageIndicationSeekBar.update(dataSetPosition)
     }
 
     /**
@@ -163,7 +164,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
                             with(viewModel.viewPager.dataSet.correspondingPosition(adapterPosition)){
                                 CropProcedureDialog(
                                     Pair(viewModel.viewPager.dataSet[this].screenshotUri, viewModel.viewPager.dataSet[this].crop),
-                                    binding.viewPager.context
+                                    imageFileWritingContext = parentActivity
                                 ) {incrementNSavedCrops -> onCropProcedureAction(this, incrementNSavedCrops)}
                                     .show(parentActivity.supportFragmentManager, "Crop procedure dialog")
                             }
@@ -201,7 +202,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
             if (incrementNSavedCrops)
                 viewModel.incrementNSavedCrops()
             if (viewModel.viewPager.dataSet.size == 1)
-                return parentActivity.appTitleFragment.value.invoke(false, parentActivity)
+                return parentActivity.invoke(parentActivity.appTitleFragment, false)
 
             removeView(dataSetPosition)
         }
@@ -223,9 +224,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
             updateViewsAround(newViewPosition)
 
             // update views
-            binding.toolbar.retentionPercentage.updateText(newDataSetPosition)
-            binding.toolbar.pageIndication.updateText(newDataSetPosition)
-            binding.pageIndicationSeekBar.update(newDataSetPosition)
+            binding.updatePageDependentViews(newDataSetPosition)
         }
 
         private fun updateViewsAround(position: Index){

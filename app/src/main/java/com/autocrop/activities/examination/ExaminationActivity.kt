@@ -6,12 +6,13 @@ package com.autocrop.activities.examination
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
-import com.autocrop.activities.examination.fragments.DownstreamExaminationActivityFragment
+import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
@@ -59,18 +60,16 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
 
         // --------commit ExaminationFragment if applicable
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .add(
-                    R.id.container,
-                    ExaminationFragment()
-                )
+            supportFragmentManager
+                .beginTransaction()
+                .add(binding.container.id, ExaminationFragment())
                 .commit()
         }
 
         // ---------display Snackbars
         if (nDismissedImages.notNull())
             displaySnackbar(
-                "Couldn't find cropping bounds for\n%d image%s".format(nDismissedImages, listOf("", "s")[nDismissedImages!! > 1]),
+                "Couldn't find cropping bounds for\n$nDismissedImages image${listOf("", "s")[nDismissedImages!! > 1]}",
                 TextColors.urgent
             )
         else if (conductAutoScroll)
@@ -81,8 +80,29 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
             )
     }
 
-    val saveAllFragment: Lazy<DownstreamExaminationActivityFragment> = lazy { SaveAllFragment() }
-    val appTitleFragment: Lazy<DownstreamExaminationActivityFragment> = lazy { AppTitleFragment() }
+    val saveAllFragment: Lazy<Fragment> = lazy { SaveAllFragment() }
+    val appTitleFragment: Lazy<Fragment> = lazy { AppTitleFragment() }
+
+    fun invoke(fragment: Lazy<Fragment>, flipRight: Boolean) {
+        val animations = arrayOf(
+            arrayOf(
+                R.animator.card_flip_left_in,
+                R.animator.card_flip_left_out
+            ),
+            arrayOf(
+                R.animator.card_flip_right_in,
+                R.animator.card_flip_right_out
+            )
+        )[flipRight]
+
+        supportFragmentManager
+            .beginTransaction()
+            // .setCustomAnimations(animations[0], animations[1])
+            .add(binding.container.id, fragment.value)
+//            .addToBackStack(null)
+//            .setReorderingAllowed(true)
+            .commit()
+    }
 
     /**
      * Block backPress throughout the process of saving all crops,
