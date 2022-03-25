@@ -7,10 +7,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.main.MainActivity
@@ -19,57 +17,28 @@ import com.autocrop.clearAndLog
 import com.autocrop.cropBundleList
 import com.autocrop.utils.android.*
 import com.autocrop.utils.logBeforehand
-import com.w2sv.autocrop.R
+import com.w2sv.autocrop.databinding.ActivityCroppingBinding
 import java.lang.ref.WeakReference
-import kotlin.properties.Delegates
-
 
 val N_DISMISSED_IMAGES_IDENTIFIER: String = intentExtraIdentifier("n_dismissed_images")
 
-
 class CroppingActivity : AppCompatActivity() {
-    private var nSelectedImages by Delegates.notNull<Int>()
     private lateinit var cropper: Cropper
 
-    private lateinit var views: Views
+    private lateinit var binding: ActivityCroppingBinding
+    private val ActivityCroppingBinding.croppingViews: List<View>
+        get() = listOf(croppingProgressBar, croppingCurrentImageNumberTextView, croppingTextView)
+    private val ActivityCroppingBinding.croppingFailureViews: List<View>
+        get() = listOf(croppingFailureTextView, croppingFailureErrorIcon)
 
-    inner class Views {
-        val progressBar: ProgressBar = findViewById(R.id.cropping_progress_bar)
-        private val currentImageNumberText: TextView =
-            findViewById(R.id.cropping_current_image_number_text_view)
-
-        fun setCurrentImageNumberText(currentImageNumber: Int) {
-            currentImageNumberText.text =
-                getString(R.string.fracture, currentImageNumber, nSelectedImages)
-        }
-
-        private val croppingText: TextView = findViewById(R.id.cropping_text_view)
-
-        val croppingViews: List<View>
-            get() = listOf(progressBar, currentImageNumberText, croppingText)
-
-        private val croppingFailureText: TextView = findViewById(R.id.cropping_failure_text_view)
-        fun setCroppingFailureText(attemptedMultipleImages: Boolean) {
-            croppingFailureText.text = R.string.cropping_failure.run {
-                if (attemptedMultipleImages)
-                    getString(this, " any of", "s")
-                else
-                    getString(this, "", "")
-            }
-        }
-
-        private val croppingFailureIcon: ImageView = findViewById(R.id.cropping_failure_error_icon)
-
-        val croppingFailureViews: List<View>
-            get() = listOf(croppingFailureText, croppingFailureIcon)
-    }
+    private lateinit var viewModel: CroppingActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // set layout, retrieve views
-        setContentView(R.layout.activity_cropping)
-        views = Views()
+        // -----------retrieve ViewBinding, setContentView
+        binding = ActivityCroppingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // convert passed image uri strings back to uris, set nSelectedImages
         val imageUris: Array<Uri> =
@@ -77,19 +46,24 @@ class CroppingActivity : AppCompatActivity() {
                 Uri.parse(it)
             }
                 .toTypedArray()
-                .also {
-                    nSelectedImages = it.size
-                }
+
+        viewModel = ViewModelProvider(
+            this,
+            CroppingActivityViewModelFactory(
+                imageUris.size,
+                binding.croppingProgressBar.max
+            )
+        )[CroppingActivityViewModel::class.java]
 
         // execute async cropping task
         cropper = Cropper(
-            nSelectedImages,
-            WeakReference(this),
-            WeakReference(views.progressBar),
-            views::setCurrentImageNumberText,
-            this::onTaskCompleted
-        ).also {
-            it.execute(*imageUris)
+            viewModel,
+            WeakReference(binding.croppingProgressBar),
+            WeakReference(binding.croppingCurrentImageNumberTextView),
+            contentResolver,
+            ::onTaskCompleted
+        ).apply {
+            execute(*imageUris)
         }
     }
 
@@ -99,32 +73,25 @@ class CroppingActivity : AppCompatActivity() {
      */
     private fun onTaskCompleted() = logBeforehand("Async Cropping task finished") {
         if (cropBundleList.isNotEmpty())
-            startExaminationActivity(nSelectedImages - cropBundleList.size)
-        else {
-            Handler(Looper.getMainLooper()).postDelayed(
-                {
-                    hideSystemUI(window)
+            startExaminationActivity(viewModel.nSelectedImages - cropBundleList.size)
+        else
+            {
+                Handler(Looper.getMainLooper()).postDelayed(
+                    {
+                        hideSystemUI(window)
 
-                    with(views) {
-                        croppingViews.forEach {
-                            it.hide()
-                        }
-
-                        setCroppingFailureText(nSelectedImages > 1)
-
-                        croppingFailureViews.forEach {
-                            it.show()
-                        }
+                        binding.croppingViews.forEach { it.hide() }
+                        binding.croppingFailureTextView.updateText(viewModel.nSelectedImages > 1)
+                        binding.croppingFailureViews.forEach { it.show() }
 
                         Handler(Looper.getMainLooper()).postDelayed(
                             { startMainActivity() },
                             3000
                         )
-                    }
-                },
-                300
-            )
-        }
+                    },
+                    300
+                )
+            }
     }
 
     private fun startExaminationActivity(nDismissedCrops: Int) {
@@ -165,7 +132,7 @@ class CroppingActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
 
-        // cropping_progress_bar.progress = 0 TODO
+        binding.croppingProgressBar.progress = 0
         finishAndRemoveTask()
     }
 }

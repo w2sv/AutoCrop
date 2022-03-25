@@ -1,5 +1,6 @@
 package com.autocrop.activities.cropping
 
+import android.content.ContentResolver
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -12,12 +13,12 @@ import com.autocrop.utils.toInt
 import java.lang.ref.WeakReference
 
 class Cropper(
-    private val nSelectedImages: Int,
-    private val context: WeakReference<Context>,
+    private val viewModel: CroppingActivityViewModel,
     private val progressBar: WeakReference<ProgressBar>,
-    private val setCurrentImageViewText: (Int) -> Unit,
-    private val onTaskCompleted: () -> Unit
-) : AsyncTask<Uri, Pair<Int, Int>, Void?>() {
+    private val currentImageNumberTextView: WeakReference<CurrentImageNumberTextView>,
+    private val contentResolver: ContentResolver,
+    private val onTaskCompleted: () -> Unit)
+        : AsyncTask<Uri, Pair<Int, Int>, Void?>() {
 
     /**
      * Initializes imageOrdinalTextView text
@@ -25,7 +26,7 @@ class Cropper(
     override fun onPreExecute() {
         super.onPreExecute()
 
-        setCurrentImageViewText(0)
+        currentImageNumberTextView.forceUnwrapped().updateText(0)
     }
 
     /**
@@ -36,20 +37,8 @@ class Cropper(
     override fun doInBackground(vararg params: Uri): Void? {
         var decimalStepSum = 0f
 
-        val (progressBarIntStep: Int, progressBarDecimalStep: Float) = (
-                progressBar.forceUnwrapped().max.toFloat() / nSelectedImages.toFloat()
-                )
-            .run {
-                toInt()
-                    .let {
-                        Pair(it, minus(it))
-                    }
-            }
-
         params.forEachIndexed { index, uri ->
-            val image: Bitmap = BitmapFactory.decodeStream(
-                context.forceUnwrapped().contentResolver.openInputStream(uri)
-            )!!
+            val image: Bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))!!
 
             // attempt to crop image, add uri-crop mapping to image cash if successful
             with(croppedImage(image)) {
@@ -57,18 +46,18 @@ class Cropper(
                 // exit loop if task got cancelled
                 if (this@Cropper.isCancelled)
                     return null
-                else
-                    this?.let {
-                        cropBundleList.add(
-                            Triple(uri, first, second)
-                        )
-                    }
+
+                this?.let {
+                    cropBundleList.add(
+                        Triple(uri, first, second)
+                    )
+                }
             }
 
-            // advance progress bar, image ordinal text view
-            decimalStepSum += progressBarDecimalStep
-            with(Pair(index + 1, progressBarIntStep + (decimalStepSum >= 1).toInt())) {
-                if (second > progressBarIntStep)
+            // advance progress bar, screenshot number text view
+            decimalStepSum += viewModel.progressBarDecimalStep
+            with(Pair(index + 1, viewModel.progressBarIntStep + (decimalStepSum >= 1).toInt())) {
+                if (second > viewModel.progressBarIntStep)
                     decimalStepSum -= 1
 
                 publishProgress(this)
@@ -82,9 +71,7 @@ class Cropper(
      */
     override fun onProgressUpdate(vararg imageOrdinalWithProgressBarStep: Pair<Int, Int>) {
         with(imageOrdinalWithProgressBarStep[0]) {
-            setCurrentImageViewText(first)
-
-            // advance progress bar
+            currentImageNumberTextView.forceUnwrapped().updateText(first)
             progressBar.forceUnwrapped().progress += second
         }
     }

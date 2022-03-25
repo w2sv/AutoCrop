@@ -30,7 +30,7 @@
         android:progress="0"
         android:progressDrawable="@drawable/progress_bar_cropping_activity_progress"/>
 
-    <TextView
+    <com.autocrop.activities.cropping.CurrentImageNumberTextView
         android:id="@+id/cropping_current_image_number_text_view"
 
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
         android:gravity="center"
 
         android:textSize="17sp">
-    </TextView>
+    </com.autocrop.activities.cropping.CurrentImageNumberTextView>
 
     <ImageView
         android:id="@+id/cropping_failure_error_icon"
@@ -55,7 +55,7 @@
         android:contentDescription="@null">
     </ImageView>
 
-    <TextView
+    <com.autocrop.activities.cropping.CroppingFailureTextView
         android:id="@+id/cropping_failure_text_view"
         android:visibility="gone"
 
@@ -69,6 +69,6 @@
         android:textSize="20sp"
         android:paddingHorizontal="60dp"
         android:textColor="@color/dark_green">
-    </TextView>
+    </com.autocrop.activities.cropping.CroppingFailureTextView>
 
 </RelativeLayout>
