@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -17,8 +18,8 @@ import com.autocrop.activities.main.SELECTED_IMAGE_URI_STRINGS_IDENTIFIER
 import com.autocrop.clearAndLog
 import com.autocrop.cropBundleList
 import com.autocrop.utils.android.*
+import com.autocrop.utils.logBeforehand
 import com.w2sv.autocrop.R
-import timber.log.Timber
 import java.lang.ref.WeakReference
 import kotlin.properties.Delegates
 
@@ -28,7 +29,7 @@ val N_DISMISSED_IMAGES_IDENTIFIER: String = intentExtraIdentifier("n_dismissed_i
 
 class CroppingActivity : AppCompatActivity() {
     private var nSelectedImages by Delegates.notNull<Int>()
-    private lateinit var croppingTask: Cropper
+    private lateinit var cropper: Cropper
 
     private lateinit var views: Views
 
@@ -81,7 +82,7 @@ class CroppingActivity : AppCompatActivity() {
                 }
 
         // execute async cropping task
-        croppingTask = Cropper(
+        cropper = Cropper(
             nSelectedImages,
             WeakReference(this),
             WeakReference(views.progressBar),
@@ -96,13 +97,11 @@ class CroppingActivity : AppCompatActivity() {
      * Starts either Examination- or MainActivity depending on whether or not any
      * of the selected images has been successfully cropped
      */
-    private fun onTaskCompleted() {
-        Timber.i("Async Cropping task finished")
-
+    private fun onTaskCompleted() = logBeforehand("Async Cropping task finished") {
         if (cropBundleList.isNotEmpty())
             startExaminationActivity(nSelectedImages - cropBundleList.size)
         else {
-            Handler().postDelayed(
+            Handler(Looper.getMainLooper()).postDelayed(
                 {
                     hideSystemUI(window)
 
@@ -117,7 +116,7 @@ class CroppingActivity : AppCompatActivity() {
                             it.show()
                         }
 
-                        Handler().postDelayed(
+                        Handler(Looper.getMainLooper()).postDelayed(
                             { startMainActivity() },
                             3000
                         )
@@ -149,14 +148,14 @@ class CroppingActivity : AppCompatActivity() {
      * Return to MainActivity on confirmed back press
      */
     private val backPressHandler = BackPressHandler(this, "Tap again to cancel") {
-        croppingTask.cancel(false)
+        cropper.cancel(false)
         cropBundleList.clearAndLog()
 
         startMainActivity()
     }
 
     override fun onBackPressed() {
-        if (croppingTask.status != AsyncTask.Status.FINISHED)
+        if (cropper.status != AsyncTask.Status.FINISHED)
             return backPressHandler()
     }
 
