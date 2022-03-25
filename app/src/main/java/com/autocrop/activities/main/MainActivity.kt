@@ -86,7 +86,6 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             screenResolution(windowManager)
         ).also { Timber.i("Initialized flowFieldPApplet") }
 
-        @Suppress("MISSING_DEPENDENCY_CLASS", "MISSING_DEPENDENCY_SUPERCLASS", "TYPE_MISMATCH")
         fun setPFragment() {
             PFragment(pApplet).setView(
                 binding.canvasContainer, this@MainActivity
