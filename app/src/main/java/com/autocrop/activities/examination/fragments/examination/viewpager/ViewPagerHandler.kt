@@ -15,7 +15,6 @@ import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
 import com.autocrop.activities.examination.ViewPagerModel
 import com.autocrop.crop
-import com.autocrop.cropBundleList
 import com.autocrop.screenshotUri
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.TextColors
@@ -36,12 +35,12 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
         ViewModelProvider(parentActivity)[ExaminationViewModel::class.java]
     }
 
-    val scroller: Scroller
+    val scroller by lazy { Scroller() }
     var blockPageDependentViewUpdating = false
 
     init {
-        // instantiate adapter, display first crop
         binding.viewPager.apply {
+            // instantiate adapter, set first crop
             adapter = CropPagerAdapter()
 
             setCurrentItem(
@@ -76,13 +75,10 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
                     rotationY = 90f * position
                 }
             }
-
-            // instantiate Scroller if applicable
-            scroller = Scroller(viewModel.viewPager.longAutoScrollDelay, viewModel.viewPager.dataSet.lastIndex).apply {
-                if (viewModel.viewPager.conductAutoScroll)
-                    invoke()
-            }
         }
+        // run Scroller if applicable
+        if (viewModel.viewPager.conductAutoScroll)
+            scroller.invoke()
     }
 
     private fun ActivityExaminationFragmentRootBinding.updatePageDependentViews(dataSetPosition: Index){
@@ -94,9 +90,10 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
     /**
      * Class accounting for automatic scrolling at the start of crop examination
      */
-    inner class Scroller(private val longAutoScrollDelay: Boolean, private val maxScrolls: Int) {
+    inner class Scroller {
         var isRunning: Boolean = false
         private var conductedScrolls = 0
+        private val maxScrolls = viewModel.viewPager.dataSet.lastIndex
         private lateinit var timer: Timer
 
         fun invoke(){
@@ -114,7 +111,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
                                 cancel(onScreenTouch = false)
                         }
                     },
-                    listOf(1000L, 1500L)[longAutoScrollDelay],
+                    listOf(1000L, 1500L)[viewModel.viewPager.longAutoScrollDelay],
                     1000L
                 )
             }
@@ -197,8 +194,9 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
         override fun getItemCount(): Int = listOf(1, ViewPagerModel.MAX_VIEWS)[viewModel.viewPager.dataSet.size > 1]
 
         /**
-         * Increment nSavedCrops if applicable, triggers activity exit if cropBundleList
-         * about to be exhausted
+         * Increment nSavedCrops if applicable & triggers activity exit if cropBundleList
+         * about to be exhausted; otherwise removes current view, the procedure action has been
+         * selected for, from pager
          */
         private fun onCropProcedureAction(dataSetPosition: Index, incrementNSavedCrops: Boolean){
             if (incrementNSavedCrops)
@@ -209,6 +207,13 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
             removeView(dataSetPosition)
         }
 
+        /**
+         * • scroll to subsequent position
+         * • remove cropBundle from dataSet
+         * • rotate dataSet such that it will subsequently align with the determined newViewPosition again
+         * • reset preloaded views around newViewPosition
+         * • update page dependent views
+         */
         private fun removeView(dataSetPosition: Index) {
             val (newDataSetPosition, newViewPosition) = viewModel.viewPager.dataSet.newPositionWithNewViewPosition(dataSetPosition, binding.viewPager.currentItem)
 
@@ -223,16 +228,21 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
             viewModel.viewPager.dataSet.rotateAndResetPositionTrackers(newViewPosition, newDataSetPosition)
 
             // update surrounding views
-            updateViewsAround(newViewPosition)
+            resetViewsAround(newViewPosition)
 
             // update views
             binding.updatePageDependentViews(newDataSetPosition)
         }
 
-        private fun updateViewsAround(position: Index){
-            val resetMargin = 3
+        /**
+         * Triggers reloading of preloaded views surrounding the one sitting at [position]
+         *
+         * Recycler View preloads and cashes 3 views to either side of the one being currently displayed
+         */
+        private fun resetViewsAround(position: Index){
+            val nPreloadedViewsToEitherSide = 3
 
-            notifyItemRangeChanged(position - resetMargin, resetMargin * 2 + 1)
+            notifyItemRangeChanged(position - nPreloadedViewsToEitherSide, nPreloadedViewsToEitherSide * 2 + 1)
         }
     }
 }
