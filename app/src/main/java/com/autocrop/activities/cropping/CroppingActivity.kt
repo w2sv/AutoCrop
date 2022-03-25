@@ -10,17 +10,15 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.BackPressHandler
+import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.activities.main.SELECTED_IMAGE_URI_STRINGS_IDENTIFIER
 import com.autocrop.clearAndLog
 import com.autocrop.cropBundleList
 import com.autocrop.utils.android.*
 import com.autocrop.utils.logBeforehand
 import com.w2sv.autocrop.databinding.ActivityCroppingBinding
 import java.lang.ref.WeakReference
-
-val N_DISMISSED_IMAGES_IDENTIFIER: String = intentExtraIdentifier("n_dismissed_images")
 
 class CroppingActivity : AppCompatActivity() {
     private lateinit var cropper: Cropper
@@ -42,7 +40,7 @@ class CroppingActivity : AppCompatActivity() {
 
         // convert passed image uri strings back to uris, set nSelectedImages
         val imageUris: Array<Uri> =
-            intent.getStringArrayExtra(SELECTED_IMAGE_URI_STRINGS_IDENTIFIER)!!.map {
+            intent.getStringArrayExtra(IntentIdentifiers.SELECTED_IMAGE_URI_STRINGS)!!.map {
                 Uri.parse(it)
             }
                 .toTypedArray()
@@ -97,7 +95,7 @@ class CroppingActivity : AppCompatActivity() {
     private fun startExaminationActivity(nDismissedCrops: Int) {
         startActivity(
             Intent(this, ExaminationActivity::class.java).putExtra(
-                N_DISMISSED_IMAGES_IDENTIFIER,
+                IntentIdentifiers.N_DISMISSED_IMAGES,
                 nDismissedCrops
             )
         )

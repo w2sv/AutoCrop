@@ -10,10 +10,11 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
+import androidx.fragment.app.FragmentActivity
 import com.autocrop.UserPreferences
+import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.CroppingActivity
-import com.autocrop.activities.examination.N_SAVED_CROPS
 import com.autocrop.picturesDir
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
@@ -24,10 +25,6 @@ import com.w2sv.autocrop.databinding.ActivityMainBinding
 import processing.android.PFragment
 import timber.log.Timber
 import java.io.File
-
-
-val SELECTED_IMAGE_URI_STRINGS_IDENTIFIER: String = intentExtraIdentifier("selected_image_uri_strings")
-
 
 class MainActivity : SystemUiHidingFragmentActivity() {
 
@@ -71,7 +68,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         flowField.setCaptureButtonOnClickListener()
 
         // display cropping saving results if applicable
-        nSavedCropsRetriever(intent, N_SAVED_CROPS, -1)?.let { nSavedCrops ->
+        nSavedCropsRetriever(intent, IntentIdentifiers.N_SAVED_CROPS, -1)?.let { nSavedCrops ->
             displaySnackbar(
                 when (nSavedCrops) {
                     0 -> "Discarded all crops"
@@ -89,6 +86,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             screenResolution(windowManager)
         ).also { Timber.i("Initialized flowFieldPApplet") }
 
+        @Suppress("MISSING_DEPENDENCY_CLASS", "MISSING_DEPENDENCY_SUPERCLASS", "TYPE_MISMATCH")
         fun setPFragment() {
             PFragment(pApplet).setView(
                 binding.canvasContainer, this@MainActivity
@@ -288,7 +286,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         startActivity(
             Intent(this, CroppingActivity::class.java)
                 .putExtra(
-                    SELECTED_IMAGE_URI_STRINGS_IDENTIFIER,
+                    IntentIdentifiers.SELECTED_IMAGE_URI_STRINGS,
                     imageUriStrings
                 )
         )

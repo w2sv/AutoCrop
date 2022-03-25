@@ -9,8 +9,8 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
+import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.SystemUiHidingFragmentActivity
-import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
 import com.autocrop.activities.examination.fragments.singleaction.SingleActionExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.singleaction.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.singleaction.saveall.SaveAllFragment
@@ -18,16 +18,15 @@ import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearAndLog
 import com.autocrop.cropBundleList
-import com.autocrop.utils.android.*
+import com.autocrop.utils.android.IntentExtraRetriever
+import com.autocrop.utils.android.TextColors
+import com.autocrop.utils.android.displaySnackbar
+import com.autocrop.utils.android.returnTransitionAnimation
 import com.autocrop.utils.get
 import com.autocrop.utils.notNull
 import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationBinding
-
-
-val N_SAVED_CROPS: String = intentExtraIdentifier("n_saved_crops")
-
 
 class ExaminationActivity : SystemUiHidingFragmentActivity() {
     private lateinit var viewModel: ExaminationViewModel
@@ -45,7 +44,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
 
         // --------retrieve variables
         val nDismissedImages: Int? =
-            nDismissedImagesRetriever(intent, N_DISMISSED_IMAGES_IDENTIFIER, 0)
+            nDismissedImagesRetriever(intent, IntentIdentifiers.N_DISMISSED_IMAGES, 0)
         val conductAutoScroll: Boolean =
             UserPreferences.conductAutoScrolling && cropBundleList.size > 1
 
@@ -131,7 +130,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
             Intent(
                 this,
                 MainActivity::class.java
-            ).putExtra(N_SAVED_CROPS, viewModel.nSavedCrops)
+            ).putExtra(IntentIdentifiers.N_SAVED_CROPS, viewModel.nSavedCrops)
         )
 
         returnTransitionAnimation()
