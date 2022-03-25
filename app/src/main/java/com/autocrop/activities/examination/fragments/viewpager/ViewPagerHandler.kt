@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.examination.viewpager
+package com.autocrop.activities.examination.fragments.viewpager
 
 import android.annotation.SuppressLint
 import android.os.Handler
@@ -23,10 +23,10 @@ import com.autocrop.utils.get
 import com.autocrop.utils.toInt
 import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.ActivityExaminationFragmentRootBinding
+import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
 import java.util.*
 
-class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBinding){
+class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpagerBinding){
 
     private val examinationActivity: ExaminationActivity
         get() = binding.viewPager.context as ExaminationActivity
@@ -35,7 +35,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
         ViewModelProvider(examinationActivity)[ExaminationViewModel::class.java]
     }
 
-    val scroller by lazy { Scroller() }
+    val scroller = Scroller()
     var blockPageDependentViewUpdating = false
 
     init {
@@ -81,7 +81,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
             scroller.invoke()
     }
 
-    private fun ActivityExaminationFragmentRootBinding.updatePageDependentViews(dataSetPosition: Index){
+    private fun ActivityExaminationFragmentViewpagerBinding.updatePageDependentViews(dataSetPosition: Index){
         toolbar.retentionPercentage.updateText(dataSetPosition)
         toolbar.pageIndication.updateText(dataSetPosition)
         pageIndicationSeekBar.update(dataSetPosition)
@@ -161,12 +161,11 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
                          */
                         override fun onClick() {
                             viewModel.viewPager.dataSet.correspondingPosition(adapterPosition).let{ dataSetPosition ->
-                                with(CropProcedureDialog(
+                                CropProcedureDialog(
                                     viewModel.viewPager.dataSet[dataSetPosition].screenshotUri to viewModel.viewPager.dataSet[dataSetPosition].crop,
                                     imageFileWritingContext = examinationActivity)
-                                {incrementNSavedCrops -> onCropProcedureAction(dataSetPosition, incrementNSavedCrops)}){
-                                    show(requireActivity().supportFragmentManager, TAG)
-                                }
+                                {incrementNSavedCrops -> onCropProcedureAction(dataSetPosition, incrementNSavedCrops)}
+                                    .show(examinationActivity.supportFragmentManager, "")
                             }
                         }
                     }

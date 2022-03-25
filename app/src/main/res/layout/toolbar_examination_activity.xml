@@ -36,7 +36,7 @@
 
         <!-- Retention Percentage -->
 
-    <com.autocrop.activities.examination.fragments.examination.CropRetentionPercentageTextView
+    <com.autocrop.activities.examination.fragments.viewpager.CropRetentionPercentageTextView
         android:id="@+id/retention_percentage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
 
         <!-- Page Indication -->
 
-    <com.autocrop.activities.examination.fragments.examination.PageIndicationTextView
+    <com.autocrop.activities.examination.fragments.viewpager.PageIndicationTextView
         android:id="@+id/page_indication"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

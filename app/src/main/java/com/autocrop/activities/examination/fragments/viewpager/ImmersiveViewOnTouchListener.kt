@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.examination.viewpager
+package com.autocrop.activities.examination.fragments.viewpager
 
 import android.annotation.SuppressLint
 import android.graphics.Point

@@ -1,5 +1,7 @@
 package com.autocrop.activities.examination.fragments
 
+import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.autocrop.activities.examination.ExaminationActivity

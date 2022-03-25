@@ -20,8 +20,7 @@ object TextColors {
 fun Activity.displayToast(
     message: String,
     textColor: Int = TextColors.neutral,
-    length: Int = Toast.LENGTH_LONG
-) {
+    length: Int = Toast.LENGTH_LONG) {
 
     Toast.makeText(
         this,
@@ -47,23 +46,20 @@ fun Activity.displaySnackbar(
     message: String,
     textColor: Int,
     length: Int = Snackbar.LENGTH_LONG,
-    backgroundColor: Int? = null
-) = Snackbar.make(findViewById(android.R.id.content), message, length)
-    .apply {
-        backgroundColor?.let {
-            setBackgroundTint(resources.getColor(it, theme))
-        }
+    backgroundColor: Int? = null) =
 
-        with(view) {
-            findViewById<TextView>(com.google.android.material.R.id.snackbar_text).apply {
-                setTextColor(resources.getColor(textColor, theme))
-                textAlignment = View.TEXT_ALIGNMENT_CENTER
-                maxLines = 2
+    Snackbar.make(findViewById(android.R.id.content), message, length)
+        .apply {
+            backgroundColor?.let {
+                setBackgroundTint(resources.getColor(it, theme))
+            }
+
+            with(view) {
+                findViewById<TextView>(com.google.android.material.R.id.snackbar_text).apply {
+                    setTextColor(resources.getColor(textColor, theme))
+                    textAlignment = View.TEXT_ALIGNMENT_CENTER
+                    maxLines = 2
+                }
             }
         }
-    }
-    .show()
-
-abstract class TaggedDialogFragment: DialogFragment(){
-    val TAG: String = javaClass.name
-}
+        .show()

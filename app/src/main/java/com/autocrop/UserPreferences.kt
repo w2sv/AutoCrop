@@ -12,11 +12,12 @@ import java.util.*
  */
 object UserPreferences : SortedMap<String, Boolean> by sortedMapOf() {
 
-    val sharedPreferencesFileName: String = this.javaClass.name
+    val sharedPreferencesFileName: String = javaClass.name
 
     object Keys {
         const val conductAutoScrolling: String = "CONDUCT_AUTO_SCROLL"
-        const val deleteInputScreenshots: String = "DELETE_INPUT_SCREENSHOTS"
+        const val deleteIndividualScreenshot = "DELETE_INDIVIDUAL_SCREENSHOT"
+        const val deleteScreenshotsOnSaveAll: String = "DELETE_SCREENSHOTS_ON_SAVE_ALL"
     }
 
     val isInitialized: Boolean
@@ -25,7 +26,8 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf() {
     fun init(sharedPreferences: SharedPreferences) = logAfterwards("Initialized UserPreferences") {
         mapOf(
             Keys.conductAutoScrolling to true,
-            Keys.deleteInputScreenshots to false
+            Keys.deleteIndividualScreenshot to false,
+            Keys.deleteScreenshotsOnSaveAll to false
         ).forEach{ (key, defaultValue) ->
             this[key] = sharedPreferences.getBoolean(key, defaultValue)
         }
@@ -34,16 +36,18 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf() {
     /**
      * Expose values as variables for convenience
      */
-    val conductAutoScroll: Boolean
+    val conductAutoScrolling: Boolean
         get() = getValue(Keys.conductAutoScrolling)
-    val deleteInputScreenshots: Boolean
-        get() = getValue(Keys.deleteInputScreenshots)
+    val deleteIndividualScreenshot: Boolean
+        get() = getValue(Keys.deleteIndividualScreenshot)
+    val deleteScreenshotsOnSaveAll: Boolean
+        get() = getValue(Keys.deleteScreenshotsOnSaveAll)
 
     fun toggle(key: String) = logAfterwards("Toggled $key to ${this[key]}"){
         this[key] = !this[key]!!
     }
 
-    fun writeToSharedPreferences(sharedPreferences: SharedPreferences) = logAfterwards("Wrote UserPreferences to sharedPreferences") {
+    fun writeToSharedPreferences(sharedPreferences: SharedPreferences) = logAfterwards("Wrote UserPreferences $this to sharedPreferences") {
         (keys zip values).forEach { (key, value) ->
             sharedPreferences.writeBoolean(key, value)
         }

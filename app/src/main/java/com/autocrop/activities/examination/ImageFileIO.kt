@@ -8,7 +8,6 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import com.autocrop.UserPreferences
 import com.autocrop.picturesDir
 import com.autocrop.utils.android.apiNotNewerThanQ
 import com.autocrop.utils.android.debuggingModeEnabled
@@ -21,12 +20,12 @@ import java.io.OutputStream
 fun saveCropAndDeleteScreenshotIfApplicable(
     screenshotUri: Uri,
     crop: Bitmap,
+    deleteScreenshot: Boolean,
     context: Context) {
 
     crop.save(context, screenshotUri.cropFileName)
 
-    // delete screenshot if applicable
-    if (UserPreferences.deleteInputScreenshots)
+    if (deleteScreenshot)
         screenshotUri.deleteUnderlyingImageFile(context)
 }
 

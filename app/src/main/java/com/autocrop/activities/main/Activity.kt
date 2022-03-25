@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import com.autocrop.UserPreferences
@@ -77,7 +76,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                 when (nSavedCrops) {
                     0 -> "Discarded all crops"
                     else -> listOf("", "s")[nSavedCrops >= 2].let { numerusInflection ->
-                        "Saved $nSavedCrops crop$numerusInflection" + listOf("", " and deleted\n$nSavedCrops corresponding screenshot$numerusInflection")[UserPreferences.deleteInputScreenshots]
+                        "Saved $nSavedCrops crop$numerusInflection" + listOf("", " and deleted\n$nSavedCrops corresponding screenshot$numerusInflection")[UserPreferences.deleteScreenshotsOnSaveAll]
                     }
                 },
                 textColor = TextColors.successfullyCarriedOut
@@ -127,13 +126,11 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         binding.menuButton.setOnClickListener {
 
             val menuItemToPreferenceKey: Map<Int, String> = mapOf(
-                R.id.main_menu_item_delete_input_screenshots to UserPreferences.Keys.deleteInputScreenshots,
                 R.id.main_menu_item_conduct_auto_scrolling to UserPreferences.Keys.conductAutoScrolling
             )
 
             val groupDividerItems: List<Int> = listOf(
-                R.id.main_menu_examination_item_group_divider,
-                R.id.main_menu_crop_saving_item_group_divider
+                R.id.main_menu_examination_item_group_divider
             )
 
             // inflate popup menu

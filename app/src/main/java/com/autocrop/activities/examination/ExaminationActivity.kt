@@ -6,16 +6,15 @@ package com.autocrop.activities.examination
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.N_DISMISSED_IMAGES_IDENTIFIER
-import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
-import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
-import com.autocrop.activities.examination.fragments.examination.ExaminationFragment
-import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
+import com.autocrop.activities.examination.fragments.singleaction.SingleActionExaminationActivityFragment
+import com.autocrop.activities.examination.fragments.singleaction.apptitle.AppTitleFragment
+import com.autocrop.activities.examination.fragments.singleaction.saveall.SaveAllFragment
+import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearAndLog
 import com.autocrop.cropBundleList
@@ -40,6 +39,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // ----------retrieve ViewBinding
         binding = ActivityExaminationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -47,7 +47,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
         val nDismissedImages: Int? =
             nDismissedImagesRetriever(intent, N_DISMISSED_IMAGES_IDENTIFIER, 0)
         val conductAutoScroll: Boolean =
-            UserPreferences.conductAutoScroll && cropBundleList.size > 1
+            UserPreferences.conductAutoScrolling && cropBundleList.size > 1
 
         //----------retrieve ViewModel
         viewModel = ViewModelProvider(
@@ -62,7 +62,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .add(binding.container.id, ExaminationFragment())
+                .add(binding.container.id, ViewPagerFragment())
                 .commit()
         }
 
@@ -80,10 +80,10 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
             )
     }
 
-    val saveAllFragment: Lazy<ExaminationActivityFragment> = lazy { SaveAllFragment() }
-    val appTitleFragment: Lazy<ExaminationActivityFragment> = lazy { AppTitleFragment() }
+    val saveAllFragment: Lazy<SaveAllFragment> = lazy { SaveAllFragment() }
+    val appTitleFragment: Lazy<AppTitleFragment> = lazy { AppTitleFragment() }
 
-    fun Lazy<ExaminationActivityFragment>.commit(flipRight: Boolean){
+    fun Lazy<SingleActionExaminationActivityFragment>.commit(flipRight: Boolean){
         val animations = arrayOf(
             arrayOf(
                 R.animator.card_flip_left_in,

@@ -21,7 +21,7 @@
     </androidx.viewpager2.widget.ViewPager2>
 
     <!-- https://en.proft.me/2018/02/5/decorating-seekbar-android/ -->
-    <com.autocrop.activities.examination.fragments.examination.PageIndicationSeekBar
+    <com.autocrop.activities.examination.fragments.viewpager.PageIndicationSeekBar
         android:id="@+id/page_indication_seek_bar"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
@@ -39,6 +39,6 @@
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-    </com.autocrop.activities.examination.fragments.examination.PageIndicationSeekBar>
+    </com.autocrop.activities.examination.fragments.viewpager.PageIndicationSeekBar>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

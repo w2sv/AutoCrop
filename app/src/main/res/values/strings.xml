@@ -21,9 +21,6 @@
 
     <!-- Menu Item Text -->
     <string name="menu_item_examination_group">Examination</string>
-    <string name="menu_item_saving_group">Crop Processing</string>
-
-    <string name="menu_item_delete_input_screenshots">Delete screenshots</string>
     <string name="menu_item_conduct_auto_scrolling">Conduct auto scrolling</string>
 
 </resources>

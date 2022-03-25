@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.examination
+package com.autocrop.activities.examination.fragments.viewpager
 
 import android.animation.ObjectAnimator
 import android.content.Context
