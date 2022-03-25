@@ -160,12 +160,13 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
                          * Invoke CropProcedureDialog upon click
                          */
                         override fun onClick() {
-                            with(viewModel.viewPager.dataSet.correspondingPosition(adapterPosition)){
-                                CropProcedureDialog(
-                                    Pair(viewModel.viewPager.dataSet[this].screenshotUri, viewModel.viewPager.dataSet[this].crop),
-                                    imageFileWritingContext = parentActivity
-                                ) {incrementNSavedCrops -> onCropProcedureAction(this, incrementNSavedCrops)}
-                                    .show(parentActivity.supportFragmentManager, CropProcedureDialog.TAG)
+                            viewModel.viewPager.dataSet.correspondingPosition(adapterPosition).let{ dataSetPosition ->
+                                with(CropProcedureDialog(
+                                    viewModel.viewPager.dataSet[dataSetPosition].screenshotUri to viewModel.viewPager.dataSet[dataSetPosition].crop,
+                                    imageFileWritingContext = parentActivity)
+                                {incrementNSavedCrops -> onCropProcedureAction(dataSetPosition, incrementNSavedCrops)}){
+                                    show(parentActivity.supportFragmentManager, TAG)
+                                }
                             }
                         }
                     }
@@ -185,7 +186,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
         }
 
         /**
-         * Defines setting of crop wrt position
+         * Defines crop setting wrt [position]
          */
         override fun onBindViewHolder(holder: CropViewHolder, position: Index) {
             holder.cropView.setImageBitmap(viewModel.viewPager.dataSet.atCorrespondingPosition(position).crop)

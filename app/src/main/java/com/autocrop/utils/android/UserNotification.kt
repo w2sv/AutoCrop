@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import com.w2sv.autocrop.R
 import com.google.android.material.snackbar.Snackbar
 
@@ -15,7 +16,6 @@ object TextColors {
     const val successfullyCarriedOut: Int = R.color.light_green
     const val urgent: Int = R.color.saturated_magenta
 }
-
 
 fun Activity.displayToast(
     message: String,
@@ -43,7 +43,6 @@ fun Activity.displayToast(
     }
 }
 
-
 fun Activity.displaySnackbar(
     message: String,
     textColor: Int,
@@ -64,3 +63,7 @@ fun Activity.displaySnackbar(
         }
     }
     .show()
+
+abstract class TaggedDialogFragment: DialogFragment(){
+    val TAG: String = javaClass.name
+}

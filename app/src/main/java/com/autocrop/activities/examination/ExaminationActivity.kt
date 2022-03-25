@@ -100,7 +100,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
             .setCustomAnimations(animations[0], animations[1])
             .replace(binding.container.id, value)
             .addToBackStack(null)
-            // .setReorderingAllowed(true)
+            .setReorderingAllowed(true)
             .commit()
     }
 

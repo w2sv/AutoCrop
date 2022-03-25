@@ -7,9 +7,9 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
 import com.autocrop.UserPreferences
 import com.autocrop.activities.examination.saveCropAndDeleteScreenshotIfApplicable
+import com.autocrop.utils.android.TaggedDialogFragment
 import com.autocrop.utils.get
 
 
@@ -20,25 +20,26 @@ import com.autocrop.utils.get
 class CropProcedureDialog(
     private val cropWithUri: Pair<Uri, Bitmap>,
     private val imageFileWritingContext: Context,
-    private val onCropAction: (Boolean) -> Unit)
-        : DialogFragment() {
+    private val onCropAction: (incrementNSavedCrops: Boolean) -> Unit)
+        : TaggedDialogFragment() {
 
     private val title: String = listOf(
         "Save crop?",
         "Save crop and\ndelete screenshot?"
     )[UserPreferences.deleteInputScreenshots]
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = AlertDialog.Builder(activity).run {
-        setTitle(title)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        AlertDialog.Builder(activity).run {
+            setTitle(title)
 
-        setNegativeButton("No, discard") { _, _ -> onCropAction(false)}
-        setPositiveButton("Yes") { _, _ ->
-            CropProcessor().execute(Triple(cropWithUri.first, cropWithUri.second, imageFileWritingContext))
-            onCropAction(true)
+            setNegativeButton("No, discard") { _, _ -> onCropAction(false)}
+            setPositiveButton("Yes") { _, _ ->
+                CropProcessor().execute(Triple(cropWithUri.first, cropWithUri.second, imageFileWritingContext))
+                onCropAction(true)
+            }
+
+            create()
         }
-
-        create()
-    }
 
     private class CropProcessor: AsyncTask<Triple<Uri, Bitmap, Context>, Void, Void?>() {
         override fun doInBackground(vararg params: Triple<Uri, Bitmap, Context>): Void? {
@@ -51,9 +52,5 @@ class CropProcedureDialog(
             }
             return null
         }
-    }
-
-    companion object{
-        val TAG = ::CropProcedureDialog.javaClass.name
     }
 }

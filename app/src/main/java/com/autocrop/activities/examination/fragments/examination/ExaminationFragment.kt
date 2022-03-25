@@ -12,6 +12,7 @@ import com.autocrop.UserPreferences
 import com.autocrop.activities.examination.ExaminationViewModel
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.examination.viewpager.ViewPagerHandler
+import com.autocrop.utils.android.TaggedDialogFragment
 import com.autocrop.utils.get
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentRootBinding
@@ -54,8 +55,9 @@ class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examin
 
         fun showConfirmationDialogIfScrollerNotRunning(title: String, positiveButtonOnClickListener: () -> Unit) {
             if (!viewPagerHandler.scroller.isRunning)
-                CropEntiretyActionConfirmationDialogFragment(title, positiveButtonOnClickListener)
-                    .show(childFragmentManager, CropEntiretyActionConfirmationDialogFragment.TAG)
+                with(CropEntiretyActionConfirmationDialogFragment(title, positiveButtonOnClickListener)){
+                    show(childFragmentManager, TAG)
+                }
         }
 
         // ------------save_all_button
@@ -79,7 +81,7 @@ class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examin
 class CropEntiretyActionConfirmationDialogFragment(
     private val title: String,
     private val positiveButtonOnClickListener: () -> Unit)
-        : DialogFragment() {
+        : TaggedDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(requireContext())
@@ -89,8 +91,4 @@ class CropEntiretyActionConfirmationDialogFragment(
                 setPositiveButton("Yes") { _, _ -> positiveButtonOnClickListener() }
             }
             .create()
-
-    companion object {
-        val TAG = ::CropEntiretyActionConfirmationDialogFragment.javaClass.name
-    }
 }
