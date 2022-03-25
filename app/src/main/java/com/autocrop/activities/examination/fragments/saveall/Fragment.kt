@@ -11,8 +11,6 @@ import java.lang.ref.WeakReference
 
 
 class SaveAllFragment : ExaminationActivityFragment(R.layout.activity_examination_fragment_saveall) {
-    private val viewModel: ExaminationViewModel by activityViewModels()
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

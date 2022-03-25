@@ -19,8 +19,6 @@ import com.w2sv.autocrop.databinding.ActivityExaminationFragmentRootBinding
 
 class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examination_fragment_root){
 
-    private val viewModel: ExaminationViewModel by activityViewModels<ExaminationViewModel>()
-
     private lateinit var viewPagerHandler: ViewPagerHandler
 
     protected var _binding: ActivityExaminationFragmentRootBinding? = null
@@ -75,7 +73,6 @@ class ExaminationFragment : ExaminationActivityFragment(R.layout.activity_examin
             }
         }
     }
-
 }
 
 class CropEntiretyActionConfirmationDialogFragment(

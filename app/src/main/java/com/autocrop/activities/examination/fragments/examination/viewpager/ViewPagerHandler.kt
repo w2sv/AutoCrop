@@ -28,11 +28,11 @@ import java.util.*
 
 class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBinding){
 
-    private val parentActivity: ExaminationActivity
+    private val examinationActivity: ExaminationActivity
         get() = binding.viewPager.context as ExaminationActivity
 
     private val viewModel: ExaminationViewModel by lazy {
-        ViewModelProvider(parentActivity)[ExaminationViewModel::class.java]
+        ViewModelProvider(examinationActivity)[ExaminationViewModel::class.java]
     }
 
     val scroller by lazy { Scroller() }
@@ -124,7 +124,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
             timer.cancel()
             isRunning = false
 
-            parentActivity.displaySnackbar(
+            examinationActivity.displaySnackbar(
                 listOf("Traversed all crops", "Cancelled auto scrolling")[onScreenTouch],
                 TextColors.successfullyCarriedOut,
                 Snackbar.LENGTH_SHORT
@@ -163,9 +163,9 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
                             viewModel.viewPager.dataSet.correspondingPosition(adapterPosition).let{ dataSetPosition ->
                                 with(CropProcedureDialog(
                                     viewModel.viewPager.dataSet[dataSetPosition].screenshotUri to viewModel.viewPager.dataSet[dataSetPosition].crop,
-                                    imageFileWritingContext = parentActivity)
+                                    imageFileWritingContext = examinationActivity)
                                 {incrementNSavedCrops -> onCropProcedureAction(dataSetPosition, incrementNSavedCrops)}){
-                                    show(parentActivity.supportFragmentManager, TAG)
+                                    show(requireActivity().supportFragmentManager, TAG)
                                 }
                             }
                         }
@@ -203,7 +203,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentRootBindi
             if (incrementNSavedCrops)
                 viewModel.incrementNSavedCrops()
             if (viewModel.viewPager.dataSet.size == 1)
-                return parentActivity.run { appTitleFragment.commit(true) }
+                return examinationActivity.run { appTitleFragment.commit(true) }
 
             removeView(dataSetPosition)
         }

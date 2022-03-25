@@ -1,10 +1,14 @@
 package com.autocrop.activities.examination.fragments
 
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.autocrop.activities.examination.ExaminationActivity
+import com.autocrop.activities.examination.ExaminationViewModel
 
 
 abstract class ExaminationActivityFragment(layoutId: Int): Fragment(layoutId){
+    protected val viewModel: ExaminationViewModel by activityViewModels()
+
     /**
      * Retyped [androidx.fragment.app.Fragment.requireActivity]
      */

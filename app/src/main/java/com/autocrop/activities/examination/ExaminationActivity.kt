@@ -136,7 +136,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
 
         returnTransitionAnimation()
 
-        cropBundleList.clearAndLog()
+        viewModel.viewPager.dataSet.clearAndLog()
         finishAndRemoveTask()
     }
 }
