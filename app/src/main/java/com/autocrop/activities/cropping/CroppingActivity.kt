@@ -39,29 +39,25 @@ class CroppingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // convert passed image uri strings back to uris, set nSelectedImages
-        val imageUris: Array<Uri> =
-            intent.getStringArrayExtra(IntentIdentifiers.SELECTED_IMAGE_URI_STRINGS)!!.map {
-                Uri.parse(it)
+        intent.getParcelableArrayListExtra<Uri>(IntentIdentifiers.SELECTED_IMAGE_URI_STRINGS)!!.let { uris ->
+            viewModel = ViewModelProvider(
+                this,
+                CroppingActivityViewModelFactory(
+                    uris.size,
+                    binding.croppingProgressBar.max
+                )
+            )[CroppingActivityViewModel::class.java]
+
+            // execute async cropping task
+            cropper = Cropper(
+                viewModel,
+                WeakReference(binding.croppingProgressBar),
+                WeakReference(binding.croppingCurrentImageNumberTextView),
+                contentResolver,
+                ::onTaskCompleted
+            ).apply {
+                execute(*uris.toTypedArray())
             }
-                .toTypedArray()
-
-        viewModel = ViewModelProvider(
-            this,
-            CroppingActivityViewModelFactory(
-                imageUris.size,
-                binding.croppingProgressBar.max
-            )
-        )[CroppingActivityViewModel::class.java]
-
-        // execute async cropping task
-        cropper = Cropper(
-            viewModel,
-            WeakReference(binding.croppingProgressBar),
-            WeakReference(binding.croppingCurrentImageNumberTextView),
-            contentResolver,
-            ::onTaskCompleted
-        ).apply {
-            execute(*imageUris)
         }
     }
 

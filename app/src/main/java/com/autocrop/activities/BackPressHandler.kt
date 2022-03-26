@@ -14,8 +14,8 @@ import com.autocrop.utils.android.displaySnackbar
 class BackPressHandler(
     private val snackbarDisplayActivity: Activity,
     private val snackbarMessage: String,
-    private val secondPressAction: () -> Unit)
-{
+    private val secondPressAction: () -> Unit) {
+
     companion object {
         private const val RESET_DURATION: Long = 2500
     }

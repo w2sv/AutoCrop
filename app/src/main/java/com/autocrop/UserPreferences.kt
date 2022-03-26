@@ -28,6 +28,7 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf() {
             Keys.deleteScreenshotsOnSaveAll to false
         ).forEach{ (key, defaultValue) ->
             this[key] = sharedPreferences.getBoolean(key, defaultValue)
+            hasChangedSinceLastWriteToSharedPreferences[key] = false
         }
     }
 
@@ -54,7 +55,7 @@ object UserPreferences : SortedMap<String, Boolean> by sortedMapOf() {
      * Keep track of which values have changed since last writing operation to shared preferences
      * to reduce number of conducted IO operations
      */
-    private val hasChangedSinceLastWriteToSharedPreferences: MutableMap<String, Boolean> = keys.zip(List(size){false}).toMap().toMutableMap()
+    private val hasChangedSinceLastWriteToSharedPreferences: MutableMap<String, Boolean> = mutableMapOf()
 
     fun writeChangedValuesToSharedPreferences(sharedPreferences: Lazy<SharedPreferences>) =
         keys

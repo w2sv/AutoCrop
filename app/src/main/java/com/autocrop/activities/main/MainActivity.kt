@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Environment
+import android.os.Parcelable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
@@ -76,7 +77,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                         "Saved $nSavedCrops crop$numerusInflection" + listOf("", " and deleted\n$nSavedCrops corresponding screenshot$numerusInflection")[UserPreferences.deleteScreenshotsOnSaveAll]
                     }
                 },
-                textColor = TextColors.SUCCESS
+                TextColors.SUCCESS
             )
         }
     }
@@ -267,19 +268,13 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             when (requestCode) {
                 IntentCodes.IMAGE_SELECTION.ordinal -> {
                     with(data?.clipData!!) {
-                        if (itemCount > CROP_IMAGES_SELECTION_MAX){
+                        if (itemCount > CROP_IMAGES_SELECTION_MAX)
                             displaySnackbar(
                                 "Can't crop more than $CROP_IMAGES_SELECTION_MAX images at a time",
                                 TextColors.URGENT
                             )
-                            return
-                        }
-
-                        startCroppingActivity(
-                            imageUriStrings = (0 until itemCount)
-                                .map { getItemAt(it)?.uri!!.toString() }
-                                .toTypedArray()
-                        )
+                        else
+                            startCroppingActivity(imageUris = ArrayList((0 until itemCount).map { getItemAt(it)?.uri!! }))
                     }
                 }
             }
@@ -289,13 +284,10 @@ class MainActivity : SystemUiHidingFragmentActivity() {
     //$$$$$$$$$$
     // Exiting $
     //$$$$$$$$$$
-    private fun startCroppingActivity(imageUriStrings: Array<String>) {
+    private fun startCroppingActivity(imageUris: ArrayList<Parcelable>) {
         startActivity(
             Intent(this, CroppingActivity::class.java)
-                .putExtra(
-                    IntentIdentifiers.SELECTED_IMAGE_URI_STRINGS,
-                    imageUriStrings
-                )
+                .putParcelableArrayListExtra(IntentIdentifiers.SELECTED_IMAGE_URI_STRINGS, imageUris)
         )
         proceedTransitionAnimation()
     }
