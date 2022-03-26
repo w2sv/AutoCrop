@@ -1,6 +1,5 @@
 package com.autocrop.utils.android
 
-import timber.log.Timber
 import java.io.File
 
 
@@ -11,12 +10,7 @@ import java.io.File
 fun makeDirIfRequired(path: String): Boolean {
     with(File(path)) {
         if (apiNotNewerThanQ && !exists())
-            return mkdirs().also {
-                if (it)
-                    Timber.i("Created $path")
-                else
-                    Timber.e("Couldn't create $path")
-            }
+            return mkdirs()
     }
     return false
 }
