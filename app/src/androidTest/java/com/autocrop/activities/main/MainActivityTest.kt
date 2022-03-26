@@ -85,14 +85,14 @@ class MainActivityTest: UserPreferencesModifier() {
             retryFlakyAction(5000) { clickView(id) }
 
             scenarioExtension.scenario.onActivity {
-                Assert.assertEquals(1, it.flowField.capturesDestinationDir.listFiles()!!.size)
+                Assert.assertEquals(1, it.flowFieldHandler.capturesDestinationDir.listFiles()!!.size)
             }
         }
 
         @AfterEach
         fun clearCapturesDir(){
             scenarioExtension.scenario.onActivity{
-                it.flowField.capturesDestinationDir.listFiles()!!.forEach { file ->
+                it.flowFieldHandler.capturesDestinationDir.listFiles()!!.forEach { file ->
                     file.deleteRecursively()
                 }
             }

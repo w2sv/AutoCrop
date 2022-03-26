@@ -30,13 +30,13 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
     companion object{
         const val CROP_IMAGES_SELECTION_MAX: Int = 100
+
+        enum class IntentCodes{
+            IMAGE_SELECTION
+        }
     }
 
-    enum class IntentCodes{
-        IMAGE_SELECTION
-    }
-
-    lateinit var flowField: FlowField
+    lateinit var flowFieldHandler: FlowFieldHandler
 
     private val nSavedCropsRetriever = IntentExtraRetriever()
 
@@ -54,18 +54,18 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (!::flowField.isInitialized)
-            flowField = FlowField()
-        flowField.setPFragment()
+        if (!::flowFieldHandler.isInitialized)
+            flowFieldHandler = FlowFieldHandler()
+        flowFieldHandler.setPFragment()
 
         // initialize UserPreferences if necessary
         if (!UserPreferences.isInitialized)
-            UserPreferences.init(getSharedPreferences(UserPreferences.sharedPreferencesFileName))
+            UserPreferences.initializeFromSharedPreferences(getSharedPreferences())
 
         // set button onClickListeners
         setImageSelectionButtonOnClickListener()
         setMenuInflationButtonOnClickListener()
-        flowField.setCaptureButtonOnClickListener()
+        flowFieldHandler.setCaptureButtonOnClickListener()
 
         // display cropping saving results if applicable
         nSavedCropsRetriever(intent, IntentIdentifiers.N_SAVED_CROPS, -1)?.let { nSavedCrops ->
@@ -81,10 +81,10 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         }
     }
 
-    inner class FlowField{
+    inner class FlowFieldHandler{
         private val pApplet: FlowFieldPApplet = FlowFieldPApplet(
             screenResolution(windowManager)
-        ).also { Timber.i("Initialized flowFieldPApplet") }
+        )
 
         fun setPFragment() {
             PFragment(pApplet).setView(
@@ -92,31 +92,43 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             )
         }
 
-        /**
-         * Not working for api > Q, such that image simply won't be saved,
-         * however without leading to a crash
-         *
-         * https://stackoverflow.com/questions/36088699/error-open-failed-enoent-no-such-file-or-directory
-         */
         val flowfieldDestinationDir: File = if (apiNotNewerThanQ)
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         else
+            /**
+             * Not working for api > Q, such that image simply won't be saved,
+             * however without leading to a crash
+             *
+             * https://stackoverflow.com/questions/36088699/error-open-failed-enoent-no-such-file-or-directory
+             */
             applicationContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
 
-        fun setCaptureButtonOnClickListener(){
-            binding.flowfieldCaptureButton.setOnClickListener {
-                File(flowfieldDestinationDir, "FlowField_${formattedDateTimeString()}")
-                    .absolutePath
-                    .let { destinationFilePath ->
-                        pApplet.canvas.save(destinationFilePath)
-                        Timber.i("Saving flowfield canvas to $destinationFilePath")
-                    }
-                displaySnackbar(
-                    "Saved Flowfield Capture to\n${flowfieldDestinationDir.absolutePath}",
-                    TextColors.successfullyCarriedOut,
-                    Toast.LENGTH_SHORT
-                )
+        /**
+         * Request permissions if necessary and run [captureFlowField] if granted or
+         * directly run [captureFlowField] respectively
+         */
+        fun setCaptureButtonOnClickListener() = binding.flowfieldCaptureButton.setOnClickListener {
+                permissionsHandler.requestPermissionsIfNecessaryAndRunFunIfAllGrantedOrRunDirectly {
+                    captureFlowField()
+                }
             }
+
+        /**
+         * Save current FlowField canvas to "{ExternalImageDirectory}.{FlowField_{formattedDateTimeString()}}.jpg",
+         * display Snackbar comprising directory path file has been saved to
+         */
+        private fun captureFlowField(){
+            File(flowfieldDestinationDir, "FlowField_${formattedDateTimeString()}.jpg")
+                .canonicalPath
+                .let { destinationFilePath ->
+                    pApplet.canvas.save(destinationFilePath)
+                    Timber.i("Saving flowfield canvas to $destinationFilePath")
+                }
+            displaySnackbar(
+                "Saved Flowfield Capture to\n${flowfieldDestinationDir.absolutePath}",
+                TextColors.successfullyCarriedOut,
+                Toast.LENGTH_SHORT
+            )
         }
     }
 
@@ -169,56 +181,49 @@ class MainActivity : SystemUiHidingFragmentActivity() {
     //$$$$$$$$$$$$$$
     private inner class PermissionsHandler{
         private val requiredPermissions: List<String> = listOf(
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
 
+        private val ungrantedPermissions: List<String>
+            get() = requiredPermissions.filter { !permissionGranted(it) }
+
         val allPermissionsGranted: Boolean
-            get() = permissionToIsGranted.values.all { it }
+            get() = ungrantedPermissions.isEmpty()
 
-        private val permissionToIsGranted: MutableMap<String, Boolean> by lazy {
-            requiredPermissions
-                .associateWith { permissionGranted(it) }
-                .toMutableMap()
-        }
-
-        fun request() {
-            val dummyRequestCode = 420
-
-            requestPermissions(
-                requiredPermissions
-                    .filter { permissionToIsGranted[it] == false }
-                    .toTypedArray(),
-                dummyRequestCode
-            )
-        }
-
-        fun onRequestPermissionsResult(
-            permissions: Array<out String>,
-            grantResults: IntArray) {
-
-            val permissionToDescription: Map<String, String> = listOf("writing", "reading")
-                .mapIndexed { index, s -> requiredPermissions[index] to s }
-                .toMap()
-
-            if (grantResults.all { it == PackageManager.PERMISSION_DENIED })
-                return displayToast(
-                    "You need to permit file reading and\n" +
-                            "writing in order for the app to work"
-                )
-
-            (permissions zip grantResults.toTypedArray()).forEach {
-                if (it.second != PackageManager.PERMISSION_GRANTED)
-                    displayToast(
-                        "You need to permit file ${permissionToDescription[it.first]}\n" +
-                                "in order for the app to work"
-                    )
-                else
-                    permissionToIsGranted[it.first] = true
+        /**
+         * Decorator either running passed function if all permissions granted, otherwise sets
+         * [onAllPermissionsGranted] to passed function and calls [requestRequiredPermissions]
+         */
+        fun requestPermissionsIfNecessaryAndRunFunIfAllGrantedOrRunDirectly(onAllPermissionsGranted: () -> Unit): Unit =
+            ungrantedPermissions.let {
+                if (it.isNotEmpty()){
+                    this.onAllPermissionsGranted = onAllPermissionsGranted
+                    return requestPermissions(it.toTypedArray(), 420)
+                }
+                return onAllPermissionsGranted()
             }
 
-            if (allPermissionsGranted)
-                selectImages()
+        private var onAllPermissionsGranted: (() -> Unit)?  = null
+
+        /**
+         * Display snackbar if any permission hasn't been granted,
+         * otherwise run [onAllPermissionsGranted], which needs to have been set previously
+         *
+         * Clears [onAllPermissionsGranted] afterwards in any case
+         */
+        fun onRequestPermissionsResult(permissions: Array<out String>, grantResults: IntArray) {
+            if (grantResults.any { it == PackageManager.PERMISSION_DENIED }) {
+                displaySnackbar(
+                    "You need to permit file reading and\n" +
+                            "writing in order for the app to work",
+                    TextColors.neutral
+                )
+                Timber.i("Not all required permissions were granted; permissions: ${permissions.toList()} | grantResults: ${grantResults.toList()}")
+            }
+            else
+                onAllPermissionsGranted!!()
+            onAllPermissionsGranted = null
         }
     }
 
@@ -233,14 +238,16 @@ class MainActivity : SystemUiHidingFragmentActivity() {
     //$$$$$$$$$$$$$$$$$$
     // Image Selection $
     //$$$$$$$$$$$$$$$$$$
-    private fun setImageSelectionButtonOnClickListener(){
-        binding.imageSelectionButton.setOnClickListener {
-            if (!permissionsHandler.allPermissionsGranted)
-                permissionsHandler.request()
-            else
+
+    /**
+     * Run [selectImages] if all permissions granted, otherwise request required permissions and
+     * then run [selectImages] if all granted
+     */
+    private fun setImageSelectionButtonOnClickListener() = binding.imageSelectionButton.setOnClickListener {
+            permissionsHandler.requestPermissionsIfNecessaryAndRunFunIfAllGrantedOrRunDirectly {
                 selectImages()
+            }
         }
-    }
 
     private fun selectImages() {
         Intent(Intent.ACTION_PICK).run {
@@ -291,7 +298,6 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                 )
         )
         proceedTransitionAnimation()
-        onExit()
     }
 
     /**
@@ -302,7 +308,11 @@ class MainActivity : SystemUiHidingFragmentActivity() {
     }
 
     /**
-     * Writes set preferences to shared preferences
+     * Write set preferences to shared preferences
      */
-    private fun onExit() = UserPreferences.writeToSharedPreferences(getSharedPreferences(UserPreferences.sharedPreferencesFileName))
+    override fun onPause() {
+        super.onPause()
+
+        UserPreferences.writeChangedValuesToSharedPreferences(lazy { getSharedPreferences() })
+    }
 }

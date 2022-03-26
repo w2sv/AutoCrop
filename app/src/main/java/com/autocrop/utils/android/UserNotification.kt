@@ -1,14 +1,10 @@
 package com.autocrop.utils.android
 
 import android.app.Activity
-import android.graphics.Color
-import android.view.Gravity
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
-import androidx.fragment.app.DialogFragment
-import com.w2sv.autocrop.R
 import com.google.android.material.snackbar.Snackbar
+import com.w2sv.autocrop.R
 
 
 object TextColors {
@@ -16,27 +12,6 @@ object TextColors {
     const val successfullyCarriedOut: Int = R.color.light_green
     const val urgent: Int = R.color.saturated_magenta
 }
-
-fun Activity.displayToast(
-    message: String,
-    textColor: Int = TextColors.neutral,
-    length: Int = Toast.LENGTH_LONG) =
-
-    Toast.makeText(this, message, length)
-        .apply {
-            with(view!!) {
-                setBackgroundColor(Color.parseColor("darkgray"))
-
-                findViewById<TextView>(android.R.id.message).apply {
-                    setTextColor(resources.getColor(textColor, theme))
-                    gravity = Gravity.CENTER
-                    with(16 to 0) {
-                        setPadding(first, second, first, second)
-                    }
-                }
-            }
-        }
-        .show()
 
 fun Activity.displaySnackbar(
     message: String,
