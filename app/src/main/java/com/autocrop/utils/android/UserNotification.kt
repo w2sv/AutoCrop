@@ -20,27 +20,23 @@ object TextColors {
 fun Activity.displayToast(
     message: String,
     textColor: Int = TextColors.neutral,
-    length: Int = Toast.LENGTH_LONG) {
+    length: Int = Toast.LENGTH_LONG) =
 
-    Toast.makeText(
-        this,
-        message,
-        length
-    ).apply {
-        with(view!!) {
-            setBackgroundColor(Color.parseColor("darkgray"))
+    Toast.makeText(this, message, length)
+        .apply {
+            with(view!!) {
+                setBackgroundColor(Color.parseColor("darkgray"))
 
-            findViewById<TextView>(android.R.id.message).apply {
-                setTextColor(resources.getColor(textColor, theme))
-                gravity = Gravity.CENTER
-                with(Pair(16, 0)) {
-                    setPadding(first, second, first, second)
+                findViewById<TextView>(android.R.id.message).apply {
+                    setTextColor(resources.getColor(textColor, theme))
+                    gravity = Gravity.CENTER
+                    with(16 to 0) {
+                        setPadding(first, second, first, second)
+                    }
                 }
             }
         }
-        show()
-    }
-}
+        .show()
 
 fun Activity.displaySnackbar(
     message: String,
@@ -48,13 +44,14 @@ fun Activity.displaySnackbar(
     length: Int = Snackbar.LENGTH_LONG,
     backgroundColor: Int? = null) =
 
-    Snackbar.make(findViewById(android.R.id.content), message, length)
+    Snackbar
+        .make(findViewById(android.R.id.content), message, length)
         .apply {
-            backgroundColor?.let {
-                setBackgroundTint(resources.getColor(it, theme))
-            }
+            if (backgroundColor != null)
+                setBackgroundTint(resources.getColor(backgroundColor, theme))
 
             with(view) {
+                @Suppress("UNRESOLVED_REFERENCE")
                 findViewById<TextView>(com.google.android.material.R.id.snackbar_text).apply {
                     setTextColor(resources.getColor(textColor, theme))
                     textAlignment = View.TEXT_ALIGNMENT_CENTER
