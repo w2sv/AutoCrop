@@ -14,7 +14,6 @@ import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearAndLog
-import com.autocrop.cropBundleList
 import com.autocrop.utils.android.*
 import com.autocrop.utils.logBeforehand
 import com.w2sv.autocrop.databinding.ActivityCroppingBinding
@@ -66,8 +65,8 @@ class CroppingActivity : AppCompatActivity() {
      * of the selected images has been successfully cropped
      */
     private fun onTaskCompleted() = logBeforehand("Async Cropping task finished") {
-        if (cropBundleList.isNotEmpty())
-            startExaminationActivity(viewModel.nSelectedImages - cropBundleList.size)
+        if (ExaminationActivity.cropBundles.isNotEmpty())
+            startExaminationActivity(viewModel.nSelectedImages - ExaminationActivity.cropBundles.size)
         else
             {
                 Handler(Looper.getMainLooper()).postDelayed(
@@ -110,7 +109,7 @@ class CroppingActivity : AppCompatActivity() {
      */
     private val backPressHandler = BackPressHandler(this, "Tap again to cancel") {
         cropper.cancel(false)
-        cropBundleList.clearAndLog()
+        ExaminationActivity.cropBundles.clearAndLog()
 
         startMainActivity()
     }

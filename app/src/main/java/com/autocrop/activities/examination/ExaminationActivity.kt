@@ -7,6 +7,7 @@ package com.autocrop.activities.examination
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import com.autocrop.CropBundle
 import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.IntentIdentifiers
@@ -17,7 +18,6 @@ import com.autocrop.activities.examination.fragments.singleaction.saveall.SaveAl
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.clearAndLog
-import com.autocrop.cropBundleList
 import com.autocrop.utils.android.IntentExtraRetriever
 import com.autocrop.utils.android.TextColors
 import com.autocrop.utils.android.displaySnackbar
@@ -29,6 +29,11 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 
 class ExaminationActivity : SystemUiHidingFragmentActivity() {
+
+    companion object{
+        val cropBundles: MutableList<CropBundle> = mutableListOf()
+    }
+
     private lateinit var viewModel: ExaminationViewModel
 
     private val nDismissedImagesRetriever = IntentExtraRetriever()
@@ -46,7 +51,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
         val nDismissedImages: Int? =
             nDismissedImagesRetriever(intent, IntentIdentifiers.N_DISMISSED_IMAGES, 0)
         val conductAutoScroll: Boolean =
-            UserPreferences.conductAutoScrolling && cropBundleList.size > 1
+            UserPreferences.conductAutoScrolling && cropBundles.size > 1
 
         //----------retrieve ViewModel
         viewModel = ViewModelProvider(

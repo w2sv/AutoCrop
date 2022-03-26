@@ -3,7 +3,6 @@ package com.autocrop.activities.examination
 import androidx.lifecycle.ViewModel
 import com.autocrop.CropBundle
 import com.autocrop.CropBundleList
-import com.autocrop.cropBundleList
 import com.autocrop.utils.Index
 import com.autocrop.utils.at
 import com.autocrop.utils.get
@@ -38,7 +37,7 @@ class ViewPagerModel(val conductAutoScroll: Boolean,
     }
 }
 
-class ViewPagerDataSet : CropBundleList by cropBundleList {
+class ViewPagerDataSet : CropBundleList by ExaminationActivity.cropBundles {
 
     // -------------Position Trackers
 

@@ -1,13 +1,11 @@
 package com.autocrop.activities.cropping
 
 import android.content.ContentResolver
-import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.AsyncTask
 import android.widget.ProgressBar
-import com.autocrop.cropBundleList
+import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.utils.forceUnwrapped
 import com.autocrop.utils.toInt
 import java.lang.ref.WeakReference
@@ -31,24 +29,21 @@ class Cropper(
 
     /**
      * Loads images represented by uris, crops and binds them to
-     * imageBundleList if successful;
-     * Publishes incremented progress values to onProgressUpdate
+     * [ExaminationActivity.cropBundles] if successful;
+     * Publishes incremented progress values to [onProgressUpdate]
      */
     override fun doInBackground(vararg params: Uri): Void? {
         var decimalStepSum = 0f
 
         params.forEachIndexed { index, uri ->
-            val image: Bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))!!
+            // exit loop if task got cancelled
+            if (isCancelled)
+                return null
 
             // attempt to crop image, add uri-crop mapping to image cash if successful
-            with(croppedImage(image)) {
-
-                // exit loop if task got cancelled
-                if (this@Cropper.isCancelled)
-                    return null
-
+            with(croppedImage(image = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))!!)) {
                 this?.let {
-                    cropBundleList.add(
+                    ExaminationActivity.cropBundles.add(
                         Triple(uri, first, second)
                     )
                 }
