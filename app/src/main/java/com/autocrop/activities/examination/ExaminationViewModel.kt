@@ -42,8 +42,8 @@ class ViewPagerDataSet : CropBundleList by cropBundleList {
 
     // -------------Position Trackers
 
-    private var tailHash: Int = cropBundleList.last().hashCode()
-    private var tailPosition: Index = cropBundleList.lastIndex
+    private var tailHash: Int = last().hashCode()
+    private var tailPosition: Index = lastIndex
     private var headPosition: Index = 0
 
     // ----------------Position Conversion

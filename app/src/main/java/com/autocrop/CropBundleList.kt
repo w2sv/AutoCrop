@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.autocrop.utils.logAfterwards
 
-
 //$$$$$$$$$$$$$$$$$$
 // CropBundleList $$
 //$$$$$$$$$$$$$$$$$$
@@ -13,7 +12,6 @@ typealias CropBundleList = MutableList<CropBundle>
 fun CropBundleList.clearAndLog() = logAfterwards("Cleared cropBundleList"){clear()}
 
 val cropBundleList: CropBundleList = mutableListOf()
-
 
 //$$$$$$$$$$$$$$
 // CropBundle $$
