@@ -5,17 +5,17 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Environment
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
-import androidx.fragment.app.FragmentActivity
 import com.autocrop.UserPreferences
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.CroppingActivity
-import com.autocrop.picturesDir
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
 import com.autocrop.utils.get
@@ -92,26 +92,27 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             )
         }
 
-        val capturesDestinationDir: File = File(
-            picturesDir,
-            "Flowfield-Captures"
-        )
+        /**
+         * Not working for api > Q, such that image simply won't be saved,
+         * however without leading to a crash
+         *
+         * https://stackoverflow.com/questions/36088699/error-open-failed-enoent-no-such-file-or-directory
+         */
+        val flowfieldDestinationDir: File = if (apiNotNewerThanQ)
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        else
+            applicationContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
 
         fun setCaptureButtonOnClickListener(){
-            makeDirIfRequired(capturesDestinationDir.absolutePath)
-
             binding.flowfieldCaptureButton.setOnClickListener {
-                pApplet.canvas.save(
-                    File(
-                        capturesDestinationDir,
-                        "flowfield${formattedDateTimeString()}.jpg"
-                    )
-                        .absolutePath
-                        .also { Timber.i("Saving flowfield canvas to $it") }
-                )
-
-                displayToast(
-                    "Saved Flowfield Capture to\n${capturesDestinationDir}",
+                File(flowfieldDestinationDir, "FlowField_${formattedDateTimeString()}")
+                    .absolutePath
+                    .let { destinationFilePath ->
+                        pApplet.canvas.save(destinationFilePath)
+                        Timber.i("Saving flowfield canvas to $destinationFilePath")
+                    }
+                displaySnackbar(
+                    "Saved Flowfield Capture to\n${flowfieldDestinationDir.absolutePath}",
                     TextColors.successfullyCarriedOut,
                     Toast.LENGTH_SHORT
                 )
@@ -120,7 +121,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
     }
 
     fun setMenuInflationButtonOnClickListener(){
-        binding.menuButton.setOnClickListener {
+        binding.menuButton.setOnClickListener { view: View ->
 
             val menuItemToPreferenceKey: Map<Int, String> = mapOf(
                 R.id.main_menu_item_conduct_auto_scrolling to UserPreferences.Keys.conductAutoScrolling
@@ -131,7 +132,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
             )
 
             // inflate popup menu
-            PopupMenu(this@MainActivity, it).run {
+            PopupMenu(this@MainActivity, view).run {
                 menuInflater.inflate(R.menu.activity_main, menu)
 
                 // set checks from UserPreferences

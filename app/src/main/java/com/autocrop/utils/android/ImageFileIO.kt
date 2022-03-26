@@ -10,7 +10,6 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import com.autocrop.picturesDir
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -36,7 +35,7 @@ fun Bitmap.save(context: Context, fileName: String) {
 }
 
 private fun imageFileUriToOutputStreamUntilQ(fileName: String): Pair<Uri, OutputStream> =
-    File(picturesDir, fileName).let { destinationFile ->
+    File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), fileName).let { destinationFile ->
         Uri.fromFile(destinationFile) to FileOutputStream(destinationFile)
     }
 
