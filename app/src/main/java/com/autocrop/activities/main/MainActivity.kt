@@ -76,7 +76,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                         "Saved $nSavedCrops crop$numerusInflection" + listOf("", " and deleted\n$nSavedCrops corresponding screenshot$numerusInflection")[UserPreferences.deleteScreenshotsOnSaveAll]
                     }
                 },
-                textColor = TextColors.successfullyCarriedOut
+                textColor = TextColors.SUCCESS
             )
         }
     }
@@ -126,7 +126,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                 }
             displaySnackbar(
                 "Saved Flowfield Capture to\n${flowfieldDestinationDir.absolutePath}",
-                TextColors.successfullyCarriedOut,
+                TextColors.SUCCESS,
                 Toast.LENGTH_SHORT
             )
         }
@@ -217,7 +217,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                 displaySnackbar(
                     "You need to permit file reading and\n" +
                             "writing in order for the app to work",
-                    TextColors.neutral
+                    TextColors.NEUTRAL
                 )
                 Timber.i("Not all required permissions were granted; permissions: ${permissions.toList()} | grantResults: ${grantResults.toList()}")
             }
@@ -270,7 +270,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
                         if (itemCount > CROP_IMAGES_SELECTION_MAX){
                             displaySnackbar(
                                 "Can't crop more than $CROP_IMAGES_SELECTION_MAX images at a time",
-                                TextColors.urgent
+                                TextColors.URGENT
                             )
                             return
                         }

@@ -31,7 +31,7 @@ class BackPressHandler(
                 RESET_DURATION
             )
 
-            snackbarDisplayActivity.displaySnackbar(snackbarMessage, TextColors.neutral)
+            snackbarDisplayActivity.displaySnackbar(snackbarMessage, TextColors.NEUTRAL)
         }
         else
             return secondPressAction()

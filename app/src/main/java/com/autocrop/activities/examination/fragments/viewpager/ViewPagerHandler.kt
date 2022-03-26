@@ -126,7 +126,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
 
             examinationActivity.displaySnackbar(
                 listOf("Traversed all crops", "Cancelled auto scrolling")[onScreenTouch],
-                TextColors.successfullyCarriedOut,
+                TextColors.SUCCESS,
                 Snackbar.LENGTH_SHORT
             )
         }

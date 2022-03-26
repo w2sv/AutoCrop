@@ -8,9 +8,9 @@ import com.w2sv.autocrop.R
 
 
 object TextColors {
-    const val neutral: Int = R.color.light_gray
-    const val successfullyCarriedOut: Int = R.color.light_green
-    const val urgent: Int = R.color.saturated_magenta
+    const val NEUTRAL: Int = R.color.light_gray
+    const val SUCCESS: Int = R.color.light_green
+    const val URGENT: Int = R.color.saturated_magenta
 }
 
 fun Activity.displaySnackbar(

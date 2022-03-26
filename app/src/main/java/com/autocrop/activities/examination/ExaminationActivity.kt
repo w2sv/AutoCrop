@@ -69,12 +69,12 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
         if (nDismissedImages.notNull())
             displaySnackbar(
                 "Couldn't find cropping bounds for\n$nDismissedImages image${listOf("", "s")[nDismissedImages!! > 1]}",
-                TextColors.urgent
+                TextColors.URGENT
             )
         else if (conductAutoScroll)
             displaySnackbar(
                 "Tap screen to cancel auto scrolling",
-                TextColors.neutral,
+                TextColors.NEUTRAL,
                 Snackbar.LENGTH_SHORT
             )
     }
@@ -116,7 +116,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
         saveAllFragment.isInitialized() -> {
             displaySnackbar(
                 "Wait until crops have been saved",
-                TextColors.urgent
+                TextColors.URGENT
             )
         }
         else -> backPressHandler()
