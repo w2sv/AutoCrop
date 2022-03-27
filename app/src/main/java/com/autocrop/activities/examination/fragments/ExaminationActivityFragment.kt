@@ -1,28 +1,10 @@
 package com.autocrop.activities.examination.fragments
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.viewbinding.ViewBinding
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
+import com.autocrop.utils.android.BindingHandlingFragment
+import com.autocrop.utils.android.InflateViewBinding
 
-
-abstract class ExaminationActivityFragment(layoutId: Int): Fragment(layoutId){
-    protected val viewModel: ExaminationViewModel by activityViewModels()
-
-    /**
-     * Retyped [androidx.fragment.app.Fragment.requireActivity]
-     */
-    val activity: ExaminationActivity
-        get() = super.requireActivity() as ExaminationActivity
-}
-
-//abstract class BindingHandlingExaminationActivityFragment<T: ViewBinding>(layoutId: Int): ExaminationActivityFragment(layoutId){
-//    protected var _binding: T? = null
-//    protected val binding: T
-//        get() = _binding!!
-//
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        _binding = null
-//    }
-//}
+abstract class ExaminationActivityFragment<VB: ViewBinding>(inflateViewBinding: InflateViewBinding<VB>)
+    : BindingHandlingFragment<ExaminationActivity, ExaminationViewModel, VB>(ExaminationViewModel::class.java, inflateViewBinding)

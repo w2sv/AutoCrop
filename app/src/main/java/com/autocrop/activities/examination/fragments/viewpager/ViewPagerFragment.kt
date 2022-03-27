@@ -3,36 +3,16 @@ package com.autocrop.activities.examination.fragments.viewpager
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.autocrop.UserPreferences
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
-import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
 
-class ViewPagerFragment : ExaminationActivityFragment(R.layout.activity_examination_fragment_viewpager){
+class ViewPagerFragment
+    : ExaminationActivityFragment<ActivityExaminationFragmentViewpagerBinding>(ActivityExaminationFragmentViewpagerBinding::inflate){
 
     private lateinit var viewPagerHandler: ViewPagerHandler
-
-    private var _binding: ActivityExaminationFragmentViewpagerBinding? = null
-    private val binding: ActivityExaminationFragmentViewpagerBinding
-        get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = ActivityExaminationFragmentViewpagerBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

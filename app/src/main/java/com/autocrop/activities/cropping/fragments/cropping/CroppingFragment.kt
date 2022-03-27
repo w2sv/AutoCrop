@@ -2,14 +2,11 @@ package com.autocrop.activities.cropping.fragments.cropping
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.os.Handler
+import android.os.Looper
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import com.autocrop.activities.IntentIdentifiers
-import com.autocrop.activities.cropping.CroppingActivity
-import com.autocrop.activities.cropping.CroppingActivityViewModel
+import com.autocrop.activities.cropping.fragments.CroppingActivityFragment
 import com.autocrop.activities.cropping.fragments.croppingunsuccessful.CroppingUnsuccessfulFragment
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.utils.android.proceedTransitionAnimation
@@ -17,28 +14,10 @@ import com.autocrop.utils.logBeforehand
 import com.w2sv.autocrop.databinding.ActivityCroppingFragmentRootBinding
 import java.lang.ref.WeakReference
 
-class CroppingFragment: Fragment() {
-    private val viewModel: CroppingActivityViewModel by activityViewModels()
+class CroppingFragment
+    : CroppingActivityFragment<ActivityCroppingFragmentRootBinding>(ActivityCroppingFragmentRootBinding::inflate) {
 
     lateinit var cropper: Cropper
-
-    private var _binding: ActivityCroppingFragmentRootBinding? = null
-    private val binding: ActivityCroppingFragmentRootBinding
-        get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = ActivityCroppingFragmentRootBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,8 +41,14 @@ class CroppingFragment: Fragment() {
         if (viewModel.cropBundles.isNotEmpty())
             startExaminationActivity(viewModel.nSelectedImages - viewModel.cropBundles.size)
         else
-            (requireActivity() as CroppingActivity).replaceCurrentFragmentWith(
-                CroppingUnsuccessfulFragment()
+            // delay briefly to assure progress bar having reached 100% before UI change
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+                    activity.replaceCurrentFragmentWith(
+                        CroppingUnsuccessfulFragment()
+                    )
+                },
+                300
             )
     }
 

@@ -6,13 +6,13 @@ package com.autocrop.activities.examination
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.CropBundle
 import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.SystemUiHidingFragmentActivity
-import com.autocrop.activities.examination.fragments.singleaction.SingleActionExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.singleaction.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.singleaction.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
@@ -84,10 +84,10 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
             )
     }
 
-    val saveAllFragment: Lazy<SaveAllFragment> = lazy { SaveAllFragment() }
-    val appTitleFragment: Lazy<AppTitleFragment> = lazy { AppTitleFragment() }
+    val saveAllFragment: SaveAllFragment by lazy { SaveAllFragment() }
+    val appTitleFragment: AppTitleFragment by lazy { AppTitleFragment() }
 
-    fun Lazy<SingleActionExaminationActivityFragment>.commit(flipRight: Boolean){
+    fun Fragment.commit(flipRight: Boolean){
         val animations = arrayOf(
             arrayOf(
                 R.animator.card_flip_left_in,
@@ -102,7 +102,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(animations[0], animations[1])
-            .replace(binding.activityCroppingLayout.id, value)
+            .replace(binding.activityCroppingLayout.id, this)
             .addToBackStack(null)
             .setReorderingAllowed(true)
             .commit()
@@ -117,8 +117,8 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
     }
 
     override fun onBackPressed() = when {
-        appTitleFragment.isInitialized() -> Unit
-        saveAllFragment.isInitialized() -> {
+        appTitleFragment.isVisible -> Unit
+        saveAllFragment.isVisible -> {
             displaySnackbar(
                 "Wait until crops have been saved",
                 TextColors.URGENT

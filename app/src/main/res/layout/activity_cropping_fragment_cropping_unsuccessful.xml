@@ -17,7 +17,7 @@
         android:contentDescription="@null">
     </ImageView>
 
-    <com.autocrop.activities.cropping.fragments.croppingunsuccessful.CroppingFailureTextView
+    <com.autocrop.activities.cropping.fragments.croppingunsuccessful.CroppingUnsuccessfulTextView
         android:id="@+id/cropping_unsuccessful_text_view"
 
         android:layout_width="match_parent"
@@ -30,6 +30,6 @@
         android:textSize="20sp"
         android:paddingHorizontal="60dp"
         android:textColor="@color/dark_green">
-    </com.autocrop.activities.cropping.fragments.croppingunsuccessful.CroppingFailureTextView>
+    </com.autocrop.activities.cropping.fragments.croppingunsuccessful.CroppingUnsuccessfulTextView>
 
 </RelativeLayout>
