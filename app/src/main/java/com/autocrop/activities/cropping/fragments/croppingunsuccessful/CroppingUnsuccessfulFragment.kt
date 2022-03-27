@@ -45,7 +45,7 @@ class CroppingUnsuccessfulFragment: Fragment(){
                 binding.croppingUnsuccessfulTextView.updateText(viewModel.nSelectedImages > 1)
 
                 Handler(Looper.getMainLooper()).postDelayed(
-                    { (requireActivity() as CroppingActivity).startMainActivity() },
+                    { (requireActivity() as CroppingActivity).returnToMainActivity() },
                     3000
                 )
             },

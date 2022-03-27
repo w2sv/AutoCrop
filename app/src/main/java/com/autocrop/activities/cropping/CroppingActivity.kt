@@ -8,19 +8,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.IntentIdentifiers
-import com.autocrop.activities.cropping.fragments.cropping.CroppingRootFragment
-import com.autocrop.activities.examination.ExaminationActivity
+import com.autocrop.activities.cropping.fragments.cropping.CroppingFragment
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.clearAndLog
 import com.autocrop.utils.android.returnTransitionAnimation
 import com.w2sv.autocrop.databinding.ActivityCroppingBinding
 
 class CroppingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCroppingBinding
-
     private lateinit var viewModel: CroppingActivityViewModel
 
-    private val rootFragment: CroppingRootFragment by lazy{ CroppingRootFragment() }
+    private val croppingFragment: CroppingFragment by lazy{ CroppingFragment() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,22 +34,23 @@ class CroppingActivity : AppCompatActivity() {
             )
         )[CroppingActivityViewModel::class.java]
 
-        // ----------launch root fragment
-        supportFragmentManager
-            .beginTransaction()
-            .add(binding.layout.id, rootFragment)
-            .commit()
+        // ----------launch cropping fragment
+        if (savedInstanceState == null)
+            supportFragmentManager
+                .beginTransaction()
+                .add(binding.activityCroppingLayout.id, croppingFragment)
+                .commit()
     }
 
     fun replaceCurrentFragmentWith(fragment: Fragment){
         supportFragmentManager
             .beginTransaction()
-            .replace(binding.layout.id, fragment)
+            .replace(binding.activityCroppingLayout.id, fragment)
             .setReorderingAllowed(true)
             .commit()
     }
 
-    fun startMainActivity() {
+    fun returnToMainActivity() {
         startActivity(
             Intent(this, MainActivity::class.java)
         )
@@ -63,14 +61,12 @@ class CroppingActivity : AppCompatActivity() {
      * Return to MainActivity on confirmed back press
      */
     private val backPressHandler = BackPressHandler(this, "Tap again to cancel") {
-        rootFragment.cropper.cancel(false)
-        ExaminationActivity.cropBundles.clearAndLog()
-
-        startMainActivity()
+        croppingFragment.cropper.cancel(false)
+        returnToMainActivity()
     }
 
     override fun onBackPressed() {
-        if (rootFragment.cropper.status != AsyncTask.Status.FINISHED)
+        if (croppingFragment.cropper.status != AsyncTask.Status.FINISHED)
             return backPressHandler()
     }
 

@@ -2,6 +2,7 @@ package com.autocrop.activities.cropping
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import com.autocrop.CropBundleList
 
 class CroppingActivityViewModel(val uris: ArrayList<Uri>): ViewModel(){
     companion object{
@@ -19,4 +20,6 @@ class CroppingActivityViewModel(val uris: ArrayList<Uri>): ViewModel(){
             progressBarDecimalStep = it - progressBarIntStep
         }
     }
+
+    val cropBundles: CropBundleList = mutableListOf()
 }

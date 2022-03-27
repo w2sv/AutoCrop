@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.widget.ProgressBar
 import com.autocrop.activities.cropping.CroppingActivityViewModel
-import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.utils.forceUnwrapped
 import com.autocrop.utils.toInt
 import java.lang.ref.WeakReference
@@ -30,7 +29,7 @@ class Cropper(
 
     /**
     * Loads images represented by uris, crops and binds them to
-     * [ExaminationActivity.cropBundles] if successful;
+     * [CroppingActivityViewModel.cropBundles] if successful;
      * Publishes incremented progress values to [onProgressUpdate]
      */
     override fun doInBackground(vararg params: Uri): Void? {
@@ -44,7 +43,7 @@ class Cropper(
             // attempt to crop image, add uri-crop mapping to image cash if successful
             with(croppedImage(image = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))!!)) {
                 this?.let {
-                    ExaminationActivity.cropBundles.add(
+                    viewModel.cropBundles.add(
                         Triple(uri, first, second)
                     )
                 }

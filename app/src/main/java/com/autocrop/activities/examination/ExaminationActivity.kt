@@ -31,7 +31,7 @@ import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 class ExaminationActivity : SystemUiHidingFragmentActivity() {
 
     companion object{
-        val cropBundles: MutableList<CropBundle> = mutableListOf()
+        lateinit var cropBundles: MutableList<CropBundle>
     }
 
     private lateinit var viewModel: ExaminationViewModel
@@ -66,7 +66,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .add(binding.container.id, ViewPagerFragment())
+                .add(binding.activityCroppingLayout.id, ViewPagerFragment())
                 .commit()
         }
 
@@ -102,7 +102,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(animations[0], animations[1])
-            .replace(binding.container.id, value)
+            .replace(binding.activityCroppingLayout.id, value)
             .addToBackStack(null)
             .setReorderingAllowed(true)
             .commit()

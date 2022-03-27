@@ -17,7 +17,7 @@ import com.autocrop.utils.logBeforehand
 import com.w2sv.autocrop.databinding.ActivityCroppingFragmentRootBinding
 import java.lang.ref.WeakReference
 
-class CroppingRootFragment: Fragment() {
+class CroppingFragment: Fragment() {
     private val viewModel: CroppingActivityViewModel by activityViewModels()
 
     lateinit var cropper: Cropper
@@ -59,15 +59,17 @@ class CroppingRootFragment: Fragment() {
      * of the selected images has been successfully cropped
      */
     private fun onTaskCompleted() = logBeforehand("Async Cropping task finished") {
-        if (ExaminationActivity.cropBundles.isNotEmpty())
-            startExaminationActivity(viewModel.nSelectedImages - ExaminationActivity.cropBundles.size)
+        if (viewModel.cropBundles.isNotEmpty())
+            startExaminationActivity(viewModel.nSelectedImages - viewModel.cropBundles.size)
         else
             (requireActivity() as CroppingActivity).replaceCurrentFragmentWith(
                 CroppingUnsuccessfulFragment()
             )
     }
 
-    private fun startExaminationActivity(nDismissedCrops: Int) =
+    private fun startExaminationActivity(nDismissedCrops: Int){
+        ExaminationActivity.cropBundles = viewModel.cropBundles
+
         requireActivity().let { activity ->
             startActivity(
                 Intent(activity, ExaminationActivity::class.java).putExtra(
@@ -77,4 +79,5 @@ class CroppingRootFragment: Fragment() {
             )
             activity.proceedTransitionAnimation()
         }
+    }
 }
