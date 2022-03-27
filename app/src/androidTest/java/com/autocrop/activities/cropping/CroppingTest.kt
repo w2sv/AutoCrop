@@ -2,6 +2,7 @@ package com.autocrop.activities.cropping
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import com.autocrop.activities.cropping.fragments.cropping.croppedImage
 import org.junit.Assert
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource

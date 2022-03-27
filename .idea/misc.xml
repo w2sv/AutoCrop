@@ -6,11 +6,15 @@
         <entry key="../../../../../layout/custom_preview.xml" value="0.2759259259259259" />
         <entry key="../../../Android/Sdk/platforms/android-31/data/res/layout/auto_complete_list.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/activity_cropping.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/activity_cropping_fragment_cropping_unsuccessful.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/activity_cropping_fragment_root.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/activity_examination.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/activity_examination_apptitle.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/activity_examination_examination.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/activity_examination_fragment_apptitle.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/activity_examination_fragment_root.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/activity_examination_fragment_saveall.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/activity_examination_fragment_viewpager.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/activity_examination_saveall.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/activity_welcome.xml" value="0.2625" />

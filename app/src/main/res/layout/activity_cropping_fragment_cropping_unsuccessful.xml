@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/cropping_unsuccessful_icon"
+        android:src="@drawable/ic_error"
+
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:translationY="-70dp"
+
+        android:contentDescription="@null">
+    </ImageView>
+
+    <com.autocrop.activities.cropping.fragments.croppingunsuccessful.CroppingFailureTextView
+        android:id="@+id/cropping_unsuccessful_text_view"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:gravity="center"
+
+        android:minLines="3"
+        android:text="@string/cropping_failure"
+        android:textSize="20sp"
+        android:paddingHorizontal="60dp"
+        android:textColor="@color/dark_green">
+    </com.autocrop.activities.cropping.fragments.croppingunsuccessful.CroppingFailureTextView>
+
+</RelativeLayout>

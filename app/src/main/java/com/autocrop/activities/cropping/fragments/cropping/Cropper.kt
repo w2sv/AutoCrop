@@ -1,10 +1,11 @@
-package com.autocrop.activities.cropping
+package com.autocrop.activities.cropping.fragments.cropping
 
 import android.content.ContentResolver
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.AsyncTask
 import android.widget.ProgressBar
+import com.autocrop.activities.cropping.CroppingActivityViewModel
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.utils.forceUnwrapped
 import com.autocrop.utils.toInt
@@ -23,12 +24,12 @@ class Cropper(
      */
     override fun onPreExecute() {
         super.onPreExecute()
-
         currentImageNumberTextView.forceUnwrapped().updateText(0)
     }
 
+
     /**
-     * Loads images represented by uris, crops and binds them to
+    * Loads images represented by uris, crops and binds them to
      * [ExaminationActivity.cropBundles] if successful;
      * Publishes incremented progress values to [onProgressUpdate]
      */

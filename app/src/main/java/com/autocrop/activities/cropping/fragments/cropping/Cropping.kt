@@ -1,4 +1,4 @@
-package com.autocrop.activities.cropping
+package com.autocrop.activities.cropping.fragments.cropping
 
 import android.graphics.Bitmap
 import kotlin.math.roundToInt
@@ -47,8 +47,8 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
     val sampleStep: Int = image.width / N_PIXEL_COMPARISONS_PER_ROW
     fun searchRange(startIndex: Int): IntRange = (startIndex until lastRowIndex)
 
-    fun getLowerBoundIndex(queryStartInd: Int, candidates: BorderPairCandidates = mutableListOf()): BorderPairCandidates{
-        fun getUpperBoundIndex(lowerBoundIndex: Int, candidates: BorderPairCandidates): BorderPairCandidates{
+    fun getLowerBoundIndex(queryStartInd: Int, candidates: BorderPairCandidates = mutableListOf()): BorderPairCandidates {
+        fun getUpperBoundIndex(lowerBoundIndex: Int, candidates: BorderPairCandidates): BorderPairCandidates {
             var precedingRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(lowerBoundIndex, sampleStep)
 
             for (i in searchRange(lowerBoundIndex + 1)){

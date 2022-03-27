@@ -16,8 +16,8 @@ class ViewPagerFragment : ExaminationActivityFragment(R.layout.activity_examinat
 
     private lateinit var viewPagerHandler: ViewPagerHandler
 
-    protected var _binding: ActivityExaminationFragmentViewpagerBinding? = null
-    protected val binding: ActivityExaminationFragmentViewpagerBinding
+    private var _binding: ActivityExaminationFragmentViewpagerBinding? = null
+    private val binding: ActivityExaminationFragmentViewpagerBinding
         get() = _binding!!
 
     override fun onCreateView(
