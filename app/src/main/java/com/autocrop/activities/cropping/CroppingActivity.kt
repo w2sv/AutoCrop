@@ -42,8 +42,8 @@ class CroppingActivity : AppCompatActivity() {
             viewModel = ViewModelProvider(
                 this,
                 CroppingActivityViewModelFactory(
-                    uris.size,
-                    binding.croppingProgressBar.max
+                    nSelectedImages = uris.size,
+                    progressBarMax = binding.croppingProgressBar.max
                 )
             )[CroppingActivityViewModel::class.java]
 
