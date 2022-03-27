@@ -31,9 +31,9 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
     private val examinationActivity: ExaminationActivity
         get() = binding.viewPager.context as ExaminationActivity
 
-    private val viewModel: ExaminationViewModel by lazy {
-        ViewModelProvider(examinationActivity)[ExaminationViewModel::class.java]
-    }
+    private val activityViewModel: ExaminationViewModel by lazy { ViewModelProvider(examinationActivity)[ExaminationViewModel::class.java] }
+    private val viewModel: ViewPagerModel
+        get() = activityViewModel.viewPager
 
     val scroller = Scroller()
     var blockPageDependentViewUpdating = false
@@ -44,7 +44,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
             adapter = CropPagerAdapter()
 
             setCurrentItem(
-                viewModel.viewPager.startPosition,
+                viewModel.startPosition,
                 false
             )
 
@@ -58,7 +58,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
                     super.onPageSelected(position)
 
                     if (!blockPageDependentViewUpdating)
-                        binding.updatePageDependentViews(viewModel.viewPager.dataSet.correspondingPosition(position))
+                        binding.updatePageDependentViews(viewModel.dataSet.correspondingPosition(position))
                 }
             })
 
@@ -77,7 +77,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
             }
         }
         // run Scroller if applicable
-        if (viewModel.viewPager.conductAutoScroll)
+        if (viewModel.conductAutoScroll)
             scroller.invoke()
     }
 
@@ -93,7 +93,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
     inner class Scroller {
         var isRunning: Boolean = false
         private var conductedScrolls = 0
-        private val maxScrolls = viewModel.viewPager.dataSet.lastIndex
+        private val maxScrolls = viewModel.dataSet.lastIndex
         private lateinit var timer: Timer
 
         fun invoke(){
@@ -111,7 +111,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
                                 cancel(onScreenTouch = false)
                         }
                     },
-                    listOf(1000L, 1500L)[viewModel.viewPager.longAutoScrollDelay],
+                    listOf(1000L, 1500L)[viewModel.longAutoScrollDelay],
                     1000L
                 )
             }
@@ -160,9 +160,9 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
                          * Invoke CropProcedureDialog upon click
                          */
                         override fun onClick() {
-                            viewModel.viewPager.dataSet.correspondingPosition(adapterPosition).let{ dataSetPosition ->
+                            viewModel.dataSet.correspondingPosition(adapterPosition).let{ dataSetPosition ->
                                 CropProcedureDialog(
-                                    viewModel.viewPager.dataSet[dataSetPosition].screenshotUri to viewModel.viewPager.dataSet[dataSetPosition].crop,
+                                    viewModel.dataSet[dataSetPosition].screenshotUri to viewModel.dataSet[dataSetPosition].crop,
                                     imageFileWritingContext = examinationActivity)
                                 {incrementNSavedCrops -> onCropProcedureAction(dataSetPosition, incrementNSavedCrops)}
                                     .show(examinationActivity.supportFragmentManager, "")
@@ -188,10 +188,10 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
          * Defines crop setting wrt [position]
          */
         override fun onBindViewHolder(holder: CropViewHolder, position: Index) {
-            holder.cropView.setImageBitmap(viewModel.viewPager.dataSet.atCorrespondingPosition(position).crop)
+            holder.cropView.setImageBitmap(viewModel.dataSet.atCorrespondingPosition(position).crop)
         }
 
-        override fun getItemCount(): Int = listOf(1, ViewPagerModel.MAX_VIEWS)[viewModel.viewPager.dataSet.size > 1]
+        override fun getItemCount(): Int = listOf(1, ViewPagerModel.MAX_VIEWS)[viewModel.dataSet.size > 1]
 
         /**
          * Increment nSavedCrops if applicable & triggers activity exit if cropBundleList
@@ -200,8 +200,8 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
          */
         private fun onCropProcedureAction(dataSetPosition: Index, incrementNSavedCrops: Boolean){
             if (incrementNSavedCrops)
-                viewModel.incrementNSavedCrops()
-            if (viewModel.viewPager.dataSet.size == 1)
+                activityViewModel.incrementNSavedCrops()
+            if (viewModel.dataSet.size == 1)
                 return examinationActivity.run { appTitleFragment.commit(true) }
 
             removeView(dataSetPosition)
@@ -215,7 +215,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
          * • update page dependent views
          */
         private fun removeView(dataSetPosition: Index) {
-            val (newDataSetPosition, newViewPosition) = viewModel.viewPager.dataSet.newPositionWithNewViewPosition(dataSetPosition, binding.viewPager.currentItem)
+            val (newDataSetPosition, newViewPosition) = viewModel.dataSet.newPositionWithNewViewPosition(dataSetPosition, binding.viewPager.currentItem)
 
             // scroll to newViewPosition with blocked pageDependentViewUpdating
             blockPageDependentViewUpdating = true
@@ -224,14 +224,14 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
 
             // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
             // aligning with newViewPosition
-            viewModel.viewPager.dataSet.removeAt(dataSetPosition)
-            viewModel.viewPager.dataSet.rotateAndResetPositionTrackers(newViewPosition, newDataSetPosition)
+            viewModel.dataSet.removeAt(dataSetPosition)
+            viewModel.dataSet.rotateAndResetPositionTrackers(newViewPosition, newDataSetPosition)
 
             // update surrounding views
             resetViewsAround(newViewPosition)
 
             // update views
-            binding.updatePageDependentViews(newDataSetPosition)
+            binding.updatePageDependentViews(viewModel.dataSet.correspondingPosition(newViewPosition))
         }
 
         /**
