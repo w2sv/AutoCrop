@@ -9,8 +9,6 @@ import com.autocrop.utils.logAfterwards
 //$$$$$$$$$$$$$$$$$$
 typealias CropBundleList = MutableList<CropBundle>
 
-fun CropBundleList.clearAndLog() = logAfterwards("Cleared CropBundleList"){clear()}
-
 //$$$$$$$$$$$$$$
 // CropBundle $$
 //$$$$$$$$$$$$$$

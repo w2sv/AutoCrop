@@ -17,12 +17,12 @@ import com.autocrop.activities.examination.fragments.singleaction.apptitle.AppTi
 import com.autocrop.activities.examination.fragments.singleaction.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.clearAndLog
 import com.autocrop.utils.android.IntentExtraRetriever
 import com.autocrop.utils.android.TextColors
 import com.autocrop.utils.android.displaySnackbar
 import com.autocrop.utils.android.returnTransitionAnimation
 import com.autocrop.utils.get
+import com.autocrop.utils.logAfterwards
 import com.autocrop.utils.notNull
 import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.R
@@ -130,7 +130,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
     /**
      * Clears remaining cropBundle elements contained within cropBundleList
      */
-    fun returnToMainActivity() {
+    fun returnToMainActivity() = logAfterwards("Cleared cropBundleList") {
         startActivity(
             Intent(
                 this,
@@ -140,7 +140,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
 
         returnTransitionAnimation()
 
-        viewModel.viewPager.dataSet.clearAndLog()
+        cropBundles.clear()
         finishAndRemoveTask()
     }
 }
