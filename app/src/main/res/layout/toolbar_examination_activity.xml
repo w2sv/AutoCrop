@@ -17,7 +17,7 @@
         android:layout_gravity="start"
         android:background="@android:color/transparent"
         android:text="@string/discard_all_button"
-        android:textColor="#302C2D"
+        android:textColor="#9194A6"
         android:translationX="-10dp" />
 
         <!-- Save All -->
@@ -29,7 +29,7 @@
         android:layout_gravity="start"
         android:background="@android:color/transparent"
         android:text="@string/save_all_button"
-        android:textColor="#302C2D"
+        android:textColor="#9194A6"
         android:translationX="-10dp"/>
 
     <!-- Page Indication Text View -->

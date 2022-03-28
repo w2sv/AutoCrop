@@ -1,5 +1,7 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
@@ -7,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnticipateInterpolator
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -16,10 +19,7 @@ import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
 import com.autocrop.activities.examination.ViewPagerModel
 import com.autocrop.utils.Index
-import com.autocrop.utils.android.TextColors
-import com.autocrop.utils.android.displaySnackbar
-import com.autocrop.utils.android.hide
-import com.autocrop.utils.android.show
+import com.autocrop.utils.android.*
 import com.autocrop.utils.get
 import com.autocrop.utils.toInt
 import com.google.android.material.snackbar.Snackbar
@@ -105,7 +105,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
 
         fun invoke(){
             isRunning = true
-            binding.autoScrollingTextView.visibility = View.VISIBLE
+            examinationActivity.runOnUiThread { binding.autoScrollingTextView.show() }
 
             timer = Timer().apply {
                 schedule(
@@ -133,8 +133,10 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
             timer.cancel()
             isRunning = false
             examinationActivity.runOnUiThread {
-                binding.autoScrollingTextView.hide()
-                binding.discardedTextView.show()
+                val duration = examinationActivity.resources.getInteger(android.R.integer.config_longAnimTime).toLong()
+
+                binding.autoScrollingTextView.fadeOut(duration)
+                binding.discardedTextView.fadeIn(duration)
             }
 
             examinationActivity.displaySnackbar(
@@ -178,7 +180,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
                                     viewModel.dataSet[dataSetPosition].screenshotUri to viewModel.dataSet[dataSetPosition].crop,
                                     imageFileWritingContext = examinationActivity)
                                 {incrementNSavedCrops -> onCropProcedureAction(dataSetPosition, incrementNSavedCrops)}
-                                    .show(examinationActivity.supportFragmentManager, "")
+                                    .show(examinationActivity.supportFragmentManager, "CROP_PROCEDURE_DIALOG")
                             }
                         }
                     }
@@ -220,8 +222,18 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
             if (viewModel.dataSet.size == 1)
                 return examinationActivity.run { replaceCurrentFragmentWith(appTitleFragment, true) }
             else if (viewModel.dataSet.size == 2)
-                examinationActivity.runOnUiThread { binding.pageIndicationSeekBar.hide() }
-
+                examinationActivity.runOnUiThread {
+                    binding.pageIndicationSeekBar.animate()
+                        .scaleX(0f)
+                        .scaleY(0f)
+                        .setInterpolator(AnticipateInterpolator())
+                        .setListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator) {
+                                binding.pageIndicationSeekBar.remove()
+                            }
+                        })
+                        .duration = 700L
+                }
             removeView(dataSetPosition)
         }
 

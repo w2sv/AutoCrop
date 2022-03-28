@@ -22,7 +22,7 @@
     <!-- https://en.proft.me/2018/02/5/decorating-seekbar-android/ -->
     <com.autocrop.activities.examination.fragments.viewpager.PageIndicationSeekBar
         android:id="@+id/page_indication_seek_bar"
-        android:layout_width="100dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
 
         android:splitTrack="false"
