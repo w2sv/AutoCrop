@@ -15,11 +15,11 @@ import com.autocrop.UserPreferences
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
 import com.autocrop.activities.examination.ViewPagerModel
-import com.autocrop.crop
-import com.autocrop.screenshotUri
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.TextColors
 import com.autocrop.utils.android.displaySnackbar
+import com.autocrop.utils.android.hide
+import com.autocrop.utils.android.show
 import com.autocrop.utils.get
 import com.autocrop.utils.toInt
 import com.google.android.material.snackbar.Snackbar
@@ -48,6 +48,9 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
                 viewModel.startPosition,
                 false
             )
+
+            if (viewModel.dataSet.size > 1)
+                examinationActivity.runOnUiThread { binding.pageIndicationSeekBar.show() }
 
             // register onPageChangeCallbacks
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -80,13 +83,16 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
         // run Scroller if applicable
         if (viewModel.conductAutoScroll)
             scroller.invoke()
+        else
+            examinationActivity.runOnUiThread { binding.discardedTextView.show() }
     }
 
-    private fun ActivityExaminationFragmentViewpagerBinding.updatePageDependentViews(dataSetPosition: Index){
-        toolbar.retentionPercentage.updateText(dataSetPosition)
-        toolbar.pageIndication.updateText(dataSetPosition)
-        pageIndicationSeekBar.update(dataSetPosition)
-    }
+    private fun ActivityExaminationFragmentViewpagerBinding.updatePageDependentViews(dataSetPosition: Index) =
+        examinationActivity.runOnUiThread{
+            toolbar.pageIndication.updateText(dataSetPosition)
+            discardedTextView.updateText(dataSetPosition)
+            pageIndicationSeekBar.update(dataSetPosition)
+        }
 
     /**
      * Class accounting for automatic scrolling at the start of crop examination
@@ -99,6 +105,8 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
 
         fun invoke(){
             isRunning = true
+            binding.autoScrollingTextView.visibility = View.VISIBLE
+
             timer = Timer().apply {
                 schedule(
                     object : TimerTask() {
@@ -124,6 +132,10 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
         fun cancel(onScreenTouch: Boolean) {
             timer.cancel()
             isRunning = false
+            examinationActivity.runOnUiThread {
+                binding.autoScrollingTextView.hide()
+                binding.discardedTextView.show()
+            }
 
             examinationActivity.displaySnackbar(
                 listOf("Traversed all crops", "Cancelled auto scrolling")[onScreenTouch],
@@ -207,6 +219,8 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
             }
             if (viewModel.dataSet.size == 1)
                 return examinationActivity.run { replaceCurrentFragmentWith(appTitleFragment, true) }
+            else if (viewModel.dataSet.size == 2)
+                examinationActivity.runOnUiThread { binding.pageIndicationSeekBar.hide() }
 
             removeView(dataSetPosition)
         }

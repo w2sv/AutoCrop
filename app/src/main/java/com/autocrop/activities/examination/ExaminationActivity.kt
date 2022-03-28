@@ -53,12 +53,6 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
                 "Couldn't find cropping bounds for\n$nDismissedImages image${numberInflection(nDismissedImages!!)}",
                 TextColors.URGENT
             )
-        else if (conductAutoScroll)
-            displaySnackbar(
-                "Tap screen to cancel auto scrolling",
-                TextColors.NEUTRAL,
-                Snackbar.LENGTH_SHORT
-            )
 
         //----------retrieve ViewModel
         viewModel = ViewModelProvider(

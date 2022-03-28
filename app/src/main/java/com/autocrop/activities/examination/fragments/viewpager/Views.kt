@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
 import com.autocrop.activities.examination.ViewPagerModel
-import com.autocrop.retentionPercentage
 import com.w2sv.autocrop.R
 
 interface ViewModelRetriever{
@@ -51,20 +50,20 @@ abstract class PageDependentTextView(context: Context, attr: AttributeSet, priva
     AppCompatTextView(context, attr),
     ViewModelRetriever by ViewModelRetrieverImplementation(context) {
 
+    init{
+        updateText(0)
+    }
+
     fun updateText(viewPagerDataSetPosition: Int){
         text = context.resources.getString(stringId, *formatArgs(viewPagerDataSetPosition).toTypedArray())
     }
     protected abstract fun formatArgs(viewPagerDataSetPosition: Int): List<Int>
 }
 
-class CropRetentionPercentageTextView(context: Context, attr: AttributeSet):
-    PageDependentTextView(context, attr, R.string.examination_activity_retention_percentage) {
+class DiscardedTextView(context: Context, attr: AttributeSet):
+    PageDependentTextView(context, attr, R.string.discarded) {
 
-    init{
-        translationX -= (viewModel.dataSet.size.toString().lastIndex) * 31
-        updateText(0)
-    }
-    override fun formatArgs(viewPagerDataSetPosition: Int): List<Int> = listOf(viewModel.dataSet[viewPagerDataSetPosition].retentionPercentage)
+    override fun formatArgs(viewPagerDataSetPosition: Int): List<Int> = listOf(viewModel.dataSet[viewPagerDataSetPosition].discardedPercentage, viewModel.dataSet[viewPagerDataSetPosition].approximateDiscardedFileSize)
 }
 
 class PageIndicationTextView(context: Context, attr: AttributeSet): PageDependentTextView(context, attr, R.string.fracture) {
