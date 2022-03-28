@@ -10,7 +10,7 @@ abstract class FragmentHostingActivity<VB: ViewBinding>(inflateViewBinding: (Lay
     : ViewBindingHandlingActivity<VB>(inflateViewBinding) {
 
     abstract val rootFragment: Fragment
-    protected var fragmentContainerViewId by Delegates.notNull<Int>()
+    protected var fragmentContainerViewId by Delegates.notNull<Int>()  // TODO: retrieve by reflection and thus remove need to be set by child class
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

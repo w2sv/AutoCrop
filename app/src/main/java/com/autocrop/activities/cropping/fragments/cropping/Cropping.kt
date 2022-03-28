@@ -3,48 +3,43 @@ package com.autocrop.activities.cropping.fragments.cropping
 import android.graphics.Bitmap
 import kotlin.math.roundToInt
 
-
 private typealias BorderPair = Pair<Int, Int>
 private typealias BorderPairs = List<BorderPair>
 private typealias BorderPairCandidates = MutableList<BorderPair>
 
-private const val N_PIXEL_COMPARISONS_PER_ROW: Int = 5
-private const val N_PIXEL_COMPARISONS_PER_COLUMN: Int = 4
-
-private const val UPPER_BOUND_MARGIN: Int = 2
-
-
-fun croppedImage(image: Bitmap): Pair<Bitmap, Int>?{
-    val lastRowIndex: Int = image.height - 1
-
-    val borderPairCandidates: BorderPairs = getCroppingBorderPairCandidates(image, lastRowIndex)
+fun croppedImage(image: Bitmap): Triple<Bitmap, Int, Int>?{
+    val borderPairCandidates: BorderPairs = getCroppingBorderPairCandidates(image, image.height - 1)
         .filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(image)
         .also { if (it.isEmpty())
             return null
         }
 
     // find cropping border pair of maximal crop height
-    val croppingBorders: BorderPair = borderPairCandidates.maxByOrNull {
-        it.second - it.first
-    }!!
+    val upperBoundMargin = 2
+    val (y: Int, height: Int) = borderPairCandidates.maxByOrNull {it.second - it.first}!!.let { maxSizeBorderPair ->
+        (maxSizeBorderPair.first + 1).let { y ->
+            y to maxSizeBorderPair.second - y - upperBoundMargin
+        }
+    }
+    val discardedPercentage: Float = image.height.toFloat().run {
+        minus(height.toFloat()) / this
+    }
 
-    val y: Int = croppingBorders.first + 1
-    val height: Int = croppingBorders.second - y - UPPER_BOUND_MARGIN
-
-    return Pair(
-        Bitmap.createBitmap(
-            image,
-            0,
-            y,
-            image.width,
-            height),
-        (height.toFloat() / image.height.toFloat() * 100).roundToInt()
+    return Triple(
+        Bitmap.createBitmap(image,0, y, image.width, height),
+        (discardedPercentage * 100).roundToInt(),
+        (discardedPercentage * image.approximatedJpegFileSizeInKB).roundToInt()
     )
 }
 
+private val Bitmap.approximatedJpegFileSizeInKB: Int
+    get() = allocationByteCount / 10 / 1024
+
 
 private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): BorderPairs {
-    val sampleStep: Int = image.width / N_PIXEL_COMPARISONS_PER_ROW
+    val nPixelComparisonsPerRow = 5
+
+    val sampleStep: Int = image.width / nPixelComparisonsPerRow
     fun searchRange(startIndex: Int): IntRange = (startIndex until lastRowIndex)
 
     fun getLowerBoundIndex(queryStartInd: Int, candidates: BorderPairCandidates = mutableListOf()): BorderPairCandidates {
@@ -117,7 +112,8 @@ private fun BorderPairs.filterInCenterProximityExclusivelyVerticallyFluctuatingO
 
 
 private fun Bitmap.hasFluctuationThroughoutColumn(x: Int, y: Int, candidateHeight: Int): Boolean{
-    val step: Int = (candidateHeight + y) / N_PIXEL_COMPARISONS_PER_COLUMN
+    val nPixelComparisonsPerColumn = 4
+    val step: Int = (candidateHeight + y) / nPixelComparisonsPerColumn
 
     return !(y + step until candidateHeight + y step step).all {
         getPixel(x, it) == getPixel(x, it - step)

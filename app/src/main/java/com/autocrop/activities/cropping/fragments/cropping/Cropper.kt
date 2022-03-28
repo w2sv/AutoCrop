@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.AsyncTask
 import android.widget.ProgressBar
+import com.autocrop.CropBundle
 import com.autocrop.activities.cropping.CroppingActivityViewModel
 import com.autocrop.utils.forceUnwrapped
 import com.autocrop.utils.toInt
@@ -44,7 +45,7 @@ class Cropper(
             with(croppedImage(image = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))!!)) {
                 this?.let {
                     viewModel.cropBundles.add(
-                        Triple(uri, first, second)
+                        CropBundle(uri, first, second, third)
                     )
                 }
             }
