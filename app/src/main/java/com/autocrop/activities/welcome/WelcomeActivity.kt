@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.utils.android.debuggingModeEnabled
 import com.autocrop.utils.android.restartTransitionAnimation
@@ -32,9 +30,14 @@ class WelcomeActivity : FragmentActivity(R.layout.activity_welcome) {
                     )
                 )
                 restartTransitionAnimation()
-                finish()
             },
             1500
         )
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        finishAndRemoveTask()
     }
 }

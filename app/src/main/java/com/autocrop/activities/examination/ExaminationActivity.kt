@@ -7,12 +7,12 @@ package com.autocrop.activities.examination
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.CropBundle
 import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.IntentIdentifiers
-import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.examination.fragments.singleaction.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.singleaction.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
@@ -25,7 +25,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 
-class ExaminationActivity : SystemUiHidingFragmentActivity() {
+class ExaminationActivity : FragmentActivity() {
 
     companion object{
         lateinit var cropBundles: MutableList<CropBundle>

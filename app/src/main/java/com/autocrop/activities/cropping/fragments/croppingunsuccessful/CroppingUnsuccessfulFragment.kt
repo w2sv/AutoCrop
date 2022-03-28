@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import com.autocrop.activities.cropping.fragments.CroppingActivityFragment
-import com.autocrop.utils.android.hideSystemUI
 import com.w2sv.autocrop.databinding.ActivityCroppingFragmentCroppingUnsuccessfulBinding
 
 class CroppingUnsuccessfulFragment
@@ -15,9 +14,7 @@ class CroppingUnsuccessfulFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        hideSystemUI(requireActivity().window)
-
+        
         mainActivityReturnHandler.postDelayed(
             { activity.returnToMainActivity() },
             3000

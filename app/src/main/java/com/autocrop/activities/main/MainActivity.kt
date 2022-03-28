@@ -12,10 +12,10 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import com.autocrop.UserPreferences
 import com.autocrop.activities.IntentIdentifiers
-import com.autocrop.activities.SystemUiHidingFragmentActivity
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
@@ -27,7 +27,7 @@ import processing.android.PFragment
 import timber.log.Timber
 import java.io.File
 
-class MainActivity : SystemUiHidingFragmentActivity() {
+class MainActivity : AppCompatActivity() {
 
     companion object{
         const val CROP_IMAGES_SELECTION_MAX: Int = 100
