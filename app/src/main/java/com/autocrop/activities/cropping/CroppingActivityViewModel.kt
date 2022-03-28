@@ -13,6 +13,10 @@ class CroppingActivityViewModel(val uris: ArrayList<Uri>): ViewModel(){
     val progressBarDecimalStep: Float
 
     val nSelectedImages: Int = uris.size
+    val cropBundles: CropBundleList = mutableListOf()
+
+    val nDismissedImages: Int
+        get() = nSelectedImages - cropBundles.size
 
     init {
         (PROGRESS_BAR_MAX.toFloat() / nSelectedImages.toFloat()).let {
@@ -20,6 +24,4 @@ class CroppingActivityViewModel(val uris: ArrayList<Uri>): ViewModel(){
             progressBarDecimalStep = it - progressBarIntStep
         }
     }
-
-    val cropBundles: CropBundleList = mutableListOf()
 }

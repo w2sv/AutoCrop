@@ -206,7 +206,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
                     activityViewModel.nDeletedCrops += 1
             }
             if (viewModel.dataSet.size == 1)
-                return examinationActivity.run { appTitleFragment.commit(true) }
+                return examinationActivity.run { replaceCurrentFragmentWith(appTitleFragment, true) }
 
             removeView(dataSetPosition)
         }

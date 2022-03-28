@@ -38,7 +38,7 @@ class CroppingFragment
      */
     private fun onTaskCompleted() = logBeforehand("Async Cropping task finished") {
         if (viewModel.cropBundles.isNotEmpty())
-            startExaminationActivity(viewModel.nSelectedImages - viewModel.cropBundles.size)
+            startExaminationActivity()
         else
             // delay briefly to assure progress bar having reached 100% before UI change
             Handler(Looper.getMainLooper()).postDelayed(
@@ -51,14 +51,14 @@ class CroppingFragment
             )
     }
 
-    private fun startExaminationActivity(nDismissedCrops: Int){
+    private fun startExaminationActivity(){
         ExaminationActivity.cropBundles = viewModel.cropBundles
 
         requireActivity().let { activity ->
             startActivity(
                 Intent(activity, ExaminationActivity::class.java).putExtra(
                     IntentIdentifiers.N_DISMISSED_IMAGES,
-                    nDismissedCrops
+                    viewModel.nDismissedImages
                 )
             )
             activity.proceedTransitionAnimation()

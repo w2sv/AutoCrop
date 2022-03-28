@@ -16,7 +16,9 @@ class SaveAllFragment :
             if (UserPreferences.deleteScreenshotsOnSaveAll)
                 viewModel.nDeletedCrops += viewModel.viewPager.dataSet.size
 
-            with(activity){appTitleFragment.commit(true)}
+            with(activity){
+                replaceCurrentFragmentWith(appTitleFragment, true)
+            }
         }
             .execute()
     }

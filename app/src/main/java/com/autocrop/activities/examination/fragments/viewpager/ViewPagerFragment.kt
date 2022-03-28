@@ -37,7 +37,7 @@ class ViewPagerFragment
                 CropEntiretyActionConfirmationDialogFragment("Save all crops?", true)
                 {
                     with(activity){
-                        saveAllFragment.commit(true)
+                        replaceCurrentFragmentWith(saveAllFragment, true)
                     }
                 }
                     .show(childFragmentManager, "SAVE_ALL_BUTTON_CONFIRMATION_DIALOG")
@@ -48,7 +48,7 @@ class ViewPagerFragment
         binding.toolbar.discardAllButton.setOnClickListener {
             ifScrollerNotRunning {
                 CropEntiretyActionConfirmationDialogFragment("Discard all crops?", false)
-                { with(activity){appTitleFragment.commit(false)} }
+                { with(activity){replaceCurrentFragmentWith(appTitleFragment, false)} }
                     .show(childFragmentManager, "DISCARD_ALL_BUTTON_CONFIRMATION_DIALOG")
             }
         }

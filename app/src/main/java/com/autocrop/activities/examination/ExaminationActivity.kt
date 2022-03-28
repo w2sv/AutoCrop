@@ -5,13 +5,12 @@
 package com.autocrop.activities.examination
 
 import android.content.Intent
-import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.CropBundle
 import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
+import com.autocrop.activities.FragmentHostingActivity
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.examination.fragments.singleaction.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.singleaction.saveall.SaveAllFragment
@@ -25,7 +24,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 
-class ExaminationActivity : FragmentActivity() {
+class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(ActivityExaminationBinding::inflate) {
 
     companion object{
         lateinit var cropBundles: MutableList<CropBundle>
@@ -35,37 +34,18 @@ class ExaminationActivity : FragmentActivity() {
 
     private val nDismissedImagesRetriever = IntentExtraRetriever<Int>()
 
-    private lateinit var binding: ActivityExaminationBinding
+    override val rootFragment: ViewPagerFragment by lazy{ViewPagerFragment()}
+    val saveAllFragment: SaveAllFragment by lazy { SaveAllFragment() }
+    val appTitleFragment: AppTitleFragment by lazy { AppTitleFragment() }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // ----------retrieve ViewBinding
-        binding = ActivityExaminationBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateCore() {
+        fragmentContainerViewId = binding.layout.id
 
         // --------retrieve variables
         val nDismissedImages: Int? =
             nDismissedImagesRetriever(intent, IntentIdentifiers.N_DISMISSED_IMAGES, 0)
         val conductAutoScroll: Boolean =
             UserPreferences.conductAutoScrolling && cropBundles.size > 1
-
-        //----------retrieve ViewModel
-        viewModel = ViewModelProvider(
-            this,
-            ExaminationViewModelFactory(
-                conductAutoScroll,
-                longAutoScrollDelay = nDismissedImages.notNull()
-            )
-        )[ExaminationViewModel::class.java]
-
-        // --------commit ExaminationFragment if applicable
-        if (savedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .add(binding.layout.id, ViewPagerFragment())
-                .commit()
-        }
 
         // ---------display Snackbars
         if (nDismissedImages.notNull())
@@ -79,28 +59,25 @@ class ExaminationActivity : FragmentActivity() {
                 TextColors.NEUTRAL,
                 Snackbar.LENGTH_SHORT
             )
+
+        //----------retrieve ViewModel
+        viewModel = ViewModelProvider(
+            this,
+            ExaminationViewModelFactory(
+                conductAutoScroll,
+                longAutoScrollDelay = nDismissedImages.notNull()
+            )
+        )[ExaminationViewModel::class.java]
     }
 
-    val saveAllFragment: SaveAllFragment by lazy { SaveAllFragment() }
-    val appTitleFragment: AppTitleFragment by lazy { AppTitleFragment() }
-
-    fun Fragment.commit(flipRight: Boolean){
-        val animations = arrayOf(
+    fun replaceCurrentFragmentWith(fragment: Fragment, flipRight: Boolean) {
+        super.replaceCurrentFragmentWith(
+            fragment,
             arrayOf(
-                R.animator.card_flip_left_in,
-                R.animator.card_flip_left_out
-            ),
-            arrayOf(
-                R.animator.card_flip_right_in,
-                R.animator.card_flip_right_out
-            )
-        )[flipRight]
-
-        supportFragmentManager
-            .beginTransaction()
-            .setCustomAnimations(animations[0], animations[1])
-            .replace(binding.layout.id, this)
-            .commit()
+                R.animator.card_flip_left_in to R.animator.card_flip_left_out,
+                R.animator.card_flip_right_in to R.animator.card_flip_right_out
+            )[flipRight]
+        )
     }
 
     /**
@@ -132,7 +109,6 @@ class ExaminationActivity : FragmentActivity() {
                 MainActivity::class.java
             ).putExtra(IntentIdentifiers.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS, intArrayOf(viewModel.nSavedCrops, viewModel.nDeletedCrops))
         )
-
         returnTransitionAnimation()
     }
 
