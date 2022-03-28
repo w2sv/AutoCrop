@@ -68,7 +68,7 @@ class Cropper(
     override fun onProgressUpdate(vararg imageOrdinalWithProgressBarStep: Pair<Int, Int>) {
         with(imageOrdinalWithProgressBarStep[0]) {
             currentImageNumberTextView.forceUnwrapped().updateText(first)
-            progressBar.forceUnwrapped().progress += second
+            progressBar.forceUnwrapped().incrementProgressBy(second)
         }
     }
 

@@ -4,9 +4,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.2759259259259259" />
+        <entry key="../../../Android/Sdk/platforms/android-31/data/res/drawable/ratingbar_indicator_material.xml" value="0.26" />
         <entry key="../../../Android/Sdk/platforms/android-31/data/res/layout/auto_complete_list.xml" value="0.2625" />
         <entry key="app/src/main/res/drawable/button_image_selection.xml" value="0.181" />
         <entry key="app/src/main/res/drawable/ic_camera.xml" value="0.181" />
+        <entry key="app/src/main/res/drawable/progress_bar_circular_save_all_crops.xml" value="0.181" />
+        <entry key="app/src/main/res/drawable/progress_bar_cropping_activity_progress.xml" value="0.181" />
+        <entry key="app/src/main/res/drawable/seekbar_progress.xml" value="0.181" />
         <entry key="app/src/main/res/drawable/seekbar_tumb_examination_activity.xml" value="0.181" />
         <entry key="app/src/main/res/layout/activity_cropping.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/activity_cropping_fragment_cropping_unsuccessful.xml" value="0.2625" />

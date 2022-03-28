@@ -36,8 +36,9 @@
         android:outlineProvider="paddedBounds"
         android:progressTint="@android:color/transparent"
 
-        android:visibility="invisible"
+        android:visibility="visible"
 
+        android:progress="50"
         android:max="100">
     </com.autocrop.activities.examination.fragments.viewpager.PageIndicationSeekBar>
 
@@ -46,9 +47,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
 
-        android:layout_alignParentEnd="true"
 
-        android:layout_marginTop="85dp"
+        android:layout_marginTop="80dp"
         android:layout_marginHorizontal="30dp"
         android:text="@string/discarded"
 

@@ -2,6 +2,7 @@ package com.autocrop.activities.examination.fragments.viewpager
 
 import android.animation.ObjectAnimator
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
@@ -36,14 +37,8 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
         val targetProgress: Int = viewModel.pageIndicationSeekBar.pagePercentage(dataSetPosition, max)
         val traverseEntireBar: Boolean = (setOf(progress, targetProgress) subtract setOf(0, 100)).isEmpty()
 
-        with(
-            ObjectAnimator.ofInt(
-                this,
-                "progress",
-                targetProgress
-            )
-        ) {
-            duration = 400
+        with(ObjectAnimator.ofInt(this,"progress", targetProgress)) {
+            duration = if (traverseEntireBar) 400 else 100
             interpolator = if (traverseEntireBar) BounceInterpolator() else DecelerateInterpolator()
             start()
         }
