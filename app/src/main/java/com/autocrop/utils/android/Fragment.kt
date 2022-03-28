@@ -20,13 +20,15 @@ abstract class ExtendedFragment<A: Activity, M: ViewModel>(viewModelClass: Class
     @Suppress("UNCHECKED_CAST")
     val activity: A
         get() = requireActivity() as A
-}typealias InflateViewBinding<VB>  = (LayoutInflater, ViewGroup?, Boolean) -> VB
+}
+
+typealias InflateViewBinding<VB>  = (LayoutInflater, ViewGroup?, Boolean) -> VB
 
 abstract class BindingHandlingFragment<A: Activity, VM: ViewModel, VB: ViewBinding>(
     viewModelClass: Class<VM>,
     private val inflateViewBinding: InflateViewBinding<VB>
 )
-        : ExtendedFragment<A, VM>(viewModelClass){
+    : ExtendedFragment<A, VM>(viewModelClass){
 
     private var _binding: VB? = null
     protected val binding: VB

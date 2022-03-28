@@ -17,10 +17,7 @@ import com.autocrop.activities.examination.fragments.singleaction.apptitle.AppTi
 import com.autocrop.activities.examination.fragments.singleaction.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.utils.android.IntentExtraRetriever
-import com.autocrop.utils.android.TextColors
-import com.autocrop.utils.android.displaySnackbar
-import com.autocrop.utils.android.returnTransitionAnimation
+import com.autocrop.utils.android.*
 import com.autocrop.utils.get
 import com.autocrop.utils.logAfterwards
 import com.autocrop.utils.notNull
@@ -36,7 +33,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
 
     private lateinit var viewModel: ExaminationViewModel
 
-    private val nDismissedImagesRetriever = IntentExtraRetriever()
+    private val nDismissedImagesRetriever = IntentExtraRetriever<Int>()
 
     private lateinit var binding: ActivityExaminationBinding
 
@@ -66,14 +63,14 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .add(binding.activityCroppingLayout.id, ViewPagerFragment())
+                .add(binding.layout.id, ViewPagerFragment())
                 .commit()
         }
 
         // ---------display Snackbars
         if (nDismissedImages.notNull())
             displaySnackbar(
-                "Couldn't find cropping bounds for\n$nDismissedImages image${listOf("", "s")[nDismissedImages!! > 1]}",
+                "Couldn't find cropping bounds for\n$nDismissedImages image${numberInflection(nDismissedImages!!)}",
                 TextColors.URGENT
             )
         else if (conductAutoScroll)
@@ -102,9 +99,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
         supportFragmentManager
             .beginTransaction()
             .setCustomAnimations(animations[0], animations[1])
-            .replace(binding.activityCroppingLayout.id, this)
-            .addToBackStack(null)
-            .setReorderingAllowed(true)
+            .replace(binding.layout.id, this)
             .commit()
     }
 
@@ -112,7 +107,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
      * Block backPress throughout the process of saving all crops,
      * otherwise return to MainActivity after confirmation
      */
-    private val backPressHandler = BackPressHandler(this, "Tap again to return to main screen"){
+    private val handleBackPress = BackPressHandler(this, "Tap again to return to main screen"){
         returnToMainActivity()
     }
 
@@ -124,7 +119,7 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
                 TextColors.URGENT
             )
         }
-        else -> backPressHandler()
+        else -> handleBackPress()
     }
 
     /**
@@ -135,10 +130,14 @@ class ExaminationActivity : SystemUiHidingFragmentActivity() {
             Intent(
                 this,
                 MainActivity::class.java
-            ).putExtra(IntentIdentifiers.N_SAVED_CROPS, viewModel.nSavedCrops)
+            ).putExtra(IntentIdentifiers.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS, intArrayOf(viewModel.nSavedCrops, viewModel.nDeletedCrops))
         )
 
         returnTransitionAnimation()
+    }
+
+    override fun onStop() {
+        super.onStop()
 
         cropBundles.clear()
         finishAndRemoveTask()

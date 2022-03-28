@@ -11,6 +11,7 @@ import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.autocrop.UserPreferences
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
 import com.autocrop.activities.examination.ViewPagerModel
@@ -199,8 +200,11 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
          * selected for, from pager
          */
         private fun onCropProcedureAction(dataSetPosition: Index, incrementNSavedCrops: Boolean){
-            if (incrementNSavedCrops)
-                activityViewModel.incrementNSavedCrops()
+            if (incrementNSavedCrops){
+                activityViewModel.nSavedCrops += 1
+                if (UserPreferences.deleteIndividualScreenshot)
+                    activityViewModel.nDeletedCrops += 1
+            }
             if (viewModel.dataSet.size == 1)
                 return examinationActivity.run { appTitleFragment.commit(true) }
 

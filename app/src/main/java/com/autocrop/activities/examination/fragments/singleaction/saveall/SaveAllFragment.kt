@@ -12,7 +12,10 @@ class SaveAllFragment :
 
     override fun runAction() {
         CropSaver(UserPreferences.deleteScreenshotsOnSaveAll, WeakReference(activity)) {
-            viewModel.incrementNSavedCrops(viewModel.viewPager.dataSet.size)
+            viewModel.nSavedCrops += viewModel.viewPager.dataSet.size
+            if (UserPreferences.deleteScreenshotsOnSaveAll)
+                viewModel.nDeletedCrops += viewModel.viewPager.dataSet.size
+
             with(activity){appTitleFragment.commit(true)}
         }
             .execute()

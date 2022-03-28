@@ -7,7 +7,6 @@ import android.os.Looper
 import android.view.View
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.cropping.fragments.CroppingActivityFragment
-import com.autocrop.activities.cropping.fragments.croppingunsuccessful.CroppingUnsuccessfulFragment
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.utils.android.proceedTransitionAnimation
 import com.autocrop.utils.logBeforehand
@@ -44,9 +43,9 @@ class CroppingFragment
             // delay briefly to assure progress bar having reached 100% before UI change
             Handler(Looper.getMainLooper()).postDelayed(
                 {
-                    activity.replaceCurrentFragmentWith(
-                        CroppingUnsuccessfulFragment()
-                    )
+                    with(activity){
+                        replaceCurrentFragmentWith(croppingUnsuccessfulFragment)
+                    }
                 },
                 300
             )

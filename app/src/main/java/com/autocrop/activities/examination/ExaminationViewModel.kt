@@ -14,10 +14,7 @@ import kotlin.math.roundToInt
 class ExaminationViewModel(conductAutoScroll: Boolean,
                            longAutoScrollDelay: Boolean): ViewModel() {
     var nSavedCrops = 0
-
-    fun incrementNSavedCrops(by: Int = 1){
-        nSavedCrops += by
-    }
+    var nDeletedCrops = 0
 
     val viewPager = ViewPagerModel(conductAutoScroll, longAutoScrollDelay)
 }

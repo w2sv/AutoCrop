@@ -39,7 +39,7 @@ class MainActivity : SystemUiHidingFragmentActivity() {
 
     lateinit var flowFieldHandler: FlowFieldHandler
 
-    private val nSavedCropsRetriever = IntentExtraRetriever()
+    private val nSavedCropsRetriever = IntentExtraRetriever<IntArray>()
 
     private lateinit var binding: ActivityMainBinding
 
@@ -69,12 +69,18 @@ class MainActivity : SystemUiHidingFragmentActivity() {
         flowFieldHandler.setCaptureButtonOnClickListener()
 
         // display cropping saving results if applicable
-        nSavedCropsRetriever(intent, IntentIdentifiers.N_SAVED_CROPS, -1)?.let { nSavedCrops ->
+        nSavedCropsRetriever(intent, IntentIdentifiers.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)?.let {
+            val (nSavedCrops, nDeletedScreenshots) = it[0] to it[1]
+            println("jknasdfa $nSavedCrops $nDeletedScreenshots")
+
             displaySnackbar(
                 when (nSavedCrops) {
                     0 -> "Discarded all crops"
-                    else -> listOf("", "s")[nSavedCrops >= 2].let { numerusInflection ->
-                        "Saved $nSavedCrops crop$numerusInflection" + listOf("", " and deleted\n$nSavedCrops corresponding screenshot$numerusInflection")[UserPreferences.deleteScreenshotsOnSaveAll]
+                    else -> "Saved ${nSavedCrops} crop${numberInflection(nSavedCrops)}".run {
+                        if (nDeletedScreenshots != 0)
+                            plus(" and deleted\n${listOf(nDeletedScreenshots, "corresponding")[nDeletedScreenshots == nSavedCrops]} screenshot${numberInflection(nDeletedScreenshots)}")
+                        else
+                            this
                     }
                 },
                 TextColors.SUCCESS

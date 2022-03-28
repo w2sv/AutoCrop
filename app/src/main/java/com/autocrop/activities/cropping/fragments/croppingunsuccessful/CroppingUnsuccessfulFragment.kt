@@ -11,14 +11,25 @@ import com.w2sv.autocrop.databinding.ActivityCroppingFragmentCroppingUnsuccessfu
 class CroppingUnsuccessfulFragment
     : CroppingActivityFragment<ActivityCroppingFragmentCroppingUnsuccessfulBinding>(ActivityCroppingFragmentCroppingUnsuccessfulBinding::inflate) {
 
+    private val mainActivityReturnHandler = Handler(Looper.getMainLooper())
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         hideSystemUI(requireActivity().window)
 
-        Handler(Looper.getMainLooper()).postDelayed(
+        mainActivityReturnHandler.postDelayed(
             { activity.returnToMainActivity() },
             3000
         )
+    }
+
+    /**
+     * Cancel [mainActivityReturnHandler]
+     */
+    override fun onStop() {
+        super.onStop()
+
+        mainActivityReturnHandler.removeCallbacksAndMessages(null)
     }
 }
