@@ -3,6 +3,7 @@ package com.autocrop.activities.examination
 import androidx.lifecycle.ViewModel
 import com.autocrop.CropBundle
 import com.autocrop.CropBundleList
+import com.autocrop.UserPreferences
 import com.autocrop.utils.Index
 import com.autocrop.utils.at
 import com.autocrop.utils.get
@@ -11,16 +12,14 @@ import java.util.*
 import kotlin.math.roundToInt
 
 
-class ExaminationViewModel(conductAutoScroll: Boolean,
-                           longAutoScrollDelay: Boolean): ViewModel() {
+class ExaminationViewModel(val nDismissedImages: Int): ViewModel() {
     var nSavedCrops = 0
     var nDeletedCrops = 0
 
-    val viewPager = ViewPagerModel(conductAutoScroll, longAutoScrollDelay)
+    val viewPager = ViewPagerModel()
 }
 
-class ViewPagerModel(val conductAutoScroll: Boolean,
-                     val longAutoScrollDelay: Boolean){
+class ViewPagerModel{
 
     companion object {
         const val MAX_VIEWS: Int = Int.MAX_VALUE
@@ -28,6 +27,8 @@ class ViewPagerModel(val conductAutoScroll: Boolean,
 
     val dataSet = ViewPagerDataSet()
     val pageIndicationSeekBar = PageIndicationSeekBarModel(dataSet)
+
+    val conductAutoScroll = UserPreferences.conductAutoScrolling && dataSet.size > 1
 
     val startPosition: Int = (MAX_VIEWS / 2).run {
         minus(dataSet.correspondingPosition(this))

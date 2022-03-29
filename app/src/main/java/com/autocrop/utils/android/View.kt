@@ -9,6 +9,11 @@ fun View.show() { visibility = View.VISIBLE }
 fun View.hide() { visibility = View.INVISIBLE }
 fun View.remove() { visibility = View.GONE}
 
+fun crossFade(fadeInView: View, fadeOutView: View, animationDuration: Long){
+    fadeInView.fadeIn(animationDuration)
+    fadeOutView.fadeOut(animationDuration)
+}
+
 fun View.fadeIn(duration: Long){
     alpha = 0f
     show()

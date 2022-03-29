@@ -11,12 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnticipateInterpolator
 import android.widget.ImageView
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.UserPreferences
 import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.activities.examination.ExaminationViewModel
 import com.autocrop.activities.examination.ViewPagerModel
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.*
@@ -29,14 +27,13 @@ import java.util.*
 
 class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpagerBinding){
 
-    private val examinationActivity: ExaminationActivity
-        get() = binding.viewPager.context as ExaminationActivity
+    private val activity: ExaminationActivity = binding.viewPager.context as ExaminationActivity
 
-    private val activityViewModel: ExaminationViewModel by lazy { ViewModelProvider(examinationActivity)[ExaminationViewModel::class.java] }
     private val viewModel: ViewPagerModel
-        get() = activityViewModel.viewPager
+        get() = activity.viewModel.viewPager
 
     val scroller = Scroller()
+
     var blockPageDependentViewUpdating = false
 
     init {
@@ -50,7 +47,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
             )
 
             if (viewModel.dataSet.size > 1)
-                examinationActivity.runOnUiThread { binding.pageIndicationSeekBar.show() }
+                activity.runOnUiThread { binding.pageIndicationSeekBar.show() }
 
             // register onPageChangeCallbacks
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -65,30 +62,21 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
                         binding.updatePageDependentViews(viewModel.dataSet.correspondingPosition(position))
                 }
             })
-
-            /**
-             * Set Cube Out Page Transformer
-             *
-             * Reference: https://www.loginworks.com/blogs/how-to-make-awesome-transition-
-             * effects-using-pagetransformer-in-android/
-             */
-            setPageTransformer { view: View, position: Float ->
-                with(view) {
-                    pivotX = listOf(0f, width.toFloat())[(position < 0f).toInt()]
-                    pivotY = height * 0.5f
-                    rotationY = 90f * position
-                }
-            }
+//            setCubeOutPageTransformer()
         }
         // run Scroller if applicable
         if (viewModel.conductAutoScroll)
             scroller.invoke()
-        else
-            examinationActivity.runOnUiThread { binding.discardedTextView.show() }
+        else{
+            activity.runOnUiThread { binding.discardedTextView.show() }
+            setCubeOutPageTransformer()
+        }
     }
 
+    private fun setCubeOutPageTransformer(){ binding.viewPager.setPageTransformer(CubeOutPageTransformer())}
+
     private fun ActivityExaminationFragmentViewpagerBinding.updatePageDependentViews(dataSetPosition: Index) =
-        examinationActivity.runOnUiThread{
+        activity.runOnUiThread{
             toolbar.pageIndication.updateText(dataSetPosition)
             discardedTextView.updateText(dataSetPosition)
             pageIndicationSeekBar.update(dataSetPosition)
@@ -105,9 +93,11 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
 
         fun invoke(){
             isRunning = true
-            examinationActivity.runOnUiThread { binding.autoScrollingTextView.show() }
+            activity.runOnUiThread { binding.autoScrollingTextView.show() }
 
             timer = Timer().apply {
+                val period = 1000L
+
                 schedule(
                     object : TimerTask() {
                         override fun run() {
@@ -120,8 +110,8 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
                                 cancel(onScreenTouch = false)
                         }
                     },
-                    listOf(1000L, 1500L)[viewModel.longAutoScrollDelay],
-                    1000L
+                    period,
+                    period
                 )
             }
         }
@@ -132,18 +122,17 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
         fun cancel(onScreenTouch: Boolean) {
             timer.cancel()
             isRunning = false
-            examinationActivity.runOnUiThread {
-                val duration = examinationActivity.resources.getInteger(android.R.integer.config_longAnimTime).toLong()
-
-                binding.autoScrollingTextView.fadeOut(duration)
-                binding.discardedTextView.fadeIn(duration)
+            activity.runOnUiThread {
+                crossFade(binding.discardedTextView, binding.autoScrollingTextView, 900L)
+                setCubeOutPageTransformer()
             }
 
-            examinationActivity.displaySnackbar(
-                listOf("Traversed all crops", "Cancelled auto scrolling")[onScreenTouch],
-                TextColors.SUCCESS,
-                Snackbar.LENGTH_SHORT
-            )
+            if (onScreenTouch)
+                activity.displaySnackbar(
+                    "Cancelled auto scrolling",
+                    TextColors.SUCCESS,
+                    Snackbar.LENGTH_SHORT
+                )
         }
     }
 
@@ -178,9 +167,9 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
                             viewModel.dataSet.correspondingPosition(adapterPosition).let{ dataSetPosition ->
                                 CropProcedureDialog(
                                     viewModel.dataSet[dataSetPosition].screenshotUri to viewModel.dataSet[dataSetPosition].crop,
-                                    imageFileWritingContext = examinationActivity)
+                                    imageFileWritingContext = activity)
                                 {incrementNSavedCrops -> onCropProcedureAction(dataSetPosition, incrementNSavedCrops)}
-                                    .show(examinationActivity.supportFragmentManager, "CROP_PROCEDURE_DIALOG")
+                                    .show(activity.supportFragmentManager, "CROP_PROCEDURE_DIALOG")
                             }
                         }
                     }
@@ -215,14 +204,15 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
          */
         private fun onCropProcedureAction(dataSetPosition: Index, incrementNSavedCrops: Boolean){
             if (incrementNSavedCrops){
-                activityViewModel.nSavedCrops += 1
+                activity.viewModel.nSavedCrops++
                 if (UserPreferences.deleteIndividualScreenshot)
-                    activityViewModel.nDeletedCrops += 1
+                    activity.viewModel.nDeletedCrops++
             }
-            if (viewModel.dataSet.size == 1)
-                return examinationActivity.run { replaceCurrentFragmentWith(appTitleFragment, true) }
-            else if (viewModel.dataSet.size == 2)
-                examinationActivity.runOnUiThread {
+
+            when(viewModel.dataSet.size){
+                0 -> return
+                1 -> activity.run { replaceCurrentFragmentWith(appTitleFragment, true) }
+                2 -> activity.runOnUiThread {
                     binding.pageIndicationSeekBar.animate()
                         .scaleX(0f)
                         .scaleY(0f)
@@ -234,6 +224,8 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
                         })
                         .duration = 700L
                 }
+                else -> Unit
+            }
             removeView(dataSetPosition)
         }
 

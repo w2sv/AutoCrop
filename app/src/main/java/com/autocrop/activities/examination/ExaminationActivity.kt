@@ -8,7 +8,6 @@ import android.content.Intent
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.CropBundle
-import com.autocrop.UserPreferences
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.FragmentHostingActivity
 import com.autocrop.activities.IntentIdentifiers
@@ -19,8 +18,6 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.utils.android.*
 import com.autocrop.utils.get
 import com.autocrop.utils.logAfterwards
-import com.autocrop.utils.notNull
-import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 
@@ -30,7 +27,7 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
         lateinit var cropBundles: MutableList<CropBundle>
     }
 
-    private lateinit var viewModel: ExaminationViewModel
+    lateinit var viewModel: ExaminationViewModel
 
     private val nDismissedImagesRetriever = IntentExtraRetriever<Int>()
 
@@ -41,27 +38,21 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
     override fun onCreateCore() {
         fragmentContainerViewId = binding.layout.id
 
-        // --------retrieve variables
-        val nDismissedImages: Int? =
-            nDismissedImagesRetriever(intent, IntentIdentifiers.N_DISMISSED_IMAGES, 0)
-        val conductAutoScroll: Boolean =
-            UserPreferences.conductAutoScrolling && cropBundles.size > 1
-
-        // ---------display Snackbars
-        if (nDismissedImages.notNull())
-            displaySnackbar(
-                "Couldn't find cropping bounds for\n$nDismissedImages image${numberInflection(nDismissedImages!!)}",
-                TextColors.URGENT
-            )
-
         //----------retrieve ViewModel
         viewModel = ViewModelProvider(
             this,
-            ExaminationViewModelFactory(
-                conductAutoScroll,
-                longAutoScrollDelay = nDismissedImages.notNull()
-            )
+            ExaminationViewModelFactory(nDismissedImages = nDismissedImagesRetriever(intent, IntentIdentifiers.N_DISMISSED_IMAGES) ?: 0)
         )[ExaminationViewModel::class.java]
+
+        // ---------display Snackbar
+        with(viewModel.nDismissedImages) {
+            if (!equals(0))
+                displaySnackbar(
+                    "Couldn't find cropping bounds for\n$this image${numberInflection(this)}",
+                    TextColors.URGENT,
+                    1800
+                )
+        }
     }
 
     fun replaceCurrentFragmentWith(fragment: Fragment, flipRight: Boolean) {
@@ -96,17 +87,23 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
     /**
      * Clears remaining cropBundle elements contained within cropBundleList
      */
-    fun returnToMainActivity() = logAfterwards("Cleared cropBundleList") {
+    fun returnToMainActivity(){
         startActivity(
             Intent(
                 this,
                 MainActivity::class.java
-            ).putExtra(IntentIdentifiers.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS, intArrayOf(viewModel.nSavedCrops, viewModel.nDeletedCrops))
+            ).putExtra(
+                IntentIdentifiers.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS,
+                intArrayOf(
+                    viewModel.nSavedCrops,
+                    viewModel.nDeletedCrops
+                )
+            )
         )
         returnTransitionAnimation()
     }
 
-    override fun onStop() {
+    override fun onStop() = logAfterwards("Cleared cropBundles") {
         super.onStop()
 
         cropBundles.clear()
