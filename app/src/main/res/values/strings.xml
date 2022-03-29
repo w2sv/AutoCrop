@@ -7,7 +7,7 @@
     <string name="crops_processing_in_progress">Processing crops…</string>
     <string name="cropping_failure">Couldn\'t find cropping bounds for%1$s the selected image%2$s</string>
     <string name="auto_scrolling">AutoScrolling</string>
-    <string name="discarded">discarded %1$d%%=%2$dkb</string>
+    <string name="discarded">discarded</string>
 
     <!-- Button -->
 

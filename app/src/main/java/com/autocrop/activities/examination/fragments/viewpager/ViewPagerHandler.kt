@@ -210,8 +210,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
             }
 
             when(viewModel.dataSet.size){
-                0 -> return
-                1 -> activity.run { replaceCurrentFragmentWith(appTitleFragment, true) }
+                1 -> return activity.run { replaceCurrentFragmentWith(appTitleFragment, true) }
                 2 -> activity.runOnUiThread {
                     binding.pageIndicationSeekBar.animate()
                         .scaleX(0f)

@@ -30,7 +30,7 @@ fun Bitmap.save(context: Context, fileName: String) {
     compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
     fileOutputStream.close()
 
-    newUri.notifyGalleryAboutFileModification(context)
+    // newUri.notifyGalleryAboutFileModification(context)
     Timber.i("Saved crop to ${newUri.path}")
 }
 
