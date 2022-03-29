@@ -3,7 +3,8 @@ package com.autocrop.activities.welcome
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import com.autocrop.activities.SystemUiHidingFragmentActivity
+import android.os.Looper
+import androidx.fragment.app.FragmentActivity
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.utils.android.debuggingModeEnabled
 import com.autocrop.utils.android.restartTransitionAnimation
@@ -11,7 +12,7 @@ import com.w2sv.autocrop.R
 import timber.log.Timber
 
 
-class WelcomeActivity : SystemUiHidingFragmentActivity(R.layout.activity_welcome) {
+class WelcomeActivity : FragmentActivity(R.layout.activity_welcome) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -20,7 +21,7 @@ class WelcomeActivity : SystemUiHidingFragmentActivity(R.layout.activity_welcome
             Timber.plant(Timber.DebugTree())
 
         // transition to main activity after certain delay
-        Handler().postDelayed(
+        Handler(Looper.getMainLooper()).postDelayed(
             {
                 startActivity(
                     Intent(
@@ -29,9 +30,14 @@ class WelcomeActivity : SystemUiHidingFragmentActivity(R.layout.activity_welcome
                     )
                 )
                 restartTransitionAnimation()
-                finish()
             },
             1500
         )
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        finishAndRemoveTask()
     }
 }

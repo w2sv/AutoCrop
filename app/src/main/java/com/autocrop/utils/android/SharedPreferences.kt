@@ -1,19 +1,12 @@
 package com.autocrop.utils.android
 
 import android.app.Activity
+import android.content.Context
 import android.content.SharedPreferences
 
 
-fun Activity.getDefaultSharedPreferences(): SharedPreferences = getSharedPreferences(
-    "default",
-    0
-)
+fun Activity.getSharedPreferences(): SharedPreferences = getPreferences(Context.MODE_PRIVATE)
 
-
-fun SharedPreferences.writeBoolean(key: String, value: Boolean){
-    this.edit().putBoolean(
-        key,
-        value
-    )
-        .apply()
-}
+fun SharedPreferences.writeBoolean(key: String, value: Boolean) = edit()
+    .putBoolean(key, value)
+    .apply()

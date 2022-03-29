@@ -4,9 +4,10 @@
     <!-- Views -->
     <string name="cropping_in_progress">Cropping…</string>
     <string name="fracture">%1$d/%2$d</string>
-    <string name="examination_activity_retention_percentage">%1$d%% retained</string>
     <string name="crops_processing_in_progress">Processing crops…</string>
     <string name="cropping_failure">Couldn\'t find cropping bounds for%1$s the selected image%2$s</string>
+    <string name="auto_scrolling">AutoScrolling</string>
+    <string name="discarded">discarded %1$d%%=%2$dkb</string>
 
     <!-- Button -->
 
@@ -21,10 +22,6 @@
 
     <!-- Menu Item Text -->
     <string name="menu_item_examination_group">Examination</string>
-    <string name="menu_item_saving_group">Saving</string>
-
-    <string name="menu_item_delete_input_screenshots">Delete screenshots</string>
-    <string name="menu_item_save_to_autocrop_folder">Use AutoCropped folder</string>
     <string name="menu_item_conduct_auto_scrolling">Conduct auto scrolling</string>
 
 </resources>

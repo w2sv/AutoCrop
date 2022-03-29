@@ -14,19 +14,4 @@
         android:title="@string/menu_item_conduct_auto_scrolling"
         android:checkable="true"/>
 
-    <item
-        android:id="@+id/main_menu_crop_saving_item_group_divider"
-        android:title="@string/menu_item_saving_group"
-        android:enabled="false"/>
-
-    <item
-        android:id="@+id/main_menu_item_delete_input_screenshots"
-        android:title="@string/menu_item_delete_input_screenshots"
-        android:checkable="true"/>
-
-    <item
-        android:id="@+id/main_menu_item_save_to_autocropped_dir"
-        android:title="@string/menu_item_save_to_autocrop_folder"
-        android:checkable="true"/>
-
 </menu>

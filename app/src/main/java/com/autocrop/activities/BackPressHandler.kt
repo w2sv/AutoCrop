@@ -1,19 +1,39 @@
 package com.autocrop.activities
 
+import android.app.Activity
 import android.os.Handler
+import android.os.Looper
+import com.autocrop.utils.android.TextColors
+import com.autocrop.utils.android.displaySnackbar
 
 
-class BackPressHandler {
-    private val resetDuration: Long = 2500
+/**
+ * Display Snackbar beset with $snackbarMessage on first backpress,
+ * upon second within $RESET_DURATION trigger $secondPressAction,
+ */
+class BackPressHandler(
+    private val snackbarDisplayActivity: Activity,
+    private val snackbarMessage: String,
+    private val onSecondPress: () -> Unit) {
+
+    companion object {
+        private const val RESET_DURATION: Long = 2500
+    }
 
     var pressedOnce: Boolean = false
 
-    fun onPress() {
-        pressedOnce = true
+    operator fun invoke() {
+        if (!pressedOnce){
+            pressedOnce = true
 
-        Handler().postDelayed(
-            { pressedOnce = false },
-            resetDuration
-        )
+            Handler(Looper.getMainLooper()).postDelayed(
+                { pressedOnce = false },
+                RESET_DURATION
+            )
+
+            snackbarDisplayActivity.displaySnackbar(snackbarMessage, TextColors.NEUTRAL)
+        }
+        else
+            return onSecondPress()
     }
 }

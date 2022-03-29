@@ -7,10 +7,8 @@ import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 
 fun viewInteractionById(viewId: Int): ViewInteraction = Espresso.onView(ViewMatchers.withId(viewId))
+fun viewInteractionByTextId(textId: Int): ViewInteraction = Espresso.onView(ViewMatchers.withText(textId))
 
-fun viewInteractionByText(text: Int): ViewInteraction = Espresso.onView(ViewMatchers.withText(text))
+fun clickView(viewId: Int): ViewInteraction = viewInteractionById(viewId).perform(ViewActions.click())
 
-fun clickView(viewId: Int): ViewInteraction = Espresso.onView(ViewMatchers.withId(viewId))
-    .perform(ViewActions.click())
-
-fun ViewInteraction.popupMenuItem(): ViewInteraction = inRoot(RootMatchers.isPlatformPopup())
+fun popupMenuItemByTextId(textId: Int): ViewInteraction = viewInteractionByTextId(textId).inRoot(RootMatchers.isPlatformPopup())

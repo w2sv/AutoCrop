@@ -1,12 +1,9 @@
 package com.autocrop
 
 import android.content.SharedPreferences
-import android.os.Build
-import android.os.Environment
-import com.autocrop.utils.android.makeDirIfRequired
 import com.autocrop.utils.android.writeBoolean
+import com.autocrop.utils.logAfterwards
 import timber.log.Timber
-import java.io.File
 import java.util.*
 
 
@@ -14,86 +11,57 @@ import java.util.*
  * Singleton encapsulating entirety of parameters set by user
  * having a global impact
  */
-object UserPreferences : SortedMap<String, Boolean> by sortedMapOf(
-    Keys.conductAutoScrolling to true,
-    Keys.deleteInputScreenshots to true,
-    Keys.saveToAutocroppedDir to true) {
-
+object UserPreferences : SortedMap<String, Boolean> by sortedMapOf() {
     object Keys {
         const val conductAutoScrolling: String = "CONDUCT_AUTO_SCROLL"
-        const val deleteInputScreenshots: String = "DELETE_INPUT_SCREENSHOTS"
-        const val saveToAutocroppedDir: String = "SAVE_TO_AUTOCROPPED_DIR"
+        const val deleteIndividualScreenshot = "DELETE_INDIVIDUAL_SCREENSHOT"
+        const val deleteScreenshotsOnSaveAll: String = "DELETE_SCREENSHOTS_ON_SAVE_ALL"
     }
 
-    val conductAutoScroll: Boolean
-        get() = get(Keys.conductAutoScrolling)!!
-    val deleteInputScreenshots: Boolean
-        get() = get(Keys.deleteInputScreenshots)!!
-    val saveToAutocroppedDir: Boolean
-        get() = get(Keys.saveToAutocroppedDir)!!
+    val isInitialized: Boolean
+        get() = isNotEmpty()
 
-    var isInitialized: Boolean = false
-
-    fun init(defaultSharedPreferences: SharedPreferences) {
-        keys.forEach {
-            this[it] = defaultSharedPreferences.getBoolean(
-                it,
-                get(it)!!
-            )
-        }
-        Timber.i("Initialized Parameters")
-
-        isInitialized = true
-    }
-
-    fun toggle(key: String) {
-        this[key] = !this[key]!!
-        Timber.i("Toggled $key to ${this[key]}")
-
-        when (key) {
-            Keys.saveToAutocroppedDir -> saveToAutocropDirTogglingEcho()
-            else -> Unit
+    fun initializeFromSharedPreferences(sharedPreferences: SharedPreferences) = logAfterwards("Initialized ${javaClass.name}") {
+        mapOf(
+            Keys.conductAutoScrolling to true,
+            Keys.deleteIndividualScreenshot to false,
+            Keys.deleteScreenshotsOnSaveAll to false
+        ).forEach{ (key, defaultValue) ->
+            this[key] = sharedPreferences.getBoolean(key, defaultValue)
+            hasChangedSinceLastWriteToSharedPreferences[key] = false
         }
     }
-
-    fun writeToSharedPreferences(
-        previousValues: List<Boolean>,
-        defaultSharedPreferences: SharedPreferences
-    ) {
-        (keys zip (previousValues zip values)).forEach {
-            with(it.second) {
-                if (first != second)
-                    defaultSharedPreferences.writeBoolean(
-                        it.first,
-                        second
-                    )
-                Timber.i("Set SharedPreferences.${it.first} to $second")
-            }
-        }
-    }
-
-    val relativeCropSaveDirPath: String
-        get() = Environment.DIRECTORY_PICTURES.run {
-            if (!saveToAutocroppedDir)
-                this
-            else
-                File(this, "AutoCropped").path
-        }
-
-    val absoluteCropSaveDirPath: String
-        get() = Environment.getExternalStoragePublicDirectory(relativeCropSaveDirPath).absolutePath
 
     /**
-     * Creates AutoCrop dir in external storage pictures directory if saveToAutocropDir
-     * true after toggling, dir not yet existent and Version < Q, beginning from which
-     * directories are created automatically
+     * Expose values as variables for convenience
      */
-    private fun saveToAutocropDirTogglingEcho() {
-        if (saveToAutocroppedDir)
-            makeAutoCroppedDirIfRequired()
+    val conductAutoScrolling: Boolean
+        get() = getValue(Keys.conductAutoScrolling)
+    val deleteIndividualScreenshot: Boolean
+        get() = getValue(Keys.deleteIndividualScreenshot)
+    val deleteScreenshotsOnSaveAll: Boolean
+        get() = getValue(Keys.deleteScreenshotsOnSaveAll)
+
+    /**
+     * Toggles respective value & respective value within [hasChangedSinceLastWriteToSharedPreferences]
+     * and logs
+     */
+    fun toggle(key: String) = logAfterwards("Toggled $key to ${this[key]}"){
+        this[key] = !getValue(key)
+        hasChangedSinceLastWriteToSharedPreferences[key] = !hasChangedSinceLastWriteToSharedPreferences.getValue(key)
     }
 
-    fun makeAutoCroppedDirIfRequired(): Boolean =
-        makeDirIfRequired(absoluteCropSaveDirPath)
+    /**
+     * Keep track of which values have changed since last writing operation to shared preferences
+     * to reduce number of conducted IO operations
+     */
+    private val hasChangedSinceLastWriteToSharedPreferences: MutableMap<String, Boolean> = mutableMapOf()
 
+    fun writeChangedValuesToSharedPreferences(sharedPreferences: Lazy<SharedPreferences>) =
+        keys
+            .filter { hasChangedSinceLastWriteToSharedPreferences.getValue(it) }
+            .forEach {
+                sharedPreferences.value.writeBoolean(it, getValue(it))
+                Timber.i("Wrote $it=${getValue(it)} to shared preferences")
+            }
 }
