@@ -7,15 +7,16 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Environment
 import android.os.Parcelable
+import android.provider.MediaStore
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import com.autocrop.UserPreferences
 import com.autocrop.activities.IntentIdentifiers
+import com.autocrop.activities.ViewBindingHandlingActivity
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
@@ -27,21 +28,23 @@ import processing.android.PFragment
 import timber.log.Timber
 import java.io.File
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ViewBindingHandlingActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+
+    enum class IntentCodes{
+        IMAGE_SELECTION
+    }
 
     companion object{
-        const val CROP_IMAGES_SELECTION_MAX: Int = 100
-
-        enum class IntentCodes{
-            IMAGE_SELECTION
-        }
+        private val REQUIRED_PERMISSIONS: Array<String> = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
     }
 
     lateinit var flowFieldHandler: FlowFieldHandler
 
+    private val permissionsHandler = PermissionsHandler()
     private val nSavedCropsRetriever = IntentExtraRetriever<IntArray>()
-
-    private lateinit var binding: ActivityMainBinding
 
     /**
      * - Sets flowfield
@@ -51,9 +54,6 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         if (!::flowFieldHandler.isInitialized)
             flowFieldHandler = FlowFieldHandler()
@@ -88,15 +88,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     inner class FlowFieldHandler{
-        private val pApplet: FlowFieldPApplet = FlowFieldPApplet(
-            screenResolution(windowManager)
-        )
+        private val pApplet: FlowFieldPApplet = FlowFieldPApplet(screenResolution(windowManager))
 
-        fun setPFragment() {
-            PFragment(pApplet).setView(
-                binding.canvasContainer, this@MainActivity
-            )
-        }
+        fun setPFragment() = PFragment(pApplet).setView(binding.canvasContainer, this@MainActivity)
 
         private val flowfieldDestinationDir: File = if (apiNotNewerThanQ)
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
@@ -107,7 +101,7 @@ class MainActivity : AppCompatActivity() {
              *
              * https://stackoverflow.com/questions/36088699/error-open-failed-enoent-no-such-file-or-directory
              */
-            applicationContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+            File(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.path!!)
 
         /**
          * Request permissions if necessary and run [captureFlowField] if granted or
@@ -185,13 +179,8 @@ class MainActivity : AppCompatActivity() {
     // Permissions $
     //$$$$$$$$$$$$$$
     private inner class PermissionsHandler{
-        private val requiredPermissions: List<String> = listOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-
         private val missingPermissions: List<String>
-            get() = requiredPermissions.filter { !permissionGranted(it) }
+            get() = REQUIRED_PERMISSIONS.filter { !permissionGranted(it) }
 
         /**
          * Decorator either running passed function if all permissions granted, otherwise sets
@@ -229,8 +218,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private val permissionsHandler = PermissionsHandler()
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -257,7 +244,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun selectImages() {
         Intent(Intent.ACTION_PICK).run {
-            type = "image/*"
+            type = IMAGE_MIME_TYPE
             putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             startActivityForResult(
                 this,
@@ -269,19 +256,9 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == RESULT_OK) {
-            when (requestCode) {
-                IntentCodes.IMAGE_SELECTION.ordinal -> {
-                    with(data?.clipData!!) {
-                        if (itemCount > CROP_IMAGES_SELECTION_MAX)
-                            displaySnackbar(
-                                "Can't crop more than $CROP_IMAGES_SELECTION_MAX images at a time",
-                                TextColors.URGENT
-                            )
-                        else
-                            startCroppingActivity(imageUris = ArrayList((0 until itemCount).map { getItemAt(it)?.uri!! }))
-                    }
-                }
+        if (resultCode == RESULT_OK && requestCode == IntentCodes.IMAGE_SELECTION.ordinal) {
+            with(data?.clipData!!) {
+                startCroppingActivity(imageUris = ArrayList((0 until itemCount).map { getItemAt(it)?.uri!! }))
             }
         }
     }
@@ -298,7 +275,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Triggers app exiting
+     * Exit app
      */
     override fun onBackPressed() {
         finishAffinity()

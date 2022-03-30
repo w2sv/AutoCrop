@@ -15,6 +15,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 
+const val IMAGE_MIME_TYPE = "image/*"
+
 /**
  * References:
  *      https://stackoverflow.com/a/10124040
@@ -72,7 +74,7 @@ fun Uri.deleteUnderlyingImageFile(context: Context) {
         MediaScannerConnection.scanFile(
             this,
             arrayOf(file.toString()),
-            arrayOf("image/*")
+            arrayOf(IMAGE_MIME_TYPE)
         ) { _, _ -> }
     }
 }
