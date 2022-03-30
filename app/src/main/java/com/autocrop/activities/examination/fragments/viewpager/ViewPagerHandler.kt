@@ -24,7 +24,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
 import java.util.*
-import kotlin.properties.Delegates
 
 class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpagerBinding){
 
@@ -180,7 +179,8 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
                             viewModel.dataSet.correspondingPosition(adapterPosition).let{ dataSetPosition ->
                                 CropProcedureDialog(
                                     viewModel.dataSet[dataSetPosition].screenshotUri to viewModel.dataSet[dataSetPosition].crop,
-                                    imageFileWritingContext = activity)
+                                    activity.contentResolver
+                                )
                                 {incrementNSavedCrops -> onCropProcedureAction(dataSetPosition, incrementNSavedCrops)}
                                     .show(activity.supportFragmentManager, "CROP_PROCEDURE_DIALOG")
                             }

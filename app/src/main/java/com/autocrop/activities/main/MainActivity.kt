@@ -3,13 +3,9 @@ package com.autocrop.activities.main
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Bitmap.CompressFormat
 import android.graphics.Typeface
 import android.os.Bundle
-import android.os.Environment
 import android.os.Parcelable
-import android.provider.MediaStore
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
@@ -29,7 +25,6 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityMainBinding
 import processing.android.PFragment
 import timber.log.Timber
-import java.io.File
 
 class MainActivity : ViewBindingHandlingActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
@@ -110,7 +105,7 @@ class MainActivity : ViewBindingHandlingActivity<ActivityMainBinding>(ActivityMa
          * display Snackbar comprising directory path file has been saved to
          */
         private fun captureFlowField(){
-            pApplet.bitmap().save(this@MainActivity, "FlowField_${formattedDateTimeString()}.jpg")
+            pApplet.bitmap().save(contentResolver,"FlowField_${formattedDateTimeString()}.jpg")
 
             displaySnackbar(
                 "Saved FlowField to pictures",
