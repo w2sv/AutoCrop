@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.animation.AnticipateInterpolator
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.UserPreferences
 import com.autocrop.activities.examination.ExaminationActivity
@@ -48,7 +49,6 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
             )
             previousPosition = viewModel.startPosition
 
-
             if (viewModel.dataSet.size > 1)
                 activity.runOnUiThread { binding.pageIndicationSeekBar.show() }
 
@@ -64,6 +64,15 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
                     if (!blockPageDependentViewUpdating)
                         binding.updatePageDependentViews(viewModel.dataSet.correspondingPosition(position), position > previousPosition)
                     previousPosition = position
+                }
+
+                override fun onPageScrollStateChanged(state: Int) {
+                    super.onPageScrollStateChanged(state)
+
+                    if (scroller.switchPageTransformer && state == ViewPager.SCROLL_STATE_IDLE){
+                        setCubeOutPageTransformer()
+                        scroller.switchPageTransformer = false
+                    }
                 }
             })
         }
@@ -93,6 +102,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
         private var conductedScrolls = 0
         private val maxScrolls = viewModel.dataSet.lastIndex
         private lateinit var timer: Timer
+        var switchPageTransformer = false
 
         fun invoke(){
             isRunning = true
@@ -125,9 +135,9 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
         fun cancel(onScreenTouch: Boolean) {
             timer.cancel()
             isRunning = false
+            switchPageTransformer = true
             activity.runOnUiThread {
                 crossFade(binding.discardedTextView, binding.autoScrollingTextView, 900L)
-                setCubeOutPageTransformer()
             }
 
             if (onScreenTouch)
