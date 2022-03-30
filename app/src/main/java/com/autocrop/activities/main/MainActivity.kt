@@ -18,6 +18,7 @@ import com.autocrop.UserPreferences
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.ViewBindingHandlingActivity
 import com.autocrop.activities.cropping.CroppingActivity
+import com.autocrop.activities.proceedTransitionAnimation
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
 import com.autocrop.utils.get
@@ -206,8 +207,7 @@ class MainActivity : ViewBindingHandlingActivity<ActivityMainBinding>(ActivityMa
         fun onRequestPermissionsResult(permissions: Array<out String>, grantResults: IntArray) {
             if (grantResults.any { it == PackageManager.PERMISSION_DENIED }) {
                 displaySnackbar(
-                    "You need to permit file reading and\n" +
-                            "writing in order for the app to work",
+                    "You need to permit file reading and\nwriting in order for the app to work",
                     TextColors.NEUTRAL
                 )
                 Timber.i("Not all required permissions were granted; permissions: ${permissions.toList()} | grantResults: ${grantResults.toList()}")

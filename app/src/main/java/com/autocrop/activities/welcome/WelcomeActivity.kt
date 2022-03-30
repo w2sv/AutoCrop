@@ -7,7 +7,7 @@ import android.os.Looper
 import androidx.fragment.app.FragmentActivity
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.utils.android.debuggingModeEnabled
-import com.autocrop.utils.android.restartTransitionAnimation
+import com.autocrop.activities.restartTransitionAnimation
 import com.w2sv.autocrop.R
 import timber.log.Timber
 

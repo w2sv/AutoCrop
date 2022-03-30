@@ -8,7 +8,7 @@ import android.view.View
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.cropping.fragments.CroppingActivityFragment
 import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.utils.android.proceedTransitionAnimation
+import com.autocrop.activities.proceedTransitionAnimation
 import com.autocrop.utils.logBeforehand
 import com.w2sv.autocrop.databinding.ActivityCroppingFragmentRootBinding
 import java.lang.ref.WeakReference

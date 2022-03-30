@@ -15,6 +15,7 @@ import com.autocrop.activities.examination.fragments.singleaction.apptitle.AppTi
 import com.autocrop.activities.examination.fragments.singleaction.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
+import com.autocrop.activities.returnTransitionAnimation
 import com.autocrop.utils.android.*
 import com.autocrop.utils.get
 import com.autocrop.utils.logAfterwards

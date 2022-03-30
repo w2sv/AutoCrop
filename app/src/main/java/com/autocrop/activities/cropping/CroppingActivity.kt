@@ -1,9 +1,6 @@
 package com.autocrop.activities.cropping
 
 import android.content.Intent
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.BackPressHandler
 import com.autocrop.activities.FragmentHostingActivity
@@ -11,7 +8,7 @@ import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.cropping.fragments.cropping.CroppingFragment
 import com.autocrop.activities.cropping.fragments.croppingunsuccessful.CroppingUnsuccessfulFragment
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.utils.android.returnTransitionAnimation
+import com.autocrop.activities.returnTransitionAnimation
 import com.w2sv.autocrop.databinding.ActivityCroppingBinding
 
 class CroppingActivity : FragmentHostingActivity<ActivityCroppingBinding>(ActivityCroppingBinding::inflate) {
