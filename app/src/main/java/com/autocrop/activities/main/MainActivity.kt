@@ -3,6 +3,8 @@ package com.autocrop.activities.main
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Environment
@@ -93,17 +95,6 @@ class MainActivity : ViewBindingHandlingActivity<ActivityMainBinding>(ActivityMa
 
         fun setPFragment() = PFragment(pApplet).setView(binding.canvasContainer, this@MainActivity)
 
-        private val flowfieldDestinationDir: File = if (apiNotNewerThanQ)
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        else
-            /**
-             * Not working for api > Q, such that image simply won't be saved,
-             * however without leading to a crash
-             *
-             * https://stackoverflow.com/questions/36088699/error-open-failed-enoent-no-such-file-or-directory
-             */
-            File(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.path!!)
-
         /**
          * Request permissions if necessary and run [captureFlowField] if granted or
          * directly run [captureFlowField] respectively
@@ -119,14 +110,10 @@ class MainActivity : ViewBindingHandlingActivity<ActivityMainBinding>(ActivityMa
          * display Snackbar comprising directory path file has been saved to
          */
         private fun captureFlowField(){
-            File(flowfieldDestinationDir, "FlowField_${formattedDateTimeString()}.jpg")
-                .canonicalPath
-                .let { destinationFilePath ->
-                    pApplet.canvas.save(destinationFilePath)
-                    Timber.i("Saving flowfield canvas to $destinationFilePath")
-                }
+            pApplet.bitmap().save(this@MainActivity, "FlowField_${formattedDateTimeString()}.jpg")
+
             displaySnackbar(
-                "Saved Flowfield Capture to\n${flowfieldDestinationDir.absolutePath}",
+                "Saved FlowField to pictures",
                 TextColors.SUCCESS,
                 Toast.LENGTH_SHORT
             )

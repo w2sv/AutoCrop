@@ -4,6 +4,7 @@
 
 package com.autocrop.activities.main;
 
+import android.graphics.Bitmap;
 import android.graphics.Point;
 
 import java.util.ArrayList;
@@ -39,6 +40,11 @@ public class FlowFieldPApplet extends PApplet {
     final int FRAMES_PER_FADING_STEP = 3;
 
     PGraphics canvas;
+
+    public Bitmap bitmap(){
+        canvas.loadPixels();
+        return Bitmap.createBitmap(canvas.pixels, canvas.width, canvas.height, Bitmap.Config.ARGB_8888);
+    }
 
     private class FlowField {
         PVector[] vectors;
