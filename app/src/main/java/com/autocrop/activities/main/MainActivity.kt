@@ -71,12 +71,11 @@ class MainActivity : AppCompatActivity() {
         // display cropping saving results if applicable
         nSavedCropsRetriever(intent, IntentIdentifiers.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)?.let {
             val (nSavedCrops, nDeletedScreenshots) = it[0] to it[1]
-            println("jknasdfa $nSavedCrops $nDeletedScreenshots")
 
             displaySnackbar(
                 when (nSavedCrops) {
                     0 -> "Discarded all crops"
-                    else -> "Saved ${nSavedCrops} crop${numberInflection(nSavedCrops)}".run {
+                    else -> "Saved $nSavedCrops crop${numberInflection(nSavedCrops)}".run {
                         if (nDeletedScreenshots != 0)
                             plus(" and deleted\n${listOf(nDeletedScreenshots, "corresponding")[nDeletedScreenshots == nSavedCrops]} screenshot${numberInflection(nDeletedScreenshots)}")
                         else
@@ -99,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        val flowfieldDestinationDir: File = if (apiNotNewerThanQ)
+        private val flowfieldDestinationDir: File = if (apiNotNewerThanQ)
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         else
             /**
@@ -139,7 +138,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun setMenuInflationButtonOnClickListener(){
+    private fun setMenuInflationButtonOnClickListener(){
         binding.menuButton.setOnClickListener { view: View ->
 
             val menuItemToPreferenceKey: Map<Int, String> = mapOf(
@@ -177,7 +176,6 @@ class MainActivity : AppCompatActivity() {
                         persistMenuAfterItemClick(this)
                     }
                 }
-
                 show()
             }
         }
@@ -192,18 +190,15 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
 
-        private val ungrantedPermissions: List<String>
+        private val missingPermissions: List<String>
             get() = requiredPermissions.filter { !permissionGranted(it) }
-
-        val allPermissionsGranted: Boolean
-            get() = ungrantedPermissions.isEmpty()
 
         /**
          * Decorator either running passed function if all permissions granted, otherwise sets
-         * [onAllPermissionsGranted] to passed function and calls [requestRequiredPermissions]
+         * [onAllPermissionsGranted] to passed function and calls [requestPermissions]
          */
         fun requestPermissionsIfNecessaryAndRunFunIfAllGrantedOrRunDirectly(onAllPermissionsGranted: () -> Unit): Unit =
-            ungrantedPermissions.let {
+            missingPermissions.let {
                 if (it.isNotEmpty()){
                     this.onAllPermissionsGranted = onAllPermissionsGranted
                     return requestPermissions(it.toTypedArray(), 420)
@@ -240,7 +235,11 @@ class MainActivity : AppCompatActivity() {
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
-    ) = permissionsHandler.onRequestPermissionsResult(permissions, grantResults)
+    ){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        permissionsHandler.onRequestPermissionsResult(permissions, grantResults)
+    }
 
     //$$$$$$$$$$$$$$$$$$
     // Image Selection $

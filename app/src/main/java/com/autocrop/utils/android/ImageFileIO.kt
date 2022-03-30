@@ -65,10 +65,10 @@ fun Uri.deleteUnderlyingImageFile(context: Context) {
     with(context) {
         contentResolver.delete(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-             "${MediaStore.Images.ImageColumns.DATA}=?",
+             "${MediaStore.Images.ImageColumns._ID}=?",
             arrayOf(file.canonicalPath)
         )
-        notifyGalleryAboutFileModification(this)
+//        notifyGalleryAboutFileModification(this)
         MediaScannerConnection.scanFile(
             this,
             arrayOf(file.toString()),
