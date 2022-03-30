@@ -19,11 +19,11 @@ import com.autocrop.activities.examination.ViewPagerModel
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.*
 import com.autocrop.utils.get
-import com.autocrop.utils.toInt
 import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
 import java.util.*
+import kotlin.properties.Delegates
 
 class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpagerBinding){
 
@@ -34,7 +34,8 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
 
     val scroller = Scroller()
 
-    var blockPageDependentViewUpdating = false
+    private var blockPageDependentViewUpdating = false
+    private var previousPosition: Int
 
     init {
         binding.viewPager.apply {
@@ -45,6 +46,8 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
                 viewModel.startPosition,
                 false
             )
+            previousPosition = viewModel.startPosition
+
 
             if (viewModel.dataSet.size > 1)
                 activity.runOnUiThread { binding.pageIndicationSeekBar.show() }
@@ -59,10 +62,10 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
                     super.onPageSelected(position)
 
                     if (!blockPageDependentViewUpdating)
-                        binding.updatePageDependentViews(viewModel.dataSet.correspondingPosition(position))
+                        binding.updatePageDependentViews(viewModel.dataSet.correspondingPosition(position), position > previousPosition)
+                    previousPosition = position
                 }
             })
-//            setCubeOutPageTransformer()
         }
         // run Scroller if applicable
         if (viewModel.conductAutoScroll)
@@ -75,11 +78,11 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
 
     private fun setCubeOutPageTransformer(){ binding.viewPager.setPageTransformer(CubeOutPageTransformer())}
 
-    private fun ActivityExaminationFragmentViewpagerBinding.updatePageDependentViews(dataSetPosition: Index) =
+    private fun ActivityExaminationFragmentViewpagerBinding.updatePageDependentViews(dataSetPosition: Index, onRightScroll: Boolean = false) =
         activity.runOnUiThread{
             toolbar.pageIndication.updateText(dataSetPosition)
             discardedTextView.updateText(dataSetPosition)
-            pageIndicationSeekBar.update(dataSetPosition)
+            pageIndicationSeekBar.update(dataSetPosition, onRightScroll)
         }
 
     /**

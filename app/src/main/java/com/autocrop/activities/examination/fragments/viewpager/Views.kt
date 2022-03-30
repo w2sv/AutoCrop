@@ -2,7 +2,6 @@ package com.autocrop.activities.examination.fragments.viewpager
 
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.graphics.drawable.GradientDrawable
 import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import android.view.animation.BounceInterpolator
@@ -35,12 +34,14 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
         isEnabled = false  // disables dragging of bar
     }
 
-    fun update(dataSetPosition: Int) {
+    fun update(dataSetPosition: Int, scrolledRight: Boolean) {
         val targetProgress: Int = viewModel.pageIndicationSeekBar.pagePercentage(dataSetPosition, max)
-        val traverseEntireBar: Boolean = (setOf(progress, targetProgress) subtract setOf(0, 100)).isEmpty()
+        val displayBouncingAnimation: Boolean = listOf(progress, targetProgress).let {
+            (it == listOf(0, 100) && !scrolledRight) || (it == listOf(100, 0) && scrolledRight)
+        }
 
         with(ObjectAnimator.ofInt(this,"progress", targetProgress)) {
-             val (_duration, _interpolator) = if (traverseEntireBar) 400L to BounceInterpolator() else 100L to DecelerateInterpolator()
+             val (_duration, _interpolator) = if (displayBouncingAnimation) 400L to BounceInterpolator() else 100L to DecelerateInterpolator()
             interpolator = _interpolator
             duration = _duration
             start()
@@ -65,14 +66,13 @@ class DiscardedTextView(context: Context, attr: AttributeSet):
     PageDependentTextView(context, attr, R.string.discarded) {
 
     override fun updateText(viewPagerDataSetPosition: Int) {
-        viewModel.dataSet[viewPagerDataSetPosition].let { cropBundle ->
+        with(viewModel.dataSet[viewPagerDataSetPosition]) {
             text = SpannableStringBuilder()
                 .append(getString(0))
-                .bold { append(" ${cropBundle.discardedPercentage}%") }
+                .bold { append(" ${discardedPercentage}%") }
                 .append("=")
-                .bold { append("${cropBundle.approximateDiscardedFileSize}kb") }
+                .bold { append("${approximateDiscardedFileSize}kb") }
         }
-        listOf(viewModel.dataSet[viewPagerDataSetPosition].discardedPercentage, viewModel.dataSet[viewPagerDataSetPosition].approximateDiscardedFileSize)
     }
     override fun formatArgs(viewPagerDataSetPosition: Int): List<Int> = listOf()
 }
