@@ -13,6 +13,10 @@ class CurrentImageNumberTextView(context: Context, attr: AttributeSet?): AppComp
         ViewModelProvider(context as CroppingActivity)[CroppingActivityViewModel::class.java]
     }
 
+    init {
+        updateText(0)
+    }
+
     fun updateText(currentImageNumber: Int){
         text = context.resources.getString(R.string.fracture, currentImageNumber, viewModel.nSelectedImages)
     }

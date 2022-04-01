@@ -20,15 +20,6 @@ class Cropper(
         : AsyncTask<Uri, Pair<Int, Int>, Void?>() {
 
     /**
-     * Initializes imageOrdinalTextView text
-     */
-    override fun onPreExecute() {
-        super.onPreExecute()
-        currentImageNumberTextView.forceUnwrapped().updateText(0)
-    }
-
-
-    /**
     * Loads images represented by uris, crops and binds them to
      * [CroppingActivityViewModel.cropBundles] if successful;
      * Publishes incremented progress values to [onProgressUpdate]

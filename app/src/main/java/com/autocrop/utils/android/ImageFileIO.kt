@@ -16,7 +16,7 @@ import java.io.OutputStream
 const val IMAGE_MIME_TYPE = "image/*"
 
 /**
- * References:
+ * @see
  *      https://stackoverflow.com/a/10124040
  *      https://stackoverflow.com/a/59536115
  */
@@ -55,10 +55,12 @@ private fun imageFileUriToOutputStreamPostQ(fileName: String, contentResolver: C
 const val FILE_PATH_COLUMN_NAME = MediaStore.Images.Media.DATA
 
 /**
- * References:
+ * @see
  *      https://stackoverflow.com/questions/10716642/android-deleting-an-image?noredirect=1&lq=1
  *      https://developer.android.com/training/data-storage/use-cases#modify-delete-media
  *      https://stackoverflow.com/a/12478822/12083276
+ *
+ * @return flag indicating whether image was successfully deleted
  */
 fun Uri.deleteUnderlyingImageFile(contentResolver: ContentResolver): Boolean = contentResolver.delete(
     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -67,7 +69,8 @@ fun Uri.deleteUnderlyingImageFile(contentResolver: ContentResolver): Boolean = c
 ) != 0.also{ Timber.i(if (it == 0) "Couldn't delete screenshot" else "Deleted screenshot") }
 
 /**
- * Reference: https://stackoverflow.com/a/16511111/12083276
+ * @see
+ *      https://stackoverflow.com/a/16511111/12083276
  *
  * Alternative solution: https://stackoverflow.com/a/38568666/12083276
  */

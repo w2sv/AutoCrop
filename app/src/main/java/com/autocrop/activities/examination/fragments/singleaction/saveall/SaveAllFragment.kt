@@ -8,6 +8,11 @@ import com.w2sv.autocrop.databinding.ActivityExaminationFragmentSaveallBinding
 class SaveAllFragment :
     SingleActionExaminationActivityFragment<ActivityExaminationFragmentSaveallBinding>(ActivityExaminationFragmentSaveallBinding::inflate) {
 
+    /**
+     * Save all remaining crops and delete corresponding screenshots if applicable,
+     * increment respective counters within [viewModel]
+     * invoke AppTitleFragment
+     */
     override fun runAction() {
         CropSaver(UserPreferences.deleteScreenshotsOnSaveAll, activity.contentResolver) {
 
