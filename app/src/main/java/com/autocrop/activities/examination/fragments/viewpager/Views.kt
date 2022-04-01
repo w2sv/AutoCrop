@@ -7,10 +7,10 @@ import android.util.AttributeSet
 import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.bold
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.utils.android.AbstractViewModelRetriever
+import com.autocrop.utils.android.ExtendedTextView
 import com.autocrop.utils.android.ViewModelRetriever
 import com.w2sv.autocrop.R
 
@@ -41,8 +41,8 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
     }
 }
 
-abstract class PageDependentTextView(context: Context, attr: AttributeSet, private val stringId: Int):
-    AppCompatTextView(context, attr),
+abstract class PageDependentTextView(context: Context, attr: AttributeSet, stringId: Int):
+    ExtendedTextView(context, attr, stringId),
     ViewModelRetriever<ViewPagerFragmentViewModel> by ViewPagerViewModelRetriever(context) {
 
     init{
@@ -50,7 +50,7 @@ abstract class PageDependentTextView(context: Context, attr: AttributeSet, priva
     }
 
     abstract fun updateText(viewPagerDataSetPosition: Int)
-    protected fun getString(viewPagerDataSetPosition: Int): String = context.resources.getString(stringId, *formatArgs(viewPagerDataSetPosition).toTypedArray())
+    protected fun getString(viewPagerDataSetPosition: Int): String = super.getString().format(*formatArgs(viewPagerDataSetPosition).toTypedArray())
     protected abstract fun formatArgs(viewPagerDataSetPosition: Int): List<Int>
 }
 

@@ -2,19 +2,14 @@ package com.autocrop.activities.cropping.fragments.cropping
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.lifecycle.ViewModelProvider
-import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.cropping.CroppingActivityViewModel
-import com.autocrop.utils.android.AbstractViewModelRetriever
+import com.autocrop.activities.cropping.fragments.CroppingActivityViewModelRetriever
+import com.autocrop.utils.android.ExtendedTextView
 import com.autocrop.utils.android.ViewModelRetriever
 import com.w2sv.autocrop.R
 
-private class CroppingActivityViewModelRetriever(context: Context):
-    AbstractViewModelRetriever<CroppingActivityViewModel, CroppingActivity>(context, CroppingActivityViewModel::class.java)
-
-class CurrentImageNumberTextView(context: Context, attr: AttributeSet?):
-    AppCompatTextView(context, attr),
+class CurrentImageNumberTextView(context: Context, attr: AttributeSet):
+    ExtendedTextView(context, attr, R.string.fracture),
     ViewModelRetriever<CroppingActivityViewModel> by CroppingActivityViewModelRetriever(context) {
 
     init {
@@ -22,6 +17,6 @@ class CurrentImageNumberTextView(context: Context, attr: AttributeSet?):
     }
 
     fun updateText(currentImageNumber: Int){
-        text = context.resources.getString(R.string.fracture, currentImageNumber, viewModel.nSelectedImages)
+        text = getString().format(currentImageNumber, viewModel.nSelectedImages)
     }
 }
