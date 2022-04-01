@@ -9,25 +9,17 @@ import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.bold
-import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.activities.examination.ExaminationViewModel
-import com.autocrop.activities.examination.ViewPagerModel
+import com.autocrop.utils.android.AbstractViewModelRetriever
+import com.autocrop.utils.android.ViewModelRetriever
 import com.w2sv.autocrop.R
 
-interface ViewModelRetriever{
-    val viewModel: ViewPagerModel
-}
-
-class ViewModelRetrieverImplementation(context: Context): ViewModelRetriever {
-    override val viewModel: ViewPagerModel by lazy {
-        ViewModelProvider(context as ExaminationActivity)[ExaminationViewModel::class.java].viewPager
-    }
-}
+private class ViewPagerViewModelRetriever(context: Context):
+    AbstractViewModelRetriever<ViewPagerFragmentViewModel, ExaminationActivity>(context, ViewPagerFragmentViewModel::class.java)
 
 class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
     AppCompatSeekBar(context, attr),
-    ViewModelRetriever by ViewModelRetrieverImplementation(context) {
+    ViewModelRetriever<ViewPagerFragmentViewModel> by ViewPagerViewModelRetriever(context) {
 
     init {
         progress = viewModel.pageIndicationSeekBar.pagePercentage(0, max)
@@ -51,7 +43,7 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
 
 abstract class PageDependentTextView(context: Context, attr: AttributeSet, private val stringId: Int):
     AppCompatTextView(context, attr),
-    ViewModelRetriever by ViewModelRetrieverImplementation(context) {
+    ViewModelRetriever<ViewPagerFragmentViewModel> by ViewPagerViewModelRetriever(context) {
 
     init{
         updateText(0)

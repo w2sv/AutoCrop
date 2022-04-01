@@ -6,12 +6,16 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.cropping.CroppingActivityViewModel
+import com.autocrop.utils.android.AbstractViewModelRetriever
+import com.autocrop.utils.android.ViewModelRetriever
 import com.w2sv.autocrop.R
 
-class CurrentImageNumberTextView(context: Context, attr: AttributeSet?): AppCompatTextView(context, attr){
-    private val viewModel: CroppingActivityViewModel by lazy {
-        ViewModelProvider(context as CroppingActivity)[CroppingActivityViewModel::class.java]
-    }
+private class CroppingActivityViewModelRetriever(context: Context):
+    AbstractViewModelRetriever<CroppingActivityViewModel, CroppingActivity>(context, CroppingActivityViewModel::class.java)
+
+class CurrentImageNumberTextView(context: Context, attr: AttributeSet?):
+    AppCompatTextView(context, attr),
+    ViewModelRetriever<CroppingActivityViewModel> by CroppingActivityViewModelRetriever(context) {
 
     init {
         updateText(0)

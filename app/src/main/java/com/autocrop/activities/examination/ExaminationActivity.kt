@@ -28,7 +28,7 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
         lateinit var cropBundles: MutableList<CropBundle>
     }
 
-    lateinit var viewModel: ExaminationViewModel
+    lateinit var sharedViewModel: ExaminationViewModel
 
     private val nDismissedImagesRetriever = IntentExtraRetriever<Int>()
 
@@ -40,13 +40,13 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
         fragmentContainerViewId = binding.layout.id
 
         //----------retrieve ViewModel
-        viewModel = ViewModelProvider(
+        sharedViewModel = ViewModelProvider(
             this,
             ExaminationViewModelFactory(nDismissedImages = nDismissedImagesRetriever(intent, IntentIdentifiers.N_DISMISSED_IMAGES) ?: 0)
         )[ExaminationViewModel::class.java]
 
         // ---------display Snackbar
-        with(viewModel.nDismissedImages) {
+        with(sharedViewModel.nDismissedImages) {
             if (!equals(0))
                 displaySnackbar(
                     "Couldn't find cropping bounds for\n$this image${numberInflection(this)}",
@@ -96,8 +96,8 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
             ).putExtra(
                 IntentIdentifiers.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS,
                 intArrayOf(
-                    viewModel.nSavedCrops,
-                    viewModel.nDeletedCrops
+                    sharedViewModel.nSavedCrops,
+                    sharedViewModel.nDeletedScreenshots
                 )
             )
         )

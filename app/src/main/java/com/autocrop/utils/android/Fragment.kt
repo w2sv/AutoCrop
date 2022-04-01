@@ -11,8 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewbinding.ViewBinding
 
-abstract class ExtendedFragment<A: Activity, M: ViewModel>(viewModelClass: Class<M>): Fragment(){
-    protected val viewModel: M by lazy { ViewModelProvider(activity as ViewModelStoreOwner)[viewModelClass] }
+abstract class ExtendedFragment<A: Activity, M: ViewModel>(viewModelClass: Class<M>):
+    Fragment(){
+
+    protected val sharedViewModel: M by lazy { ViewModelProvider(activity as ViewModelStoreOwner)[viewModelClass] }
 
     /**
      * Retyped [androidx.fragment.app.Fragment.requireActivity]

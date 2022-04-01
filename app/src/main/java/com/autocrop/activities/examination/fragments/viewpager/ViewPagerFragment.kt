@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.autocrop.UserPreferences
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
@@ -17,7 +18,7 @@ class ViewPagerFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewPagerHandler = ViewPagerHandler(binding)
+        viewPagerHandler = ViewPagerHandler(binding, ViewModelProvider(this)[ViewPagerFragmentViewModel::class.java])
         setToolbarButtonOnClickListeners()
     }
 

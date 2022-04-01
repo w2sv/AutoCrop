@@ -22,13 +22,13 @@ class CroppingFragment
         super.onViewCreated(view, savedInstanceState)
 
         cropper = Cropper(
-            viewModel,
+            sharedViewModel,
             WeakReference(binding.croppingProgressBar),
             WeakReference(binding.croppingCurrentImageNumberTextView),
             requireActivity().contentResolver,
             ::onTaskCompleted
         ).apply {
-            execute(*viewModel.uris.toTypedArray())
+            execute(*sharedViewModel.uris.toTypedArray())
         }
     }
 
@@ -37,7 +37,7 @@ class CroppingFragment
      * of the selected images has been successfully cropped
      */
     private fun onTaskCompleted() = logBeforehand("Async Cropping task finished") {
-        if (viewModel.cropBundles.isNotEmpty())
+        if (sharedViewModel.cropBundles.isNotEmpty())
             startExaminationActivity()
         else
             // delay briefly to assure progress bar having reached 100% before UI change
@@ -52,13 +52,13 @@ class CroppingFragment
     }
 
     private fun startExaminationActivity(){
-        ExaminationActivity.cropBundles = viewModel.cropBundles
+        ExaminationActivity.cropBundles = sharedViewModel.cropBundles
 
         requireActivity().let { activity ->
             startActivity(
                 Intent(activity, ExaminationActivity::class.java).putExtra(
                     IntentIdentifiers.N_DISMISSED_IMAGES,
-                    viewModel.nDismissedImages
+                    sharedViewModel.nDismissedImages
                 )
             )
             activity.proceedTransitionAnimation()

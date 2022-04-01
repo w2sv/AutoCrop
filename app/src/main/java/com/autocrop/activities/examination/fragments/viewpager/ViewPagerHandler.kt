@@ -16,7 +16,7 @@ import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.UserPreferences
 import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.activities.examination.ViewPagerModel
+import com.autocrop.activities.examination.ExaminationViewModel
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.*
 import com.autocrop.utils.get
@@ -25,12 +25,15 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
 import java.util.*
 
-class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpagerBinding){
+class ViewPagerHandler(
+    private val binding: ActivityExaminationFragmentViewpagerBinding,
+    private val viewModel: ViewPagerFragmentViewModel
+){
 
     private val activity: ExaminationActivity = binding.viewPager.context as ExaminationActivity
 
-    private val viewModel: ViewPagerModel
-        get() = activity.viewModel.viewPager
+    private val sharedViewModel: ExaminationViewModel
+        get() = activity.sharedViewModel
 
     val scroller = Scroller()
 
@@ -208,7 +211,7 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
             holder.cropView.setImageBitmap(viewModel.dataSet.atCorrespondingPosition(position).crop)
         }
 
-        override fun getItemCount(): Int = listOf(1, ViewPagerModel.MAX_VIEWS)[viewModel.dataSet.size > 1]
+        override fun getItemCount(): Int = listOf(1, ViewPagerFragmentViewModel.MAX_VIEWS)[viewModel.dataSet.size > 1]
 
         /**
          * Increment nSavedCrops if applicable & triggers activity exit if cropBundleList
@@ -216,11 +219,8 @@ class ViewPagerHandler(private val binding: ActivityExaminationFragmentViewpager
          * selected for, from pager
          */
         private fun onCropProcedureAction(dataSetPosition: Index, incrementNSavedCrops: Boolean){
-            if (incrementNSavedCrops){
-                activity.viewModel.nSavedCrops++
-                if (UserPreferences.deleteIndividualScreenshot)
-                    activity.viewModel.nDeletedCrops++
-            }
+            if (incrementNSavedCrops)
+                sharedViewModel.incrementImageFileIOCounters(1, deletedScreenshots = UserPreferences.deleteIndividualScreenshot)
 
             when(viewModel.dataSet.size){
                 1 -> return activity.run { replaceCurrentFragmentWith(appTitleFragment, true) }
