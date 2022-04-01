@@ -17,12 +17,12 @@ class CroppingUnsuccessfulTextView(context: Context, attr: AttributeSet):
         updateText(viewModel.nSelectedImages > 1)
     }
 
-    private fun updateText(multipleScreenshotsAttempted: Boolean){
+    private fun updateText(attemptedMultipleScreenshots: Boolean){
         text = getString().format(
             *listOf(
                 listOf("", ""),
                 listOf(" any of", "s")
-            )[multipleScreenshotsAttempted].toTypedArray()
+            )[attemptedMultipleScreenshots].toTypedArray()
         )
     }
 }
