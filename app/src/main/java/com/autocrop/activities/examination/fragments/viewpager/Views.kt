@@ -12,6 +12,7 @@ import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.utils.android.AbstractViewModelRetriever
 import com.autocrop.utils.android.ExtendedTextView
 import com.autocrop.utils.android.ViewModelRetriever
+import com.autocrop.utils.android.show
 import com.w2sv.autocrop.R
 
 private class ViewPagerViewModelRetriever(context: Context):
@@ -22,8 +23,11 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
     ViewModelRetriever<ViewPagerFragmentViewModel> by ViewPagerViewModelRetriever(context) {
 
     init {
-        progress = viewModel.pageIndicationSeekBar.pagePercentage(0, max)
-        isEnabled = false  // disables dragging of bar
+        if (viewModel.dataSet.size > 1){
+            show()
+            progress = viewModel.pageIndicationSeekBar.pagePercentage(0, max)
+            isEnabled = false  // disables dragging of bar
+        }
     }
 
     fun update(dataSetPosition: Int, scrolledRight: Boolean) {
