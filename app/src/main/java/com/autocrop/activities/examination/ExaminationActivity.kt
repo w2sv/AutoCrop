@@ -16,7 +16,6 @@ import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.utils.android.*
-import com.autocrop.utils.get
 import com.autocrop.utils.logAfterwards
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationBinding
@@ -56,10 +55,10 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
     fun replaceCurrentFragmentWith(fragment: Fragment, flipRight: Boolean) {
         super.replaceCurrentFragmentWith(
             fragment,
-            arrayOf(
-                R.animator.card_flip_left_in to R.animator.card_flip_left_out,
+            if (flipRight)
+                R.animator.card_flip_left_in to R.animator.card_flip_left_out
+            else
                 R.animator.card_flip_right_in to R.animator.card_flip_right_out
-            )[flipRight]
         )
     }
 

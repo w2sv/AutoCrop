@@ -6,7 +6,6 @@ import com.autocrop.activities.cropping.CroppingActivityViewModel
 import com.autocrop.activities.cropping.fragments.CroppingActivityViewModelRetriever
 import com.autocrop.utils.android.ExtendedTextView
 import com.autocrop.utils.android.ViewModelRetriever
-import com.autocrop.utils.get
 import com.w2sv.autocrop.R
 
 class CroppingUnsuccessfulTextView(context: Context, attr: AttributeSet):
@@ -19,10 +18,8 @@ class CroppingUnsuccessfulTextView(context: Context, attr: AttributeSet):
 
     private fun updateText(attemptedMultipleScreenshots: Boolean){
         text = getString().format(
-            *listOf(
-                listOf("", ""),
-                listOf(" any of", "s")
-            )[attemptedMultipleScreenshots].toTypedArray()
+            *(if (attemptedMultipleScreenshots) listOf("", "") else listOf(" any of", "s"))
+                .toTypedArray()
         )
     }
 }

@@ -14,12 +14,11 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
-import com.autocrop.global.UserPreferences
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
+import com.autocrop.global.UserPreferences
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.*
-import com.autocrop.utils.get
 import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
@@ -211,7 +210,7 @@ class ViewPagerHandler(
             holder.cropView.setImageBitmap(viewModel.dataSet.atCorrespondingPosition(position).crop)
         }
 
-        override fun getItemCount(): Int = listOf(1, ViewPagerFragmentViewModel.MAX_VIEWS)[viewModel.dataSet.size > 1]
+        override fun getItemCount(): Int = if (viewModel.dataSet.size > 1) ViewPagerFragmentViewModel.MAX_VIEWS else 1
 
         /**
          * Increment nSavedCrops if applicable & triggers activity exit if cropBundleList

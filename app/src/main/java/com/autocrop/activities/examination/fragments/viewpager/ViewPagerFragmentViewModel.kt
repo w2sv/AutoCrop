@@ -3,11 +3,10 @@ package com.autocrop.activities.examination.fragments.viewpager
 import androidx.lifecycle.ViewModel
 import com.autocrop.CropBundle
 import com.autocrop.CropBundleList
-import com.autocrop.global.UserPreferences
 import com.autocrop.activities.examination.ExaminationActivity
+import com.autocrop.global.UserPreferences
 import com.autocrop.utils.Index
 import com.autocrop.utils.at
-import com.autocrop.utils.get
 import com.autocrop.utils.rotated
 import java.util.*
 import kotlin.math.roundToInt
@@ -50,7 +49,7 @@ class ViewPagerDataSet : CropBundleList by ExaminationActivity.cropBundles {
             tailHash = at(position - 1).hashCode()
             return position.rotated(-1, sizePostRemoval) to viewPosition - 1
         }
-        return listOf(position, 0)[position == sizePostRemoval] to viewPosition + 1
+        return (if (position == sizePostRemoval) 0 else position) to viewPosition + 1
     }
 
     private fun removingAtTail(removePosition: Index): Boolean = removePosition == tailPosition

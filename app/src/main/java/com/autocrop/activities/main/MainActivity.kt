@@ -19,7 +19,6 @@ import com.autocrop.global.UserPreferences
 import com.autocrop.uicontroller.activity.ViewBindingHandlingActivity
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
-import com.autocrop.utils.get
 import com.autocrop.utils.setSpanHolistically
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityMainBinding
@@ -75,7 +74,7 @@ class MainActivity : ViewBindingHandlingActivity<ActivityMainBinding>() {
                     0 -> "Discarded all crops"
                     else -> "Saved $nSavedCrops crop${numberInflection(nSavedCrops)}".run {
                         if (nDeletedScreenshots != 0)
-                            plus(" and deleted\n${listOf(nDeletedScreenshots, "corresponding")[nDeletedScreenshots == nSavedCrops]} screenshot${numberInflection(nDeletedScreenshots)}")
+                            plus(" and deleted\n${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} screenshot${numberInflection(nDeletedScreenshots)}")
                         else
                             this
                     }
