@@ -18,8 +18,6 @@ class CroppingActivity : FragmentHostingActivity<ActivityCroppingBinding>(Activi
     val croppingUnsuccessfulFragment: CroppingUnsuccessfulFragment by lazy{ CroppingUnsuccessfulFragment() }
 
     override fun onCreateCore() {
-        fragmentContainerViewId = binding.layout.id
-
         viewModel = ViewModelProvider(
             this,
             CroppingActivityViewModelFactory(

@@ -37,8 +37,6 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
     val appTitleFragment: AppTitleFragment by lazy { AppTitleFragment() }
 
     override fun onCreateCore() {
-        fragmentContainerViewId = binding.layout.id
-
         //----------retrieve ViewModel
         sharedViewModel = ViewModelProvider(
             this,
@@ -51,7 +49,7 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
                 displaySnackbar(
                     "Couldn't find cropping bounds for\n$this image${numberInflection(this)}",
                     TextColors.URGENT,
-                    1800
+                    2500
                 )
         }
     }
@@ -67,7 +65,7 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
     }
 
     /**
-     * Block backPress throughout the process of saving all crops,
+     * Block backPress throughout if either [saveAllFragment] or [appTitleFragment] showing,
      * otherwise return to MainActivity after confirmation
      */
     private val handleBackPress = BackPressHandler(this, "Tap again to return to main screen"){
@@ -85,9 +83,6 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
         else -> handleBackPress()
     }
 
-    /**
-     * Clears remaining cropBundle elements contained within cropBundleList
-     */
     fun returnToMainActivity(){
         startActivity(
             Intent(
@@ -104,6 +99,9 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
         returnTransitionAnimation()
     }
 
+    /**
+     * Clear [cropBundles]
+     */
     override fun onStop() = logAfterwards("Cleared cropBundles") {
         super.onStop()
 

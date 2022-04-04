@@ -2,30 +2,46 @@ package com.autocrop.activities
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import kotlin.properties.Delegates
+import com.autocrop.utils.reflectField
+import com.autocrop.utils.reflectMethod
 
 abstract class FragmentHostingActivity<VB: ViewBinding>(inflateViewBinding: (LayoutInflater) -> VB)
     : ViewBindingHandlingActivity<VB>(inflateViewBinding) {
 
+    /**
+     * Fragment being launched before exiting [onCreateCore]
+     */
     abstract val rootFragment: Fragment
-    protected var fragmentContainerViewId by Delegates.notNull<Int>()  // TODO: retrieve by reflection and thus remove need to be set by child class
 
+    /**
+     * Retrieved bmo reflection from view binding;
+     *
+     * Imposes the need for activity layout to carry the id "layout"
+     */
+    private val layoutId: Int by lazy {
+        binding.reflectField<ViewGroup>("layout").reflectMethod("id")
+    }
+
+    /**
+     * Run [onCreateCore] and thereupon [launchRootFragment] if applicable
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onCreateCore()
-        launchRootFragment(savedInstanceState)
+        if (savedInstanceState == null)
+            launchRootFragment()
     }
 
     protected abstract fun onCreateCore()
 
-    private fun launchRootFragment(savedInstanceState: Bundle?){
-        if (savedInstanceState == null)
-            supportFragmentManager
-                .beginTransaction()
-                .add(fragmentContainerViewId, rootFragment)
-                .commit()
+    private fun launchRootFragment(){
+        supportFragmentManager
+            .beginTransaction()
+            .add(layoutId, rootFragment)
+            .commit()
     }
 
     fun replaceCurrentFragmentWith(fragment: Fragment, animationIds: Pair<Int, Int>? = null){
@@ -36,7 +52,7 @@ abstract class FragmentHostingActivity<VB: ViewBinding>(inflateViewBinding: (Lay
                     setCustomAnimations(it.first, it.second)
                 } ?: this
             }
-            .replace(fragmentContainerViewId, fragment)
+            .replace(layoutId, fragment)
             .setReorderingAllowed(true)
             .commit()
     }

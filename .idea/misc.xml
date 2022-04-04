@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/layout/activity_cropping.xml" value="0.25679347826086957" />
         <entry key="app/src/main/res/layout/activity_examination_fragment_viewpager.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/toolbar_examination_activity.xml" value="0.213768115942029" />
       </map>
