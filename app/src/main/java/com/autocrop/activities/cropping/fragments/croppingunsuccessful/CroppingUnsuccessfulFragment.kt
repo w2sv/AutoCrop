@@ -8,7 +8,7 @@ import com.autocrop.activities.cropping.fragments.CroppingActivityFragment
 import com.w2sv.autocrop.databinding.ActivityCroppingFragmentCroppingUnsuccessfulBinding
 
 class CroppingUnsuccessfulFragment
-    : CroppingActivityFragment<ActivityCroppingFragmentCroppingUnsuccessfulBinding>(ActivityCroppingFragmentCroppingUnsuccessfulBinding::inflate) {
+    : CroppingActivityFragment<ActivityCroppingFragmentCroppingUnsuccessfulBinding>() {
 
     private val mainActivityReturnHandler = Handler(Looper.getMainLooper())
 
@@ -16,7 +16,7 @@ class CroppingUnsuccessfulFragment
         super.onViewCreated(view, savedInstanceState)
         
         mainActivityReturnHandler.postDelayed(
-            { activity.returnToMainActivity() },
+            { typedActivity.returnToMainActivity() },
             3000
         )
     }

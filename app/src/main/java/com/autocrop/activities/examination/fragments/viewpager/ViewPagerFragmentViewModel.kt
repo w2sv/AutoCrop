@@ -3,7 +3,7 @@ package com.autocrop.activities.examination.fragments.viewpager
 import androidx.lifecycle.ViewModel
 import com.autocrop.CropBundle
 import com.autocrop.CropBundleList
-import com.autocrop.UserPreferences
+import com.autocrop.global.UserPreferences
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.utils.Index
 import com.autocrop.utils.at

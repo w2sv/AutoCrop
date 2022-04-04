@@ -5,16 +5,16 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.cropping.fragments.CroppingActivityFragment
 import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.activities.proceedTransitionAnimation
 import com.autocrop.utils.logBeforehand
 import com.w2sv.autocrop.databinding.ActivityCroppingFragmentRootBinding
 import java.lang.ref.WeakReference
 
 class CroppingFragment
-    : CroppingActivityFragment<ActivityCroppingFragmentRootBinding>(ActivityCroppingFragmentRootBinding::inflate) {
+    : CroppingActivityFragment<ActivityCroppingFragmentRootBinding>() {
 
     lateinit var cropper: Cropper
 
@@ -43,7 +43,7 @@ class CroppingFragment
             // delay briefly to assure progress bar having reached 100% before UI change
             Handler(Looper.getMainLooper()).postDelayed(
                 {
-                    with(activity){
+                    with(typedActivity){
                         replaceCurrentFragmentWith(croppingUnsuccessfulFragment)
                     }
                 },
@@ -61,7 +61,7 @@ class CroppingFragment
                     sharedViewModel.nDismissedImages
                 )
             )
-            activity.proceedTransitionAnimation()
+            ActivityTransitions.PROCEED(activity)
         }
     }
 }

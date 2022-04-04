@@ -6,7 +6,7 @@ import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.FlakyTest
-import com.autocrop.UserPreferences
+import com.autocrop.global.UserPreferences
 import com.w2sv.autocrop.R
 import de.mannodermaus.junit5.ActivityScenarioExtension
 import org.hamcrest.CoreMatchers.allOf

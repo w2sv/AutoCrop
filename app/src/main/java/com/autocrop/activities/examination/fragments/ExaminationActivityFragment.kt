@@ -3,8 +3,9 @@ package com.autocrop.activities.examination.fragments
 import androidx.viewbinding.ViewBinding
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
-import com.autocrop.utils.android.BindingHandlingFragment
-import com.autocrop.utils.android.InflateViewBinding
+import com.autocrop.uicontroller.fragment.ViewBindingHandlingFragment
 
-abstract class ExaminationActivityFragment<VB: ViewBinding>(inflateViewBinding: InflateViewBinding<VB>)
-    : BindingHandlingFragment<ExaminationActivity, ExaminationViewModel, VB>(ExaminationViewModel::class.java, inflateViewBinding)
+abstract class ExaminationActivityFragment<VB: ViewBinding>
+    : ViewBindingHandlingFragment<ExaminationActivity, ExaminationViewModel, VB>(
+        ExaminationViewModel::class.java
+    )

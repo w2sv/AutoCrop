@@ -6,12 +6,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.UserPreferences
+import com.autocrop.global.UserPreferences
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
 
 class ViewPagerFragment
-    : ExaminationActivityFragment<ActivityExaminationFragmentViewpagerBinding>(ActivityExaminationFragmentViewpagerBinding::inflate){
+    : ExaminationActivityFragment<ActivityExaminationFragmentViewpagerBinding>(){
 
     private lateinit var viewPagerHandler: ViewPagerHandler
 
@@ -37,7 +37,7 @@ class ViewPagerFragment
             ifScrollerNotRunning {
                 CropEntiretyActionConfirmationDialogFragment("Save all crops?", true)
                 {
-                    with(activity){
+                    with(typedActivity){
                         replaceCurrentFragmentWith(saveAllFragment, true)
                     }
                 }
@@ -49,7 +49,7 @@ class ViewPagerFragment
         binding.toolbar.discardAllButton.setOnClickListener {
             ifScrollerNotRunning {
                 CropEntiretyActionConfirmationDialogFragment("Discard all crops?", false)
-                { with(activity){replaceCurrentFragmentWith(appTitleFragment, false)} }
+                { with(typedActivity){replaceCurrentFragmentWith(appTitleFragment, false)} }
                     .show(childFragmentManager, "DISCARD_ALL_BUTTON_CONFIRMATION_DIALOG")
             }
         }
@@ -67,7 +67,9 @@ class CropEntiretyActionConfirmationDialogFragment(
             .run {
                 setTitle(title)
                 if (addDeleteCorrespondingScreenshotsCheckbox)
-                    setMultiChoiceItems(arrayOf("Delete corresponding screenshots"), booleanArrayOf(UserPreferences.deleteScreenshotsOnSaveAll)){_, _, _ -> UserPreferences.toggle(UserPreferences.Keys.deleteScreenshotsOnSaveAll)}
+                    setMultiChoiceItems(arrayOf("Delete corresponding screenshots"), booleanArrayOf(
+                        UserPreferences.deleteScreenshotsOnSaveAll)){ _, _, _ -> UserPreferences.toggle(
+                        UserPreferences.Keys.deleteScreenshotsOnSaveAll)}
                 setNegativeButton("No") { _, _ -> }
                 setPositiveButton("Yes") { _, _ -> positiveButtonOnClickListener() }
             }

@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.singleaction.saveall
+package com.autocrop.activities.examination.fragments.saveall
 
 import android.content.ContentResolver
 import android.os.AsyncTask

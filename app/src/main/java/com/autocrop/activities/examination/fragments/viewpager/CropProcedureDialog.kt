@@ -8,7 +8,7 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import com.autocrop.UserPreferences
+import com.autocrop.global.UserPreferences
 import com.autocrop.activities.examination.saveCropAndDeleteScreenshotIfApplicable
 
 /**
@@ -25,7 +25,9 @@ class CropProcedureDialog(
         AlertDialog.Builder(activity).run {
             setTitle("Save crop?")
 
-            setMultiChoiceItems(arrayOf("Delete corresponding screenshot"), booleanArrayOf(UserPreferences.deleteIndividualScreenshot)){_, _, _ -> UserPreferences.toggle(UserPreferences.Keys.deleteIndividualScreenshot) }
+            setMultiChoiceItems(arrayOf("Delete corresponding screenshot"), booleanArrayOf(
+                UserPreferences.deleteIndividualScreenshot)){ _, _, _ -> UserPreferences.toggle(
+                UserPreferences.Keys.deleteIndividualScreenshot) }
             setNegativeButton("No, discard") { _, _ -> onCropAction(false)}
             setPositiveButton("Yes") { _, _ ->
                 CropProcessor().execute(IOParameters(cropWithUri.first, cropWithUri.second, UserPreferences.deleteIndividualScreenshot, contentResolver))

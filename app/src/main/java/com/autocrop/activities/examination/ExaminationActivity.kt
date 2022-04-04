@@ -8,21 +8,20 @@ import android.content.Intent
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.CropBundle
-import com.autocrop.activities.BackPressHandler
-import com.autocrop.activities.FragmentHostingActivity
+import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifiers
-import com.autocrop.activities.examination.fragments.singleaction.apptitle.AppTitleFragment
-import com.autocrop.activities.examination.fragments.singleaction.saveall.SaveAllFragment
+import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
+import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.activities.returnTransitionAnimation
+import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.utils.android.*
 import com.autocrop.utils.get
 import com.autocrop.utils.logAfterwards
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 
-class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(ActivityExaminationBinding::inflate) {
+class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>() {
 
     companion object{
         lateinit var cropBundles: MutableList<CropBundle>
@@ -96,7 +95,7 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
                 )
             )
         )
-        returnTransitionAnimation()
+        ActivityTransitions.RETURN(this)
     }
 
     /**

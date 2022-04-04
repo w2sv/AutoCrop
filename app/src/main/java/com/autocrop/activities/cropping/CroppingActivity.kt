@@ -2,16 +2,16 @@ package com.autocrop.activities.cropping
 
 import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.activities.BackPressHandler
-import com.autocrop.activities.FragmentHostingActivity
+import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.cropping.fragments.cropping.CroppingFragment
 import com.autocrop.activities.cropping.fragments.croppingunsuccessful.CroppingUnsuccessfulFragment
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.activities.returnTransitionAnimation
+import com.autocrop.uicontroller.activity.FragmentHostingActivity
+import com.autocrop.utils.android.BackPressHandler
 import com.w2sv.autocrop.databinding.ActivityCroppingBinding
 
-class CroppingActivity : FragmentHostingActivity<ActivityCroppingBinding>(ActivityCroppingBinding::inflate) {
+class CroppingActivity : FragmentHostingActivity<ActivityCroppingBinding>() {
     private lateinit var viewModel: CroppingActivityViewModel
 
     override val rootFragment: CroppingFragment by lazy{ CroppingFragment() }
@@ -30,7 +30,7 @@ class CroppingActivity : FragmentHostingActivity<ActivityCroppingBinding>(Activi
         startActivity(
             Intent(this, MainActivity::class.java)
         )
-        returnTransitionAnimation()
+        ActivityTransitions.RESTART(this)
     }
 
     /**

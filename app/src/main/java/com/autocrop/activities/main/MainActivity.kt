@@ -12,11 +12,11 @@ import android.text.style.StyleSpan
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
-import com.autocrop.UserPreferences
+import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifiers
-import com.autocrop.activities.ViewBindingHandlingActivity
 import com.autocrop.activities.cropping.CroppingActivity
-import com.autocrop.activities.proceedTransitionAnimation
+import com.autocrop.global.UserPreferences
+import com.autocrop.uicontroller.activity.ViewBindingHandlingActivity
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
 import com.autocrop.utils.get
@@ -26,7 +26,7 @@ import com.w2sv.autocrop.databinding.ActivityMainBinding
 import processing.android.PFragment
 import timber.log.Timber
 
-class MainActivity : ViewBindingHandlingActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+class MainActivity : ViewBindingHandlingActivity<ActivityMainBinding>() {
 
     enum class IntentCodes{
         IMAGE_SELECTION
@@ -253,7 +253,7 @@ class MainActivity : ViewBindingHandlingActivity<ActivityMainBinding>(ActivityMa
             Intent(this, CroppingActivity::class.java)
                 .putParcelableArrayListExtra(IntentIdentifiers.SELECTED_IMAGE_URI_STRINGS, imageUris)
         )
-        proceedTransitionAnimation()
+        ActivityTransitions.PROCEED(this)
     }
 
     /**

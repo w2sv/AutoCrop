@@ -1,6 +1,6 @@
 package utils
 
-import com.autocrop.UserPreferences
+import com.autocrop.global.UserPreferences
 import org.junit.AfterClass
 import org.junit.Assert
 import org.junit.BeforeClass

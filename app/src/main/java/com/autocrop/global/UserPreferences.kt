@@ -1,4 +1,4 @@
-package com.autocrop
+package com.autocrop.global
 
 import android.content.SharedPreferences
 import com.autocrop.utils.android.writeBoolean

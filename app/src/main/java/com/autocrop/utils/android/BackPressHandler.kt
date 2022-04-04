@@ -1,10 +1,8 @@
-package com.autocrop.activities
+package com.autocrop.utils.android
 
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
-import com.autocrop.utils.android.TextColors
-import com.autocrop.utils.android.displaySnackbar
 
 
 /**

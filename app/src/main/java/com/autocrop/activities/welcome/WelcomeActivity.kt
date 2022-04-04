@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.fragment.app.FragmentActivity
+import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.utils.android.debuggingModeEnabled
-import com.autocrop.activities.restartTransitionAnimation
 import com.w2sv.autocrop.R
 import timber.log.Timber
 
@@ -29,7 +29,7 @@ class WelcomeActivity : FragmentActivity(R.layout.activity_welcome) {
                         MainActivity::class.java
                     )
                 )
-                restartTransitionAnimation()
+                ActivityTransitions.RESTART(this)
             },
             1500
         )

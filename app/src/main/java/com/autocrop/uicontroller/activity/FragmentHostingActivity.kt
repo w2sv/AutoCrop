@@ -1,15 +1,14 @@
-package com.autocrop.activities
+package com.autocrop.uicontroller.activity
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.autocrop.utils.reflectField
 import com.autocrop.utils.reflectMethod
 
-abstract class FragmentHostingActivity<VB: ViewBinding>(inflateViewBinding: (LayoutInflater) -> VB)
-    : ViewBindingHandlingActivity<VB>(inflateViewBinding) {
+abstract class FragmentHostingActivity<VB: ViewBinding>
+    : ViewBindingHandlingActivity<VB>() {
 
     /**
      * Fragment being launched before exiting [onCreateCore]
