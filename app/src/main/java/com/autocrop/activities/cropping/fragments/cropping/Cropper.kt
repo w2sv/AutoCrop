@@ -5,9 +5,8 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.AsyncTask
 import android.widget.ProgressBar
-import com.autocrop.CropBundle
+import com.autocrop.types.CropBundle
 import com.autocrop.activities.cropping.CroppingActivityViewModel
-import com.autocrop.utils.forceUnwrapped
 import com.autocrop.utils.toInt
 import java.lang.ref.WeakReference
 
@@ -58,8 +57,8 @@ class Cropper(
      */
     override fun onProgressUpdate(vararg imageOrdinalWithProgressBarStep: Pair<Int, Int>) {
         with(imageOrdinalWithProgressBarStep[0]) {
-            currentImageNumberTextView.forceUnwrapped().updateText(first)
-            progressBar.forceUnwrapped().incrementProgressBy(second)
+            currentImageNumberTextView.get()!!.updateText(first)
+            progressBar.get()!!.incrementProgressBy(second)
         }
     }
 

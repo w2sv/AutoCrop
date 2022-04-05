@@ -74,6 +74,6 @@ class DiscardedTextView(context: Context, attr: AttributeSet):
 }
 
 class PageIndicationTextView(context: Context, attr: AttributeSet): PageDependentTextView(context, attr, R.string.fracture) {
-    override fun updateText(viewPagerDataSetPosition: Int){ text = getString(viewPagerDataSetPosition) }
-    override fun formatArgs(viewPagerDataSetPosition: Int): List<Int> = listOf(viewModel.dataSet.pageIndex(viewPagerDataSetPosition) + 1, viewModel.dataSet.size)
+    override fun updateText(pageIndex: Int){ text = getString(pageIndex) }
+    override fun formatArgs(pageIndex: Int): List<Int> = listOf(pageIndex + 1, viewModel.dataSet.size)
 }

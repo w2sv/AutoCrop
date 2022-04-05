@@ -89,9 +89,12 @@ class ViewPagerHandler(
 
     private fun ActivityExaminationFragmentViewpagerBinding.updatePageDependentViews(dataSetPosition: Index, onRightScroll: Boolean = false) =
         activity.runOnUiThread{
-            toolbar.pageIndication.updateText(dataSetPosition)
             discardedTextView.updateText(dataSetPosition)
-            pageIndicationSeekBar.update(dataSetPosition, onRightScroll)
+
+            viewModel.dataSet.pageIndex(dataSetPosition).let{ pageIndex ->
+                toolbar.pageIndication.updateText(pageIndex)
+                pageIndicationSeekBar.update(pageIndex, onRightScroll)
+            }
         }
 
     /**
@@ -247,7 +250,7 @@ class ViewPagerHandler(
          * • update page dependent views
          */
         private fun removeView(dataSetPosition: Index) {
-            val (newDataSetPosition, newViewPosition) = viewModel.dataSet.newPositionWithNewViewPosition(dataSetPosition, binding.viewPager.currentItem)
+            val newViewPosition = viewModel.dataSet.newViewPosition(dataSetPosition, binding.viewPager.currentItem)
 
             // scroll to newViewPosition with blocked pageDependentViewUpdating
             blockPageDependentViewUpdating = true
@@ -257,7 +260,7 @@ class ViewPagerHandler(
             // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
             // aligning with newViewPosition
             viewModel.dataSet.removeAt(dataSetPosition)
-            viewModel.dataSet.rotateAndResetPositionTrackers(newViewPosition, newDataSetPosition)
+            viewModel.dataSet.rotateAndResetPositionTrackers(newViewPosition)
 
             // update surrounding views
             resetViewsAround(newViewPosition)

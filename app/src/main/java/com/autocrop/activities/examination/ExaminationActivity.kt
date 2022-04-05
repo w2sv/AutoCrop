@@ -7,7 +7,7 @@ package com.autocrop.activities.examination
 import android.content.Intent
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.CropBundle
+import com.autocrop.types.CropBundle
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment

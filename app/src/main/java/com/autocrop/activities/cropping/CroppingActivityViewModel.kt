@@ -2,7 +2,7 @@ package com.autocrop.activities.cropping
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
-import com.autocrop.CropBundleList
+import com.autocrop.types.CropBundleList
 
 class CroppingActivityViewModel(val uris: ArrayList<Uri>): ViewModel(){
     companion object{

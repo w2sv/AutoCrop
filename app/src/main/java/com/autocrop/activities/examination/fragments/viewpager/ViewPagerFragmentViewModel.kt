@@ -1,13 +1,12 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
 import androidx.lifecycle.ViewModel
-import com.autocrop.CropBundle
-import com.autocrop.CropBundleList
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.global.UserPreferences
+import com.autocrop.types.CropBundle
+import com.autocrop.types.CropBundleList
 import com.autocrop.utils.Index
 import com.autocrop.utils.at
-import com.autocrop.utils.rotated
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -31,58 +30,51 @@ class ViewPagerDataSet : CropBundleList by ExaminationActivity.cropBundles {
 
     // -------------Position Trackers
 
-    private var tailHash: Int = last().hashCode()
     private var tailPosition: Index = lastIndex
-    private var headPosition: Index = 0
 
     // ----------------Position Conversion
 
-    fun correspondingPosition(viewPosition: Int): Int = viewPosition % size
+    fun correspondingPosition(viewPosition: Int, dataSetSize: Int = size): Int = viewPosition % dataSetSize
     fun atCorrespondingPosition(viewPosition: Int): CropBundle = get(correspondingPosition(viewPosition))
 
     // ----------------Element Removal
 
-    fun newPositionWithNewViewPosition(position: Index, viewPosition: Index): Pair<Index, Index> {
-        val sizePostRemoval = lastIndex
-
-        if (removingAtTail(position)){
-            tailHash = at(position - 1).hashCode()
-            return position.rotated(-1, sizePostRemoval) to viewPosition - 1
-        }
-        return (if (position == sizePostRemoval) 0 else position) to viewPosition + 1
-    }
+    fun newViewPosition(position: Index, viewPosition: Index): Index =
+        if (removingAtTail(position))
+            viewPosition - 1
+        else
+            viewPosition + 1
 
     private fun removingAtTail(removePosition: Index): Boolean = removePosition == tailPosition
 
-    fun rotateAndResetPositionTrackers(newViewPosition: Index, positionPostRemoval: Index){
-        Collections.rotate(this, (newViewPosition % size) - positionPostRemoval)
+    fun rotateAndResetPositionTrackers(newViewPosition: Index){
+        val tailHash: Int = get(minOf(tailPosition, lastIndex)).hashCode()
 
-        // reset position trackers
-        with(indexOfFirst { it.hashCode() == tailHash }) {
-            tailPosition = this
-            headPosition = rotated(1, size)
-        }
+        // rotate collection
+        Collections.rotate(this, correspondingPosition(newViewPosition) - correspondingPosition(newViewPosition, size + 1))
+
+        // rotate position tracker indices
+        tailPosition = indexOfFirst { it.hashCode() == tailHash }
+        println("tailPosition: $tailPosition")
     }
 
     // --------------Page Index Retrieval
 
-    fun pageIndex(position: Index): Index = headPosition.run {
-        if (this <= position)
-            position - this
+    fun pageIndex(position: Index): Index{
+        println("position: $position")
+
+        if (position > tailPosition)
+            return position - (tailPosition + 1)
         else
-            lastIndex - this + position + 1
+            return position + lastIndex - tailPosition
     }
 }
 
 class PageIndicationSeekBarModel(private val viewPagerDataSet: ViewPagerDataSet) {
 
-    companion object {
-        const val PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE: Int = 50
-    }
-
-    fun pagePercentage(dataSetPosition: Int, max: Int): Int =
+    fun pagePercentage(pageIndex: Int, max: Int): Int =
         if (viewPagerDataSet.size == 1)
-            PERCENTAGE_TO_BE_DISPLAYED_ON_LAST_PAGE
+            50
         else
-            (max.toFloat() / (viewPagerDataSet.lastIndex).toFloat() * viewPagerDataSet.pageIndex(dataSetPosition)).roundToInt()
+            (max.toFloat() / (viewPagerDataSet.lastIndex).toFloat() * pageIndex).roundToInt()
 }
