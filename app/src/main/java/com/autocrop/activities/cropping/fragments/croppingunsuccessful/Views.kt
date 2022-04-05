@@ -10,8 +10,8 @@ import com.w2sv.autocrop.R
 
 class CroppingUnsuccessfulTextView(context: Context, attr: AttributeSet):
     ExtendedTextView(context, attr, R.string.cropping_failure),
-    ViewModelRetriever<CroppingActivityViewModel> by CroppingActivityViewModelRetriever(context)
-{
+    ViewModelRetriever<CroppingActivityViewModel> by CroppingActivityViewModelRetriever(context) {
+
     init {
         updateText(viewModel.nSelectedImages > 1)
     }

@@ -26,8 +26,7 @@ import java.util.*
 
 class ViewPagerHandler(
     private val binding: ActivityExaminationFragmentViewpagerBinding,
-    private val viewModel: ViewPagerFragmentViewModel
-){
+    private val viewModel: ViewPagerFragmentViewModel){
 
     private val activity: ExaminationActivity = binding.viewPager.context as ExaminationActivity
 
