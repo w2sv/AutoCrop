@@ -21,7 +21,7 @@ import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 
 class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>() {
 
-    lateinit var sharedViewModel: ExaminationViewModel
+    private lateinit var sharedViewModel: ExaminationActivityViewModel
 
     private val nDismissedImagesRetriever = IntentExtraRetriever<Int>()
 
@@ -34,7 +34,7 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
         sharedViewModel = ViewModelProvider(
             this,
             ExaminationViewModelFactory(nDismissedImages = nDismissedImagesRetriever(intent, IntentIdentifiers.N_DISMISSED_IMAGES) ?: 0)
-        )[ExaminationViewModel::class.java]
+        )[ExaminationActivityViewModel::class.java]
 
         // ---------display Snackbar
         with(sharedViewModel.nDismissedImages) {
@@ -95,7 +95,7 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
     override fun onStop() = logAfterwards("Cleared cropBundles") {
         super.onStop()
 
-        ExaminationViewModel.cropBundles.clear()
+        ExaminationActivityViewModel.cropBundles.clear()
         finishAndRemoveTask()
     }
 }

@@ -1,18 +1,18 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.text.SpannableStringBuilder
 import android.util.AttributeSet
+import android.view.animation.AnticipateInterpolator
 import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.core.text.bold
 import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.utils.android.AbstractViewModelRetriever
-import com.autocrop.utils.android.ExtendedTextView
-import com.autocrop.utils.android.ViewModelRetriever
-import com.autocrop.utils.android.show
+import com.autocrop.utils.android.*
 import com.w2sv.autocrop.R
 
 private class ViewPagerViewModelRetriever(context: Context):
@@ -42,6 +42,19 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
             duration = _duration
             start()
         }
+    }
+
+    fun hideAnimated(){
+        animate()
+            .scaleX(0f)
+            .scaleY(0f)
+            .setInterpolator(AnticipateInterpolator())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    remove()
+                }
+            })
+            .duration = 700L
     }
 }
 

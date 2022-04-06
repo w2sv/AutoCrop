@@ -2,7 +2,7 @@ package com.autocrop.activities.examination.fragments.saveall
 
 import android.content.ContentResolver
 import android.os.AsyncTask
-import com.autocrop.activities.examination.ExaminationViewModel
+import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.saveCropAndDeleteScreenshotIfApplicable
 
 
@@ -18,7 +18,7 @@ class CropSaver(
      * in cropBundleList
      */
     override fun doInBackground(vararg params: Void): Void? {
-        for ((uri, bitmap, _) in ExaminationViewModel.cropBundles) {
+        for ((uri, bitmap, _) in ExaminationActivityViewModel.cropBundles) {
             saveCropAndDeleteScreenshotIfApplicable(
                 uri,
                 bitmap,

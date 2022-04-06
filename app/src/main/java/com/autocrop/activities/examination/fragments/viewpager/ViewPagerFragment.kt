@@ -18,7 +18,12 @@ class ViewPagerFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewPagerHandler = ViewPagerHandler(binding, ViewModelProvider(this)[ViewPagerFragmentViewModel::class.java])
+        viewPagerHandler = ViewPagerHandler(
+            binding,
+            ViewModelProvider(this)[ViewPagerFragmentViewModel::class.java],
+            sharedViewModel,
+            typedActivity
+        )
         setToolbarButtonOnClickListeners()
     }
 

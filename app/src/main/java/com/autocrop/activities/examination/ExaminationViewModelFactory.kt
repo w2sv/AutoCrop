@@ -7,7 +7,7 @@ class ExaminationViewModelFactory(private val nDismissedImages: Int)
         : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = ExaminationViewModel(
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = ExaminationActivityViewModel(
         nDismissedImages
     ) as T
 }
