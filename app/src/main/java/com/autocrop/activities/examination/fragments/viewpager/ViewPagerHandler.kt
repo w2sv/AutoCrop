@@ -33,10 +33,10 @@ class ViewPagerHandler(
     private val sharedViewModel: ExaminationViewModel
         get() = activity.sharedViewModel
 
-    val scroller = Scroller()
+    val scroller: Scroller = Scroller()
 
     private var blockPageDependentViewUpdating = false
-    private var previousPosition: Int
+    private var switchPageTransformerOnNextScrollStateChange = false
 
     init {
         binding.viewPager.apply {
@@ -47,13 +47,14 @@ class ViewPagerHandler(
                 viewModel.startPosition,
                 false
             )
-            previousPosition = viewModel.startPosition
 
             if (viewModel.dataSet.size > 1)
                 activity.runOnUiThread { binding.pageIndicationSeekBar.show() }
 
             // register onPageChangeCallbacks
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+
+                private var previousPosition = viewModel.startPosition
 
                 /**
                  * Updates retentionPercentage, pageIndication and seekBar upon page change if not blocked
@@ -69,16 +70,19 @@ class ViewPagerHandler(
                 override fun onPageScrollStateChanged(state: Int) {
                     super.onPageScrollStateChanged(state)
 
-                    if (scroller.switchPageTransformer && state == ViewPager.SCROLL_STATE_IDLE){
+                    if (switchPageTransformerOnNextScrollStateChange && state == ViewPager.SCROLL_STATE_IDLE){
                         setCubeOutPageTransformer()
-                        scroller.switchPageTransformer = false
+                        switchPageTransformerOnNextScrollStateChange = false
                     }
                 }
             })
         }
+
         // run Scroller if applicable
-        if (viewModel.conductAutoScroll)
-            scroller.invoke()
+        if (viewModel.conductAutoScroll) {
+            activity.runOnUiThread { binding.autoScrollingTextView.show() }
+            scroller.run(binding.viewPager, viewModel.dataSet.size)
+        }
         else{
             activity.runOnUiThread { binding.discardedTextView.show() }
             setCubeOutPageTransformer()
@@ -101,33 +105,30 @@ class ViewPagerHandler(
      * Class accounting for automatic scrolling at the start of crop examination
      */
     inner class Scroller {
-        var isRunning: Boolean = false
-        private var conductedScrolls = 0
-        private val maxScrolls = viewModel.dataSet.lastIndex
-        private lateinit var timer: Timer
-        var switchPageTransformer = false
+        private var timer: Timer? = null
+        val isRunning: Boolean
+            get() = timer != null
 
-        fun invoke(){
-            isRunning = true
-            activity.runOnUiThread { binding.autoScrollingTextView.show() }
-
+        fun run(viewPager2: ViewPager2, maxScrolls: Int) {
             timer = Timer().apply {
-                val period = 1000L
-
                 schedule(
                     object : TimerTask() {
+                        private var conductedScrolls: Int = 0
+
                         override fun run() {
                             Handler(Looper.getMainLooper()).post {
-                                with(binding.viewPager) { setCurrentItem(currentItem + 1, true) }
-                                conductedScrolls++
+                                if (conductedScrolls < maxScrolls) {
+                                    with(viewPager2) {
+                                        setCurrentItem(currentItem + 1, true)
+                                    }
+                                    conductedScrolls++
+                                } else
+                                    cancel(onScreenTouch = false)
                             }
-
-                            if (conductedScrolls == maxScrolls)
-                                cancel(onScreenTouch = false)
                         }
                     },
-                    period,
-                    period
+                    1000L,
+                    1000L
                 )
             }
         }
@@ -136,19 +137,23 @@ class ViewPagerHandler(
          * Cancels timer, displays Snackbar as to the cause of cancellation
          */
         fun cancel(onScreenTouch: Boolean) {
-            timer.cancel()
-            isRunning = false
-            switchPageTransformer = true
+            timer!!.cancel()
+            timer = null
+
             activity.runOnUiThread {
                 crossFade(binding.discardedTextView, binding.autoScrollingTextView, 900L)
             }
 
-            if (onScreenTouch)
+            if (onScreenTouch){
+                setCubeOutPageTransformer()
                 activity.displaySnackbar(
                     "Cancelled auto scrolling",
                     TextColors.SUCCESS,
                     Snackbar.LENGTH_SHORT
                 )
+            }
+            else
+                switchPageTransformerOnNextScrollStateChange = true
         }
     }
 
