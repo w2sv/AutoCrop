@@ -250,7 +250,8 @@ class ViewPagerHandler(
          * • update page dependent views
          */
         private fun removeView(dataSetPosition: Index) {
-            val newViewPosition = viewModel.dataSet.newViewPosition(dataSetPosition, binding.viewPager.currentItem)
+            val removingAtDataSetTail = viewModel.dataSet.removingAtTail(dataSetPosition)
+            val newViewPosition = binding.viewPager.currentItem + viewModel.dataSet.viewPositionIncrement(removingAtDataSetTail)
 
             // scroll to newViewPosition with blocked pageDependentViewUpdating
             blockPageDependentViewUpdating = true
@@ -259,8 +260,7 @@ class ViewPagerHandler(
 
             // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
             // aligning with newViewPosition
-            viewModel.dataSet.removeAt(dataSetPosition)
-            viewModel.dataSet.rotateAndResetPositionTrackers(newViewPosition)
+            viewModel.dataSet.removeAtAndRealign(dataSetPosition, removingAtDataSetTail, newViewPosition)
 
             // update surrounding views
             resetViewsAround(newViewPosition)

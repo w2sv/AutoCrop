@@ -25,13 +25,13 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
     init {
         if (viewModel.dataSet.size > 1){
             show()
-            progress = viewModel.pageIndicationSeekBar.pagePercentage(0, max)
+            progress = viewModel.pageIndicationSeekbarPagePercentage(0, max)
             isEnabled = false  // disables dragging of bar
         }
     }
 
     fun update(dataSetPosition: Int, scrolledRight: Boolean) {
-        val targetProgress: Int = viewModel.pageIndicationSeekBar.pagePercentage(dataSetPosition, max)
+        val targetProgress: Int = viewModel.pageIndicationSeekbarPagePercentage(dataSetPosition, max)
         val displayBouncingAnimation: Boolean = listOf(progress, targetProgress).let {
             (it == listOf(0, 100) && !scrolledRight) || (it == listOf(100, 0) && scrolledRight)
         }
