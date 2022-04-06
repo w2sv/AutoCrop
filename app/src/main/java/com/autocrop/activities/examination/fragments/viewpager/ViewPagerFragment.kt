@@ -24,6 +24,7 @@ class ViewPagerFragment
             sharedViewModel,
             typedActivity
         )
+
         setToolbarButtonOnClickListeners()
     }
 
