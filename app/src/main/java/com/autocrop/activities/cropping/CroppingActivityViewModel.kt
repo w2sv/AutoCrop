@@ -2,6 +2,7 @@ package com.autocrop.activities.cropping
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import com.autocrop.types.CropBundle
 import com.autocrop.types.CropBundleList
 
 class CroppingActivityViewModel(val uris: ArrayList<Uri>): ViewModel(){
@@ -13,7 +14,7 @@ class CroppingActivityViewModel(val uris: ArrayList<Uri>): ViewModel(){
     val progressBarDecimalStep: Float
 
     val nSelectedImages: Int = uris.size
-    val cropBundles: CropBundleList = mutableListOf()
+    val cropBundles: MutableList<CropBundle> = mutableListOf()
 
     val nDismissedImages: Int
         get() = nSelectedImages - cropBundles.size

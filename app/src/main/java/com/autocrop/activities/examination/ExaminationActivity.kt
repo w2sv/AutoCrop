@@ -7,7 +7,6 @@ package com.autocrop.activities.examination
 import android.content.Intent
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.types.CropBundle
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
@@ -21,10 +20,6 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 
 class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>() {
-
-    companion object{
-        lateinit var cropBundles: MutableList<CropBundle>
-    }
 
     lateinit var sharedViewModel: ExaminationViewModel
 
@@ -97,13 +92,10 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
         ActivityTransitions.RETURN(this)
     }
 
-    /**
-     * Clear [cropBundles]
-     */
     override fun onStop() = logAfterwards("Cleared cropBundles") {
         super.onStop()
 
-        cropBundles.clear()
+        ExaminationViewModel.cropBundles.clear()
         finishAndRemoveTask()
     }
 }

@@ -9,6 +9,7 @@ import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.cropping.fragments.CroppingActivityFragment
 import com.autocrop.activities.examination.ExaminationActivity
+import com.autocrop.activities.examination.ExaminationViewModel
 import com.autocrop.utils.logBeforehand
 import com.w2sv.autocrop.databinding.ActivityCroppingFragmentRootBinding
 import java.lang.ref.WeakReference
@@ -52,7 +53,7 @@ class CroppingFragment
     }
 
     private fun startExaminationActivity(){
-        ExaminationActivity.cropBundles = sharedViewModel.cropBundles
+        ExaminationViewModel.cropBundles = sharedViewModel.cropBundles
 
         requireActivity().let { activity ->
             startActivity(

@@ -18,17 +18,11 @@ internal class ViewPagerDataSetTest {
     private val initialSize = 10
     private val initialTailPosition = 9
 
-    private val cropBundles: CropBundleList = (0 until initialSize)
-        .map { CropBundle(it.toString().toUri(), createBitmap(1, 1, Bitmap.Config.ARGB_8888), it, it) }
-        .toMutableList()
-
-    @BeforeAll
-    fun setup(){
-        ExaminationActivity.cropBundles = cropBundles
-        viewPagerDataSet = ViewPagerDataSet()
-    }
-
-    private lateinit var viewPagerDataSet: ViewPagerDataSet
+    private var viewPagerDataSet = ViewPagerDataSet(
+        (0 until initialSize)
+            .map { CropBundle(it.toString().toUri(), createBitmap(1, 1, Bitmap.Config.ARGB_8888), it, it) }
+            .toMutableList()
+    )
 
     @Test
     fun correctInitialization(){

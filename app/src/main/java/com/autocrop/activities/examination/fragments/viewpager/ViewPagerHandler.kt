@@ -221,7 +221,7 @@ class ViewPagerHandler(
          */
         private fun onCropProcedureAction(dataSetPosition: Index, incrementNSavedCrops: Boolean){
             if (incrementNSavedCrops)
-                sharedViewModel.incrementImageFileIOCounters(1, deletedScreenshots = UserPreferences.deleteIndividualScreenshot)
+                sharedViewModel.incrementImageFileIOCounters(UserPreferences.deleteIndividualScreenshot)
 
             when(viewModel.dataSet.size){
                 1 -> return activity.run { replaceCurrentFragmentWith(appTitleFragment, true) }

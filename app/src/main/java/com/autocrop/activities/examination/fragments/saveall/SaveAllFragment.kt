@@ -14,9 +14,7 @@ class SaveAllFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        CropSaver(UserPreferences.deleteScreenshotsOnSaveAll, typedActivity.contentResolver) {
-            sharedViewModel.incrementImageFileIOCounters(ExaminationActivity.cropBundles.size, UserPreferences.deleteScreenshotsOnSaveAll)
-
+        CropSaver(UserPreferences.deleteScreenshotsOnSaveAll, typedActivity.contentResolver, sharedViewModel::incrementImageFileIOCounters) {
             with(typedActivity){
                 replaceCurrentFragmentWith(appTitleFragment, true)
             }
