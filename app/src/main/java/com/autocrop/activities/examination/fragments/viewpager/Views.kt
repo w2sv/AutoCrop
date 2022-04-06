@@ -66,27 +66,23 @@ abstract class PageDependentTextView(context: Context, attr: AttributeSet, strin
         updateText(0)
     }
 
-    abstract fun updateText(viewPagerDataSetPosition: Int)
-    protected fun getString(viewPagerDataSetPosition: Int): String = super.getString().format(*formatArgs(viewPagerDataSetPosition).toTypedArray())
-    protected abstract fun formatArgs(viewPagerDataSetPosition: Int): List<Int>
+    abstract fun updateText(position: Int)
 }
 
 class DiscardedTextView(context: Context, attr: AttributeSet):
     PageDependentTextView(context, attr, R.string.discarded) {
 
-    override fun updateText(viewPagerDataSetPosition: Int) {
-        with(viewModel.dataSet[viewPagerDataSetPosition]) {
+    override fun updateText(position: Int) {
+        with(viewModel.dataSet[position]) {
             text = SpannableStringBuilder()
-                .append(getString(0))
+                .append(getString())
                 .bold { append(" ${discardedPercentage}%") }
                 .append("=")
                 .bold { append("${approximateDiscardedFileSize}kb") }
         }
     }
-    override fun formatArgs(viewPagerDataSetPosition: Int): List<Int> = listOf()
 }
 
 class PageIndicationTextView(context: Context, attr: AttributeSet): PageDependentTextView(context, attr, R.string.fracture) {
-    override fun updateText(pageIndex: Int){ text = getString(pageIndex) }
-    override fun formatArgs(pageIndex: Int): List<Int> = listOf(pageIndex + 1, viewModel.dataSet.size)
+    override fun updateText(position: Int){ text = getString().format(position + 1, viewModel.dataSet.size) }
 }
