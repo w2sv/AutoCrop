@@ -3,7 +3,6 @@ package com.autocrop.activities.examination
 import androidx.lifecycle.ViewModel
 import com.autocrop.types.CropBundle
 
-
 class ExaminationViewModel(val nDismissedImages: Int): ViewModel() {
 
     companion object{

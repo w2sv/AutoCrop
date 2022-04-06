@@ -1,11 +1,9 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
 import androidx.lifecycle.ViewModel
-import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
 import com.autocrop.global.UserPreferences
 import com.autocrop.types.CropBundle
-import com.autocrop.types.CropBundleList
 import com.autocrop.utils.Index
 import com.autocrop.utils.rotated
 import java.util.*

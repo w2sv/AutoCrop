@@ -3,9 +3,7 @@ package com.autocrop.activities.examination.fragments.viewpager
 import android.graphics.Bitmap
 import androidx.core.graphics.createBitmap
 import androidx.core.net.toUri
-import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.types.CropBundle
-import com.autocrop.types.CropBundleList
 import org.junit.Assert
 import org.junit.jupiter.api.*
 import org.junit.jupiter.params.ParameterizedTest

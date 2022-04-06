@@ -2,7 +2,6 @@ package com.autocrop.activities.examination.fragments.saveall
 
 import android.content.ContentResolver
 import android.os.AsyncTask
-import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationViewModel
 import com.autocrop.activities.examination.saveCropAndDeleteScreenshotIfApplicable
 
