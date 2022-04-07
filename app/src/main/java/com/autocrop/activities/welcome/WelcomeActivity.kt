@@ -31,7 +31,7 @@ class WelcomeActivity : FragmentActivity(R.layout.activity_welcome) {
                 )
                 ActivityTransitions.RESTART(this)
             },
-            1500
+            700
         )
     }
 
