@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@drawable/gradient">
+
+    <TextView
+        android:id="@+id/app_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        style="@style/AppTitleTextView"
+
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="200dp"/>
+
+    <!--    <ImageView-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+
+    <!--        android:layout_centerInParent="true">-->
+
+    <!--    </ImageView>-->
+
+    <TextView
+        android:id="@+id/built_by"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@+id/app_title_text_view"
+        android:layout_marginTop="250dp"
+
+        android:text="Built by:"
+        android:textSize="18sp">
+
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@+id/built_by"
+
+        android:layout_marginTop="35dp"
+
+        android:text="W2SV"
+        android:textSize="32sp"
+        android:textColor="@color/light_green"
+        android:textStyle="italic">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/version_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
+
+        android:textSize="26sp">
+    </TextView>
+
+</RelativeLayout>

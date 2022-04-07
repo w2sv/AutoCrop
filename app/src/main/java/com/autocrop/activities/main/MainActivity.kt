@@ -1,8 +1,7 @@
 package com.autocrop.activities.main
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
 import com.autocrop.activities.IntentIdentifiers
+import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.global.UserPreferences
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
@@ -16,6 +15,7 @@ class MainActivity : FragmentHostingActivity<ActivityMainBinding>() {
     }
 
     override val rootFragment by lazy{ FlowFieldFragment() }
+    val aboutFragment by lazy { AboutFragment() }
 
     private val nSavedCropsRetriever = IntentExtraRetriever<IntArray>()
 
@@ -42,7 +42,10 @@ class MainActivity : FragmentHostingActivity<ActivityMainBinding>() {
      * Exit app
      */
     override fun onBackPressed() {
-        finishAffinity()
+        if (aboutFragment.isVisible)
+            hideAndShowFragments(aboutFragment, rootFragment)
+        else
+            finishAffinity()
     }
 
     /**

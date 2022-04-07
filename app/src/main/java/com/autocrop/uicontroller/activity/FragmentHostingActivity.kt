@@ -55,4 +55,18 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
             .setReorderingAllowed(true)
             .commit()
     }
+
+    fun hideAndShowFragments(hideFragment: Fragment, showFragment: Fragment){
+        supportFragmentManager
+            .beginTransaction()
+            .setReorderingAllowed(true)
+            .hide(hideFragment)
+            .apply {
+                if (showFragment !in supportFragmentManager.fragments)
+                    add(layoutId, showFragment)
+                else
+                    show(showFragment)
+            }
+            .commit()
+    }
 }

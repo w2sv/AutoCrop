@@ -21,6 +21,7 @@ import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.UserPreferences
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
+import com.autocrop.utils.logAfterwards
 import com.autocrop.utils.setSpanHolistically
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.w2sv.autocrop.R
@@ -44,8 +45,8 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!::flowFieldHandler.isInitialized)
-            flowFieldHandler = FlowFieldHandler()
+//        if (!::flowFieldHandler.isInitialized)
+        flowFieldHandler = FlowFieldHandler()
         flowFieldHandler.setPFragment()
 
         // initialize UserPreferences if necessary
@@ -64,7 +65,9 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
                 screenResolution(requireActivity().windowManager)
             )
 
-        fun setPFragment() = PFragment(pApplet).setView(binding.canvasContainer, requireActivity())
+        fun setPFragment() = logAfterwards("Set FlowFieldPApplet") {
+            PFragment(pApplet).setView(binding.canvasContainer, requireActivity())
+        }
 
         /**
          * Request permissions if necessary and run [captureFlowField] if granted or
@@ -115,7 +118,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
 
                 mapOf(
                     R.id.main_menu_item_rate_the_app to ::launchInAppReviewFlow,
-                    R.id.main_menu_item_about_the_app to {}
+                    R.id.main_menu_item_about_the_app to { with(typedActivity) { hideAndShowFragments(rootFragment, aboutFragment) } }
                 ).forEach { (id, onClickListener) ->
                     with(menu.findItem(id)){
                         setOnMenuItemClickListener {
