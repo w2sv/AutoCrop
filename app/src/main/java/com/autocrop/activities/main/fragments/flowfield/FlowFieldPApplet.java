@@ -2,7 +2,7 @@
  * Core graphical algorithm by Daniel Shiffman @ https://thecodingtrain.com/CodingChallenges/024-perlinnoiseflowfield.html
  */
 
-package com.autocrop.activities.main;
+package com.autocrop.activities.main.fragments.flowfield;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;

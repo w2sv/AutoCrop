@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentActivity
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.cropping.CroppingActivity
-import com.autocrop.activities.main.FlowFieldPApplet
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.UserPreferences
@@ -60,7 +59,10 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
     }
 
     inner class FlowFieldHandler{
-        private val pApplet: FlowFieldPApplet = FlowFieldPApplet(screenResolution(requireActivity().windowManager))
+        private val pApplet: FlowFieldPApplet =
+            FlowFieldPApplet(
+                screenResolution(requireActivity().windowManager)
+            )
 
         fun setPFragment() = PFragment(pApplet).setView(binding.canvasContainer, requireActivity())
 
