@@ -1,8 +1,20 @@
 <resources>
 
+    <style name="Theme.App.Splash" parent="Theme.SplashScreen">
+        // Set the splash screen background, animated icon, and animation duration.
+        <item name="windowSplashScreenBackground"></item>
+
+        // Use windowSplashScreenAnimatedIcon to add either a drawable or an
+        // animated drawable. One of these is required.
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_camera</item>
+<!--        <item name="windowSplashScreenAnimationDuration">2000</item>  # Required for animated icons-->
+
+        <item name="postSplashScreenTheme">@style/Theme.App.Main</item>
+    </style>
+
     <!-- App Theme -->
 
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.App.Main" parent="Theme.AppCompat.NoActionBar">
 
         <item name="android:windowBackground">@android:color/black</item>
 

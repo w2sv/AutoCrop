@@ -12,6 +12,7 @@ import android.text.style.StyleSpan
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.cropping.CroppingActivity
@@ -50,6 +51,8 @@ class MainActivity : ViewBindingHandlingActivity<ActivityMainBinding>() {
      * - Displays crop saving results snackbar if applicable
      */
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+
         super.onCreate(savedInstanceState)
 
         if (!::flowFieldHandler.isInitialized)

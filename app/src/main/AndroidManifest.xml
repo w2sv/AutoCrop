@@ -25,7 +25,7 @@
         android:icon="@mipmap/brudineletten"
         android:roundIcon="@mipmap/brudineletten_round"
 
-        android:theme="@style/AppTheme"
+        android:theme="@style/Theme.App.Splash"
 
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true">
@@ -35,22 +35,16 @@
             android:value="ca-app-pub-1494255973790385~2659692781"/>
 
         <!-- Activities -->
+
         <activity
-            android:name="com.autocrop.activities.welcome.WelcomeActivity"
-            android:screenOrientation="portrait"
-            android:noHistory="true"
-            android:exported="true">
+            android:name="com.autocrop.activities.main.MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
-
-        </activity>
-
-        <activity
-            android:name="com.autocrop.activities.main.MainActivity"
-            android:screenOrientation="portrait">
         </activity>
 
         <activity
