@@ -5,7 +5,11 @@
       <map>
         <entry key="app/src/main/res/drawable/image_brudineletten.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_cropping.xml" value="0.25679347826086957" />
+        <entry key="app/src/main/res/layout/activity_cropping_fragment_cropping_unsuccessful.xml" value="0.14266304347826086" />
+        <entry key="app/src/main/res/layout/activity_examination.xml" value="0.14266304347826086" />
         <entry key="app/src/main/res/layout/activity_examination_fragment_viewpager.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/activity_main_fragment_flowfield.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/toolbar_examination_activity.xml" value="0.213768115942029" />
         <entry key="app/src/main/res/menu/activity_main.xml" value="0.2625" />
       </map>

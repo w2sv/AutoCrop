@@ -13,10 +13,7 @@
 
         <item
             android:id="@+id/main_menu_item_conduct_auto_scrolling"
-
             android:icon="@drawable/ic_round_double_arrow_24"
-            android:iconTint="@color/saturated_magenta"
-
             android:title="@string/menu_item_conduct_auto_scrolling"
             android:checkable="true" />
 
@@ -29,18 +26,12 @@
 
         <item
             android:id="@+id/main_menu_item_about_the_app"
-
             android:icon="@drawable/ic_outline_info_24"
-            android:iconTint="@color/saturated_magenta"
-
             android:title="@string/menu_item_about_the_app"/>
 
         <item
             android:id="@+id/main_menu_item_rate_the_app"
-
             android:icon="@drawable/ic_sharp_star_rate_24"
-            android:iconTint="@color/saturated_magenta"
-
             android:title="@string/menu_item_rate_the_app"/>
 
 </menu>

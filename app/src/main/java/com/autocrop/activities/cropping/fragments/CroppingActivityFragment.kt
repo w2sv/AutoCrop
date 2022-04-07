@@ -3,9 +3,9 @@ package com.autocrop.activities.cropping.fragments
 import androidx.viewbinding.ViewBinding
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.cropping.CroppingActivityViewModel
-import com.autocrop.uicontroller.fragment.ViewBindingHandlingFragment
+import com.autocrop.uicontroller.fragment.SharedViewModelAndViewBindingHoldingFragment
 
 abstract class CroppingActivityFragment<VB: ViewBinding>
-    : ViewBindingHandlingFragment<CroppingActivity, CroppingActivityViewModel, VB>(
+    : SharedViewModelAndViewBindingHoldingFragment<CroppingActivity, VB, CroppingActivityViewModel>(
         CroppingActivityViewModel::class.java
     )

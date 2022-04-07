@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
 import java.lang.reflect.ParameterizedType
 
-abstract class ViewBindingHandlingFragment<A: Activity, VM: ViewModel, VB: ViewBinding>(viewModelClass: Class<VM>)
-        : SharedViewModelHoldingFragment<A, VM>(viewModelClass){
+abstract class ViewBindingHoldingFragment<A: Activity, VB: ViewBinding>
+        : ExtendedFragment<A>(){
 
     private var _binding: VB? = null
     protected val binding: VB
