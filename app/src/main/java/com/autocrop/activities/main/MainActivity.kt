@@ -122,7 +122,8 @@ class MainActivity : ViewBindingHandlingActivity<ActivityMainBinding>() {
             )
 
             val groupDividerItems: List<Int> = listOf(
-                R.id.main_menu_examination_item_group_divider
+                R.id.main_menu_group_divider_examination,
+                R.id.main_menu_group_divider_other
             )
 
             // inflate popup menu

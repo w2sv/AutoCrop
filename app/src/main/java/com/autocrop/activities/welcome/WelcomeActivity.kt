@@ -11,7 +11,6 @@ import com.autocrop.utils.android.debuggingModeEnabled
 import com.w2sv.autocrop.R
 import timber.log.Timber
 
-
 class WelcomeActivity : FragmentActivity(R.layout.activity_welcome) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

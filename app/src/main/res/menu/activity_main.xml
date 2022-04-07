@@ -4,14 +4,43 @@
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
 
-    <item
-        android:id="@+id/main_menu_examination_item_group_divider"
-        android:title="@string/menu_item_examination_group"
-        android:enabled="false"/>
+    <!--  Examination  -->
 
     <item
-        android:id="@+id/main_menu_item_conduct_auto_scrolling"
-        android:title="@string/menu_item_conduct_auto_scrolling"
-        android:checkable="true"/>
+        android:id="@+id/main_menu_group_divider_examination"
+        android:title="@string/menu_item_group_divider_examination"
+        android:enabled="false"/>
+
+        <item
+            android:id="@+id/main_menu_item_conduct_auto_scrolling"
+
+            android:icon="@drawable/ic_round_double_arrow_24"
+            android:iconTint="@color/saturated_magenta"
+
+            android:title="@string/menu_item_conduct_auto_scrolling"
+            android:checkable="true" />
+
+    <!--  Other  -->
+
+    <item
+        android:id="@+id/main_menu_group_divider_other"
+        android:title="@string/menu_item_group_divider_other"
+        android:enabled="false"/>
+
+        <item
+            android:id="@+id/main_menu_item_about_the_app"
+
+            android:icon="@drawable/ic_outline_info_24"
+            android:iconTint="@color/saturated_magenta"
+
+            android:title="@string/menu_item_about_the_app"/>
+
+        <item
+            android:id="@+id/main_menu_item_rate_the_app"
+
+            android:icon="@drawable/ic_sharp_star_rate_24"
+            android:iconTint="@color/saturated_magenta"
+
+            android:title="@string/menu_item_rate_the_app"/>
 
 </menu>
