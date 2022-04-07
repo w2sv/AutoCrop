@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.SpannableString
@@ -21,9 +22,7 @@ import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.UserPreferences
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
-import com.autocrop.utils.logAfterwards
 import com.autocrop.utils.setSpanHolistically
-import com.google.android.play.core.review.ReviewManagerFactory
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityMainFragmentFlowfieldBinding
 import processing.android.PFragment
@@ -38,16 +37,15 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
         )
     }
 
-    lateinit var flowFieldHandler: FlowFieldHandler
+    private lateinit var flowFieldHandler: FlowFieldHandler
 
     private val permissionsHandler = PermissionsHandler()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        if (!::flowFieldHandler.isInitialized)
+        // initialize FlowField
         flowFieldHandler = FlowFieldHandler()
-        flowFieldHandler.setPFragment()
 
         // initialize UserPreferences if necessary
         if (!UserPreferences.isInitialized)
@@ -59,13 +57,13 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
         flowFieldHandler.setCaptureButtonOnClickListener()
     }
 
-    inner class FlowFieldHandler{
+    private inner class FlowFieldHandler{
         private val pApplet: FlowFieldPApplet =
             FlowFieldPApplet(
                 screenResolution(requireActivity().windowManager)
             )
 
-        fun setPFragment() = logAfterwards("Set FlowFieldPApplet") {
+        init {
             PFragment(pApplet).setView(binding.canvasContainer, requireActivity())
         }
 
@@ -117,7 +115,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
                 }
 
                 mapOf(
-                    R.id.main_menu_item_rate_the_app to ::launchInAppReviewFlow,
+                    R.id.main_menu_item_rate_the_app to ::goToPlayStoreListing,
                     R.id.main_menu_item_about_the_app to { with(typedActivity) { hideAndShowFragments(rootFragment, aboutFragment) } }
                 ).forEach { (id, onClickListener) ->
                     with(menu.findItem(id)){
@@ -145,15 +143,13 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
             }
         }
 
-    private fun launchInAppReviewFlow() =
-        with(ReviewManagerFactory.create(requireContext())){
-            requestReviewFlow().addOnCompleteListener { task ->
-                if (task.isSuccessful)
-                    launchReviewFlow(requireActivity(), task.result)
-                else
-                    Timber.i("Failed to retrieve reviewInfo: ${task.exception}")
+    private fun goToPlayStoreListing() =
+        startActivity(
+            Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse("https://play.google.com/store/apps/details?id=${requireContext().packageName}")
+                setPackage("com.android.vending")
             }
-        }
+        )
 
     //$$$$$$$$$$$$$$
     // Permissions $

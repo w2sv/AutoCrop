@@ -9,6 +9,9 @@
     <string name="auto_scrolling">AutoScrolling</string>
     <string name="discarded">discarded</string>
 
+    <string name="version">Version: %1$s</string>
+    <string name="copyright">© 2021-%1$d | Janek Zangenberg</string>
+
     <!-- Button -->
 
         <!-- Text -->

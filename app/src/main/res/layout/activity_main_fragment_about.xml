@@ -31,7 +31,7 @@
 
         android:layout_centerHorizontal="true"
         android:layout_alignTop="@+id/app_title_text_view"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="170dp"
 
         android:text="Built by:"
         android:textSize="18sp">
@@ -54,16 +54,29 @@
 
     </TextView>
 
-    <TextView
+    <com.autocrop.activities.main.fragments.about.VersionTextView
         android:id="@+id/version_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
+        android:layout_alignTop="@id/built_by"
+        android:layout_marginTop="160dp"
 
-        android:textSize="26sp">
-    </TextView>
+        android:text="@string/version"
+        android:textSize="24sp">
+    </com.autocrop.activities.main.fragments.about.VersionTextView>
+
+    <com.autocrop.activities.main.fragments.about.CopyrightTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@id/version_text_view"
+        android:layout_marginTop="100dp"
+
+        android:text="@string/copyright"
+        android:textSize="16sp">
+    </com.autocrop.activities.main.fragments.about.CopyrightTextView>
 
 </RelativeLayout>
