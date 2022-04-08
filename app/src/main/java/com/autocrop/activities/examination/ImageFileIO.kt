@@ -13,12 +13,12 @@ fun saveCropAndDeleteScreenshotIfApplicable(
     deleteScreenshot: Boolean,
     contentResolver: ContentResolver) {
 
-    crop.save(contentResolver, screenshotUri.autoCropFileName)
+    crop.save(contentResolver, screenshotUri.cropFileName)
 
     if (deleteScreenshot)
         screenshotUri.deleteUnderlyingImageFile(contentResolver)
 }
 
-private val Uri.autoCropFileName: String
+private val Uri.cropFileName: String
     get() = fileName
         .replace("screenshot","AutoCrop",true)

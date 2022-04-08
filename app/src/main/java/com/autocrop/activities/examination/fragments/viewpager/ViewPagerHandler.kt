@@ -13,7 +13,7 @@ import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
-import com.autocrop.global.UserPreferences
+import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.*
 import com.google.android.material.snackbar.Snackbar
@@ -236,7 +236,7 @@ class ViewPagerHandler(
          */
         private fun onCropProcedureAction(dataSetPosition: Index, incrementNSavedCrops: Boolean){
             if (incrementNSavedCrops)
-                sharedViewModel.incrementImageFileIOCounters(UserPreferences.deleteIndividualScreenshot)
+                sharedViewModel.incrementImageFileIOCounters(BooleanUserPreferences.deleteIndividualScreenshot)
 
             when(viewModel.dataSet.size){
                 1 -> return activity.run { replaceCurrentFragmentWith(appTitleFragment, true) }

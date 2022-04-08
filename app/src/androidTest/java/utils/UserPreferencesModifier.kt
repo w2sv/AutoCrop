@@ -1,6 +1,6 @@
 package utils
 
-import com.autocrop.global.UserPreferences
+import com.autocrop.global.BooleanUserPreferences
 import org.junit.AfterClass
 import org.junit.Assert
 import org.junit.BeforeClass
@@ -16,14 +16,14 @@ abstract class UserPreferencesModifier {
 
     @BeforeClass
     fun storeUserPreferences(){
-        userPreferencesOnTestStart = UserPreferences.values.toTypedArray()
+        userPreferencesOnTestStart = BooleanUserPreferences.values.toTypedArray()
     }
 
     protected fun setUserPreferences(to: Array<Boolean>){
-        Assert.assertEquals(to.size, UserPreferences.size)
+        Assert.assertEquals(to.size, BooleanUserPreferences.size)
 
-        UserPreferences.keys.forEachIndexed { i, el ->
-            UserPreferences[el] = to[i]
+        BooleanUserPreferences.keys.forEachIndexed { i, el ->
+            BooleanUserPreferences[el] = to[i]
         }
     }
 

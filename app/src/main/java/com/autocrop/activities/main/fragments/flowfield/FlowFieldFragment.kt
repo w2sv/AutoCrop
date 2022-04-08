@@ -1,25 +1,27 @@
 package com.autocrop.activities.main.fragments.flowfield
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
+import android.provider.DocumentsContract
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
-import androidx.fragment.app.FragmentActivity
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.cropping.CroppingActivity
-import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
-import com.autocrop.global.UserPreferences
+import com.autocrop.global.BooleanUserPreferences
+import com.autocrop.global.UriUserPreferences
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
 import com.autocrop.utils.setSpanHolistically
@@ -48,8 +50,10 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
         flowFieldHandler = FlowFieldHandler()
 
         // initialize UserPreferences if necessary
-        if (!UserPreferences.isInitialized)
-            UserPreferences.initializeFromSharedPreferences(requireActivity().getSharedPreferences())
+        if (!BooleanUserPreferences.isInitialized)
+            BooleanUserPreferences.initializeFromSharedPreferences(requireActivity().getSharedPreferences())
+        if (!UriUserPreferences.isInitialized)
+            UriUserPreferences.initializeFromSharedPreferences(requireActivity().getSharedPreferences())
 
         // set button onClickListeners
         setImageSelectionButtonOnClickListener()
@@ -110,13 +114,13 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
 
                 // set checks from UserPreferences
                 mapOf(
-                    R.id.main_menu_item_conduct_auto_scrolling to UserPreferences.Keys.conductAutoScrolling
+                    R.id.main_menu_item_conduct_auto_scrolling to BooleanUserPreferences.Keys.conductAutoScrolling
                 ).forEach { (id, userPreferencesKey) ->
                     with(menu.findItem(id)){
-                        isChecked = UserPreferences.getValue(userPreferencesKey)
+                        isChecked = BooleanUserPreferences.getValue(userPreferencesKey)
 
                         setOnMenuItemClickListener { item ->
-                            UserPreferences.toggle(userPreferencesKey)
+                            BooleanUserPreferences.toggle(userPreferencesKey)
                             isChecked = !isChecked
                             item.persistMenuAfterClick(requireContext())
                         }
@@ -125,7 +129,8 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
 
                 mapOf(
                     R.id.main_menu_item_rate_the_app to ::goToPlayStoreListing,
-                    R.id.main_menu_item_about_the_app to { with(typedActivity) { hideAndShowFragments(rootFragment, aboutFragment) } }
+                    R.id.main_menu_item_about_the_app to { with(typedActivity) { hideAndShowFragments(rootFragment, aboutFragment) } },
+                    R.id.main_menu_item_change_save_destination_dir to { pickSaveDestinationDir.launch(UriUserPreferences.imageSaveDestination) }
                 ).forEach { (id, onClickListener) ->
                     with(menu.findItem(id)){
                         setOnMenuItemClickListener {
@@ -138,6 +143,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
                 // format group divider items
                 listOf(
                     R.id.main_menu_group_divider_examination,
+                    R.id.main_menu_group_divider_crop_saving,
                     R.id.main_menu_group_divider_other
                 ).forEach { id ->
                     with(menu.findItem(id)){
@@ -159,6 +165,23 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
                 setPackage("com.android.vending")
             }
         )
+
+    private val pickSaveDestinationDir = registerForActivityResult(
+        object: ActivityResultContracts.OpenDocumentTree(){
+            override fun createIntent(context: Context, input: Uri?): Intent {
+                return super.createIntent(context, input)
+                    .apply {
+                        flags = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+                    }
+            }
+        }
+    ) {
+        it?.let {
+            requireContext().contentResolver.takePersistableUriPermission(it,Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+
+            UriUserPreferences.imageSaveDestination = DocumentsContract.buildDocumentUriUsingTree(it, DocumentsContract.getTreeDocumentId(it))
+        }
+    }
 
     //$$$$$$$$$$$$$$
     // Permissions $
@@ -222,39 +245,17 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
      */
     private fun setImageSelectionButtonOnClickListener() = binding.imageSelectionButton.setOnClickListener {
         permissionsHandler.requestPermissionsIfNecessaryAndRunFunIfAllGrantedOrRunDirectly {
-            selectImages()
+            selectImages.launch(IMAGE_MIME_TYPE)
         }
     }
 
-    private fun selectImages() {
-        Intent(Intent.ACTION_PICK).run {
-            type = IMAGE_MIME_TYPE
-            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            startActivityForResult(
-                this,
-                MainActivity.IntentCodes.IMAGE_SELECTION.ordinal
+    private val selectImages = registerForActivityResult(ActivityResultContracts.GetMultipleContents()){ selectedUris ->
+        if (selectedUris.isNotEmpty()){
+            startActivity(
+                Intent(requireActivity(), CroppingActivity::class.java)
+                    .putParcelableArrayListExtra(IntentIdentifiers.SELECTED_IMAGE_URI_STRINGS, ArrayList(selectedUris))
             )
+            ActivityTransitions.PROCEED(requireContext())
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == FragmentActivity.RESULT_OK && requestCode == MainActivity.IntentCodes.IMAGE_SELECTION.ordinal) {
-            with(data?.clipData!!) {
-                startCroppingActivity(imageUris = ArrayList((0 until itemCount).map { getItemAt(it)?.uri!! }))
-            }
-        }
-    }
-
-    //$$$$$$$$$$
-    // Exiting $
-    //$$$$$$$$$$
-    private fun startCroppingActivity(imageUris: ArrayList<Parcelable>) {
-        startActivity(
-            Intent(requireActivity(), CroppingActivity::class.java)
-                .putParcelableArrayListExtra(IntentIdentifiers.SELECTED_IMAGE_URI_STRINGS, imageUris)
-        )
-        ActivityTransitions.PROCEED(requireContext())
     }
 }

@@ -3,16 +3,13 @@ package com.autocrop.activities.main
 import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.autocrop.global.UserPreferences
+import com.autocrop.global.BooleanUserPreferences
+import com.autocrop.global.UriUserPreferences
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.utils.android.*
 import com.w2sv.autocrop.databinding.ActivityMainBinding
 
 class MainActivity : FragmentHostingActivity<ActivityMainBinding>() {
-
-    enum class IntentCodes{
-        IMAGE_SELECTION
-    }
 
     override val rootFragment by lazy{ FlowFieldFragment() }
     val aboutFragment by lazy { AboutFragment() }
@@ -54,6 +51,7 @@ class MainActivity : FragmentHostingActivity<ActivityMainBinding>() {
     override fun onPause() {
         super.onPause()
 
-        UserPreferences.writeChangedValuesToSharedPreferences(lazy { getSharedPreferences() })
+        BooleanUserPreferences.writeChangedValuesToSharedPreferences(lazy { getSharedPreferences() })
+        UriUserPreferences.writeChangedValuesToSharedPreferences(lazy { getSharedPreferences() })
     }
 }

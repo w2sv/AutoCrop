@@ -2,7 +2,7 @@ package com.autocrop.activities.examination.fragments.viewpager
 
 import androidx.lifecycle.ViewModel
 import com.autocrop.activities.examination.ExaminationActivityViewModel
-import com.autocrop.global.UserPreferences
+import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.types.CropBundle
 import com.autocrop.utils.Index
 import com.autocrop.utils.rotated
@@ -17,7 +17,7 @@ class ViewPagerFragmentViewModel: ViewModel(){
 
     val dataSet = ViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 
-    val conductAutoScroll = UserPreferences.conductAutoScrolling && dataSet.size > 1
+    val conductAutoScroll = BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
 
     val startPosition: Int = (MAX_VIEWS / 2).run {
         minus(dataSet.correspondingPosition(this))

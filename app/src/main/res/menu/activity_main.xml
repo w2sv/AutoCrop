@@ -17,6 +17,18 @@
             android:title="@string/menu_item_conduct_auto_scrolling"
             android:checkable="true" />
 
+    <!--  Crop Saving  -->
+
+    <item
+        android:id="@+id/main_menu_group_divider_crop_saving"
+        android:title="@string/menu_item_group_divider_crop_saving"
+        android:enabled="false"/>
+
+        <item
+            android:id="@+id/main_menu_item_change_save_destination_dir"
+            android:icon="@drawable/ic_round_save_24"
+            android:title="@string/main_menu_item_change_directory" />
+
     <!--  Other  -->
 
     <item

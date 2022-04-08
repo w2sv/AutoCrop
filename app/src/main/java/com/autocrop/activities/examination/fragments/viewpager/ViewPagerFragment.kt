@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.global.UserPreferences
+import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
 
@@ -74,8 +74,8 @@ class CropEntiretyActionConfirmationDialogFragment(
                 setTitle(title)
                 if (addDeleteCorrespondingScreenshotsCheckbox)
                     setMultiChoiceItems(arrayOf("Delete corresponding screenshots"), booleanArrayOf(
-                        UserPreferences.deleteScreenshotsOnSaveAll)){ _, _, _ -> UserPreferences.toggle(
-                        UserPreferences.Keys.deleteScreenshotsOnSaveAll)}
+                        BooleanUserPreferences.deleteScreenshotsOnSaveAll)){ _, _, _ -> BooleanUserPreferences.toggle(
+                        BooleanUserPreferences.Keys.deleteScreenshotsOnSaveAll)}
                 setNegativeButton("No") { _, _ -> }
                 setPositiveButton("Yes") { _, _ -> positiveButtonOnClickListener() }
             }

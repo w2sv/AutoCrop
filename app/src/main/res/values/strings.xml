@@ -25,10 +25,12 @@
 
     <!-- Menu Item Text -->
     <string name="menu_item_group_divider_examination">Examination</string>
+    <string name="menu_item_group_divider_crop_saving">CropSaving</string>
     <string name="menu_item_group_divider_other">Other</string>
 
     <string name="menu_item_conduct_auto_scrolling">AutoScroll</string>
     <string name="menu_item_rate_the_app">Rate the app</string>
     <string name="menu_item_about_the_app">About</string>
+    <string name="main_menu_item_change_directory">Change Directory</string>
 
 </resources>
