@@ -58,7 +58,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
     }
 
     private inner class FlowFieldHandler{
-        private val pApplet: FlowFieldPApplet =
+        val pApplet: FlowFieldPApplet =
             FlowFieldPApplet(
                 screenResolution(requireActivity().windowManager)
             )
@@ -78,18 +78,27 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
         }
 
         /**
-         * Save current FlowField canvas to "{ExternalImageDirectory}.{FlowField_{formattedDateTimeString()}}.jpg",
-         * display Snackbar comprising directory path file has been saved to
+         * Save current FlowField canvas to "[externalPicturesDir].{FlowField_[formattedDateTimeString]}.jpg",
+         * display Snackbar with saving destination
          */
         private fun captureFlowField(){
             pApplet.bitmap().save(requireContext().contentResolver,"FlowField_${formattedDateTimeString()}.jpg")
 
             requireActivity().displaySnackbar(
-                "Saved FlowField to pictures",
+                "Saved FlowField to \n$externalPicturesDir",
                 TextColors.SUCCESS,
                 Toast.LENGTH_SHORT
             )
         }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+
+        if (hidden)
+            flowFieldHandler.pApplet.pause()
+        else
+            flowFieldHandler.pApplet.resume()
     }
 
     private fun setMenuInflationButtonOnClickListener() =

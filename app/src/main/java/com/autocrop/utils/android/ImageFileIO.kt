@@ -34,8 +34,10 @@ fun Bitmap.save(contentResolver: ContentResolver, fileName: String) {
     Timber.i("Saved crop to ${newUri.path}")
 }
 
+val externalPicturesDir: File = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+
 private fun imageFileUriToOutputStreamUntilQ(fileName: String): Pair<Uri, OutputStream> =
-    File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), fileName).let { destinationFile ->
+    File(externalPicturesDir, fileName).let { destinationFile ->
         Uri.fromFile(destinationFile) to FileOutputStream(destinationFile)
     }
 
