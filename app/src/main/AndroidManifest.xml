@@ -2,7 +2,6 @@
 
 <!-- package name not to be touched (due to app already having been uploaded to playstore) -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.w2sv.autocrop">
 
     <!-- Permissions
@@ -21,6 +20,7 @@
     <!--Reference: https://developer.android.com/guide/topics/manifest/application-element -->
     <application
         android:label="@string/app_title"
+        android:name="com.autocrop.application.AutoCrop"
 
         android:icon="@mipmap/brudineletten"
         android:roundIcon="@mipmap/brudineletten_round"

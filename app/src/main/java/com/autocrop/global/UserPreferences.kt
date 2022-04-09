@@ -2,16 +2,17 @@ package com.autocrop.global
 
 import android.content.SharedPreferences
 import android.net.Uri
-import com.autocrop.utils.android.writeBoolean
+import android.provider.DocumentsContract
 import com.autocrop.utils.logAfterwards
+import com.autocrop.utils.logBeforehand
 import timber.log.Timber
 import java.util.*
 
-abstract class UserPreferences<T>(private val defaultValue: Map<String, T>): SortedMap<String, T> by sortedMapOf(){
-    fun initializeFromSharedPreferences(sharedPreferences: SharedPreferences) = logAfterwards("Initialized ${javaClass.name}") {
-        defaultValue.forEach{ (key, defaultValue) ->
+abstract class UserPreferences<T>(default: SortedMap<String, T>): SortedMap<String, T> by default{
+    fun initializeFromSharedPreferences(sharedPreferences: SharedPreferences) = logBeforehand("Initializing ${javaClass.name} from SharedPreferences") {
+        forEach{ (key, defaultValue) ->
             this[key] = sharedPreferences.getValue(key, defaultValue)
-            hasChangedSinceLastWriteToSharedPreferences[key] = false
+            Timber.i("Set ${javaClass.name}.$key to $defaultValue from SharedPreferences")
         }
     }
 
@@ -19,16 +20,15 @@ abstract class UserPreferences<T>(private val defaultValue: Map<String, T>): Sor
      * Keep track of which values have changed since last writing operation to shared preferences
      * to reduce number of conducted IO operations
      */
-    protected val hasChangedSinceLastWriteToSharedPreferences: MutableMap<String, Boolean> = mutableMapOf()
-
-    val isInitialized: Boolean
-        get() = isNotEmpty()
+    protected val changedSinceLastDiscSync: MutableMap<String, Boolean> =
+        mutableMapOf<String, Boolean>().withDefault { false }
 
     fun writeChangedValuesToSharedPreferences(sharedPreferences: Lazy<SharedPreferences>) =
         keys
-            .filter { hasChangedSinceLastWriteToSharedPreferences.getValue(it) }
+            .filter { changedSinceLastDiscSync.getValue(it) }
             .forEach {
                 sharedPreferences.value.writeValue(it, getValue(it))
+                changedSinceLastDiscSync[it] = false
                 Timber.i("Wrote $it=${getValue(it)} to shared preferences")
             }
 
@@ -41,7 +41,7 @@ abstract class UserPreferences<T>(private val defaultValue: Map<String, T>): Sor
  * having a global impact
  */
 object BooleanUserPreferences : UserPreferences<Boolean>(
-    mapOf(
+    sortedMapOf(
         Keys.conductAutoScrolling to true,
         Keys.deleteIndividualScreenshot to false,
         Keys.deleteScreenshotsOnSaveAll to false
@@ -65,41 +65,47 @@ object BooleanUserPreferences : UserPreferences<Boolean>(
         get() = getValue(Keys.deleteScreenshotsOnSaveAll)
 
     /**
-     * Toggles respective value & respective value within [hasChangedSinceLastWriteToSharedPreferences]
+     * Toggles respective value & respective value within [changedSinceLastDiscSync]
      * and logs
      */
     fun toggle(key: String) = logAfterwards("Toggled $key to ${this[key]}"){
         this[key] = !(getValue(key) as Boolean)
-        hasChangedSinceLastWriteToSharedPreferences[key] = !hasChangedSinceLastWriteToSharedPreferences.getValue(key)
+        changedSinceLastDiscSync[key] = !changedSinceLastDiscSync.getValue(key)
     }
 
-    override fun SharedPreferences.writeValue(key: String, value: Boolean) = writeBoolean(key, value)
+    override fun SharedPreferences.writeValue(key: String, value: Boolean) = edit().putBoolean(key, value).apply()
     override fun SharedPreferences.getValue(key: String, defaultValue: Boolean): Boolean = getBoolean(key, defaultValue)
 }
 
-object UriUserPreferences: UserPreferences<Uri?>(
-    mapOf(
-        Keys.imageSaveDestination to null,
-        Keys.treeUri to null
-    )
-){
+object SaveDestinationPreferences: UserPreferences<Uri?>(sortedMapOf(Keys.treeUri to null)){
 
     object Keys{
-        const val treeUri: String = "TREE_URI"
-        const val imageSaveDestination: String = "IMAGE_SAVE_DESTINATION"
+        const val treeUri: String = "IMAGE_SAVE_DESTINATION_TREE_URI"
     }
-
-    var imageSaveDestination: Uri?
-        get() = getValue(Keys.imageSaveDestination)
-        set(value){
-            this[Keys.imageSaveDestination] = value
-        }
 
     var treeUri: Uri?
         get() = getValue(Keys.treeUri)
         set(value){
-            this[Keys.treeUri] = value
+//            if (value != getValue(Keys.treeUri)){
+                this[Keys.treeUri] = value
+                setDocumentUri(value!!)
+                changedSinceLastDiscSync[Keys.treeUri] = true
+//            }
         }
+
+    val documentUri: Uri?
+        get() = when{
+            _documentUri == null && treeUri != null -> {
+                setDocumentUri(treeUri!!)
+                _documentUri
+            }
+            else -> _documentUri
+        }
+    private var _documentUri: Uri? = null
+    private fun setDocumentUri(treeUri: Uri){
+        _documentUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, DocumentsContract.getTreeDocumentId(treeUri))
+        Timber.i("Set documentUri $_documentUri")
+    }
 
     override fun SharedPreferences.writeValue(key: String, value: Uri?) = edit().putString(key, value.toString()).apply()
     override fun SharedPreferences.getValue(key: String, defaultValue: Uri?): Uri? = Uri.parse(getString(key, defaultValue.toString()))

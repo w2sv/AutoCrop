@@ -12,7 +12,7 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import com.autocrop.global.UriUserPreferences
+import com.autocrop.global.SaveDestinationPreferences
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -28,7 +28,7 @@ private const val JPEG_MIME_TYPE = "image/jpeg"
  */
 fun Bitmap.save(contentResolver: ContentResolver, fileName: String, pickedDestination: Uri? = null): Boolean {
     val fileOutputStream: OutputStream = when {
-        UriUserPreferences.imageSaveDestination != null -> imageFileUriToOutputStreamFromPickedPath(fileName, contentResolver)
+        SaveDestinationPreferences.documentUri != null -> imageFileUriToOutputStreamFromPickedPath(fileName, contentResolver)
         apiNotNewerThanQ -> imageFileUriToOutputStreamUntilQ(fileName)
         else -> imageFileUriToOutputStreamPostQ(fileName, contentResolver)
     }
@@ -43,11 +43,16 @@ fun Bitmap.save(contentResolver: ContentResolver, fileName: String, pickedDestin
 
 val externalPicturesDir: File = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
 
-private fun imageFileUriToOutputStreamFromPickedPath(fileName: String, contentResolver: ContentResolver): OutputStream =
-//    DocumentsContract.buildDocumentUriUsingTree()
-    DocumentsContract.createDocument(contentResolver, UriUserPreferences.imageSaveDestination!!, JPEG_MIME_TYPE, fileName)!!.run {
+private fun imageFileUriToOutputStreamFromPickedPath(fileName: String, contentResolver: ContentResolver): OutputStream{
+    println("treeUri: ${SaveDestinationPreferences.treeUri!!.path} ")
+    println("authority: ${SaveDestinationPreferences.treeUri!!.authority}")
+    println("documentUri: ${SaveDestinationPreferences.documentUri!!.path}")
+    println("authority: ${SaveDestinationPreferences.documentUri!!.authority}")
+
+    return DocumentsContract.createDocument(contentResolver, SaveDestinationPreferences.documentUri!!, JPEG_MIME_TYPE, fileName)!!.run {
         contentResolver.openOutputStream(this)!!
     }
+}
 
 private fun imageFileUriToOutputStreamUntilQ(fileName: String): OutputStream =
     FileOutputStream(File(externalPicturesDir, fileName))

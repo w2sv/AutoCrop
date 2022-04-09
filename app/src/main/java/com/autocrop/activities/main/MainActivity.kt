@@ -4,7 +4,7 @@ import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.global.BooleanUserPreferences
-import com.autocrop.global.UriUserPreferences
+import com.autocrop.global.SaveDestinationPreferences
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.utils.android.*
 import com.w2sv.autocrop.databinding.ActivityMainBinding
@@ -52,6 +52,6 @@ class MainActivity : FragmentHostingActivity<ActivityMainBinding>() {
         super.onPause()
 
         BooleanUserPreferences.writeChangedValuesToSharedPreferences(lazy { getSharedPreferences() })
-        UriUserPreferences.writeChangedValuesToSharedPreferences(lazy { getSharedPreferences() })
+        SaveDestinationPreferences.writeChangedValuesToSharedPreferences(lazy { getSharedPreferences() })
     }
 }

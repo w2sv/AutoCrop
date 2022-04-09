@@ -3,12 +3,9 @@ package com.autocrop.activities.main.fragments.flowfield
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.DocumentsContract
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
@@ -21,7 +18,7 @@ import com.autocrop.activities.IntentIdentifiers
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.BooleanUserPreferences
-import com.autocrop.global.UriUserPreferences
+import com.autocrop.global.SaveDestinationPreferences
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
 import com.autocrop.utils.setSpanHolistically
@@ -48,12 +45,6 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
 
         // initialize FlowField
         flowFieldHandler = FlowFieldHandler()
-
-        // initialize UserPreferences if necessary
-        if (!BooleanUserPreferences.isInitialized)
-            BooleanUserPreferences.initializeFromSharedPreferences(requireActivity().getSharedPreferences())
-        if (!UriUserPreferences.isInitialized)
-            UriUserPreferences.initializeFromSharedPreferences(requireActivity().getSharedPreferences())
 
         // set button onClickListeners
         setImageSelectionButtonOnClickListener()
@@ -130,7 +121,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
                 mapOf(
                     R.id.main_menu_item_rate_the_app to ::goToPlayStoreListing,
                     R.id.main_menu_item_about_the_app to { with(typedActivity) { hideAndShowFragments(rootFragment, aboutFragment) } },
-                    R.id.main_menu_item_change_save_destination_dir to { pickSaveDestinationDir.launch(UriUserPreferences.imageSaveDestination) }
+                    R.id.main_menu_item_change_save_destination_dir to { pickSaveDestinationDir.launch(SaveDestinationPreferences.treeUri) }
                 ).forEach { (id, onClickListener) ->
                     with(menu.findItem(id)){
                         setOnMenuItemClickListener {
@@ -176,10 +167,9 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
             }
         }
     ) {
-        it?.let {
-            requireContext().contentResolver.takePersistableUriPermission(it,Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-
-            UriUserPreferences.imageSaveDestination = DocumentsContract.buildDocumentUriUsingTree(it, DocumentsContract.getTreeDocumentId(it))
+        it?.let { treeUri ->
+            requireContext().contentResolver.takePersistableUriPermission(treeUri,Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            SaveDestinationPreferences.treeUri = treeUri
         }
     }
 
@@ -190,6 +180,10 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
         private val missingPermissions: List<String>
             get() = REQUIRED_PERMISSIONS.filter { !requireActivity().permissionGranted(it) }
 
+        private val permissionRequestContract = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){
+            onRequestPermissionsResult(it)
+        }
+
         /**
          * Decorator either running passed function if all permissions granted, otherwise sets
          * [onAllPermissionsGranted] to passed function and calls [requestPermissions]
@@ -198,9 +192,10 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
             missingPermissions.let {
                 if (it.isNotEmpty()){
                     this.onAllPermissionsGranted = onAllPermissionsGranted
-                    return requestPermissions(it.toTypedArray(), 420)
+                    permissionRequestContract.launch(it.toTypedArray())
                 }
-                return onAllPermissionsGranted()
+                else
+                    onAllPermissionsGranted()
             }
 
         private var onAllPermissionsGranted: (() -> Unit)?  = null
@@ -211,13 +206,13 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
          *
          * Clears [onAllPermissionsGranted] afterwards in any case
          */
-        fun onRequestPermissionsResult(permissions: Array<out String>, grantResults: IntArray) {
-            if (grantResults.any { it == PackageManager.PERMISSION_DENIED }) {
+        fun onRequestPermissionsResult(permissionToGranted: Map<String, Boolean>) {
+            if (permissionToGranted.values.any { !it }) {
                 requireActivity().displaySnackbar(
                     "You need to permit file reading and\nwriting in order for the app to work",
                     TextColors.NEUTRAL
                 )
-                Timber.i("Not all required permissions were granted; permissions: ${permissions.toList()} | grantResults: ${grantResults.toList()}")
+                Timber.i("Not all required permissions were granted: $permissionToGranted")
             }
             else
                 onAllPermissionsGranted!!()
@@ -225,31 +220,21 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray){
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        permissionsHandler.onRequestPermissionsResult(permissions, grantResults)
-    }
-
     //$$$$$$$$$$$$$$$$$$
     // Image Selection $
     //$$$$$$$$$$$$$$$$$$
 
     /**
-     * Run [selectImages] if all permissions granted, otherwise request required permissions and
-     * then run [selectImages] if all granted
+     * Launch [selectImagesContract] if all permissions granted, otherwise request required permissions and
+     * then launch [selectImagesContract] if all granted
      */
     private fun setImageSelectionButtonOnClickListener() = binding.imageSelectionButton.setOnClickListener {
         permissionsHandler.requestPermissionsIfNecessaryAndRunFunIfAllGrantedOrRunDirectly {
-            selectImages.launch(IMAGE_MIME_TYPE)
+            selectImagesContract.launch(IMAGE_MIME_TYPE)
         }
     }
 
-    private val selectImages = registerForActivityResult(ActivityResultContracts.GetMultipleContents()){ selectedUris ->
+    private val selectImagesContract = registerForActivityResult(ActivityResultContracts.GetMultipleContents()){ selectedUris ->
         if (selectedUris.isNotEmpty()){
             startActivity(
                 Intent(requireActivity(), CroppingActivity::class.java)
