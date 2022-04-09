@@ -6,10 +6,10 @@ import android.content.Intent
 /**
  * Takes care of retrieving put extra only once after instantiation
  */
-class IntentExtraRetriever<T> {
+class IntentExtraRetriever<T>(private val extraName: String) {
     private var intentConsumed: Boolean = false
 
-    operator fun invoke(intent: Intent, extraName: String, defaultValue: T? = null): T?{
+    operator fun invoke(intent: Intent, defaultValue: T? = null): T?{
         if (!intentConsumed){
             intent.extras?.let { bundle ->
                 bundle.get(extraName)?.let { value ->

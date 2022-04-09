@@ -8,8 +8,9 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import com.autocrop.global.BooleanUserPreferences
+import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.saveCropAndDeleteScreenshotIfApplicable
+import com.autocrop.global.BooleanUserPreferences
 
 /**
  * Class accounting for procedure dialog display upon screen click,
@@ -18,7 +19,8 @@ import com.autocrop.activities.examination.saveCropAndDeleteScreenshotIfApplicab
 class CropProcedureDialog(
     private val cropWithUri: Pair<Uri, Bitmap>,
     private val contentResolver: ContentResolver,
-    private val onCropAction: (incrementNSavedCrops: Boolean) -> Unit)
+    private val sharedViewModel: ExaminationActivityViewModel,
+    private val onCropAction: () -> Unit)
         : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
@@ -28,10 +30,10 @@ class CropProcedureDialog(
             setMultiChoiceItems(arrayOf("Delete corresponding screenshot"), booleanArrayOf(
                 BooleanUserPreferences.deleteIndividualScreenshot)){ _, _, _ -> BooleanUserPreferences.toggle(
                 BooleanUserPreferences.Keys.deleteIndividualScreenshot) }
-            setNegativeButton("No, discard") { _, _ -> onCropAction(false)}
+            setNegativeButton("No, discard") { _, _ -> onCropAction()}
             setPositiveButton("Yes") { _, _ ->
-                CropProcessor().execute(IOParameters(cropWithUri.first, cropWithUri.second, BooleanUserPreferences.deleteIndividualScreenshot, contentResolver))
-                onCropAction(true)
+                CropProcessor(sharedViewModel).execute(IOParameters(cropWithUri.first, cropWithUri.second, BooleanUserPreferences.deleteIndividualScreenshot, contentResolver))
+                onCropAction()
             }
 
             create()
@@ -39,14 +41,14 @@ class CropProcedureDialog(
 
     private data class IOParameters(val uri: Uri, val crop: Bitmap, val deleteScreenshot: Boolean, val contentResolver: ContentResolver)
 
-    private class CropProcessor: AsyncTask<IOParameters, Void, Void?>() {
-        override fun doInBackground(vararg params: IOParameters): Void? {
-            with(params.first()) {
-                saveCropAndDeleteScreenshotIfApplicable(
-                    uri, crop, deleteScreenshot, contentResolver
-                )
+    private class CropProcessor(private val sharedViewModel: ExaminationActivityViewModel): AsyncTask<IOParameters, Void, Void?>() {
+        override fun doInBackground(vararg params: IOParameters): Void? =
+            params.first().run {
+                val writeUri = saveCropAndDeleteScreenshotIfApplicable(uri, crop, deleteScreenshot, contentResolver)
+
+                sharedViewModel.setCropWriteDirPathIfApplicable(writeUri)
+                sharedViewModel.incrementImageFileIOCounters(deleteScreenshot)
+                null
             }
-            return null
-        }
     }
 }

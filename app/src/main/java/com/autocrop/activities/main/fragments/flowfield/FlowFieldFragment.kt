@@ -1,6 +1,7 @@
 package com.autocrop.activities.main.fragments.flowfield
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
@@ -14,11 +15,11 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
 import com.autocrop.activities.ActivityTransitions
-import com.autocrop.activities.IntentIdentifiers
+import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.BooleanUserPreferences
-import com.autocrop.global.SaveDestinationPreferences
+import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
 import com.autocrop.utils.setSpanHolistically
@@ -81,7 +82,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
 
             requireActivity().displaySnackbar(
                 "Saved FlowField to \n$externalPicturesDir",
-                TextColors.SUCCESS,
+                NotificationColor.SUCCESS,
                 Toast.LENGTH_SHORT
             )
         }
@@ -121,7 +122,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
                 mapOf(
                     R.id.main_menu_item_rate_the_app to ::goToPlayStoreListing,
                     R.id.main_menu_item_about_the_app to { with(typedActivity) { hideAndShowFragments(rootFragment, aboutFragment) } },
-                    R.id.main_menu_item_change_save_destination_dir to { pickSaveDestinationDir.launch(SaveDestinationPreferences.treeUri) }
+                    R.id.main_menu_item_change_save_destination_dir to { pickSaveDestinationDir.launch(CropFileSaveDestinationPreferences.treeUri) }
                 ).forEach { (id, onClickListener) ->
                     with(menu.findItem(id)){
                         setOnMenuItemClickListener {
@@ -150,12 +151,20 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
         }
 
     private fun goToPlayStoreListing() =
-        startActivity(
-            Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("https://play.google.com/store/apps/details?id=${requireContext().packageName}")
-                setPackage("com.android.vending")
-            }
-        )
+        try{
+            startActivity(
+                Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse("https://play.google.com/store/apps/details?id=${requireContext().packageName}")
+                    setPackage("com.android.vending")
+                }
+            )
+        } catch (e: ActivityNotFoundException){
+            requireActivity().displaySnackbar(
+                "Seems like you're not signed into\nthe Play Store, pal \uD83E\uDD14",
+                NotificationColor.NEUTRAL
+            )
+        }
+
 
     private val pickSaveDestinationDir = registerForActivityResult(
         object: ActivityResultContracts.OpenDocumentTree(){
@@ -169,7 +178,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
     ) {
         it?.let { treeUri ->
             requireContext().contentResolver.takePersistableUriPermission(treeUri,Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            SaveDestinationPreferences.treeUri = treeUri
+            CropFileSaveDestinationPreferences.treeUri = treeUri
         }
     }
 
@@ -210,7 +219,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
             if (permissionToGranted.values.any { !it }) {
                 requireActivity().displaySnackbar(
                     "You need to permit file reading and\nwriting in order for the app to work",
-                    TextColors.NEUTRAL
+                    NotificationColor.NEUTRAL
                 )
                 Timber.i("Not all required permissions were granted: $permissionToGranted")
             }
@@ -230,7 +239,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
      */
     private fun setImageSelectionButtonOnClickListener() = binding.imageSelectionButton.setOnClickListener {
         permissionsHandler.requestPermissionsIfNecessaryAndRunFunIfAllGrantedOrRunDirectly {
-            selectImagesContract.launch(IMAGE_MIME_TYPE)
+            selectImagesContract.launch(MimeTypes.IMAGE)
         }
     }
 
@@ -238,7 +247,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
         if (selectedUris.isNotEmpty()){
             startActivity(
                 Intent(requireActivity(), CroppingActivity::class.java)
-                    .putParcelableArrayListExtra(IntentIdentifiers.SELECTED_IMAGE_URI_STRINGS, ArrayList(selectedUris))
+                    .putParcelableArrayListExtra(IntentIdentifier.SELECTED_IMAGE_URI_STRINGS, ArrayList(selectedUris))
             )
             ActivityTransitions.PROCEED(requireContext())
         }

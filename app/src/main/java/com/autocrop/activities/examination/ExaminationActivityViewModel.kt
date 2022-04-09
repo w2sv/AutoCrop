@@ -1,7 +1,11 @@
 package com.autocrop.activities.examination
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.autocrop.types.CropBundle
+import com.autocrop.utils.android.parentDirPath
+import java.io.File
+import java.nio.file.Paths
 
 class ExaminationActivityViewModel(val nDismissedImages: Int): ViewModel() {
 
@@ -21,5 +25,11 @@ class ExaminationActivityViewModel(val nDismissedImages: Int): ViewModel() {
         _nSavedCrops++
         if (deletedScreenshot)
             _nDeletedScreenshots++
+    }
+
+    var cropWriteDirPath: String? = null
+    fun setCropWriteDirPathIfApplicable(cropWriteUri: Uri?){
+        if (cropWriteUri != null && cropWriteDirPath == null)
+            cropWriteDirPath = cropWriteUri.parentDirPath
     }
 }

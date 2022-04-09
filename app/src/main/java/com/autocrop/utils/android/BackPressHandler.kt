@@ -29,7 +29,7 @@ class BackPressHandler(
                 RESET_DURATION
             )
 
-            snackbarDisplayActivity.displaySnackbar(snackbarMessage, TextColors.NEUTRAL)
+            snackbarDisplayActivity.displaySnackbar(snackbarMessage, NotificationColor.NEUTRAL)
         }
         else
             return onSecondPress()

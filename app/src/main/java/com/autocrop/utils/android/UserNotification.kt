@@ -7,7 +7,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.R
 
 
-object TextColors {
+object NotificationColor {
     const val NEUTRAL: Int = R.color.light_gray
     const val SUCCESS: Int = R.color.light_green
     const val URGENT: Int = R.color.saturated_magenta

@@ -1,6 +1,7 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -156,7 +157,7 @@ class ViewPagerHandler(
                 binding.viewPager.setPageTransformer()
                 activity.displaySnackbar(
                     "Cancelled auto scrolling",
-                    TextColors.SUCCESS,
+                    NotificationColor.SUCCESS,
                     Snackbar.LENGTH_SHORT
                 )
             }
@@ -195,11 +196,12 @@ class ViewPagerHandler(
                         override fun onClick() {
                             viewModel.dataSet.correspondingPosition(adapterPosition).let{ dataSetPosition ->
                                 CropProcedureDialog(
-                                    viewModel.dataSet[dataSetPosition].screenshotUri to viewModel.dataSet[dataSetPosition].crop,
-                                    activity.contentResolver
+                                    viewModel.dataSet[dataSetPosition].run{screenshotUri to crop },
+                                    activity.contentResolver,
+                                    sharedViewModel
                                 )
-                                {incrementNSavedCrops -> onCropProcedureAction(dataSetPosition, incrementNSavedCrops)}
-                                    .show(activity.supportFragmentManager, "CROP_PROCEDURE_DIALOG")
+                                    {onCropProcedureAction(dataSetPosition)}
+                                        .show(activity.supportFragmentManager, "CROP_PROCEDURE_DIALOG")
                             }
                         }
                     }
@@ -234,10 +236,7 @@ class ViewPagerHandler(
          * hide [binding].pageIndicationSeekBar AND/OR
          * removes view, procedure action has been selected for, from pager
          */
-        private fun onCropProcedureAction(dataSetPosition: Index, incrementNSavedCrops: Boolean){
-            if (incrementNSavedCrops)
-                sharedViewModel.incrementImageFileIOCounters(BooleanUserPreferences.deleteIndividualScreenshot)
-
+        private fun onCropProcedureAction(dataSetPosition: Index){
             when(viewModel.dataSet.size){
                 1 -> return activity.run { replaceCurrentFragmentWith(appTitleFragment, true) }
                 2 -> activity.runOnUiThread { binding.pageIndicationSeekBar.hideAnimated() }

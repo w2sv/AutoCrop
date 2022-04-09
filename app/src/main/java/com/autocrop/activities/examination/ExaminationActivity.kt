@@ -8,7 +8,7 @@ import android.content.Intent
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
-import com.autocrop.activities.IntentIdentifiers
+import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
@@ -23,25 +23,25 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
 
     private lateinit var sharedViewModel: ExaminationActivityViewModel
 
-    private val nDismissedImagesRetriever = IntentExtraRetriever<Int>()
+    private val nDismissedImagesRetriever = IntentExtraRetriever<Int>(IntentIdentifier.N_DISMISSED_IMAGES)
 
     override val rootFragment: ViewPagerFragment by lazy{ViewPagerFragment()}
     val saveAllFragment: SaveAllFragment by lazy { SaveAllFragment() }
     val appTitleFragment: AppTitleFragment by lazy { AppTitleFragment() }
 
     override fun onCreateCore() {
-        //----------retrieve ViewModel
+        // retrieve ViewModel
         sharedViewModel = ViewModelProvider(
             this,
-            ExaminationViewModelFactory(nDismissedImages = nDismissedImagesRetriever(intent, IntentIdentifiers.N_DISMISSED_IMAGES) ?: 0)
+            ExaminationViewModelFactory(nDismissedImages = nDismissedImagesRetriever(intent) ?: 0)
         )[ExaminationActivityViewModel::class.java]
 
-        // ---------display Snackbar
+        // display Snackbar
         with(sharedViewModel.nDismissedImages) {
             if (!equals(0))
                 displaySnackbar(
                     "Couldn't find cropping bounds for\n$this image${numberInflection(this)}",
-                    TextColors.URGENT,
+                    NotificationColor.URGENT,
                     2500
                 )
         }
@@ -70,7 +70,7 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
         saveAllFragment.isVisible -> {
             displaySnackbar(
                 "Wait until crops have been saved",
-                TextColors.URGENT
+                NotificationColor.URGENT
             )
         }
         else -> handleBackPress()
@@ -81,13 +81,18 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
             Intent(
                 this,
                 MainActivity::class.java
-            ).putExtra(
-                IntentIdentifiers.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS,
-                intArrayOf(
-                    sharedViewModel.nSavedCrops,
-                    sharedViewModel.nDeletedScreenshots
-                )
             )
+                .putExtra(
+                    IntentIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS,
+                    intArrayOf(
+                        sharedViewModel.nSavedCrops,
+                        sharedViewModel.nDeletedScreenshots
+                    )
+                )
+                .putExtra(
+                    IntentIdentifier.CROP_WRITE_DIR_PATH,
+                    sharedViewModel.cropWriteDirPath
+                )
         )
         ActivityTransitions.RETURN(this)
     }
