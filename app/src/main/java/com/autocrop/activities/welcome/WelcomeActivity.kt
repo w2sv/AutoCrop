@@ -15,10 +15,6 @@ class WelcomeActivity : FragmentActivity(R.layout.activity_welcome) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // enable Timber if debugging mode enabled
-        if (debuggingModeEnabled())
-            Timber.plant(Timber.DebugTree())
-
         // transition to main activity after certain delay
         Handler(Looper.getMainLooper()).postDelayed(
             {
