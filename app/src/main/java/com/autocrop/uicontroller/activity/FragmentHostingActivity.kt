@@ -2,12 +2,10 @@ package com.autocrop.uicontroller.activity
 
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.autocrop.utils.reflectField
 import com.autocrop.utils.reflectMethod
-import com.w2sv.autocrop.R
 
 abstract class FragmentHostingActivity<VB: ViewBinding>
     : ViewBindingHandlingActivity<VB>() {

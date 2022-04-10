@@ -2,7 +2,7 @@
 
     <!-- App Theme -->
 
-    <style name="MainAppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.App.Main" parent="Theme.AppCompat.NoActionBar">
 
         <item name="android:windowBackground">@android:color/black</item>
 
@@ -22,10 +22,9 @@
 
     <!--    Splash Theme-->
 
-    <style name="Theme.App.Splash" parent="Theme.SplashScreen">
-        <item name="postSplashScreenTheme">@style/MainAppTheme</item>
-        <item name="windowSplashScreenBackground">@color/magenta</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/brudineletten_foreground</item>
+    <style name="Theme.App.Splash" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <!--    App Title TextView-->

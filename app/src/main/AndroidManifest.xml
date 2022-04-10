@@ -52,10 +52,14 @@
 
         <activity
             android:name="com.autocrop.activities.cropping.CroppingActivity"
+            android:theme="@style/Theme.App.Main"
+
             android:screenOrientation="portrait" />
 
         <activity
             android:name="com.autocrop.activities.examination.ExaminationActivity"
+            android:theme="@style/Theme.App.Main"
+
             android:screenOrientation="portrait" />
 
     </application>
