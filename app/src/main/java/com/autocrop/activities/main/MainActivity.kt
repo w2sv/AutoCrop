@@ -1,5 +1,7 @@
 package com.autocrop.activities.main
 
+import android.text.SpannableStringBuilder
+import androidx.core.text.color
 import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
@@ -21,16 +23,17 @@ class MainActivity : FragmentHostingActivity<ActivityMainBinding>(true) {
             val (nSavedCrops, nDeletedScreenshots) = it[0] to it[1]
 
             displaySnackbar(
-                when (nSavedCrops) {
-                    0 -> "Discarded all crops"
-                    else -> "Saved $nSavedCrops crop${numberInflection(nSavedCrops)} to ${cropWriteDirPathRetriever(intent)!!}".run {
-                        if (nDeletedScreenshots != 0)
-                            plus(" and deleted\n${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} screenshot${numberInflection(nDeletedScreenshots)}")
-                        else
-                            this
+                SpannableStringBuilder().apply {
+                    when (nSavedCrops) {
+                        0 -> append("Discarded all crops")
+                        else -> {
+                            append("Saved $nSavedCrops crop${numberInflection(nSavedCrops)} to ")
+                            color(getColorInt(NotificationColor.SUCCESS, this@MainActivity)){append(cropWriteDirPathRetriever(intent)!!)}
+                            if (nDeletedScreenshots != 0)
+                                append(" and deleted\n${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} screenshot${numberInflection(nDeletedScreenshots)}")
+                        }
                     }
-                },
-                NotificationColor.SUCCESS
+                }
             )
         }
     }
