@@ -6,14 +6,22 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+import android.text.Spanned.SPAN_INCLUSIVE_INCLUSIVE
+import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.text.color
+import androidx.core.text.scale
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
@@ -132,6 +140,22 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
                     }
                 }
 
+//                with(menu.findItem(R.id.main_menu_item_change_save_destination_dir)){
+//                    title = SpannableStringBuilder().run{
+//                        append(title)
+//                        append("\n\t")
+//                        scale(0.85f) {
+//                            color(
+//                                resources.getColor(
+//                                    R.color.leef_green,
+//                                    requireContext().theme
+//                                )
+//                            )
+//                            { append("/Pictures") }
+//                        }
+//                    }
+//                }
+
                 // format group divider items
                 listOf(
                     R.id.main_menu_group_divider_examination,
@@ -145,6 +169,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
                         }
                     }
                 }
+
                 menu.makeIconsVisible()
                 show()
             }

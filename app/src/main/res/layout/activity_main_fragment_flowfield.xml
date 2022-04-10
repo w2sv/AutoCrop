@@ -37,12 +37,13 @@
     <ImageButton
         android:id="@+id/menu_button"
         style="?android:attr/actionOverflowButtonStyle"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
 
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="20dp"
+
         android:background="@android:color/transparent"
         android:contentDescription="@string/main_activity_menu_inflation_button_description" />
 
@@ -50,11 +51,14 @@
 
     <ImageButton
         android:id="@+id/flowfield_capture_button"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="65dp"
+        android:layout_alignTop="@id/menu_button"
+        android:layout_marginTop="48dp"
         android:layout_marginEnd="22.5dp"
+
         android:background="@drawable/ic_camera"
         android:backgroundTint="@android:color/darker_gray"
         android:contentDescription="@string/main_activity_menu_inflation_button_description" />

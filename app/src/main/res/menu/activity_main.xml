@@ -15,7 +15,7 @@
             android:id="@+id/main_menu_item_conduct_auto_scrolling"
             android:icon="@drawable/ic_baseline_redo_24"
             android:title="@string/menu_item_conduct_auto_scrolling"
-            android:checkable="true" />
+            android:checkable="true"/>
 
     <!--  Crop Saving  -->
 

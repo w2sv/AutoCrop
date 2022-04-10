@@ -7,7 +7,7 @@
     <color name="leef_green">#0ca63c</color>
 
     <color name="brudi_pink">#FF3F7F</color>
-    <color name="magenta">#7F1F3F</color>
     <color name="saturated_magenta">#911945</color>
+    <color name="magenta">#7F1F3F</color>
     <color name="wine_red">#B00020</color>
 </resources>
