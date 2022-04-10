@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- package name not to be touched (due to app already having been uploaded to playstore) -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.w2sv.autocrop">
 
     <!-- Permissions
@@ -9,9 +11,7 @@
         https://stackoverflow.com/questions/64221188/write-external-storage-when-targeting-android-10-->
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-    />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- setting requestLegacyExternalStorage to true effectuates opting out of
          scoped storage for API 29 = Android 10 to enable external storage writing
@@ -28,18 +28,23 @@
         android:theme="@style/AppTheme"
 
         android:requestLegacyExternalStorage="true"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+
+        android:appCategory="image"
+        tools:targetApi="o">
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-1494255973790385~2659692781"/>
 
         <!-- Activities -->
+
         <activity
             android:name="com.autocrop.activities.welcome.WelcomeActivity"
             android:screenOrientation="portrait"
             android:noHistory="true"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/SplashTheme">
 
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -50,18 +55,17 @@
 
         <activity
             android:name="com.autocrop.activities.main.MainActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.autocrop.activities.cropping.CroppingActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
 
         <activity
             android:name="com.autocrop.activities.examination.ExaminationActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
 
     </application>
 

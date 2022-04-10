@@ -25,7 +25,10 @@
         <item name="android:text">@string/app_title</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/magenta</item>
+    </style>
 
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
 
 </resources>

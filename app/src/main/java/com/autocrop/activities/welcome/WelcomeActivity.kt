@@ -4,35 +4,34 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.utils.android.debuggingModeEnabled
-import com.w2sv.autocrop.R
-import timber.log.Timber
 
-class WelcomeActivity : FragmentActivity(R.layout.activity_welcome) {
+class WelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // transition to main activity after certain delay
-        Handler(Looper.getMainLooper()).postDelayed(
-            {
-                startActivity(
-                    Intent(
-                        this,
-                        MainActivity::class.java
-                    )
-                )
-                ActivityTransitions.RESTART(this)
-            },
-            700
+        startActivity(
+            Intent(
+                this,
+                MainActivity::class.java
+            )
         )
-    }
+        ActivityTransitions.RESTART(this)
 
-    override fun onStop() {
-        super.onStop()
-
-        finishAndRemoveTask()
+        // transition to main activity after certain delay
+//        Handler(Looper.getMainLooper()).postDelayed(
+//            {
+//                startActivity(
+//                    Intent(
+//                        this,
+//                        MainActivity::class.java
+//                    )
+//                )
+//                ActivityTransitions.RESTART(this)
+//            },
+//            700
+//        )
     }
 }
