@@ -1,16 +1,8 @@
 <resources>
 
-    <!--    Splash Theme-->
-
-    <style name="Theme.App.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/magenta</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/brudineletten_foreground</item>
-        <item name="postSplashScreenTheme">@style/Theme.App.Main</item>
-    </style>
-
     <!-- App Theme -->
 
-    <style name="Theme.App.Main" parent="Theme.AppCompat.NoActionBar">
+    <style name="MainAppTheme" parent="Theme.AppCompat.NoActionBar">
 
         <item name="android:windowBackground">@android:color/black</item>
 
@@ -28,6 +20,14 @@
 
     </style>
 
+    <!--    Splash Theme-->
+
+    <style name="Theme.App.Splash" parent="Theme.SplashScreen">
+        <item name="postSplashScreenTheme">@style/MainAppTheme</item>
+        <item name="windowSplashScreenBackground">@color/magenta</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/brudineletten_foreground</item>
+    </style>
+
     <!--    App Title TextView-->
 
     <style name="AppTitleTextView">
@@ -38,4 +38,3 @@
     </style>
 
 </resources>
-

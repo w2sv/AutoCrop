@@ -7,8 +7,9 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.autocrop.utils.reflectField
 import com.autocrop.utils.reflectMethod
+import com.w2sv.autocrop.R
 
-abstract class FragmentHostingActivity<VB: ViewBinding>(private val handleSplashScreen: Boolean = false)
+abstract class FragmentHostingActivity<VB: ViewBinding>
     : ViewBindingHandlingActivity<VB>() {
 
     /**
@@ -29,8 +30,6 @@ abstract class FragmentHostingActivity<VB: ViewBinding>(private val handleSplash
      * Run [onCreateCore] and thereupon [launchRootFragment] if applicable
      */
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (handleSplashScreen)
-            installSplashScreen()
         super.onCreate(savedInstanceState)
         onCreateCore()
         if (savedInstanceState == null)

@@ -14,7 +14,6 @@ import processing.core.PGraphics;
 import processing.core.PVector;
 import timber.log.Timber;
 
-
 public class FlowFieldPApplet extends PApplet {
     final int FLOW_FIELD_RESOLUTION = 200;
     final int N_PARTICLES = 800;

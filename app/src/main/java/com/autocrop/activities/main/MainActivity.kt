@@ -1,6 +1,8 @@
 package com.autocrop.activities.main
 
+import android.os.Bundle
 import android.text.SpannableStringBuilder
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.text.color
 import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
@@ -10,13 +12,18 @@ import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.utils.android.*
 import com.w2sv.autocrop.databinding.ActivityMainBinding
 
-class MainActivity : FragmentHostingActivity<ActivityMainBinding>(true) {
+class MainActivity : FragmentHostingActivity<ActivityMainBinding>() {
 
     override val rootFragment by lazy{ FlowFieldFragment() }
     val aboutFragment by lazy { AboutFragment() }
 
     private val nSavedCropsRetriever = IntentExtraRetriever<IntArray>(IntentIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)
     private val cropWriteDirPathRetriever = IntentExtraRetriever<String>(IntentIdentifier.CROP_WRITE_DIR_PATH)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateCore() {
         nSavedCropsRetriever(intent)?.let {

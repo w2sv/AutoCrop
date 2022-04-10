@@ -1,7 +1,7 @@
 package com.autocrop.utils.android
 
 import android.app.Activity
-import android.text.SpannableStringBuilder
+import android.text.Spannable
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.ColorRes
@@ -14,21 +14,29 @@ object NotificationColor {
     const val URGENT: Int = R.color.saturated_magenta
 }
 
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+// from String and textColorId $
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
 fun Activity.displaySnackbar(
     message: String,
-    @ColorRes textColor: Int,
+    @ColorRes textColorId: Int,
     length: Int = Snackbar.LENGTH_LONG) =
         Snackbar
             .make(findViewById(android.R.id.content), message, length)
             .apply {
                 view.
-                    configuredTextView()
-                        .apply { setTextColor(getColorInt(textColor, context)) }
+                configuredTextView()
+                    .apply { setTextColor(getColorInt(textColorId, context)) }
             }
             .show()
 
+//$$$$$$$$$$$$$$$$$
+// from Spannable $
+//$$$$$$$$$$$$$$$$$
+
 fun Activity.displaySnackbar(
-    message: SpannableStringBuilder,
+    message: Spannable,
     length: Int = Snackbar.LENGTH_LONG) =
         Snackbar
             .make(findViewById(android.R.id.content), message, length)
