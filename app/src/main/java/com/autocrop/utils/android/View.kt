@@ -10,9 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 
-
 fun View.show() { visibility = View.VISIBLE }
-fun View.hide() { visibility = View.INVISIBLE }
 fun View.remove() { visibility = View.GONE}
 
 fun crossFade(fadeInView: View, fadeOutView: View, animationDuration: Long){
@@ -50,8 +48,9 @@ interface ViewModelRetriever<VM: ViewModel>{
     val viewModel: VM
 }
 
-abstract class AbstractViewModelRetriever<VM: ViewModel, VMST: ViewModelStoreOwner>(context: Context, viewModelClass: Class<VM>):
-    ViewModelRetriever<VM> {
+abstract class AbstractContextBasedViewModelRetriever<VM: ViewModel, VMST: ViewModelStoreOwner>(context: Context, viewModelClass: Class<VM>)
+    : ViewModelRetriever<VM> {
+
     @Suppress("UNCHECKED_CAST")
     override val viewModel: VM by lazy {
         ViewModelProvider(context as VMST)[viewModelClass]

@@ -8,7 +8,7 @@ import com.autocrop.utils.android.ExtendedTextView
 import com.autocrop.utils.android.ViewModelRetriever
 import com.w2sv.autocrop.R
 
-class CroppingUnsuccessfulTextView(context: Context, attr: AttributeSet):
+class CroppingUnsuccessfulTextView(context: Context, attr: AttributeSet) :
     ExtendedTextView(context, attr, R.string.cropping_failure),
     ViewModelRetriever<CroppingActivityViewModel> by CroppingActivityViewModelRetriever(context) {
 
@@ -18,7 +18,7 @@ class CroppingUnsuccessfulTextView(context: Context, attr: AttributeSet):
 
     private fun updateText(attemptedMultipleScreenshots: Boolean){
         text = getString().format(
-            *(if (attemptedMultipleScreenshots) listOf("", "") else listOf(" any of", "s"))
+            *(if (attemptedMultipleScreenshots) listOf(" any of", "s") else listOf("", ""))
                 .toTypedArray()
         )
     }

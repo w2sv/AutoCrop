@@ -16,7 +16,7 @@ import com.autocrop.utils.android.*
 import com.w2sv.autocrop.R
 
 private class ViewPagerViewModelRetriever(context: Context):
-    AbstractViewModelRetriever<ViewPagerFragmentViewModel, ExaminationActivity>(context, ViewPagerFragmentViewModel::class.java)
+    AbstractContextBasedViewModelRetriever<ViewPagerFragmentViewModel, ExaminationActivity>(context, ViewPagerFragmentViewModel::class.java)
 
 class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
     AppCompatSeekBar(context, attr),

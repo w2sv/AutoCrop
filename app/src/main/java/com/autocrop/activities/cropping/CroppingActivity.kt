@@ -46,9 +46,8 @@ class CroppingActivity : FragmentHostingActivity<ActivityCroppingBinding>() {
      * otherwise [returnToMainActivity] upon confirmed back press
      */
     override fun onBackPressed() {
-        if (croppingUnsuccessfulFragment.isVisible){
+        if (croppingUnsuccessfulFragment.isVisible)
             returnToMainActivity()
-        }
         else if (rootFragment.isVisible)
             handleBackPress()
     }
