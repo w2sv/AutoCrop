@@ -2,10 +2,15 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item>
-        <color android:color="@color/brudi_pink"/>
+        <color android:color="@android:color/black">
 
-        <bitmap
-            android:gravity="center"
-            android:src="@drawable/image_brudineletten"/>
+        </color>
     </item>
+
+    <item
+        android:gravity="center"
+        android:width="450dp"
+        android:height="450dp"
+        android:drawable="@drawable/ic_auto_crop_logo"/>
+
 </layer-list>
