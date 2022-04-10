@@ -8,7 +8,7 @@ import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.utils.android.*
 import com.w2sv.autocrop.databinding.ActivityMainBinding
 
-class MainActivity : FragmentHostingActivity<ActivityMainBinding>() {
+class MainActivity : FragmentHostingActivity<ActivityMainBinding>(true) {
 
     override val rootFragment by lazy{ FlowFieldFragment() }
     val aboutFragment by lazy { AboutFragment() }

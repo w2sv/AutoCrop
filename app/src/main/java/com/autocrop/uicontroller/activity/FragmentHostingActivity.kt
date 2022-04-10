@@ -2,12 +2,13 @@ package com.autocrop.uicontroller.activity
 
 import android.os.Bundle
 import android.view.ViewGroup
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.autocrop.utils.reflectField
 import com.autocrop.utils.reflectMethod
 
-abstract class FragmentHostingActivity<VB: ViewBinding>
+abstract class FragmentHostingActivity<VB: ViewBinding>(private val handleSplashScreen: Boolean = false)
     : ViewBindingHandlingActivity<VB>() {
 
     /**
@@ -28,6 +29,8 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
      * Run [onCreateCore] and thereupon [launchRootFragment] if applicable
      */
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (handleSplashScreen)
+            installSplashScreen()
         super.onCreate(savedInstanceState)
         onCreateCore()
         if (savedInstanceState == null)

@@ -27,7 +27,8 @@
         <item
             android:id="@+id/main_menu_item_change_save_destination_dir"
             android:icon="@drawable/ic_round_save_24"
-            android:title="@string/main_menu_item_change_directory" />
+            android:title="@string/main_menu_item_change_directory">
+        </item>
 
     <!--  Other  -->
 
