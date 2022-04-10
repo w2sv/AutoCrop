@@ -4,24 +4,15 @@ import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
-import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-import android.text.Spanned.SPAN_INCLUSIVE_INCLUSIVE
-import android.text.style.AbsoluteSizeSpan
-import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
-import android.text.style.StyleSpan
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.text.color
-import androidx.core.text.scale
+import androidx.core.text.italic
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
@@ -30,7 +21,6 @@ import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
-import com.autocrop.utils.setSpanHolistically
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityMainFragmentFlowfieldBinding
 import processing.android.PFragment
@@ -89,8 +79,10 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
             pApplet.bitmap().save(requireContext().contentResolver,"FlowField_${formattedDateTimeString()}.jpg")
 
             requireActivity().displaySnackbar(
-                "Saved FlowField to \n$externalPicturesDir",
-                NotificationColor.SUCCESS,
+                SpannableStringBuilder()
+                    .color(getColorInt(NotificationColor.NEUTRAL, requireContext())){append("Saved FlowField to")}
+                    .append("\n")
+                    .color(getColorInt(NotificationColor.SUCCESS, requireContext())){append(externalPicturesDir.absolutePath)},
                 Toast.LENGTH_SHORT
             )
         }
@@ -163,12 +155,10 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
                     R.id.main_menu_group_divider_other
                 ).forEach { id ->
                     with(menu.findItem(id)){
-                        title = SpannableString(title).apply {
-                            setSpanHolistically(ForegroundColorSpan(resources.getColor(R.color.saturated_magenta, requireContext().theme)))
-                            setSpanHolistically(StyleSpan(Typeface.ITALIC))
+                        title = SpannableStringBuilder()
+                            .italic { color(getColorInt(R.color.saturated_magenta, requireContext())) {title} }
                         }
                     }
-                }
 
                 menu.makeIconsVisible()
                 show()

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.os.Handler
 import android.os.Looper
 
-
 /**
  * Display Snackbar beset with $snackbarMessage on first backpress,
  * upon second within $RESET_DURATION trigger $secondPressAction,
