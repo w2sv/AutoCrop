@@ -26,11 +26,16 @@ class CroppingFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        croppingJob = lifecycleScope.executeAsyncTask(::doInBackground, ::onProgressUpdate) { onPostExecute() }
+        sharedViewModel.currentCropNumber.observe(viewLifecycleOwner) {
+            binding.croppingCurrentImageNumberTextView.updateText(it)
+            binding.croppingProgressBar.progress = it
+        }
+
+        croppingJob = lifecycleScope.executeAsyncTask(::doInBackground, {sharedViewModel.incrementCurrentCropNumber()}) { onPostExecute() }
     }
 
-    private suspend fun doInBackground(publishProgress: suspend (Pair<Int, Int>) -> Unit): Void?{
-        sharedViewModel.uris.forEachIndexed { index, uri ->
+    private suspend fun doInBackground(publishProgress: suspend (Void?) -> Unit): Void?{
+        sharedViewModel.uris.forEach { uri ->
 
             // attempt to crop image, upon success add resulting CropBundle to sharedViewModel
             croppedImage(BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))!!)?.run {
@@ -40,14 +45,9 @@ class CroppingFragment
             }
 
             // advance progress bar, screenshot number text view
-            publishProgress(index + 1 to sharedViewModel.incrementDecimalStepSum())
+            publishProgress(null)
         }
         return null
-    }
-
-    private fun onProgressUpdate(imageOrdinalWithProgressBarStep: Pair<Int, Int>) {
-        binding.croppingCurrentImageNumberTextView.updateText(imageOrdinalWithProgressBarStep.first)
-        binding.croppingProgressBar.incrementProgressBy(imageOrdinalWithProgressBarStep.second)
     }
 
     /**

@@ -23,6 +23,7 @@
         <entry key="app/src/main/res/drawable/splash_screen.xml" value="0.1815" />
         <entry key="app/src/main/res/layout/activity_cropping.xml" value="0.25679347826086957" />
         <entry key="app/src/main/res/layout/activity_cropping_fragment_cropping_unsuccessful.xml" value="0.14266304347826086" />
+        <entry key="app/src/main/res/layout/activity_cropping_fragment_root.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/activity_examination.xml" value="0.14266304347826086" />
         <entry key="app/src/main/res/layout/activity_examination_fragment_apptitle.xml" value="0.14266304347826086" />
         <entry key="app/src/main/res/layout/activity_examination_fragment_viewpager.xml" value="0.2625" />
