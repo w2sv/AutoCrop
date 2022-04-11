@@ -14,7 +14,7 @@ fun saveCropAndDeleteScreenshotIfApplicable(
     deleteScreenshot: Boolean,
     contentResolver: ContentResolver): Uri? {
 
-    val writeUri = crop.save(contentResolver, screenshotUri.cropFileName, CropFileSaveDestinationPreferences.documentUri)
+    val writeUri = crop.save(contentResolver, cropFileName(screenshotUri.fileName), CropFileSaveDestinationPreferences.documentUri)
 
     if (deleteScreenshot)
         screenshotUri.deleteUnderlyingImageFile(contentResolver)
@@ -22,6 +22,11 @@ fun saveCropAndDeleteScreenshotIfApplicable(
     return writeUri
 }
 
-private val Uri.cropFileName: String
-    get() = fileName
-        .replace("screenshot","AutoCrop",true)  // TODO
+private fun cropFileName(fileName: String): String = fileName
+    .replace("screenshot","AutoCrop",true)
+    .run {
+        if (contains("AutoCrop"))
+            this
+        else
+            "AutoCrop_$this"
+    }

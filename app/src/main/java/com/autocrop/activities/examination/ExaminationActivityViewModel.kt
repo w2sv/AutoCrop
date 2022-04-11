@@ -4,8 +4,6 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.autocrop.types.CropBundle
 import com.autocrop.utils.android.parentDirPath
-import java.io.File
-import java.nio.file.Paths
 
 class ExaminationActivityViewModel(val nDismissedImages: Int): ViewModel() {
 
