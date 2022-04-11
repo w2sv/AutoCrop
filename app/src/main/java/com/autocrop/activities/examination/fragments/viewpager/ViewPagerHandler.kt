@@ -90,6 +90,7 @@ class ViewPagerHandler(
         }
 
         var setPageTransformerOnNextScrollCompletion = false
+        var removeView: (() -> Unit)? = null
 
         /**
          * [setPageTransformer] upon next scroll completion if applicable
@@ -97,9 +98,15 @@ class ViewPagerHandler(
         override fun onPageScrollStateChanged(state: Int) {
             super.onPageScrollStateChanged(state)
 
-            if (setPageTransformerOnNextScrollCompletion && state == ViewPager.SCROLL_STATE_IDLE){
-                binding.viewPager.setPageTransformer()
-                setPageTransformerOnNextScrollCompletion = false
+            if (state == ViewPager.SCROLL_STATE_IDLE){
+                if (setPageTransformerOnNextScrollCompletion){
+                    binding.viewPager.setPageTransformer()
+                    setPageTransformerOnNextScrollCompletion = false
+                }
+                removeView?.let {
+                    it()
+                    removeView = null
+                }
             }
         }
     }
@@ -198,7 +205,7 @@ class ViewPagerHandler(
                          */
                         override fun onClick() = with(CropProcedureDialog()) {
                             arguments = bundleOf(CropProcedureDialog.DATA_SET_POSITION_IN to viewModel.dataSet.correspondingPosition(adapterPosition))
-                            show(examinationActivity.supportFragmentManager, "CROP_PROCEDURE_DIALOG")
+                            show(examinationActivity.supportFragmentManager)
                         }
                     }
                 )
@@ -257,15 +264,17 @@ class ViewPagerHandler(
             binding.viewPager.setCurrentItem(newViewPosition, true)
             pageChangeHandler.updateViews = true
 
-            // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
-            // aligning with newViewPosition
-            viewModel.dataSet.removeAtAndRealign(dataSetPosition, removingAtDataSetTail, newViewPosition)
+            pageChangeHandler.removeView = {
+                // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
+                // aligning with newViewPosition
+                viewModel.dataSet.removeAtAndRealign(dataSetPosition, removingAtDataSetTail, newViewPosition)
 
-            // update surrounding views
-            resetViewsAround(newViewPosition)
+                // update surrounding views
+                resetViewsAround(newViewPosition)
 
-            // update views
-            binding.updatePageDependentViews(viewModel.dataSet.correspondingPosition(newViewPosition))
+                // update views
+                binding.updatePageDependentViews(viewModel.dataSet.correspondingPosition(newViewPosition))
+            }
         }
 
         /**

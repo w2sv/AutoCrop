@@ -4,10 +4,10 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
+import com.autocrop.utils.android.ExtendedDialogFragment
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
 
 class ViewPagerFragment
@@ -21,7 +21,6 @@ class ViewPagerFragment
         viewPagerHandler = ViewPagerHandler(
             binding,
             ViewModelProvider(this)[ViewPagerFragmentViewModel::class.java],
-            sharedViewModel,
             typedActivity
         )
 
@@ -33,51 +32,68 @@ class ViewPagerFragment
      */
     private fun setToolbarButtonOnClickListeners() {
 
-        fun ifScrollerNotRunning(f: () -> Unit){
-            if (!viewPagerHandler.scroller.isRunning)
-                f()
-        }
-
-        // ------------save_all_button
-        binding.toolbar.saveAllButton.setOnClickListener {
-            ifScrollerNotRunning {
-                CropEntiretyActionConfirmationDialogFragment("Save all crops?", true)
-                {
-                    with(typedActivity){
-                        replaceCurrentFragmentWith(saveAllFragment, true)
-                    }
+        arrayOf(
+             Triple(binding.toolbar.saveAllButton, SaveAllConfirmationDialogFragment()) {
+                 with(typedActivity) {
+                     replaceCurrentFragmentWith(saveAllFragment, true)
+                 }
+             },
+            Triple(binding.toolbar.discardAllButton, DiscardAllConfirmationDialogFragment()) {
+                with(typedActivity) {
+                    replaceCurrentFragmentWith(appTitleFragment, false)
                 }
-                    .show(childFragmentManager, "SAVE_ALL_BUTTON_CONFIRMATION_DIALOG")
             }
-        }
+        ).forEach { (button, dialogClass, resultListener) ->
+            requireActivity().supportFragmentManager.setFragmentResultListener(dialogClass.resultKey, requireActivity()){
+                    _, _ -> resultListener()
+            }
 
-        // --------------discard_all_button
-        binding.toolbar.discardAllButton.setOnClickListener {
-            ifScrollerNotRunning {
-                CropEntiretyActionConfirmationDialogFragment("Discard all crops?", false)
-                { with(typedActivity){replaceCurrentFragmentWith(appTitleFragment, false)} }
-                    .show(childFragmentManager, "DISCARD_ALL_BUTTON_CONFIRMATION_DIALOG")
+            button.setOnClickListener {
+                if (!viewPagerHandler.scroller.isRunning)
+                    dialogClass
+                        .show(requireActivity().supportFragmentManager)
             }
         }
     }
 }
 
-class CropEntiretyActionConfirmationDialogFragment(
-    private val title: String,
-    private val addDeleteCorrespondingScreenshotsCheckbox: Boolean,
-    private val positiveButtonOnClickListener: () -> Unit)
-        : DialogFragment() {
+abstract class CropEntiretyButtonDialogFragment
+    : ExtendedDialogFragment(){
+
+    val resultKey: String = "${this::class.java.name}_CONFIRMED"
+
+    protected fun setFragmentResult() = requireActivity().supportFragmentManager.setFragmentResult(
+        resultKey,
+        Bundle.EMPTY
+    )
+}
+
+class SaveAllConfirmationDialogFragment
+    : CropEntiretyButtonDialogFragment(){
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(requireContext())
             .run {
-                setTitle(title)
-                if (addDeleteCorrespondingScreenshotsCheckbox)
-                    setMultiChoiceItems(arrayOf("Delete corresponding screenshots"), booleanArrayOf(
-                        BooleanUserPreferences.deleteScreenshotsOnSaveAll)){ _, _, _ -> BooleanUserPreferences.toggle(
-                        BooleanUserPreferences.Keys.deleteScreenshotsOnSaveAll)}
+                setTitle("Save all crops?")
+                setMultiChoiceItems(arrayOf("Delete corresponding screenshots"), booleanArrayOf(
+                    BooleanUserPreferences.deleteScreenshotsOnSaveAll)){ _, _, _ -> BooleanUserPreferences.toggle(
+                    BooleanUserPreferences.Keys.deleteScreenshotsOnSaveAll)}
+
                 setNegativeButton("No") { _, _ -> }
-                setPositiveButton("Yes") { _, _ -> positiveButtonOnClickListener() }
+                setPositiveButton("Yes") { _, _ -> setFragmentResult()}
+            }
+            .create()
+}
+
+class DiscardAllConfirmationDialogFragment
+    : CropEntiretyButtonDialogFragment(){
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        AlertDialog.Builder(requireContext())
+            .run {
+                setTitle("Discard all crops?")
+                setNegativeButton("No") { _, _ -> }
+                setPositiveButton("Yes") { _, _ -> setFragmentResult() }
             }
             .create()
 }

@@ -4,12 +4,13 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.core.os.bundleOf
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.saveCropAndDeleteScreenshotIfApplicable
 import com.autocrop.global.BooleanUserPreferences
+import com.autocrop.utils.android.ExtendedDialogFragment
 import com.autocrop.utils.executeAsyncTask
 
 /**
@@ -17,9 +18,7 @@ import com.autocrop.utils.executeAsyncTask
  * defining respective procedure effects
  */
 class CropProcedureDialog
-        : DialogFragment() {
-
-    private val sharedViewModel: ExaminationActivityViewModel by activityViewModels()
+        : ExtendedDialogFragment() {
 
     companion object{
         const val DATA_SET_POSITION_IN = "DATA_SET_POSITION_IN"
@@ -45,14 +44,14 @@ class CropProcedureDialog
 
             setNegativeButton("No, discard") { _, _ -> triggerOnProcedureSelected() }
             setPositiveButton("Yes") { _, _ ->
-                lifecycleScope.executeAsyncTask({ saveCrop(dataSetPosition, BooleanUserPreferences.deleteIndividualScreenshot) })
+                lifecycleScope.executeAsyncTask({ saveCrop(dataSetPosition, BooleanUserPreferences.deleteIndividualScreenshot, ViewModelProvider(requireActivity() as ExaminationActivity)[ExaminationActivityViewModel::class.java]) })
                 triggerOnProcedureSelected()
             }
 
             create()
         }
 
-    private fun saveCrop(dataSetPosition: Int, deleteScreenshot: Boolean): Void?{
+    private fun saveCrop(dataSetPosition: Int, deleteScreenshot: Boolean, sharedViewModel: ExaminationActivityViewModel): Void?{
         val writeUri = ExaminationActivityViewModel.cropBundles[dataSetPosition].run {
             saveCropAndDeleteScreenshotIfApplicable(screenshotUri, crop, deleteScreenshot, requireContext().contentResolver)
         }
