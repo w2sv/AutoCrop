@@ -37,7 +37,7 @@ class CroppingActivity : FragmentHostingActivity<ActivityCroppingBinding>() {
      * Return to MainActivity on confirmed back press
      */
     private val handleBackPress = BackPressHandler(this, "Tap again to cancel") {
-        rootFragment.cropper.cancel(false)
+        rootFragment.onStop()
         returnToMainActivity()
     }
 

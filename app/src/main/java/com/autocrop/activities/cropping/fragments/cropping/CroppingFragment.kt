@@ -17,7 +17,7 @@ import java.lang.ref.WeakReference
 class CroppingFragment
     : CroppingActivityFragment<ActivityCroppingFragmentRootBinding>() {
 
-    lateinit var cropper: Cropper
+    private lateinit var cropper: Cropper
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,6 +50,12 @@ class CroppingFragment
                 },
                 300
             )
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        cropper.cancel(false)
     }
 
     private fun startExaminationActivity(){
