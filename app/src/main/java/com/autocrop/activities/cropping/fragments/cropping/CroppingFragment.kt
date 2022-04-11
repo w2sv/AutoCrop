@@ -15,7 +15,6 @@ import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.types.CropBundle
 import com.autocrop.utils.executeAsyncTask
 import com.autocrop.utils.logBeforehand
-import com.autocrop.utils.toInt
 import com.w2sv.autocrop.databinding.ActivityCroppingFragmentRootBinding
 import kotlinx.coroutines.Job
 
@@ -31,26 +30,17 @@ class CroppingFragment
     }
 
     private suspend fun doInBackground(publishProgress: suspend (Pair<Int, Int>) -> Unit): Void?{
-        var decimalStepSum = 0f
-
         sharedViewModel.uris.forEachIndexed { index, uri ->
-            // attempt to crop image, add uri-crop mapping to image cash if successful
-            with(croppedImage(image = BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))!!)) {
-                this?.let {
-                    sharedViewModel.cropBundles.add(
-                        CropBundle(uri, first, second, third)
-                    )
-                }
+
+            // attempt to crop image, upon success add resulting CropBundle to sharedViewModel
+            croppedImage(BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))!!)?.run {
+                sharedViewModel.cropBundles.add(
+                    CropBundle(uri, first, second, third)
+                )
             }
 
             // advance progress bar, screenshot number text view
-            decimalStepSum += sharedViewModel.progressBarDecimalStep
-            with(Pair(index + 1, sharedViewModel.progressBarIntStep + (decimalStepSum >= 1).toInt())) {
-                if (second > sharedViewModel.progressBarIntStep)
-                    decimalStepSum -= 1
-
-                publishProgress(this)
-            }
+            publishProgress(index + 1 to sharedViewModel.incrementDecimalStepSum())
         }
         return null
     }
