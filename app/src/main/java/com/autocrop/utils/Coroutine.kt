@@ -16,8 +16,8 @@ fun <R> CoroutineScope.executeAsyncTask(
 
 fun <P, R> CoroutineScope.executeAsyncTask(
     doInBackground: suspend (suspend (P) -> Unit) -> R,
-    onPostExecute: (R) -> Unit,
-    onProgressUpdate: (P) -> Unit) = launch {
+    onProgressUpdate: (P) -> Unit,
+    onPostExecute: (R) -> Unit) = launch {
         val result = withContext(Dispatchers.IO) {
             doInBackground {
                 withContext(Dispatchers.Main) { onProgressUpdate(it) }
