@@ -1,7 +1,6 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -9,12 +8,11 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.activities.examination.ExaminationActivityViewModel
-import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.*
 import com.google.android.material.snackbar.Snackbar
@@ -25,8 +23,7 @@ import java.util.*
 class ViewPagerHandler(
     private val binding: ActivityExaminationFragmentViewpagerBinding,
     private val viewModel: ViewPagerFragmentViewModel,
-    private val sharedViewModel: ExaminationActivityViewModel,
-    private val activity: ExaminationActivity){
+    private val examinationActivity: ExaminationActivity){
 
     val scroller: Scroller = Scroller()
     private val pageChangeHandler = PageChangeHandler()
@@ -51,22 +48,22 @@ class ViewPagerHandler(
 
         // display pageIndicationSeekBar if applicable
         if (viewModel.dataSet.size > 1)
-            activity.runOnUiThread { binding.pageIndicationSeekBar.show() }
+            examinationActivity.runOnUiThread { binding.pageIndicationSeekBar.show() }
 
         // run Scroller and display respective text view if applicable;
         // otherwise display discardedTextView and set page transformer
         if (viewModel.conductAutoScroll) {
-            activity.runOnUiThread { binding.autoScrollingTextView.show() }
+            examinationActivity.runOnUiThread { binding.autoScrollingTextView.show() }
             scroller.run(binding.viewPager, viewModel.dataSet.size)
         }
         else{
-            activity.runOnUiThread { binding.discardedTextView.show() }
+            examinationActivity.runOnUiThread { binding.discardedTextView.show() }
             binding.viewPager.setPageTransformer()
         }
     }
 
     private fun ActivityExaminationFragmentViewpagerBinding.updatePageDependentViews(dataSetPosition: Index, onRightScroll: Boolean = false) =
-        activity.runOnUiThread{
+        examinationActivity.runOnUiThread{
             discardedTextView.updateText(dataSetPosition)
 
             viewModel.dataSet.pageIndex(dataSetPosition).let{ pageIndex ->
@@ -149,13 +146,13 @@ class ViewPagerHandler(
             timer!!.cancel()
             timer = null
 
-            activity.runOnUiThread {
+            examinationActivity.runOnUiThread {
                 crossFade(binding.discardedTextView, binding.autoScrollingTextView, 900L)
             }
 
             if (onScreenTouch){
                 binding.viewPager.setPageTransformer()
-                activity.displaySnackbar(
+                examinationActivity.displaySnackbar(
                     "Cancelled auto scrolling",
                     NotificationColor.SUCCESS,
                     Snackbar.LENGTH_SHORT
@@ -190,19 +187,18 @@ class ViewPagerHandler(
                                 super.onTouch(v, event)
                         }
 
-                        /**
-                         * Invoke CropProcedureDialog upon click
-                         */
-                        override fun onClick() {
-                            viewModel.dataSet.correspondingPosition(adapterPosition).let{ dataSetPosition ->
-                                CropProcedureDialog(
-                                    viewModel.dataSet[dataSetPosition].run{screenshotUri to crop },
-                                    activity.contentResolver,
-                                    sharedViewModel
-                                )
-                                    {onCropProcedureAction(dataSetPosition)}
-                                        .show(activity.supportFragmentManager, "CROP_PROCEDURE_DIALOG")
+                        init {
+                            examinationActivity.supportFragmentManager.setFragmentResultListener(CropProcedureDialog.PROCEDURE_SELECTED, examinationActivity){
+                                    _, bundle -> onCropProcedureSelected(bundle.getInt(CropProcedureDialog.DATA_SET_POSITION_OUT))
                             }
+                        }
+
+                        /**
+                         * Invoke CropProcedureDialog
+                         */
+                        override fun onClick() = with(CropProcedureDialog()) {
+                            arguments = bundleOf(CropProcedureDialog.DATA_SET_POSITION_IN to viewModel.dataSet.correspondingPosition(adapterPosition))
+                            show(examinationActivity.supportFragmentManager, "CROP_PROCEDURE_DIALOG")
                         }
                     }
                 )
@@ -236,10 +232,10 @@ class ViewPagerHandler(
          * hide [binding].pageIndicationSeekBar AND/OR
          * removes view, procedure action has been selected for, from pager
          */
-        private fun onCropProcedureAction(dataSetPosition: Index){
+        private fun onCropProcedureSelected(dataSetPosition: Index){
             when(viewModel.dataSet.size){
-                1 -> return activity.run { replaceCurrentFragmentWith(appTitleFragment, true) }
-                2 -> activity.runOnUiThread { binding.pageIndicationSeekBar.hideAnimated() }
+                1 -> return examinationActivity.run { replaceCurrentFragmentWith(appTitleFragment, true) }
+                2 -> examinationActivity.runOnUiThread { binding.pageIndicationSeekBar.hideAnimated() }
                 else -> Unit
             }
             removeView(dataSetPosition)

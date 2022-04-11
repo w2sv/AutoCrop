@@ -2,26 +2,30 @@ package com.autocrop.activities.examination.fragments.viewpager
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.ContentResolver
-import android.graphics.Bitmap
-import android.net.Uri
-import android.os.AsyncTask
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.saveCropAndDeleteScreenshotIfApplicable
 import com.autocrop.global.BooleanUserPreferences
+import com.autocrop.utils.executeAsyncTask
 
 /**
  * Class accounting for procedure dialog display upon screen click,
  * defining respective procedure effects
  */
-class CropProcedureDialog(
-    private val cropWithUri: Pair<Uri, Bitmap>,
-    private val contentResolver: ContentResolver,
-    private val sharedViewModel: ExaminationActivityViewModel,
-    private val onCropAction: () -> Unit)
+class CropProcedureDialog
         : DialogFragment() {
+
+    private val sharedViewModel: ExaminationActivityViewModel by activityViewModels()
+
+    companion object{
+        const val DATA_SET_POSITION_IN = "DATA_SET_POSITION_IN"
+        const val DATA_SET_POSITION_OUT = "DATA_SET_POSITION_OUT"
+        const val PROCEDURE_SELECTED = "ON_PROCEDURE_SELECTED"
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(activity).run {
@@ -30,25 +34,31 @@ class CropProcedureDialog(
             setMultiChoiceItems(arrayOf("Delete corresponding screenshot"), booleanArrayOf(
                 BooleanUserPreferences.deleteIndividualScreenshot)){ _, _, _ -> BooleanUserPreferences.toggle(
                 BooleanUserPreferences.Keys.deleteIndividualScreenshot) }
-            setNegativeButton("No, discard") { _, _ -> onCropAction()}
+
+            val dataSetPosition = requireArguments().getInt(DATA_SET_POSITION_IN)
+            val triggerOnProcedureSelected = {
+                requireActivity().supportFragmentManager.setFragmentResult(
+                    PROCEDURE_SELECTED,
+                    bundleOf(DATA_SET_POSITION_OUT to dataSetPosition)
+                )
+            }
+
+            setNegativeButton("No, discard") { _, _ -> triggerOnProcedureSelected() }
             setPositiveButton("Yes") { _, _ ->
-                CropProcessor(sharedViewModel).execute(IOParameters(cropWithUri.first, cropWithUri.second, BooleanUserPreferences.deleteIndividualScreenshot, contentResolver))
-                onCropAction()
+                lifecycleScope.executeAsyncTask({ saveCrop(dataSetPosition, BooleanUserPreferences.deleteIndividualScreenshot) })
+                triggerOnProcedureSelected()
             }
 
             create()
         }
 
-    private data class IOParameters(val uri: Uri, val crop: Bitmap, val deleteScreenshot: Boolean, val contentResolver: ContentResolver)
+    private fun saveCrop(dataSetPosition: Int, deleteScreenshot: Boolean): Void?{
+        val writeUri = ExaminationActivityViewModel.cropBundles[dataSetPosition].run {
+            saveCropAndDeleteScreenshotIfApplicable(screenshotUri, crop, deleteScreenshot, requireContext().contentResolver)
+        }
 
-    private class CropProcessor(private val sharedViewModel: ExaminationActivityViewModel): AsyncTask<IOParameters, Void, Void?>() {
-        override fun doInBackground(vararg params: IOParameters): Void? =
-            params.first().run {
-                val writeUri = saveCropAndDeleteScreenshotIfApplicable(uri, crop, deleteScreenshot, contentResolver)
-
-                sharedViewModel.setCropWriteDirPathIfApplicable(writeUri)
-                sharedViewModel.incrementImageFileIOCounters(deleteScreenshot)
-                null
-            }
+        sharedViewModel.setCropWriteDirPathIfApplicable(writeUri)
+        sharedViewModel.incrementImageFileIOCounters(deleteScreenshot)
+        return null
     }
 }

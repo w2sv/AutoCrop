@@ -7,7 +7,6 @@ import android.view.View
 import com.autocrop.utils.logAfterwards
 import kotlin.math.abs
 
-
 /**
  * Enables distinction between pulling up navigation bar and clicks
  * whilst employing immersive view app layout
