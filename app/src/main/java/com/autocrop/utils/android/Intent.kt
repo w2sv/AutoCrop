@@ -2,7 +2,6 @@ package com.autocrop.utils.android
 
 import android.content.Intent
 
-
 /**
  * Takes care of retrieving put extra only once after instantiation
  */

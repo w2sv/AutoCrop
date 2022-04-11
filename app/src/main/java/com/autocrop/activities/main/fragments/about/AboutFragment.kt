@@ -3,7 +3,7 @@ package com.autocrop.activities.main.fragments.about
 import android.content.Context
 import android.util.AttributeSet
 import com.autocrop.activities.main.fragments.MainActivityFragment
-import com.autocrop.utils.android.ExtendedTextView
+import com.autocrop.uielements.ExtendedTextView
 import com.w2sv.autocrop.BuildConfig
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityMainFragmentAboutBinding

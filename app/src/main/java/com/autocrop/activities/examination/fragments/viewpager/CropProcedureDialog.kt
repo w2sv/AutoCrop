@@ -10,7 +10,7 @@ import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.saveCropAndDeleteScreenshotIfApplicable
 import com.autocrop.global.BooleanUserPreferences
-import com.autocrop.utils.android.ExtendedDialogFragment
+import com.autocrop.uielements.ExtendedDialogFragment
 import com.autocrop.utils.executeAsyncTask
 
 /**

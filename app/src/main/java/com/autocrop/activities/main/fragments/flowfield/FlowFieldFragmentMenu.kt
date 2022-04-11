@@ -7,9 +7,9 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.text.color
 import androidx.core.text.italic
 import com.autocrop.global.BooleanUserPreferences
+import com.autocrop.uielements.makeIconsVisible
+import com.autocrop.uielements.persistMenuAfterClick
 import com.autocrop.utils.android.getColorInt
-import com.autocrop.utils.android.makeIconsVisible
-import com.autocrop.utils.android.persistMenuAfterClick
 import com.w2sv.autocrop.R
 
 class FlowFieldFragmentMenu(itemId2OnCLickListener: Map<Int, () -> Unit>, context: Context, anchor: View)

@@ -12,7 +12,7 @@ import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.core.text.bold
 import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.utils.android.*
+import com.autocrop.uielements.*
 import com.w2sv.autocrop.R
 
 private class ViewPagerViewModelRetriever(context: Context):

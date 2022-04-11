@@ -1,4 +1,4 @@
-package com.autocrop.utils.android
+package com.autocrop.uielements
 
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager

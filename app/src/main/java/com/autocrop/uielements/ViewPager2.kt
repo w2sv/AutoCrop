@@ -1,4 +1,4 @@
-package com.autocrop.utils.android
+package com.autocrop.uielements
 
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2

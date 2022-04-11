@@ -4,7 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import com.autocrop.global.BooleanUserPreferences
-import com.autocrop.utils.android.ExtendedDialogFragment
+import com.autocrop.uielements.ExtendedDialogFragment
 
 abstract class AllCropsRegardingDialogFragment
     : ExtendedDialogFragment(){

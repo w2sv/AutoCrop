@@ -9,6 +9,7 @@ import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.global.userPreferencesInstances
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.utils.android.*
+import com.autocrop.utils.numberInflection
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityMainBinding
 

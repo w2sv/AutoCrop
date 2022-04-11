@@ -16,6 +16,7 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.utils.android.*
 import com.autocrop.utils.logAfterwards
+import com.autocrop.utils.numberInflection
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 

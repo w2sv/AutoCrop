@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.ExaminationActivity
+import com.autocrop.uielements.CubeOutPageTransformer
+import com.autocrop.uielements.crossFade
+import com.autocrop.uielements.show
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.*
 import com.google.android.material.snackbar.Snackbar

@@ -2,8 +2,8 @@ package com.autocrop.application
 
 import android.app.Application
 import com.autocrop.global.userPreferencesInstances
-import com.autocrop.utils.android.debuggingModeEnabled
 import com.autocrop.utils.android.getSharedPreferences
+import com.w2sv.autocrop.BuildConfig
 import timber.log.Timber
 
 class AutoCrop: Application() {
@@ -15,7 +15,7 @@ class AutoCrop: Application() {
         super.onCreate()
 
         // enable Timber if debugging mode enabled
-        if (debuggingModeEnabled())
+        if (BuildConfig.DEBUG)
             Timber.plant(Timber.DebugTree())
 
         with(getSharedPreferences()){
