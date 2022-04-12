@@ -39,14 +39,7 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
             this,
             ExaminationViewModelFactory(
                 nDismissedImagesRetriever(intent) ?: 0,
-                checkUriPermission(
-                    CropFileSaveDestinationPreferences.documentUri,
-                    null,
-                    null,
-                    Binder.getCallingPid(),
-                    Binder.getCallingUid(),
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                ) == PackageManager.PERMISSION_GRANTED
+                CropFileSaveDestinationPreferences.documentUri?.let{uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)}
             )
         )[ExaminationActivityViewModel::class.java]
 
