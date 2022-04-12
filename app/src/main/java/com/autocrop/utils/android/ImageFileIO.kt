@@ -30,34 +30,42 @@ val externalPicturesDir: File = Environment.getExternalStoragePublicDirectory(En
  *      https://stackoverflow.com/a/10124040
  *      https://stackoverflow.com/a/59536115
  */
-fun Bitmap.save(contentResolver: ContentResolver, fileName: String, parentDocumentUri: Uri? = null): Uri? {
-    val (fileOutputStream, writeUri) = when {
-        parentDocumentUri != null -> OutputStreamWithUri.fromParentDocument(fileName, parentDocumentUri, contentResolver)
-        apiNotNewerThanQ -> OutputStreamWithUri.untilQ(fileName)
-        else -> OutputStreamWithUri.postQ(fileName, contentResolver)
+fun ContentResolver.saveBitmap(bitmap: Bitmap, fileName: String): Boolean = bitmap.compressToStream(
+    when {
+        apiNotNewerThanQ -> GetOutputStream.untilQ(fileName)
+        else -> GetOutputStream.postQ(fileName, this)
+    }
+)
+    .also {
+        Timber.i(
+            if (it) "Successfully wrote $fileName" else "Couldn't write $fileName"
+        )
     }
 
-    // write image
-    val successfullyCompressed: Boolean = compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
-    fileOutputStream.close()
+fun ContentResolver.saveBitmap(bitmap: Bitmap, fileName: String, parentDocumentUri: Uri): Boolean =
+    bitmap.compressToStream(GetOutputStream.fromParentDocument(fileName, parentDocumentUri, this))
+        .also { Timber.i(
+            if (it) "Successfully wrote $fileName to parentDocumentUri" else "Couldn't write $fileName to parentDocumentUri"
+        )
+    }
 
-    Timber.i(if (successfullyCompressed) "Successfully saved bitmap $fileName" else "Couldn't save bitmap $fileName")
-    return if (successfullyCompressed) writeUri else null
-}
+fun Bitmap.compressToStream(stream: OutputStream) =
+    compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        .also {stream.close()}
 
-private object OutputStreamWithUri{
-    fun fromParentDocument(fileName: String, parentDocumentUri: Uri, contentResolver: ContentResolver): Pair<OutputStream, Uri> =
+private object GetOutputStream{
+    fun fromParentDocument(fileName: String, parentDocumentUri: Uri, contentResolver: ContentResolver): OutputStream =
         DocumentsContract.createDocument(contentResolver, parentDocumentUri, MimeTypes.JPEG, fileName)!!.run {
-            contentResolver.openOutputStream(this)!! to this
+            contentResolver.openOutputStream(this)!!
         }
 
-    fun untilQ(fileName: String): Pair<OutputStream, Uri> =
+    fun untilQ(fileName: String): OutputStream =
         File(externalPicturesDir, fileName).run {
-            FileOutputStream(this) to Uri.fromFile(this)
+            FileOutputStream(this)
         }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    fun postQ(fileName: String, contentResolver: ContentResolver): Pair<OutputStream, Uri> =
+    fun postQ(fileName: String, contentResolver: ContentResolver): OutputStream =
         contentResolver.insert(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             ContentValues().apply {
@@ -66,7 +74,7 @@ private object OutputStreamWithUri{
                 put(MediaStore.MediaColumns.MIME_TYPE, MimeTypes.JPEG)
             }
         )!!.let { newUri ->
-            contentResolver.openOutputStream(newUri)!! to newUri
+            contentResolver.openOutputStream(newUri)!!
         }
 }
 
@@ -84,13 +92,15 @@ const val FILE_PATH_COLUMN_NAME = MediaStore.Images.Media.DATA
  *
  * @return flag indicating whether image was successfully deleted
  */
-fun Uri.deleteUnderlyingImageFile(contentResolver: ContentResolver): Boolean =
-    contentResolver.delete(
-        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-        "${FILE_PATH_COLUMN_NAME}=?",
-        arrayOf(imageFilePath(contentResolver))
-    ) != 0
-        .also{ Timber.i(if (it == 0) "Couldn't delete screenshot" else "Successfully deleted screenshot") }
+fun ContentResolver.deleteImageMediaFile(uri: Uri): Boolean =
+    (
+            delete(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                "${FILE_PATH_COLUMN_NAME}=?",
+                arrayOf(imageFilePath(uri))
+            ) != 0
+    )
+        .also{ Timber.i(if (it) "Successfully deleted screenshot" else "Couldn't delete screenshot") }
 
 /**
  * @see
@@ -98,8 +108,8 @@ fun Uri.deleteUnderlyingImageFile(contentResolver: ContentResolver): Boolean =
  *
  * Alternative solution: https://stackoverflow.com/a/38568666/12083276
  */
-private fun Uri.imageFilePath(contentResolver: ContentResolver): String =
-    contentResolver.query(this, arrayOf(FILE_PATH_COLUMN_NAME),null,null,null)!!.run {
+private fun ContentResolver.imageFilePath(uri: Uri): String =
+    query(uri, arrayOf(FILE_PATH_COLUMN_NAME), null, null, null)!!.run {
         moveToFirst()
         getString(getColumnIndexOrThrow(FILE_PATH_COLUMN_NAME))!!
             .also { close() }

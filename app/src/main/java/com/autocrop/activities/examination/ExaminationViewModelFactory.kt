@@ -3,11 +3,12 @@ package com.autocrop.activities.examination
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-class ExaminationViewModelFactory(private val nDismissedImages: Int)
+class ExaminationViewModelFactory(private val nDismissedImages: Int, private val documentUriWritePermissionValid: Boolean?)
         : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T = ExaminationActivityViewModel(
-        nDismissedImages
+        nDismissedImages,
+        documentUriWritePermissionValid
     ) as T
 }

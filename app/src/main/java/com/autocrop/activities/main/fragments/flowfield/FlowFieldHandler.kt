@@ -10,8 +10,7 @@ import com.autocrop.utils.formattedDateTimeString
 import processing.android.PFragment
 
 class FlowFieldHandler(private val activity: FragmentActivity,
-                       canvasContainer: FrameLayout
-){
+                       canvasContainer: FrameLayout){
 
     val flowfield = FlowFieldPApplet(screenResolution(activity.windowManager))
 
@@ -32,7 +31,7 @@ class FlowFieldHandler(private val activity: FragmentActivity,
      * display Snackbar with saving destination
      */
     private fun captureFlowField(){
-        flowfield.bitmap().save(activity.contentResolver,"FlowField_${formattedDateTimeString()}.jpg")
+        activity.contentResolver.saveBitmap(flowfield.bitmap(), "FlowField_${formattedDateTimeString()}.jpg")
 
         activity.displaySnackbar(
             SpannableStringBuilder()

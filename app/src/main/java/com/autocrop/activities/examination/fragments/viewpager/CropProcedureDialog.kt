@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
-import com.autocrop.activities.examination.saveCropAndDeleteScreenshotIfApplicable
+import com.autocrop.activities.examination.processCropBundle
 import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.uielements.ExtendedDialogFragment
 import com.autocrop.utils.executeAsyncTask
@@ -52,11 +52,12 @@ class CropProcedureDialog
         }
 
     private fun saveCrop(dataSetPosition: Int, deleteScreenshot: Boolean, sharedViewModel: ExaminationActivityViewModel): Void?{
-        val writeUri = ExaminationActivityViewModel.cropBundles[dataSetPosition].run {
-            saveCropAndDeleteScreenshotIfApplicable(screenshotUri, crop, deleteScreenshot, requireContext().contentResolver)
-        }
+        requireContext().contentResolver.processCropBundle(
+            ExaminationActivityViewModel.cropBundles[dataSetPosition],
+            deleteScreenshot,
+            sharedViewModel.documentUriWritePermissionValid
+        )
 
-        sharedViewModel.setCropWriteDirPathIfApplicable(writeUri)
         sharedViewModel.incrementImageFileIOCounters(deleteScreenshot)
         return null
     }

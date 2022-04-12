@@ -1,7 +1,9 @@
 package com.autocrop.global
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.Binder
 import com.autocrop.utils.android.buildDocumentUriFromTreeUri
 import com.autocrop.utils.logBeforehand
 import timber.log.Timber
@@ -86,13 +88,9 @@ object CropFileSaveDestinationPreferences: UserPreferences<Uri?>(sortedMapOf(Key
      * Inherently build [documentUri] upon setting new [treeUri]
      */
     override fun put(key: String?, value: Uri?): Uri? {
-        println("value: $value")
-        println("value: ${value == null}")
-
         if (key == Keys.treeUri && value != getOrDefault(Keys.treeUri, null))
             documentUri = buildDocumentUriFromTreeUri(value!!)
                 .also { Timber.i("Set documentUri $it") }
-
         return super.put(key, value)
     }
 

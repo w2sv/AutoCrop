@@ -1,25 +1,32 @@
 package com.autocrop.activities.examination
 
 import android.content.ContentResolver
-import android.graphics.Bitmap
-import android.net.Uri
 import com.autocrop.global.CropFileSaveDestinationPreferences
-import com.autocrop.utils.android.deleteUnderlyingImageFile
+import com.autocrop.types.CropBundle
+import com.autocrop.utils.android.deleteImageMediaFile
 import com.autocrop.utils.android.fileName
-import com.autocrop.utils.android.save
+import com.autocrop.utils.android.saveBitmap
 
-fun saveCropAndDeleteScreenshotIfApplicable(
-    screenshotUri: Uri,
-    crop: Bitmap,
+fun ContentResolver.processCropBundle(
+    cropBundle: CropBundle,
     deleteScreenshot: Boolean,
-    contentResolver: ContentResolver): Uri? {
+    documentUriValid: Boolean?): Pair<Boolean, Boolean>{
 
-    val writeUri = crop.save(contentResolver, cropFileName(screenshotUri.fileName), CropFileSaveDestinationPreferences.documentUri)
+    val successfullySavedCrop = if (documentUriValid == true)
+        saveBitmap(
+            cropBundle.crop,
+            cropFileName(cropBundle.screenshotUri.fileName),
+            CropFileSaveDestinationPreferences.documentUri!!
+        )
+    else
+        saveBitmap(
+            cropBundle.crop,
+            cropFileName(cropBundle.screenshotUri.fileName)
+        )
 
-    if (deleteScreenshot)
-        screenshotUri.deleteUnderlyingImageFile(contentResolver)
-
-    return writeUri
+    return successfullySavedCrop to if (deleteScreenshot)
+        deleteImageMediaFile(cropBundle.screenshotUri)
+    else false
 }
 
 private fun cropFileName(fileName: String): String = fileName

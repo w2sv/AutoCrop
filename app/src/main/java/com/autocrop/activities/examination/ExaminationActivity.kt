@@ -5,6 +5,8 @@
 package com.autocrop.activities.examination
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Binder
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
@@ -13,9 +15,9 @@ import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
+import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.utils.android.*
-import com.autocrop.utils.logAfterwards
 import com.autocrop.utils.numberInflection
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationBinding
@@ -31,10 +33,21 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
     val appTitleFragment: AppTitleFragment by lazy { AppTitleFragment() }
 
     override fun onCreateCore() {
+
         // retrieve ViewModel
         sharedViewModel = ViewModelProvider(
             this,
-            ExaminationViewModelFactory(nDismissedImages = nDismissedImagesRetriever(intent) ?: 0)
+            ExaminationViewModelFactory(
+                nDismissedImagesRetriever(intent) ?: 0,
+                checkUriPermission(
+                    CropFileSaveDestinationPreferences.documentUri,
+                    null,
+                    null,
+                    Binder.getCallingPid(),
+                    Binder.getCallingUid(),
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                ) == PackageManager.PERMISSION_GRANTED
+            )
         )[ExaminationActivityViewModel::class.java]
 
         // display Snackbar
@@ -83,25 +96,21 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
                 this,
                 MainActivity::class.java
             )
-                .putExtra(
-                    IntentIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS,
-                    intArrayOf(
-                        sharedViewModel.nSavedCrops,
-                        sharedViewModel.nDeletedScreenshots
+                .apply {
+                    putExtra(
+                        IntentIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS,
+                        intArrayOf(
+                            sharedViewModel.nSavedCrops,
+                            sharedViewModel.nDeletedScreenshots
+                        )
                     )
-                )
-                .putExtra(
-                    IntentIdentifier.CROP_WRITE_DIR_PATH,
-                    sharedViewModel.cropWriteDirPath
-                )
+                    if (sharedViewModel.nSavedCrops != 0)
+                        putExtra(
+                            IntentIdentifier.CROP_WRITE_DIR_PATH,
+                            sharedViewModel.cropWriteDirIdentifier()
+                        )
+                }
         )
         ActivityTransitions.RETURN(this)
-    }
-
-    override fun onStop() = logAfterwards("Cleared cropBundles") {
-        super.onStop()
-
-        ExaminationActivityViewModel.cropBundles.clear()
-        finishAndRemoveTask()
     }
 }

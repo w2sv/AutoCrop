@@ -1,11 +1,12 @@
 package com.autocrop.activities.examination
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
+import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.types.CropBundle
-import com.autocrop.utils.android.parentDirPath
+import com.autocrop.utils.android.externalPicturesDir
 
-class ExaminationActivityViewModel(val nDismissedImages: Int): ViewModel() {
+class ExaminationActivityViewModel(val nDismissedImages: Int, val documentUriWritePermissionValid: Boolean?)
+    : ViewModel() {
 
     companion object{
         lateinit var cropBundles: MutableList<CropBundle>
@@ -25,9 +26,18 @@ class ExaminationActivityViewModel(val nDismissedImages: Int): ViewModel() {
             _nDeletedScreenshots++
     }
 
-    var cropWriteDirPath: String? = null
-    fun setCropWriteDirPathIfApplicable(cropWriteUri: Uri?){
-        if (cropWriteUri != null && cropWriteDirPath == null)
-            cropWriteDirPath = cropWriteUri.parentDirPath
+    fun cropWriteDirIdentifier(): String =
+        if (documentUriWritePermissionValid == true)
+            CropFileSaveDestinationPreferences.documentUri!!.pathSegments[1]
+        else
+            externalPicturesDir.parent!!
+
+    /**
+     * Clear [cropBundles]
+     */
+    override fun onCleared() {
+        super.onCleared()
+
+        cropBundles.clear()
     }
 }

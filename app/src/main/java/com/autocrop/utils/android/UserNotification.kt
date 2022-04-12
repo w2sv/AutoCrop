@@ -21,9 +21,9 @@ object NotificationColor {
 fun Activity.displaySnackbar(
     message: String,
     @ColorRes textColorId: Int,
-    length: Int = Snackbar.LENGTH_LONG) =
+    displayDuration: Int = Snackbar.LENGTH_LONG) =
         Snackbar
-            .make(findViewById(android.R.id.content), message, length)
+            .make(findViewById(android.R.id.content), message, displayDuration)
             .apply {
                 view.
                 configuredTextView()
@@ -37,9 +37,9 @@ fun Activity.displaySnackbar(
 
 fun Activity.displaySnackbar(
     message: Spannable,
-    length: Int = Snackbar.LENGTH_LONG) =
+    displayDuration: Int = Snackbar.LENGTH_LONG) =
         Snackbar
-            .make(findViewById(android.R.id.content), message, length)
+            .make(findViewById(android.R.id.content), message, displayDuration)
             .apply {
                 view.configuredTextView()
             }
