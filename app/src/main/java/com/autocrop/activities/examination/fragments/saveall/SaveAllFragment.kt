@@ -18,25 +18,24 @@ class SaveAllFragment :
 
         lifecycleScope.executeAsyncTask(
             { processRemainingCropBundles(BooleanUserPreferences.deleteScreenshotsOnSaveAll)},
-            { invokeAppTitleFragment() }
+            { typedActivity.redirectToExitFragment() }
         )
     }
 
     private fun processRemainingCropBundles(deleteCorrespondingScreenshots: Boolean): Void? {
         ExaminationActivityViewModel.cropBundles.forEach { bundle ->
-            requireContext().contentResolver.processCropBundle(
+            val (_, deletionResult) = requireContext().processCropBundle(
                 bundle,
                 deleteCorrespondingScreenshots,
                 sharedViewModel.documentUriWritePermissionValid
             )
+            deletionResult?.let { (deletionUri, _) ->
+                if (deletionUri != null)
+                    sharedViewModel.deletionQueryScreenshotUris.add(deletionUri)
+            }
 
             sharedViewModel.incrementImageFileIOCounters(deleteCorrespondingScreenshots)
         }
         return null
     }
-
-    private fun invokeAppTitleFragment() =
-        with(typedActivity){
-            replaceCurrentFragmentWith(appTitleFragment, true)
-        }
 }

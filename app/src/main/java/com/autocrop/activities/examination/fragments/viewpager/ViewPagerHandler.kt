@@ -244,7 +244,7 @@ class ViewPagerHandler(
          */
         private fun onCropProcedureSelected(dataSetPosition: Index){
             when(viewModel.dataSet.size){
-                1 -> return examinationActivity.run { replaceCurrentFragmentWith(appTitleFragment, true) }
+                1 -> return examinationActivity.redirectToExitFragment()
                 2 -> examinationActivity.runOnUiThread { binding.pageIndicationSeekBar.hideAnimated() }
                 else -> Unit
             }

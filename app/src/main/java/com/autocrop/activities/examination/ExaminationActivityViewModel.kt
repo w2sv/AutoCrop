@@ -1,5 +1,6 @@
 package com.autocrop.activities.examination
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.types.CropBundle
@@ -19,6 +20,8 @@ class ExaminationActivityViewModel(val nDismissedImages: Int, val documentUriWri
     private var _nDeletedScreenshots = 0
     val nDeletedScreenshots: Int
         get() = _nDeletedScreenshots
+
+    val deletionQueryScreenshotUris: MutableList<Uri> = mutableListOf()
 
     fun incrementImageFileIOCounters(deletedScreenshot: Boolean){
         _nSavedCrops++

@@ -73,7 +73,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
         }
     ) {
         it?.let { treeUri ->
-            requireContext().contentResolver.takePersistableUriPermission(treeUri,Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            requireActivity().applicationContext.contentResolver.takePersistableUriPermission(treeUri,Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             CropFileSaveDestinationPreferences.treeUri = treeUri
         }
     }

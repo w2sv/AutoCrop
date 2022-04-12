@@ -82,8 +82,6 @@ private object GetOutputStream{
 // Deletion $
 //$$$$$$$$$$$
 
-const val FILE_PATH_COLUMN_NAME = MediaStore.Images.Media.DATA
-
 /**
  * @see
  *      https://stackoverflow.com/questions/10716642/android-deleting-an-image?noredirect=1&lq=1
@@ -96,8 +94,8 @@ fun ContentResolver.deleteImageMediaFile(uri: Uri): Boolean =
     (
             delete(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                "${FILE_PATH_COLUMN_NAME}=?",
-                arrayOf(imageFilePath(uri))
+                "${MediaStore.Images.Media.DATA}=?",
+                arrayOf(queryImageFilePath(uri))
             ) != 0
     )
         .also{ Timber.i(if (it) "Successfully deleted screenshot" else "Couldn't delete screenshot") }
@@ -108,9 +106,12 @@ fun ContentResolver.deleteImageMediaFile(uri: Uri): Boolean =
  *
  * Alternative solution: https://stackoverflow.com/a/38568666/12083276
  */
-private fun ContentResolver.imageFilePath(uri: Uri): String =
-    query(uri, arrayOf(FILE_PATH_COLUMN_NAME), null, null, null)!!.run {
+private fun ContentResolver.queryImageFilePath(uri: Uri, selection: String? = null, selectionArgs: Array<String>? = null): String =
+    queryImageFileProjection(uri, MediaStore.Images.Media.DATA, selection, selectionArgs)
+
+private fun ContentResolver.queryImageFileProjection(uri: Uri, projection: String, selection: String?, selectionArgs: Array<String>?): String =
+    query(uri, arrayOf(projection), selection, selectionArgs, null)!!.run {
         moveToFirst()
-        getString(getColumnIndexOrThrow(FILE_PATH_COLUMN_NAME))!!
+        getString(getColumnIndexOrThrow(projection))!!
             .also { close() }
     }

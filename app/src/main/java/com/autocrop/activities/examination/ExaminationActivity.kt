@@ -5,13 +5,14 @@
 package com.autocrop.activities.examination
 
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Binder
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
+import com.autocrop.activities.examination.fragments.deletionquery.DeletionQueryFragment
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
@@ -31,6 +32,7 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
     override val rootFragment: ViewPagerFragment by lazy{ViewPagerFragment()}
     val saveAllFragment: SaveAllFragment by lazy { SaveAllFragment() }
     val appTitleFragment: AppTitleFragment by lazy { AppTitleFragment() }
+    val screenshotDeletionQueryFragment: DeletionQueryFragment by lazy { DeletionQueryFragment() }
 
     override fun onCreateCore() {
 
@@ -62,6 +64,13 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
             else
                 R.animator.card_flip_right_in to R.animator.card_flip_right_out
         )
+    }
+
+    fun redirectToExitFragment(){
+        if (sharedViewModel.deletionQueryScreenshotUris.isNotEmpty() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            replaceCurrentFragmentWith(screenshotDeletionQueryFragment, true)
+        else
+            replaceCurrentFragmentWith(appTitleFragment, false)
     }
 
     /**
