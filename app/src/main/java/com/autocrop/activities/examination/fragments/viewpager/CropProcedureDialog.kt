@@ -34,7 +34,8 @@ class CropProcedureDialog
 
             setMultiChoiceItems(arrayOf("Delete corresponding screenshot"), booleanArrayOf(
                 BooleanUserPreferences.deleteIndividualScreenshot)){ _, _, _ -> BooleanUserPreferences.toggle(
-                BooleanUserPreferences.Keys.deleteIndividualScreenshot) }
+                BooleanUserPreferences.Keys.deleteIndividualScreenshot)
+            }
 
             val dataSetPosition = requireArguments().getInt(DATA_SET_POSITION_IN)
 

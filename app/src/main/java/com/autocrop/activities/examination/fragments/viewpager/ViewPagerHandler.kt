@@ -191,13 +191,14 @@ class ViewPagerHandler(
                         /**
                          * Cancel scroller upon touch if running
                          */
-                        override fun onTouch(v: View?, event: MotionEvent?): Boolean = scroller.run {
-                            if (isRunning)
-                                false
-                                    .also { cancel(true) }
-                            else
-                                super.onTouch(v, event)
-                        }
+                        override fun onTouch(v: View?, event: MotionEvent?): Boolean =
+                            scroller.run {
+                                if (isRunning)
+                                    false
+                                        .also { cancel(true) }
+                                else
+                                    super.onTouch(v, event)
+                            }
 
                         init {
                             examinationActivity.supportFragmentManager.setFragmentResultListener(CropProcedureDialog.PROCEDURE_SELECTED, examinationActivity){
@@ -231,11 +232,11 @@ class ViewPagerHandler(
         /**
          * Defines crop setting wrt [position]
          */
-        override fun onBindViewHolder(holder: CropViewHolder, position: Index) {
+        override fun onBindViewHolder(holder: CropViewHolder, position: Index) =
             holder.cropView.setImageBitmap(viewModel.dataSet.atCorrespondingPosition(position).crop)
-        }
 
-        override fun getItemCount(): Int = if (viewModel.dataSet.size > 1) ViewPagerFragmentViewModel.MAX_VIEWS else 1
+        override fun getItemCount(): Int =
+            if (viewModel.dataSet.size > 1) ViewPagerFragmentViewModel.MAX_VIEWS else 1
 
         /**
          * Increment nSavedCrops if applicable
