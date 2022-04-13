@@ -35,10 +35,10 @@ class MainActivity : FragmentHostingActivity<ActivityMainBinding>() {
                     when (nSavedCrops) {
                         0 -> append("Discarded all crops")
                         else -> {
-                            append("Saved $nSavedCrops crop${numberInflection(nSavedCrops)} to \n")
+                            append("Saved $nSavedCrops crop${numberInflection(nSavedCrops)} to ")
                             color(getColorInt(NotificationColor.SUCCESS, this@MainActivity)){append(cropWriteDirPathRetriever(intent)!!)}
                             if (nDeletedScreenshots != 0)
-                                append(" and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} screenshot${numberInflection(nDeletedScreenshots)}")
+                                append("\nand deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} screenshot${numberInflection(nDeletedScreenshots)}")
                         }
                     }
                 }

@@ -15,21 +15,29 @@ import com.autocrop.utils.android.deleteImageMediaFile
 import com.autocrop.utils.android.fileName
 import com.autocrop.utils.android.saveBitmap
 
-typealias DeletionResult = Pair<Uri?, Boolean?>
+typealias DeletionResult = Pair<Boolean, Uri?>
 
 fun Context.processCropBundle(
     cropBundle: CropBundle,
-    deleteScreenshot: Boolean,
-    documentUriValid: Boolean?): Pair<Boolean, DeletionResult?>{
+    documentUriValid: Boolean?,
+    deleteScreenshot: Boolean): Pair<Boolean, DeletionResult?>{
 
-    val cropSuccessfullySaved = contentResolver.saveCrop(cropBundle.crop, cropFileName(cropBundle.screenshotUri.fileName), documentUriValid)
+    val cropSuccessfullySaved = contentResolver.saveCrop(
+        cropBundle.crop,
+        cropFileName(cropBundle.screenshotUri.fileName),
+        documentUriValid
+    )
     val screenshotDeletionResult = if (deleteScreenshot)
-        deleteImageFile(cropBundle.screenshotUri)
+        attemptImageFileDeletion(cropBundle.screenshotUri)
     else
         null
 
     return cropSuccessfullySaved to screenshotDeletionResult
 }
+
+//$$$$$$$$$$$$$$
+// Crop Saving $
+//$$$$$$$$$$$$$$
 
 private fun ContentResolver.saveCrop(crop: Bitmap, cropFileName: String, documentUriValid: Boolean?): Boolean =
     if (documentUriValid == true)
@@ -53,25 +61,31 @@ private fun cropFileName(fileName: String): String = fileName
             "AutoCrop_$this"
     }
 
-private fun Context.deleteImageFile(uri: Uri): DeletionResult {
-    var deletionUri: Uri? = null
-    var successfullyDeleted: Boolean? = null
+//$$$$$$$$$$$$$$$$$$$$$$
+// Screenshot Deletion $
+//$$$$$$$$$$$$$$$$$$$$$$
+
+private fun Context.attemptImageFileDeletion(uri: Uri): DeletionResult {
+    val isDocumentUri: Boolean = DocumentsContract.isDocumentUri(this, uri)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        deletionUri = uri.mediaUriWithAppendedId(this)
-    else
-        successfullyDeleted = if (DocumentsContract.isDocumentUri(this, uri))
-            DocumentsContract.deleteDocument(contentResolver, uri)
-        else
-            contentResolver.deleteImageMediaFile(uri)
-
-    return deletionUri to successfullyDeleted
+        return false to uri.mediaUriWithAppendedId(this, isDocumentUri)
+    return contentResolver.deleteImageFile(uri, isDocumentUri) to null
 }
 
 @RequiresApi(Build.VERSION_CODES.R)
-private fun Uri.mediaUriWithAppendedId(context: Context) = ContentUris.withAppendedId(
-    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-    (if (DocumentsContract.isDocumentUri(context, this)) MediaStore.getMediaUri(context, this)!! else this)
-        .lastPathSegment!!
-        .toLong()
-)
+private fun Uri.mediaUriWithAppendedId(context: Context, isDocumentUri: Boolean) =
+    ContentUris.withAppendedId(
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+        mediaUriId(if (isDocumentUri) MediaStore.getMediaUri(context, this)!! else this)
+    )
+
+fun mediaUriId(mediaUri: Uri): Long =
+    mediaUri.lastPathSegment!!.toLong()
+
+// TODO: add custom MaxApi=<R annotation
+private fun ContentResolver.deleteImageFile(uri: Uri, isDocumentUri: Boolean): Boolean =
+    if (isDocumentUri)
+        DocumentsContract.deleteDocument(this, uri)
+    else
+        deleteImageMediaFile(uri)

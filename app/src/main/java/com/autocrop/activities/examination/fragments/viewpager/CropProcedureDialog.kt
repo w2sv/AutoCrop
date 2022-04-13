@@ -2,18 +2,14 @@ package com.autocrop.activities.examination.fragments.viewpager
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
-import android.provider.DocumentsContract
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
-import com.autocrop.activities.examination.processCropBundle
 import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.uielements.ExtendedDialogFragment
-import com.autocrop.utils.android.uriPermissionGranted
 import com.autocrop.utils.executeAsyncTask
 
 /**
@@ -38,35 +34,30 @@ class CropProcedureDialog
                 BooleanUserPreferences.Keys.deleteIndividualScreenshot) }
 
             val dataSetPosition = requireArguments().getInt(DATA_SET_POSITION_IN)
-            val triggerOnProcedureSelected = {
-                requireActivity().supportFragmentManager.setFragmentResult(
-                    PROCEDURE_SELECTED,
-                    bundleOf(DATA_SET_POSITION_OUT to dataSetPosition)
-                )
-            }
 
-            setNegativeButton("No, discard") { _, _ -> triggerOnProcedureSelected() }
+            setNegativeButton("No, discard") { _, _ -> triggerOnProcedureSelected(dataSetPosition) }
             setPositiveButton("Yes") { _, _ ->
-                lifecycleScope.executeAsyncTask({ saveCrop(dataSetPosition, BooleanUserPreferences.deleteIndividualScreenshot, ViewModelProvider(requireActivity() as ExaminationActivity)[ExaminationActivityViewModel::class.java]) })
-                triggerOnProcedureSelected()
+                lifecycleScope.executeAsyncTask(
+                    { saveCrop(
+                        dataSetPosition,
+                        BooleanUserPreferences.deleteIndividualScreenshot,
+                        ViewModelProvider(requireActivity() as ExaminationActivity)[ExaminationActivityViewModel::class.java])
+                    }
+                )
+                triggerOnProcedureSelected(dataSetPosition)
             }
 
             create()
         }
 
     private fun saveCrop(dataSetPosition: Int, deleteScreenshot: Boolean, sharedViewModel: ExaminationActivityViewModel): Void?{
-        val (_, deletionResult) = requireContext().processCropBundle(
-            ExaminationActivityViewModel.cropBundles[dataSetPosition],
-            deleteScreenshot,
-            sharedViewModel.documentUriWritePermissionValid
-        )
-
-        deletionResult?.let { (permissionQueryUri, _) ->
-            if (permissionQueryUri != null)
-                sharedViewModel.deletionQueryScreenshotUris.add(permissionQueryUri)
-        }
-
-        sharedViewModel.incrementImageFileIOCounters(deleteScreenshot)
+        sharedViewModel.processCropBundle(dataSetPosition, deleteScreenshot, requireContext())
         return null
     }
+
+    private fun triggerOnProcedureSelected(dataSetPosition: Int) =
+        requireActivity().supportFragmentManager.setFragmentResult(
+            PROCEDURE_SELECTED,
+            bundleOf(DATA_SET_POSITION_OUT to dataSetPosition)
+        )
 }

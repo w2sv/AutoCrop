@@ -5,7 +5,6 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
-import com.autocrop.activities.examination.processCropBundle
 import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.utils.executeAsyncTask
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentSaveallBinding
@@ -23,18 +22,8 @@ class SaveAllFragment :
     }
 
     private fun processRemainingCropBundles(deleteCorrespondingScreenshots: Boolean): Void? {
-        ExaminationActivityViewModel.cropBundles.forEach { bundle ->
-            val (_, deletionResult) = requireContext().processCropBundle(
-                bundle,
-                deleteCorrespondingScreenshots,
-                sharedViewModel.documentUriWritePermissionValid
-            )
-            deletionResult?.let { (deletionUri, _) ->
-                if (deletionUri != null)
-                    sharedViewModel.deletionQueryScreenshotUris.add(deletionUri)
-            }
-
-            sharedViewModel.incrementImageFileIOCounters(deleteCorrespondingScreenshots)
+        ExaminationActivityViewModel.cropBundles.indices.forEach {
+            sharedViewModel.processCropBundle(it, deleteCorrespondingScreenshots, requireContext())
         }
         return null
     }

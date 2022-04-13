@@ -1,16 +1,32 @@
 package com.autocrop.activities.examination
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.types.CropBundle
 import com.autocrop.utils.android.externalPicturesDir
+import timber.log.Timber
 
-class ExaminationActivityViewModel(val nDismissedImages: Int, val documentUriWritePermissionValid: Boolean?)
+class ExaminationActivityViewModel(val nDismissedImages: Int, private val documentUriWritePermissionValid: Boolean?)
     : ViewModel() {
 
     companion object{
         lateinit var cropBundles: MutableList<CropBundle>
+    }
+
+    fun processCropBundle(cropBundlesPosition: Int, deleteScreenshot: Boolean, context: Context){
+        val (_, deletionResult) = context.processCropBundle(
+            cropBundles[cropBundlesPosition],
+            documentUriWritePermissionValid,
+            deleteScreenshot
+        )
+        deletionResult?.second?.let {
+            deletionQueryScreenshotUris.add(it)
+            Timber.i("Added $it to deletionQueryScreenshotUris")
+        }
+
+        incrementImageFileIOCounters(deletionResult?.first ?: false)
     }
 
     private var _nSavedCrops = 0
@@ -23,10 +39,13 @@ class ExaminationActivityViewModel(val nDismissedImages: Int, val documentUriWri
 
     val deletionQueryScreenshotUris: MutableList<Uri> = mutableListOf()
 
-    fun incrementImageFileIOCounters(deletedScreenshot: Boolean){
+    private fun incrementImageFileIOCounters(deletedScreenshot: Boolean){
         _nSavedCrops++
         if (deletedScreenshot)
             _nDeletedScreenshots++
+    }
+    fun incrementNDeletedScreenshotsByDeletionQueryScreenshotUris(){
+        _nDeletedScreenshots += deletionQueryScreenshotUris.size
     }
 
     fun cropWriteDirIdentifier(): String =
