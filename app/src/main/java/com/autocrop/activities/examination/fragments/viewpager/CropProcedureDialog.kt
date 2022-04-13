@@ -11,6 +11,7 @@ import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.uielements.ExtendedDialogFragment
 import com.autocrop.utils.executeAsyncTask
+import kotlinx.coroutines.Job
 
 /**
  * Class accounting for procedure dialog display upon screen click,
@@ -25,6 +26,8 @@ class CropProcedureDialog
         const val PROCEDURE_SELECTED = "ON_PROCEDURE_SELECTED"
     }
 
+    var cropBundleProcessingJob: Job? = null
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(activity).run {
             setTitle("Save crop?")
@@ -37,7 +40,7 @@ class CropProcedureDialog
 
             setNegativeButton("No, discard") { _, _ -> triggerOnProcedureSelected(dataSetPosition) }
             setPositiveButton("Yes") { _, _ ->
-                lifecycleScope.executeAsyncTask(
+                cropBundleProcessingJob = lifecycleScope.executeAsyncTask(
                     { saveCrop(
                         dataSetPosition,
                         BooleanUserPreferences.deleteIndividualScreenshot,

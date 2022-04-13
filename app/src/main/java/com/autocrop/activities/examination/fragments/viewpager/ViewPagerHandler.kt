@@ -175,8 +175,10 @@ class ViewPagerHandler(
 
     private inner class CropPagerAdapter: RecyclerView.Adapter<CropPagerAdapter.CropViewHolder>() {
 
+        val cropProcedureDialog = CropProcedureDialog()
+
         @SuppressLint("ClickableViewAccessibility")
-        inner class CropViewHolder(view: ImageView) : RecyclerView.ViewHolder(view) {
+        private inner class CropViewHolder(view: ImageView) : RecyclerView.ViewHolder(view) {
             val cropView: ImageView = view.findViewById(R.id.slide_item_image_view_examination_activity)
 
             /**
@@ -206,7 +208,7 @@ class ViewPagerHandler(
                         /**
                          * Invoke CropProcedureDialog
                          */
-                        override fun onClick() = with(CropProcedureDialog()) {
+                        override fun onClick() = with(cropProcedureDialog) {
                             arguments = bundleOf(CropProcedureDialog.DATA_SET_POSITION_IN to viewModel.dataSet.correspondingPosition(adapterPosition))
                             show(examinationActivity.supportFragmentManager)
                         }
@@ -244,7 +246,14 @@ class ViewPagerHandler(
          */
         private fun onCropProcedureSelected(dataSetPosition: Index){
             when(viewModel.dataSet.size){
-                1 -> return examinationActivity.redirectToExitFragment()
+                1 -> {
+                    (binding.viewPager.adapter as CropPagerAdapter).cropProcedureDialog.cropBundleProcessingJob?.run {
+                        invokeOnCompletion {
+                            examinationActivity.redirectToExitFragment()
+                        }
+                    } ?: examinationActivity.redirectToExitFragment()
+                    return
+                }
                 2 -> examinationActivity.runOnUiThread { binding.pageIndicationSeekBar.hideAnimated() }
                 else -> Unit
             }
