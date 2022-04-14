@@ -43,7 +43,6 @@
 
         <activity
             android:name="com.autocrop.activities.main.MainActivity"
-            android:theme="@style/Theme.App.Main"
 
             android:screenOrientation="portrait"
             android:exported="true">

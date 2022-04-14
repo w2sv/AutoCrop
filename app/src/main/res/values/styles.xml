@@ -22,9 +22,8 @@
 
     <!--    Splash Theme-->
 
-    <style name="Theme.App.Splash" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.App.Splash" parent="Theme.App.Main">
         <item name="android:windowBackground">@drawable/splash_screen</item>
-        <item name="android:windowFullscreen">true</item>
     </style>
 
     <!--    App Title TextView-->
