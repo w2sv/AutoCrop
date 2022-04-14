@@ -94,6 +94,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun selectImages() =
         startActivityForResult(
             Intent(Intent.ACTION_PICK)
@@ -104,6 +105,8 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
             IntentCode.IMAGE_SELECTION.ordinal
         )
 
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
