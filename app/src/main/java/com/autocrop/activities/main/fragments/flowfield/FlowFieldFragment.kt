@@ -1,5 +1,6 @@
 package com.autocrop.activities.main.fragments.flowfield
 
+import android.app.Activity.RESULT_OK
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -7,12 +8,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.CropFileSaveDestinationPreferences
-import com.autocrop.utils.android.*
+import com.autocrop.utils.android.MimeTypes
+import com.autocrop.utils.android.NotificationColor
+import com.autocrop.utils.android.displaySnackbar
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityMainFragmentFlowfieldBinding
 
@@ -83,23 +85,47 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
     //$$$$$$$$$$$$$$$$$$
 
     /**
-     * Launch [selectImagesContract] if all permissions granted, otherwise request required permissions and
-     * then launch [selectImagesContract] if all granted
+     * Launch [selectImages] if all permissions granted, otherwise request required permissions and
+     * then launch [selectImages] if all granted
      */
     private fun setImageSelectionButtonOnClickListener() = binding.imageSelectionButton.setOnClickListener {
         permissionsHandler.requestPermissionsIfNecessaryAndOrIfAllGrantedRun {
-            selectImagesContract.launch(MimeTypes.IMAGE)
+            selectImages()
         }
     }
 
-    private val selectImagesContract = registerForActivityResult(ActivityResultContracts.GetMultipleContents()){ selectedUris ->
-        if (selectedUris.isNotEmpty()){
-            startActivity(
-                Intent(requireActivity(), CroppingActivity::class.java)
-                    .putParcelableArrayListExtra(IntentIdentifier.SELECTED_IMAGE_URI_STRINGS, ArrayList(selectedUris))
-            )
-            ActivityTransitions.PROCEED(requireContext())
+    private fun selectImages() =
+        startActivityForResult(
+            Intent(Intent.ACTION_PICK)
+                .apply {
+                    type = MimeTypes.IMAGE
+                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                },
+            IntentCode.IMAGE_SELECTION.ordinal
+        )
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                IntentCode.IMAGE_SELECTION.ordinal -> {
+                    with(data?.clipData!!) {
+                        startActivity(
+                            Intent(requireActivity(), CroppingActivity::class.java)
+                                .putParcelableArrayListExtra(
+                                    IntentIdentifier.SELECTED_IMAGE_URIS,
+                                    ArrayList((0 until itemCount).map { getItemAt(it).uri })
+                                )
+                        )
+                    }
+                }
+            }
         }
+    }
+
+    private enum class IntentCode {
+        IMAGE_SELECTION
     }
 
     //$$$$$$$$$$$$$$$$$

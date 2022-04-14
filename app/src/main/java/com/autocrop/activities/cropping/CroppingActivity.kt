@@ -21,7 +21,7 @@ class CroppingActivity : FragmentHostingActivity<ActivityCroppingBinding>() {
         viewModel = ViewModelProvider(
             this,
             CroppingActivityViewModelFactory(
-                uris = intent.getParcelableArrayListExtra(IntentIdentifier.SELECTED_IMAGE_URI_STRINGS)!!
+                uris = intent.getParcelableArrayListExtra(IntentIdentifier.SELECTED_IMAGE_URIS)!!
             )
         )[CroppingActivityViewModel::class.java]
     }
