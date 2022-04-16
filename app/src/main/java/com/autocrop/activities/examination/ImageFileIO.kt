@@ -15,6 +15,7 @@ import com.autocrop.utils.android.fileName
 import com.autocrop.utils.android.queryImageFileMediaColumn
 import com.autocrop.utils.android.saveBitmap
 import com.autocrop.utils.logBeforehand
+import timber.log.Timber
 
 typealias DeletionResult = Pair<Boolean, Uri?>
 
@@ -66,19 +67,23 @@ private fun cropFileName(fileName: String): String = fileName
 //$$$$$$$$$$$$$$$$$$$$$$
 
 private fun Context.attemptImageFileDeletion(uri: Uri): DeletionResult = logBeforehand("attemptImageFileDeletion for $uri") {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
         false to uri.mediaUriWithAppendedId(this)
-    contentResolver.deleteImageMediaFile(uri) to null
+            .also { Timber.i("Returned mediaUriWithAppendedId") }
+    else
+        contentResolver.deleteImageMediaFile(uri) to null
+            .also { Timber.i("Triggered immediate image file deletion") }
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
-private fun Uri.mediaUriWithAppendedId(context: Context) =
+private fun Uri.mediaUriWithAppendedId(context: Context): Uri =
     ContentUris.withAppendedId(
         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
         context.mediaUriId(this)
     )
+        .also { Timber.i("Result mediaUriWithAppendedId: $it") }
 
 @RequiresApi(Build.VERSION_CODES.Q)
-fun Context.mediaUriId(uri: Uri): Long =
+private fun Context.mediaUriId(uri: Uri): Long =
     contentResolver.queryImageFileMediaColumn(uri, MediaStore.Images.Media._ID)
         .toLong()
