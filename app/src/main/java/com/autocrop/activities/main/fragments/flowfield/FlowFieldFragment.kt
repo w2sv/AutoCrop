@@ -14,6 +14,7 @@ import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.utils.android.MimeTypes
 import com.autocrop.utils.android.NotificationColor
+import com.autocrop.utils.android.clipDataItems
 import com.autocrop.utils.android.displaySnackbar
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityMainFragmentFlowfieldBinding
@@ -113,15 +114,16 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 IntentCode.IMAGE_SELECTION.ordinal -> {
-                    with(data?.clipData!!) {
-                        startActivity(
-                            Intent(requireActivity(), CroppingActivity::class.java)
-                                .putParcelableArrayListExtra(
-                                    IntentIdentifier.SELECTED_IMAGE_URIS,
-                                    ArrayList((0 until itemCount).map { getItemAt(it).uri })
-                                )
+                    startActivity(
+                        Intent(
+                            requireActivity(),
+                            CroppingActivity::class.java
                         )
-                    }
+                            .putParcelableArrayListExtra(
+                                IntentIdentifier.SELECTED_IMAGE_URIS,
+                                ArrayList(data?.clipDataItems()!!.map { it.uri })
+                            )
+                    )
                 }
             }
         }

@@ -5,14 +5,13 @@
 package com.autocrop.activities.examination
 
 import android.content.Intent
-import android.os.Build
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
-import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
+import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.global.CropFileSaveDestinationPreferences
@@ -21,6 +20,7 @@ import com.autocrop.utils.android.*
 import com.autocrop.utils.numberInflection
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationBinding
+import timber.log.Timber
 
 class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>() {
 
@@ -66,11 +66,9 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
     }
 
     fun redirectToExitFragment(){
-        println("deletionQueryScreenshotUris.size: ${sharedViewModel.deletionQueryScreenshotUris.size}")
-
         if (sharedViewModel.deletionQueryScreenshotUris.isNotEmpty())
-            replaceCurrentFragmentWith(screenshotDeletionQueryFragment, null)
-                .also { println("Invoking screenshotDeletionQueryFragment") }
+            replaceCurrentFragmentWith(screenshotDeletionQueryFragment, true)
+                .also { Timber.i("Invoking screenshotDeletionQueryFragment for ${sharedViewModel.deletionQueryScreenshotUris.size} deletion uris") }
         else
             replaceCurrentFragmentWith(appTitleFragment, false)
     }
@@ -88,7 +86,7 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
         saveAllFragment.isVisible -> {
             displaySnackbar(
                 "Wait until crops have been saved",
-                NotificationColor.URGENT
+                NotificationColor.NEUTRAL
             )
         }
         else -> handleBackPress()
