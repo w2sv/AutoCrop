@@ -59,10 +59,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
                 }
             )
         } catch (e: ActivityNotFoundException){
-            requireActivity().displaySnackbar(
-                "Seems like you're not signed into\nthe Play Store, pal \uD83E\uDD14",
-                NotificationColor.NEUTRAL
-            )
+            requireActivity().displaySnackbar("Seems like you're not signed into\nthe Play Store, pal \uD83E\uDD14")
         }
 
     private val pickSaveDestinationDirContract = registerForActivityResult(

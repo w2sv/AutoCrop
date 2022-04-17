@@ -8,7 +8,7 @@ import com.autocrop.types.CropBundle
 import com.autocrop.utils.android.externalPicturesDir
 import timber.log.Timber
 
-class ExaminationActivityViewModel(val nDismissedImages: Int, private val documentUriWritePermissionValid: Boolean?)
+class ExaminationActivityViewModel(private val documentUriWritePermissionValid: Boolean?)
     : ViewModel() {
 
     companion object{

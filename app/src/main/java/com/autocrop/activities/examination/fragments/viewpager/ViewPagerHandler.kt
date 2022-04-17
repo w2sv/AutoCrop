@@ -164,8 +164,6 @@ class ViewPagerHandler(
                 binding.viewPager.setPageTransformer()
                 examinationActivity.displaySnackbar(
                     "Cancelled auto scrolling",
-                    NotificationColor.SUCCESS,
-                    Snackbar.LENGTH_SHORT,
                     R.drawable.ic_outline_cancel_24
                 )
             }

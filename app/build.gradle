@@ -60,6 +60,8 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.4.1'
     implementation 'androidx.activity:activity-ktx:1.4.0'
 
+    implementation 'com.github.matecode:Snacky:1.1.5'
+
     // ----------TESTS------------
 
     def junitVersion = "5.8.2"

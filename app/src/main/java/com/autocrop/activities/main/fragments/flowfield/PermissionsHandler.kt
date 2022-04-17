@@ -50,10 +50,7 @@ class PermissionsHandler(private val fragment: Fragment){
      */
     private fun onRequestPermissionsResult(permissionToGranted: Map<String, Boolean>) {
         if (permissionToGranted.values.any { !it }) {
-            fragment.requireActivity().displaySnackbar(
-                "You need to permit file reading and\nwriting in order for the app to work",
-                NotificationColor.NEUTRAL
-            )
+            fragment.requireActivity().displaySnackbar("You need to permit file reading and\nwriting in order for the app to work")
             Timber.i("Not all required permissions were granted: $permissionToGranted")
         }
         else

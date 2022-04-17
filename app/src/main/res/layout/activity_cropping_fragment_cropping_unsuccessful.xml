@@ -5,7 +5,7 @@
 
     <ImageView
         android:id="@+id/cropping_unsuccessful_icon"
-        android:src="@drawable/ic_error"
+        android:src="@drawable/ic_error_24"
 
         android:layout_width="100dp"
         android:layout_height="100dp"

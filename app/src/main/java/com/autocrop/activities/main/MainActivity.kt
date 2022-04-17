@@ -31,7 +31,7 @@ class MainActivity : FragmentHostingActivity<ActivityMainBinding>() {
             val (nSavedCrops, nDeletedScreenshots) = it[0] to it[1]
 
             when (nSavedCrops) {
-                0 -> displaySnackbar("Discarded all crops", NotificationColor.NEUTRAL, R.drawable.ic_outline_sentiment_dissatisfied_24)
+                0 -> displaySnackbar("Discarded all crops", R.drawable.ic_outline_sentiment_dissatisfied_24)
                 else ->
                     displaySnackbar(
                         SpannableStringBuilder().apply {

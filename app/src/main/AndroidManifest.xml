@@ -20,6 +20,8 @@
     <!--Reference: https://developer.android.com/guide/topics/manifest/application-element -->
     <application
         android:label="@string/app_title"
+        tools:replace="android:label"
+
         android:name="com.autocrop.application.AutoCrop"
 
         android:icon="@mipmap/brudineletten"

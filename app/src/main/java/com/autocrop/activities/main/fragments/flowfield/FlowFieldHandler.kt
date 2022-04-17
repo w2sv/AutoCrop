@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
 import com.w2sv.autocrop.R
+import de.mateware.snacky.Snacky
 import processing.android.PFragment
 
 class FlowFieldHandler(private val activity: FragmentActivity,
@@ -35,12 +36,18 @@ class FlowFieldHandler(private val activity: FragmentActivity,
 
         contentResolver.saveBitmap(flowfield.bitmap(), "FlowField_${formattedDateTimeString()}.jpg")
 
-        displaySnackbar(
-            SpannableStringBuilder()
-                .append("Saved FlowField to")
-                .append("\n")
-                .color(getColorInt(NotificationColor.SUCCESS, this)){append(externalPicturesDir.absolutePath)},
-            R.drawable.ic_round_save_24
-        )
+        Snacky
+            .builder()
+            .setText(
+                SpannableStringBuilder()
+                    .append("Saved FlowField to")
+                    .append("\n")
+                    .color(getColorInt(NotificationColor.SUCCESS, this)){append(externalPicturesDir.absolutePath)},
+            )
+            .centerText()
+            .setIcon(R.drawable.ic_round_save_24)
+            .setActivity(activity)
+            .build()
+            .show()
     }
 }

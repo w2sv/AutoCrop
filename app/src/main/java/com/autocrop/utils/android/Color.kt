@@ -7,7 +7,6 @@ import androidx.annotation.ColorRes
 /**
  * @return precached [ColorInt] if present, otherwise caches before returning
  */
-@ColorInt
 fun getColorInt(@ColorRes id: Int, context: Context): Int =
     id2Color.getOrPut(id){ context.resources.getColor(id, context.theme) }
 

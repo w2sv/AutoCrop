@@ -5,6 +5,8 @@
 package com.autocrop.activities.examination
 
 import android.content.Intent
+import android.text.SpannableStringBuilder
+import androidx.core.text.color
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
@@ -16,45 +18,49 @@ import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
+import com.autocrop.uicontroller.activity.SharedViewModelHandler
 import com.autocrop.utils.android.*
 import com.autocrop.utils.numberInflection
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 import timber.log.Timber
 
-class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>() {
+class ExaminationActivity :
+    FragmentHostingActivity<ActivityExaminationBinding>(),
+    SharedViewModelHandler<ExaminationActivityViewModel> {
 
-    private lateinit var sharedViewModel: ExaminationActivityViewModel
+    override val rootFragment: ViewPagerFragment by lazy{ ViewPagerFragment() }
+    val saveAllFragment: SaveAllFragment by lazy { SaveAllFragment() }
+    private val screenshotDeletionQueryFragment: ScreenshotDeletionQueryFragment by lazy { ScreenshotDeletionQueryFragment() }
+    val appTitleFragment: AppTitleFragment by lazy { AppTitleFragment() }
 
+    override lateinit var sharedViewModel: ExaminationActivityViewModel
     private val nDismissedImagesRetriever = IntentExtraRetriever<Int>(IntentIdentifier.N_DISMISSED_IMAGES)
 
-    override val rootFragment: ViewPagerFragment by lazy{ViewPagerFragment()}
-    val saveAllFragment: SaveAllFragment by lazy { SaveAllFragment() }
-    val appTitleFragment: AppTitleFragment by lazy { AppTitleFragment() }
-    private val screenshotDeletionQueryFragment: ScreenshotDeletionQueryFragment by lazy { ScreenshotDeletionQueryFragment() }
-
     override fun onCreateCore() {
+        super.setSharedViewModel()
 
-        // retrieve ViewModel
-        sharedViewModel = ViewModelProvider(
-            this,
-            ExaminationViewModelFactory(
-                nDismissedImagesRetriever(intent) ?: 0,
-                CropFileSaveDestinationPreferences.documentUri?.let{uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)}
+        // display couldn't find cropping bounds Snackbar if applicable
+        nDismissedImagesRetriever(intent, 0) ?.let {
+            displaySnackbar(
+                SpannableStringBuilder()
+                    .append("Couldn't find cropping bounds for\n")
+                    .color(getColorInt(R.color.saturated_magenta, this@ExaminationActivity)) {
+                        append("$it")
+                    }
+                    .append(" image${numberInflection(it)}"),
+                R.drawable.ic_error_24
             )
-        )[ExaminationActivityViewModel::class.java]
-
-        // display Snackbar
-        with(sharedViewModel.nDismissedImages) {
-            if (!equals(0))
-                displaySnackbar(
-                    "Couldn't find cropping bounds for\n$this image${numberInflection(this)}",
-                    NotificationColor.NEUTRAL,
-                    2500,
-                    R.drawable.ic_error
-                )
         }
     }
+
+    override fun provideSharedViewModel(): ExaminationActivityViewModel =
+        ViewModelProvider(
+            this,
+            ExaminationViewModelFactory(
+                documentUriWritePermissionValid = CropFileSaveDestinationPreferences.documentUri?.let{uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)}
+            )
+        )[ExaminationActivityViewModel::class.java]
 
     fun replaceCurrentFragmentWith(fragment: Fragment, flipRight: Boolean) {
         super.replaceCurrentFragmentWith(
@@ -87,7 +93,6 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
         saveAllFragment.isVisible -> {
             displaySnackbar(
                 "Wait until crops have been saved",
-                NotificationColor.NEUTRAL,
                 R.drawable.ic_baseline_front_hand_24
             )
         }
