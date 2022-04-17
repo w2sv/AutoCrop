@@ -30,19 +30,19 @@ class MainActivity : FragmentHostingActivity<ActivityMainBinding>() {
         nSavedCropsRetriever(intent)?.let {
             val (nSavedCrops, nDeletedScreenshots) = it[0] to it[1]
 
-            displaySnackbar(
-                SpannableStringBuilder().apply {
-                    when (nSavedCrops) {
-                        0 -> append("Discarded all crops")
-                        else -> {
+            when (nSavedCrops) {
+                0 -> displaySnackbar("Discarded all crops", NotificationColor.NEUTRAL, R.drawable.ic_outline_sentiment_dissatisfied_24)
+                else ->
+                    displaySnackbar(
+                        SpannableStringBuilder().apply {
                             append("Saved $nSavedCrops crop${numberInflection(nSavedCrops)} to ")
                             color(getColorInt(NotificationColor.SUCCESS, this@MainActivity)){append(cropWriteDirPathRetriever(intent)!!)}
                             if (nDeletedScreenshots != 0)
                                 append("\nand deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} screenshot${numberInflection(nDeletedScreenshots)}")
-                        }
-                    }
-                }
-            )
+                        },
+                        R.drawable.ic_baseline_done_24
+                    )
+            }
         }
     }
 

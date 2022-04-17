@@ -7,6 +7,7 @@ import androidx.core.text.color
 import androidx.fragment.app.FragmentActivity
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
+import com.w2sv.autocrop.R
 import processing.android.PFragment
 
 class FlowFieldHandler(private val activity: FragmentActivity,
@@ -30,14 +31,16 @@ class FlowFieldHandler(private val activity: FragmentActivity,
      * Save current FlowField canvas to "[externalPicturesDir].{FlowField_[formattedDateTimeString]}.jpg",
      * display Snackbar with saving destination
      */
-    private fun captureFlowField(){
-        activity.contentResolver.saveBitmap(flowfield.bitmap(), "FlowField_${formattedDateTimeString()}.jpg")
+    private fun captureFlowField() = with(activity){
 
-        activity.displaySnackbar(
+        contentResolver.saveBitmap(flowfield.bitmap(), "FlowField_${formattedDateTimeString()}.jpg")
+
+        displaySnackbar(
             SpannableStringBuilder()
                 .append("Saved FlowField to")
                 .append("\n")
-                .color(getColorInt(NotificationColor.SUCCESS, activity)){append(externalPicturesDir.absolutePath)}
+                .color(getColorInt(NotificationColor.SUCCESS, this)){append(externalPicturesDir.absolutePath)},
+            R.drawable.ic_round_save_24
         )
     }
 }

@@ -49,8 +49,9 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
             if (!equals(0))
                 displaySnackbar(
                     "Couldn't find cropping bounds for\n$this image${numberInflection(this)}",
-                    NotificationColor.URGENT,
-                    2500
+                    NotificationColor.NEUTRAL,
+                    2500,
+                    R.drawable.ic_error
                 )
         }
     }
@@ -86,7 +87,8 @@ class ExaminationActivity : FragmentHostingActivity<ActivityExaminationBinding>(
         saveAllFragment.isVisible -> {
             displaySnackbar(
                 "Wait until crops have been saved",
-                NotificationColor.NEUTRAL
+                NotificationColor.NEUTRAL,
+                R.drawable.ic_baseline_front_hand_24
             )
         }
         else -> handleBackPress()

@@ -9,12 +9,17 @@
         <entry key="app/src/main/res/drawable/ic_auto_crop_logo.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/ic_autocrop_logo.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/ic_autocrop_logo_1_.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/ic_baseline_done_24.xml" value="0.1825" />
+        <entry key="app/src/main/res/drawable/ic_baseline_front_hand_24.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_baseline_redo_24.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/ic_brudineletten_regular.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_brudineletten_web.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_camera.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/ic_error.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/ic_outline_cancel_24.xml" value="0.13" />
         <entry key="app/src/main/res/drawable/ic_outline_info_24.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/ic_outline_sentiment_dissatisfied_24.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_round_save_24.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/ic_sharp_star_rate_24.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/image_brudineletten.xml" value="0.1" />

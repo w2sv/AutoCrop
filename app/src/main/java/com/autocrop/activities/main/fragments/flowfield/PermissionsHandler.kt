@@ -48,7 +48,7 @@ class PermissionsHandler(private val fragment: Fragment){
      *
      * Clears [onAllPermissionsGranted] afterwards in any case
      */
-    fun onRequestPermissionsResult(permissionToGranted: Map<String, Boolean>) {
+    private fun onRequestPermissionsResult(permissionToGranted: Map<String, Boolean>) {
         if (permissionToGranted.values.any { !it }) {
             fragment.requireActivity().displaySnackbar(
                 "You need to permit file reading and\nwriting in order for the app to work",
