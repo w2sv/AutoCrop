@@ -6,6 +6,7 @@ package com.autocrop.activities.examination
 
 import android.content.Intent
 import android.text.SpannableStringBuilder
+import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -45,9 +46,7 @@ class ExaminationActivity :
             displaySnackbar(
                 SpannableStringBuilder()
                     .append("Couldn't find cropping bounds for\n")
-                    .color(getColorInt(R.color.saturated_magenta, this@ExaminationActivity)) {
-                        append("$it")
-                    }
+                    .bold { append("$it") }
                     .append(" image${numberInflection(it)}"),
                 R.drawable.ic_error_24
             )

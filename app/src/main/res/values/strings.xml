@@ -5,9 +5,10 @@
     <string name="cropping_in_progress">Cropping…</string>
     <string name="fracture">%1$d/%2$d</string>
     <string name="crops_processing_in_progress">Processing crops…</string>
-    <string name="cropping_failure">Couldn\'t find cropping bounds for%1$s the selected image%2$s</string>
+    <string name="cropping_failure">No cropping borders found</string>
     <string name="auto_scrolling">AutoScrolling</string>
     <string name="discarded">discarded</string>
+    <string name="cropping_failure_instruction_text_view">Make sure your selected screenshots possess a continuous monochromatic border both above and below the core image area</string>
 
     <string name="version">Version: %1$s</string>
     <string name="copyright">© 2021-%1$d | Janek Zangenberg</string>
@@ -32,5 +33,6 @@
     <string name="menu_item_rate_the_app">Rate the app</string>
     <string name="menu_item_about_the_app">About</string>
     <string name="main_menu_item_change_directory">Change Directory</string>
+    <string name="got_it">Got it</string>
 
 </resources>

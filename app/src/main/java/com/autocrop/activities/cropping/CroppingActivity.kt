@@ -35,7 +35,7 @@ class CroppingActivity :
         startActivity(
             Intent(this, MainActivity::class.java)
         )
-        ActivityTransitions.RESTART(this)
+        ActivityTransitions.RETURN(this)
     }
 
     /**

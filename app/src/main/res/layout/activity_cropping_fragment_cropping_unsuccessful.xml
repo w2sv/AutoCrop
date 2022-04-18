@@ -1,35 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
 
-    <ImageView
-        android:id="@+id/cropping_unsuccessful_icon"
-        android:src="@drawable/ic_error_24"
+    android:background="@android:color/black">
 
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+    <TextView
+        android:id="@+id/cropping_unsuccessful_text_view"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="200dp"
+        android:layout_marginHorizontal="40dp"
 
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:translationY="-70dp"
+
+        android:text="@string/cropping_failure"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        android:textColor="@color/dark_green"/>
+
+    <ImageView
+        android:src="@drawable/ic_error_24"
+
+        android:layout_width="@dimen/error_icon_cropping_failure_screen"
+        android:layout_height="@dimen/error_icon_cropping_failure_screen"
+
+        android:layout_alignStart="@+id/cropping_unsuccessful_text_view"
+        android:layout_alignBottom="@+id/cropping_unsuccessful_text_view"
+        android:layout_marginStart="@dimen/error_icon_cropping_failure_horizontal_margin"
+        android:layout_marginBottom="@dimen/error_icon_cropping_failure_vertical_margin"
 
         android:contentDescription="@null">
     </ImageView>
 
-    <com.autocrop.activities.cropping.fragments.croppingunsuccessful.CroppingUnsuccessfulTextView
-        android:id="@+id/cropping_unsuccessful_text_view"
+    <ImageView
+        android:src="@drawable/ic_error_24"
 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="70dp"
+        android:layout_width="@dimen/error_icon_cropping_failure_screen"
+        android:layout_height="@dimen/error_icon_cropping_failure_screen"
+
+        android:layout_alignEnd="@+id/cropping_unsuccessful_text_view"
+        android:layout_alignBottom="@+id/cropping_unsuccessful_text_view"
+        android:layout_marginEnd="@dimen/error_icon_cropping_failure_horizontal_margin"
+        android:layout_marginBottom="@dimen/error_icon_cropping_failure_vertical_margin"
+
+        android:contentDescription="@null">
+    </ImageView>
+
+    <TextView
+        android:id="@+id/cropping_unsuccessful_instruction"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignTop="@+id/cropping_unsuccessful_text_view"
+        android:layout_marginTop="120dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="30dp"
+
         android:gravity="center"
 
-        android:minLines="3"
-        android:text="@string/cropping_failure"
-        android:textSize="20sp"
-        android:paddingHorizontal="60dp"
-        android:textColor="@color/dark_green">
-    </com.autocrop.activities.cropping.fragments.croppingunsuccessful.CroppingUnsuccessfulTextView>
+        android:textAlignment="center"
+        android:text="@string/cropping_failure_instruction_text_view"
+        android:textSize="14sp">
+    </TextView>
 
+    <Button
+        android:id="@+id/cropping_unsuccessful_got_it_button"
+
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+
+        android:layout_alignTop="@+id/cropping_unsuccessful_instruction"
+        android:layout_marginTop="120dp"
+        android:layout_centerHorizontal="true"
+
+        android:background="@color/saturated_magenta"
+
+        android:text="@string/got_it"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="italic"/>
 </RelativeLayout>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="error_icon_cropping_failure_screen">25dip</dimen>
+    <dimen name="error_icon_cropping_failure_horizontal_margin">-40dip</dimen>
+    <dimen name="error_icon_cropping_failure_vertical_margin">-1dip</dimen>
+
+</resources>
