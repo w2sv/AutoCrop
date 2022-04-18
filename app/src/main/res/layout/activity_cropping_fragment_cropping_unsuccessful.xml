@@ -13,12 +13,14 @@
         android:layout_height="wrap_content"
 
         android:layout_alignParentTop="true"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="180dp"
         android:layout_marginHorizontal="40dp"
 
         android:layout_centerHorizontal="true"
 
         android:text="@string/cropping_failure"
+        android:maxLines="1"
+        android:textStyle="italic"
         android:textAlignment="center"
         android:textSize="22sp"
         android:textColor="@color/dark_green"/>
@@ -57,16 +59,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_alignTop="@+id/cropping_unsuccessful_text_view"
-        android:layout_marginTop="120dp"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:layout_marginHorizontal="30dp"
 
         android:gravity="center"
 
         android:textAlignment="center"
         android:text="@string/cropping_failure_instruction_text_view"
-        android:textSize="14sp">
+        android:textSize="16sp">
     </TextView>
 
     <Button
@@ -75,8 +75,8 @@
         android:layout_width="150dp"
         android:layout_height="50dp"
 
-        android:layout_alignTop="@+id/cropping_unsuccessful_instruction"
-        android:layout_marginTop="120dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="180dp"
         android:layout_centerHorizontal="true"
 
         android:background="@color/saturated_magenta"
