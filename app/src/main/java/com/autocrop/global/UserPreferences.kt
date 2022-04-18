@@ -46,27 +46,23 @@ abstract class UserPreferences<T>(default: SortedMap<String, T>)
  */
 object BooleanUserPreferences : UserPreferences<Boolean>(
     sortedMapOf(
-        Keys.conductAutoScrolling to true,
-        Keys.deleteIndividualScreenshot to false,
-        Keys.deleteScreenshotsOnSaveAll to false
+        Keys.CONDUCT_AUTO_SCROLLING to true,
+        Keys.DELETE_SCREENSHOTS to false
     )
 ) {
 
     object Keys {
-        const val conductAutoScrolling: String = "CONDUCT_AUTO_SCROLL"
-        const val deleteIndividualScreenshot = "DELETE_INDIVIDUAL_SCREENSHOT"
-        const val deleteScreenshotsOnSaveAll: String = "DELETE_SCREENSHOTS_ON_SAVE_ALL"
+        const val CONDUCT_AUTO_SCROLLING: String = "CONDUCT_AUTO_SCROLL"
+        const val DELETE_SCREENSHOTS: String = "DELETE_SCREENSHOTS"
     }
 
     /**
      * Expose values as variables for convenience
      */
     val conductAutoScrolling: Boolean
-        get() = getValue(Keys.conductAutoScrolling)
-    val deleteIndividualScreenshot: Boolean
-        get() = getValue(Keys.deleteIndividualScreenshot)
-    val deleteScreenshotsOnSaveAll: Boolean
-        get() = getValue(Keys.deleteScreenshotsOnSaveAll)
+        get() = getValue(Keys.CONDUCT_AUTO_SCROLLING)
+    val deleteScreenshots: Boolean
+        get() = getValue(Keys.DELETE_SCREENSHOTS)
 
     fun toggle(key: String){
         put(key, !getValue(key))
@@ -76,26 +72,26 @@ object BooleanUserPreferences : UserPreferences<Boolean>(
     override fun SharedPreferences.getValue(key: String, defaultValue: Boolean): Boolean = getBoolean(key, defaultValue)
 }
 
-object CropFileSaveDestinationPreferences: UserPreferences<Uri?>(sortedMapOf(Keys.treeUri to null)) {
+object CropFileSaveDestinationPreferences: UserPreferences<Uri?>(sortedMapOf(Keys.TREE_URI to null)) {
 
     object Keys {
-        const val treeUri: String = "IMAGE_SAVE_DESTINATION_TREE_URI"
+        const val TREE_URI: String = "IMAGE_SAVE_DESTINATION_TREE_URI"
     }
 
     /**
      * Inherently build [documentUri] upon setting new [treeUri]
      */
     override fun put(key: String?, value: Uri?): Uri? {
-        if (key == Keys.treeUri && value != getOrDefault(Keys.treeUri, null))
+        if (key == Keys.TREE_URI && value != getOrDefault(Keys.TREE_URI, null))
             documentUri = buildDocumentUriFromTreeUri(value!!)
                 .also { Timber.i("Set documentUri $it") }
         return super.put(key, value)
     }
 
     var treeUri: Uri?
-        get() = getValue(Keys.treeUri)
+        get() = getValue(Keys.TREE_URI)
         set(value) {
-            put(Keys.treeUri, value)
+            put(Keys.TREE_URI, value)
         }
 
     var documentUri: Uri? = null
@@ -107,4 +103,5 @@ object CropFileSaveDestinationPreferences: UserPreferences<Uri?>(sortedMapOf(Key
             Uri.parse(this)
         }
 }
+
 val userPreferencesInstances = arrayOf(BooleanUserPreferences, CropFileSaveDestinationPreferences)

@@ -16,7 +16,7 @@ class SaveAllFragment :
         super.onViewCreated(view, savedInstanceState)
 
         lifecycleScope.executeAsyncTask(
-            { processRemainingCropBundles(BooleanUserPreferences.deleteScreenshotsOnSaveAll)},
+            { processRemainingCropBundles(BooleanUserPreferences.deleteScreenshots)},
             { typedActivity.invokeSubsequentFragment() }
         )
     }

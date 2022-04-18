@@ -33,8 +33,8 @@ class CropProcedureDialog
             setTitle("Save crop?")
 
             setMultiChoiceItems(arrayOf("Delete corresponding screenshot"), booleanArrayOf(
-                BooleanUserPreferences.deleteIndividualScreenshot)){ _, _, _ -> BooleanUserPreferences.toggle(
-                BooleanUserPreferences.Keys.deleteIndividualScreenshot)
+                BooleanUserPreferences.deleteScreenshots)){ _, _, _ -> BooleanUserPreferences.toggle(
+                BooleanUserPreferences.Keys.DELETE_SCREENSHOTS)
             }
 
             val dataSetPosition = requireArguments().getInt(DATA_SET_POSITION_IN)
@@ -44,7 +44,7 @@ class CropProcedureDialog
                 cropBundleProcessingJob = lifecycleScope.executeAsyncTask(
                     { saveCrop(
                         dataSetPosition,
-                        BooleanUserPreferences.deleteIndividualScreenshot,
+                        BooleanUserPreferences.deleteScreenshots,
                         ViewModelProvider(requireActivity() as ExaminationActivity)[ExaminationActivityViewModel::class.java])
                     }
                 )

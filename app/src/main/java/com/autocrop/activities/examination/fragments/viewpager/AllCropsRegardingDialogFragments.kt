@@ -25,8 +25,8 @@ class SaveAllConfirmationDialogFragment
             .run {
                 setTitle("Save all crops?")
                 setMultiChoiceItems(arrayOf("Delete corresponding screenshots"), booleanArrayOf(
-                    BooleanUserPreferences.deleteScreenshotsOnSaveAll)){ _, _, _ -> BooleanUserPreferences.toggle(
-                    BooleanUserPreferences.Keys.deleteScreenshotsOnSaveAll)}
+                    BooleanUserPreferences.deleteScreenshots)){ _, _, _ -> BooleanUserPreferences.toggle(
+                    BooleanUserPreferences.Keys.DELETE_SCREENSHOTS)}
 
                 setNegativeButton("No") { _, _ -> }
                 setPositiveButton("Yes") { _, _ -> setFragmentResult()}
