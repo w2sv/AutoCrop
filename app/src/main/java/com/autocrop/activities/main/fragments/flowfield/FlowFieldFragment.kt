@@ -6,20 +6,23 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.text.color
 import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.CropFileSaveDestinationPreferences
-import com.autocrop.utils.android.MimeTypes
-import com.autocrop.utils.android.NotificationColor
-import com.autocrop.utils.android.clipDataItems
-import com.autocrop.utils.android.displaySnackbar
+import com.autocrop.uicontroller.fragment.ActivityRootFragment
+import com.autocrop.utils.android.*
+import com.autocrop.utils.numberInflection
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityMainFragmentFlowfieldBinding
 
-class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBinding>() {
+class FlowFieldFragment:
+    MainActivityFragment<ActivityMainFragmentFlowfieldBinding>(),
+    ActivityRootFragment {
 
     private val permissionsHandler = PermissionsHandler(this)
     private lateinit var flowFieldHandler: FlowFieldHandler
@@ -34,7 +37,37 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
         setImageSelectionButtonOnClickListener()
         setMenuInflationButtonOnClickListener()
         flowFieldHandler.setFlowFieldCaptureButton(binding.flowfieldCaptureButton, permissionsHandler)
+
+        // display CropIOResultSnackbar
+        displayActivityEntrySnackbar()
     }
+
+    private val nSavedCropsRetriever = IntentExtraRetriever<IntArray>(IntentIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)
+    private val cropWriteDirPathRetriever = IntentExtraRetriever<String>(IntentIdentifier.CROP_WRITE_DIR_PATH)
+
+    override fun displayActivityEntrySnackbar(){
+        nSavedCropsRetriever(requireActivity().intent)?.let {
+            val (nSavedCrops, nDeletedScreenshots) = it[0] to it[1]
+
+            when (nSavedCrops) {
+                0 -> requireActivity().displaySnackbar("Discarded all crops", R.drawable.ic_outline_sentiment_dissatisfied_24)
+                else ->
+                    requireActivity().displaySnackbar(
+                        SpannableStringBuilder().apply {
+                            append("Saved $nSavedCrops crop${numberInflection(nSavedCrops)} to ")
+                            color(getColorInt(NotificationColor.SUCCESS, requireContext())){append(cropWriteDirPathRetriever(requireActivity().intent)!!)}
+                            if (nDeletedScreenshots != 0)
+                                append(" and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} screenshot${numberInflection(nDeletedScreenshots)}")
+                        },
+                        R.drawable.ic_baseline_done_24
+                    )
+            }
+        }
+    }
+
+    //$$$$$$$$$$$$$$$
+    // Menu-related $
+    //$$$$$$$$$$$$$$$
 
     private fun setMenuInflationButtonOnClickListener() =
         binding.menuButton.setOnClickListener { view: View ->
@@ -59,7 +92,7 @@ class FlowFieldFragment: MainActivityFragment<ActivityMainFragmentFlowfieldBindi
                 }
             )
         } catch (e: ActivityNotFoundException){
-            requireActivity().displaySnackbar("Seems like you're not signed into\nthe Play Store, pal \uD83E\uDD14")
+            requireActivity().displaySnackbar("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
         }
 
     private val pickSaveDestinationDirContract = registerForActivityResult(

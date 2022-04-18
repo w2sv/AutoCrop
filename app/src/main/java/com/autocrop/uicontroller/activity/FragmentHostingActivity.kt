@@ -34,7 +34,7 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
             launchRootFragment()
     }
 
-    protected abstract fun onCreateCore()
+    protected open fun onCreateCore() = Unit
 
     private fun launchRootFragment(){
         supportFragmentManager

@@ -5,9 +5,6 @@
 package com.autocrop.activities.examination
 
 import android.content.Intent
-import android.text.SpannableStringBuilder
-import androidx.core.text.bold
-import androidx.core.text.color
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
@@ -20,8 +17,9 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.uicontroller.activity.SharedViewModelHandler
-import com.autocrop.utils.android.*
-import com.autocrop.utils.numberInflection
+import com.autocrop.utils.android.BackPressHandler
+import com.autocrop.utils.android.displaySnackbar
+import com.autocrop.utils.android.uriPermissionGranted
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 import timber.log.Timber
@@ -36,22 +34,8 @@ class ExaminationActivity :
     val appTitleFragment: AppTitleFragment by lazy { AppTitleFragment() }
 
     override lateinit var sharedViewModel: ExaminationActivityViewModel
-    private val nDismissedImagesRetriever = IntentExtraRetriever<Int>(IntentIdentifier.N_DISMISSED_IMAGES)
 
-    override fun onCreateCore() {
-        super.setSharedViewModel()
-
-        // display couldn't find cropping bounds Snackbar if applicable
-        nDismissedImagesRetriever(intent, 0) ?.let {
-            displaySnackbar(
-                SpannableStringBuilder()
-                    .append("Couldn't find cropping bounds for\n")
-                    .bold { append("$it") }
-                    .append(" image${numberInflection(it)}"),
-                R.drawable.ic_error_24
-            )
-        }
-    }
+    override fun onCreateCore() = super.setSharedViewModel()
 
     override fun provideSharedViewModel(): ExaminationActivityViewModel =
         ViewModelProvider(

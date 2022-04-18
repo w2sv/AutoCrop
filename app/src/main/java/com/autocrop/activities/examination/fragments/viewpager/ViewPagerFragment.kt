@@ -1,13 +1,22 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.View
+import androidx.core.text.italic
 import androidx.lifecycle.ViewModelProvider
+import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
+import com.autocrop.uicontroller.fragment.ActivityRootFragment
+import com.autocrop.utils.android.IntentExtraRetriever
+import com.autocrop.utils.android.displaySnackbar
+import com.autocrop.utils.numberInflection
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
 
-class ViewPagerFragment
-    : ExaminationActivityFragment<ActivityExaminationFragmentViewpagerBinding>(){
+class ViewPagerFragment:
+    ExaminationActivityFragment<ActivityExaminationFragmentViewpagerBinding>(),
+    ActivityRootFragment {
 
     private lateinit var viewPagerHandler: ViewPagerHandler
 
@@ -21,6 +30,23 @@ class ViewPagerFragment
         )
 
         setToolbarButtonOnClickListeners()
+
+        // display couldn't find cropping bounds Snackbar if applicable
+        displayActivityEntrySnackbar()
+    }
+
+    private val nDismissedImagesRetriever = IntentExtraRetriever<Int>(IntentIdentifier.N_DISMISSED_IMAGES)
+
+    override fun displayActivityEntrySnackbar(){
+        nDismissedImagesRetriever(requireActivity().intent, 0) ?.let {
+            requireActivity().displaySnackbar(
+                SpannableStringBuilder()
+                    .append("Couldn't find cropping bounds for ")
+                    .italic { append("$it") }
+                    .append(" image${numberInflection(it)}"),
+                R.drawable.ic_error_24
+            )
+        }
     }
 
     /**
