@@ -11,10 +11,10 @@ abstract class AllCropsRegardingDialogFragment
 
     val resultKey: String = "${this::class.java.name}_CONFIRMED"
 
-    protected fun setFragmentResult() = requireActivity().supportFragmentManager.setFragmentResult(
-        resultKey,
-        Bundle.EMPTY
-    )
+    protected fun setFragmentResult() =
+        requireActivity()
+            .supportFragmentManager
+            .setFragmentResult(resultKey, Bundle.EMPTY)
 }
 
 class SaveAllConfirmationDialogFragment
@@ -25,8 +25,11 @@ class SaveAllConfirmationDialogFragment
             .run {
                 setTitle("Save all crops?")
                 setMultiChoiceItems(arrayOf("Delete corresponding screenshots"), booleanArrayOf(
-                    BooleanUserPreferences.deleteScreenshots)){ _, _, _ -> BooleanUserPreferences.toggle(
-                    BooleanUserPreferences.Keys.DELETE_SCREENSHOTS)}
+                    BooleanUserPreferences.deleteScreenshots)){ _, _, _ ->
+                    BooleanUserPreferences.toggle(
+                        BooleanUserPreferences.Keys.DELETE_SCREENSHOTS
+                    )
+                }
 
                 setNegativeButton("No") { _, _ -> }
                 setPositiveButton("Yes") { _, _ -> setFragmentResult()}
