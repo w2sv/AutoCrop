@@ -46,21 +46,26 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
     fun replaceCurrentFragmentWith(fragment: Fragment, animationIds: Pair<Int, Int>? = null){
         supportFragmentManager
             .beginTransaction()
-            .run {
+            .apply {
                 animationIds?.let {
                     setCustomAnimations(it.first, it.second)
-                } ?: this
+                }
             }
             .replace(layoutId, fragment)
             .setReorderingAllowed(true)
             .commit()
     }
 
-    fun hideAndShowFragments(hideFragment: Fragment, showFragment: Fragment){
+    fun swapFragments(hideFragment: Fragment, showFragment: Fragment, animationIds: Pair<Int, Int>? = null){
         supportFragmentManager
             .beginTransaction()
             .setReorderingAllowed(true)
             .hide(hideFragment)
+            .apply {
+                animationIds?.let {
+                    setCustomAnimations(it.first, it.second)
+                }
+            }
             .apply {
                 if (showFragment !in supportFragmentManager.fragments)
                     add(layoutId, showFragment)

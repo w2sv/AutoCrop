@@ -17,7 +17,7 @@ class SaveAllFragment :
 
         lifecycleScope.executeAsyncTask(
             { processRemainingCropBundles(BooleanUserPreferences.deleteScreenshotsOnSaveAll)},
-            { typedActivity.redirectToExitFragment() }
+            { typedActivity.invokeSubsequentFragment() }
         )
     }
 

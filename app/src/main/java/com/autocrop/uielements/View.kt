@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
+import com.w2sv.autocrop.R
 
 fun View.show() { visibility = View.VISIBLE }
 fun View.remove() { visibility = View.GONE}
@@ -40,9 +41,9 @@ fun View.fadeOut(duration: Long){
         .duration = duration
 }
 
-fun View.setAnimation(technique: Techniques) =
+fun View.setAnimation(technique: Techniques): YoYo.YoYoString =
     YoYo.with(technique)
-        .duration(1000)
+        .duration(context.resources.getInteger(R.integer.yoyo_animation_duration).toLong())
         .playOn(this)
 
 abstract class ExtendedTextView(context: Context, attr: AttributeSet, private val stringId: Int)

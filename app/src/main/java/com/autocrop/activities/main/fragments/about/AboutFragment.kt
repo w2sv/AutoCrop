@@ -15,7 +15,6 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityMainFragmentAboutBinding
 import java.util.*
 
-
 class AboutFragment: MainActivityFragment<ActivityMainFragmentAboutBinding>(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

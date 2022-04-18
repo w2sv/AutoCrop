@@ -55,7 +55,7 @@ class ExaminationActivity :
         )
     }
 
-    fun redirectToExitFragment(){
+    fun invokeSubsequentFragment(){
         if (sharedViewModel.deletionQueryScreenshotUris.isNotEmpty())
             replaceCurrentFragmentWith(screenshotDeletionQueryFragment, true)
                 .also { Timber.i("Invoking screenshotDeletionQueryFragment for ${sharedViewModel.deletionQueryScreenshotUris.size} deletion uris") }

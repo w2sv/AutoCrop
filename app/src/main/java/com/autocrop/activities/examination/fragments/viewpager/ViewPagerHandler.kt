@@ -18,7 +18,6 @@ import com.autocrop.uielements.crossFade
 import com.autocrop.uielements.show
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.*
-import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
 import java.util.*
@@ -249,9 +248,9 @@ class ViewPagerHandler(
                 1 -> {
                     (binding.viewPager.adapter as CropPagerAdapter).cropProcedureDialog.cropBundleProcessingJob?.run {
                         invokeOnCompletion {
-                            examinationActivity.redirectToExitFragment()
+                            examinationActivity.invokeSubsequentFragment()
                         }
-                    } ?: examinationActivity.redirectToExitFragment()
+                    } ?: examinationActivity.invokeSubsequentFragment()
                     return
                 }
                 2 -> examinationActivity.runOnUiThread { binding.pageIndicationSeekBar.hideAnimated() }

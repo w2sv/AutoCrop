@@ -1,15 +1,13 @@
 package com.autocrop.activities.main
 
 import android.os.Bundle
-import android.text.SpannableStringBuilder
-import androidx.core.text.color
-import com.autocrop.activities.IntentIdentifier
+import androidx.fragment.app.Fragment
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.global.userPreferencesInstances
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.utils.android.*
-import com.autocrop.utils.numberInflection
+import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityMainBinding
 
@@ -24,12 +22,15 @@ class MainActivity :
         super.onCreate(savedInstanceState)
     }
 
+    fun swapFragments(hideFragment: Fragment, showFragment: Fragment) =
+        super.swapFragments(hideFragment, showFragment, Animatoo.)
+
     /**
      * Return to [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app
      */
     override fun onBackPressed() {
         if (aboutFragment.isVisible)
-            hideAndShowFragments(aboutFragment, rootFragment)
+            swapFragments(aboutFragment, rootFragment)
         else
             finishAffinity()
     }
