@@ -1,13 +1,11 @@
 package com.autocrop.activities.main
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.global.userPreferencesInstances
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
-import com.autocrop.utils.android.*
-import com.blogspot.atifsoftwares.animatoolib.Animatoo
+import com.autocrop.utils.android.getSharedPreferences
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityMainBinding
 
