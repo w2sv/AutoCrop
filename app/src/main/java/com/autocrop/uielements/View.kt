@@ -9,6 +9,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 
 fun View.show() { visibility = View.VISIBLE }
 fun View.remove() { visibility = View.GONE}
@@ -37,6 +39,11 @@ fun View.fadeOut(duration: Long){
         })
         .duration = duration
 }
+
+fun View.setAnimation(technique: Techniques) =
+    YoYo.with(technique)
+        .duration(1000)
+        .playOn(this)
 
 abstract class ExtendedTextView(context: Context, attr: AttributeSet, private val stringId: Int)
     : AppCompatTextView(context, attr) {

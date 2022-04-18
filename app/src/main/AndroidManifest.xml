@@ -24,8 +24,8 @@
 
         android:name="com.autocrop.application.AutoCrop"
 
-        android:icon="@mipmap/brudineletten"
-        android:roundIcon="@mipmap/brudineletten_round"
+        android:icon="@mipmap/trippy_brudineletten"
+        android:roundIcon="@mipmap/trippy_brudineletten_round"
 
         android:theme="@style/Theme.App.Splash"
 
@@ -40,8 +40,6 @@
             android:value="ca-app-pub-1494255973790385~2659692781"/>
 
         <!-- Activities -->
-
-<!--        TODO-->
 
         <activity
             android:name="com.autocrop.activities.main.MainActivity"

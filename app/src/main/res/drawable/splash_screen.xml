@@ -5,7 +5,7 @@
         android:drawable="@drawable/gradient_about_screen_background"/>
 
     <item
-        android:drawable="@drawable/brudineletten_impressionist_painting"
+        android:drawable="@drawable/trippy_brudineletten"
         android:gravity="center"
         android:height="240dp"
         android:width="240dp">
