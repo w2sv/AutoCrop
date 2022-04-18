@@ -9,7 +9,8 @@ import com.autocrop.utils.rotated
 import java.util.*
 import kotlin.math.roundToInt
 
-class ViewPagerFragmentViewModel: ViewModel(){
+class ViewPagerFragmentViewModel:
+    ViewModel(){
 
     companion object {
         const val MAX_VIEWS: Int = Int.MAX_VALUE
@@ -18,7 +19,6 @@ class ViewPagerFragmentViewModel: ViewModel(){
     val dataSet = ViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 
     val conductAutoScroll = BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
-
     val startPosition: Int = (MAX_VIEWS / 2).run {
         minus(dataSet.correspondingPosition(this))
     }
@@ -30,7 +30,8 @@ class ViewPagerFragmentViewModel: ViewModel(){
             (max.toFloat() / (dataSet.lastIndex).toFloat() * pageIndex).roundToInt()
 }
 
-class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) : MutableList<CropBundle> by cropBundles{
+class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) :
+    MutableList<CropBundle> by cropBundles{
 
     // -------------Position Trackers
 

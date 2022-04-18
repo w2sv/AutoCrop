@@ -26,15 +26,21 @@ class CroppingFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedViewModel.currentCropNumber.observe(viewLifecycleOwner) {
+        // attach views to currentCropNumber observable
+        sharedViewModel.currentImageNumber.observe(viewLifecycleOwner) {
             binding.croppingCurrentImageNumberTextView.updateText(it)
             binding.croppingProgressBar.progress = it
         }
 
-        croppingJob = lifecycleScope.executeAsyncTask(::doInBackground, {sharedViewModel.incrementCurrentCropNumber()}) { onPostExecute() }
+        // launch croppingJob
+        croppingJob = lifecycleScope.executeAsyncTask(
+            ::cropImages,
+            { sharedViewModel.incrementCurrentImageNumber() },
+            { startExaminationActivityOrInvokeCroppingFailureFragment() }
+        )
     }
 
-    private suspend fun doInBackground(publishProgress: suspend (Void?) -> Unit): Void?{
+    private suspend fun cropImages(publishProgress: suspend (Void?) -> Unit): Void?{
         sharedViewModel.uris.forEach { uri ->
 
             // attempt to crop image, upon success add resulting CropBundle to sharedViewModel
@@ -54,7 +60,7 @@ class CroppingFragment
      * Starts either Examination- or MainActivity depending on whether or not any
      * of the selected images has been successfully cropped
      */
-    private fun onPostExecute() = logBeforehand("Async Cropping task finished") {
+    private fun startExaminationActivityOrInvokeCroppingFailureFragment() = logBeforehand("Async Cropping task finished") {
         if (sharedViewModel.cropBundles.isNotEmpty())
             startExaminationActivity()
         else
@@ -62,13 +68,16 @@ class CroppingFragment
             Handler(Looper.getMainLooper()).postDelayed(
                 {
                     with(typedActivity){
-                        replaceCurrentFragmentWith(croppingUnsuccessfulFragment)
+                        replaceCurrentFragmentWith(croppingFailedFragment)
                     }
                 },
                 300
             )
     }
 
+    /**
+     * Inherently sets [ExaminationActivityViewModel.cropBundles]
+     */
     private fun startExaminationActivity(){
         ExaminationActivityViewModel.cropBundles = sharedViewModel.cropBundles
 
@@ -83,6 +92,9 @@ class CroppingFragment
         }
     }
 
+    /**
+     * Cancel [croppingJob]
+     */
     override fun onStop() {
         super.onStop()
 

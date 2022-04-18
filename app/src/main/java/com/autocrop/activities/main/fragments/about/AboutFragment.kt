@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
 import com.autocrop.activities.main.fragments.MainActivityFragment
-import com.autocrop.uielements.ExtendedTextView
-import com.autocrop.uielements.setAnimation
+import com.autocrop.uielements.view.ExtendedTextView
+import com.autocrop.uielements.view.animate
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.BuildConfig
 import com.w2sv.autocrop.R
@@ -19,8 +19,8 @@ class AboutFragment: MainActivityFragment<ActivityMainFragmentAboutBinding>(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.appTitleTextView.setOnClickListener { it.setAnimation(Techniques.Wobble) }
-        binding.trippyBrudinelettenImageView.setOnClickListener { it.setAnimation(Techniques.Tada) }
+        binding.appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
+        binding.trippyBrudinelettenImageView.setOnClickListener { it.animate(Techniques.Tada) }
 
         binding.w2svTv.setOnClickListener {
             val viewIntent = Intent(

@@ -1,7 +1,3 @@
-/**
- * ViewPager2 Reference: https://medium.com/swlh/android-infinite-auto-image-slider-using-view-pager-2-android-studio-java-a0e450dec071
- */
-
 package com.autocrop.activities.examination
 
 import android.content.Intent
@@ -22,7 +18,6 @@ import com.autocrop.utils.android.displaySnackbar
 import com.autocrop.utils.android.uriPermissionGranted
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationBinding
-import timber.log.Timber
 
 class ExaminationActivity :
     FragmentHostingActivity<ActivityExaminationBinding>(),
@@ -45,7 +40,11 @@ class ExaminationActivity :
             )
         )[ExaminationActivityViewModel::class.java]
 
-    fun replaceCurrentFragmentWith(fragment: Fragment, flipRight: Boolean) {
+    //$$$$$$$$$$$$$$$$
+    // Post Creation $
+    //$$$$$$$$$$$$$$$$
+
+    fun replaceCurrentFragmentWith(fragment: Fragment, flipRight: Boolean) =
         super.replaceCurrentFragmentWith(
             fragment,
             if (flipRight)
@@ -53,15 +52,16 @@ class ExaminationActivity :
             else
                 R.animator.card_flip_right_in to R.animator.card_flip_right_out
         )
-    }
 
-    fun invokeSubsequentFragment(){
+    /**
+     * Invoke [screenshotDeletionQueryFragment] in case of any screenshot uris whose deletion
+     * has to be confirmed, otherwise [appTitleFragment]
+     */
+    fun invokeSubsequentFragment() =
         if (sharedViewModel.deletionQueryScreenshotUris.isNotEmpty())
             replaceCurrentFragmentWith(screenshotDeletionQueryFragment, true)
-                .also { Timber.i("Invoking screenshotDeletionQueryFragment for ${sharedViewModel.deletionQueryScreenshotUris.size} deletion uris") }
         else
             replaceCurrentFragmentWith(appTitleFragment, false)
-    }
 
     /**
      * Block backPress throughout if either [saveAllFragment] or [appTitleFragment] showing,

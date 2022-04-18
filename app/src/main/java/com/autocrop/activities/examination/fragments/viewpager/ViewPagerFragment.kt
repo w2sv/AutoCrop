@@ -10,7 +10,7 @@ import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.uicontroller.fragment.ActivityRootFragment
 import com.autocrop.utils.android.IntentExtraRetriever
 import com.autocrop.utils.android.displaySnackbar
-import com.autocrop.utils.numberInflection
+import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
 
@@ -30,8 +30,6 @@ class ViewPagerFragment:
         )
 
         setToolbarButtonOnClickListeners()
-
-        // display couldn't find cropping bounds Snackbar if applicable
         displayActivityEntrySnackbar()
     }
 
@@ -43,7 +41,7 @@ class ViewPagerFragment:
                 SpannableStringBuilder()
                     .append("Couldn't find cropping bounds for ")
                     .italic { append("$it") }
-                    .append(" image${numberInflection(it)}"),
+                    .append(" image".numericallyInflected(it)),
                 R.drawable.ic_error_24
             )
         }
@@ -53,7 +51,6 @@ class ViewPagerFragment:
      * Runs defined onClickListeners only if scroller not running
      */
     private fun setToolbarButtonOnClickListeners() {
-
         arrayOf(
              Triple(binding.toolbar.saveAllButton, SaveAllConfirmationDialogFragment()) {
                  with(typedActivity) {

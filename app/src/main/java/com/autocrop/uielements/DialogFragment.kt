@@ -5,5 +5,10 @@ import androidx.fragment.app.FragmentManager
 
 abstract class ExtendedDialogFragment
     : DialogFragment(){
-        fun show(fragmentManager: FragmentManager) = show(fragmentManager, this::class.java.name)
+
+    /**
+     * Show with tag=class.name
+     */
+    fun show(fragmentManager: FragmentManager) =
+            show(fragmentManager, this::class.java.name)
     }

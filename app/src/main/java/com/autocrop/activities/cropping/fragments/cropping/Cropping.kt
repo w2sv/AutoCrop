@@ -35,7 +35,6 @@ fun croppedImage(image: Bitmap): Triple<Bitmap, Int, Int>?{
 private val Bitmap.approximatedJpegFileSizeInKB: Int
     get() = allocationByteCount / 10 / 1024
 
-
 private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): BorderPairs {
     val nPixelComparisonsPerRow = 5
 
@@ -87,15 +86,13 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
         .toList()
 }
 
-
-/*
-* x -> column index
-* y -> row index
-*/
+/**
+ * x -> column index
+ * y -> row index
+ */
 private fun Bitmap.hasFluctuationThroughoutRow(y: Int, sampleStep: Int): Boolean = !(sampleStep until width - 1 step sampleStep).all {
      getPixel(it, y) == getPixel(it - sampleStep, y)
 }
-
 
 private fun BorderPairs.filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(image: Bitmap): BorderPairs {
     val widthQueryOffsetPercentage = 0.4f
@@ -109,7 +106,6 @@ private fun BorderPairs.filterInCenterProximityExclusivelyVerticallyFluctuatingO
             }
         }
 }
-
 
 private fun Bitmap.hasFluctuationThroughoutColumn(x: Int, y: Int, candidateHeight: Int): Boolean{
     val nPixelComparisonsPerColumn = 4

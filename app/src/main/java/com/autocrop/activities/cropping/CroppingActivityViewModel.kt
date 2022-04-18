@@ -8,17 +8,16 @@ import com.autocrop.types.CropBundle
 
 class CroppingActivityViewModel(val uris: ArrayList<Uri>): ViewModel(){
 
-    val nSelectedImages: Int = uris.size
     val cropBundles: MutableList<CropBundle> = mutableListOf()
 
+    val nSelectedImages: Int = uris.size
     val nDismissedImages: Int
         get() = nSelectedImages - cropBundles.size
 
-    val currentCropNumber: LiveData<Int> by lazy {
+    val currentImageNumber: LiveData<Int> by lazy {
         MutableLiveData(0)
     }
-
-    fun incrementCurrentCropNumber(){
-        (currentCropNumber as MutableLiveData).value = currentCropNumber.value?.plus(1)
+    fun incrementCurrentImageNumber(){
+        (currentImageNumber as MutableLiveData).value = currentImageNumber.value?.plus(1)
     }
 }

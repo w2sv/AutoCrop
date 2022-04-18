@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.cropping.fragments.cropping.CroppingFragment
-import com.autocrop.activities.cropping.fragments.croppingunsuccessful.CroppingUnsuccessfulFragment
+import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.uicontroller.activity.SharedViewModelHandler
@@ -19,7 +19,7 @@ class CroppingActivity :
     override lateinit var sharedViewModel: CroppingActivityViewModel
 
     override val rootFragment: CroppingFragment by lazy{ CroppingFragment() }
-    val croppingUnsuccessfulFragment: CroppingUnsuccessfulFragment by lazy{ CroppingUnsuccessfulFragment() }
+    val croppingFailedFragment: CroppingFailedFragment by lazy{ CroppingFailedFragment() }
 
     override fun onCreateCore() = super.setSharedViewModel()
 
@@ -47,11 +47,11 @@ class CroppingActivity :
     }
 
     /**
-     * Return directly to [MainActivity] if [croppingUnsuccessfulFragment] visible,
+     * Return directly to [MainActivity] if [croppingFailedFragment] visible,
      * otherwise [returnToMainActivity] upon confirmed back press
      */
     override fun onBackPressed() {
-        if (croppingUnsuccessfulFragment.isVisible)
+        if (croppingFailedFragment.isVisible)
             returnToMainActivity()
         else if (rootFragment.isVisible)
             handleBackPress()

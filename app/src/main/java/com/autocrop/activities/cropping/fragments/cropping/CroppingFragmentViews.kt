@@ -5,8 +5,8 @@ import android.util.AttributeSet
 import android.widget.ProgressBar
 import com.autocrop.activities.cropping.CroppingActivityViewModel
 import com.autocrop.activities.cropping.fragments.CroppingActivityViewModelRetriever
-import com.autocrop.uielements.ExtendedTextView
-import com.autocrop.uielements.ViewModelRetriever
+import com.autocrop.uielements.view.ExtendedTextView
+import com.autocrop.uielements.view.ViewModelRetriever
 import com.w2sv.autocrop.R
 
 class CurrentImageNumberTextView(context: Context, attr: AttributeSet):

@@ -12,11 +12,14 @@ import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.core.text.bold
 import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.uielements.*
+import com.autocrop.uielements.view.*
 import com.w2sv.autocrop.R
 
 private class ViewPagerViewModelRetriever(context: Context):
-    AbstractContextBasedViewModelRetriever<ViewPagerFragmentViewModel, ExaminationActivity>(context, ViewPagerFragmentViewModel::class.java)
+    AbstractContextBasedViewModelRetriever<ViewPagerFragmentViewModel, ExaminationActivity>(
+        context,
+        ViewPagerFragmentViewModel::class.java
+    )
 
 class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
     AppCompatSeekBar(context, attr),

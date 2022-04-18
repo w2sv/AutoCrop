@@ -16,7 +16,7 @@ import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.fragment.ActivityRootFragment
 import com.autocrop.utils.android.*
-import com.autocrop.utils.numberInflection
+import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityMainFragmentFlowfieldBinding
 
@@ -54,10 +54,10 @@ class FlowFieldFragment:
                 else ->
                     requireActivity().displaySnackbar(
                         SpannableStringBuilder().apply {
-                            append("Saved $nSavedCrops crop${numberInflection(nSavedCrops)} to ")
+                            append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
                             color(getColorInt(NotificationColor.SUCCESS, requireContext())){append(cropWriteDirPathRetriever(requireActivity().intent)!!)}
                             if (nDeletedScreenshots != 0)
-                                append(" and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} screenshot${numberInflection(nDeletedScreenshots)}")
+                                append(" and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} ${"screenshot".numericallyInflected(nDeletedScreenshots)}")
                         },
                         R.drawable.ic_baseline_done_24
                     )
