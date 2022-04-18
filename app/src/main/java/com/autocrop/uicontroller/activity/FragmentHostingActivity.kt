@@ -3,8 +3,8 @@ package com.autocrop.uicontroller.activity
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.viewbinding.ViewBinding
-import com.autocrop.utils.android.addIfNecessaryAndShow
 import com.autocrop.utils.reflectField
 import com.autocrop.utils.reflectMethod
 import com.w2sv.autocrop.R
@@ -68,8 +68,14 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
                 R.animator.card_flip_right_out
             )
             .hide(hideFragment)
-            .addIfNecessaryAndShow(showFragment, layoutId, supportFragmentManager)
+            .addIfNecessaryAndShow(showFragment)
             .setReorderingAllowed(true)
             .commit()
     }
+
+    private fun FragmentTransaction.addIfNecessaryAndShow(fragment: Fragment): FragmentTransaction =
+        if (fragment !in supportFragmentManager.fragments)
+            add(layoutId, fragment)
+        else
+            show(fragment)
 }
