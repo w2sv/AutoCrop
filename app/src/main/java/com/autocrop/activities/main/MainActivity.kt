@@ -22,9 +22,6 @@ class MainActivity :
         super.onCreate(savedInstanceState)
     }
 
-    fun swapFragments(hideFragment: Fragment, showFragment: Fragment) =
-        super.swapFragments(hideFragment, showFragment, Animatoo.)
-
     /**
      * Return to [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app
      */
