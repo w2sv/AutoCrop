@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.types.CropBundle
 import com.autocrop.utils.android.deleteImageMediaFile
 import com.autocrop.utils.android.fileName
