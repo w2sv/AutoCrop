@@ -71,7 +71,7 @@ private fun ContentResolver.saveCrop(crop: Bitmap, cropFileName: String, saveDir
 private fun cropFileName(fileName: String): String{
     val appName = "AutoCrop"
 
-    fileName
+    return fileName
         .replace("screenshot", appName,true)
         .run {
             if (contains(appName))
