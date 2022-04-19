@@ -10,7 +10,6 @@ import org.junit.jupiter.params.provider.ValueSource
 import utils.streamAssetFile
 import java.io.File
 
-
 /**
  * Actually running unit tests which however can't be implemented as such due to
  * inherent infeasibility of loading images
@@ -18,16 +17,16 @@ import java.io.File
 class CroppingTest {
     @ParameterizedTest
     @CsvSource(
-        "Screenshot_2021-02-20-20-44-37-742_com.android.chrome.png, 720, 897, 62",
-        "Screenshot_2021-02-20-20-44-47-768_com.android.chrome.png, 720, 897, 62",
-        "Screenshot_2021-02-20-20-45-01-118_com.android.chrome.png, 720, 897, 62",
-        "Screenshot_2021-02-20-21-35-48-770_com.android.chrome.png, 720, 897, 62",
-        "Screenshot_2021-02-20-21-36-25-277_com.android.chrome.png, 720, 813, 56",
-        "Screenshot_2021-02-20-21-40-51-320_com.reddit.frontpage.png, 720, 896, 62",
-        "Screenshot_2021-02-20-23-54-23-480_com.android.chrome.png, 720, 896, 62",
-        "Screenshot_2021-02-20-23-54-37-101_com.android.chrome.png, 720, 1103, 77",
-        "Screenshot_2021-02-20-23-54-46-890_com.android.chrome.png, 720, 930, 65",
-        "Screenshot_2021-02-20-23-54-58-389_com.android.chrome.png, 720, 991, 69"
+        "Screenshot_2021-02-20-20-44-37-742_com.android.chrome.png, 720, 897, 38",
+        "Screenshot_2021-02-20-20-44-47-768_com.android.chrome.png, 720, 897, 38",
+        "Screenshot_2021-02-20-20-45-01-118_com.android.chrome.png, 720, 897, 38",
+        "Screenshot_2021-02-20-21-35-48-770_com.android.chrome.png, 720, 897, 38",
+        "Screenshot_2021-02-20-21-36-25-277_com.android.chrome.png, 720, 813, 44",
+        "Screenshot_2021-02-20-21-40-51-320_com.reddit.frontpage.png, 720, 896, 38",
+        "Screenshot_2021-02-20-23-54-23-480_com.android.chrome.png, 720, 896, 38",
+        "Screenshot_2021-02-20-23-54-37-101_com.android.chrome.png, 720, 1103, 23",
+        "Screenshot_2021-02-20-23-54-46-890_com.android.chrome.png, 720, 930, 35",
+        "Screenshot_2021-02-20-23-54-58-389_com.android.chrome.png, 720, 991, 31"
     )
     fun validScreenshotCroppingResults(fileName: String, expectedWidth: Int, expectedHeight: Int, expectedRetentionPercentage: Int) {
         val (crop, retentionPercentage) = croppedImage(
