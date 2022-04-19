@@ -17,8 +17,20 @@ import com.autocrop.utils.android.saveBitmap
 import com.autocrop.utils.logBeforehand
 import timber.log.Timber
 
+/**
+ * first := deletionSuccessful
+ * second := [mediaUriWithAppendedId] whose deletion has to be confirmed
+ *
+ * first=true -> second=null
+ * first=false -> second=null | !null
+ * second=!null -> first = false
+ */
 typealias DeletionResult = Pair<Boolean, Uri?>
 
+/**
+ * Saves [CropBundle.crop] under [cropFileName] depending on [CropBundle.screenshotUri]
+ * Deletes/triggers deletion of respective screenshot depending on [deleteScreenshot]
+ */
 fun Context.processCropBundle(
     cropBundle: CropBundle,
     documentUriValid: Boolean?,
@@ -53,14 +65,21 @@ private fun ContentResolver.saveCrop(crop: Bitmap, cropFileName: String, saveDir
         cropFileName
     )
 
-private fun cropFileName(fileName: String): String = fileName
-    .replace("screenshot","AutoCrop",true)
-    .run {
-        if (contains("AutoCrop"))
-            this
-        else
-            "AutoCrop_$this"
-    }
+/**
+ * Replaces 'screenshot' by 'AutoCrop' if present in [fileName], otherwise adds it as prefix
+ */
+private fun cropFileName(fileName: String): String{
+    val appName = "AutoCrop"
+
+    fileName
+        .replace("screenshot", appName,true)
+        .run {
+            if (contains(appName))
+                this
+            else
+                "${appName}_$this"
+        }
+}
 
 //$$$$$$$$$$$$$$$$$$$$$$
 // Screenshot Deletion $
@@ -81,9 +100,8 @@ private fun Uri.mediaUriWithAppendedId(context: Context): Uri =
         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
         context.mediaUriId(this)
     )
-        .also { Timber.i("Result mediaUriWithAppendedId: $it") }
+        .also { Timber.i("Constructed mediaUriWithAppendedId: $it") }
 
 @RequiresApi(Build.VERSION_CODES.Q)
 private fun Context.mediaUriId(uri: Uri): Long =
-    contentResolver.queryImageFileMediaColumn(uri, MediaStore.Images.Media._ID)
-        .toLong()
+    contentResolver.queryImageFileMediaColumn(uri, MediaStore.Images.Media._ID).toLong()
