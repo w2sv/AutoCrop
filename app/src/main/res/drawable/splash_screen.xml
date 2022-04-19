@@ -7,7 +7,7 @@
     <item
         android:drawable="@drawable/trippy_brudineletten"
         android:gravity="center"
-        android:height="240dp"
-        android:width="240dp">
+        android:height="210dp"
+        android:width="210dp">
     </item>
 </layer-list>
