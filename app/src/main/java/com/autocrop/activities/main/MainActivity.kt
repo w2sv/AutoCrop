@@ -5,7 +5,7 @@ import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.global.userPreferencesInstances
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
-import com.autocrop.utils.android.getSharedPreferences
+import com.autocrop.utils.android.getApplicationWideSharedPreferences
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityMainBinding
 
@@ -36,7 +36,7 @@ class MainActivity :
     override fun onPause() {
         super.onPause()
 
-        with(lazy { getSharedPreferences() }){
+        with(lazy { getApplicationWideSharedPreferences() }){
             userPreferencesInstances.forEach {
                 it.writeChangedValuesToSharedPreferences(this)
             }

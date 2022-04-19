@@ -2,14 +2,15 @@ package com.autocrop.application
 
 import android.app.Application
 import com.autocrop.global.userPreferencesInstances
-import com.autocrop.utils.android.getSharedPreferences
+import com.autocrop.utils.android.getApplicationWideSharedPreferences
 import com.w2sv.autocrop.BuildConfig
 import timber.log.Timber
 
 class AutoCrop: Application() {
 
     /**
-     * Initializes [userPreferencesInstances] from application-wide SharedPreferences
+     * Plants [Timber] tree if applicable
+     * initializes [userPreferencesInstances] from application-wide SharedPreferences
      */
     override fun onCreate() {
         super.onCreate()
@@ -18,7 +19,8 @@ class AutoCrop: Application() {
         if (BuildConfig.DEBUG)
             Timber.plant(Timber.DebugTree())
 
-        with(getSharedPreferences()){
+        // initialize userPreferencesInstances
+        with(getApplicationWideSharedPreferences()){
             Timber.i("Retrieved SharedPreferences content: $all")
 
             userPreferencesInstances.forEach {

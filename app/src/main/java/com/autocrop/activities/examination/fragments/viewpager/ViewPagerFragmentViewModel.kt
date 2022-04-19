@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.types.CropBundle
-import com.autocrop.utils.Index
 import com.autocrop.utils.rotated
 import java.util.*
 import kotlin.math.roundToInt
@@ -12,16 +11,17 @@ import kotlin.math.roundToInt
 class ViewPagerFragmentViewModel:
     ViewModel(){
 
-    companion object {
-        const val MAX_VIEWS: Int = Int.MAX_VALUE
-    }
-
     val dataSet = ViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 
+    // -------------Additional parameters
+
+    companion object { const val MAX_VIEWS: Int = Int.MAX_VALUE }
     val conductAutoScroll = BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
     val startPosition: Int = (MAX_VIEWS / 2).run {
         minus(dataSet.correspondingPosition(this))
     }
+
+    // -------------pageIndicationSeekbar
 
     fun pageIndicationSeekbarPagePercentage(pageIndex: Int, max: Int): Int =
         if (dataSet.size == 1)
@@ -35,7 +35,10 @@ class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) :
 
     // -------------Position Trackers
 
-    var tailPosition: Index = lastIndex
+    /**
+     * For keeping track of #page
+     */
+    var tailPosition: Int = lastIndex
 
     // ----------------Position Conversion
 
@@ -44,12 +47,20 @@ class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) :
 
     // ----------------Element Removal
 
-    fun removingAtTail(position: Index): Boolean = tailPosition == position
+    fun removingAtTail(position: Int): Boolean = tailPosition == position
 
     fun viewPositionIncrement(removingAtTail: Boolean): Int =
         if (removingAtTail) -1 else 1
 
-    fun removeAtAndRealign(removePosition: Index, removingAtTail: Boolean, viewPosition: Index){
+    /**
+     * Remove element at [removePosition]
+     * rotate Collection such as to realign cropBundle sitting at [viewPosition] and [viewPosition]
+     * reset [tailPosition]
+     *
+     * Retrieval of cropBundle at [viewPosition] and tail after element removal carried out by
+     * storing respective hash to then look it up again -> code simplicity over efficiency
+     */
+    fun removeAtAndRealign(removePosition: Int, removingAtTail: Boolean, viewPosition: Int){
         val viewPositionCropBundleHash = atCorrespondingPosition(viewPosition).hashCode()
         val subsequentTailHash = get(if (removingAtTail) tailPosition.rotated(-1, size) else tailPosition).hashCode()
 
@@ -62,7 +73,7 @@ class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) :
 
     // --------------Page Index Retrieval
 
-    fun pageIndex(position: Index): Index =
+    fun pageIndex(position: Int): Int =
         if (position > tailPosition)
             position - (tailPosition + 1)
         else

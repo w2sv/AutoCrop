@@ -8,13 +8,13 @@ import com.autocrop.activities.cropping.fragments.cropping.CroppingFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
-import com.autocrop.uicontroller.activity.SharedViewModelHandler
+import com.autocrop.uicontroller.activity.SharedViewModelHandlingActivity
 import com.autocrop.utils.android.BackPressHandler
 import com.w2sv.autocrop.databinding.ActivityCroppingBinding
 
 class CroppingActivity :
     FragmentHostingActivity<ActivityCroppingBinding>(),
-    SharedViewModelHandler<CroppingActivityViewModel> {
+    SharedViewModelHandlingActivity<CroppingActivityViewModel> {
 
     override lateinit var sharedViewModel: CroppingActivityViewModel
 

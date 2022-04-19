@@ -12,6 +12,10 @@ import com.w2sv.autocrop.databinding.ActivityExaminationFragmentSaveallBinding
 class SaveAllFragment :
     ExaminationActivityFragment<ActivityExaminationFragmentSaveallBinding>() {
 
+    /**
+     * Launch async [processRemainingCropBundles] task, call [typedActivity].invokeSubsequentFragment
+     * onPostExecute
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

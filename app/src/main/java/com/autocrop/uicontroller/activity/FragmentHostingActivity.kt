@@ -20,14 +20,14 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
     /**
      * Retrieved bmo reflection from view binding;
      *
-     * Imposes the need for activity layout to carry the id "layout"
+     * Note: Imposes the need for activity layout to carry the id "layout"
      */
     private val layoutId: Int by lazy {
         binding.reflectField<ViewGroup>("layout").reflectMethod("id")
     }
 
     /**
-     * Run [onCreateCore] and thereupon [launchRootFragment] if applicable
+     * Run [onCreateCore] and [launchRootFragment] if applicable
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

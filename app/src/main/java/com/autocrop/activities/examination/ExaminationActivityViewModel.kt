@@ -15,6 +15,14 @@ class ExaminationActivityViewModel(private val documentUriWritePermissionValid: 
         lateinit var cropBundles: MutableList<CropBundle>
     }
 
+    val nSavedCrops: Int
+        get() = _nSavedCrops
+    private var _nSavedCrops = 0
+
+    val nDeletedScreenshots: Int
+        get() = _nDeletedScreenshots
+    private var _nDeletedScreenshots = 0
+
     fun processCropBundle(cropBundlesPosition: Int, deleteScreenshot: Boolean, context: Context){
         val (_, deletionResult) = context.processCropBundle(
             cropBundles[cropBundlesPosition],
@@ -29,21 +37,13 @@ class ExaminationActivityViewModel(private val documentUriWritePermissionValid: 
         incrementImageFileIOCounters(deletionResult?.first ?: false)
     }
 
-    private var _nSavedCrops = 0
-    val nSavedCrops: Int
-        get() = _nSavedCrops
-
-    private var _nDeletedScreenshots = 0
-    val nDeletedScreenshots: Int
-        get() = _nDeletedScreenshots
-
-    val deletionQueryScreenshotUris: MutableList<Uri> = mutableListOf()
-
     private fun incrementImageFileIOCounters(deletedScreenshot: Boolean){
         _nSavedCrops++
         if (deletedScreenshot)
             _nDeletedScreenshots++
     }
+
+    val deletionQueryScreenshotUris: MutableList<Uri> = mutableListOf()
     fun incrementNDeletedScreenshotsByDeletionQueryScreenshotUris(){
         _nDeletedScreenshots += deletionQueryScreenshotUris.size
     }
@@ -52,7 +52,7 @@ class ExaminationActivityViewModel(private val documentUriWritePermissionValid: 
         if (documentUriWritePermissionValid == true)
             CropFileSaveDestinationPreferences.documentUri!!.pathSegments[1]
         else
-            externalPicturesDir.parent!!
+            externalPicturesDir.path
 
     /**
      * Clear [cropBundles]

@@ -16,7 +16,7 @@ import com.autocrop.uielements.view.*
 import com.w2sv.autocrop.R
 
 private class ViewPagerViewModelRetriever(context: Context):
-    AbstractContextBasedViewModelRetriever<ViewPagerFragmentViewModel, ExaminationActivity>(
+    ViewModelRetrievingView<ViewPagerFragmentViewModel, ExaminationActivity>(
         context,
         ViewPagerFragmentViewModel::class.java
     )

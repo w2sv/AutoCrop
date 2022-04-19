@@ -9,11 +9,14 @@ interface ViewModelRetriever<VM: ViewModel>{
     val viewModel: VM
 }
 
-abstract class AbstractContextBasedViewModelRetriever<VM: ViewModel, VMST: ViewModelStoreOwner>(context: Context, viewModelClass: Class<VM>)
+abstract class ViewModelRetrievingView<VM: ViewModel, VMSO: ViewModelStoreOwner>(context: Context, viewModelClass: Class<VM>)
     : ViewModelRetriever<VM> {
 
+    /**
+     * Retrieve instance of [VM] by means of context
+     */
     @Suppress("UNCHECKED_CAST")
     override val viewModel: VM by lazy {
-        ViewModelProvider(context as VMST)[viewModelClass]
+        ViewModelProvider(context as VMSO)[viewModelClass]
     }
 }

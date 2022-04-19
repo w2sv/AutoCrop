@@ -12,7 +12,7 @@ import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
-import com.autocrop.uicontroller.activity.SharedViewModelHandler
+import com.autocrop.uicontroller.activity.SharedViewModelHandlingActivity
 import com.autocrop.utils.android.BackPressHandler
 import com.autocrop.utils.android.displaySnackbar
 import com.autocrop.utils.android.uriPermissionGranted
@@ -21,7 +21,7 @@ import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 
 class ExaminationActivity :
     FragmentHostingActivity<ActivityExaminationBinding>(),
-    SharedViewModelHandler<ExaminationActivityViewModel> {
+    SharedViewModelHandlingActivity<ExaminationActivityViewModel> {
 
     override val rootFragment: ViewPagerFragment by lazy{ ViewPagerFragment() }
     val saveAllFragment: SaveAllFragment by lazy { SaveAllFragment() }
