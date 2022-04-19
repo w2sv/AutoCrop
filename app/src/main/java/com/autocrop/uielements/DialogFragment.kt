@@ -7,7 +7,7 @@ abstract class ExtendedDialogFragment
     : DialogFragment(){
 
     /**
-     * Show with tag=class.name
+     * [show] with tag=class.name
      */
     fun show(fragmentManager: FragmentManager) =
             show(fragmentManager, this::class.java.name)
