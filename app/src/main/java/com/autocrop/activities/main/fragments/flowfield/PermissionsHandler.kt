@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import com.autocrop.utils.android.NotificationColor
 import com.autocrop.utils.android.displaySnackbar
 import com.autocrop.utils.android.permissionGranted
+import com.w2sv.autocrop.R
 import timber.log.Timber
 
 class PermissionsHandler(private val fragment: Fragment){
@@ -50,7 +51,10 @@ class PermissionsHandler(private val fragment: Fragment){
      */
     private fun onRequestPermissionsResult(permissionToGranted: Map<String, Boolean>) {
         if (permissionToGranted.values.any { !it }) {
-            fragment.requireActivity().displaySnackbar("You need to permit file reading and\nwriting in order for the app to work")
+            fragment.requireActivity().displaySnackbar(
+                "You need to permit media file access in order for the app to work",
+                R.drawable.ic_error_24
+            )
             Timber.i("Not all required permissions were granted: $permissionToGranted")
         }
         else
