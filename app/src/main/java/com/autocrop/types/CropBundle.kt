@@ -9,6 +9,9 @@ data class CropBundle(
     val discardedPercentage: Int,
     val approximateDiscardedFileSize: Int) {
 
+    /**
+     * Relies exclusively on [screenshotUri], since per definition in and itself unambiguous
+     */
     override fun hashCode(): Int = screenshotUri.hashCode()
     override fun equals(other: Any?): Boolean =
         when{

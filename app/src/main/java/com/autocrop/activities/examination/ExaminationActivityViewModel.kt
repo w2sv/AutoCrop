@@ -3,12 +3,11 @@ package com.autocrop.activities.examination
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
-import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.types.CropBundle
 import com.autocrop.utils.android.externalPicturesDir
 import timber.log.Timber
 
-class ExaminationActivityViewModel(private val documentUriWritePermissionValid: Boolean?)
+class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?)
     : ViewModel() {
 
     companion object{
@@ -26,7 +25,7 @@ class ExaminationActivityViewModel(private val documentUriWritePermissionValid: 
     fun processCropBundle(cropBundlesPosition: Int, deleteScreenshot: Boolean, context: Context){
         val (_, deletionResult) = context.processCropBundle(
             cropBundles[cropBundlesPosition],
-            documentUriWritePermissionValid,
+            validSaveDirDocumentUri,
             deleteScreenshot
         )
         deletionResult?.second?.let {
@@ -49,10 +48,9 @@ class ExaminationActivityViewModel(private val documentUriWritePermissionValid: 
     }
 
     fun cropWriteDirIdentifier(): String =
-        if (documentUriWritePermissionValid == true)
-            CropFileSaveDestinationPreferences.documentUri!!.pathSegments[1]
-        else
-            externalPicturesDir.path
+        validSaveDirDocumentUri?.let {
+            it.pathSegments[1]
+        } ?: externalPicturesDir.path
 
     /**
      * Clear [cropBundles]

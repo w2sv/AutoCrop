@@ -1,9 +1,7 @@
 package com.autocrop.activities.examination
 
-import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -33,13 +31,13 @@ typealias DeletionResult = Pair<Boolean, Uri?>
  */
 fun Context.processCropBundle(
     cropBundle: CropBundle,
-    documentUriValid: Boolean?,
+    validSaveDirDocumentUri: Uri?,
     deleteScreenshot: Boolean): Pair<Boolean, DeletionResult?>{
 
-    val cropSuccessfullySaved = contentResolver.saveCrop(
+    val cropSuccessfullySaved = contentResolver.saveBitmap(
         cropBundle.crop,
         cropFileName(cropBundle.screenshotUri.fileName),
-        if (documentUriValid == true) CropFileSaveDestinationPreferences.documentUri else null
+        validSaveDirDocumentUri
     )
     val screenshotDeletionResult = if (deleteScreenshot)
         attemptImageFileDeletion(cropBundle.screenshotUri)
@@ -52,18 +50,6 @@ fun Context.processCropBundle(
 //$$$$$$$$$$$$$$
 // Crop Saving $
 //$$$$$$$$$$$$$$
-
-private fun ContentResolver.saveCrop(crop: Bitmap, cropFileName: String, saveDirDocumentUri: Uri?): Boolean =
-    saveDirDocumentUri?.let {
-        saveBitmap(
-            crop,
-            cropFileName,
-            saveDirDocumentUri
-        )
-    } ?: saveBitmap(
-        crop,
-        cropFileName
-    )
 
 /**
  * Replaces 'screenshot' by 'AutoCrop' if present in [fileName], otherwise adds it as prefix
@@ -85,6 +71,13 @@ private fun cropFileName(fileName: String): String{
 // Screenshot Deletion $
 //$$$$$$$$$$$$$$$$$$$$$$
 
+/**
+ * Starting from [Build.VERSION_CODES.R] deletion of external files requires explicit user permission,
+ * therefore in that case merely returns retrieved [mediaUriWithAppendedId] for querying deletion confirmation
+ * later on
+ *
+ * Otherwise deletes file immediately
+ */
 private fun Context.attemptImageFileDeletion(uri: Uri): DeletionResult = logBeforehand("attemptImageFileDeletion for $uri") {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
         false to uri.mediaUriWithAppendedId(this)

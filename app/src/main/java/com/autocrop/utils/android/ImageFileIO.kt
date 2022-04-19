@@ -9,6 +9,7 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
+import com.autocrop.utils.logBeforehand
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -19,7 +20,7 @@ object MimeTypes{
     const val JPEG = "image/jpeg"
 }
 
-val externalPicturesDir: File = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+val externalPicturesDir: File = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)  // TODO
 
 //$$$$$$$$$
 // Saving $
@@ -30,42 +31,44 @@ val externalPicturesDir: File = Environment.getExternalStoragePublicDirectory(En
  *      https://stackoverflow.com/a/10124040
  *      https://stackoverflow.com/a/59536115
  */
-fun ContentResolver.saveBitmap(bitmap: Bitmap, fileName: String): Boolean = bitmap.compressToStream(
-    when {
-        apiNotNewerThanQ -> GetOutputStream.untilQ(fileName)
-        else -> GetOutputStream.postQ(fileName, this)
-    }
-)
-    .also {
-        Timber.i(
-            if (it) "Successfully wrote $fileName" else "Couldn't write $fileName"
-        )
-    }
-
-fun ContentResolver.saveBitmap(bitmap: Bitmap, fileName: String, parentDocumentUri: Uri): Boolean =
-    bitmap.compressToStream(GetOutputStream.fromParentDocument(fileName, parentDocumentUri, this))
-        .also { Timber.i(
-            if (it) "Successfully wrote $fileName to parentDocumentUri" else "Couldn't write $fileName to parentDocumentUri"
-        )
-    }
+fun ContentResolver.saveBitmap(bitmap: Bitmap, fileName: String, parentDocumentUri: Uri? = null): Boolean =
+    bitmap.compressToStream(
+        when {
+            parentDocumentUri != null -> GetOutputStream.fromParentDocument(fileName, this, parentDocumentUri)
+            apiNotNewerThanQ -> GetOutputStream.untilQ(fileName)
+            else -> GetOutputStream.postQ(fileName, this)
+        }
+    )
+        .also {
+            Timber.i(
+                if (it) "Successfully wrote $fileName" else "Couldn't write $fileName"
+            )
+        }
 
 fun Bitmap.compressToStream(stream: OutputStream) =
     compress(Bitmap.CompressFormat.JPEG, 100, stream)
         .also {stream.close()}
 
 private object GetOutputStream{
-    fun fromParentDocument(fileName: String, parentDocumentUri: Uri, contentResolver: ContentResolver): OutputStream =
-        DocumentsContract.createDocument(contentResolver, parentDocumentUri, MimeTypes.JPEG, fileName)!!.run {
+    fun fromParentDocument(fileName: String, contentResolver: ContentResolver, parentDocumentUri: Uri): OutputStream = logBeforehand("GetOutputStream.fromParentDocument") {
+        DocumentsContract.createDocument(
+            contentResolver,
+            parentDocumentUri,
+            MimeTypes.JPEG,
+            fileName
+        )!!.run {
             contentResolver.openOutputStream(this)!!
         }
+    }
 
-    fun untilQ(fileName: String): OutputStream =
+    fun untilQ(fileName: String): OutputStream = logBeforehand("GetOutputStream.untilQ") {
         File(externalPicturesDir, fileName).run {
             FileOutputStream(this)
         }
+    }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    fun postQ(fileName: String, contentResolver: ContentResolver): OutputStream =
+    fun postQ(fileName: String, contentResolver: ContentResolver): OutputStream = logBeforehand("GetOutputStream.postQ") {
         contentResolver.insert(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             ContentValues().apply {
@@ -76,6 +79,7 @@ private object GetOutputStream{
         )!!.let { newUri ->
             contentResolver.openOutputStream(newUri)!!
         }
+    }
 }
 
 //$$$$$$$$$$$

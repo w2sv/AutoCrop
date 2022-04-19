@@ -36,7 +36,12 @@ class ExaminationActivity :
         ViewModelProvider(
             this,
             ExaminationViewModelFactory(
-                documentUriWritePermissionValid = CropFileSaveDestinationPreferences.documentUri?.let{uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)}
+                validSaveDirDocumentUri = CropFileSaveDestinationPreferences.documentUri?.let{
+                    if (uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
+                        it
+                    else
+                        null
+                }
             )
         )[ExaminationActivityViewModel::class.java]
 
