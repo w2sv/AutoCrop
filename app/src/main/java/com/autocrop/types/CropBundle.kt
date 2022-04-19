@@ -3,6 +3,9 @@ package com.autocrop.types
 import android.graphics.Bitmap
 import android.net.Uri
 
+/**
+ * Encapsulation of entirety of data being associated with crop
+ */
 data class CropBundle(
     val screenshotUri: Uri,
     val crop: Bitmap,
@@ -10,7 +13,7 @@ data class CropBundle(
     val approximateDiscardedFileSize: Int) {
 
     /**
-     * Relies exclusively on [screenshotUri], since per definition in and itself unambiguous
+     * @return [hashCode] of [screenshotUri], since per definition in and itself unambiguous
      */
     override fun hashCode(): Int = screenshotUri.hashCode()
     override fun equals(other: Any?): Boolean =
