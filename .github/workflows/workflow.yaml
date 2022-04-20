@@ -15,8 +15,9 @@ jobs:
         device-profile: [  # paired value syntax: @https://stackoverflow.com/a/68940067/12083276
           { api: 28, device: Nexus 6 },
           { api: 29, device: Nexus 6 },
-          { api: 30, device: Pixel 5 },
-          { api: 31, device: Pixel 5 }
+          { api: 30, device: Nexus 6 },
+          { api: 31, device: Nexus 6 },
+          { api: 32, device: Nexus 6 }
         ]
     steps:
       - name: Checkout current repository in ubuntu's file system
@@ -33,7 +34,7 @@ jobs:
           ./gradlew testDebugUnitTest
 
       - name: Run Instrumentation tests
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@v2  # @https://github.com/ReactiveCircus/android-emulator-runner
         with:
           api-level: ${{ matrix.device-profile.api }}
           arch: x86_64
