@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/w2sv/AutoCrop/actions/workflows/workflow.yaml/badge.svg)](https://github.com/w2sv/AutoCrop/actions/workflows/workflow.yaml)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/w2sv/AutoCrop?include_prereleases)
-https://img.shields.io/github/license/w2sv/AutoCrop
+![GitHub](https://img.shields.io/github/license/w2sv/AutoCrop)
 
 # AutoCrop
 
