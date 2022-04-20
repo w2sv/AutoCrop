@@ -32,8 +32,8 @@
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
 
-        android:appCategory="image"
-        tools:targetApi="o">
+            android:appCategory="image"
+            tools:targetApi="o">
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
