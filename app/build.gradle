@@ -8,15 +8,20 @@ def TARGET_SDK_VERSION = 31
 
 android {
     signingConfigs {
-        config {
-            def keystorePropertiesFile = rootProject.file("keystore.properties");
-            def keystoreProperties = new Properties()
-            keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-            
-            storeFile rootProject.file("keys.jks")
-            storePassword keystoreProperties["storePassword"]
-            keyAlias "release"
-            keyPassword keystoreProperties["keyPassword"]
+        release {
+            rootProject.file("keystore.properties").with{propertyFile ->
+                if (propertyFile.exists()){
+                    def keystoreProperties = new Properties()
+                    keystoreProperties.load(new FileInputStream(propertyFile))
+
+                    storeFile rootProject.file("keys.jks")
+                    storePassword keystoreProperties["storePassword"]
+                    keyAlias "release"
+                    keyPassword keystoreProperties["keyPassword"]
+                }
+                else
+                    println("$propertyFile.path does not exist")
+            }
         }
     }
     compileSdkVersion TARGET_SDK_VERSION
@@ -36,7 +41,7 @@ android {
     }
     buildTypes {
         release {
-            signingConfig signingConfigs.config
+            signingConfig signingConfigs.release
 
             minifyEnabled false
             shrinkResources false
