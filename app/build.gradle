@@ -7,8 +7,6 @@ plugins{
 // import @loadedProperties
 apply from: "$rootDir/utils.gradle"
 
-def buildProperties = loadedProperties(rootProject.file("build.properties"))
-
 android {
     signingConfigs {
         release {
@@ -26,15 +24,22 @@ android {
             }
         }
     }
-    compileSdkVersion buildProperties["targetSdkVersion"] as Integer
+
+    def MIN_SDK_VERSION = 23
+    def COMPILE_SDK_VERSION = 31
+
+    def VERSION_CODE = 9
+    def VERSION_NAME = '3.0.2'
+
+    compileSdkVersion COMPILE_SDK_VERSION
     defaultConfig {
-        applicationId buildProperties["applicationId"]
+        applicationId 'com.w2sv.autocrop'
 
-        minSdkVersion buildProperties["minSdkVersion"] as Integer
-        targetSdkVersion buildProperties["targetSdkVersion"] as Integer
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion COMPILE_SDK_VERSION
 
-        versionCode buildProperties["versionCode"] as Integer
-        versionName buildProperties["versionName"]
+        versionCode VERSION_CODE
+        versionName VERSION_NAME
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArgument("runnerBuilder", "de.mannodermaus.junit5.AndroidJUnit5Builder")
@@ -53,13 +58,13 @@ android {
         }
     }
     compileOptions {
-        def javaVersion = JavaVersion.VERSION_11
+        def JAVA_VERSION = JavaVersion.VERSION_11
 
-        sourceCompatibility javaVersion
-        targetCompatibility javaVersion
+        sourceCompatibility JAVA_VERSION
+        targetCompatibility JAVA_VERSION
     }
     kotlinOptions {
-        jvmTarget = buildProperties["javaSdk"]
+        jvmTarget = '11'
     }
     testOptions {
         animationsDisabled = true
