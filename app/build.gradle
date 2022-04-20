@@ -4,7 +4,7 @@ plugins{
     id 'de.mannodermaus.android-junit5'
 }
 
-// import @loadedProperties
+// import @loadedProperties from ./utils.gradle
 apply from: "$rootDir/utils.gradle"
 
 android {
@@ -20,7 +20,7 @@ android {
                     keyPassword keystoreProperties["keyPassword"]
                 }
                 else
-                    println("$propertyFile.path does not exist")
+                    println("Failed to create release signing configuration: $propertyFile.path does not exist")
             }
         }
     }
@@ -109,31 +109,31 @@ dependencies {
 
     // ----------TESTS------------
 
-    def junitVersion = "5.8.2"
+    def JUNIT_VERSION = "5.8.2"
 
     // -----------------
     // Unit Tests
 
-    testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter:$JUNIT_VERSION"
     testImplementation "androidx.test.ext:junit:1.1.3"
 
     // -----------------
     // System Tests
 
-    def espressoVersion = "3.4.0"
-
     // 4) Jupiter API & Test Runner, if you don't have it already
     androidTestImplementation "androidx.test:runner:1.4.0"
-    androidTestImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    androidTestImplementation "org.junit.jupiter:junit-jupiter-api:$JUNIT_VERSION"
 
     // 5) The instrumentation test companion libraries
     androidTestImplementation "de.mannodermaus.junit5:android-test-core:1.3.0"
     androidTestRuntimeOnly "de.mannodermaus.junit5:android-test-runner:1.3.0"
 
     // Jupiter Params
-    androidTestImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
+    androidTestImplementation "org.junit.jupiter:junit-jupiter-params:$JUNIT_VERSION"
 
     // Espresso
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
+    def ESPRESSO_VERSION = "3.4.0"
+
+    androidTestImplementation "androidx.test.espresso:espresso-core:$ESPRESSO_VERSION"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$ESPRESSO_VERSION"
 }
