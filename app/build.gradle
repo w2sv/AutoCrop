@@ -1,27 +1,30 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'de.mannodermaus.android-junit5'
+plugins{
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'de.mannodermaus.android-junit5'
+}
+
+def TARGET_SDK_VERSION = 31
 
 android {
     signingConfigs {
-        def keystorePropertiesFile = rootProject.file("keystore.properties");
-        def keystoreProperties = new Properties()
-        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
         config {
+            def keystorePropertiesFile = rootProject.file("keystore.properties");
+            def keystoreProperties = new Properties()
+            keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+            
             storeFile rootProject.file("keys.jks")
             storePassword keystoreProperties["storePassword"]
             keyAlias "release"
             keyPassword keystoreProperties["keyPassword"]
         }
     }
-    compileSdkVersion 31
+    compileSdkVersion TARGET_SDK_VERSION
     defaultConfig {
         applicationId "com.w2sv.autocrop"
 
         minSdkVersion 23
-        targetSdkVersion 31
-        compileSdkVersion 31
+        targetSdkVersion TARGET_SDK_VERSION
 
         versionCode 9
         versionName "3.0.2"
@@ -33,10 +36,12 @@ android {
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.config
+
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
+
             // debuggable true
         }
     }
