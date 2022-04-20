@@ -12,4 +12,4 @@
 Janek Zangenberg
 
 ## License
-[see here](License)
+[see here](AutoCrop/tree/master/License)
