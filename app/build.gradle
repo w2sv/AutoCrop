@@ -20,8 +20,8 @@ android {
         applicationId "com.w2sv.autocrop"
         minSdkVersion 23
         targetSdkVersion 31
-        versionCode 8
-        versionName "3.0.1"
+        versionCode 9
+        versionName "3.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArgument("runnerBuilder", "de.mannodermaus.junit5.AndroidJUnit5Builder")
@@ -34,7 +34,7 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            //            debuggable true
+            // debuggable true
         }
     }
     compileOptions {
