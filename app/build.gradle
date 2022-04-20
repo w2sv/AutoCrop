@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'de.mannodermaus.android-junit5'
 
-def keystorePropertiesFile = rootProject.file("keystore.properties");
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 android {
     signingConfigs {
+        def keystorePropertiesFile = rootProject.file("keystore.properties");
+        def keystoreProperties = new Properties()
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
         config {
             storeFile rootProject.file("keys.jks")
             storePassword keystoreProperties["storePassword"]
@@ -30,14 +30,13 @@ android {
         testInstrumentationRunnerArgument("runnerBuilder", "de.mannodermaus.junit5.AndroidJUnit5Builder")
 
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
-
-        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
             // debuggable true
         }
     }
