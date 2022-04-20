@@ -9,8 +9,14 @@ jobs:
     name: Build and run tests
     runs-on: macos-latest  # allows for hardware acceleration through HAXM
     strategy:
+      fail-fast: false
       matrix:
-        api-version: [28, 29]  # 23, 25, 27,
+        device-profile: [
+          { api: 28, device: Nexus 6}
+          { api: 29, device: Nexus 6 }
+          { api: 30, device: Pixel 5 }
+          { api: 31, device: Pixel 5 }
+        ]
     steps:
       - name: Checkout current repository in ubuntu's file system
         uses: actions/checkout@v2
@@ -28,9 +34,9 @@ jobs:
       - name: Instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: ${{ matrix.api-version }}
+          api-level: ${{ matrix.device-profile.api }}
           arch: x86
-          profile: Nexus 6
+          profile: ${{ matrix.device-profile.device }}
           avd-name: test
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
           disable-animations: true
