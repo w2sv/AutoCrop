@@ -4,16 +4,17 @@ plugins{
     id 'de.mannodermaus.android-junit5'
 }
 
-def buildProperties = new Properties()
-buildProperties.load(new FileInputStream(rootProject.file("build.properties")))
+// import @loadedProperties
+apply from: "$rootDir/utils.gradle"
+
+def buildProperties = loadedProperties(rootProject.file("build.properties"))
 
 android {
     signingConfigs {
         release {
             rootProject.file("keystore.properties").with{propertyFile ->
                 if (propertyFile.exists()){
-                    def keystoreProperties = new Properties()
-                    keystoreProperties.load(new FileInputStream(propertyFile))
+                    def keystoreProperties = loadedProperties(propertyFile)
 
                     storeFile rootProject.file("keys.jks")
                     storePassword keystoreProperties["storePassword"]
