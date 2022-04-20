@@ -30,20 +30,22 @@
         android:theme="@style/Theme.App.Splash"
 
         android:requestLegacyExternalStorage="true"
+
         android:supportsRtl="true"
 
-            android:appCategory="image"
-            tools:targetApi="o">
+        android:appCategory="image"
+        tools:targetApi="o">
 
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-1494255973790385~2659692781"/>
+        <!-- Google AdMob -->
+
+<!--        <meta-data-->
+<!--            android:name="com.google.android.gms.ads.APPLICATION_ID"-->
+<!--            android:value="ca-app-pub-1494255973790385~2659692781"/>-->
 
         <!-- Activities -->
 
         <activity
             android:name="com.autocrop.activities.main.MainActivity"
-
             android:screenOrientation="portrait"
             android:exported="true">
 
@@ -56,15 +58,12 @@
         <activity
             android:name="com.autocrop.activities.cropping.CroppingActivity"
             android:theme="@style/Theme.App.Main"
-
             android:screenOrientation="portrait" />
 
         <activity
             android:name="com.autocrop.activities.examination.ExaminationActivity"
             android:theme="@style/Theme.App.Main"
-
             android:screenOrientation="portrait" />
-
     </application>
 
 </manifest>
