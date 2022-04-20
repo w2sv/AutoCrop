@@ -1,6 +1,6 @@
 ![alt text](store-images/grafics/Webp.net-resizeimage.jpg?raw=true)
 
-[![Build](https://github.com/w2sv/AutoCrop/actions/workflows/build.yaml/badge.svg)](https://github.com/w2sv/AutoCrop/actions/workflows/build.yaml)
+[![Build](https://github.com/w2sv/AutoCrop/workflows/workflow.yaml/badge.svg)](https://github.com/w2sv/AutoCrop/actions)
 
 # AutoCrop
 
