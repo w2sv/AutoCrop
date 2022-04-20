@@ -12,4 +12,4 @@
 Janek Zangenberg
 
 ## License
-[see here](LICENSE)
+[GPL-3.0 License](LICENSE)
