@@ -1,5 +1,5 @@
-""" Reference: https://www.raywenderlich.com/10562143-continuous-integration-for-android
-https://dev.to/ychescale9/running-android-emulators-on-ci-from-bitrise-io-to-github-actions-3j76 """
+# Reference: https://www.raywenderlich.com/10562143-continuous-integration-for-android
+# https://dev.to/ychescale9/running-android-emulators-on-ci-from-bitrise-io-to-github-actions-3j76
 
 name: CI Workflow
 on: [push, pull_request]
@@ -26,12 +26,12 @@ jobs:
         with:
           java-version: 11
 
-      - name: Unit tests
+      - name: Run Unit tests
         run: |
           chmod +x gradlew
           ./gradlew testDebugUnitTest
 
-      - name: Instrumentation tests
+      - name: Run Instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.device-profile.api }}
