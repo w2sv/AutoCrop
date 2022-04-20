@@ -58,7 +58,7 @@ android {
         targetCompatibility javaVersion
     }
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = buildProperties["javaSdk"]
     }
     testOptions {
         animationsDisabled = true
