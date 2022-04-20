@@ -2,9 +2,9 @@
 
 # AutoCrop
 
-Android application enabling batch cropping of phone screenshots, discarding areas which don't pertain to the targeted core image
+__Android application enabling batch cropping of phone screenshots, discarding areas which don't pertain to the targeted core image__
 
-[Playstore listing] (https://play.google.com/store/apps/details?id=com.w2sv.autocrop)
+[Playstore listing](https://play.google.com/store/apps/details?id=com.w2sv.autocrop)
 
 ## Author
 Janek Zangenberg
