@@ -18,8 +18,11 @@ android {
     compileSdkVersion 31
     defaultConfig {
         applicationId "com.w2sv.autocrop"
+
         minSdkVersion 23
         targetSdkVersion 31
+        compileSdkVersion 31
+
         versionCode 9
         versionName "3.0.2"
 
@@ -27,6 +30,7 @@ android {
         testInstrumentationRunnerArgument("runnerBuilder", "de.mannodermaus.junit5.AndroidJUnit5Builder")
 
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
+
         signingConfig signingConfigs.config
     }
     buildTypes {
