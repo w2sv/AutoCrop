@@ -8,6 +8,9 @@ jobs:
   build-and-test:
     name: Build and run tests
     runs-on: macos-latest  # allows for hardware acceleration through HAXM
+    strategy:
+      matrix:
+        api-version: [29, 30, 31]  # 23, 25, 27,
     steps:
       - name: Checkout current repository in ubuntu's file system
         uses: actions/checkout@v2
@@ -25,7 +28,7 @@ jobs:
       - name: Instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: ${{ matrix.api-version }}
           arch: x86
           profile: Nexus 6
           avd-name: test
