@@ -8,9 +8,11 @@
 
   __Android application enabling batch cropping of phone screenshots, discarding areas which don't pertain to the targeted core image__
 
-## Available on
+## Download
 
-[Playstore](https://play.google.com/store/apps/details?id=com.w2sv.autocrop)
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" 
+      alt="Download from Google Play" 
+      height="80">](https://play.google.com/store/apps/details?id=com.w2sv.autocrop)
 
 ## Author
 Janek Zangenberg
