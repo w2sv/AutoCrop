@@ -44,6 +44,8 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.device-profile.api }}
+          profile: ${{ matrix.device-profile.device }}
+          arch: x86_64
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
@@ -58,10 +60,10 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2  # @https://github.com/ReactiveCircus/android-emulator-runner
         with:
           api-level: ${{ matrix.device-profile.api }}
-          arch: x86_64
           profile: ${{ matrix.device-profile.device }}
-          avd-name: test
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot
           disable-animations: true
           script: ./gradlew connectedCheck
 
