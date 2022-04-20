@@ -1,5 +1,5 @@
-# Reference: https://www.raywenderlich.com/10562143-continuous-integration-for-android
-# https://dev.to/ychescale9/running-android-emulators-on-ci-from-bitrise-io-to-github-actions-3j76
+""" Reference: https://www.raywenderlich.com/10562143-continuous-integration-for-android
+https://dev.to/ychescale9/running-android-emulators-on-ci-from-bitrise-io-to-github-actions-3j76 """
 
 name: CI Workflow
 on: [push, pull_request]
@@ -9,12 +9,12 @@ jobs:
     name: Build and run tests
     runs-on: macos-latest  # allows for hardware acceleration through HAXM
     strategy:
-      fail-fast: false
-      matrix:
+      fail-fast: false  # continue if one strategy fails
+      matrix:  # @https://docs.github.com/en/actions/using-jobs/using-a-build-matrix-for-your-jobs
         device-profile: [
-          { api: 28, device: Nexus 6}
-          { api: 29, device: Nexus 6 }
-          { api: 30, device: Pixel 5 }
+          { api: 28, device: Nexus 6 },
+          { api: 29, device: Nexus 6 },
+          { api: 30, device: Pixel 5 },
           { api: 31, device: Pixel 5 }
         ]
     steps:
