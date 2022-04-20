@@ -3,12 +3,15 @@
 <!-- package name not to be touched (due to app already having been uploaded to playstore) -->
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.w2sv.autocrop">
 
-    <!-- Permissions -->
+    <!-- Permissions
+
+        https://stackoverflow.com/questions/64221188/write-external-storage-when-targeting-android-10-->
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name= "android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- setting requestLegacyExternalStorage to true effectuates opting out of
          scoped storage for API 29 = Android 10 to enable external storage writing
@@ -17,46 +20,50 @@
     <!--Reference: https://developer.android.com/guide/topics/manifest/application-element -->
     <application
         android:label="@string/app_title"
+        tools:replace="android:label"
 
-        android:icon="@mipmap/brudineletten"
-        android:roundIcon="@mipmap/brudineletten_round"
-        android:theme="@style/AppTheme"
+        android:name="com.autocrop.application.AutoCrop"
+
+        android:icon="@mipmap/trippy_brudineletten"
+        android:roundIcon="@mipmap/trippy_brudineletten_round"
+
+        android:theme="@style/Theme.App.Splash"
 
         android:requestLegacyExternalStorage="true"
-        android:allowBackup="false"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+
+            android:appCategory="image"
+            tools:targetApi="o">
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-1494255973790385~2659692781"/>
 
         <!-- Activities -->
+
         <activity
-            android:name="com.autocrop.activities.welcome.WelcomeActivity"
+            android:name="com.autocrop.activities.main.MainActivity"
+
             android:screenOrientation="portrait"
-            android:noHistory="true">
+            android:exported="true">
 
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
-
-        </activity>
-
-        <activity
-            android:name="com.autocrop.activities.main.MainActivity"
-            android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name="com.autocrop.activities.cropping.CroppingActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:theme="@style/Theme.App.Main"
+
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.autocrop.activities.examination.ExaminationActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:theme="@style/Theme.App.Main"
+
+            android:screenOrientation="portrait" />
 
     </application>
 

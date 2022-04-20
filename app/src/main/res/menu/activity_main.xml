@@ -4,29 +4,46 @@
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
 
+    <!--  Examination  -->
+
     <item
-        android:id="@+id/main_menu_examination_item_group_divider"
-        android:title="@string/menu_item_examination_group"
+        android:id="@+id/main_menu_group_divider_examination"
+        android:title="@string/menu_item_group_divider_examination"
         android:enabled="false"/>
 
-    <item
-        android:id="@+id/main_menu_conduct_auto_scrolling"
-        android:title="@string/menu_item_conduct_auto_scrolling"
-        android:checkable="true"/>
+        <item
+            android:id="@+id/main_menu_item_conduct_auto_scrolling"
+            android:icon="@drawable/ic_baseline_redo_24"
+            android:title="@string/menu_item_conduct_auto_scrolling"
+            android:checkable="true"/>
+
+    <!--  Crop Saving  -->
 
     <item
-        android:id="@+id/main_menu_crop_saving_item_group_divider"
-        android:title="@string/menu_item_saving_group"
+        android:id="@+id/main_menu_group_divider_crop_saving"
+        android:title="@string/menu_item_group_divider_crop_saving"
         android:enabled="false"/>
 
-    <item
-        android:id="@+id/main_menu_item_delete_input_screenshots"
-        android:title="@string/menu_item_delete_input_screenshots"
-        android:checkable="true"/>
+        <item
+            android:id="@+id/main_menu_item_change_save_destination_dir"
+            android:icon="@drawable/ic_round_save_24"
+            android:title="@string/main_menu_item_change_directory"/>
+
+    <!--  Other  -->
 
     <item
-        android:id="@+id/main_menu_item_save_to_autocropped_dir"
-        android:title="@string/menu_item_save_to_autocrop_folder"
-        android:checkable="true"/>
+        android:id="@+id/main_menu_group_divider_other"
+        android:title="@string/menu_item_group_divider_other"
+        android:enabled="false"/>
+
+        <item
+            android:id="@+id/main_menu_item_about_the_app"
+            android:icon="@drawable/ic_outline_info_24"
+            android:title="@string/menu_item_about_the_app"/>
+
+        <item
+            android:id="@+id/main_menu_item_rate_the_app"
+            android:icon="@drawable/ic_sharp_star_rate_24"
+            android:title="@string/menu_item_rate_the_app"/>
 
 </menu>

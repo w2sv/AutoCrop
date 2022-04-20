@@ -1,4 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable/autocrop_logo.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/button_image_selection.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/gradient.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/gradient_about_screen_background.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/ic_auto_crop_logo.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/ic_autocrop_logo.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/ic_autocrop_logo_1_.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/ic_baseline_done_24.xml" value="0.1825" />
+        <entry key="app/src/main/res/drawable/ic_baseline_front_hand_24.xml" value="0.1825" />
+        <entry key="app/src/main/res/drawable/ic_baseline_redo_24.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/ic_brudineletten_regular.xml" value="0.1825" />
+        <entry key="app/src/main/res/drawable/ic_brudineletten_web.xml" value="0.1825" />
+        <entry key="app/src/main/res/drawable/ic_camera.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/ic_camera_24.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/ic_error.xml" value="0.1825" />
+        <entry key="app/src/main/res/drawable/ic_error_24.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/ic_outline_cancel_24.xml" value="0.13" />
+        <entry key="app/src/main/res/drawable/ic_outline_info_24.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/ic_outline_sentiment_dissatisfied_24.xml" value="0.1825" />
+        <entry key="app/src/main/res/drawable/ic_round_save_24.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/ic_sharp_star_rate_24.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/image_brudineletten.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/progress_bar_circular_save_all_crops.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/progress_bar_cropping_activity_progress.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/seekbar_tumb_examination_activity.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/splash_background.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/splash_screen.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/trippy_brudineletten_background.xml" value="0.1825" />
+        <entry key="app/src/main/res/layout/activity_cropping.xml" value="0.25679347826086957" />
+        <entry key="app/src/main/res/layout/activity_cropping_fragment_cropping_unsuccessful.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_cropping_fragment_root.xml" value="0.19791666666666666" />
+        <entry key="app/src/main/res/layout/activity_examination.xml" value="0.14266304347826086" />
+        <entry key="app/src/main/res/layout/activity_examination_fragment_apptitle.xml" value="0.14266304347826086" />
+        <entry key="app/src/main/res/layout/activity_examination_fragment_deletionquery.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/activity_examination_fragment_viewpager.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/activity_main_fragment_about.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/activity_main_fragment_flowfield.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/activity_welcome.xml" value="0.14266304347826086" />
+        <entry key="app/src/main/res/layout/toolbar_examination_activity.xml" value="0.213768115942029" />
+        <entry key="app/src/main/res/menu/activity_main.xml" value="0.2625" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/brudineletten.xml" value="0.13" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/brudineletten_round.xml" value="0.1815" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1815" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1815" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/trippy_brudineletten.xml" value="0.1825" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/trippy_brudineletten_round.xml" value="0.1825" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
 </project>

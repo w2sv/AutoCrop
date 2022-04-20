@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Toolbar -->
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_examination_activity" />
+
+    <!-- View Pager -->
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+        android:background="@android:color/black" />
+
+    <!-- https://en.proft.me/2018/02/5/decorating-seekbar-android/ -->
+    <com.autocrop.activities.examination.fragments.viewpager.PageIndicationSeekBar
+        android:id="@+id/page_indication_seek_bar"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+
+        android:splitTrack="false"
+
+        android:layout_alignParentEnd="true"
+
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="20dp"
+        android:thumb="@drawable/seekbar_tumb_examination_activity"
+
+        android:outlineProvider="paddedBounds"
+        android:progressTint="@android:color/transparent"
+
+        android:visibility="gone"
+
+        android:max="100">
+    </com.autocrop.activities.examination.fragments.viewpager.PageIndicationSeekBar>
+
+    <com.autocrop.activities.examination.fragments.viewpager.DiscardedTextView
+        android:id="@+id/discarded_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+
+        android:layout_marginTop="80dp"
+        android:layout_marginHorizontal="30dp"
+        android:textSize="13sp"
+
+        android:visibility="invisible"
+
+        tools:ignore="RelativeOverlap">
+
+    </com.autocrop.activities.examination.fragments.viewpager.DiscardedTextView>
+
+    <TextView
+        android:id="@+id/auto_scrolling_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+
+        android:layout_marginTop="85dp"
+        android:layout_marginHorizontal="30dp"
+
+        android:text="@string/auto_scrolling"
+        android:textColor="@color/saturated_magenta"
+        android:textStyle="bold"
+        android:textSize="15sp"
+
+        android:visibility="invisible"
+
+        tools:ignore="RelativeOverlap">
+
+    </TextView>
+
+</RelativeLayout>

@@ -2,7 +2,7 @@
 
     <!-- App Theme -->
 
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.App.Main" parent="Theme.AppCompat.NoActionBar">
 
         <item name="android:windowBackground">@android:color/black</item>
 
@@ -20,16 +20,19 @@
 
     </style>
 
+    <!--    Splash Theme-->
+
+    <style name="Theme.App.Splash" parent="Theme.App.Main">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
+    <!--    App Title TextView-->
+
     <style name="AppTitleTextView">
         <item name="android:textSize">42sp</item>
         <item name="android:text">@string/app_title</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/magenta</item>
-
-        <item name="android:gravity">center</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
     </style>
 
 </resources>
-

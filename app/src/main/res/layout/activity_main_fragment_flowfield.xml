@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:id="@+id/layout_activity_main">
+
+    <!-- Pixel Field Container -->
+
+    <FrameLayout
+        android:id="@+id/canvas_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </FrameLayout>
+
+    <!-- Buttons -->
+
+    <!-- Image Selection -->
+
+    <Button
+        android:id="@+id/image_selection_button"
+        style="@style/Base.Widget.AppCompat.Button.Colored"
+        android:background="@drawable/button_image_selection"
+
+        android:layout_width="136dp"
+        android:layout_height="143dp"
+        android:layout_centerInParent="true"
+
+        android:fontFamily="sans-serif"
+        android:text="@string/image_selection_button"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@android:color/darker_gray"/>
+
+    <!-- Menu Inflation -->
+
+    <ImageButton
+        android:id="@+id/menu_button"
+        style="?android:attr/actionOverflowButtonStyle"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
+
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/main_activity_menu_inflation_button_description" />
+
+    <!-- Screenshot -->
+
+    <ImageButton
+        android:id="@+id/flowfield_capture_button"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@id/menu_button"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="22.5dp"
+
+        android:background="@drawable/ic_camera_24"
+        android:backgroundTint="@android:color/darker_gray"
+        android:contentDescription="@string/main_activity_menu_inflation_button_description" />
+
+</RelativeLayout>

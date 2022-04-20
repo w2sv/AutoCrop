@@ -17,7 +17,7 @@
         android:layout_gravity="start"
         android:background="@android:color/transparent"
         android:text="@string/discard_all_button"
-        android:textColor="@android:color/white"
+        android:textColor="#FFFFFF"
         android:translationX="-10dp" />
 
         <!-- Save All -->
@@ -26,37 +26,25 @@
         android:id="@+id/save_all_button"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_gravity="start"
         android:background="@android:color/transparent"
         android:text="@string/save_all_button"
-        android:textColor="@android:color/white"
-        android:translationX="-45dp"/>
+        android:textColor="#FFFFFF"
+        android:translationX="-10dp"/>
 
-    <!-- Text View -->
+    <!-- Page Indication Text View -->
 
-        <!-- Retention Percentage -->
-
-    <TextView
-        android:id="@+id/retention_percentage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:textColor="@color/leef_green"
-        android:textSize="14sp"
-        android:textStyle="italic"
-        android:translationX="-55dp"
-        android:visibility="visible" />
-
-        <!-- Page Indication -->
-
-    <TextView
+    <com.autocrop.activities.examination.fragments.viewpager.PageIndicationTextView
         android:id="@+id/page_indication"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:layout_gravity="end"
-        android:textColor="#FFF"
-        android:textSize="14sp"
-        android:textStyle="italic"
-        android:translationX="55dp" />
+        android:translationX="-14dp"
+
+        android:text="@string/fracture"
+        android:textColor="@color/leef_green"
+        android:textSize="15sp"
+        android:textStyle="italic"/>
 
 </androidx.appcompat.widget.Toolbar>
