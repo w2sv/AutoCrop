@@ -7,6 +7,8 @@ on: [push, pull_request]
 
 env:
   ARCH: x86_64
+  JAVA_VERSION: 11
+  DEVICE: Nexus 6
 
 jobs:
   run-unit-tests:
@@ -20,7 +22,7 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: ${{ env.JAVA_VERSION }}
 
       - name: Run Unit tests
         run: |
@@ -34,13 +36,11 @@ jobs:
     runs-on: macos-latest  # allows for hardware acceleration through HAXM
     strategy:
       fail-fast: false  # continue if one strategy fails
-      matrix:  # @https://docs.github.com/en/actions/using-jobs/using-a-build-matrix-for-your-jobs
-        device-profile: [  # paired value syntax: @https://stackoverflow.com/a/68940067/12083276
-          { api: 28, device: Nexus 6 },
-          { api: 29, device: Nexus 6 },
-          { api: 30, device: Nexus 6 },
-          { api: 31, device: Nexus 6 }
-        ]
+
+      # paired value syntax: @https://stackoverflow.com/a/68940067/12083276
+      # @https://docs.github.com/en/actions/using-jobs/using-a-build-matrix-for-your-jobs
+      matrix:  
+        api: [28, 29, 30, 31]
     steps:
       - name: Checkout current repository in ubuntu's file system
         uses: actions/checkout@v3 
@@ -48,7 +48,7 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: ${{ env.JAVA_VERSION }}
 
       - name: Gradle cache
         uses: gradle/gradle-build-action@v2
@@ -60,14 +60,14 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ matrix.device-profile.api }}
+          key: avd-${{ matrix.api }}
 
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: ${{ matrix.device-profile.api }}
-          profile: ${{ matrix.device-profile.device }}
+          api-level: ${{ matrix.api }}
+          profile: ${{ env.DEVICE }}
           arch: ${{ env.ARCH }}
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
@@ -77,8 +77,8 @@ jobs:
       - name: Run Instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: ${{ matrix.device-profile.api }}
-          profile: ${{ matrix.device-profile.device }}
+          api-level: ${{ matrix.api }}
+          profile: ${{ matrix.DEVICE }}
           arch: ${{ env.ARCH }}
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot-save
