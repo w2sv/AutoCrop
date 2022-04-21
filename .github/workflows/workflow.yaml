@@ -6,7 +6,7 @@ name: CI Workflow
 on: [push, pull_request]
 
 env:
-  UBUNTU_REPO: actions/checkout@v3 
+  ARCH: x86_64
 
 jobs:
   run-unit-tests:
@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout current repository in ubuntu's file system
-        uses: ${{ UBUNTU_REPO }}
+        uses: actions/checkout@v3 
 
       - name: Setup JDK
         uses: actions/setup-java@v1
@@ -43,7 +43,7 @@ jobs:
         ]
     steps:
       - name: Checkout current repository in ubuntu's file system
-        uses: ${{ UBUNTU_REPO }}
+        uses: actions/checkout@v3 
 
       - name: Setup JDK
         uses: actions/setup-java@v1
@@ -68,7 +68,7 @@ jobs:
         with:
           api-level: ${{ matrix.device-profile.api }}
           profile: ${{ matrix.device-profile.device }}
-          arch: x86_64
+          arch: ${{ env.ARCH }}
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
@@ -79,7 +79,7 @@ jobs:
         with:
           api-level: ${{ matrix.device-profile.api }}
           profile: ${{ matrix.device-profile.device }}
-          arch: x86_64
+          arch: ${{ env.ARCH }}
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot-save
           disable-animations: true
