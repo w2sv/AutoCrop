@@ -29,10 +29,10 @@ jobs:
           chmod +x gradlew
           ./gradlew testDebugUnitTest
 
-  build-and-test:
+  build-and-run-instrumentation-tests-on-various-devices:
     # @https://github.com/ReactiveCircus/android-emulator-runner
 
-    name: Build and run tests
+    name: Build and run instrumentation tests on various devices
     runs-on: macos-latest  # allows for hardware acceleration through HAXM
     strategy:
       fail-fast: false  # continue if one strategy fails
