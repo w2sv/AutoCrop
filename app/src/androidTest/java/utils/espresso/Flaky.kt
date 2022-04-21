@@ -2,16 +2,12 @@ package utils.espresso
 
 import android.os.SystemClock
 import androidx.test.espresso.PerformException
-import androidx.test.espresso.intent.Intents
 import java.util.concurrent.TimeoutException
 
-inline fun intentTester(wrappedFun: () -> Unit) {
-    Intents.init()
-    wrappedFun()
-    Intents.release()
-}
+const val MEDIUM_TIMEOUT: Long = 1000
+const val SLOW_TIMEOUT: Long = 5000
 
-inline fun retryFlakyAction(timeout: Long, flakyAction: () -> Unit) {
+inline fun retryFlakyAction(timeout: Long = MEDIUM_TIMEOUT, flakyAction: () -> Unit) {
     val startTime = SystemClock.elapsedRealtime()
     var nTries = 0
 

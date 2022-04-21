@@ -32,7 +32,7 @@
     <string name="menu_item_conduct_auto_scrolling">AutoScroll</string>
     <string name="menu_item_rate_the_app">Rate the app</string>
     <string name="menu_item_about_the_app">About</string>
-    <string name="main_menu_item_change_directory">Change Directory</string>
+    <string name="menu_item_change_directory">Change Directory</string>
     <string name="got_it">Got it</string>
     <string name="built_by">Built by:</string>
     <string name="w2sv">W2SV</string>
