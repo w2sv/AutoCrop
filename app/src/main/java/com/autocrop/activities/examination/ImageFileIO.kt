@@ -53,7 +53,7 @@ fun Context.processCropBundle(
 /**
  * Replaces 'screenshot' by 'AutoCrop' if present in [fileName], otherwise adds it as prefix
  */
-private fun cropFileName(fileName: String): String{
+fun cropFileName(fileName: String): String{
     val appName = "AutoCrop"
 
     return fileName
