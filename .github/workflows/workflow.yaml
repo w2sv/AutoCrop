@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout current repository in ubuntu's file system
-        uses: UBUNTU_REPO
+        uses: ${{ UBUNTU_REPO }}
 
       - name: Setup JDK
         uses: actions/setup-java@v1
@@ -43,7 +43,7 @@ jobs:
         ]
     steps:
       - name: Checkout current repository in ubuntu's file system
-        uses: UBUNTU_REPO
+        uses: ${{ UBUNTU_REPO }}
 
       - name: Setup JDK
         uses: actions/setup-java@v1
