@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout current repository in ubuntu's file system
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup JDK
         uses: actions/setup-java@v1
@@ -40,7 +40,7 @@ jobs:
         ]
     steps:
       - name: Checkout current repository in ubuntu's file system
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup JDK
         uses: actions/setup-java@v1
@@ -78,6 +78,6 @@ jobs:
           profile: ${{ matrix.device-profile.device }}
           arch: x86_64
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot-save
           disable-animations: true
           script: ./gradlew connectedCheck
