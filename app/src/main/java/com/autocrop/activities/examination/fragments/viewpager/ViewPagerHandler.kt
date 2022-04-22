@@ -25,9 +25,10 @@ import java.util.*
 class ViewPagerHandler(
     private val binding: ActivityExaminationFragmentViewpagerBinding,
     private val viewModel: ViewPagerFragmentViewModel,
-    private val examinationActivity: ExaminationActivity){
+    private val examinationActivity: ExaminationActivity,
+    previousPosition: Int?){
 
-    val scroller: Scroller = Scroller()
+    private val scroller: Scroller = Scroller()
     private val pageChangeHandler = PageChangeHandler()
 
     init {
@@ -38,7 +39,7 @@ class ViewPagerHandler(
             adapter = CropPagerAdapter()
 
             setCurrentItem(
-                viewModel.startPosition,
+                previousPosition ?: viewModel.startPosition,
                 false
             )
 
@@ -48,16 +49,17 @@ class ViewPagerHandler(
 
         // -----------init other UI elements
 
+        val dataSetPosition = viewModel.dataSet.correspondingPosition(binding.viewPager.currentItem)
+        binding.updatePageDependentViews(dataSetPosition)
+
         // display pageIndicationSeekBar if applicable
         if (viewModel.dataSet.size > 1)
             examinationActivity.runOnUiThread { binding.pageIndicationSeekBar.show() }
 
         // run Scroller and display respective text view if applicable;
         // otherwise display discardedTextView and set page transformer
-        if (viewModel.conductAutoScroll) {
-            examinationActivity.runOnUiThread { binding.autoScrollingTextView.show() }
-            scroller.run(binding.viewPager, viewModel.dataSet.size)
-        }
+        if (viewModel.autoScroll)
+            scroller.run(binding.viewPager, viewModel.dataSet.size - dataSetPosition)
         else{
             examinationActivity.runOnUiThread { binding.discardedTextView.show() }
             binding.viewPager.setPageTransformer()
@@ -117,11 +119,11 @@ class ViewPagerHandler(
      * Class accounting for automatic scrolling at the start of crop examination
      */
     inner class Scroller {
-        private var timer: Timer? = null
-        val isRunning: Boolean
-            get() = timer != null
+        private lateinit var timer: Timer
 
         fun run(viewPager2: ViewPager2, maxScrolls: Int) {
+            examinationActivity.runOnUiThread { binding.autoScrollingTextView.show() }
+
             timer = Timer().apply {
                 schedule(
                     object : TimerTask() {
@@ -152,8 +154,8 @@ class ViewPagerHandler(
          * • [displaySnackbar] if [onScreenTouch]
          */
         fun cancel(onScreenTouch: Boolean) {
-            timer!!.cancel()
-            timer = null
+            timer.cancel()
+            viewModel.autoScroll = false
 
             examinationActivity.runOnUiThread {
                 crossFade(binding.discardedTextView, binding.autoScrollingTextView, 900L)
@@ -190,13 +192,11 @@ class ViewPagerHandler(
                          * Cancel scroller upon touch if running
                          */
                         override fun onTouch(v: View?, event: MotionEvent?): Boolean =
-                            scroller.run {
-                                if (isRunning)
-                                    false
-                                        .also { cancel(true) }
-                                else
-                                    super.onTouch(v, event)
-                            }
+                            if (viewModel.autoScroll)
+                                false
+                                    .also { scroller.cancel(true) }
+                            else
+                                super.onTouch(v, event)
 
                         init {
                             examinationActivity.supportFragmentManager.setFragmentResultListener(CropProcedureDialog.PROCEDURE_SELECTED, examinationActivity){

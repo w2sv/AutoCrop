@@ -65,10 +65,6 @@ abstract class PageDependentTextView(context: Context, attr: AttributeSet, strin
     ExtendedTextView(context, attr, stringId),
     ViewModelRetriever<ViewPagerFragmentViewModel> by ViewPagerViewModelRetriever(context) {
 
-    init{
-        updateText(0)
-    }
-
     abstract fun updateText(position: Int)
 }
 

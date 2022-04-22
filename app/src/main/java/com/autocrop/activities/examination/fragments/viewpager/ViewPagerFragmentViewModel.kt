@@ -16,7 +16,7 @@ class ViewPagerFragmentViewModel:
     // -------------Additional parameters
 
     companion object { const val MAX_VIEWS: Int = Int.MAX_VALUE }
-    val conductAutoScroll = BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
+    var autoScroll = BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
     val startPosition: Int = (MAX_VIEWS / 2).run {
         minus(dataSet.correspondingPosition(this))
     }

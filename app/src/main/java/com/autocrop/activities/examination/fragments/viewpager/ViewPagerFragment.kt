@@ -3,7 +3,7 @@ package com.autocrop.activities.examination.fragments.viewpager
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
-import androidx.core.text.italic
+import androidx.core.text.bold
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
@@ -18,19 +18,29 @@ class ViewPagerFragment:
     ExaminationActivityFragment<ActivityExaminationFragmentViewpagerBinding>(),
     ActivityRootFragment {
 
+    companion object{
+        private const val CURRENT_VIEW_PAGER_POSITION = "CURRENT_VIEW_PAGER_POSITION"
+    }
+
     private lateinit var viewPagerHandler: ViewPagerHandler
+    private lateinit var viewModel: ViewPagerFragmentViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProvider(this)[ViewPagerFragmentViewModel::class.java]
+
         viewPagerHandler = ViewPagerHandler(
             binding,
-            ViewModelProvider(this)[ViewPagerFragmentViewModel::class.java],
-            typedActivity
+            viewModel,
+            typedActivity,
+            savedInstanceState?.getInt(CURRENT_VIEW_PAGER_POSITION)
         )
 
         setToolbarButtonOnClickListeners()
-        displayActivityEntrySnackbar()
+
+        if (savedInstanceState == null)
+            displayActivityEntrySnackbar()
     }
 
     private val nDismissedImagesRetriever = IntentExtraRetriever<Int>(IntentIdentifier.N_DISMISSED_IMAGES)
@@ -40,7 +50,7 @@ class ViewPagerFragment:
             requireActivity().displaySnackbar(
                 SpannableStringBuilder()
                     .append("Couldn't find cropping bounds for ")
-                    .italic { append("$it") }
+                    .bold { append("$it") }
                     .append(" image".numericallyInflected(it)),
                 R.drawable.ic_error_24
             )
@@ -62,16 +72,23 @@ class ViewPagerFragment:
                     replaceCurrentFragmentWith(appTitleFragment, false)
                 }
             }
-        ).forEach { (button, dialogClass, resultListener) ->
-            requireActivity().supportFragmentManager.setFragmentResultListener(dialogClass.resultKey, requireActivity()){
-                    _, _ -> resultListener()
-            }
+        )
+            .forEach { (button, dialogClass, resultListener) ->
+                requireActivity().supportFragmentManager.setFragmentResultListener(dialogClass.resultKey, requireActivity()){
+                        _, _ -> resultListener()
+                }
 
-            button.setOnClickListener {
-                if (!viewPagerHandler.scroller.isRunning)
-                    dialogClass
-                        .show(requireActivity().supportFragmentManager)
+                button.setOnClickListener {
+                    if (!viewModel.autoScroll)
+                        dialogClass
+                            .show(requireActivity().supportFragmentManager)
+                }
             }
-        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt(CURRENT_VIEW_PAGER_POSITION, binding.viewPager.currentItem)
     }
 }
