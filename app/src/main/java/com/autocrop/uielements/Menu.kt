@@ -23,4 +23,5 @@ fun MenuItem.persistMenuAfterClick(context: Context): Boolean = run {
  *      https://stackoverflow.com/questions/15454995/popupmenu-with-icons
  */
 @SuppressLint("RestrictedApi")
-fun Menu.makeIconsVisible() = (this as MenuBuilder).setOptionalIconsVisible(true)
+fun Menu.makeIconsVisible() =
+    (this as MenuBuilder).setOptionalIconsVisible(true)

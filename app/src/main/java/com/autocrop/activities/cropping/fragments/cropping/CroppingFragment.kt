@@ -41,7 +41,7 @@ class CroppingFragment
     }
 
     private suspend fun cropImages(publishProgress: suspend (Void?) -> Unit): Void?{
-        sharedViewModel.uris.forEach { uri ->
+        sharedViewModel.uris.subList(sharedViewModel.currentImageNumber.value!!, sharedViewModel.uris.size).forEach { uri ->
 
             // attempt to crop image, upon success add resulting CropBundle to sharedViewModel
             croppedImage(BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))!!)?.run {

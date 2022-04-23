@@ -56,10 +56,10 @@ class CroppingActivity :
         else if (rootFragment.isVisible)
             handleBackPress()
     }
-
-    override fun onStop() {
-        super.onStop()
-
-        finishAndRemoveTask()
-    }
+//
+//    override fun onStop() {
+//        super.onStop()
+//
+//        finishAndRemoveTask()
+//    }
 }

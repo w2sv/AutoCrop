@@ -15,14 +15,14 @@ import com.w2sv.autocrop.R
 class FlowFieldFragmentMenu(itemId2OnCLickListener: Map<Int, () -> Unit>, context: Context, anchor: View)
     : PopupMenu(context, anchor){
 
-        init{
-            menuInflater.inflate(R.menu.activity_main, menu)
+    init{
+        menuInflater.inflate(R.menu.activity_main, menu)
 
-            setCheckableItems(context)
-            setOnClickListeners(itemId2OnCLickListener)
-            styleGroupDividers(context)
-            menu.makeIconsVisible()
-        }
+        setCheckableItems(context)
+        setOnClickListeners(itemId2OnCLickListener)
+        styleGroupDividers(context)
+        menu.makeIconsVisible()
+    }
 
     /**
      * Sets check and [setOnMenuItemClickListener]
@@ -66,4 +66,4 @@ class FlowFieldFragmentMenu(itemId2OnCLickListener: Map<Int, () -> Unit>, contex
                 ) {append(title)} }
             }
         }
-    }
+}

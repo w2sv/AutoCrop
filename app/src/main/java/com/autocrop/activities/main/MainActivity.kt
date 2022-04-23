@@ -16,7 +16,9 @@ class MainActivity :
     val aboutFragment by lazy { AboutFragment() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.Theme_App_Main)
+        if (savedInstanceState == null)
+            setTheme(R.style.Theme_App_Main)
+
         super.onCreate(savedInstanceState)
     }
 

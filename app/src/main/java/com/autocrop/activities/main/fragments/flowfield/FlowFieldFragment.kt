@@ -35,11 +35,12 @@ class FlowFieldFragment:
 
         // set button onClickListeners
         setImageSelectionButtonOnClickListener()
-        setMenuInflationButtonOnClickListener()
+        binding.menuButton.setOnClickListener { popupMenu.show() }
         flowFieldHandler.setFlowFieldCaptureButton(binding.flowfieldCaptureButton, permissionsHandler)
 
         // display CropIOResultSnackbar
-        displayActivityEntrySnackbar()
+        if (savedInstanceState == null)
+            displayActivityEntrySnackbar()
     }
 
     private val nSavedCropsRetriever = IntentExtraRetriever<IntArray>(IntentIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)
@@ -69,25 +70,23 @@ class FlowFieldFragment:
     // Menu-related $
     //$$$$$$$$$$$$$$$
 
-    private fun setMenuInflationButtonOnClickListener() =
-        binding.menuButton.setOnClickListener { view: View ->
-                FlowFieldFragmentMenu(
-                    mapOf(
-                        R.id.main_menu_item_change_save_destination_dir to {
-                            pickSaveDestinationDirContract.launch(CropFileSaveDestinationPreferences.treeUri)
-                        },
-                        R.id.main_menu_item_rate_the_app to ::goToPlayStoreListing,
-                        R.id.main_menu_item_about_the_app to {
-                            with(typedActivity) {
-                                swapFragments(rootFragment, aboutFragment)
-                            }
-                        }
-                    ),
-                    requireContext(),
-                    view
-                )
-                .show()
-        }
+    private val popupMenu: FlowFieldFragmentMenu by lazy {
+        FlowFieldFragmentMenu(
+            mapOf(
+                R.id.main_menu_item_change_save_destination_dir to {
+                    pickSaveDestinationDirContract.launch(CropFileSaveDestinationPreferences.treeUri)
+                },
+                R.id.main_menu_item_rate_the_app to ::goToPlayStoreListing,
+                R.id.main_menu_item_about_the_app to {
+                    with(typedActivity) {
+                        swapFragments(rootFragment, aboutFragment)
+                    }
+                }
+            ),
+            requireView().context,
+            binding.menuButton
+        )
+    }
 
     private fun goToPlayStoreListing() =
         try{
