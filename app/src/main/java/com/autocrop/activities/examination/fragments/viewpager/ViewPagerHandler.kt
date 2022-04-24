@@ -61,7 +61,10 @@ class ViewPagerHandler(
         if (viewModel.autoScroll)
             scroller.run(binding.viewPager, viewModel.dataSet.size - dataSetPosition)
         else{
-            examinationActivity.runOnUiThread { binding.discardedTextView.show() }
+            examinationActivity.runOnUiThread {
+                binding.discardedTextView.show()
+                binding.toolbar.toolbar.show()
+            }
             binding.viewPager.setPageTransformer()
         }
     }
@@ -159,6 +162,7 @@ class ViewPagerHandler(
 
             examinationActivity.runOnUiThread {
                 crossFade(binding.discardedTextView, binding.autoScrollingTextView, 900L)
+                binding.toolbar.toolbar.dropDownAnimation()
             }
 
             if (onScreenTouch){

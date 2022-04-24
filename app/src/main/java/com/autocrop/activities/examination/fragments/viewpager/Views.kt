@@ -6,10 +6,12 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.text.SpannableStringBuilder
 import android.util.AttributeSet
+import android.view.animation.AnimationUtils
 import android.view.animation.AnticipateInterpolator
 import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
+import androidx.appcompat.widget.Toolbar
 import androidx.core.text.bold
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.uielements.view.*
@@ -20,6 +22,16 @@ private class ViewPagerViewModelRetriever(context: Context):
         context,
         ViewPagerFragmentViewModel::class.java
     )
+
+class ExaminationToolBar(context: Context, attr: AttributeSet)
+    : Toolbar(context, attr){
+
+    fun dropDownAnimation(){
+        show()
+
+        startAnimation(AnimationUtils.loadAnimation(context, R.anim.animate_slide_down_enter))
+    }
+}
 
 class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
     AppCompatSeekBar(context, attr),
