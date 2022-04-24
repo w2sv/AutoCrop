@@ -6,9 +6,43 @@
 
     <!-- Toolbar -->
 
-    <include
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        layout="@layout/toolbar_examination_activity" />
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:visibility="invisible"
+        android:elevation="4dp">
+
+        <!-- Button -->
+
+        <!-- Dismiss All -->
+
+        <Button
+            android:id="@+id/discard_all_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="@android:color/transparent"
+            android:text="@string/discard_all_button"
+            android:textStyle="bold"
+            android:textColor="@color/dark_green"
+            android:translationX="-10dp" />
+
+        <!-- Save All -->
+
+        <Button
+            android:id="@+id/save_all_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="@android:color/transparent"
+            android:text="@string/save_all_button"
+            android:textStyle="bold"
+            android:textColor="@color/dark_green"
+            android:translationX="-10dp"/>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <!-- View Pager -->
 
@@ -30,7 +64,7 @@
 
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
-        android:visibility="visible">
+        android:visibility="invisible">
 
         <!-- https://en.proft.me/2018/02/5/decorating-seekbar-android/ -->
         <com.autocrop.activities.examination.fragments.viewpager.PageIndicationSeekBar
@@ -96,7 +130,7 @@
 
         android:text="@string/auto_scrolling"
         android:textColor="@color/saturated_magenta"
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:textStyle="bold"
 
         android:visibility="invisible"

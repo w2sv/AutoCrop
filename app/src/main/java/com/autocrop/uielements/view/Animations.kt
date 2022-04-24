@@ -7,8 +7,10 @@ import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.autocrop.R
 
-fun crossFade(fadeInView: View, fadeOutView: View, animationDuration: Long){
-    fadeInView.fadeIn(animationDuration)
+fun crossFade(animationDuration: Long, fadeOutView: View, vararg fadeInView: View){
+    fadeInView.forEach {
+        it.fadeIn(animationDuration)
+    }
     fadeOutView.fadeOut(animationDuration)
 }
 

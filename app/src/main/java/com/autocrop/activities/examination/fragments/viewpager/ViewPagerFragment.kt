@@ -62,12 +62,12 @@ class ViewPagerFragment:
      */
     private fun setToolbarButtonOnClickListeners() {
         arrayOf(
-             Triple(binding.toolbar.saveAllButton, SaveAllConfirmationDialogFragment()) {
+             Triple(binding.saveAllButton, SaveAllConfirmationDialogFragment()) {
                  with(typedActivity) {
                      replaceCurrentFragmentWith(saveAllFragment, true)
                  }
              },
-            Triple(binding.toolbar.discardAllButton, DiscardAllConfirmationDialogFragment()) {
+            Triple(binding.discardAllButton, DiscardAllConfirmationDialogFragment()) {
                 with(typedActivity) {
                     replaceCurrentFragmentWith(appTitleFragment, false)
                 }
