@@ -13,15 +13,9 @@ import processing.core.PGraphics;
 
 public class FlowFieldSketch extends PApplet {
 
-//    final public PGraphics canvas;
-
     public FlowFieldSketch(int width, int height) {
         this.width = width;
         this.height = height;
-
-        getGraphics();
-
-        g = createGraphics(width, height);
     }
 
     public void settings() {
@@ -53,10 +47,7 @@ public class FlowFieldSketch extends PApplet {
     private final PixelFader pixelFader = new PixelFader(3);
 
     public void draw(){
-//        background(0);
         changeColorIfApplicable();
-
-        g.beginDraw();
 
         pixelFader.fadePixelsIfApplicable(frameCount, g);
         flowfield.update();
@@ -66,9 +57,6 @@ public class FlowFieldSketch extends PApplet {
             p.update();
             p.show(g, alpha.value);
         }
-
-        g.endDraw();
-//        image(g, 0, 0);
 
         alpha.decreaseIfApplicable(millis());
     }

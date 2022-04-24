@@ -10,7 +10,6 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.color
-import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
@@ -28,18 +27,13 @@ class FlowFieldFragment:
     private val permissionsHandler = PermissionsHandler(this)
     private lateinit var flowFieldBinding: FlowFieldBinding
 
-    private lateinit var viewModel: FlowFieldFragmentViewModel
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(this)[FlowFieldFragmentViewModel::class.java]
 
         // initialize FlowFieldHandler and thus FlowField
         flowFieldBinding = FlowFieldBinding(
             requireActivity(),
-            binding.canvasContainer,
-            viewModel
+            binding.canvasContainer
         )
 
         // set button onClickListeners
@@ -179,11 +173,5 @@ class FlowFieldFragment:
 
     private enum class IntentCode {
         IMAGE_SELECTION
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        flowFieldBinding.bindSketchToViewModel(viewModel)
     }
 }

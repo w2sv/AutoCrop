@@ -12,35 +12,16 @@ import com.autocrop.utils.formattedDateTimeString
 import com.w2sv.autocrop.R
 import processing.android.PFragment
 import processing.core.PGraphics
-import timber.log.Timber
 
 class FlowFieldBinding(activity: FragmentActivity,
-                       canvasContainer: FrameLayout,
-                       flowFieldFragmentViewModel: FlowFieldFragmentViewModel){
+                       canvasContainer: FrameLayout){
 
-    private val sketch: FlowFieldSketch
     private val pFragment: PFragment
 
     init {
         val (w, h) = screenResolution(activity.windowManager).run {x to y}
 
-        sketch = flowFieldFragmentViewModel.flowFieldSketch?.apply {
-            background(0)
-            setSize(w, h)
-
-            with(g){
-//                loadPixels()
-                resize(w, h)
-//                setSize(w, h)
-//                updatePixels()
-                Timber.i("screenDims: $w $h | canvasDims: $width $height")
-            }
-
-        } ?: FlowFieldSketch(w, h)
-
-        flowFieldFragmentViewModel.flowFieldSketch = null
-
-        pFragment = PFragment(sketch)
+        pFragment = PFragment(FlowFieldSketch(w, h))
         pFragment.setView(canvasContainer, activity)
     }
 
@@ -58,7 +39,7 @@ class FlowFieldBinding(activity: FragmentActivity,
      */
     private fun captureFlowField() =
         with(pFragment.requireActivity()){
-            contentResolver.saveBitmap(sketch.g.bitmap(), "FlowField_${formattedDateTimeString()}.jpg")
+            contentResolver.saveBitmap(pFragment.sketch.g.bitmap(), "FlowField_${formattedDateTimeString()}.jpg")
 
             displaySnackbar(
                 SpannableStringBuilder()
@@ -72,9 +53,5 @@ class FlowFieldBinding(activity: FragmentActivity,
     private fun PGraphics.bitmap(): Bitmap {
         loadPixels()
         return Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888)
-    }
-
-    fun bindSketchToViewModel(viewModel: FlowFieldFragmentViewModel){
-        viewModel.flowFieldSketch = sketch
     }
 }
