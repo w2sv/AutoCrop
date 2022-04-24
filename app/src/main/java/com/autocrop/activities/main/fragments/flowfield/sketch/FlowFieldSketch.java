@@ -43,8 +43,7 @@ public class FlowFieldSketch extends PApplet {
         Particle.setRandomColor(this);
     }
 
-    private final GraduallyDecreasingValue alpha = new GraduallyDecreasingValue(55, 35, 400);
-    private final PixelFader pixelFader = new PixelFader(3);
+    private final PixelFader pixelFader = new PixelFader(2);
 
     public void draw(){
         changeColorIfApplicable();
@@ -55,10 +54,10 @@ public class FlowFieldSketch extends PApplet {
         for (Particle p : particles) {
             flowfield.affect(p);
             p.update();
-            p.show(g, alpha.value);
+            p.show(g, 30);
         }
 
-        alpha.decreaseIfApplicable(millis());
+//        alpha.decreaseIfApplicable(millis());
     }
 
     private int lastParticleColorChangeSecond;
@@ -121,7 +120,7 @@ class PixelFader{
             int alpha = (canvas.pixels[i] >> 24) & 0xFF;
 
             // reduce alpha value
-            alpha = max(0, alpha - 1);
+            alpha = max(0, alpha - 3);
 
             // assign color with new alpha-value
             canvas.pixels[i] = alpha << 24 | (canvas.pixels[i]) & 0xFFFFFF;

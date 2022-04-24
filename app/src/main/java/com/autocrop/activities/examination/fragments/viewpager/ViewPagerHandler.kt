@@ -52,7 +52,7 @@ class ViewPagerHandler(
         val dataSetPosition = viewModel.dataSet.correspondingPosition(binding.viewPager.currentItem)
         binding.updatePageDependentViews(dataSetPosition)
 
-        // display pageIndicationSeekBar if applicable
+        // display pageIndicationElements if applicable
         if (viewModel.dataSet.size > 1)
             examinationActivity.runOnUiThread {
                 binding.pageIndicationElements.show()
@@ -163,7 +163,7 @@ class ViewPagerHandler(
             viewModel.autoScroll = false
 
             examinationActivity.runOnUiThread {
-                crossFade(900L, binding.autoScrollingTextView, binding.discardingStatisticsTv, binding.toolbar)
+                crossFade(examinationActivity.resources.getInteger(R.integer.visibility_changing_animation_duration).toLong(), binding.autoScrollingTextView, binding.discardingStatisticsTv, binding.toolbar)
             }
 
             if (onScreenTouch){
@@ -258,7 +258,7 @@ class ViewPagerHandler(
                     } ?: examinationActivity.invokeSubsequentFragment()
                     return
                 }
-                2 -> examinationActivity.runOnUiThread { binding.pageIndicationElements.shrinkHidingAnimation() }
+                2 -> examinationActivity.runOnUiThread { binding.pageIndicationElements.shrinkAndRemove() }
                 else -> Unit
             }
             removeView(dataSetPosition)

@@ -25,7 +25,7 @@ private class ViewPagerViewModelRetriever(context: Context):
 class PageIndicationElements(context: Context, attr: AttributeSet)
     : RelativeLayout(context, attr){
 
-    fun shrinkHidingAnimation(){
+    fun shrinkAndRemove(){
         animate()
             .scaleX(0f)
             .scaleY(0f)
@@ -35,7 +35,7 @@ class PageIndicationElements(context: Context, attr: AttributeSet)
                     remove()
                 }
             })
-            .duration = 700L
+            .duration = resources.getInteger(R.integer.visibility_changing_animation_duration).toLong()
     }
 }
 
@@ -44,11 +44,7 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
     ViewModelRetriever<ViewPagerFragmentViewModel> by ViewPagerViewModelRetriever(context) {
 
     init {
-        if (viewModel.dataSet.size > 1){
-            show()
-            progress = viewModel.pageIndicationSeekbarPagePercentage(0, max)
-            isEnabled = false  // disables dragging of bar
-        }
+        isEnabled = false  // disables dragging of bar
     }
 
     fun update(dataSetPosition: Int, scrolledRight: Boolean) {
@@ -57,10 +53,16 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
             (it == listOf(0, 100) && !scrolledRight) || (it == listOf(100, 0) && scrolledRight)
         }
 
+        val interpolatorToAnimationDuration = mapOf(
+            BounceInterpolator::class.java to 400L,
+            DecelerateInterpolator::class.java to 100L
+        )
+
         with(ObjectAnimator.ofInt(this,"progress", targetProgress)) {
-             val (_duration, _interpolator) = if (displayBouncingAnimation) 400L to BounceInterpolator() else 100L to DecelerateInterpolator()
-            interpolator = _interpolator
-            duration = _duration
+            val interpolator = if (displayBouncingAnimation) BounceInterpolator() else DecelerateInterpolator()
+
+            this.interpolator = interpolator
+            duration = interpolatorToAnimationDuration.getValue(interpolator::class.java)
             start()
         }
     }
