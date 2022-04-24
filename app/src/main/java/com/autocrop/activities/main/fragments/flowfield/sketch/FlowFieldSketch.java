@@ -54,6 +54,8 @@ public class FlowFieldSketch extends PApplet {
 
         canvas.beginDraw();
 
+//        canvas.scale(0.5f, 1f);
+
         pixelFader.fadePixelsIfApplicable(frameCount, canvas);
         flowfield.update();
 
@@ -64,7 +66,8 @@ public class FlowFieldSketch extends PApplet {
         }
 
         canvas.endDraw();
-        image(canvas, 0, 0);
+
+        image(canvas, 0, 0, width, height);
 
         alpha.decreaseIfApplicable(millis());
     }

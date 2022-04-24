@@ -13,19 +13,19 @@ import com.w2sv.autocrop.R
 import processing.android.PFragment
 import processing.core.PGraphics
 import timber.log.Timber
-import kotlin.math.PI
 
 class FlowFieldBinding(activity: FragmentActivity,
                        canvasContainer: FrameLayout,
                        flowFieldFragmentViewModel: FlowFieldFragmentViewModel){
 
-    private val sketch: FlowFieldSketch
     private val pFragment: PFragment
+    private val PFragment.typedSketch: FlowFieldSketch
+        get() = sketch as FlowFieldSketch
 
     init {
         val (w, h) = screenResolution(activity.windowManager).run {x to y}
 
-        sketch = flowFieldFragmentViewModel.flowFieldSketch?.apply {
+        val sketch = flowFieldFragmentViewModel.flowFieldSketch?.apply {
             setSize(w, h)
 
 //            with(canvas){
@@ -57,7 +57,7 @@ class FlowFieldBinding(activity: FragmentActivity,
      */
     private fun captureFlowField() =
         with(pFragment.requireActivity()){
-            contentResolver.saveBitmap(sketch.canvas.bitmap(), "FlowField_${formattedDateTimeString()}.jpg")
+            contentResolver.saveBitmap(pFragment.typedSketch.canvas.bitmap(), "FlowField_${formattedDateTimeString()}.jpg")
 
             displaySnackbar(
                 SpannableStringBuilder()
@@ -74,6 +74,6 @@ class FlowFieldBinding(activity: FragmentActivity,
     }
 
     fun bindSketchToViewModel(viewModel: FlowFieldFragmentViewModel){
-        viewModel.flowFieldSketch = sketch
+        viewModel.flowFieldSketch = pFragment.typedSketch
     }
 }

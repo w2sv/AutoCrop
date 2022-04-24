@@ -9,7 +9,7 @@
     <!-- Pixel Field Container -->
 
     <FrameLayout
-        android:id="@+id/canvas_container"
+        android:id="@+id/sketch_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
     </FrameLayout>

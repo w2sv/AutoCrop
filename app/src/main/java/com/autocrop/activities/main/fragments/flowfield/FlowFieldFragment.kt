@@ -38,7 +38,7 @@ class FlowFieldFragment:
         // initialize FlowFieldHandler and thus FlowField
         flowFieldBinding = FlowFieldBinding(
             requireActivity(),
-            binding.canvasContainer,
+            binding.sketchContainer,
             viewModel
         )
 
