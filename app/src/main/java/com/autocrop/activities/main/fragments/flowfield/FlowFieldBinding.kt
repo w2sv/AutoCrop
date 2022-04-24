@@ -1,41 +1,37 @@
 package com.autocrop.activities.main.fragments.flowfield
 
+import android.graphics.Bitmap
 import android.text.SpannableStringBuilder
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import androidx.core.text.color
 import androidx.fragment.app.FragmentActivity
+import com.autocrop.activities.main.fragments.flowfield.sketch.FlowFieldSketch
 import com.autocrop.utils.android.*
 import com.autocrop.utils.formattedDateTimeString
 import com.w2sv.autocrop.R
 import processing.android.PFragment
+import processing.core.PGraphics
 import timber.log.Timber
 
 class FlowFieldBinding(activity: FragmentActivity,
                        canvasContainer: FrameLayout,
                        flowFieldFragmentViewModel: FlowFieldFragmentViewModel){
 
-    private val sketch: FlowFieldPApplet
+    private val sketch: FlowFieldSketch
     private val pFragment: PFragment
 
     init {
-        val resolution = screenResolution(activity.windowManager)
+        val (w, h) = screenResolution(activity.windowManager).run {x to y}
 
         sketch = flowFieldFragmentViewModel.flowFieldSketch?.apply {
             with(canvas){
                 loadPixels()
-
-                val w = resolution.x
-                val h = resolution.y
-
                 resize(w, h)
-//                setSize(w, h)
-
                 updatePixels()
-
-                Timber.i("screenRes: $resolution | canvas dims: $width $height")
+                Timber.i("screenDims: $w $h | canvasDims: $width $height")
             }
-        } ?: FlowFieldPApplet(resolution)
+        } ?: FlowFieldSketch(w, h)
 
         flowFieldFragmentViewModel.flowFieldSketch = null
 
@@ -57,7 +53,7 @@ class FlowFieldBinding(activity: FragmentActivity,
      */
     private fun captureFlowField() =
         with(pFragment.requireActivity()){
-            contentResolver.saveBitmap(sketch.bitmap(), "FlowField_${formattedDateTimeString()}.jpg")
+            contentResolver.saveBitmap(sketch.canvas.bitmap(), "FlowField_${formattedDateTimeString()}.jpg")
 
             displaySnackbar(
                 SpannableStringBuilder()
@@ -67,6 +63,11 @@ class FlowFieldBinding(activity: FragmentActivity,
                 R.drawable.ic_round_save_24
             )
         }
+
+    private fun PGraphics.bitmap(): Bitmap {
+        loadPixels()
+        return Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888)
+    }
 
     fun bindSketchToViewModel(viewModel: FlowFieldFragmentViewModel){
         viewModel.flowFieldSketch = sketch
