@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
-import timber.log.Timber;
 
 public class FlowFieldPApplet extends PApplet {
     final int FLOW_FIELD_RESOLUTION = 200;
@@ -49,7 +48,7 @@ public class FlowFieldPApplet extends PApplet {
         PVector[] vectors;
         int cols, rows;
         float inc = 0.1f;
-        float zoff = 0;
+        float zOff = 0;
         int resolution;
 
         FlowField(int _resolution) {
@@ -64,7 +63,7 @@ public class FlowFieldPApplet extends PApplet {
             for (int y = 0; y < rows; y++) {
                 float yoff = 0;
                 for (int x = 0; x < cols; x++) {
-                    float angle = noise(xoff, yoff, zoff) * TWO_PI * 4;
+                    float angle = noise(xoff, yoff, zOff) * TWO_PI * 4;
 
                     PVector v = PVector.fromAngle(angle);
                     v.setMag(1);
@@ -74,7 +73,7 @@ public class FlowFieldPApplet extends PApplet {
                     xoff += inc;
                 }
             }
-            zoff += 0.004;
+            zOff += 0.004;
         }
 
         void affect(Particle particle){
@@ -89,9 +88,9 @@ public class FlowFieldPApplet extends PApplet {
     private class Particle {
         PVector pos;
         PVector acc;
-        private PVector vel;
-        private PVector previousPos;
-        private float maxSpeed;
+        private final PVector vel;
+        private final PVector previousPos;
+        private final float maxSpeed;
 
         Particle() {
             maxSpeed = random(PARTICLE_VELOCITY_MAX_LOWER_BOUND, PARTICLE_VELOCITY_MAX_UPPER_BOUND);
@@ -166,7 +165,7 @@ public class FlowFieldPApplet extends PApplet {
     }
 
     public void settings() {
-        size(width, height, P2D);
+        size(width, height, JAVA2D);
     }
 
     private void setBackground(){
@@ -216,7 +215,6 @@ public class FlowFieldPApplet extends PApplet {
         if (alpha > MIN_ALPHA && millis() > decreaseCheckPoint){
             alpha -= 1;
             decreaseCheckPoint += MILLISECONDS_PER_ALPHA_DECREASE;
-            Timber.i("Decreased alpha");
         }
     }
 

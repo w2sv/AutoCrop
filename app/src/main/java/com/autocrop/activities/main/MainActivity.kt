@@ -32,11 +32,8 @@ class MainActivity :
             finishAffinity()
     }
 
-    /**
-     * Write preferences to disk in case of any changes having been made
-     */
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
 
         with(lazy { getApplicationWideSharedPreferences() }){
             userPreferencesInstances.forEach {

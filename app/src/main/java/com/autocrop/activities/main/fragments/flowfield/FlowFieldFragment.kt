@@ -10,6 +10,7 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.color
+import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
@@ -25,18 +26,26 @@ class FlowFieldFragment:
     ActivityRootFragment {
 
     private val permissionsHandler = PermissionsHandler(this)
-    private lateinit var flowFieldHandler: FlowFieldHandler
+    private lateinit var flowFieldBinding: FlowFieldBinding
+
+    private lateinit var viewModel: FlowFieldFragmentViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProvider(this)[FlowFieldFragmentViewModel::class.java]
+
         // initialize FlowFieldHandler and thus FlowField
-        flowFieldHandler = FlowFieldHandler(requireActivity(), binding.canvasContainer)
+        flowFieldBinding = FlowFieldBinding(
+            requireActivity(),
+            binding.canvasContainer,
+            viewModel
+        )
 
         // set button onClickListeners
         setImageSelectionButtonOnClickListener()
-        binding.menuButton.setOnClickListener { popupMenu.show() }
-        flowFieldHandler.setFlowFieldCaptureButton(binding.flowfieldCaptureButton, permissionsHandler)
+        setMenuInflationButtonOnClickListener()
+        flowFieldBinding.setCaptureButton(binding.flowfieldCaptureButton, permissionsHandler)
 
         // display CropIOResultSnackbar
         if (savedInstanceState == null)
@@ -69,6 +78,10 @@ class FlowFieldFragment:
     //$$$$$$$$$$$$$$$
     // Menu-related $
     //$$$$$$$$$$$$$$$
+
+    private fun setMenuInflationButtonOnClickListener() {
+        binding.menuButton.setOnClickListener { popupMenu.show() }
+    }
 
     private val popupMenu: FlowFieldFragmentMenu by lazy {
         FlowFieldFragmentMenu(
@@ -168,16 +181,9 @@ class FlowFieldFragment:
         IMAGE_SELECTION
     }
 
-    //$$$$$$$$$$$$$$$$$
-    // After Creation $
-    //$$$$$$$$$$$$$$$$$
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
 
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-
-        if (hidden)
-            flowFieldHandler.flowfield.pause()
-        else
-            flowFieldHandler.flowfield.resume()
+        flowFieldBinding.bindSketchToViewModel(viewModel)
     }
 }

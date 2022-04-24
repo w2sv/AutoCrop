@@ -17,11 +17,11 @@ fun Activity.displaySnackbar(text: String, @DrawableRes icon: Int? = null, @Colo
         .setText(text)
         .styleAndShow(this, icon, textColorRes)
 
-fun Activity.displaySnackbar(text: SpannableStringBuilder, @DrawableRes icon: Int? = null, @ColorRes textColorRes: Int? = null) =
+fun Activity.displaySnackbar(text: SpannableStringBuilder, @DrawableRes icon: Int? = null) =
     Snacky
         .builder()
         .setText(text)
-        .styleAndShow(this, icon, textColorRes)
+        .styleAndShow(this, icon)
 
 private fun Snacky.Builder.styleAndShow(activity: Activity, @DrawableRes icon: Int? = null, @ColorRes textColorRes: Int? = null) =
     centerText()
