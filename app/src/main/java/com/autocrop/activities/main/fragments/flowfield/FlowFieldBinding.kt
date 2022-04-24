@@ -25,12 +25,17 @@ class FlowFieldBinding(activity: FragmentActivity,
         val (w, h) = screenResolution(activity.windowManager).run {x to y}
 
         sketch = flowFieldFragmentViewModel.flowFieldSketch?.apply {
-            with(canvas){
-                loadPixels()
+            background(0)
+            setSize(w, h)
+
+            with(g){
+//                loadPixels()
                 resize(w, h)
-                updatePixels()
+//                setSize(w, h)
+//                updatePixels()
                 Timber.i("screenDims: $w $h | canvasDims: $width $height")
             }
+
         } ?: FlowFieldSketch(w, h)
 
         flowFieldFragmentViewModel.flowFieldSketch = null
@@ -53,7 +58,7 @@ class FlowFieldBinding(activity: FragmentActivity,
      */
     private fun captureFlowField() =
         with(pFragment.requireActivity()){
-            contentResolver.saveBitmap(sketch.canvas.bitmap(), "FlowField_${formattedDateTimeString()}.jpg")
+            contentResolver.saveBitmap(sketch.g.bitmap(), "FlowField_${formattedDateTimeString()}.jpg")
 
             displaySnackbar(
                 SpannableStringBuilder()
