@@ -19,7 +19,7 @@
         android:layout_gravity="start"
         android:background="@android:color/transparent"
         android:text="@string/discard_all_button"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/magenta"
         android:translationX="-10dp" />
 
         <!-- Save All -->
@@ -31,22 +31,7 @@
         android:layout_gravity="start"
         android:background="@android:color/transparent"
         android:text="@string/save_all_button"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/magenta"
         android:translationX="-10dp"/>
-
-    <!-- Page Indication Text View -->
-
-    <com.autocrop.activities.examination.fragments.viewpager.PageIndicationTextView
-        android:id="@+id/page_indication"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_gravity="end"
-        android:translationX="-14dp"
-
-        android:text="@string/fracture"
-        android:textColor="@color/leef_green"
-        android:textSize="15sp"
-        android:textStyle="italic"/>
 
 </com.autocrop.activities.examination.fragments.viewpager.ExaminationToolBar>

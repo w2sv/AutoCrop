@@ -54,7 +54,9 @@ class ViewPagerHandler(
 
         // display pageIndicationSeekBar if applicable
         if (viewModel.dataSet.size > 1)
-            examinationActivity.runOnUiThread { binding.pageIndicationSeekBar.show() }
+            examinationActivity.runOnUiThread {
+                binding.pageIndicationElements.show()
+            }
 
         // run Scroller and display respective text view if applicable;
         // otherwise display discardedTextView and set page transformer
@@ -62,7 +64,7 @@ class ViewPagerHandler(
             scroller.run(binding.viewPager, viewModel.dataSet.size - dataSetPosition)
         else{
             examinationActivity.runOnUiThread {
-                binding.discardedTextView.show()
+                binding.discardingStatisticsTv.show()
                 binding.toolbar.toolbar.show()
             }
             binding.viewPager.setPageTransformer()
@@ -71,10 +73,10 @@ class ViewPagerHandler(
 
     private fun ActivityExaminationFragmentViewpagerBinding.updatePageDependentViews(dataSetPosition: Index, onRightScroll: Boolean = false) =
         examinationActivity.runOnUiThread{
-            discardedTextView.updateText(dataSetPosition)
+            discardingStatisticsTv.updateText(dataSetPosition)
 
             viewModel.dataSet.pageIndex(dataSetPosition).let{ pageIndex ->
-                toolbar.pageIndication.updateText(pageIndex)
+                pageIndicationTv.updateText(pageIndex)
                 pageIndicationSeekBar.update(pageIndex, onRightScroll)
             }
         }
@@ -161,7 +163,7 @@ class ViewPagerHandler(
             viewModel.autoScroll = false
 
             examinationActivity.runOnUiThread {
-                crossFade(binding.discardedTextView, binding.autoScrollingTextView, 900L)
+                crossFade(binding.discardingStatisticsTv, binding.autoScrollingTextView, 900L)
                 binding.toolbar.toolbar.dropDownAnimation()
             }
 
@@ -257,7 +259,7 @@ class ViewPagerHandler(
                     } ?: examinationActivity.invokeSubsequentFragment()
                     return
                 }
-                2 -> examinationActivity.runOnUiThread { binding.pageIndicationSeekBar.hideAnimated() }
+                2 -> examinationActivity.runOnUiThread { binding.pageIndicationElements.shrinkHidingAnimation() }
                 else -> Unit
             }
             removeView(dataSetPosition)

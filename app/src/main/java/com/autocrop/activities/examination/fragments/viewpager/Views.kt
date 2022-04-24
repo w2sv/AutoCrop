@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils
 import android.view.animation.AnticipateInterpolator
 import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
+import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.appcompat.widget.Toolbar
 import androidx.core.text.bold
@@ -30,6 +31,23 @@ class ExaminationToolBar(context: Context, attr: AttributeSet)
         show()
 
         startAnimation(AnimationUtils.loadAnimation(context, R.anim.animate_slide_down_enter))
+    }
+}
+
+class PageIndicationElements(context: Context, attr: AttributeSet)
+    : RelativeLayout(context, attr){
+
+    fun shrinkHidingAnimation(){
+        animate()
+            .scaleX(0f)
+            .scaleY(0f)
+            .setInterpolator(AnticipateInterpolator())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    remove()
+                }
+            })
+            .duration = 700L
     }
 }
 
@@ -57,19 +75,6 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
             duration = _duration
             start()
         }
-    }
-
-    fun hideAnimated(){
-        animate()
-            .scaleX(0f)
-            .scaleY(0f)
-            .setInterpolator(AnticipateInterpolator())
-            .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    remove()
-                }
-            })
-            .duration = 700L
     }
 }
 
