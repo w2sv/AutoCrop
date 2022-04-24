@@ -46,7 +46,7 @@
 
         <activity
             android:name="com.autocrop.activities.main.MainActivity"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="unspecified"
             android:exported="true">
 
             <intent-filter>
@@ -58,12 +58,12 @@
         <activity
             android:name="com.autocrop.activities.cropping.CroppingActivity"
             android:theme="@style/Theme.App.Main"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="unspecified" />
 
         <activity
             android:name="com.autocrop.activities.examination.ExaminationActivity"
             android:theme="@style/Theme.App.Main"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="unspecified" />
     </application>
 
 </manifest>

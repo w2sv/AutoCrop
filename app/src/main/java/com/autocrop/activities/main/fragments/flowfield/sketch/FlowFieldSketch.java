@@ -13,15 +13,13 @@ import processing.core.PGraphics;
 
 public class FlowFieldSketch extends PApplet {
 
-//    final public PGraphics canvas;
+    final public PGraphics canvas;
 
     public FlowFieldSketch(int width, int height) {
         this.width = width;
         this.height = height;
 
-        getGraphics();
-
-        g = createGraphics(width, height);
+        canvas = createGraphics(width, height);
     }
 
     public void settings() {
@@ -32,8 +30,6 @@ public class FlowFieldSketch extends PApplet {
     private ArrayList<Particle> particles;
 
     public void setup() {
-        background(0);
-
         // initialize flowfield
         flowfield = new FlowField(width, height);
         flowfield.update();
@@ -53,22 +49,22 @@ public class FlowFieldSketch extends PApplet {
     private final PixelFader pixelFader = new PixelFader(3);
 
     public void draw(){
-//        background(0);
+        background(0);
         changeColorIfApplicable();
 
-        g.beginDraw();
+        canvas.beginDraw();
 
-        pixelFader.fadePixelsIfApplicable(frameCount, g);
+        pixelFader.fadePixelsIfApplicable(frameCount, canvas);
         flowfield.update();
 
         for (Particle p : particles) {
             flowfield.affect(p);
             p.update();
-            p.show(g, alpha.value);
+            p.show(canvas, alpha.value);
         }
 
-        g.endDraw();
-//        image(g, 0, 0);
+        canvas.endDraw();
+        image(canvas, 0, 0);
 
         alpha.decreaseIfApplicable(millis());
     }
