@@ -35,7 +35,7 @@ jobs:
     name: Build and run instrumentation tests on various devices
     runs-on: macos-latest  # allows for hardware acceleration through HAXM
     strategy:
-      fail-fast: false  # continue if one strategy fails
+      fail-fast: true  # continue if one strategy fails
 
       # paired value syntax: @https://stackoverflow.com/a/68940067/12083276
       # @https://docs.github.com/en/actions/using-jobs/using-a-build-matrix-for-your-jobs
