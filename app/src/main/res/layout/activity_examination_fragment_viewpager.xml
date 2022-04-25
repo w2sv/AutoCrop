@@ -25,7 +25,7 @@
             android:background="@android:color/transparent"
             android:text="@string/discard_all_button"
             android:textStyle="bold"
-            android:textColor="@color/dark_green"
+            android:textColor="@color/light_gray"
             android:translationX="-10dp" />
 
         <!-- Save All -->
@@ -38,7 +38,7 @@
             android:background="@android:color/transparent"
             android:text="@string/save_all_button"
             android:textStyle="bold"
-            android:textColor="@color/dark_green"
+            android:textColor="@color/light_gray"
             android:translationX="-10dp"/>
 
     </androidx.appcompat.widget.Toolbar>
@@ -133,6 +133,7 @@
         android:layout_marginHorizontal="30dp"
 
         android:textSize="13sp"
+        android:textColor="@color/light_gray"
 
         android:visibility="invisible"/>
 

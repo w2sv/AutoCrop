@@ -2,7 +2,7 @@
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:drawable="@drawable/gradient_about_screen_background"/>
+        android:drawable="@drawable/gradient_background_main"/>
 
     <item
         android:drawable="@drawable/trippy_brudineletten"

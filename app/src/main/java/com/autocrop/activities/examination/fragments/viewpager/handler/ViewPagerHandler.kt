@@ -111,7 +111,7 @@ class ViewPagerHandler(
 
         @SuppressLint("ClickableViewAccessibility")
         private inner class CropViewHolder(view: ImageView) : RecyclerView.ViewHolder(view) {
-            val cropView: ImageView = view.findViewById(R.id.slide_item_image_view_examination_activity)
+            val cropView: ImageView = view.findViewById(R.id.image_view_examination_view_pager)
 
             /**
              * Set onTouchListener through implementation of ImmersiveViewOnTouchListener
@@ -159,7 +159,7 @@ class ViewPagerHandler(
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CropViewHolder {
             return CropViewHolder(
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.slide_item_container_examination_activity, parent, false)
+                    .inflate(R.layout.activity_examination_view_pager_image_view, parent, false)
                         as ImageView
             )
         }

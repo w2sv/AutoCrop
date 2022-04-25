@@ -32,7 +32,7 @@
         <item name="android:textSize">42sp</item>
         <item name="android:text">@string/app_title</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/magenta</item>
+        <item name="android:textColor">@color/saturated_magenta</item>
     </style>
 
 </resources>

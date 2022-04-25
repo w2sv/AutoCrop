@@ -4,7 +4,9 @@
 
     <color name="light_green">#008577</color>
     <color name="dark_green">#00574B</color>
-    <color name="leef_green">#0ca63c</color>
+    <color name="leaf_green">#0ca63c</color>
+
+    <color name="ocean_blue">#1a0ac7</color>
 
     <color name="brudi_pink">#FF3F7F</color>
     <color name="saturated_magenta">#911945</color>

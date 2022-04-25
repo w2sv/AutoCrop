@@ -23,19 +23,34 @@ class AboutFragment: MainActivityFragment<ActivityMainFragmentAboutBinding>(){
         binding.trippyBrudinelettenImageView.setOnClickListener { it.animate(Techniques.Tada) }
 
         binding.w2svTv.setOnClickListener {
-            val viewIntent = Intent(
+            // WHOOPSIE DAISY! - view simply disappears after ZoomOutRight
+            // and has to be thus ZoomInRight'd back in
+            it.animate(Techniques.ZoomOutRight){
+                it.animate(Techniques.ZoomInRight)
+            }
+
+            startActivity(
+                Intent(
                 "android.intent.action.VIEW",
                 Uri.parse("http://github.com/w2sv")
+                )
             )
-            startActivity(viewIntent)
         }
     }
 }
 
-class VersionTextView(context: Context, attr: AttributeSet): ExtendedTextView(context, attr, R.string.version){
-    init { text = getString().format(BuildConfig.VERSION_NAME) }
+class VersionTextView(context: Context, attr: AttributeSet):
+    ExtendedTextView(context, attr, R.string.version){
+
+    init {
+        text = getString().format(BuildConfig.VERSION_NAME)
+
+        setOnClickListener { it.animate(Techniques.RubberBand) }
+    }
 }
 
-class CopyrightTextView(context: Context, attr: AttributeSet): ExtendedTextView(context, attr, R.string.copyright){
+class CopyrightTextView(context: Context, attr: AttributeSet):
+    ExtendedTextView(context, attr, R.string.copyright){
+
     init { text = getString().format(Calendar.getInstance().get(Calendar.YEAR)) }
 }

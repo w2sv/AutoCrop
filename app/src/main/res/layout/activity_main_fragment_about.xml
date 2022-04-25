@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    android:background="@drawable/gradient_about_screen_background">
+    android:background="@drawable/gradient_background_main">
 
     <TextView
         android:id="@+id/app_title_text_view"
@@ -55,7 +55,7 @@
 
         android:text="@string/w2sv"
         android:textSize="32sp"
-        android:textColor="@color/light_green"
+        android:textColor="@android:color/holo_purple"
         android:textStyle="italic">
 
     </TextView>
