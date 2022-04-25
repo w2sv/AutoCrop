@@ -8,6 +8,8 @@ import androidx.core.text.color
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.IntentIdentifier
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
+import com.autocrop.activities.examination.fragments.viewpager.dialogs.DiscardAllConfirmationDialog
+import com.autocrop.activities.examination.fragments.viewpager.dialogs.SaveAllConfirmationDialog
 import com.autocrop.uicontroller.fragment.ActivityRootFragment
 import com.autocrop.utils.android.IntentExtraRetriever
 import com.autocrop.utils.android.displaySnackbar
@@ -68,12 +70,12 @@ class ViewPagerFragment:
      */
     private fun setToolbarButtonOnClickListeners() {
         arrayOf(
-             Triple(binding.saveAllButton, SaveAllConfirmationDialogFragment()) {
+             Triple(binding.saveAllButton, SaveAllConfirmationDialog()) {
                  with(typedActivity) {
                      replaceCurrentFragmentWith(saveAllFragment, true)
                  }
              },
-            Triple(binding.discardAllButton, DiscardAllConfirmationDialogFragment()) {
+            Triple(binding.discardAllButton, DiscardAllConfirmationDialog()) {
                 with(typedActivity) {
                     replaceCurrentFragmentWith(appTitleFragment, false)
                 }

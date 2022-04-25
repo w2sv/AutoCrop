@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.ExaminationActivity
+import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCropProcedureDialog
 import com.autocrop.uielements.CubeOutPageTransformer
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show
@@ -180,7 +181,7 @@ class ViewPagerHandler(
 
     private inner class CropPagerAdapter: RecyclerView.Adapter<CropPagerAdapter.CropViewHolder>() {
 
-        val cropProcedureDialog = CropProcedureDialog()
+        val cropProcedureDialog = SingleCropProcedureDialog()
 
         @SuppressLint("ClickableViewAccessibility")
         private inner class CropViewHolder(view: ImageView) : RecyclerView.ViewHolder(view) {
@@ -204,8 +205,10 @@ class ViewPagerHandler(
                                 super.onTouch(v, event)
 
                         init {
-                            examinationActivity.supportFragmentManager.setFragmentResultListener(CropProcedureDialog.PROCEDURE_SELECTED, examinationActivity){
-                                    _, bundle -> onCropProcedureSelected(bundle.getInt(CropProcedureDialog.DATA_SET_POSITION_OUT))
+                            examinationActivity.supportFragmentManager.setFragmentResultListener(
+                                SingleCropProcedureDialog.PROCEDURE_SELECTED, examinationActivity){
+                                    _, bundle -> onCropProcedureSelected(bundle.getInt(
+                                SingleCropProcedureDialog.DATA_SET_POSITION_OUT))
                             }
                         }
 
@@ -213,7 +216,7 @@ class ViewPagerHandler(
                          * Invoke CropProcedureDialog
                          */
                         override fun onClick() = with(cropProcedureDialog) {
-                            arguments = bundleOf(CropProcedureDialog.DATA_SET_POSITION_IN to viewModel.dataSet.correspondingPosition(adapterPosition))
+                            arguments = bundleOf(SingleCropProcedureDialog.DATA_SET_POSITION_IN to viewModel.dataSet.correspondingPosition(adapterPosition))
                             show(examinationActivity.supportFragmentManager)
                         }
                     }

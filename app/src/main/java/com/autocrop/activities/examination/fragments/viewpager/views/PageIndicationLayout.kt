@@ -1,28 +1,21 @@
-package com.autocrop.activities.examination.fragments.viewpager
+package com.autocrop.activities.examination.fragments.viewpager.views
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import android.view.animation.AnticipateInterpolator
 import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatSeekBar
-import androidx.core.text.bold
-import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.uielements.view.*
+import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragmentViewModel
+import com.autocrop.uielements.view.ViewModelRetriever
+import com.autocrop.uielements.view.remove
 import com.w2sv.autocrop.R
 
-private class ViewPagerViewModelRetriever(context: Context):
-    ViewModelRetrievingView<ViewPagerFragmentViewModel, ExaminationActivity>(
-        context,
-        ViewPagerFragmentViewModel::class.java
-    )
-
-class PageIndicationElements(context: Context, attr: AttributeSet)
+class PageIndicationLayout(context: Context, attr: AttributeSet)
     : RelativeLayout(context, attr){
 
     fun shrinkAndRemove(){
@@ -68,27 +61,8 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
     }
 }
 
-abstract class PageDependentTextView(context: Context, attr: AttributeSet, stringId: Int):
-    ExtendedTextView(context, attr, stringId),
-    ViewModelRetriever<ViewPagerFragmentViewModel> by ViewPagerViewModelRetriever(context) {
-
-    abstract fun updateText(position: Int)
-}
-
-class DiscardedTextView(context: Context, attr: AttributeSet):
-    PageDependentTextView(context, attr, R.string.discarded) {
-
-    override fun updateText(position: Int) {
-        with(viewModel.dataSet[position]) {
-            text = SpannableStringBuilder()
-                .append(getString())
-                .bold { append(" ${discardedPercentage}%") }
-                .append("=")
-                .bold { append("${approximateDiscardedFileSize}kb") }
-        }
-    }
-}
-
 class PageIndicationTextView(context: Context, attr: AttributeSet): PageDependentTextView(context, attr, R.string.fracture) {
-    override fun updateText(position: Int){ text = getString().format(position + 1, viewModel.dataSet.size) }
+    override fun updateText(position: Int){
+        text = getString().format(position + 1, viewModel.dataSet.size)
+    }
 }

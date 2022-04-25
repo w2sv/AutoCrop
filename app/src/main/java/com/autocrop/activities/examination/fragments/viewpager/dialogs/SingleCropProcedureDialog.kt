@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager
+package com.autocrop.activities.examination.fragments.viewpager.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -17,7 +17,7 @@ import kotlinx.coroutines.Job
  * Class accounting for procedure dialog display upon screen click,
  * defining respective procedure effects
  */
-class CropProcedureDialog
+class SingleCropProcedureDialog
         : ExtendedDialogFragment() {
 
     companion object{

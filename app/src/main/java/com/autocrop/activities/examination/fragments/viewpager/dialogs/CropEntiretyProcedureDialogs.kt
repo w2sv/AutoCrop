@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager
+package com.autocrop.activities.examination.fragments.viewpager.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.uielements.ExtendedDialogFragment
 
-abstract class AllCropsRegardingDialogFragment
+abstract class CropEntiretyProcedureDialog
     : ExtendedDialogFragment(){
 
     val resultKey: String = "${this::class.java.name}_CONFIRMED"
@@ -17,8 +17,8 @@ abstract class AllCropsRegardingDialogFragment
             .setFragmentResult(resultKey, Bundle.EMPTY)
 }
 
-class SaveAllConfirmationDialogFragment
-    : AllCropsRegardingDialogFragment(){
+class SaveAllConfirmationDialog
+    : CropEntiretyProcedureDialog(){
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(requireContext())
@@ -37,8 +37,8 @@ class SaveAllConfirmationDialogFragment
             .create()
 }
 
-class DiscardAllConfirmationDialogFragment
-    : AllCropsRegardingDialogFragment(){
+class DiscardAllConfirmationDialog
+    : CropEntiretyProcedureDialog(){
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(requireContext())

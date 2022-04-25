@@ -53,7 +53,7 @@
         android:layout_height="match_parent"
         android:background="@android:color/black" />
 
-    <com.autocrop.activities.examination.fragments.viewpager.PageIndicationElements
+    <com.autocrop.activities.examination.fragments.viewpager.views.PageIndicationLayout
         android:layout_width="145dp"
         android:layout_height="wrap_content"
 
@@ -67,7 +67,7 @@
         android:visibility="invisible">
 
         <!-- https://en.proft.me/2018/02/5/decorating-seekbar-android/ -->
-        <com.autocrop.activities.examination.fragments.viewpager.PageIndicationSeekBar
+        <com.autocrop.activities.examination.fragments.viewpager.views.PageIndicationSeekBar
             android:id="@+id/page_indication_seek_bar"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
@@ -84,11 +84,11 @@
             android:progressTint="@android:color/transparent"
 
             android:max="100">
-        </com.autocrop.activities.examination.fragments.viewpager.PageIndicationSeekBar>
+        </com.autocrop.activities.examination.fragments.viewpager.views.PageIndicationSeekBar>
 
         <!-- Page Indication Text View -->
 
-        <com.autocrop.activities.examination.fragments.viewpager.PageIndicationTextView
+        <com.autocrop.activities.examination.fragments.viewpager.views.PageIndicationTextView
             android:id="@+id/page_indication_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -101,9 +101,9 @@
             android:textSize="15sp"
             android:textStyle="italic" />
 
-    </com.autocrop.activities.examination.fragments.viewpager.PageIndicationElements>
+    </com.autocrop.activities.examination.fragments.viewpager.views.PageIndicationLayout>
 
-    <com.autocrop.activities.examination.fragments.viewpager.DiscardedTextView
+    <com.autocrop.activities.examination.fragments.viewpager.views.DiscardedTextView
         android:id="@+id/discarding_statistics_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -115,9 +115,7 @@
 
         android:visibility="invisible"
 
-        tools:ignore="RelativeOverlap">
-
-    </com.autocrop.activities.examination.fragments.viewpager.DiscardedTextView>
+        tools:ignore="RelativeOverlap"/>
 
     <TextView
         android:id="@+id/auto_scrolling_text_view"
