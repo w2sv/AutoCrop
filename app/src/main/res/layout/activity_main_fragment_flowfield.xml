@@ -50,7 +50,7 @@
 
     <!-- Crop Sharing -->
 
-    <ImageButton
+    <com.autocrop.activities.main.fragments.flowfield.CropSharingButton
         android:id="@+id/crop_sharing_button"
         android:layout_width="35dp"
         android:layout_height="35dp"

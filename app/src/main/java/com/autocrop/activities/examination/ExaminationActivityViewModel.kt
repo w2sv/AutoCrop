@@ -22,7 +22,7 @@ class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?)
         get() = _nDeletedScreenshots
     private var _nDeletedScreenshots = 0
 
-    val cropWriteUris = mutableListOf<Uri>()
+    val cropSavingUris = mutableListOf<Uri>()
 
     fun processCropBundle(cropBundlesPosition: Int, deleteScreenshot: Boolean, context: Context){
         val (savingResult, deletionResult) = context.processCropBundle(
@@ -32,7 +32,7 @@ class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?)
         )
         with(savingResult){
             if (first)
-                cropWriteUris.add(second)
+                cropSavingUris.add(second)
         }
         deletionResult?.second?.let {
             deletionQueryScreenshotUris.add(it)

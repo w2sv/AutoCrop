@@ -15,7 +15,6 @@ import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.fragment.ActivityRootFragment
-import com.autocrop.uielements.view.show
 import com.autocrop.utils.android.*
 import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
@@ -42,35 +41,17 @@ class FlowFieldFragment:
         setMenuInflationButtonOnClickListener()
         flowFieldBinding.setCaptureButton(binding.flowfieldCaptureButton, permissionsHandler)
 
-        requireActivity().intent.extras?.getParcelableArrayList<Uri>(IntentExtraIdentifier.CROP_WRITE_URIS)?.let {
-            setCropSharingButton(it)
-        }
-
-        // display CropIOResultSnackbar
+        // display CropIOResultSnackbar upon activity entry
         if (savedInstanceState == null)
             displayActivityEntrySnackbar()
-    }
-
-    private fun setCropSharingButton(cropWriteUris: ArrayList<Uri>){
-        with(binding.cropSharingButton){
-            show()
-            setOnClickListener {
-                startActivity(
-                    Intent.createChooser(Intent().apply {
-                        action = Intent.ACTION_SEND_MULTIPLE
-                        putParcelableArrayListExtra(Intent.EXTRA_STREAM, cropWriteUris)
-                        type = MimeTypes.IMAGE
-                    },
-                    "Share crops"
-                    )
-                )
-            }
-        }
     }
 
     private val nSavedCropsRetriever = IntentExtraRetriever<IntArray>(IntentExtraIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)
     private val cropWriteDirPathRetriever = IntentExtraRetriever<String>(IntentExtraIdentifier.CROP_WRITE_DIR_PATH)
 
+    /**
+     * Notifies as to IO results from previous ExaminationActivity cycle
+     */
     override fun displayActivityEntrySnackbar(){
         nSavedCropsRetriever(requireActivity().intent)?.let {
             val (nSavedCrops, nDeletedScreenshots) = it[0] to it[1]
@@ -95,9 +76,8 @@ class FlowFieldFragment:
     // Menu-related $
     //$$$$$$$$$$$$$$$
 
-    private fun setMenuInflationButtonOnClickListener() {
+    private fun setMenuInflationButtonOnClickListener() =
         binding.menuButton.setOnClickListener { popupMenu.show() }
-    }
 
     private val popupMenu: FlowFieldFragmentMenu by lazy {
         FlowFieldFragmentMenu(

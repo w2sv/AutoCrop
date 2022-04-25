@@ -106,10 +106,10 @@ class ExaminationActivity :
                             IntentExtraIdentifier.CROP_WRITE_DIR_PATH,
                             sharedViewModel.cropWriteDirIdentifier()
                         )
-                    if (sharedViewModel.cropWriteUris.isNotEmpty())
+                    if (sharedViewModel.cropSavingUris.isNotEmpty())
                         putParcelableArrayListExtra(
-                            IntentExtraIdentifier.CROP_WRITE_URIS,
-                            ArrayList(sharedViewModel.cropWriteUris)
+                            IntentExtraIdentifier.CROP_SAVING_URIS,
+                            ArrayList(sharedViewModel.cropSavingUris)
                         )
                 }
         )
