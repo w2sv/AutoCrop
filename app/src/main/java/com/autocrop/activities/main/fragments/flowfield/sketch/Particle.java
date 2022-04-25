@@ -1,38 +1,38 @@
 package com.autocrop.activities.main.fragments.flowfield.sketch;
 
+import com.autocrop.utils.RandomUtils;
+
+import java.util.ArrayList;
+
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
 class Particle extends PApplet {
-    private static int color;
-
     private static int[] COLORS;
 
     public static void initializeColors(PApplet applet){
         final int MAGENTA = applet.color(199, 32, 65);
         final int LIGHT_MAGENTA = applet.color(199, 10, 89);
         final int DARK_RED = applet.color(153, 15, 36);
+        final int BLUE = applet.color(26, 10, 199);
 
-        COLORS = new int[]{MAGENTA, LIGHT_MAGENTA, DARK_RED};
+        COLORS = new int[]{MAGENTA, LIGHT_MAGENTA, DARK_RED, BLUE};
     }
 
-    /**
-     * in seconds
-     */
+    private static int colorIndex;
+
+    static public void setRandomNewColor(){
+        ArrayList<Integer> unusedColorIndices = new ArrayList<>();
+        for (int i = 0; i < COLORS.length; i++){
+            if (i != colorIndex)
+                unusedColorIndices.add(i);
+        }
+
+        colorIndex = RandomUtils.randomElement(unusedColorIndices);
+    }
+
     public static final int COLOR_CHANGE_FREQUENCY = 5;
-
-    static public void setRandomColor(PApplet applet){
-        color = COLORS[floor(applet.random(0, COLORS.length))];
-    }
-
-    private static final float PARTICLE_START_VELOCITY_LOWER_BOUND = 5;
-    private static final float PARTICLE_START_VELOCITY_UPPER_BOUND = 7;
-
-    private static final float PARTICLE_VELOCITY_MAX_LOWER_BOUND = 12;
-    private static final float PARTICLE_VELOCITY_MAX_UPPER_BOUND = 18;
-
-    private static final float PARTICLE_STROKE_WEIGHT = 2;
 
     PVector pos;
     PVector acc;
@@ -47,17 +47,16 @@ class Particle extends PApplet {
         this.width = width;
         this.height = height;
 
-        maxSpeed = random(PARTICLE_VELOCITY_MAX_LOWER_BOUND, PARTICLE_VELOCITY_MAX_UPPER_BOUND);
+        vel = new PVector(startVelocity(), startVelocity());
+        acc = new PVector(0, 0);
+        maxSpeed = random(9, 12);
 
         pos = new PVector(random(width), random(height));
         previousPos = pos.copy();
-
-        vel = new PVector(randomVelocity(), randomVelocity());
-        acc = new PVector(0, 0);
     }
 
-    private float randomVelocity() {
-        return random(PARTICLE_START_VELOCITY_LOWER_BOUND, PARTICLE_START_VELOCITY_UPPER_BOUND);
+    private float startVelocity() {
+        return random(3, 5);
     }
 
     public void update() {
@@ -93,8 +92,8 @@ class Particle extends PApplet {
     }
 
     public void show(PGraphics canvas, int alpha) {
-        canvas.stroke(color, alpha);
-        canvas.strokeWeight(PARTICLE_STROKE_WEIGHT);
+        canvas.stroke(COLORS[colorIndex], alpha);
+        canvas.strokeWeight(2);
         canvas.line(pos.x, pos.y, previousPos.x, previousPos.y);
         canvas.point(pos.x, pos.y);  // ?
         updatePreviousPos();
