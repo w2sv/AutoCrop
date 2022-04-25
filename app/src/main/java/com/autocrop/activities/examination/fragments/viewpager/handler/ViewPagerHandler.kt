@@ -1,8 +1,6 @@
-package com.autocrop.activities.examination.fragments.viewpager
+package com.autocrop.activities.examination.fragments.viewpager.handler
 
 import android.annotation.SuppressLint
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -10,9 +8,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.ExaminationActivity
+import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragmentViewModel
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCropProcedureDialog
 import com.autocrop.uielements.CubeOutPageTransformer
 import com.autocrop.uielements.view.crossFade
@@ -21,7 +19,6 @@ import com.autocrop.utils.Index
 import com.autocrop.utils.android.*
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
-import java.util.*
 
 class ViewPagerHandler(
     private val binding: ActivityExaminationFragmentViewpagerBinding,
@@ -29,46 +26,69 @@ class ViewPagerHandler(
     private val examinationActivity: ExaminationActivity,
     previousPosition: Int?){
 
-    private val scroller: Scroller = Scroller()
-    private val pageChangeHandler = PageChangeHandler()
+    private val pageChangeHandler = PageChangeHandler(viewModel.startPosition) { position, onRightScroll ->
+        binding.updatePageDependentViews(viewModel.dataSet.correspondingPosition(position), onRightScroll)
+    }
+    private val scroller: Scroller = Scroller { onScreenTouch ->
+        viewModel.autoScroll = false
 
-    init {
-        // ----------init viewPager
-        binding.viewPager.apply {
-
-            // set adapter + first view
-            adapter = CropPagerAdapter()
-
-            setCurrentItem(
-                previousPosition ?: viewModel.startPosition,
-                false
+        examinationActivity.runOnUiThread {
+            crossFade(
+                examinationActivity.resources.getInteger(R.integer.visibility_changing_animation_duration).toLong(),
+                binding.autoScrollingTextView,
+                binding.discardingStatisticsTv, binding.toolbar
             )
-
-            // register onPageChangeCallbacks
-            registerOnPageChangeCallback(pageChangeHandler)
         }
 
-        // -----------init other UI elements
+        if (onScreenTouch){
+            binding.viewPager.setPageTransformer()
+            examinationActivity.displaySnackbar(
+                "Cancelled auto scrolling",
+                R.drawable.ic_outline_cancel_24
+            )
+        }
+        else
+            pageChangeHandler.onNextScrollCompletion = { binding.viewPager.setPageTransformer() }
+    }
 
-        val dataSetPosition = viewModel.dataSet.correspondingPosition(binding.viewPager.currentItem)
-        binding.updatePageDependentViews(dataSetPosition)
+    init {
+        binding.viewPager.initialize(previousPosition)
+        binding.initializeViews()
+    }
+
+    private fun ViewPager2.initialize(previousPosition: Int?){
+        // set adapter + first view
+        adapter = CropPagerAdapter()
+
+        setCurrentItem(
+            previousPosition ?: viewModel.startPosition,
+            false
+        )
+
+        // register onPageChangeCallbacks
+        registerOnPageChangeCallback(pageChangeHandler)
+    }
+
+    private fun ActivityExaminationFragmentViewpagerBinding.initializeViews(){
+        val dataSetPosition = viewModel.dataSet.correspondingPosition(viewPager.currentItem)
+        updatePageDependentViews(dataSetPosition)
 
         // display pageIndicationElements if applicable
         if (viewModel.dataSet.size > 1)
             examinationActivity.runOnUiThread {
-                binding.pageIndicationElements.show()
+                pageIndicationElements.show()
             }
 
         // run Scroller and display respective text view if applicable;
         // otherwise display discardedTextView and set page transformer
         if (viewModel.autoScroll)
-            scroller.run(binding.viewPager, viewModel.dataSet.size - dataSetPosition)
+            scroller.run(viewPager, viewModel.dataSet.size - dataSetPosition, autoScrollingTextView)
         else{
             examinationActivity.runOnUiThread {
-                binding.discardingStatisticsTv.show()
-                binding.toolbar.show()
+                discardingStatisticsTv.show()
+                toolbar.show()
             }
-            binding.viewPager.setPageTransformer()
+            viewPager.setPageTransformer()
         }
     }
 
@@ -82,102 +102,8 @@ class ViewPagerHandler(
             }
         }
 
-    private fun ViewPager2.setPageTransformer() = setPageTransformer(CubeOutPageTransformer())
-
-    private inner class PageChangeHandler: ViewPager2.OnPageChangeCallback(){
-        private var previousPosition = viewModel.startPosition
-        var updateViews = true
-
-        /**
-         * [updatePageDependentViews] if not blocked
-         */
-        override fun onPageSelected(position: Int) {
-            super.onPageSelected(position)
-
-            if (updateViews)
-                binding.updatePageDependentViews(viewModel.dataSet.correspondingPosition(position), position > previousPosition)
-            previousPosition = position
-        }
-
-        var setPageTransformerOnNextScrollCompletion = false
-        var removeView: (() -> Unit)? = null
-
-        /**
-         * [setPageTransformer] upon next scroll completion if applicable
-         */
-        override fun onPageScrollStateChanged(state: Int) {
-            super.onPageScrollStateChanged(state)
-
-            if (state == ViewPager.SCROLL_STATE_IDLE){
-                if (setPageTransformerOnNextScrollCompletion){
-                    binding.viewPager.setPageTransformer()
-                    setPageTransformerOnNextScrollCompletion = false
-                }
-                removeView?.let {
-                    it()
-                    removeView = null
-                }
-            }
-        }
-    }
-
-    /**
-     * Class accounting for automatic scrolling at the start of crop examination
-     */
-    inner class Scroller {
-        private lateinit var timer: Timer
-
-        fun run(viewPager2: ViewPager2, maxScrolls: Int) {
-            examinationActivity.runOnUiThread { binding.autoScrollingTextView.show() }
-
-            timer = Timer().apply {
-                schedule(
-                    object : TimerTask() {
-                        private var conductedScrolls: Int = 0
-
-                        override fun run() {
-                            Handler(Looper.getMainLooper()).post {
-                                with(viewPager2) {
-                                    setCurrentItem(currentItem + 1, true)
-                                }
-                                conductedScrolls++
-
-                                if (conductedScrolls == maxScrolls)
-                                    return@post cancel(false)
-                            }
-                        }
-                    },
-                    1000L,
-                    1000L
-                )
-            }
-        }
-
-        /**
-         * • Cancel [timer] and null it
-         * • cross fade views to be displayed during scrolling and after it respectively
-         * • [setPageTransformer]
-         * • [displaySnackbar] if [onScreenTouch]
-         */
-        fun cancel(onScreenTouch: Boolean) {
-            timer.cancel()
-            viewModel.autoScroll = false
-
-            examinationActivity.runOnUiThread {
-                crossFade(examinationActivity.resources.getInteger(R.integer.visibility_changing_animation_duration).toLong(), binding.autoScrollingTextView, binding.discardingStatisticsTv, binding.toolbar)
-            }
-
-            if (onScreenTouch){
-                binding.viewPager.setPageTransformer()
-                examinationActivity.displaySnackbar(
-                    "Cancelled auto scrolling",
-                    R.drawable.ic_outline_cancel_24
-                )
-            }
-            else
-                pageChangeHandler.setPageTransformerOnNextScrollCompletion = true
-        }
-    }
+    private fun ViewPager2.setPageTransformer() =
+        setPageTransformer(CubeOutPageTransformer())
 
     private inner class CropPagerAdapter: RecyclerView.Adapter<CropPagerAdapter.CropViewHolder>() {
 
@@ -198,9 +124,10 @@ class ViewPagerHandler(
                          * Cancel scroller upon touch if running
                          */
                         override fun onTouch(v: View?, event: MotionEvent?): Boolean =
-                            if (viewModel.autoScroll)
+                            if (viewModel.autoScroll) {
+                                scroller.cancel(true)
                                 false
-                                    .also { scroller.cancel(true) }
+                            }
                             else
                                 super.onTouch(v, event)
 
@@ -216,7 +143,9 @@ class ViewPagerHandler(
                          * Invoke CropProcedureDialog
                          */
                         override fun onClick() = with(cropProcedureDialog) {
-                            arguments = bundleOf(SingleCropProcedureDialog.DATA_SET_POSITION_IN to viewModel.dataSet.correspondingPosition(adapterPosition))
+                            arguments = bundleOf(
+                                SingleCropProcedureDialog.DATA_SET_POSITION_IN to viewModel.dataSet.correspondingPosition(adapterPosition)
+                            )
                             show(examinationActivity.supportFragmentManager)
                         }
                     }

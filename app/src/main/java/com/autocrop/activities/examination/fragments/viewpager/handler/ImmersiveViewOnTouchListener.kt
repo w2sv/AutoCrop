@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager
+package com.autocrop.activities.examination.fragments.viewpager.handler
 
 import android.annotation.SuppressLint
 import android.graphics.Point
@@ -6,7 +6,6 @@ import android.view.MotionEvent
 import android.view.View
 import com.autocrop.utils.android.manhattanNorm
 import com.autocrop.utils.logAfterwards
-import kotlin.math.abs
 
 /**
  * Enables distinction between pulling up navigation bar and clicks
