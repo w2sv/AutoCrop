@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
-import com.autocrop.activities.IntentIdentifier
+import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
@@ -95,7 +95,7 @@ class ExaminationActivity :
             )
                 .apply {
                     putExtra(
-                        IntentIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS,
+                        IntentExtraIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS,
                         intArrayOf(
                             sharedViewModel.nSavedCrops,
                             sharedViewModel.nDeletedScreenshots
@@ -103,8 +103,13 @@ class ExaminationActivity :
                     )
                     if (sharedViewModel.nSavedCrops != 0)
                         putExtra(
-                            IntentIdentifier.CROP_WRITE_DIR_PATH,
+                            IntentExtraIdentifier.CROP_WRITE_DIR_PATH,
                             sharedViewModel.cropWriteDirIdentifier()
+                        )
+                    if (sharedViewModel.cropWriteUris.isNotEmpty())
+                        putParcelableArrayListExtra(
+                            IntentExtraIdentifier.CROP_WRITE_URIS,
+                            ArrayList(sharedViewModel.cropWriteUris)
                         )
                 }
         )

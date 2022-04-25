@@ -31,44 +31,45 @@ val externalPicturesDir: File = Environment.getExternalStoragePublicDirectory(En
  *      https://stackoverflow.com/a/10124040
  *      https://stackoverflow.com/a/59536115
  */
-fun ContentResolver.saveBitmap(bitmap: Bitmap, fileName: String, parentDocumentUri: Uri? = null): Boolean =
-    bitmap.compressToStream(
-        when {
-            parentDocumentUri != null -> GetOutputStream.fromParentDocument(fileName, this, parentDocumentUri)
-            apiNotNewerThanQ -> GetOutputStream.untilQ(fileName)
-            else -> GetOutputStream.postQ(fileName, this)
-        }
-    )
+fun ContentResolver.saveBitmap(bitmap: Bitmap, fileName: String, parentDocumentUri: Uri? = null): Pair<Boolean, Uri>{
+    val (outputStream, writeUri) = when {
+        parentDocumentUri != null -> GetOutputStream.fromParentDocument(fileName, this, parentDocumentUri)
+        apiNotNewerThanQ -> GetOutputStream.untilQ(fileName)
+        else -> GetOutputStream.postQ(fileName, this)
+    }
+
+    return (bitmap.compressToStream(outputStream) to writeUri)
         .also {
             Timber.i(
-                if (it) "Successfully wrote $fileName" else "Couldn't write $fileName"
+                if (it.first) "Successfully wrote $fileName" else "Couldn't write $fileName"
             )
         }
+}
 
 fun Bitmap.compressToStream(stream: OutputStream) =
     compress(Bitmap.CompressFormat.JPEG, 100, stream)
         .also {stream.close()}
 
 private object GetOutputStream{
-    fun fromParentDocument(fileName: String, contentResolver: ContentResolver, parentDocumentUri: Uri): OutputStream = logBeforehand("GetOutputStream.fromParentDocument") {
+    fun fromParentDocument(fileName: String, contentResolver: ContentResolver, parentDocumentUri: Uri): Pair<OutputStream, Uri> = logBeforehand("GetOutputStream.fromParentDocument") {
         DocumentsContract.createDocument(
             contentResolver,
             parentDocumentUri,
             MimeTypes.JPEG,
             fileName
         )!!.run {
-            contentResolver.openOutputStream(this)!!
+            contentResolver.openOutputStream(this)!! to this
         }
     }
 
-    fun untilQ(fileName: String): OutputStream = logBeforehand("GetOutputStream.untilQ") {
+    fun untilQ(fileName: String): Pair<OutputStream, Uri> = logBeforehand("GetOutputStream.untilQ") {
         File(externalPicturesDir, fileName).run {
-            FileOutputStream(this)
+            FileOutputStream(this) to Uri.fromFile(this)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    fun postQ(fileName: String, contentResolver: ContentResolver): OutputStream = logBeforehand("GetOutputStream.postQ") {
+    fun postQ(fileName: String, contentResolver: ContentResolver): Pair<OutputStream, Uri> = logBeforehand("GetOutputStream.postQ") {
         contentResolver.insert(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             ContentValues().apply {
@@ -77,7 +78,7 @@ private object GetOutputStream{
                 put(MediaStore.MediaColumns.MIME_TYPE, MimeTypes.JPEG)
             }
         )!!.let { newUri ->
-            contentResolver.openOutputStream(newUri)!!
+            contentResolver.openOutputStream(newUri)!! to newUri
         }
     }
 }

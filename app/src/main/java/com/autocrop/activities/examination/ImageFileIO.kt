@@ -23,6 +23,7 @@ import timber.log.Timber
  * second=!null -> first = false
  */
 typealias DeletionResult = Pair<Boolean, Uri?>
+typealias SavingResult = Pair<Boolean, Uri>
 
 /**
  * Saves [CropBundle.crop] under [cropFileName] depending on [CropBundle.screenshotUri]
@@ -31,9 +32,9 @@ typealias DeletionResult = Pair<Boolean, Uri?>
 fun Context.processCropBundle(
     cropBundle: CropBundle,
     validSaveDirDocumentUri: Uri?,
-    deleteScreenshot: Boolean): Pair<Boolean, DeletionResult?>{
+    deleteScreenshot: Boolean): Pair<SavingResult, DeletionResult?>{
 
-    val cropSuccessfullySaved = contentResolver.saveBitmap(
+    val cropSavingResult = contentResolver.saveBitmap(
         cropBundle.crop,
         cropFileName(cropBundle.screenshotUri.fileName),
         validSaveDirDocumentUri
@@ -43,7 +44,7 @@ fun Context.processCropBundle(
     else
         null
 
-    return cropSuccessfullySaved to screenshotDeletionResult
+    return cropSavingResult to screenshotDeletionResult
 }
 
 //$$$$$$$$$$$$$$

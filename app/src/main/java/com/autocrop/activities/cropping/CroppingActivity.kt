@@ -3,7 +3,7 @@ package com.autocrop.activities.cropping
 import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
-import com.autocrop.activities.IntentIdentifier
+import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.fragments.cropping.CroppingFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.activities.main.MainActivity
@@ -27,7 +27,7 @@ class CroppingActivity :
         ViewModelProvider(
             this,
             CroppingActivityViewModelFactory(
-                uris = intent.getParcelableArrayListExtra(IntentIdentifier.SELECTED_IMAGE_URIS)!!
+                uris = intent.getParcelableArrayListExtra(IntentExtraIdentifier.SELECTED_IMAGE_URIS)!!
             )
         )[CroppingActivityViewModel::class.java]
 

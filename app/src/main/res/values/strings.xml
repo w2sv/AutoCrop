@@ -21,8 +21,9 @@
     <string name="discard_all_button">Discard All</string>
 
         <!-- Description -->
-    <string name="main_activity_menu_inflation_button_description">Inflate settings menu</string>
-    <string name="main_activity_menu_screenshot_button_description">Capture Flow Field image</string>
+    <string name="menu_inflation_button_description">Inflate settings menu</string>
+    <string name="screenshot_button_description">Capture Flow Field image</string>
+    <string name="crop_sharing_button_description">Share saved crops</string>
 
     <!-- Menu Item Text -->
     <string name="menu_item_group_divider_examination">Examination</string>

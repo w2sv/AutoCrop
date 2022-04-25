@@ -10,11 +10,12 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.color
-import com.autocrop.activities.IntentIdentifier
+import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.fragment.ActivityRootFragment
+import com.autocrop.uielements.view.show
 import com.autocrop.utils.android.*
 import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
@@ -41,13 +42,34 @@ class FlowFieldFragment:
         setMenuInflationButtonOnClickListener()
         flowFieldBinding.setCaptureButton(binding.flowfieldCaptureButton, permissionsHandler)
 
+        requireActivity().intent.extras?.getParcelableArrayList<Uri>(IntentExtraIdentifier.CROP_WRITE_URIS)?.let {
+            setCropSharingButton(it)
+        }
+
         // display CropIOResultSnackbar
         if (savedInstanceState == null)
             displayActivityEntrySnackbar()
     }
 
-    private val nSavedCropsRetriever = IntentExtraRetriever<IntArray>(IntentIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)
-    private val cropWriteDirPathRetriever = IntentExtraRetriever<String>(IntentIdentifier.CROP_WRITE_DIR_PATH)
+    private fun setCropSharingButton(cropWriteUris: ArrayList<Uri>){
+        with(binding.cropSharingButton){
+            show()
+            setOnClickListener {
+                startActivity(
+                    Intent.createChooser(Intent().apply {
+                        action = Intent.ACTION_SEND_MULTIPLE
+                        putParcelableArrayListExtra(Intent.EXTRA_STREAM, cropWriteUris)
+                        type = MimeTypes.IMAGE
+                    },
+                    "Share crops"
+                    )
+                )
+            }
+        }
+    }
+
+    private val nSavedCropsRetriever = IntentExtraRetriever<IntArray>(IntentExtraIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)
+    private val cropWriteDirPathRetriever = IntentExtraRetriever<String>(IntentExtraIdentifier.CROP_WRITE_DIR_PATH)
 
     override fun displayActivityEntrySnackbar(){
         nSavedCropsRetriever(requireActivity().intent)?.let {
@@ -162,7 +184,7 @@ class FlowFieldFragment:
                             CroppingActivity::class.java
                         )
                             .putParcelableArrayListExtra(
-                                IntentIdentifier.SELECTED_IMAGE_URIS,
+                                IntentExtraIdentifier.SELECTED_IMAGE_URIS,
                                 ArrayList(data?.clipDataItems()!!.map { it.uri })
                             )
                     )

@@ -6,7 +6,7 @@ import android.view.View
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.activities.IntentIdentifier
+import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.DiscardAllConfirmationDialog
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SaveAllConfirmationDialog
@@ -48,7 +48,7 @@ class ViewPagerFragment:
             displayActivityEntrySnackbar()
     }
 
-    private val nDismissedImagesRetriever = IntentExtraRetriever<Int>(IntentIdentifier.N_DISMISSED_IMAGES)
+    private val nDismissedImagesRetriever = IntentExtraRetriever<Int>(IntentExtraIdentifier.N_DISMISSED_IMAGES)
 
     override fun displayActivityEntrySnackbar(){
         nDismissedImagesRetriever(requireActivity().intent, 0) ?.let {
