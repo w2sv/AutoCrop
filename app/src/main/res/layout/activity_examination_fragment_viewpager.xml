@@ -118,9 +118,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
 
-        android:visibility="invisible"
-
-        tools:ignore="RelativeOverlap">
+        android:visibility="invisible">
 
     </TextView>
 
@@ -137,8 +135,6 @@
 
         android:textSize="13sp"
 
-        android:visibility="invisible"
-
-        tools:ignore="RelativeOverlap"/>
+        android:visibility="invisible"/>
 
 </RelativeLayout>
