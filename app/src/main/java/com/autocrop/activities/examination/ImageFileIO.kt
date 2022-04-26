@@ -23,6 +23,11 @@ import timber.log.Timber
  * second=!null -> first = false
  */
 typealias DeletionResult = Pair<Boolean, Uri?>
+
+/**
+ * first := savingSuccessful
+ * second := writeUri
+ */
 typealias SavingResult = Pair<Boolean, Uri>
 
 /**

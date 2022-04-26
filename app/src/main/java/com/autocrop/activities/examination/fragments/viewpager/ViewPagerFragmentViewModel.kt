@@ -25,7 +25,7 @@ class ViewPagerFragmentViewModel:
 
     fun pageIndicationSeekbarPagePercentage(pageIndex: Int, max: Int): Int =
         if (dataSet.size == 1)
-            50
+            max / 2
         else
             (max.toFloat() / (dataSet.lastIndex).toFloat() * pageIndex).roundToInt()
 }
