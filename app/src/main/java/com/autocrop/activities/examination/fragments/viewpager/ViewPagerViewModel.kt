@@ -1,5 +1,7 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.global.BooleanUserPreferences
@@ -8,16 +10,30 @@ import com.autocrop.utils.rotated
 import java.util.*
 import kotlin.math.roundToInt
 
-class ViewPagerFragmentViewModel:
+class ViewPagerViewModel:
     ViewModel(){
 
     val dataSet = ViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
+
+    val dataSetPosition: LiveData<Int> by lazy {
+        MutableLiveData(0)
+    }
+    var scrolledRight = true
+
+    fun setDataSetPosition(viewPosition: Int, onScrollRight: Boolean? = null){
+        onScrollRight?.let {
+            scrolledRight = it
+        }
+        (dataSetPosition as MutableLiveData).postValue(dataSet.correspondingPosition(viewPosition))
+    }
+
+    val maxScrolls = dataSet.size - dataSetPosition.value!!
 
     // -------------Additional parameters
 
     companion object { const val MAX_VIEWS: Int = Int.MAX_VALUE }
     var autoScroll = BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
-    val startPosition: Int = (MAX_VIEWS / 2).run {
+    val initialViewPosition: Int = (MAX_VIEWS / 2).run {
         minus(dataSet.correspondingPosition(this))
     }
 

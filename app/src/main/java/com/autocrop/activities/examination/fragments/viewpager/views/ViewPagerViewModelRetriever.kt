@@ -2,11 +2,11 @@ package com.autocrop.activities.examination.fragments.viewpager.views
 
 import android.content.Context
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
-import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragmentViewModel
+import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.uielements.view.ViewModelRetrievingView
 
 class ViewPagerViewModelRetriever(context: Context):
-    ViewModelRetrievingView<ViewPagerFragmentViewModel, ViewPagerFragment>(
+    ViewModelRetrievingView<ViewPagerViewModel, ViewPagerFragment>(
         context,
-        ViewPagerFragmentViewModel::class.java
+        ViewPagerViewModel::class.java
     )

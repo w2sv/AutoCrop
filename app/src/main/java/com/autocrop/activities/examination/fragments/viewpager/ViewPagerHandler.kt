@@ -21,13 +21,11 @@ import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
 
 class ViewPagerHandler(
     private val binding: ActivityExaminationFragmentViewpagerBinding,
-    private val viewModel: ViewPagerFragmentViewModel,
+    private val viewModel: ViewPagerViewModel,
     private val examinationActivity: ExaminationActivity,
     previousPosition: Int?){
 
-    private val pageChangeHandler = PageChangeHandler(viewModel.startPosition) { position, onRightScroll ->
-        binding.updatePageDependentViews(viewModel.dataSet.correspondingPosition(position), onRightScroll)
-    }
+    private val pageChangeHandler = PageChangeHandler(viewModel)
     private val scroller: Scroller = Scroller { onScreenTouch ->
         viewModel.autoScroll = false
 
@@ -51,8 +49,19 @@ class ViewPagerHandler(
     }
 
     init {
-        binding.viewPager.initialize(previousPosition)
-        binding.initializeViews()
+        with(binding){
+            // set LiveData observer
+            viewModel.dataSetPosition.observe(examinationActivity){ dataSetPosition ->
+                discardingStatisticsTv.updateText(dataSetPosition)
+
+                viewModel.dataSet.pageIndex(dataSetPosition).let{ pageIndex ->
+                    pageIndicationTv.updateText(pageIndex)
+                    pageIndicationSeekBar.update(pageIndex)
+                }
+            }
+
+            viewPager.initialize(previousPosition)
+        }
     }
 
     private fun ViewPager2.initialize(previousPosition: Int?){
@@ -60,36 +69,20 @@ class ViewPagerHandler(
         adapter = CropPagerAdapter()
 
         setCurrentItem(
-            previousPosition ?: viewModel.startPosition,
+            previousPosition ?: viewModel.initialViewPosition,
             false
         )
 
         // register onPageChangeCallbacks
         registerOnPageChangeCallback(pageChangeHandler)
 
-        if (!viewModel.autoScroll)
-            setPageTransformer()
-    }
-
-    private fun ActivityExaminationFragmentViewpagerBinding.initializeViews(){
-        val dataSetPosition = viewModel.dataSet.correspondingPosition(viewPager.currentItem)
-        updatePageDependentViews(dataSetPosition)
-
         // run Scroller and display respective text view if applicable;
         // otherwise display discardedTextView and set page transformer
         if (viewModel.autoScroll)
-            scroller.run(viewPager, viewModel.dataSet.size - dataSetPosition, autoScrollingTextView)
+            scroller.run(this, viewModel.maxScrolls, binding.autoScrollingTextView)
+        if (viewModel.autoScroll)
+            setPageTransformer()
     }
-
-    private fun ActivityExaminationFragmentViewpagerBinding.updatePageDependentViews(dataSetPosition: Index, onRightScroll: Boolean = false) =
-        examinationActivity.runOnUiThread{
-            discardingStatisticsTv.updateText(dataSetPosition)
-
-            viewModel.dataSet.pageIndex(dataSetPosition).let{ pageIndex ->
-                pageIndicationTv.updateText(pageIndex)
-                pageIndicationSeekBar.update(pageIndex, onRightScroll)
-            }
-        }
 
     private fun ViewPager2.setPageTransformer() =
         setPageTransformer(CubeOutPageTransformer())
@@ -160,7 +153,7 @@ class ViewPagerHandler(
             holder.cropView.setImageBitmap(viewModel.dataSet.atCorrespondingPosition(position).crop)
 
         override fun getItemCount(): Int =
-            if (viewModel.dataSet.size > 1) ViewPagerFragmentViewModel.MAX_VIEWS else 1
+            if (viewModel.dataSet.size > 1) ViewPagerViewModel.MAX_VIEWS else 1
 
         /**
          * Increment nSavedCrops if applicable
@@ -197,9 +190,8 @@ class ViewPagerHandler(
             val newViewPosition = binding.viewPager.currentItem + viewModel.dataSet.viewPositionIncrement(removingAtDataSetTail)
 
             // scroll to newViewPosition with blocked pageDependentViewUpdating
-            pageChangeHandler.updateViews = false
+            pageChangeHandler.blockViewUpdatingOnNextPageChange = true
             binding.viewPager.setCurrentItem(newViewPosition, true)
-            pageChangeHandler.updateViews = true
 
             pageChangeHandler.removeView = {
                 // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
@@ -210,7 +202,7 @@ class ViewPagerHandler(
                 resetViewsAround(newViewPosition)
 
                 // update views
-                binding.updatePageDependentViews(viewModel.dataSet.correspondingPosition(newViewPosition))
+                viewModel.setDataSetPosition(newViewPosition)
             }
         }
 

@@ -3,23 +3,24 @@ package com.autocrop.activities.examination.fragments.viewpager
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 
-class PageChangeHandler(
-    viewPagerStartPosition: Int,
-    private val updatePageDependentViews: (position: Int, Boolean) -> Unit)
+class PageChangeHandler(private val viewModel: ViewPagerViewModel)
         : ViewPager2.OnPageChangeCallback(){
 
-    private var previousPosition = viewPagerStartPosition
-    var updateViews = true
+    private var previousPosition = viewModel.initialViewPosition
+    var blockViewUpdatingOnNextPageChange = false
 
     /**
-     * [updatePageDependentViews] if not blocked
+     * [viewModel].setDataSetPosition if not blocked
      */
     override fun onPageSelected(position: Int) {
         super.onPageSelected(position)
 
-        if (updateViews)
-            updatePageDependentViews(position, position > previousPosition)
-        previousPosition = position
+        if (!blockViewUpdatingOnNextPageChange){
+            viewModel.setDataSetPosition(position, position > previousPosition)
+            previousPosition = position
+        }
+        else
+            blockViewUpdatingOnNextPageChange = false
     }
 
     var onNextScrollCompletion: (() -> Unit)? = null

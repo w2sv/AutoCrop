@@ -4,7 +4,7 @@ import android.content.Context
 import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import androidx.core.text.bold
-import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragmentViewModel
+import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.uielements.view.StringResourceCoupledTextView
 import com.autocrop.uielements.view.ViewModelRetriever
 import com.autocrop.uielements.view.show
@@ -12,7 +12,7 @@ import com.w2sv.autocrop.R
 
 abstract class PageDependentTextView(context: Context, attr: AttributeSet, stringId: Int):
     StringResourceCoupledTextView(context, attr, stringId),
-    ViewModelRetriever<ViewPagerFragmentViewModel> by ViewPagerViewModelRetriever(context) {
+    ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context) {
 
     abstract fun updateText(position: Int)
 }

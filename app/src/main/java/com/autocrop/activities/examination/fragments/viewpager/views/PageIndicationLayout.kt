@@ -7,14 +7,14 @@ import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatSeekBar
-import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragmentViewModel
+import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.uielements.view.ViewModelRetriever
 import com.autocrop.uielements.view.show
 import com.w2sv.autocrop.R
 
 class PageIndicationLayout(context: Context, attr: AttributeSet):
     RelativeLayout(context, attr),
-    ViewModelRetriever<ViewPagerFragmentViewModel> by ViewPagerViewModelRetriever(context){
+    ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context){
 
     init {
         if (viewModel.dataSet.size > 1)
@@ -24,7 +24,7 @@ class PageIndicationLayout(context: Context, attr: AttributeSet):
 
 class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
     AppCompatSeekBar(context, attr),
-    ViewModelRetriever<ViewPagerFragmentViewModel> by ViewPagerViewModelRetriever(context) {
+    ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context) {
 
     /**
      * Disable manual dragging
@@ -33,7 +33,7 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
         isEnabled = false
     }
 
-    fun update(dataSetPosition: Int, scrolledRight: Boolean) {
+    fun update(dataSetPosition: Int) {
         val animationDuration = mapOf(
             BounceInterpolator::class.java to 400L,
             DecelerateInterpolator::class.java to 100L
@@ -42,7 +42,7 @@ class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
         val newProgress: Int = viewModel.pageIndicationSeekbarPagePercentage(dataSetPosition, max)
 
         with(ObjectAnimator.ofInt(this,"progress", newProgress)) {
-            with(if (displayBouncingAnimation(scrolledRight, newProgress)) BounceInterpolator::class.java else DecelerateInterpolator::class.java){
+            with(if (displayBouncingAnimation(viewModel.scrolledRight, newProgress)) BounceInterpolator::class.java else DecelerateInterpolator::class.java){
                 interpolator = newInstance()
                 duration = animationDuration.getValue(this)
             }

@@ -27,12 +27,12 @@ class ViewPagerFragment:
     }
 
     private lateinit var viewPagerHandler: ViewPagerHandler
-    private lateinit var viewModel: ViewPagerFragmentViewModel
+    private lateinit var viewModel: ViewPagerViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[ViewPagerFragmentViewModel::class.java]
+        viewModel = ViewModelProvider(this)[ViewPagerViewModel::class.java]
 
         viewPagerHandler = ViewPagerHandler(
             binding,
