@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager.handler
+package com.autocrop.activities.examination.fragments.viewpager
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -10,14 +10,12 @@ import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragmentViewModel
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCropProcedureDialog
 import com.autocrop.uielements.CubeOutPageTransformer
 import com.autocrop.uielements.view.crossFade
-import com.autocrop.uielements.view.show
 import com.autocrop.uielements.view.shrinkAndFinallyRemove
 import com.autocrop.utils.Index
-import com.autocrop.utils.android.*
+import com.autocrop.utils.android.displaySnackbar
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
 
@@ -37,7 +35,7 @@ class ViewPagerHandler(
             crossFade(
                 examinationActivity.resources.getInteger(R.integer.visibility_changing_animation_duration).toLong(),
                 binding.autoScrollingTextView,
-                binding.discardingStatisticsTv, binding.toolbar
+                binding.discardingStatisticsTv, binding.buttonToolbar
             )
         }
 
@@ -68,29 +66,19 @@ class ViewPagerHandler(
 
         // register onPageChangeCallbacks
         registerOnPageChangeCallback(pageChangeHandler)
+
+        if (!viewModel.autoScroll)
+            setPageTransformer()
     }
 
     private fun ActivityExaminationFragmentViewpagerBinding.initializeViews(){
         val dataSetPosition = viewModel.dataSet.correspondingPosition(viewPager.currentItem)
         updatePageDependentViews(dataSetPosition)
 
-        // display pageIndicationElements if applicable
-        if (viewModel.dataSet.size > 1)
-            examinationActivity.runOnUiThread {
-                pageIndicationElements.show()
-            }
-
         // run Scroller and display respective text view if applicable;
         // otherwise display discardedTextView and set page transformer
         if (viewModel.autoScroll)
             scroller.run(viewPager, viewModel.dataSet.size - dataSetPosition, autoScrollingTextView)
-        else{
-            examinationActivity.runOnUiThread {
-                discardingStatisticsTv.show()
-                toolbar.show()
-            }
-            viewPager.setPageTransformer()
-        }
     }
 
     private fun ActivityExaminationFragmentViewpagerBinding.updatePageDependentViews(dataSetPosition: Index, onRightScroll: Boolean = false) =

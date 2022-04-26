@@ -10,7 +10,6 @@ import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.DiscardAllConfirmationDialog
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SaveAllConfirmationDialog
-import com.autocrop.activities.examination.fragments.viewpager.handler.ViewPagerHandler
 import com.autocrop.uicontroller.fragment.ActivityRootFragment
 import com.autocrop.utils.android.IntentExtraRetriever
 import com.autocrop.utils.android.displaySnackbar

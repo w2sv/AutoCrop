@@ -5,10 +5,22 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
+import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragmentViewModel
 import com.autocrop.uielements.view.ViewModelRetriever
+import com.autocrop.uielements.view.show
 import com.w2sv.autocrop.R
+
+class PageIndicationLayout(context: Context, attr: AttributeSet):
+    RelativeLayout(context, attr),
+    ViewModelRetriever<ViewPagerFragmentViewModel> by ViewPagerViewModelRetriever(context){
+
+    init {
+        if (viewModel.dataSet.size > 1)
+            show()
+    }
+}
 
 class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
     AppCompatSeekBar(context, attr),

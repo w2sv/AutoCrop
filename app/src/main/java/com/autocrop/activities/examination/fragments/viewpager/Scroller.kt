@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager.handler
+package com.autocrop.activities.examination.fragments.viewpager
 
 import android.app.Activity
 import android.os.Handler

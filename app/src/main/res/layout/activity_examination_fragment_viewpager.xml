@@ -6,8 +6,8 @@
 
     <!-- Toolbar -->
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <com.autocrop.activities.examination.fragments.viewpager.views.ButtonToolbar
+        android:id="@+id/button_toolbar"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@android:color/transparent"
@@ -42,7 +42,7 @@
             android:textColor="@color/light_gray"
             android:translationX="-10dp"/>
 
-    </androidx.appcompat.widget.Toolbar>
+    </com.autocrop.activities.examination.fragments.viewpager.views.ButtonToolbar>
 
     <!-- View Pager -->
 
@@ -54,7 +54,7 @@
 
         android:background="@android:color/black"/>
 
-    <RelativeLayout
+    <com.autocrop.activities.examination.fragments.viewpager.views.PageIndicationLayout
         android:layout_width="145dp"
         android:layout_height="wrap_content"
 
@@ -104,13 +104,13 @@
 
             tools:ignore="RelativeOverlap" />
 
-    </RelativeLayout>
+    </com.autocrop.activities.examination.fragments.viewpager.views.PageIndicationLayout>
 
     <TextView
         android:id="@+id/auto_scrolling_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/toolbar"
+        android:layout_alignTop="@+id/button_toolbar"
 
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="20dp"
