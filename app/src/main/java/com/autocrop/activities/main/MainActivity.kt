@@ -15,6 +15,9 @@ class MainActivity :
     override val rootFragment by lazy{ FlowFieldFragment() }
     val aboutFragment by lazy { AboutFragment() }
 
+    /**
+     * Supersede [R.style.Theme_App_Splash] upon activity entry
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         if (savedInstanceState == null)
             setTheme(R.style.Theme_App_Main)
@@ -32,6 +35,9 @@ class MainActivity :
             finishAffinity()
     }
 
+    /**
+     * Write changed values of each [userPreferencesInstances] element to SharedPreferences
+     */
     override fun onStop() {
         super.onStop()
 

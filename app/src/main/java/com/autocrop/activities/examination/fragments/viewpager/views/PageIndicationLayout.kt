@@ -1,68 +1,52 @@
 package com.autocrop.activities.examination.fragments.viewpager.views
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
-import android.view.animation.AnticipateInterpolator
 import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
-import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragmentViewModel
 import com.autocrop.uielements.view.ViewModelRetriever
-import com.autocrop.uielements.view.remove
 import com.w2sv.autocrop.R
-
-class PageIndicationLayout(context: Context, attr: AttributeSet)
-    : RelativeLayout(context, attr){
-
-    fun shrinkAndRemove(){
-        animate()
-            .scaleX(0f)
-            .scaleY(0f)
-            .setInterpolator(AnticipateInterpolator())
-            .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    remove()
-                }
-            })
-            .duration = resources.getInteger(R.integer.visibility_changing_animation_duration).toLong()
-    }
-}
 
 class PageIndicationSeekBar(context: Context, attr: AttributeSet) :
     AppCompatSeekBar(context, attr),
     ViewModelRetriever<ViewPagerFragmentViewModel> by ViewPagerViewModelRetriever(context) {
 
+    /**
+     * Disable manual dragging
+     */
     init {
-        isEnabled = false  // disables dragging of bar
+        isEnabled = false
     }
 
     fun update(dataSetPosition: Int, scrolledRight: Boolean) {
-        val targetProgress: Int = viewModel.pageIndicationSeekbarPagePercentage(dataSetPosition, max)
-        val displayBouncingAnimation: Boolean = listOf(progress, targetProgress).let {
-            (it == listOf(0, 100) && !scrolledRight) || (it == listOf(100, 0) && scrolledRight)
-        }
-
-        val interpolatorToAnimationDuration = mapOf(
+        val animationDuration = mapOf(
             BounceInterpolator::class.java to 400L,
             DecelerateInterpolator::class.java to 100L
         )
 
-        with(ObjectAnimator.ofInt(this,"progress", targetProgress)) {
-            val interpolator = if (displayBouncingAnimation) BounceInterpolator() else DecelerateInterpolator()
+        val newProgress: Int = viewModel.pageIndicationSeekbarPagePercentage(dataSetPosition, max)
 
-            this.interpolator = interpolator
-            duration = interpolatorToAnimationDuration.getValue(interpolator::class.java)
+        with(ObjectAnimator.ofInt(this,"progress", newProgress)) {
+            with(if (displayBouncingAnimation(scrolledRight, newProgress)) BounceInterpolator::class.java else DecelerateInterpolator::class.java){
+                interpolator = newInstance()
+                duration = animationDuration.getValue(this)
+            }
+
             start()
         }
     }
+
+    private fun displayBouncingAnimation(scrolledRight: Boolean, newProgress: Int): Boolean =
+        listOf(progress, newProgress).let {
+            (it == listOf(0, 100) && !scrolledRight) || (it == listOf(100, 0) && scrolledRight)
+        }
 }
 
 class PageIndicationTextView(context: Context, attr: AttributeSet): PageDependentTextView(context, attr, R.string.fracture) {
     override fun updateText(position: Int){
-        text = getString().format(position + 1, viewModel.dataSet.size)
+        text = stringResource.format(position + 1, viewModel.dataSet.size)
     }
 }

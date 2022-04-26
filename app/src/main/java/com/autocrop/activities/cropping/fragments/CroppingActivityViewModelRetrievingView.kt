@@ -5,7 +5,7 @@ import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.cropping.CroppingActivityViewModel
 import com.autocrop.uielements.view.ViewModelRetrievingView
 
-class CroppingActivityViewModelRetriever(context: Context):
+class CroppingActivityViewModelRetrievingView(context: Context):
     ViewModelRetrievingView<CroppingActivityViewModel, CroppingActivity>(
         context,
         CroppingActivityViewModel::class.java

@@ -4,27 +4,27 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.ProgressBar
 import com.autocrop.activities.cropping.CroppingActivityViewModel
-import com.autocrop.activities.cropping.fragments.CroppingActivityViewModelRetriever
-import com.autocrop.uielements.view.ExtendedTextView
+import com.autocrop.activities.cropping.fragments.CroppingActivityViewModelRetrievingView
+import com.autocrop.uielements.view.StringResourceCoupledTextView
 import com.autocrop.uielements.view.ViewModelRetriever
 import com.w2sv.autocrop.R
 
 class CurrentImageNumberTextView(context: Context, attr: AttributeSet):
-    ExtendedTextView(context, attr, R.string.fracture),
-    ViewModelRetriever<CroppingActivityViewModel> by CroppingActivityViewModelRetriever(context) {
+    StringResourceCoupledTextView(context, attr, R.string.fracture),
+    ViewModelRetriever<CroppingActivityViewModel> by CroppingActivityViewModelRetrievingView(context) {
 
     init {
         updateText(0)
     }
 
     fun updateText(currentImageNumber: Int){
-        text = getString().format(currentImageNumber, viewModel.nSelectedImages)
+        text = stringResource.format(currentImageNumber, viewModel.nSelectedImages)
     }
 }
 
 class CroppingProgressBar(context: Context, attr: AttributeSet):
     ProgressBar(context, attr),
-    ViewModelRetriever<CroppingActivityViewModel> by CroppingActivityViewModelRetriever(context){
+    ViewModelRetriever<CroppingActivityViewModel> by CroppingActivityViewModelRetrievingView(context){
         init {
             max = viewModel.nSelectedImages
         }

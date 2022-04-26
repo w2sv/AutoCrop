@@ -1,6 +1,6 @@
 package com.autocrop.activities.main.fragments.flowfield.sketch;
 
-import com.autocrop.utils.RandomUtils;
+import com.autocrop.utils.Random;
 
 import java.util.ArrayList;
 
@@ -29,7 +29,7 @@ class Particle extends PApplet {
                 unusedColorIndices.add(i);
         }
 
-        colorIndex = RandomUtils.randomElement(unusedColorIndices);
+        colorIndex = Random.randomElement(unusedColorIndices);
     }
 
     public static final int COLOR_CHANGE_FREQUENCY = 5;

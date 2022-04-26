@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
 import com.autocrop.activities.main.fragments.MainActivityFragment
-import com.autocrop.uielements.view.ExtendedTextView
+import com.autocrop.uielements.view.StringResourceCoupledTextView
 import com.autocrop.uielements.view.animate
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.BuildConfig
@@ -31,8 +31,8 @@ class AboutFragment: MainActivityFragment<ActivityMainFragmentAboutBinding>(){
 
             startActivity(
                 Intent(
-                "android.intent.action.VIEW",
-                Uri.parse("http://github.com/w2sv")
+                    "android.intent.action.VIEW",
+                    Uri.parse("http://github.com/w2sv")
                 )
             )
         }
@@ -40,17 +40,17 @@ class AboutFragment: MainActivityFragment<ActivityMainFragmentAboutBinding>(){
 }
 
 class VersionTextView(context: Context, attr: AttributeSet):
-    ExtendedTextView(context, attr, R.string.version){
+    StringResourceCoupledTextView(context, attr, R.string.version){
 
     init {
-        text = getString().format(BuildConfig.VERSION_NAME)
+        text = stringResource.format(BuildConfig.VERSION_NAME)
 
         setOnClickListener { it.animate(Techniques.RubberBand) }
     }
 }
 
 class CopyrightTextView(context: Context, attr: AttributeSet):
-    ExtendedTextView(context, attr, R.string.copyright){
+    StringResourceCoupledTextView(context, attr, R.string.copyright){
 
-    init { text = getString().format(Calendar.getInstance().get(Calendar.YEAR)) }
+    init { text = stringResource.format(Calendar.getInstance().get(Calendar.YEAR)) }
 }

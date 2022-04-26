@@ -39,13 +39,16 @@ class FlowFieldBinding(activity: FragmentActivity,
      */
     private fun captureFlowField() =
         with(pFragment.requireActivity()){
-            contentResolver.saveBitmap(pFragment.sketch.g.bitmap(), "FlowField_${formattedDateTimeString()}.jpg")
+            contentResolver.saveBitmap(
+                pFragment.sketch.g.bitmap(),
+                "FlowField_${formattedDateTimeString()}.jpg"
+            )
 
             displaySnackbar(
                 SpannableStringBuilder()
                     .append("Saved FlowField to")
                     .append("\n")
-                    .color(getColorInt(NotificationColor.SUCCESS, this)){append(externalPicturesDir.absolutePath)},
+                    .color(getColorInt(NotificationColor.SUCCESS, this)){ append(externalPicturesDir.absolutePath) },
                 R.drawable.ic_round_save_24
             )
         }

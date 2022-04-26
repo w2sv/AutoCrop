@@ -15,6 +15,7 @@ import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCro
 import com.autocrop.uielements.CubeOutPageTransformer
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show
+import com.autocrop.uielements.view.shrinkAndFinallyRemove
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.*
 import com.w2sv.autocrop.R
@@ -190,7 +191,7 @@ class ViewPagerHandler(
                     } ?: examinationActivity.invokeSubsequentFragment()
                     return
                 }
-                2 -> examinationActivity.runOnUiThread { binding.pageIndicationElements.shrinkAndRemove() }
+                2 -> examinationActivity.runOnUiThread { binding.pageIndicationElements.shrinkAndFinallyRemove() }
                 else -> Unit
             }
             removeView(dataSetPosition)

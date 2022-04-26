@@ -2,7 +2,7 @@ package com.autocrop.utils;
 
 import java.util.ArrayList;
 
-public class RandomUtils{
+public class Random {
     public static int randomInt(int exclusiveMax){
         return (int)(Math.random() * exclusiveMax);
     }

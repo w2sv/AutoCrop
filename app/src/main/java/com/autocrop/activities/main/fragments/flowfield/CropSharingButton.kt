@@ -13,17 +13,18 @@ import com.autocrop.utils.android.MimeTypes
 class CropSharingButton(context: Context, attrs: AttributeSet)
     : AppCompatImageButton(context, attrs){
 
+    /**
+     * If CROP_SAVING_URIS available from previous ExaminationActivity cycle show and
+     * setOnClickListener
+     */
     init {
         (context as Activity).intent.extras?.getParcelableArrayList<Uri>(IntentExtraIdentifier.CROP_SAVING_URIS)?.let {
             show()
-            setCropSharingButtonOnClickListener(it)
+            setOnClickListener(it)
         }
     }
 
-    /**
-     * [show] and setOnClickListener
-     */
-    private fun setCropSharingButtonOnClickListener(cropWriteUris: ArrayList<Uri>) =
+    private fun setOnClickListener(cropWriteUris: ArrayList<Uri>) =
         setOnClickListener {
             context.startActivity(
                 Intent.createChooser(
