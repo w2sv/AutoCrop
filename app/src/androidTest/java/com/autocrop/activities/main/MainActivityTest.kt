@@ -8,7 +8,6 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.FlakyTest
 import androidx.test.runner.permission.PermissionRequester
-import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.utils.android.MimeTypes
 import com.autocrop.utils.android.externalPicturesDir
 import com.w2sv.autocrop.R
@@ -120,7 +119,7 @@ internal class MainActivityTest: UserPreferencesModifier() {
 
     @Nested
     inner class MenuTest {
-        private val inflationButton = viewInteractionById(R.id.menu_button)
+        private val inflationButton = viewInteractionById(R.id.menu_inflation_button)
 
         @Test
         fun inflationButtonDisplayedAndClickable() {

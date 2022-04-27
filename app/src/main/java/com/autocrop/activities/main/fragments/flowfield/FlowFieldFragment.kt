@@ -39,7 +39,6 @@ class FlowFieldFragment:
         // set button onClickListeners
         setImageSelectionButtonOnClickListener()
         setMenuInflationButtonOnClickListener()
-        flowFieldBinding.setCaptureButton(binding.flowfieldCaptureButton, permissionsHandler)
 
         // display CropIOResultSnackbar upon activity entry
         if (savedInstanceState == null)
@@ -77,7 +76,7 @@ class FlowFieldFragment:
     //$$$$$$$$$$$$$$$
 
     private fun setMenuInflationButtonOnClickListener() =
-        binding.menuButton.setOnClickListener { popupMenu.show() }
+        binding.menuInflationButton.setOnClickListener { popupMenu.show() }
 
     private val popupMenu: FlowFieldFragmentMenu by lazy {
         FlowFieldFragmentMenu(
@@ -93,7 +92,7 @@ class FlowFieldFragment:
                 }
             ),
             requireView().context,
-            binding.menuButton
+            binding.menuInflationButton
         )
     }
 
