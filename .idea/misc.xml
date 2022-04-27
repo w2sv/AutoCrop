@@ -28,6 +28,7 @@
         <entry key="app/src/main/res/drawable/image_brudineletten.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/progress_bar_circular_save_all_crops.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/progress_bar_cropping_activity_progress.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/seekbar_thumb_examination_activity.xml" value="0.1105" />
         <entry key="app/src/main/res/drawable/seekbar_tumb_examination_activity.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/splash_background.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/splash_screen.xml" value="0.1815" />

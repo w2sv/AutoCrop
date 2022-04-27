@@ -64,8 +64,7 @@
         android:layout_alignParentEnd="true"
 
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="20dp"
-        android:visibility="invisible">
+        android:layout_marginEnd="20dp">
 
         <!-- https://en.proft.me/2018/02/5/decorating-seekbar-android/ -->
         <com.autocrop.activities.examination.fragments.viewpager.views.PageIndicationBar
@@ -79,10 +78,9 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
 
-            android:thumb="@drawable/seekbar_tumb_examination_activity"
+            android:thumb="@drawable/seekbar_thumb_examination_activity"
 
             android:outlineProvider="paddedBounds"
-            android:progressTint="@android:color/transparent"
 
             android:max="100">
         </com.autocrop.activities.examination.fragments.viewpager.views.PageIndicationBar>
