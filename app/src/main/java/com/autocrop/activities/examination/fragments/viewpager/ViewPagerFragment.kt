@@ -14,10 +14,10 @@ import com.autocrop.utils.android.displaySnackbar
 import com.autocrop.utils.android.getColorInt
 import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
+import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
 
 class ViewPagerFragment:
-    ExaminationActivityFragment<ActivityExaminationFragmentViewpagerBinding>(),
+    ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(),
     ActivityRootFragment {
 
     companion object{

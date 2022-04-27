@@ -18,10 +18,10 @@ import com.autocrop.uielements.view.shrinkAndFinallyRemove
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.displaySnackbar
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.ActivityExaminationFragmentViewpagerBinding
+import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
 
 class ViewPagerHandler(
-    private val binding: ActivityExaminationFragmentViewpagerBinding,
+    private val binding: ExaminationFragmentViewpagerBinding,
     private val viewModel: ViewPagerViewModel,
     private val examinationActivity: ExaminationActivity,
     previousPosition: Int?){
@@ -149,7 +149,7 @@ class ViewPagerHandler(
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CropViewHolder {
             return CropViewHolder(
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.activity_examination_view_pager_image_view, parent, false)
+                    .inflate(R.layout.examination_view_pager_image_view, parent, false)
                         as ImageView
             )
         }

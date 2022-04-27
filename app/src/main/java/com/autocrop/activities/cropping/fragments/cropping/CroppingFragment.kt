@@ -15,11 +15,11 @@ import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.types.CropBundle
 import com.autocrop.utils.executeAsyncTask
 import com.autocrop.utils.logBeforehand
-import com.w2sv.autocrop.databinding.ActivityCroppingFragmentRootBinding
+import com.w2sv.autocrop.databinding.CroppingFragmentBinding
 import kotlinx.coroutines.Job
 
 class CroppingFragment
-    : CroppingActivityFragment<ActivityCroppingFragmentRootBinding>() {
+    : CroppingActivityFragment<CroppingFragmentBinding>() {
 
     private lateinit var croppingJob: Job
 

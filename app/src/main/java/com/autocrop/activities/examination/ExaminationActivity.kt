@@ -17,10 +17,10 @@ import com.autocrop.utils.android.BackPressHandler
 import com.autocrop.utils.android.displaySnackbar
 import com.autocrop.utils.android.uriPermissionGranted
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.ActivityExaminationBinding
+import com.w2sv.autocrop.databinding.ExaminationBinding
 
 class ExaminationActivity :
-    FragmentHostingActivity<ActivityExaminationBinding>(),
+    FragmentHostingActivity<ExaminationBinding>(),
     SharedViewModelHandlingActivity<ExaminationActivityViewModel> {
 
     override val rootFragment: ViewPagerFragment by lazy{ ViewPagerFragment() }

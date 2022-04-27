@@ -18,10 +18,10 @@ import com.autocrop.uicontroller.fragment.ActivityRootFragment
 import com.autocrop.utils.android.*
 import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.ActivityMainFragmentFlowfieldBinding
+import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding
 
 class FlowFieldFragment:
-    MainActivityFragment<ActivityMainFragmentFlowfieldBinding>(),
+    MainActivityFragment<MainFragmentFlowfieldBinding>(),
     ActivityRootFragment {
 
     private val permissionsHandler = PermissionsHandler(this)

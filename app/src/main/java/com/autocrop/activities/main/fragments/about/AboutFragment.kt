@@ -12,10 +12,10 @@ import com.autocrop.uielements.view.animate
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.BuildConfig
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.ActivityMainFragmentAboutBinding
+import com.w2sv.autocrop.databinding.MainFragmentAboutBinding
 import java.util.*
 
-class AboutFragment: MainActivityFragment<ActivityMainFragmentAboutBinding>(){
+class AboutFragment: MainActivityFragment<MainFragmentAboutBinding>(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

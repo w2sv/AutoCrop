@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    android:background="@drawable/gradient_background_main">
+    android:background="@drawable/gradient_general_background">
 
     <TextView
         android:id="@+id/app_title_text_view"

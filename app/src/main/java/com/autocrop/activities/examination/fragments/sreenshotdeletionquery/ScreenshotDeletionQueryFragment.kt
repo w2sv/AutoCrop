@@ -11,10 +11,10 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
-import com.w2sv.autocrop.databinding.ActivityExaminationFragmentDeletionqueryBinding
+import com.w2sv.autocrop.databinding.ExaminationFragmentDeletionqueryBinding
 
 class ScreenshotDeletionQueryFragment :
-    ExaminationActivityFragment<ActivityExaminationFragmentDeletionqueryBinding>(){
+    ExaminationActivityFragment<ExaminationFragmentDeletionqueryBinding>(){
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

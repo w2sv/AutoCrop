@@ -7,10 +7,10 @@ import com.autocrop.global.userPreferencesInstances
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.utils.android.getApplicationWideSharedPreferences
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.ActivityMainBinding
+import com.w2sv.autocrop.databinding.MainBinding
 
 class MainActivity :
-    FragmentHostingActivity<ActivityMainBinding>() {
+    FragmentHostingActivity<MainBinding>() {
 
     override val rootFragment by lazy{ FlowFieldFragment() }
     val aboutFragment by lazy { AboutFragment() }
