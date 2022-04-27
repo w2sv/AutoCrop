@@ -49,14 +49,14 @@ class Particle extends PApplet {
 
         vel = new PVector(startVelocity(), startVelocity());
         acc = new PVector(0, 0);
-        maxSpeed = random(9, 12);
+        maxSpeed = random(6, 8);
 
         pos = new PVector(random(width), random(height));
         previousPos = pos.copy();
     }
 
     private float startVelocity() {
-        return random(3, 5);
+        return random(1, 3);
     }
 
     public void update() {

@@ -60,7 +60,7 @@ class FlowFieldFragmentMenu(itemId2OnCLickListener: Map<Int, () -> Unit>, contex
             with(menu.findItem(id)){
                 title = SpannableStringBuilder().italic { color(
                     getColorInt(
-                        R.color.saturated_magenta,
+                        R.color.loud_magenta,
                         context
                     )
                 ) {append(title)} }
