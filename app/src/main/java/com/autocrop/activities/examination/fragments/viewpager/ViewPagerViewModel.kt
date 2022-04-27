@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.types.CropBundle
+import com.autocrop.utils.android.mutableLiveData
 import com.autocrop.utils.rotated
 import java.util.*
 import kotlin.math.roundToInt
@@ -24,10 +25,11 @@ class ViewPagerViewModel:
         onScrollRight?.let {
             scrolledRight = it
         }
-        (dataSetPosition as MutableLiveData).postValue(dataSet.correspondingPosition(viewPosition))
+        dataSetPosition.mutableLiveData.postValue(dataSet.correspondingPosition(viewPosition))
     }
 
-    val maxScrolls = dataSet.size - dataSetPosition.value!!
+    fun maxScrolls(): Int =
+        dataSet.size - dataSetPosition.value!!
 
     // -------------Additional parameters
 
@@ -64,9 +66,7 @@ class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) :
     // ----------------Element Removal
 
     fun removingAtTail(position: Int): Boolean = tailPosition == position
-
-    fun viewPositionIncrement(removingAtTail: Boolean): Int =
-        if (removingAtTail) -1 else 1
+    fun viewPositionIncrement(removingAtTail: Boolean): Int = if (removingAtTail) -1 else 1
 
     /**
      * Remove element at [removePosition]

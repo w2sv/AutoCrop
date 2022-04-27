@@ -45,7 +45,7 @@ class ViewPagerHandler(
             )
         }
         else
-            pageChangeHandler.onNextScrollCompletion = { binding.viewPager.setPageTransformer() }
+            pageChangeHandler.addToOnNextScrollCompletion { binding.viewPager.setPageTransformer() }
     }
 
     init {
@@ -79,7 +79,7 @@ class ViewPagerHandler(
         // run Scroller and display respective text view if applicable;
         // otherwise display discardedTextView and set page transformer
         if (viewModel.autoScroll)
-            scroller.run(this, viewModel.maxScrolls, binding.autoScrollingTextView)
+            scroller.run(this, viewModel.maxScrolls(), binding.autoScrollingTextView)
         if (viewModel.autoScroll)
             setPageTransformer()
     }
@@ -193,7 +193,7 @@ class ViewPagerHandler(
             pageChangeHandler.blockViewUpdatingOnNextPageChange = true
             binding.viewPager.setCurrentItem(newViewPosition, true)
 
-            pageChangeHandler.removeView = {
+            pageChangeHandler.addToOnNextScrollCompletion {
                 // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
                 // aligning with newViewPosition
                 viewModel.dataSet.removeAtAndRealign(dataSetPosition, removingAtDataSetTail, newViewPosition)

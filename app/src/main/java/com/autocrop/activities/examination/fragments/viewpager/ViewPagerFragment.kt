@@ -42,9 +42,7 @@ class ViewPagerFragment:
         )
 
         setToolbarButtonOnClickListeners()
-
-        if (savedInstanceState == null)
-            displayActivityEntrySnackbar()
+        displayActivityEntrySnackbar()
     }
 
     private val nDismissedImagesRetriever = IntentExtraRetriever<Int>(IntentExtraIdentifier.N_DISMISSED_IMAGES)
@@ -65,31 +63,19 @@ class ViewPagerFragment:
         }
     }
 
-    /**
-     * Runs defined onClickListeners only if scroller not running
-     */
     private fun setToolbarButtonOnClickListeners() {
         arrayOf(
-             Triple(binding.saveAllButton, SaveAllConfirmationDialog()) {
-                 with(typedActivity) {
-                     replaceCurrentFragmentWith(saveAllFragment, true)
-                 }
-             },
-            Triple(binding.discardAllButton, DiscardAllConfirmationDialog()) {
-                with(typedActivity) {
-                    replaceCurrentFragmentWith(appTitleFragment, false)
-                }
-            }
+            Triple(binding.saveAllButton, SaveAllConfirmationDialog()) { typedActivity.replaceCurrentFragmentWith(typedActivity.saveAllFragment, true) },
+            Triple(binding.discardAllButton, DiscardAllConfirmationDialog(), typedActivity::invokeSubsequentFragment)
         )
             .forEach { (button, dialogClass, resultListener) ->
-                requireActivity().supportFragmentManager.setFragmentResultListener(dialogClass.resultKey, requireActivity()){
+                parentFragmentManager.setFragmentResultListener(dialogClass.resultKey, this){
                         _, _ -> resultListener()
                 }
 
                 button.setOnClickListener {
-                    if (!viewModel.autoScroll)
-                        dialogClass
-                            .show(requireActivity().supportFragmentManager)
+                    dialogClass
+                        .show(parentFragmentManager)
                 }
             }
     }

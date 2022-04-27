@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.autocrop.types.CropBundle
+import com.autocrop.utils.android.mutableLiveData
 
 class CroppingActivityViewModel(val uris: ArrayList<Uri>): ViewModel(){
 
@@ -18,6 +19,6 @@ class CroppingActivityViewModel(val uris: ArrayList<Uri>): ViewModel(){
         MutableLiveData(0)
     }
     fun incrementCurrentImageNumber(){
-        (currentImageNumber as MutableLiveData).value = currentImageNumber.value?.plus(1)
+        currentImageNumber.mutableLiveData.value = currentImageNumber.value?.plus(1)
     }
 }

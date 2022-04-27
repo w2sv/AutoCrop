@@ -2,6 +2,7 @@ package com.autocrop.activities.examination.fragments.viewpager
 
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
+import com.autocrop.utils.BlankFun
 
 class PageChangeHandler(private val viewModel: ViewPagerViewModel)
         : ViewPager2.OnPageChangeCallback(){
@@ -15,29 +16,30 @@ class PageChangeHandler(private val viewModel: ViewPagerViewModel)
     override fun onPageSelected(position: Int) {
         super.onPageSelected(position)
 
-        if (!blockViewUpdatingOnNextPageChange){
+        if (blockViewUpdatingOnNextPageChange)
+            blockViewUpdatingOnNextPageChange = false
+        else {
             viewModel.setDataSetPosition(position, position > previousPosition)
             previousPosition = position
         }
-        else
-            blockViewUpdatingOnNextPageChange = false
     }
 
-    var onNextScrollCompletion: (() -> Unit)? = null
-    var removeView: (() -> Unit)? = null
+    private var onNextScrollCompletion: BlankFun? = null
+    fun addToOnNextScrollCompletion(function: BlankFun){
+        onNextScrollCompletion = onNextScrollCompletion?.let {
+            {
+                it()
+                function()
+            }
+        } ?: function
+    }
 
     override fun onPageScrollStateChanged(state: Int) {
         super.onPageScrollStateChanged(state)
 
-        if (state == ViewPager.SCROLL_STATE_IDLE){
-            onNextScrollCompletion?.let {
-                it()
-                onNextScrollCompletion = null
-            }
-            removeView?.let {
-                it()
-                removeView = null
-            }
+        if (state == ViewPager.SCROLL_STATE_IDLE && onNextScrollCompletion != null){
+            onNextScrollCompletion!!()
+            onNextScrollCompletion = null
         }
     }
 }
