@@ -13,6 +13,7 @@ import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCropProcedureDialog
 import com.autocrop.uielements.CubeOutPageTransformer
 import com.autocrop.uielements.view.crossFade
+import com.autocrop.uielements.view.show
 import com.autocrop.uielements.view.shrinkAndFinallyRemove
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.displaySnackbar
@@ -56,11 +57,18 @@ class ViewPagerHandler(
 
                 viewModel.dataSet.pageIndex(dataSetPosition).let{ pageIndex ->
                     pageIndicationTv.updateText(pageIndex)
-                    pageIndicationSeekBar.update(pageIndex)
+                    pageIndicationSeekBar.update(pageIndex, viewModel.scrolledRight.value!!)
                 }
             }
 
             viewPager.initialize(previousPosition)
+
+            if (viewModel.dataSet.size > 1)
+                pageIndicationLayout.show()
+            if (!viewModel.autoScroll){
+                discardingStatisticsTv.show()
+                buttonToolbar.show()
+            }
         }
     }
 
@@ -80,7 +88,7 @@ class ViewPagerHandler(
         // otherwise display discardedTextView and set page transformer
         if (viewModel.autoScroll)
             scroller.run(this, viewModel.maxScrolls(), binding.autoScrollingTextView)
-        if (viewModel.autoScroll)
+        else
             setPageTransformer()
     }
 
@@ -172,7 +180,7 @@ class ViewPagerHandler(
                     } ?: examinationActivity.invokeSubsequentFragment()
                     return
                 }
-                2 -> examinationActivity.runOnUiThread { binding.pageIndicationElements.shrinkAndFinallyRemove() }
+                2 -> examinationActivity.runOnUiThread { binding.pageIndicationLayout.shrinkAndFinallyRemove() }
                 else -> Unit
             }
             removeView(dataSetPosition)

@@ -42,7 +42,8 @@ class FlowFieldFragment:
         flowFieldBinding.setCaptureButton(binding.flowfieldCaptureButton, permissionsHandler)
 
         // display CropIOResultSnackbar upon activity entry
-        displayActivityEntrySnackbar()
+        if (savedInstanceState == null)
+            displayActivityEntrySnackbar()
     }
 
     private val nSavedCropsRetriever = IntentExtraRetriever<IntArray>(IntentExtraIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)

@@ -8,8 +8,6 @@ import androidx.core.text.color
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
-import com.autocrop.activities.examination.fragments.viewpager.dialogs.DiscardAllConfirmationDialog
-import com.autocrop.activities.examination.fragments.viewpager.dialogs.SaveAllConfirmationDialog
 import com.autocrop.uicontroller.fragment.ActivityRootFragment
 import com.autocrop.utils.android.IntentExtraRetriever
 import com.autocrop.utils.android.displaySnackbar
@@ -41,8 +39,8 @@ class ViewPagerFragment:
             savedInstanceState?.getInt(CURRENT_VIEW_PAGER_POSITION)
         )
 
-        setToolbarButtonOnClickListeners()
-        displayActivityEntrySnackbar()
+        if (savedInstanceState == null)
+            displayActivityEntrySnackbar()
     }
 
     private val nDismissedImagesRetriever = IntentExtraRetriever<Int>(IntentExtraIdentifier.N_DISMISSED_IMAGES)
@@ -61,23 +59,6 @@ class ViewPagerFragment:
                 R.drawable.ic_error_24
             )
         }
-    }
-
-    private fun setToolbarButtonOnClickListeners() {
-        arrayOf(
-            Triple(binding.saveAllButton, SaveAllConfirmationDialog()) { typedActivity.replaceCurrentFragmentWith(typedActivity.saveAllFragment, true) },
-            Triple(binding.discardAllButton, DiscardAllConfirmationDialog(), typedActivity::invokeSubsequentFragment)
-        )
-            .forEach { (button, dialogClass, resultListener) ->
-                parentFragmentManager.setFragmentResultListener(dialogClass.resultKey, this){
-                        _, _ -> resultListener()
-                }
-
-                button.setOnClickListener {
-                    dialogClass
-                        .show(parentFragmentManager)
-                }
-            }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -19,12 +19,12 @@ class ViewPagerViewModel:
     val dataSetPosition: LiveData<Int> by lazy {
         MutableLiveData(0)
     }
-    var scrolledRight = true
+    val scrolledRight: LiveData<Boolean> by lazy {
+        MutableLiveData(true)
+    }
 
     fun setDataSetPosition(viewPosition: Int, onScrollRight: Boolean? = null){
-        onScrollRight?.let {
-            scrolledRight = it
-        }
+        onScrollRight?.let { scrolledRight.mutableLiveData.postValue(it) }
         dataSetPosition.mutableLiveData.postValue(dataSet.correspondingPosition(viewPosition))
     }
 
@@ -34,7 +34,9 @@ class ViewPagerViewModel:
     // -------------Additional parameters
 
     companion object { const val MAX_VIEWS: Int = Int.MAX_VALUE }
-    var autoScroll = BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
+
+    var autoScroll: Boolean = BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
+
     val initialViewPosition: Int = (MAX_VIEWS / 2).run {
         minus(dataSet.correspondingPosition(this))
     }

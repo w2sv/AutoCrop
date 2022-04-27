@@ -16,7 +16,7 @@ import processing.core.PGraphics
 class FlowFieldBinding(activity: FragmentActivity,
                        canvasContainer: FrameLayout){
 
-    private val pFragment: PFragment
+    val pFragment: PFragment
 
     init {
         val (w, h) = screenResolution(activity.windowManager).run {x to y}
