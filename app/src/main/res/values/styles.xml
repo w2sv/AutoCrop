@@ -18,25 +18,10 @@
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">true</item>
 
-<!--        <item name="android:alertDialogStyle">@style/AlertDialogCustom</item>-->
+        <!-- set color accent -->
 
-<!--        <item name="android:listChoiceIndicatorMultiple">@drawable/custom_checkbox</item>-->
         <item name="colorAccent">@color/accentuated_tv</item>
-
-<!--        <item name="alertDialogTheme">@style/DialogTheme</item>-->
-<!--        <item name="android:alertDialogTheme">?alertDialogTheme</item>-->
-<!--        <item name="dialogTheme">?alertDialogTheme</item>-->
-<!--        <item name="android:dialogTheme">?alertDialogTheme</item>-->
-
-<!--        <item name="android:listChoiceBackgroundIndicator">@drawable/ic_baseline_redo_24</item>-->
     </style>
-
-<!--    <style name="DialogTheme" parent="Theme.AppCompat.Dialog.Alert">-->
-<!--&lt;!&ndash;        <item name="android:textColor">@color/loud_magenta</item>&ndash;&gt;-->
-<!--        <item name="colorAccent">@color/loud_magenta</item>-->
-
-<!--        <item name="android:backgroundTint">@color/dark_gray</item>-->
-<!--    </style>-->
 
     <!--    Splash Theme-->
 
