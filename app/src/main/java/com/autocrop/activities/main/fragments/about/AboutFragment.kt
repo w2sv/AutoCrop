@@ -10,6 +10,7 @@ import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.uielements.view.StringResourceCoupledTextView
 import com.autocrop.uielements.view.animate
 import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.autocrop.BuildConfig
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentAboutBinding
@@ -18,16 +19,14 @@ import java.util.*
 class AboutFragment:
     MainActivityFragment<MainFragmentAboutBinding>(){
 
+    private var w2svTvAnimation: YoYo.YoYoString? = null
+
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         binding.appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
         binding.trippyBrudinelettenImageView.setOnClickListener { it.animate(Techniques.Tada) }
 
         binding.w2svTv.setOnClickListener {
-            // WHOOPSIE DAISY! - view simply disappears after ZoomOutRight
-            // and has to be thus ZoomInRight'd back in
-            it.animate(Techniques.ZoomOutRight){
-                it.animate(Techniques.ZoomInRight)
-            }
+            w2svTvAnimation = it.animate(Techniques.ZoomOutUp)
 
             startActivity(
                 Intent(
@@ -36,6 +35,18 @@ class AboutFragment:
                 )
             )
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        w2svTvAnimation?.stop(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        w2svTvAnimation = null
     }
 }
 

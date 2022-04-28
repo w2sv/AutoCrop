@@ -5,11 +5,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
-import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.uielements.view.ViewModelRetriever
-import com.autocrop.uielements.view.show
 import com.w2sv.autocrop.R
 
 class PageIndicationBar(context: Context, attr: AttributeSet) :
