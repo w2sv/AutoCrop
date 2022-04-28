@@ -39,7 +39,7 @@
         android:layout_marginTop="200dp"
         android:layout_centerHorizontal="true"
 
-        android:text="@string/built_by"
+        android:text="@string/by"
         android:textSize="18sp">
     </TextView>
 
@@ -48,14 +48,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_centerHorizontal="true"
         android:layout_alignTop="@+id/built_by_tv"
+        android:layout_centerHorizontal="true"
 
         android:layout_marginTop="35dp"
 
         android:text="@string/w2sv"
-        android:textSize="32sp"
         android:textColor="@android:color/holo_purple"
+        android:textSize="32sp"
         android:textStyle="italic">
 
     </TextView>

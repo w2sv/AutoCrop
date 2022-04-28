@@ -35,7 +35,7 @@
     <string name="menu_item_about_the_app">About</string>
     <string name="menu_item_change_directory">Change Directory</string>
     <string name="got_it">Got it</string>
-    <string name="built_by">Built by:</string>
+    <string name="by">By:</string>
     <string name="w2sv">W2SV</string>
 
 </resources>
