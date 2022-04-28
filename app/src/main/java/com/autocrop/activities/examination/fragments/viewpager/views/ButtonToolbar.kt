@@ -7,12 +7,12 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.children
 import com.autocrop.activities.examination.ExaminationActivity
+import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.CropEntiretyProcedureDialog
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.DiscardAllConfirmationDialog
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SaveAllConfirmationDialog
 import com.autocrop.uielements.view.ViewModelRetriever
-import com.autocrop.uielements.view.show
 
 class ButtonToolbar(context: Context, attr: AttributeSet):
     Toolbar(context, attr),
@@ -63,5 +63,5 @@ class SaveAllButton(context: Context, attr: AttributeSet):
     CropEntiretyRegardingButton(context, attr, SaveAllConfirmationDialog()){
 
     override fun dialogResultListener() =
-        examinationActivity.replaceCurrentFragmentWith(examinationActivity.saveAllFragment, true)
+        examinationActivity.replaceCurrentFragmentWith(SaveAllFragment(), true)
 }

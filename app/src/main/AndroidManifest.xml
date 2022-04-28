@@ -45,9 +45,7 @@
         <!-- Activities -->
 
         <activity
-            android:name="com.autocrop.activities.main.MainActivity"
-            android:screenOrientation="unspecified"
-            android:theme="@style/Theme.App.Main"
+            android:name="com.autocrop.activities.splash.SplashActivity"
             android:exported="true">
 
             <intent-filter>
@@ -57,14 +55,18 @@
         </activity>
 
         <activity
+            android:name="com.autocrop.activities.main.MainActivity"
+            android:theme="@style/Theme.App.Main">
+
+        </activity>
+
+        <activity
             android:name="com.autocrop.activities.cropping.CroppingActivity"
-            android:theme="@style/Theme.App.Main"
-            android:screenOrientation="unspecified" />
+            android:theme="@style/Theme.App.Main" />
 
         <activity
             android:name="com.autocrop.activities.examination.ExaminationActivity"
-            android:theme="@style/Theme.App.Main"
-            android:screenOrientation="unspecified" />
+            android:theme="@style/Theme.App.Main" />
     </application>
 
 </manifest>

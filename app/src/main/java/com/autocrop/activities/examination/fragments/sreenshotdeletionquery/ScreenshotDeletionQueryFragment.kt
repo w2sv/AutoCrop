@@ -11,6 +11,7 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
+import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.databinding.ExaminationFragmentDeletionqueryBinding
 
 class ScreenshotDeletionQueryFragment :
@@ -32,9 +33,7 @@ class ScreenshotDeletionQueryFragment :
         // launch appTitleFragment after small delay for UX smoothness
         Handler(Looper.getMainLooper()).postDelayed(
             {
-                with(typedActivity){
-                    replaceCurrentFragmentWith(appTitleFragment, true)
-                }
+                typedActivity.replaceCurrentFragmentWith(AppTitleFragment(), true)
             },
             100
         )
