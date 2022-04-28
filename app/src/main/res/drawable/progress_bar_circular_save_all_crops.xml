@@ -15,7 +15,7 @@
             android:centerColor="@color/wine_red"
             android:centerY="0.5"
             android:endColor="@color/brudi_pink"
-            android:startColor="@color/magenta"
+            android:startColor="@color/magenta_dark"
             android:type="sweep"
             android:useLevel="false" />
     </shape>

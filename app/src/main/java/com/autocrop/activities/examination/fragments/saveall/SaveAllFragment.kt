@@ -16,9 +16,7 @@ class SaveAllFragment :
      * Launch async [processRemainingCropBundles] task, call [typedActivity].invokeSubsequentFragment
      * onPostExecute
      */
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         lifecycleScope.executeAsyncTask(
             { processRemainingCropBundles(BooleanUserPreferences.deleteScreenshots)},
             { typedActivity.invokeSubsequentFragment() }

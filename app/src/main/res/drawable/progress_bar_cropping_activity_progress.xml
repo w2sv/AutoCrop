@@ -7,7 +7,7 @@
 
                 <gradient
                     android:startColor="@color/ocean_blue"
-                    android:endColor="@color/magenta"/>
+                    android:endColor="@color/magenta_dark"/>
             </shape>
         </clip>
     </item>

@@ -41,6 +41,7 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
     private fun launchRootFragment(){
         supportFragmentManager
             .beginTransaction()
+            .setReorderingAllowed(true)
             .add(layoutId, rootFragment)
             .commit()
     }
@@ -48,19 +49,20 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
     fun replaceCurrentFragmentWith(fragment: Fragment, animationIds: Pair<Int, Int>? = null){
         supportFragmentManager
             .beginTransaction()
+            .setReorderingAllowed(true)
             .apply {
                 animationIds?.let {
                     setCustomAnimations(it.first, it.second)
                 }
             }
             .replace(layoutId, fragment)
-            .setReorderingAllowed(true)
             .commit()
     }
 
     fun swapFragments(hideFragment: Fragment, showFragment: Fragment){
         supportFragmentManager
             .beginTransaction()
+            .setReorderingAllowed(true)
             .setCustomAnimations(
                 R.animator.card_flip_left_in,
                 R.animator.card_flip_left_out,
@@ -69,7 +71,6 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
             )
             .hide(hideFragment)
             .addIfNecessaryAndShow(showFragment)
-            .setReorderingAllowed(true)
             .commit()
     }
 

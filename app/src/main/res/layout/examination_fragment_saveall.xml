@@ -14,7 +14,7 @@
         android:gravity="center"
 
         android:text="@string/crops_processing_in_progress"
-        android:textColor="@color/magenta"
+        android:textColor="@color/magenta_dark"
         android:textSize="30sp"
         android:textStyle="bold" />
 

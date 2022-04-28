@@ -64,11 +64,13 @@
         android:layout_alignParentEnd="true"
 
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="20dp">
+        android:layout_marginEnd="20dp"
+
+        android:visibility="invisible">
 
         <!-- https://en.proft.me/2018/02/5/decorating-seekbar-android/ -->
         <com.autocrop.activities.examination.fragments.viewpager.views.PageIndicationBar
-            android:id="@+id/page_indication_seek_bar"
+            android:id="@+id/page_indication_bar"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
 
@@ -96,7 +98,7 @@
             android:layout_alignParentEnd="true"
 
             android:text="@string/fracture"
-            android:textColor="@color/magenta"
+            android:textColor="@color/accentuated_tv"
             android:textSize="15sp"
             android:textStyle="italic"
 
@@ -114,7 +116,7 @@
         android:layout_marginTop="20dp"
 
         android:text="@string/auto_scrolling"
-        android:textColor="@color/saturated_magenta"
+        android:textColor="@color/accentuated_tv"
         android:textSize="16sp"
         android:textStyle="bold"
 

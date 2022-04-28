@@ -3,7 +3,6 @@ package com.autocrop.activities.main.fragments.flowfield
 import android.content.Context
 import android.text.SpannableStringBuilder
 import android.view.View
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.text.color
 import androidx.core.text.italic
@@ -61,7 +60,7 @@ class FlowFieldFragmentMenu(itemId2OnCLickListener: Map<Int, () -> Unit>, contex
             with(menu.findItem(id)){
                 title = SpannableStringBuilder().italic { color(
                     getColorInt(
-                        R.color.loud_magenta,
+                        R.color.magenta_bright,
                         context
                     )
                 ) {append(title)} }

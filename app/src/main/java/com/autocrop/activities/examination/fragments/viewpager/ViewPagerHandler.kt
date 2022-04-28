@@ -57,7 +57,7 @@ class ViewPagerHandler(
 
                 viewModel.dataSet.pageIndex(dataSetPosition).let{ pageIndex ->
                     pageIndicationTv.updateText(pageIndex)
-                    pageIndicationSeekBar.update(pageIndex, viewModel.scrolledRight.value!!)
+                    pageIndicationBar.update(pageIndex, viewModel.scrolledRight.value!!)
                 }
             }
 

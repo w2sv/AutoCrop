@@ -15,10 +15,10 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentAboutBinding
 import java.util.*
 
-class AboutFragment: MainActivityFragment<MainFragmentAboutBinding>(){
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+class AboutFragment:
+    MainActivityFragment<MainFragmentAboutBinding>(){
 
+    override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         binding.appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
         binding.trippyBrudinelettenImageView.setOnClickListener { it.animate(Techniques.Tada) }
 

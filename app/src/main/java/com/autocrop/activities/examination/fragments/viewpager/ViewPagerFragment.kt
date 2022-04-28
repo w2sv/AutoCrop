@@ -52,7 +52,7 @@ class ViewPagerFragment:
                     .append("Couldn't find cropping bounds for ")
                     .bold {
                         color(
-                            getColorInt(R.color.saturated_magenta, requireContext())
+                            getColorInt(R.color.magenta_saturated, requireContext())
                         ) { append("$it") }
                     }
                     .append(" image".numericallyInflected(it)),

@@ -10,9 +10,7 @@ import com.w2sv.autocrop.databinding.ExaminationFragmentApptitleBinding
 class AppTitleFragment
     : ExaminationActivityFragment<ExaminationFragmentApptitleBinding>() {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         binding.appTitleTextView.animate(
             listOf(Techniques.Shake, Techniques.Wobble, Techniques.Wave, Techniques.Tada).random()
         ){typedActivity.returnToMainActivity()}

@@ -48,6 +48,10 @@
         <entry key="app/src/main/res/layout/activity_main_fragment_about.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/activity_main_fragment_flowfield.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/activity_welcome.xml" value="0.14266304347826086" />
+        <entry key="app/src/main/res/layout/cropping.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/cropping_fragment.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/examination.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/examination_fragment_viewpager.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/main_fragment_flowfield.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/slide_item_container_examination_activity.xml" value="0.1276595744680851" />
         <entry key="app/src/main/res/layout/toolbar_examination_activity.xml" value="0.213768115942029" />
