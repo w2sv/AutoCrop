@@ -20,8 +20,8 @@
 
     <ImageButton
         android:id="@+id/menu_inflation_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
 
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
@@ -36,8 +36,8 @@
 
     <com.autocrop.activities.main.fragments.flowfield.CropSharingButton
         android:id="@+id/crop_sharing_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
 
         android:layout_alignTop="@id/menu_inflation_button"
         android:layout_alignParentEnd="true"
