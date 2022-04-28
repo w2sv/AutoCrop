@@ -1,30 +1,20 @@
 package com.autocrop.uicontroller.activity
 
 import android.os.Bundle
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.viewbinding.ViewBinding
-import com.autocrop.utils.reflectField
-import com.autocrop.utils.reflectMethod
 import com.w2sv.autocrop.R
 
 abstract class FragmentHostingActivity<VB: ViewBinding>
     : ViewBindingHandlingActivity<VB>() {
 
     /**
-     * Fragment being launched before exiting [onCreateCore]
+     * Fragment being launched in [onCreate]
      */
     abstract val rootFragment: Fragment
 
-    /**
-     * Retrieved bmo reflection from view binding;
-     *
-     * Note: Imposes the need for activity layout to carry the id "layout"
-     */
-    private val layoutId: Int by lazy {
-        binding.reflectField<ViewGroup>("layout").reflectMethod("id")
-    }
+    private val layoutId: Int = binding.root.id
 
     /**
      * Run [onCreateCore] and [launchRootFragment] if applicable
@@ -45,6 +35,9 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
             .add(layoutId, rootFragment)
             .commit()
     }
+
+    fun currentFragment(): Fragment? =
+        supportFragmentManager.findFragmentById(layoutId)
 
     protected companion object{
         val leftFlipAnimationIds = R.animator.card_flip_left_in to R.animator.card_flip_left_out

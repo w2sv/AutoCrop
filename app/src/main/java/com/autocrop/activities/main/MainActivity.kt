@@ -20,7 +20,7 @@ class MainActivity :
      * Return to [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app
      */
     override fun onBackPressed() {
-        supportFragmentManager.findFragmentById(binding.root.id)?.let { fragment ->
+        currentFragment()?.let { fragment ->
             if (fragment is AboutFragment)
                 returnToRootFragment(fragment)
             else
