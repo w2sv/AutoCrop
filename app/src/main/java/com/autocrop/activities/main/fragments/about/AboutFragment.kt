@@ -2,10 +2,12 @@ package com.autocrop.activities.main.fragments.about
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.util.AttributeSet
-import android.view.View
+import androidx.lifecycle.ViewModelProvider
+import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.uielements.view.StringResourceCoupledTextView
 import com.autocrop.uielements.view.animate
@@ -15,6 +17,7 @@ import com.w2sv.autocrop.BuildConfig
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentAboutBinding
 import java.util.*
+import kotlin.properties.Delegates
 
 class AboutFragment:
     MainActivityFragment<MainFragmentAboutBinding>(){
@@ -35,12 +38,18 @@ class AboutFragment:
                 )
             )
         }
+
+        with(sharedViewModel){
+            if (stoppedAboutFragment)
+                reinitializeRootFragment = true
+        }
     }
 
     override fun onStop() {
         super.onStop()
 
         w2svTvAnimation?.stop(true)
+        sharedViewModel.stoppedAboutFragment = true
     }
 
     override fun onResume() {

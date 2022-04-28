@@ -1,6 +1,8 @@
 package com.autocrop.activities.main
 
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.global.userPreferencesInstances
@@ -13,7 +15,8 @@ class MainActivity :
     FragmentHostingActivity<MainBinding>() {
 
     override val rootFragment by lazy{ FlowFieldFragment() }
-    val aboutFragment by lazy { AboutFragment() }
+
+    private val sharedViewModel: MainActivityViewModel by viewModels()
 
     /**
      * Supersede [R.style.Theme_App_Splash] upon activity entry
@@ -29,10 +32,24 @@ class MainActivity :
      * Return to [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app
      */
     override fun onBackPressed() {
-        if (aboutFragment.isVisible)
-            swapFragments(aboutFragment, rootFragment)
+        supportFragmentManager.findFragmentById(binding.root.id)?.let { fragment ->
+            if (fragment is AboutFragment)
+                returnToRootFragment(fragment)
+            else
+                finishAffinity()
+        }
+    }
+
+    private fun returnToRootFragment(attachedRootFragment: Fragment){
+        if (sharedViewModel.reinitializeRootFragment){
+            replaceCurrentFragmentWith(
+                FlowFieldFragment(),
+                leftFlipAnimationIds
+            )
+            sharedViewModel.resetValues()
+        }
         else
-            finishAffinity()
+            swapFragments(attachedRootFragment, rootFragment)
     }
 
     /**

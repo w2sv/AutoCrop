@@ -46,6 +46,11 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
             .commit()
     }
 
+    protected companion object{
+        val leftFlipAnimationIds = R.animator.card_flip_left_in to R.animator.card_flip_left_out
+        val rightFlipAnimationIds = R.animator.card_flip_right_in to R.animator.card_flip_right_out
+    }
+
     fun replaceCurrentFragmentWith(fragment: Fragment, animationIds: Pair<Int, Int>? = null){
         supportFragmentManager
             .beginTransaction()
@@ -64,10 +69,10 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
             .beginTransaction()
             .setReorderingAllowed(true)
             .setCustomAnimations(
-                R.animator.card_flip_left_in,
-                R.animator.card_flip_left_out,
-                R.animator.card_flip_right_in,
-                R.animator.card_flip_right_out
+                leftFlipAnimationIds.first,
+                leftFlipAnimationIds.second,
+                rightFlipAnimationIds.first,
+                rightFlipAnimationIds.second
             )
             .hide(hideFragment)
             .addIfNecessaryAndShow(showFragment)

@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-class ExaminationViewModelFactory(private val validSaveDirDocumentUri: Uri?)
+class ExaminationActivityViewModelFactory(private val validSaveDirDocumentUri: Uri?)
         : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")

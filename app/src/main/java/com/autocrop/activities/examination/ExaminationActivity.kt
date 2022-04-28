@@ -24,18 +24,16 @@ class ExaminationActivity :
     SharedViewModelHandlingActivity<ExaminationActivityViewModel> {
 
     override val rootFragment: ViewPagerFragment by lazy{ ViewPagerFragment() }
-    val saveAllFragment: SaveAllFragment by lazy { SaveAllFragment() }
-    private val screenshotDeletionQueryFragment: ScreenshotDeletionQueryFragment by lazy { ScreenshotDeletionQueryFragment() }
-    val appTitleFragment: AppTitleFragment by lazy { AppTitleFragment() }
 
     override lateinit var sharedViewModel: ExaminationActivityViewModel
 
-    override fun onCreateCore() = super.setSharedViewModel()
+    override fun onCreateCore() =
+        super.setSharedViewModel()
 
     override fun provideSharedViewModel(): ExaminationActivityViewModel =
         ViewModelProvider(
             this,
-            ExaminationViewModelFactory(
+            ExaminationActivityViewModelFactory(
                 validSaveDirDocumentUri = CropFileSaveDestinationPreferences.documentUri?.let{
                     if (uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
                         it
@@ -53,38 +51,42 @@ class ExaminationActivity :
         super.replaceCurrentFragmentWith(
             fragment,
             if (flipRight)
-                R.animator.card_flip_left_in to R.animator.card_flip_left_out
+                leftFlipAnimationIds
             else
-                R.animator.card_flip_right_in to R.animator.card_flip_right_out
+                rightFlipAnimationIds
         )
 
     /**
-     * Invoke [screenshotDeletionQueryFragment] in case of any screenshot uris whose deletion
-     * has to be confirmed, otherwise [appTitleFragment]
+     * Invoke [ScreenshotDeletionQueryFragment] in case of any screenshot uris whose deletion
+     * has to be confirmed, otherwise [AppTitleFragment]
      */
     fun invokeSubsequentFragment() =
         if (sharedViewModel.deletionQueryScreenshotUris.isNotEmpty())
-            replaceCurrentFragmentWith(screenshotDeletionQueryFragment, true)
+            replaceCurrentFragmentWith(ScreenshotDeletionQueryFragment(), true)
         else
-            replaceCurrentFragmentWith(appTitleFragment, false)
+            replaceCurrentFragmentWith(AppTitleFragment(), false)
 
     /**
-     * Block backPress throughout if either [saveAllFragment] or [appTitleFragment] showing,
+     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
      * otherwise return to MainActivity after confirmation
      */
     private val handleBackPress = BackPressHandler(this, "Tap again to return to main screen"){
         returnToMainActivity()
     }
 
-    override fun onBackPressed() = when {
-        appTitleFragment.isVisible -> Unit
-        saveAllFragment.isVisible -> {
-            displaySnackbar(
-                "Wait until crops have been saved",
-                R.drawable.ic_baseline_front_hand_24
-            )
+    override fun onBackPressed(){
+        supportFragmentManager.findFragmentById(binding.root.id)?.let { currentFragment ->
+            when (currentFragment) {
+                is AppTitleFragment -> Unit
+                is SaveAllFragment -> {
+                    displaySnackbar(
+                        "Wait until crops have been saved",
+                        R.drawable.ic_baseline_front_hand_24
+                    )
+                }
+                else -> handleBackPress()
+            }
         }
-        else -> handleBackPress()
     }
 
     fun returnToMainActivity(){

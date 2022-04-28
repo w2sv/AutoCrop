@@ -47,6 +47,7 @@
         <activity
             android:name="com.autocrop.activities.main.MainActivity"
             android:screenOrientation="unspecified"
+            android:theme="@style/Theme.App.Main"
             android:exported="true">
 
             <intent-filter>

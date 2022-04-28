@@ -13,6 +13,7 @@ import androidx.core.text.color
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
+import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.fragment.ActivityRootFragment
 import com.autocrop.utils.android.*
@@ -87,7 +88,7 @@ class FlowFieldFragment:
                 R.id.main_menu_item_rate_the_app to ::goToPlayStoreListing,
                 R.id.main_menu_item_about_the_app to {
                     with(typedActivity) {
-                        swapFragments(rootFragment, aboutFragment)
+                        swapFragments(this@FlowFieldFragment, AboutFragment())
                     }
                 }
             ),
