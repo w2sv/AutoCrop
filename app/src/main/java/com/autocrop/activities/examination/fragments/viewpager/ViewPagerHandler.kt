@@ -12,11 +12,13 @@ import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCropProcedureDialog
 import com.autocrop.uielements.CubeOutPageTransformer
+import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show
 import com.autocrop.uielements.view.shrinkAndFinallyRemove
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.displaySnackbar
+import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
 
@@ -180,7 +182,9 @@ class ViewPagerHandler(
                     } ?: examinationActivity.invokeSubsequentFragment()
                     return
                 }
-                2 -> examinationActivity.runOnUiThread { binding.pageIndicationLayout.shrinkAndFinallyRemove() }
+                2 -> examinationActivity.runOnUiThread {
+                    binding.pageIndicationLayout.animate(Techniques.ZoomOutRight)
+                }
                 else -> Unit
             }
             removeView(dataSetPosition)

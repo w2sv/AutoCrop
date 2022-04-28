@@ -1,11 +1,14 @@
 package com.autocrop.activities.main.fragments.flowfield
 
 import android.content.Context
+import android.graphics.PorterDuff
 import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.text.color
 import androidx.core.text.italic
+import androidx.core.view.children
+import androidx.core.view.iterator
 import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.uielements.makeIconsVisible
 import com.autocrop.uielements.persistMenuAfterClick
@@ -18,6 +21,7 @@ class FlowFieldFragmentMenu(itemId2OnCLickListener: Map<Int, () -> Unit>, contex
     init{
         menuInflater.inflate(R.menu.activity_main, menu)
 
+        setIconColor(context)
         setCheckableItems(context)
         setOnClickListeners(itemId2OnCLickListener)
         styleGroupDividers(context)
@@ -42,6 +46,12 @@ class FlowFieldFragmentMenu(itemId2OnCLickListener: Map<Int, () -> Unit>, contex
             }
     }
 
+    private fun setIconColor(context: Context){
+        menu.children.forEach {
+            it.icon?.setColorFilter(getColorInt(R.color.magenta_bright, context), PorterDuff.Mode.SRC_ATOP)
+        }
+    }
+
     private fun setOnClickListeners(itemId2OnCLickListener: Map<Int, () -> Unit>) = itemId2OnCLickListener.forEach { (id, onClickListener) ->
             with(menu.findItem(id)){
                 setOnMenuItemClickListener {
@@ -60,7 +70,7 @@ class FlowFieldFragmentMenu(itemId2OnCLickListener: Map<Int, () -> Unit>, contex
             with(menu.findItem(id)){
                 title = SpannableStringBuilder().italic { color(
                     getColorInt(
-                        R.color.magenta_bright,
+                        R.color.dark_gray,
                         context
                     )
                 ) {append(title)} }

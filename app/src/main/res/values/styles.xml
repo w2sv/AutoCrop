@@ -21,6 +21,7 @@
         <!-- set color accent -->
 
         <item name="colorAccent">@color/accentuated_tv</item>
+
     </style>
 
     <!--    Splash Theme-->

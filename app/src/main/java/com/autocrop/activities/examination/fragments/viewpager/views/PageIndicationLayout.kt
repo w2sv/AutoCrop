@@ -27,14 +27,14 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
             DecelerateInterpolator::class.java to 100L
         )
 
-        val newProgress: Int = viewModel.pageIndicationSeekbarPagePercentage(dataSetPosition, max)
-
-        with(ObjectAnimator.ofInt(this,"progress", newProgress)) {
-            with(if (displayBouncingAnimation(scrolledRight, newProgress)) BounceInterpolator::class.java else DecelerateInterpolator::class.java){
-                interpolator = newInstance()
-                duration = animationDuration.getValue(this)
+        viewModel.pageIndicationSeekbarPagePercentage(dataSetPosition, max)?.let { newProgress ->
+            with(ObjectAnimator.ofInt(this,"progress", newProgress)) {
+                with(if (displayBouncingAnimation(scrolledRight, newProgress)) BounceInterpolator::class.java else DecelerateInterpolator::class.java){
+                    interpolator = newInstance()
+                    duration = animationDuration.getValue(this)
+                }
+                start()
             }
-            start()
         }
     }
 

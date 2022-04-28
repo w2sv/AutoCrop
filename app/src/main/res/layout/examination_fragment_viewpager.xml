@@ -80,7 +80,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
 
-            android:thumb="@drawable/seekbar_thumb_examination_activity"
+            android:thumb="@drawable/ic_baseline_rocket_launch_24"
 
             android:outlineProvider="paddedBounds"
 
