@@ -14,63 +14,72 @@
 
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="130dp"/>
+        android:layout_marginTop="15dp"/>
 
     <ImageView
         android:id="@+id/trippy_brudineletten_image_view"
 
         android:layout_alignTop="@+id/app_title_text_view"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="110dp"
+        android:layout_marginTop="70dp"
 
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
 
         android:background="@drawable/trippy_brudineletten"
         android:contentDescription="@null">
     </ImageView>
 
-    <TextView
-        android:id="@+id/by_tv"
+    <RelativeLayout
+        android:id="@+id/by_layout"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
         android:layout_alignTop="@+id/trippy_brudineletten_image_view"
-        android:layout_marginTop="200dp"
-        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:layout_centerHorizontal="true">
 
-        android:text="@string/by"
-        android:textSize="18sp">
-    </TextView>
+        <TextView
+            android:id="@+id/by_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-    <TextView
-        android:id="@+id/w2sv_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+            android:text="@string/by"
+            android:textSize="18sp">
+        </TextView>
 
-        android:layout_alignTop="@+id/by_tv"
-        android:layout_centerHorizontal="true"
+        <TextView
+            android:id="@+id/w2sv_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-        android:layout_marginTop="35dp"
+            android:layout_alignBaseline="@+id/by_tv"
+            android:layout_marginTop="25dp"
 
-        android:text="@string/w2sv"
-        android:textColor="@android:color/holo_purple"
-        android:textSize="32sp"
-        android:textStyle="italic">
+            android:layout_alignStart="@+id/by_tv"
+            android:layout_marginStart="30dp"
 
-    </TextView>
+            android:text="@string/w2sv"
+            android:textColor="@android:color/holo_purple"
+            android:textSize="25sp"
+            android:textStyle="italic">
+
+        </TextView>
+
+    </RelativeLayout>
 
     <com.autocrop.activities.main.fragments.about.VersionTextView
         android:id="@+id/version_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_alignTop="@id/w2sv_tv"
+        android:layout_alignTop="@id/by_layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="95dp"
+        android:layout_marginTop="40dp"
 
         android:text="@string/version"
-        android:textSize="24sp">
+        android:textSize="21sp">
     </com.autocrop.activities.main.fragments.about.VersionTextView>
 
     <com.autocrop.activities.main.fragments.about.CopyrightTextView
@@ -78,7 +87,7 @@
         android:layout_height="wrap_content"
 
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="15dp"
         android:layout_centerHorizontal="true"
 
         android:text="@string/copyright"

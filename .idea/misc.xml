@@ -37,6 +37,8 @@
         <entry key="app/src/main/res/drawable/splash_background.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/splash_screen.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/trippy_brudineletten_background.xml" value="0.1825" />
+        <entry key="app/src/main/res/layout-land/main_fragment_about.xml" value="0.2222222222222222" />
+        <entry key="app/src/main/res/layout-sw600dp/main_fragment_about.xml" value="0.196875" />
         <entry key="app/src/main/res/layout/activity_cropping.xml" value="0.25679347826086957" />
         <entry key="app/src/main/res/layout/activity_cropping_fragment_cropping_unsuccessful.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_cropping_fragment_root.xml" value="0.19791666666666666" />
