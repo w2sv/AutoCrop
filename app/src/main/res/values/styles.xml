@@ -18,6 +18,11 @@
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">true</item>
 
+        <item name="android:listChoiceIndicatorMultiple">@drawable/custom_checkbox</item>
+<!--        <item name="android:listChoiceBackgroundIndicator">@drawable/ic_baseline_redo_24</item>-->
+
+<!--        <item name="android:checkboxStyle">@style/customCheckBoxStyle</item>-->
+
     </style>
 
     <!--    Splash Theme-->
