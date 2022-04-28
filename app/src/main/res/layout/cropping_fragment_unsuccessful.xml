@@ -21,7 +21,7 @@
         android:textStyle="italic"
         android:textAlignment="center"
         android:textSize="22sp"
-        android:textColor="@color/dark_green"/>
+        android:textColor="@color/dark_gray"/>
 
     <ImageView
         android:src="@drawable/ic_error_24"

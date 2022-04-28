@@ -14,7 +14,7 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
      */
     abstract val rootFragment: Fragment
 
-    private val layoutId: Int = binding.root.id
+    private val layoutId: Int by lazy { binding.root.id }
 
     /**
      * Run [onCreateCore] and [launchRootFragment] if applicable

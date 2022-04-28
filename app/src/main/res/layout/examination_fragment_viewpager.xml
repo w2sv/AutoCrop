@@ -26,7 +26,7 @@
             android:background="@android:color/transparent"
             android:text="@string/discard_all_button"
             android:textStyle="bold"
-            android:textColor="@color/light_gray"
+            android:textColor="@color/accentuated_tv"
             android:translationX="-10dp" />
 
         <!-- Save All -->
@@ -39,7 +39,7 @@
             android:background="@android:color/transparent"
             android:text="@string/save_all_button"
             android:textStyle="bold"
-            android:textColor="@color/light_gray"
+            android:textColor="@color/accentuated_tv"
             android:translationX="-10dp"/>
 
     </com.autocrop.activities.examination.fragments.viewpager.views.ButtonToolbar>
@@ -98,7 +98,7 @@
             android:layout_alignParentEnd="true"
 
             android:text="@string/fracture"
-            android:textColor="@color/accentuated_tv"
+            android:textColor="@color/light_gray"
             android:textSize="15sp"
             android:textStyle="italic"
 

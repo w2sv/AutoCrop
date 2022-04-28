@@ -3,14 +3,28 @@
     <item>
         <shape android:shape="oval">
             <solid
-                android:color="@color/magenta_bright"/>
+                android:color="@color/magenta_dark"/>
             <size
                 android:width="14dp"
                 android:height="14dp"/>
             <stroke
                 android:height="0.1dip"
                 android:width="0.1dip"
-                android:color="@android:color/black" />
+                android:color="@android:color/holo_purple" />
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="oval">
+            <solid
+                android:color="@color/magenta_dark"/>
+            <size
+                android:width="14dp"
+                android:height="14dp"/>
+            <stroke
+                android:height="0.1dip"
+                android:width="0.1dip"
+                android:color="@android:color/holo_purple" />
         </shape>
     </item>
 </layer-list>

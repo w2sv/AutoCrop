@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/drawable/gradient.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/gradient_about_screen_background.xml" value="0.2515" />
         <entry key="app/src/main/res/drawable/gradient_background_main.xml" value="0.1105" />
+        <entry key="app/src/main/res/drawable/gradient_general_background.xml" value="0.237" />
         <entry key="app/src/main/res/drawable/ic_auto_crop_logo.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/ic_autocrop_logo.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/ic_autocrop_logo_1_.xml" value="0.1815" />
@@ -37,6 +38,7 @@
         <entry key="app/src/main/res/drawable/splash_background.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/splash_screen.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/trippy_brudineletten_background.xml" value="0.1825" />
+        <entry key="app/src/main/res/layout-land/cropping_fragment_unsuccessful.xml" value="0.2222222222222222" />
         <entry key="app/src/main/res/layout-land/examination_fragment_viewpager.xml" value="0.2222222222222222" />
         <entry key="app/src/main/res/layout-land/main_fragment_about.xml" value="0.2222222222222222" />
         <entry key="app/src/main/res/layout-sw600dp/main_fragment_about.xml" value="0.196875" />
@@ -55,6 +57,7 @@
         <entry key="app/src/main/res/layout/cropping.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/cropping_fragment.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/cropping_fragment_cropping_unsuccessful.xml" value="0.21547669944420692" />
+        <entry key="app/src/main/res/layout/cropping_fragment_unsuccessful.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/examination.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/examination_fragment_apptitle.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/examination_fragment_deletionquery.xml" value="0.21547669944420692" />

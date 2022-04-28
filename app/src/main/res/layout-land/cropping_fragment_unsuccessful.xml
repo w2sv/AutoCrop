@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/cropping_unsuccessful_text_view"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="40dp"
+        android:layout_marginHorizontal="40dp"
+
+        android:layout_centerHorizontal="true"
+
+        android:text="@string/cropping_failure"
+        android:maxLines="1"
+        android:textStyle="italic"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        android:textColor="@color/dark_gray"/>
+
+    <ImageView
+        android:src="@drawable/ic_error_24"
+
+        android:layout_width="@dimen/error_icon_cropping_failure_screen"
+        android:layout_height="@dimen/error_icon_cropping_failure_screen"
+
+        android:layout_alignStart="@+id/cropping_unsuccessful_text_view"
+        android:layout_alignBottom="@+id/cropping_unsuccessful_text_view"
+        android:layout_marginStart="@dimen/error_icon_cropping_failure_horizontal_margin"
+        android:layout_marginBottom="@dimen/error_icon_cropping_failure_vertical_margin"
+
+        android:contentDescription="@null">
+    </ImageView>
+
+    <ImageView
+        android:src="@drawable/ic_error_24"
+
+        android:layout_width="@dimen/error_icon_cropping_failure_screen"
+        android:layout_height="@dimen/error_icon_cropping_failure_screen"
+
+        android:layout_alignEnd="@+id/cropping_unsuccessful_text_view"
+        android:layout_alignBottom="@+id/cropping_unsuccessful_text_view"
+        android:layout_marginEnd="@dimen/error_icon_cropping_failure_horizontal_margin"
+        android:layout_marginBottom="@dimen/error_icon_cropping_failure_vertical_margin"
+
+        android:contentDescription="@null">
+    </ImageView>
+
+    <TextView
+        android:id="@+id/cropping_unsuccessful_instruction"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="50dp"
+
+        android:gravity="center"
+
+        android:textAlignment="center"
+        android:text="@string/cropping_failure_instruction_text_view"
+        android:textSize="16sp">
+    </TextView>
+
+    <Button
+        android:id="@+id/cropping_unsuccessful_got_it_button"
+
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+
+        android:layout_centerHorizontal="true"
+
+        android:background="@color/magenta_saturated"
+
+        android:text="@string/got_it"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="italic"/>
+</RelativeLayout>

@@ -17,7 +17,7 @@ class MainActivity :
     private val sharedViewModel: MainActivityViewModel by viewModels()
 
     /**
-     * Return to [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app
+     * [returnToRootFragment] if [AboutFragment] showing, otherwise exit app
      */
     override fun onBackPressed() {
         currentFragment()?.let { fragment ->
