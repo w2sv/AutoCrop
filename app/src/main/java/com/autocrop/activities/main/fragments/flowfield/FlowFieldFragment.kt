@@ -6,24 +6,19 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.text.color
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.global.CropFileSaveDestinationPreferences
-import com.autocrop.uicontroller.fragment.ActivityRootFragment
 import com.autocrop.utils.android.*
-import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding
 
 class FlowFieldFragment:
-    MainActivityFragment<MainFragmentFlowfieldBinding>(),
-    ActivityRootFragment {
+    MainActivityFragment<MainFragmentFlowfieldBinding>() {
 
     private val permissionsHandler = PermissionsHandler(this)
     private lateinit var flowFieldBinding: FlowFieldBinding
@@ -40,36 +35,6 @@ class FlowFieldFragment:
         // set button onClickListeners
         setImageSelectionButtonOnClickListener()
         setMenuInflationButtonOnClickListener()
-
-        // display CropIOResultSnackbar upon activity entry
-        if (savedInstanceState == null)
-            displayActivityEntrySnackbar()
-    }
-
-    private val nSavedCropsRetriever = IntentExtraRetriever<IntArray>(IntentExtraIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)
-    private val cropWriteDirPathRetriever = IntentExtraRetriever<String>(IntentExtraIdentifier.CROP_WRITE_DIR_PATH)
-
-    /**
-     * Notifies as to IO results from previous ExaminationActivity cycle
-     */
-    override fun displayActivityEntrySnackbar(){
-        nSavedCropsRetriever(requireActivity().intent)?.let {
-            val (nSavedCrops, nDeletedScreenshots) = it[0] to it[1]
-
-            when (nSavedCrops) {
-                0 -> requireActivity().displaySnackbar("Discarded all crops", R.drawable.ic_outline_sentiment_dissatisfied_24)
-                else ->
-                    requireActivity().displaySnackbar(
-                        SpannableStringBuilder().apply {
-                            append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                            color(getColorInt(NotificationColor.SUCCESS, requireContext())){append(cropWriteDirPathRetriever(requireActivity().intent)!!)}
-                            if (nDeletedScreenshots != 0)
-                                append(" and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} ${"screenshot".numericallyInflected(nDeletedScreenshots)}")
-                        },
-                        R.drawable.ic_baseline_done_24
-                    )
-            }
-        }
     }
 
     //$$$$$$$$$$$$$$$

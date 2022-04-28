@@ -7,7 +7,7 @@ import androidx.viewbinding.ViewBinding
 import java.lang.reflect.ParameterizedType
 
 abstract class ViewBindingHandlingActivity<VB: ViewBinding>
-    : FragmentActivity(){
+    : ExtendedActivity(){
 
     @Suppress("UNCHECKED_CAST")
     protected val binding: VB by lazy {
