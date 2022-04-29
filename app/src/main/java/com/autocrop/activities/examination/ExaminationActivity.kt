@@ -14,7 +14,7 @@ import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
-import com.autocrop.uicontroller.activity.SharedViewModelHandlingActivity
+import com.autocrop.uicontroller.activity.ViewModelScopedActivity
 import com.autocrop.utils.android.BackPressHandler
 import com.autocrop.utils.android.displaySnackbar
 import com.autocrop.utils.android.getColorInt
@@ -24,26 +24,19 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ExaminationBinding
 
 class ExaminationActivity :
-    FragmentHostingActivity<ExaminationBinding, ViewPagerFragment>(ViewPagerFragment::class.java),
-    SharedViewModelHandlingActivity<ExaminationActivityViewModel> {
+    FragmentHostingActivity<ExaminationBinding, ViewPagerFragment, ExaminationActivityViewModel>(
+        ViewPagerFragment::class.java,
+        ExaminationActivityViewModel::class.java) {
 
-    override lateinit var sharedViewModel: ExaminationActivityViewModel
-
-    override fun onCreateCore() =
-        super.setSharedViewModel()
-
-    override fun provideSharedViewModel(): ExaminationActivityViewModel =
-        ViewModelProvider(
-            this,
-            ExaminationActivityViewModelFactory(
-                validSaveDirDocumentUri = CropFileSaveDestinationPreferences.documentUri?.let{
-                    if (uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
-                        it
-                    else
-                        null
-                }
-            )
-        )[ExaminationActivityViewModel::class.java]
+    override fun viewModelFactory(): ViewModelProvider.Factory =
+        ExaminationActivityViewModelFactory(
+            validSaveDirDocumentUri = CropFileSaveDestinationPreferences.documentUri?.let{
+                if (uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
+                    it
+                else
+                    null
+            }
+        )
 
     override fun displayEntrySnackbar(){
         intentExtra(IntentExtraIdentifier.N_DISMISSED_IMAGES, blacklistValue = 0)?.let {

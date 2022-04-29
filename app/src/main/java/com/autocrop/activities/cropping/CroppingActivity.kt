@@ -8,25 +8,18 @@ import com.autocrop.activities.cropping.fragments.cropping.CroppingFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
-import com.autocrop.uicontroller.activity.SharedViewModelHandlingActivity
 import com.autocrop.utils.android.BackPressHandler
 import com.w2sv.autocrop.databinding.CroppingBinding
 
 class CroppingActivity :
-    FragmentHostingActivity<CroppingBinding, CroppingFragment>(CroppingFragment::class.java),
-    SharedViewModelHandlingActivity<CroppingActivityViewModel> {
+    FragmentHostingActivity<CroppingBinding, CroppingFragment, CroppingActivityViewModel>(
+        CroppingFragment::class.java,
+        CroppingActivityViewModel::class.java) {
 
-    override lateinit var sharedViewModel: CroppingActivityViewModel
-
-    override fun onCreateCore() = super.setSharedViewModel()
-
-    override fun provideSharedViewModel(): CroppingActivityViewModel =
-        ViewModelProvider(
-            this,
-            CroppingActivityViewModelFactory(
-                uris = intent.getParcelableArrayListExtra(IntentExtraIdentifier.SELECTED_IMAGE_URIS)!!
-            )
-        )[CroppingActivityViewModel::class.java]
+    override fun viewModelFactory(): ViewModelProvider.Factory =
+        CroppingActivityViewModelFactory(
+            uris = intent.getParcelableArrayListExtra(IntentExtraIdentifier.SELECTED_IMAGE_URIS)!!
+        )
 
     fun returnToMainActivity() {
         startActivity(

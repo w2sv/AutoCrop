@@ -1,7 +1,6 @@
 package com.autocrop.activities.main
 
 import android.text.SpannableStringBuilder
-import androidx.activity.viewModels
 import androidx.core.text.color
 import androidx.fragment.app.Fragment
 import com.autocrop.activities.IntentExtraIdentifier
@@ -9,15 +8,18 @@ import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.global.userPreferencesInstances
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
-import com.autocrop.utils.android.*
+import com.autocrop.utils.android.NotificationColor
+import com.autocrop.utils.android.displaySnackbar
+import com.autocrop.utils.android.getApplicationWideSharedPreferences
+import com.autocrop.utils.android.getColorInt
 import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainBinding
 
 class MainActivity :
-    FragmentHostingActivity<MainBinding, FlowFieldFragment>(FlowFieldFragment::class.java) {
-
-    private val sharedViewModel: MainActivityViewModel by viewModels()
+    FragmentHostingActivity<MainBinding, FlowFieldFragment, MainActivityViewModel>(
+        FlowFieldFragment::class.java,
+        MainActivityViewModel::class.java) {
 
     /**
      * Notifies as to IO results from previous ExaminationActivity cycle

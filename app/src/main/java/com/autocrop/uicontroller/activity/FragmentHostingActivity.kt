@@ -3,11 +3,14 @@ package com.autocrop.uicontroller.activity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
 import com.w2sv.autocrop.R
 
-abstract class FragmentHostingActivity<VB: ViewBinding, F: Fragment>(private val rootFragmentClass: Class<F>)
-    : EntrySnackbarDisplayingActivity<VB>() {
+abstract class FragmentHostingActivity<VB: ViewBinding, F: Fragment, VM: ViewModel>(
+    private val rootFragmentClass: Class<F>,
+    viewModelClass: Class<VM>)
+        : ViewModelScopedActivity<VB, VM>(viewModelClass) {
 
     private val layoutId: Int by lazy { binding.root.id }
 
