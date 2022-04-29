@@ -21,14 +21,11 @@ class MainActivity :
 
     private val sharedViewModel: MainActivityViewModel by viewModels()
 
-    private val nSavedCropsRetriever = IntentExtraRetriever<IntArray>(IntentExtraIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)
-    private val cropWriteDirPathRetriever = IntentExtraRetriever<String>(IntentExtraIdentifier.CROP_WRITE_DIR_PATH)
-
     /**
      * Notifies as to IO results from previous ExaminationActivity cycle
      */
     override fun displayEntrySnackbar(){
-        nSavedCropsRetriever(intent)?.let {
+        intentExtra<IntArray>(IntentExtraIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)?.let {
             val (nSavedCrops, nDeletedScreenshots) = it[0] to it[1]
 
             when (nSavedCrops) {
@@ -37,7 +34,7 @@ class MainActivity :
                     displaySnackbar(
                         SpannableStringBuilder().apply {
                             append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                            color(getColorInt(NotificationColor.SUCCESS, this@MainActivity)){append(cropWriteDirPathRetriever(intent)!!)}
+                            color(getColorInt(NotificationColor.SUCCESS, this@MainActivity)){append(intentExtra<String>(IntentExtraIdentifier.CROP_WRITE_DIR_PATH)!!)}
                             if (nDeletedScreenshots != 0)
                                 append(" and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} ${"screenshot".numericallyInflected(nDeletedScreenshots)}")
                         },

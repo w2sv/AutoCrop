@@ -7,7 +7,7 @@ import androidx.viewbinding.ViewBinding
 import com.w2sv.autocrop.R
 
 abstract class FragmentHostingActivity<VB: ViewBinding>
-    : ViewBindingHandlingActivity<VB>() {
+    : EntrySnackbarDisplayingActivity<VB>() {
 
     /**
      * Fragment being launched in [onCreate]
@@ -22,6 +22,7 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onCreateCore()
+
         if (savedInstanceState == null)
             launchRootFragment()
     }

@@ -45,10 +45,8 @@ class ExaminationActivity :
             )
         )[ExaminationActivityViewModel::class.java]
 
-    private val nDismissedImagesRetriever = IntentExtraRetriever<Int>(IntentExtraIdentifier.N_DISMISSED_IMAGES)
-
     override fun displayEntrySnackbar(){
-        nDismissedImagesRetriever(intent, 0) ?.let {
+        intentExtra(IntentExtraIdentifier.N_DISMISSED_IMAGES, blacklistValue = 0)?.let {
             displaySnackbar(
                 SpannableStringBuilder()
                     .append("Couldn't find cropping bounds for ")
