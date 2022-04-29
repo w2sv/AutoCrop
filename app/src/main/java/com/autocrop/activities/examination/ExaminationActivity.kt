@@ -106,11 +106,10 @@ class ExaminationActivity :
                                 nDeletedScreenshots
                             )
                         )
-                        if (nSavedCrops != 0)
-                            putExtra(
-                                IntentExtraIdentifier.CROP_WRITE_DIR_PATH,
-                                cropWriteDirIdentifier()
-                            )
+                        putExtra(
+                            IntentExtraIdentifier.CROP_WRITE_DIR_PATH,
+                            cropWriteDirIdentifier()
+                        )
                         if (cropSavingUris.isNotEmpty())
                             putParcelableArrayListExtra(
                                 IntentExtraIdentifier.CROP_SAVING_URIS,

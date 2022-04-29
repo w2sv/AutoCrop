@@ -3,6 +3,7 @@ package com.autocrop.activities.main
 import android.text.SpannableStringBuilder
 import androidx.core.text.color
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
