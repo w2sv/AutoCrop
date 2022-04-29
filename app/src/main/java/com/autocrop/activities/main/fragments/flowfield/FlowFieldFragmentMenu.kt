@@ -46,6 +46,7 @@ class FlowFieldFragmentMenu(itemId2OnCLickListener: Map<Int, () -> Unit>, contex
             }
     }
 
+    @Suppress("DEPRECATION")
     private fun setIconColor(context: Context){
         menu.children.forEach {
             it.icon?.setColorFilter(getColorInt(R.color.magenta_bright, context), PorterDuff.Mode.SRC_ATOP)
