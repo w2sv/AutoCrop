@@ -45,7 +45,7 @@ class ExaminationActivity :
                     .append("Couldn't find cropping bounds for ")
                     .bold {
                         color(
-                            getColorInt(R.color.magenta_saturated, this@ExaminationActivity)
+                            getColorInt(R.color.holo_purple, this@ExaminationActivity)
                         ) { append("$it") }
                     }
                     .append(" image".numericallyInflected(it)),
