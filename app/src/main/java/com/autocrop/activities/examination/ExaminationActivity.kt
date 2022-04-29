@@ -4,7 +4,6 @@ import android.content.Intent
 import android.text.SpannableStringBuilder
 import androidx.core.text.bold
 import androidx.core.text.color
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentExtraIdentifier
@@ -16,16 +15,17 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.uicontroller.activity.SharedViewModelHandlingActivity
-import com.autocrop.utils.android.*
+import com.autocrop.utils.android.BackPressHandler
+import com.autocrop.utils.android.displaySnackbar
+import com.autocrop.utils.android.getColorInt
+import com.autocrop.utils.android.uriPermissionGranted
 import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ExaminationBinding
 
 class ExaminationActivity :
-    FragmentHostingActivity<ExaminationBinding>(),
+    FragmentHostingActivity<ExaminationBinding, ViewPagerFragment>(ViewPagerFragment::class.java),
     SharedViewModelHandlingActivity<ExaminationActivityViewModel> {
-
-    override val rootFragment: ViewPagerFragment by lazy{ ViewPagerFragment() }
 
     override lateinit var sharedViewModel: ExaminationActivityViewModel
 
@@ -64,15 +64,6 @@ class ExaminationActivity :
     //$$$$$$$$$$$$$$$$
     // Post Creation $
     //$$$$$$$$$$$$$$$$
-
-    fun replaceCurrentFragmentWith(fragment: Fragment, flipRight: Boolean) =
-        super.replaceCurrentFragmentWith(
-            fragment,
-            if (flipRight)
-                leftFlipAnimationIds
-            else
-                rightFlipAnimationIds
-        )
 
     /**
      * Invoke [ScreenshotDeletionQueryFragment] in case of any screenshot uris whose deletion

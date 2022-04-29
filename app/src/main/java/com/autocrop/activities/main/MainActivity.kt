@@ -15,9 +15,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainBinding
 
 class MainActivity :
-    FragmentHostingActivity<MainBinding>() {
-
-    override val rootFragment by lazy{ FlowFieldFragment() }
+    FragmentHostingActivity<MainBinding, FlowFieldFragment>(FlowFieldFragment::class.java) {
 
     private val sharedViewModel: MainActivityViewModel by viewModels()
 
@@ -45,27 +43,27 @@ class MainActivity :
     }
 
     /**
-     * [returnToRootFragment] if [AboutFragment] showing, otherwise exit app
+     * [returnToFlowFieldFragment] if [AboutFragment] showing, otherwise exit app
      */
     override fun onBackPressed() {
         currentFragment()?.let { fragment ->
             if (fragment is AboutFragment)
-                returnToRootFragment(fragment)
+                returnToFlowFieldFragment(fragment)
             else
                 finishAffinity()
         }
     }
 
-    private fun returnToRootFragment(attachedRootFragment: Fragment){
+    private fun returnToFlowFieldFragment(attachedFragment: Fragment){
         if (sharedViewModel.reinitializeRootFragment){
             replaceCurrentFragmentWith(
                 FlowFieldFragment(),
-                leftFlipAnimationIds
+                false
             )
             sharedViewModel.resetValues()
         }
         else
-            swapFragments(attachedRootFragment, rootFragment)
+            swapFragments(attachedFragment, rootFragment()!!)
     }
 
     /**

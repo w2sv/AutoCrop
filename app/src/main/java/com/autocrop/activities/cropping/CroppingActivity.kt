@@ -13,13 +13,10 @@ import com.autocrop.utils.android.BackPressHandler
 import com.w2sv.autocrop.databinding.CroppingBinding
 
 class CroppingActivity :
-    FragmentHostingActivity<CroppingBinding>(),
+    FragmentHostingActivity<CroppingBinding, CroppingFragment>(CroppingFragment::class.java),
     SharedViewModelHandlingActivity<CroppingActivityViewModel> {
 
     override lateinit var sharedViewModel: CroppingActivityViewModel
-
-    override val rootFragment: CroppingFragment by lazy{ CroppingFragment() }
-    val croppingFailedFragment: CroppingFailedFragment by lazy{ CroppingFailedFragment() }
 
     override fun onCreateCore() = super.setSharedViewModel()
 
@@ -42,24 +39,19 @@ class CroppingActivity :
      * Return to MainActivity on confirmed back press
      */
     private val handleBackPress = BackPressHandler(this, "Tap again to cancel") {
-        rootFragment.onStop()
+//        rootFragment.onStop()
         returnToMainActivity()
     }
 
     /**
-     * Return directly to [MainActivity] if [croppingFailedFragment] visible,
+     * Directly [returnToMainActivity] if [CroppingFailedFragment] visible,
      * otherwise [returnToMainActivity] upon confirmed back press
      */
     override fun onBackPressed() {
-        if (croppingFailedFragment.isVisible)
-            returnToMainActivity()
-        else if (rootFragment.isVisible)
-            handleBackPress()
+        when (currentFragment()){
+            is CroppingFailedFragment -> returnToMainActivity()
+            is CroppingFragment -> handleBackPress()
+            else -> Unit
+        }
     }
-//
-//    override fun onStop() {
-//        super.onStop()
-//
-//        finishAndRemoveTask()
-//    }
 }

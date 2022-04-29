@@ -6,13 +6,8 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.viewbinding.ViewBinding
 import com.w2sv.autocrop.R
 
-abstract class FragmentHostingActivity<VB: ViewBinding>
+abstract class FragmentHostingActivity<VB: ViewBinding, F: Fragment>(private val rootFragmentClass: Class<F>)
     : EntrySnackbarDisplayingActivity<VB>() {
-
-    /**
-     * Fragment being launched in [onCreate]
-     */
-    abstract val rootFragment: Fragment
 
     private val layoutId: Int by lazy { binding.root.id }
 
@@ -33,25 +28,32 @@ abstract class FragmentHostingActivity<VB: ViewBinding>
         supportFragmentManager
             .beginTransaction()
             .setReorderingAllowed(true)
-            .add(layoutId, rootFragment)
+            .add(layoutId, rootFragmentClass.newInstance(), ROOT_FRAGMENT_TAG)
             .commit()
     }
 
-    fun currentFragment(): Fragment? =
+    protected fun rootFragment(): Fragment? =
+        supportFragmentManager.findFragmentByTag(ROOT_FRAGMENT_TAG)
+
+    protected fun currentFragment(): Fragment? =
         supportFragmentManager.findFragmentById(layoutId)
 
-    protected companion object{
+    private companion object{
+        const val ROOT_FRAGMENT_TAG = "ROOT_FRAGMENT"
+
         val leftFlipAnimationIds = R.animator.card_flip_left_in to R.animator.card_flip_left_out
         val rightFlipAnimationIds = R.animator.card_flip_right_in to R.animator.card_flip_right_out
     }
 
-    fun replaceCurrentFragmentWith(fragment: Fragment, animationIds: Pair<Int, Int>? = null){
+    fun replaceCurrentFragmentWith(fragment: Fragment, flipRight: Boolean? = null){
         supportFragmentManager
             .beginTransaction()
             .setReorderingAllowed(true)
             .apply {
-                animationIds?.let {
-                    setCustomAnimations(it.first, it.second)
+                flipRight?.let {
+                    with(if (it) rightFlipAnimationIds else leftFlipAnimationIds){
+                        setCustomAnimations(first, second)
+                    }
                 }
             }
             .replace(layoutId, fragment)
