@@ -15,7 +15,6 @@ import com.autocrop.uielements.CubeOutPageTransformer
 import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show
-import com.autocrop.uielements.view.shrinkAndFinallyRemove
 import com.autocrop.utils.Index
 import com.autocrop.utils.android.displaySnackbar
 import com.daimajia.androidanimations.library.Techniques
@@ -183,7 +182,7 @@ class ViewPagerHandler(
                     return
                 }
                 2 -> examinationActivity.runOnUiThread {
-                    binding.pageIndicationLayout.animate(Techniques.ZoomOutRight)
+                    binding.pageIndicationLayout.animate(Techniques.FlipOutY)
                 }
                 else -> Unit
             }

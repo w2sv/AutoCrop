@@ -26,7 +26,7 @@
             android:background="@android:color/transparent"
             android:text="@string/discard_all_button"
             android:textStyle="bold"
-            android:textColor="@color/accentuated_tv"
+            android:textColor="@color/magenta_saturated"
             android:translationX="-10dp" />
 
         <!-- Save All -->
@@ -39,7 +39,7 @@
             android:background="@android:color/transparent"
             android:text="@string/save_all_button"
             android:textStyle="bold"
-            android:textColor="@color/accentuated_tv"
+            android:textColor="@color/magenta_saturated"
             android:translationX="-10dp"/>
 
     </com.autocrop.activities.examination.fragments.viewpager.views.ButtonToolbar>
@@ -63,7 +63,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
 
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="26dp"
         android:layout_marginEnd="20dp"
 
         android:visibility="invisible">
@@ -76,11 +76,10 @@
 
             android:splitTrack="false"
 
-            android:layout_marginTop="2dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
 
-            android:thumb="@drawable/ic_baseline_rocket_launch_24"
+            android:thumb="@drawable/ic_baseline_location_on_24"
 
             android:outlineProvider="paddedBounds"
 
@@ -94,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_alignParentTop="true"
+            android:layout_alignBaseline="@+id/page_indication_bar"
             android:layout_alignParentEnd="true"
 
             android:text="@string/fracture"
@@ -116,7 +115,7 @@
         android:layout_marginTop="20dp"
 
         android:text="@string/auto_scrolling"
-        android:textColor="@color/accentuated_tv"
+        android:textColor="@android:color/holo_purple"
         android:textSize="16sp"
         android:textStyle="bold"
 
