@@ -14,7 +14,6 @@ import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
-import com.autocrop.uicontroller.activity.ViewModelScopedActivity
 import com.autocrop.utils.android.BackPressHandler
 import com.autocrop.utils.android.displaySnackbar
 import com.autocrop.utils.android.getColorInt
