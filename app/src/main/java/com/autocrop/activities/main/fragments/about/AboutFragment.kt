@@ -1,23 +1,13 @@
 package com.autocrop.activities.main.fragments.about
 
-import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.util.AttributeSet
-import androidx.lifecycle.ViewModelProvider
-import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.activities.main.fragments.MainActivityFragment
-import com.autocrop.uielements.view.StringResourceCoupledTextView
 import com.autocrop.uielements.view.animate
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
-import com.w2sv.autocrop.BuildConfig
-import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentAboutBinding
-import java.util.*
-import kotlin.properties.Delegates
 
 class AboutFragment:
     MainActivityFragment<MainFragmentAboutBinding>(){
@@ -57,20 +47,4 @@ class AboutFragment:
 
         w2svTvAnimation = null
     }
-}
-
-class VersionTextView(context: Context, attr: AttributeSet):
-    StringResourceCoupledTextView(context, attr, R.string.version){
-
-    init {
-        text = stringResource.format(BuildConfig.VERSION_NAME)
-
-        setOnClickListener { it.animate(Techniques.RubberBand) }
-    }
-}
-
-class CopyrightTextView(context: Context, attr: AttributeSet):
-    StringResourceCoupledTextView(context, attr, R.string.copyright){
-
-    init { text = stringResource.format(Calendar.getInstance().get(Calendar.YEAR)) }
 }
