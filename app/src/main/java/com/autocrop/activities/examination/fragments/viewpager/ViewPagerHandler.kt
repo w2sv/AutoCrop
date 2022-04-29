@@ -33,7 +33,6 @@ class ViewPagerHandler(
 
         examinationActivity.runOnUiThread {
             crossFade(
-                examinationActivity.resources.getInteger(R.integer.visibility_changing_animation_duration).toLong(),
                 binding.autoScrollingTextView,
                 binding.discardingStatisticsTv, binding.buttonToolbar
             )
