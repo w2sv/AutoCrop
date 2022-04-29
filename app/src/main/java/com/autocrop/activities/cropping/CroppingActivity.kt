@@ -38,10 +38,11 @@ class CroppingActivity :
     /**
      * Return to MainActivity on confirmed back press
      */
-    private val handleBackPress = BackPressHandler(this, "Tap again to cancel") {
-//        rootFragment.onStop()
-        returnToMainActivity()
-    }
+    private val handleBackPress = BackPressHandler(
+        this,
+        "Tap again to cancel",
+        ::returnToMainActivity
+    )
 
     /**
      * Directly [returnToMainActivity] if [CroppingFailedFragment] visible,
