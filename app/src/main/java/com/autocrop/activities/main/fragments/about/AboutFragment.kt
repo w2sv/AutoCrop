@@ -28,18 +28,12 @@ class AboutFragment:
                 )
             )
         }
-
-        with(sharedViewModel){
-            if (stoppedAboutFragment)
-                reinitializeRootFragment = true
-        }
     }
 
     override fun onStop() {
         super.onStop()
 
         w2svTvAnimation?.stop(true)
-        sharedViewModel.stoppedAboutFragment = true
     }
 
     override fun onResume() {

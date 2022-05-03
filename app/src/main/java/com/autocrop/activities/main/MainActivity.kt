@@ -44,27 +44,13 @@ class MainActivity :
     }
 
     /**
-     * [switchBackToFlowFieldFragment] if [AboutFragment] showing, otherwise exit app
+     * invoke [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app
      */
     override fun onBackPressed(){
-        with(currentFragment()){
-            if (this is AboutFragment && isVisible)
-                switchBackToFlowFieldFragment()
-            else
-                finishAffinity()
-        }
-    }
-
-    private fun switchBackToFlowFieldFragment(){
-        if (sharedViewModel.reinitializeRootFragment)
-            replaceCurrentFragmentWith(
-                FlowFieldFragment(),
-                false
-            )
+        if (currentFragment() is AboutFragment)
+            replaceCurrentFragmentWith(FlowFieldFragment())
         else
-            swapFragments(currentFragment()!!, rootFragment()!!)
-
-        sharedViewModel.resetValues()
+            finishAffinity()
     }
 
     /**

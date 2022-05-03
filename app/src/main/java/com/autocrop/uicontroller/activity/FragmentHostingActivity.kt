@@ -62,25 +62,4 @@ abstract class FragmentHostingActivity<VB: ViewBinding, F: Fragment, VM: ViewMod
             .replace(layoutId, fragment)
             .commit()
     }
-
-    fun swapFragments(hideFragment: Fragment, showFragment: Fragment){
-        supportFragmentManager
-            .beginTransaction()
-            .setReorderingAllowed(true)
-            .setCustomAnimations(
-                leftFlipAnimationIds.first,
-                leftFlipAnimationIds.second,
-                rightFlipAnimationIds.first,
-                rightFlipAnimationIds.second
-            )
-            .hide(hideFragment)
-            .addIfNecessaryAndShow(showFragment)
-            .commit()
-    }
-
-    private fun FragmentTransaction.addIfNecessaryAndShow(fragment: Fragment): FragmentTransaction =
-        if (fragment !in supportFragmentManager.fragments)
-            add(layoutId, fragment)
-        else
-            show(fragment)
 }
