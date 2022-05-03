@@ -2,7 +2,6 @@ package com.autocrop.uicontroller.activity
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
 import com.w2sv.autocrop.R

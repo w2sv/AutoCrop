@@ -48,7 +48,7 @@ class MainActivity :
      */
     override fun onBackPressed(){
         if (currentFragment() is AboutFragment)
-            replaceCurrentFragmentWith(FlowFieldFragment())
+            replaceCurrentFragmentWith(FlowFieldFragment(), false)
         else
             finishAffinity()
     }
