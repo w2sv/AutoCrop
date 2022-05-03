@@ -50,8 +50,8 @@ android {
         release {
             signingConfig signingConfigs.release
 
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             // debuggable true
@@ -106,6 +106,7 @@ dependencies {
     // Animations
     implementation 'com.github.mohammadatif:Animatoo:master'
     implementation 'com.daimajia.androidanimations:library:2.4@aar'
+    implementation 'com.daimajia.easing:library:2.4@aar'
 
     // ----------TESTS------------
 
