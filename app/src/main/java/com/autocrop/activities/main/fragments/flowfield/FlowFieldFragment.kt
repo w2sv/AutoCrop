@@ -25,7 +25,7 @@ class FlowFieldFragment:
         this,
         arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
         "Please permit media file access in order for the app to save generated crops",
-        "Please go to app settings and grant media file access for the app to save generated crops"
+        "You need to go to app settings and grant media file access for the app to save generated crops"
     )
     private lateinit var flowFieldBinding: FlowFieldBinding
 
@@ -78,7 +78,7 @@ class FlowFieldFragment:
             )
         } catch (e: ActivityNotFoundException){
             requireActivity()
-                .snackbar("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
+                .snacky("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
                 .show()
         }
 

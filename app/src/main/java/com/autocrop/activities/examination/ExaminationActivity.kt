@@ -36,7 +36,7 @@ class ExaminationActivity :
 
     override fun displayEntrySnackbar(){
         intentExtra(IntentExtraIdentifier.N_DISMISSED_IMAGES, blacklistValue = 0)?.let {
-            snackbar(
+            snacky(
                 SpannableStringBuilder()
                     .append("Couldn't find cropping bounds for ")
                     .bold {
@@ -78,7 +78,7 @@ class ExaminationActivity :
             when (currentFragment) {
                 is AppTitleFragment -> Unit
                 is SaveAllFragment -> {
-                    snackbar(
+                    snacky(
                         "Wait until crops have been saved",
                         R.drawable.ic_baseline_front_hand_24
                     )

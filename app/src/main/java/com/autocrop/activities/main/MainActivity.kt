@@ -2,7 +2,6 @@ package com.autocrop.activities.main
 
 import android.text.SpannableStringBuilder
 import androidx.core.text.color
-import androidx.fragment.app.Fragment
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
@@ -26,13 +25,13 @@ class MainActivity :
             val (nSavedCrops, nDeletedScreenshots) = it[0] to it[1]
 
             when (nSavedCrops) {
-                0 -> snackbar(
+                0 -> snacky(
                     "Discarded all crops",
                     R.drawable.ic_outline_sentiment_dissatisfied_24
                 )
                     .show()
                 else ->
-                    snackbar(
+                    snacky(
                         SpannableStringBuilder().apply {
                             append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
                             color(getColorInt(NotificationColor.SUCCESS, this@MainActivity)){append(intentExtra<String>(IntentExtraIdentifier.CROP_WRITE_DIR_PATH)!!)}

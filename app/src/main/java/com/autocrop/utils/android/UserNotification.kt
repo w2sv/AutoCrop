@@ -10,7 +10,7 @@ object NotificationColor {
     const val SUCCESS: Int = R.color.light_green
 }
 
-fun Activity.snackbar(
+fun Activity.snacky(
     text: CharSequence,
     @DrawableRes icon: Int? = null,
     @ColorRes textColorRes: Int? = null): Snacky.Builder =
@@ -23,7 +23,7 @@ fun Activity.snackbar(
                     setIcon(it)
                 }
                 textColorRes?.let {
-                    setTextColor(getColorInt(it, this@snackbar))
+                    setTextColor(getColorInt(it, this@snacky))
                 }
             }
             .setDuration(Snacky.LENGTH_LONG)

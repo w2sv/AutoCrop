@@ -29,7 +29,7 @@ class BackPressHandler(
             )
 
             snackbarDisplayActivity
-                .snackbar(snackbarMessage)
+                .snacky(snackbarMessage)
                 .show()
         }
         else

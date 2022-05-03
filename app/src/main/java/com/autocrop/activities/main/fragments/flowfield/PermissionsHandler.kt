@@ -1,15 +1,18 @@
 package com.autocrop.activities.main.fragments.flowfield
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.autocrop.utils.BlankFun
 import com.autocrop.utils.android.permissionGranted
 import com.autocrop.utils.android.show
-import com.autocrop.utils.android.snackbar
+import com.autocrop.utils.android.snacky
 import com.w2sv.autocrop.R
+import de.mateware.snacky.Snacky
 import timber.log.Timber
 
 class PermissionsHandler(
@@ -18,12 +21,20 @@ class PermissionsHandler(
     private val snackbarMessageOnPermissionDenial: String,
     private val snackbarMessageOnRequestSuppression: String){
 
-    private val missingPermissions: List<String>
+    /**
+     * Returns [requiredPermissions] which are also [nonRedundantManifestPermissions] and haven't
+     * yet been granted
+     */
+    private val pendingPermissions: List<String>
         get() = requiredPermissions.filter {
-            permissionsDeclaredInManifest.contains(it) && !fragment.requireActivity().permissionGranted(it)
+            nonRedundantManifestPermissions.contains(it) && !fragment.requireActivity().permissionGranted(it)
         }
 
-    private val permissionsDeclaredInManifest: Array<String> by lazy {
+    /**
+     * Returns the permissions declared within package Manifest actually required by the api,
+     * that is whose maxSdkVersion (also manually declared in Manifest) <= Build version
+     */
+    private val nonRedundantManifestPermissions: Array<String> by lazy {
         fragment.requireContext().run {
             packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
                 .requestedPermissions ?: arrayOf()
@@ -31,15 +42,15 @@ class PermissionsHandler(
     }
 
     /**
-     * Decorator either directly running [onPermissionsGranted] if all permissions granted, otherwise sets
-     * [onPermissionsGranted] to passed function and calls [permissionRequestContract].launch
+     * Function wrapper either directly running [onPermissionsGranted] if all permissions granted, otherwise sets
+     * [onPermissionsGranted] to [onPermissionsGranted] and launches [permissionRequestContract]
      */
     operator fun invoke(onPermissionsGranted: () -> Unit): Unit =
-        if (missingPermissions.isEmpty())
+        if (pendingPermissions.isEmpty())
             onPermissionsGranted()
         else{
             this.onPermissionsGranted = onPermissionsGranted
-            permissionRequestContract.launch(missingPermissions.toTypedArray())
+            permissionRequestContract.launch(pendingPermissions.toTypedArray())
         }
 
     private val permissionRequestContract = fragment.registerForActivityResult(
@@ -47,52 +58,56 @@ class PermissionsHandler(
     ){ onRequestPermissionsResult(it) }
 
     /**
-     * Display snackbar if any permission hasn't been granted,
-     * otherwise run [onPermissionsGranted], which needs to have been set previously
-     *.show()
-     * Clears [onPermissionsGranted] afterwards in any case
+     * Temporary callable to be set before, and to be cleared on exiting of [onRequestPermissionsResult]
      */
-    private fun onRequestPermissionsResult(permission2Granted: Map<String, Boolean>) {
-        if (permission2Granted.values.any { !it }) {
-            if (shouldShowRequestPermissionRationale)
-                permissionDeniedPrompt()
-            else
-                permissionRequestingSuppressedPrompt()
+    private var onPermissionsGranted: (() -> Unit)?  = null
+
+    private inline fun nullifyOnPermissionsGrantedAfterwards(f: BlankFun){
+        f()
+        onPermissionsGranted = null
+    }
+
+    /**
+     * Display snacky if some permission hasn't been granted,
+     * otherwise run previously set [onPermissionsGranted]
+     */
+    private fun onRequestPermissionsResult(permission2Granted: Map<String, Boolean>) = nullifyOnPermissionsGrantedAfterwards {
+        if (permission2Granted.values.any { !it }){
+            fragment.requireActivity().run {
+                if (shouldShowRequestPermissionRationale)
+                    permissionDeniedSnacky()
+                else
+                    permissionRequestingSuppressedSnacky()
+            }
+                .show()
 
             Timber.i("Not all required permissions were granted: $permission2Granted")
         }
         else
             onPermissionsGranted!!()
-        onPermissionsGranted = null
     }
 
     private val shouldShowRequestPermissionRationale: Boolean
-        get() = fragment.shouldShowRequestPermissionRationale(missingPermissions[0])
+        get() = fragment.shouldShowRequestPermissionRationale(pendingPermissions[0])
 
-    private var onPermissionsGranted: (() -> Unit)?  = null
+    private fun Activity.permissionDeniedSnacky(): Snacky.Builder =
+        snacky(
+            snackbarMessageOnPermissionDenial,
+            R.drawable.ic_error_24
+        )
 
-    private fun permissionDeniedPrompt() =
-        fragment.requireActivity()
-            .snackbar(
-                snackbarMessageOnPermissionDenial,
-                R.drawable.ic_error_24
+    private fun Activity.permissionRequestingSuppressedSnacky(): Snacky.Builder =
+        snacky(
+            snackbarMessageOnRequestSuppression,
+            R.drawable.ic_error_24
+        )
+        .setActionText("Settings")
+        .setActionClickListener {
+            fragment.startActivity(
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    .apply {
+                        data = Uri.fromParts("package", fragment.requireContext().packageName, null)
+                    }
             )
-            .show()
-
-    private fun permissionRequestingSuppressedPrompt() =
-        fragment.requireActivity()
-            .snackbar(
-                snackbarMessageOnRequestSuppression,
-                R.drawable.ic_error_24
-            )
-            .setActionText("Settings")
-            .setActionClickListener {
-                fragment.startActivity(
-                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        .apply {
-                            data = Uri.fromParts("package", fragment.requireContext().packageName, null)
-                        }
-                )
-            }
-            .show()
+        }
 }
