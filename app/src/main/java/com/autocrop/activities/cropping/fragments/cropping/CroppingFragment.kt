@@ -13,7 +13,7 @@ import com.autocrop.activities.cropping.fragments.CroppingActivityFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
-import com.autocrop.types.CropBundle
+import com.autocrop.collections.CropBundle
 import com.autocrop.utils.executeAsyncTask
 import com.autocrop.utils.logBeforehand
 import com.w2sv.autocrop.R

@@ -1,4 +1,4 @@
-package com.autocrop.activities.main.fragments.flowfield
+package com.autocrop.activities.main.fragments.flowfield.views
 
 import android.app.Activity
 import android.content.Context

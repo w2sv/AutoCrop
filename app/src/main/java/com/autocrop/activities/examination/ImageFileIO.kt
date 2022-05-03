@@ -6,7 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import com.autocrop.types.CropBundle
+import com.autocrop.collections.CropBundle
 import com.autocrop.utils.android.deleteImageMediaFile
 import com.autocrop.utils.android.fileName
 import com.autocrop.utils.android.queryImageFileMediaColumn

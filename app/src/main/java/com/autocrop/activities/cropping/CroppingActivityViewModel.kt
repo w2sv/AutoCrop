@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.autocrop.types.CropBundle
+import com.autocrop.collections.CropBundle
 import com.autocrop.utils.android.mutableLiveData
 
 class CroppingActivityViewModel(val uris: ArrayList<Uri>): ViewModel(){

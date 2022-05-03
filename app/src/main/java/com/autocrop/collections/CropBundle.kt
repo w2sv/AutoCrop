@@ -1,4 +1,4 @@
-package com.autocrop.types
+package com.autocrop.collections
 
 import android.graphics.Bitmap
 import android.net.Uri

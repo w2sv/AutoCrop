@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
@@ -16,8 +15,8 @@
 
     <!-- Buttons -->
 
-    <RelativeLayout
-        android:id="@+id/buttons"
+    <com.autocrop.activities.main.fragments.flowfield.views.ButtonsLayout
+        android:id="@+id/buttons_layout"
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -50,7 +49,7 @@
 
             <!-- Crop Sharing -->
 
-            <com.autocrop.activities.main.fragments.flowfield.CropSharingButton
+            <com.autocrop.activities.main.fragments.flowfield.views.CropSharingButton
                 android:id="@+id/crop_sharing_button"
                 android:layout_width="@dimen/button_flowfield_fragment_sidebar"
                 android:layout_height="@dimen/button_flowfield_fragment_sidebar"
@@ -84,6 +83,6 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@android:color/darker_gray" />
 
-    </RelativeLayout>
+    </com.autocrop.activities.main.fragments.flowfield.views.ButtonsLayout>
 
 </RelativeLayout>

@@ -3,7 +3,7 @@ package com.autocrop.activities.examination
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
-import com.autocrop.types.CropBundle
+import com.autocrop.collections.CropBundle
 import com.autocrop.utils.android.externalPicturesDir
 import timber.log.Timber
 
