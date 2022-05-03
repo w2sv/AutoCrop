@@ -35,8 +35,10 @@ class FlowFieldFragment:
             binding.canvasContainer
         )
 
-        if (savedInstanceState == null)
+        if (sharedViewModel.fadeInFlowFieldButtons){
             binding.buttons.fadeIn(resources.getInteger(R.integer.fade_in_duration_flowfield_fragment_buttons).toLong())
+            sharedViewModel.fadeInFlowFieldButtons = false
+        }
         else
             binding.buttons.show()
 

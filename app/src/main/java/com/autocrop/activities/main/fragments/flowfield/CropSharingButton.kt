@@ -25,7 +25,10 @@ class CropSharingButton(context: Context, attrs: AttributeSet)
             show()
             setOnClickListener(it)
         }
-        animate(Techniques.Tada, delay = resources.getInteger(R.integer.fade_in_duration_flowfield_fragment_buttons).toLong() / 2)
+        animate(
+            Techniques.Tada,
+            delay = resources.getInteger(R.integer.fade_in_duration_flowfield_fragment_buttons).toLong() / 2
+        )
     }
 
     private fun setOnClickListener(cropWriteUris: ArrayList<Uri>) =
