@@ -16,40 +16,50 @@
 
     <!-- Buttons -->
 
-    <!-- Menu Inflation -->
+    <RelativeLayout
+        android:layout_width="28dp"
+        android:layout_height="wrap_content"
 
-    <ImageButton
-        android:id="@+id/menu_inflation_button"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
-
-        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="20dp"
-
-        android:background="@drawable/ic_dot_menu_24"
-        android:backgroundTint="@android:color/darker_gray"
-        android:contentDescription="@string/menu_inflation_button_description" />
-
-    <!-- Crop Sharing -->
-
-    <com.autocrop.activities.main.fragments.flowfield.CropSharingButton
-        android:id="@+id/crop_sharing_button"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
-
-        android:layout_alignTop="@id/menu_inflation_button"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="22.5dp"
 
-        android:background="@drawable/ic_baseline_share_24"
-        android:backgroundTint="@android:color/darker_gray"
-        android:contentDescription="@string/crop_sharing_button_description"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp">
 
-        android:visibility="invisible"
-        tools:ignore="RelativeOverlap" />
+        <!-- Menu Inflation -->
+
+        <ImageButton
+            android:id="@+id/menu_inflation_button"
+            android:layout_width="@dimen/button_flowfield_fragment_sidebar"
+            android:layout_height="@dimen/button_flowfield_fragment_sidebar"
+
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+
+            android:background="@drawable/ic_dot_menu_24"
+            android:backgroundTint="@android:color/darker_gray"
+            android:contentDescription="@string/menu_inflation_button_description" />
+
+        <!-- Crop Sharing -->
+
+        <com.autocrop.activities.main.fragments.flowfield.CropSharingButton
+            android:id="@+id/crop_sharing_button"
+            android:layout_width="@dimen/button_flowfield_fragment_sidebar"
+            android:layout_height="@dimen/button_flowfield_fragment_sidebar"
+
+            android:layout_centerHorizontal="true"
+
+            android:layout_alignTop="@id/menu_inflation_button"
+            android:layout_marginTop="38dp"
+
+            android:background="@drawable/ic_baseline_share_24"
+            android:backgroundTint="@android:color/darker_gray"
+            android:contentDescription="@string/crop_sharing_button_description"
+
+            android:visibility="invisible"
+            tools:ignore="RelativeOverlap" />
+
+    </RelativeLayout>
 
     <!-- Image Selection -->
 

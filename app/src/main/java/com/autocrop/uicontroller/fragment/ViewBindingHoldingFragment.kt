@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
+import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
 
 abstract class ViewBindingHoldingFragment<A: Activity, VB: ViewBinding>
@@ -31,9 +32,12 @@ abstract class ViewBindingHoldingFragment<A: Activity, VB: ViewBinding>
      */
     @Suppress("UNCHECKED_CAST")
     private fun inflateViewBinding(container: ViewGroup?): VB =
+        inflateViewBinding(null, layoutInflater, container, false) as VB
+
+    @Suppress("UNCHECKED_CAST")
+    private val inflateViewBinding: Method =
         ((javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VB>)
             .getMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.java)
-            .invoke(null, layoutInflater, container, false) as VB
 
     override fun onDestroyView() {
         super.onDestroyView()

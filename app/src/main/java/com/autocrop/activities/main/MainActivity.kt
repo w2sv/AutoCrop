@@ -29,45 +29,42 @@ class MainActivity :
                     "Discarded all crops",
                     R.drawable.ic_outline_sentiment_dissatisfied_24
                 )
-                    .show()
-                else ->
-                    snacky(
-                        SpannableStringBuilder().apply {
-                            append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                            color(getColorInt(NotificationColor.SUCCESS, this@MainActivity)){append(intentExtra<String>(IntentExtraIdentifier.CROP_WRITE_DIR_PATH)!!)}
-                            if (nDeletedScreenshots != 0)
-                                append(" and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} ${"screenshot".numericallyInflected(nDeletedScreenshots)}")
-                        },
-                        R.drawable.ic_baseline_done_24
-                    )
-                        .show()
+                else -> snacky(
+                    SpannableStringBuilder().apply {
+                        append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
+                        color(getColorInt(NotificationColor.SUCCESS, this@MainActivity)){append(intentExtra<String>(IntentExtraIdentifier.CROP_WRITE_DIR_PATH)!!)}
+                        if (nDeletedScreenshots != 0)
+                            append(" and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} ${"screenshot".numericallyInflected(nDeletedScreenshots)}")
+                    },
+                    R.drawable.ic_baseline_done_24
+                )
             }
+                .show()
         }
     }
 
     /**
-     * [returnToFlowFieldFragment] if [AboutFragment] showing, otherwise exit app
+     * [switchBackToFlowFieldFragment] if [AboutFragment] showing, otherwise exit app
      */
     override fun onBackPressed(){
         with(currentFragment()){
             if (this is AboutFragment && isVisible)
-                returnToFlowFieldFragment()
+                switchBackToFlowFieldFragment()
             else
                 finishAffinity()
         }
     }
 
-
-    private fun returnToFlowFieldFragment(){
-        if (sharedViewModel.reinitializeRootFragment){
+    private fun switchBackToFlowFieldFragment(){
+        if (sharedViewModel.reinitializeRootFragment)
             replaceCurrentFragmentWith(
                 FlowFieldFragment(),
                 false
             )
-            sharedViewModel.resetValues()
-        }
         else
             swapFragments(currentFragment()!!, rootFragment()!!)
+
+        sharedViewModel.resetValues()
     }
 
     /**

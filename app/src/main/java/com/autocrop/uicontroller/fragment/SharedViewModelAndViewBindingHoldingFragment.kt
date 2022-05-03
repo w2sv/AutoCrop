@@ -9,5 +9,7 @@ import androidx.viewbinding.ViewBinding
 abstract class SharedViewModelAndViewBindingHoldingFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(viewModelClass: Class<VM>)
         : ViewBindingHoldingFragment<A, VB>(){
 
-    protected val sharedViewModel: VM by lazy { ViewModelProvider(typedActivity as ViewModelStoreOwner)[viewModelClass] }
+    protected val sharedViewModel: VM by lazy {
+        ViewModelProvider(requireActivity() as ViewModelStoreOwner)[viewModelClass]
+    }
 }

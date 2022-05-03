@@ -16,6 +16,7 @@ import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.types.CropBundle
 import com.autocrop.utils.executeAsyncTask
 import com.autocrop.utils.logBeforehand
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CroppingFragmentBinding
 import kotlinx.coroutines.Job
 
@@ -67,8 +68,8 @@ class CroppingFragment
         else
             // delay briefly to assure progress bar having reached 100% before UI change
             Handler(Looper.getMainLooper()).postDelayed(
-                { typedActivity.replaceCurrentFragmentWith(CroppingFailedFragment()) },
-                300
+                { castedActivity.replaceCurrentFragmentWith(CroppingFailedFragment()) },
+                resources.getInteger(R.integer.small_delay).toLong()
             )
     }
 

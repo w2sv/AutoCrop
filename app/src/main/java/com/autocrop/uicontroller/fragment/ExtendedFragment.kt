@@ -4,8 +4,10 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.autocrop.uicontroller.activity.FragmentHostingActivity
 
 abstract class ExtendedFragment<A: Activity>: Fragment(){
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
@@ -19,7 +21,7 @@ abstract class ExtendedFragment<A: Activity>: Fragment(){
      * Retyped [androidx.fragment.app.Fragment.requireActivity]
      */
     @Suppress("UNCHECKED_CAST")
-    val typedActivity: A by lazy {
+    val castedActivity: A by lazy {
         requireActivity() as A
     }
 }

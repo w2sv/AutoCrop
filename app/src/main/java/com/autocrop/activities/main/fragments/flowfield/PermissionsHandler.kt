@@ -62,16 +62,11 @@ class PermissionsHandler(
      */
     private var onPermissionsGranted: (() -> Unit)?  = null
 
-    private inline fun nullifyOnPermissionsGrantedAfterwards(f: BlankFun){
-        f()
-        onPermissionsGranted = null
-    }
-
     /**
      * Display snacky if some permission hasn't been granted,
      * otherwise run previously set [onPermissionsGranted]
      */
-    private fun onRequestPermissionsResult(permission2Granted: Map<String, Boolean>) = nullifyOnPermissionsGrantedAfterwards {
+    private fun onRequestPermissionsResult(permission2Granted: Map<String, Boolean>){
         if (permission2Granted.values.any { !it }){
             fragment.requireActivity().run {
                 if (shouldShowRequestPermissionRationale)
@@ -85,6 +80,8 @@ class PermissionsHandler(
         }
         else
             onPermissionsGranted!!()
+
+        onPermissionsGranted = null
     }
 
     private val shouldShowRequestPermissionRationale: Boolean

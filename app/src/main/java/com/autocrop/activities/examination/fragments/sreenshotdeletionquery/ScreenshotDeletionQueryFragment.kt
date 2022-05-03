@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ExaminationFragmentDeletionqueryBinding
 
 class ScreenshotDeletionQueryFragment :
@@ -21,8 +22,16 @@ class ScreenshotDeletionQueryFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val deletionPendingIntent = MediaStore.createDeleteRequest(requireContext().contentResolver, sharedViewModel.deletionQueryScreenshotUris)
-        screenshotDeletionQueryContract.launch(IntentSenderRequest.Builder(deletionPendingIntent.intentSender).build())
+        screenshotDeletionQueryContract.launch(
+            IntentSenderRequest.Builder(
+                MediaStore.createDeleteRequest(
+                    requireContext().contentResolver,
+                    sharedViewModel.deletionQueryScreenshotUris
+                )
+                    .intentSender
+            )
+                .build()
+        )
     }
 
     private val screenshotDeletionQueryContract = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()){
@@ -33,9 +42,9 @@ class ScreenshotDeletionQueryFragment :
         // launch appTitleFragment after small delay for UX smoothness
         Handler(Looper.getMainLooper()).postDelayed(
             {
-                typedActivity.replaceCurrentFragmentWith(AppTitleFragment(), true)
+                castedActivity.replaceCurrentFragmentWith(AppTitleFragment(), true)
             },
-            100
+            resources.getInteger(R.integer.small_delay).toLong()
         )
     }
 }

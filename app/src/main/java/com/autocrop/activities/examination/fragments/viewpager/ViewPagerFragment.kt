@@ -24,7 +24,7 @@ class ViewPagerFragment:
         viewPagerHandler = ViewPagerHandler(
             binding,
             viewModel,
-            typedActivity,
+            castedActivity,
             savedInstanceState?.getInt(CURRENT_VIEW_PAGER_POSITION)
         )
     }

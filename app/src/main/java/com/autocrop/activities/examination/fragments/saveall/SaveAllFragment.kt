@@ -1,7 +1,6 @@
 package com.autocrop.activities.examination.fragments.saveall
 
 import android.os.Bundle
-import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
@@ -13,13 +12,13 @@ class SaveAllFragment :
     ExaminationActivityFragment<ExaminationFragmentSaveallBinding>() {
 
     /**
-     * Launch async [processRemainingCropBundles] task, call [typedActivity].invokeSubsequentFragment
+     * Launch async [processRemainingCropBundles] task, call [castedActivity].invokeSubsequentFragment
      * onPostExecute
      */
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         lifecycleScope.executeAsyncTask(
             { processRemainingCropBundles(BooleanUserPreferences.deleteScreenshots)},
-            { typedActivity.invokeSubsequentFragment() }
+            { castedActivity.invokeSubsequentFragment() }
         )
     }
 

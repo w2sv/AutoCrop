@@ -21,12 +21,6 @@ import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding
 class FlowFieldFragment:
     MainActivityFragment<MainFragmentFlowfieldBinding>() {
 
-    private val runIfPermissionsGrantedOrPrompt = PermissionsHandler(
-        this,
-        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        "Please permit media file access in order for the app to save generated crops",
-        "You need to go to app settings and grant media file access for the app to save generated crops"
-    )
     private lateinit var flowFieldBinding: FlowFieldBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,15 +47,9 @@ class FlowFieldFragment:
     private val popupMenu: FlowFieldFragmentMenu by lazy {
         FlowFieldFragmentMenu(
             mapOf(
-                R.id.main_menu_item_change_save_destination_dir to {
-                    pickSaveDestinationDirContract.launch(CropFileSaveDestinationPreferences.treeUri)
-                },
+                R.id.main_menu_item_change_save_destination_dir to { pickSaveDestinationDirContract.launch(CropFileSaveDestinationPreferences.treeUri) },
                 R.id.main_menu_item_rate_the_app to ::goToPlayStoreListing,
-                R.id.main_menu_item_about_the_app to {
-                    with(typedActivity) {
-                        swapFragments(this@FlowFieldFragment, AboutFragment())
-                    }
-                }
+                R.id.main_menu_item_about_the_app to { castedActivity.swapFragments(this@FlowFieldFragment, AboutFragment()) }
             ),
             requireView().context,
             binding.menuInflationButton
@@ -84,16 +72,21 @@ class FlowFieldFragment:
 
     private val pickSaveDestinationDirContract = registerForActivityResult(
         object: ActivityResultContracts.OpenDocumentTree(){
-            override fun createIntent(context: Context, input: Uri?): Intent {
-                return super.createIntent(context, input)
+            override fun createIntent(context: Context, input: Uri?): Intent =
+                super.createIntent(context, input)
                     .apply {
-                        flags = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+                        flags = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                                Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                                Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
                     }
-            }
         }
     ) {
         it?.let { treeUri ->
-            requireActivity().applicationContext.contentResolver.takePersistableUriPermission(treeUri,Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            requireActivity().applicationContext.contentResolver.takePersistableUriPermission(
+                treeUri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
             CropFileSaveDestinationPreferences.treeUri = treeUri
         }
     }
@@ -107,10 +100,17 @@ class FlowFieldFragment:
      * then launch [selectImages] if all granted
      */
     private fun setImageSelectionButtonOnClickListener() = binding.imageSelectionButton.setOnClickListener {
-        runIfPermissionsGrantedOrPrompt {
+        ifPermissionsGranted {
             selectImages()
         }
     }
+
+    private val ifPermissionsGranted = PermissionsHandler(
+        this,
+        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+        "Please permit media file access in order for the app to save generated crops",
+        "You need to go to app settings and grant media file access for the app to save generated crops"
+    )
 
     @Suppress("DEPRECATION")
     private fun selectImages() =
