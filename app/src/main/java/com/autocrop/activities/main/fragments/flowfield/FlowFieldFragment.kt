@@ -1,5 +1,6 @@
 package com.autocrop.activities.main.fragments.flowfield
 
+import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -20,7 +21,12 @@ import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding
 class FlowFieldFragment:
     MainActivityFragment<MainFragmentFlowfieldBinding>() {
 
-    private val permissionsHandler = PermissionsHandler(this)
+    private val runIfPermissionsGrantedOrPrompt = PermissionsHandler(
+        this,
+        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+        "Please permit media file access in order for the app to save generated crops",
+        "Please go to app settings and grant media file access for the app to save generated crops"
+    )
     private lateinit var flowFieldBinding: FlowFieldBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,7 +77,9 @@ class FlowFieldFragment:
                 }
             )
         } catch (e: ActivityNotFoundException){
-            requireActivity().displaySnackbar("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
+            requireActivity()
+                .snackbar("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
+                .show()
         }
 
     private val pickSaveDestinationDirContract = registerForActivityResult(
@@ -99,7 +107,7 @@ class FlowFieldFragment:
      * then launch [selectImages] if all granted
      */
     private fun setImageSelectionButtonOnClickListener() = binding.imageSelectionButton.setOnClickListener {
-        permissionsHandler.requestPermissionsIfNecessaryAndOrIfAllGrantedRun {
+        runIfPermissionsGrantedOrPrompt {
             selectImages()
         }
     }

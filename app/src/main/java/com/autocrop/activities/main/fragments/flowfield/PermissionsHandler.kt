@@ -1,64 +1,98 @@
 package com.autocrop.activities.main.fragments.flowfield
 
-import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import com.autocrop.utils.android.NotificationColor
-import com.autocrop.utils.android.displaySnackbar
 import com.autocrop.utils.android.permissionGranted
+import com.autocrop.utils.android.show
+import com.autocrop.utils.android.snackbar
 import com.w2sv.autocrop.R
 import timber.log.Timber
 
-class PermissionsHandler(private val fragment: Fragment){
-
-    private companion object{
-        val REQUIRED_PERMISSIONS: Array<String> = arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-    }
+class PermissionsHandler(
+    private val fragment: Fragment,
+    private val requiredPermissions: Array<String>,
+    private val snackbarMessageOnPermissionDenial: String,
+    private val snackbarMessageOnRequestSuppression: String){
 
     private val missingPermissions: List<String>
-        get() = REQUIRED_PERMISSIONS.filter { !fragment.requireActivity().permissionGranted(it) }
+        get() = requiredPermissions.filter {
+            permissionsDeclaredInManifest.contains(it) && !fragment.requireActivity().permissionGranted(it)
+        }
+
+    private val permissionsDeclaredInManifest: Array<String> by lazy {
+        fragment.requireContext().run {
+            packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
+                .requestedPermissions ?: arrayOf()
+        }
+    }
+
+    /**
+     * Decorator either directly running [onPermissionsGranted] if all permissions granted, otherwise sets
+     * [onPermissionsGranted] to passed function and calls [permissionRequestContract].launch
+     */
+    operator fun invoke(onPermissionsGranted: () -> Unit): Unit =
+        if (missingPermissions.isEmpty())
+            onPermissionsGranted()
+        else{
+            this.onPermissionsGranted = onPermissionsGranted
+            permissionRequestContract.launch(missingPermissions.toTypedArray())
+        }
 
     private val permissionRequestContract = fragment.registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ){
-        onRequestPermissionsResult(it)
-    }
-
-    /**
-     * Decorator either running passed function if all permissions granted, otherwise sets
-     * [onAllPermissionsGranted] to passed function and calls [permissionRequestContract].launch
-     */
-    fun requestPermissionsIfNecessaryAndOrIfAllGrantedRun(onAllPermissionsGranted: () -> Unit): Unit =
-        missingPermissions.let {
-            if (it.isNotEmpty()){
-                this.onAllPermissionsGranted = onAllPermissionsGranted
-                permissionRequestContract.launch(it.toTypedArray())
-            }
-            else
-                onAllPermissionsGranted()
-        }
-
-    private var onAllPermissionsGranted: (() -> Unit)?  = null
+    ){ onRequestPermissionsResult(it) }
 
     /**
      * Display snackbar if any permission hasn't been granted,
-     * otherwise run [onAllPermissionsGranted], which needs to have been set previously
-     *
-     * Clears [onAllPermissionsGranted] afterwards in any case
+     * otherwise run [onPermissionsGranted], which needs to have been set previously
+     *.show()
+     * Clears [onPermissionsGranted] afterwards in any case
      */
-    private fun onRequestPermissionsResult(permissionToGranted: Map<String, Boolean>) {
-        if (permissionToGranted.values.any { !it }) {
-            fragment.requireActivity().displaySnackbar(
-                "You need to permit media file access in order for the app to work",
-                R.drawable.ic_error_24
-            )
-            Timber.i("Not all required permissions were granted: $permissionToGranted")
+    private fun onRequestPermissionsResult(permission2Granted: Map<String, Boolean>) {
+        if (permission2Granted.values.any { !it }) {
+            if (shouldShowRequestPermissionRationale)
+                permissionDeniedPrompt()
+            else
+                permissionRequestingSuppressedPrompt()
+
+            Timber.i("Not all required permissions were granted: $permission2Granted")
         }
         else
-            onAllPermissionsGranted!!()
-        onAllPermissionsGranted = null
+            onPermissionsGranted!!()
+        onPermissionsGranted = null
     }
+
+    private val shouldShowRequestPermissionRationale: Boolean
+        get() = fragment.shouldShowRequestPermissionRationale(missingPermissions[0])
+
+    private var onPermissionsGranted: (() -> Unit)?  = null
+
+    private fun permissionDeniedPrompt() =
+        fragment.requireActivity()
+            .snackbar(
+                snackbarMessageOnPermissionDenial,
+                R.drawable.ic_error_24
+            )
+            .show()
+
+    private fun permissionRequestingSuppressedPrompt() =
+        fragment.requireActivity()
+            .snackbar(
+                snackbarMessageOnRequestSuppression,
+                R.drawable.ic_error_24
+            )
+            .setActionText("Settings")
+            .setActionClickListener {
+                fragment.startActivity(
+                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        .apply {
+                            data = Uri.fromParts("package", fragment.requireContext().packageName, null)
+                        }
+                )
+            }
+            .show()
 }

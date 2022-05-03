@@ -8,10 +8,16 @@
 
     <!-- Permissions
 
-        https://stackoverflow.com/questions/64221188/write-external-storage-when-targeting-android-10-->
+        https://stackoverflow.com/questions/64221188/write-external-storage-when-targeting-android-10
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        WRITE_EXTERNAL_STORAGE implies READ_EXTERNAL_STORAGE
+            Reference: https://stackoverflow.com/questions/11942400/do-i-have-to-declare-both-write-external-storage-and-read-external-storage -->
+
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29"/>
+
+    <!-- https://stackoverflow.com/a/65477206/12083276 -->
 
     <!-- setting requestLegacyExternalStorage to true effectuates opting out of
          scoped storage for API 29 = Android 10 to enable external storage writing

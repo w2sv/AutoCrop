@@ -16,7 +16,8 @@ import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show
 import com.autocrop.utils.Index
-import com.autocrop.utils.android.displaySnackbar
+import com.autocrop.utils.android.show
+import com.autocrop.utils.android.snackbar
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
@@ -40,10 +41,11 @@ class ViewPagerHandler(
 
         if (onScreenTouch){
             binding.viewPager.setPageTransformer()
-            examinationActivity.displaySnackbar(
+            examinationActivity.snackbar(
                 "Cancelled auto scrolling",
                 R.drawable.ic_outline_cancel_24
             )
+                .show()
         }
         else
             pageChangeHandler.addToOnNextScrollCompletion { binding.viewPager.setPageTransformer() }

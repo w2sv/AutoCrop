@@ -1,7 +1,6 @@
 package com.autocrop.utils.android
 
 import android.app.Activity
-import android.text.SpannableStringBuilder
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.w2sv.autocrop.R
@@ -11,29 +10,24 @@ object NotificationColor {
     const val SUCCESS: Int = R.color.light_green
 }
 
-fun Activity.displaySnackbar(text: String, @DrawableRes icon: Int? = null, @ColorRes textColorRes: Int? = null) =
-    Snacky
-        .builder()
-        .setText(text)
-        .styleAndShow(this, icon, textColorRes)
-
-fun Activity.displaySnackbar(text: SpannableStringBuilder, @DrawableRes icon: Int? = null) =
-    Snacky
-        .builder()
-        .setText(text)
-        .styleAndShow(this, icon)
-
-private fun Snacky.Builder.styleAndShow(activity: Activity, @DrawableRes icon: Int? = null, @ColorRes textColorRes: Int? = null) =
-    centerText()
-        .apply {
-            icon?.let {
-                setIcon(it)
+fun Activity.snackbar(
+    text: CharSequence,
+    @DrawableRes icon: Int? = null,
+    @ColorRes textColorRes: Int? = null): Snacky.Builder =
+        Snacky
+            .builder()
+            .setText(text)
+            .centerText()
+            .apply {
+                icon?.let {
+                    setIcon(it)
+                }
+                textColorRes?.let {
+                    setTextColor(getColorInt(it, this@snackbar))
+                }
             }
-            textColorRes?.let {
-                setTextColor(getColorInt(it, activity))
-            }
-    }
-        .setDuration(Snacky.LENGTH_LONG)
-        .setActivity(activity)
-        .build()
-        .show()
+            .setDuration(Snacky.LENGTH_LONG)
+            .setActivity(this)
+
+fun Snacky.Builder.show() =
+    build().show()

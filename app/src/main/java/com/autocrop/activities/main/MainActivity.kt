@@ -3,16 +3,12 @@ package com.autocrop.activities.main
 import android.text.SpannableStringBuilder
 import androidx.core.text.color
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.global.userPreferencesInstances
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
-import com.autocrop.utils.android.NotificationColor
-import com.autocrop.utils.android.displaySnackbar
-import com.autocrop.utils.android.getApplicationWideSharedPreferences
-import com.autocrop.utils.android.getColorInt
+import com.autocrop.utils.android.*
 import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainBinding
@@ -30,9 +26,13 @@ class MainActivity :
             val (nSavedCrops, nDeletedScreenshots) = it[0] to it[1]
 
             when (nSavedCrops) {
-                0 -> displaySnackbar("Discarded all crops", R.drawable.ic_outline_sentiment_dissatisfied_24)
+                0 -> snackbar(
+                    "Discarded all crops",
+                    R.drawable.ic_outline_sentiment_dissatisfied_24
+                )
+                    .show()
                 else ->
-                    displaySnackbar(
+                    snackbar(
                         SpannableStringBuilder().apply {
                             append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
                             color(getColorInt(NotificationColor.SUCCESS, this@MainActivity)){append(intentExtra<String>(IntentExtraIdentifier.CROP_WRITE_DIR_PATH)!!)}
@@ -41,6 +41,7 @@ class MainActivity :
                         },
                         R.drawable.ic_baseline_done_24
                     )
+                        .show()
             }
         }
     }
@@ -48,16 +49,17 @@ class MainActivity :
     /**
      * [returnToFlowFieldFragment] if [AboutFragment] showing, otherwise exit app
      */
-    override fun onBackPressed() {
-        currentFragment()?.let { fragment ->
-            if (fragment is AboutFragment)
-                returnToFlowFieldFragment(fragment)
+    override fun onBackPressed(){
+        with(currentFragment()){
+            if (this is AboutFragment && isVisible)
+                returnToFlowFieldFragment()
             else
                 finishAffinity()
         }
     }
 
-    private fun returnToFlowFieldFragment(attachedFragment: Fragment){
+
+    private fun returnToFlowFieldFragment(){
         if (sharedViewModel.reinitializeRootFragment){
             replaceCurrentFragmentWith(
                 FlowFieldFragment(),
@@ -66,7 +68,7 @@ class MainActivity :
             sharedViewModel.resetValues()
         }
         else
-            swapFragments(attachedFragment, rootFragment()!!)
+            swapFragments(currentFragment()!!, rootFragment()!!)
     }
 
     /**

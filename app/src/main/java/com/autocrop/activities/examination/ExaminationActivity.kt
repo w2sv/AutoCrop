@@ -14,10 +14,7 @@ import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
-import com.autocrop.utils.android.BackPressHandler
-import com.autocrop.utils.android.displaySnackbar
-import com.autocrop.utils.android.getColorInt
-import com.autocrop.utils.android.uriPermissionGranted
+import com.autocrop.utils.android.*
 import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ExaminationBinding
@@ -39,7 +36,7 @@ class ExaminationActivity :
 
     override fun displayEntrySnackbar(){
         intentExtra(IntentExtraIdentifier.N_DISMISSED_IMAGES, blacklistValue = 0)?.let {
-            displaySnackbar(
+            snackbar(
                 SpannableStringBuilder()
                     .append("Couldn't find cropping bounds for ")
                     .bold {
@@ -50,6 +47,7 @@ class ExaminationActivity :
                     .append(" image".numericallyInflected(it)),
                 R.drawable.ic_error_24
             )
+                .show()
         }
     }
 
@@ -80,10 +78,11 @@ class ExaminationActivity :
             when (currentFragment) {
                 is AppTitleFragment -> Unit
                 is SaveAllFragment -> {
-                    displaySnackbar(
+                    snackbar(
                         "Wait until crops have been saved",
                         R.drawable.ic_baseline_front_hand_24
                     )
+                        .show()
                 }
                 else -> handleBackPress()
             }

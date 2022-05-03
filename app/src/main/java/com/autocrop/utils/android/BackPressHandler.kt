@@ -28,7 +28,9 @@ class BackPressHandler(
                 RESET_DURATION
             )
 
-            snackbarDisplayActivity.displaySnackbar(snackbarMessage)
+            snackbarDisplayActivity
+                .snackbar(snackbarMessage)
+                .show()
         }
         else
             return onSecondPress()
