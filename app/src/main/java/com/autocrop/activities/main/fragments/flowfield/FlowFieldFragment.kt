@@ -14,6 +14,9 @@ import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.global.CropFileSaveDestinationPreferences
+import com.autocrop.uielements.view.animate
+import com.autocrop.uielements.view.fadeIn
+import com.autocrop.uielements.view.show
 import com.autocrop.utils.android.*
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding
@@ -31,6 +34,11 @@ class FlowFieldFragment:
             requireActivity(),
             binding.canvasContainer
         )
+
+        if (savedInstanceState == null)
+            binding.buttons.fadeIn(resources.getInteger(R.integer.fade_in_duration_flowfield_fragment_buttons).toLong())
+        else
+            binding.buttons.show()
 
         // set button onClickListeners
         setImageSelectionButtonOnClickListener()

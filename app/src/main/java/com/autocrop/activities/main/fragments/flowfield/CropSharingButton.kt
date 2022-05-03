@@ -7,8 +7,11 @@ import android.net.Uri
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
 import com.autocrop.activities.IntentExtraIdentifier
+import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.show
 import com.autocrop.utils.android.MimeTypes
+import com.daimajia.androidanimations.library.Techniques
+import com.w2sv.autocrop.R
 
 class CropSharingButton(context: Context, attrs: AttributeSet)
     : AppCompatImageButton(context, attrs){
@@ -22,6 +25,7 @@ class CropSharingButton(context: Context, attrs: AttributeSet)
             show()
             setOnClickListener(it)
         }
+        animate(Techniques.Tada, delay = resources.getInteger(R.integer.fade_in_duration_flowfield_fragment_buttons).toLong() / 2)
     }
 
     private fun setOnClickListener(cropWriteUris: ArrayList<Uri>) =

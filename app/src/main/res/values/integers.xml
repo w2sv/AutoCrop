@@ -5,4 +5,5 @@
 
     <integer name="view_animation_duration">1000</integer>
     <integer name="small_delay">200</integer>
+    <integer name="fade_in_duration_flowfield_fragment_buttons">4000</integer>
 </resources>
