@@ -13,7 +13,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCropProcedureDialog
-import com.autocrop.uielements.CubeOutPageTransformer
+import com.autocrop.uielements.setPageTransformer
 import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show
@@ -95,15 +95,15 @@ class ViewPagerHandler(
             setPageTransformer()
     }
 
-    private fun ViewPager2.setPageTransformer() =
-        setPageTransformer(CubeOutPageTransformer())
-
-    private inner class CropPagerAdapter: RecyclerView.Adapter<CropPagerAdapter.CropViewHolder>() {
+    private inner class CropPagerAdapter:
+        RecyclerView.Adapter<CropPagerAdapter.CropViewHolder>() {
 
         val cropProcedureDialog = SingleCropProcedureDialog()
 
         @SuppressLint("ClickableViewAccessibility")
-        private inner class CropViewHolder(view: ImageView) : RecyclerView.ViewHolder(view) {
+        private inner class CropViewHolder(view: ImageView)
+            : RecyclerView.ViewHolder(view) {
+
             val cropView: ImageView = view.findViewById(R.id.image_view_examination_view_pager)
 
             /**
