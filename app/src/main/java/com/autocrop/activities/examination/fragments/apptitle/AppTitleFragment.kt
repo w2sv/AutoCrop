@@ -7,7 +7,7 @@ import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.databinding.ExaminationFragmentApptitleBinding
 
 class AppTitleFragment
-    : ExaminationActivityFragment<ExaminationFragmentApptitleBinding>() {
+    : ExaminationActivityFragment<ExaminationFragmentApptitleBinding>(ExaminationFragmentApptitleBinding::class.java) {
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         binding.appTitleTextView.animate(

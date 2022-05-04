@@ -9,9 +9,11 @@ import androidx.viewbinding.ViewBinding
 import com.autocrop.uicontroller.ViewModelHolder
 import com.autocrop.utils.BlankFun
 
-abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(viewModelClass: Class<VM>):
-    ViewBoundFragment<VB>(),
-    ViewModelHolder<VM> {
+abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
+    viewModelClass: Class<VM>,
+    bindingClass: Class<VB>):
+        ViewBoundFragment<VB>(bindingClass),
+        ViewModelHolder<VM> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = withPostponedEnterTransition {
         super.onViewCreated(view, savedInstanceState)

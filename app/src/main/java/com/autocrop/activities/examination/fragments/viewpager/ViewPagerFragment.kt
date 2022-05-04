@@ -7,7 +7,7 @@ import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
 
 class ViewPagerFragment:
-    ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(){
+    ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(ExaminationFragmentViewpagerBinding::class.java){
 
     companion object{
         private const val CURRENT_VIEW_PAGER_POSITION = "CURRENT_VIEW_PAGER_POSITION"

@@ -9,7 +9,7 @@ import com.autocrop.utils.executeAsyncTask
 import com.w2sv.autocrop.databinding.ExaminationFragmentSaveallBinding
 
 class SaveAllFragment :
-    ExaminationActivityFragment<ExaminationFragmentSaveallBinding>() {
+    ExaminationActivityFragment<ExaminationFragmentSaveallBinding>(ExaminationFragmentSaveallBinding::class.java) {
 
     /**
      * Launch async [processRemainingCropBundles] task, call [castedActivity].invokeSubsequentFragment

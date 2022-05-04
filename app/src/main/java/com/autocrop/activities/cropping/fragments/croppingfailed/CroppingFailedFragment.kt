@@ -6,7 +6,7 @@ import com.autocrop.activities.cropping.fragments.CroppingActivityFragment
 import com.w2sv.autocrop.databinding.CroppingFragmentFailedBinding
 
 class CroppingFailedFragment
-    : CroppingActivityFragment<CroppingFragmentFailedBinding>() {
+    : CroppingActivityFragment<CroppingFragmentFailedBinding>(CroppingFragmentFailedBinding::class.java) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -19,7 +19,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding
 
 class FlowFieldFragment:
-    MainActivityFragment<MainFragmentFlowfieldBinding>() {
+    MainActivityFragment<MainFragmentFlowfieldBinding>(MainFragmentFlowfieldBinding::class.java) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

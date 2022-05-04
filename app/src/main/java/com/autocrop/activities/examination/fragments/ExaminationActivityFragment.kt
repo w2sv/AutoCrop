@@ -5,7 +5,8 @@ import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.uicontroller.fragment.ApplicationFragment
 
-abstract class ExaminationActivityFragment<VB: ViewBinding>
+abstract class ExaminationActivityFragment<VB: ViewBinding>(bindingClass: Class<VB>)
     : ApplicationFragment<ExaminationActivity, VB, ExaminationActivityViewModel>(
-        ExaminationActivityViewModel::class.java
+        ExaminationActivityViewModel::class.java,
+        bindingClass
     )

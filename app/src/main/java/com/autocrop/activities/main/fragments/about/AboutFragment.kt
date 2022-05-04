@@ -10,7 +10,7 @@ import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.autocrop.databinding.MainFragmentAboutBinding
 
 class AboutFragment:
-    MainActivityFragment<MainFragmentAboutBinding>(){
+    MainActivityFragment<MainFragmentAboutBinding>(MainFragmentAboutBinding::class.java){
 
     private var w2svTvAnimation: YoYo.YoYoString? = null
 

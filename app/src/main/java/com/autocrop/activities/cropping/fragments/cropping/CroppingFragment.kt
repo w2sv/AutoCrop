@@ -21,7 +21,7 @@ import com.w2sv.autocrop.databinding.CroppingFragmentBinding
 import kotlinx.coroutines.Job
 
 class CroppingFragment
-    : CroppingActivityFragment<CroppingFragmentBinding>() {
+    : CroppingActivityFragment<CroppingFragmentBinding>(CroppingFragmentBinding::class.java) {
 
     private lateinit var croppingJob: Job
 

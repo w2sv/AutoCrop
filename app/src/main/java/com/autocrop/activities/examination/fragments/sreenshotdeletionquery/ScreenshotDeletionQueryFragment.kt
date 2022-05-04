@@ -16,7 +16,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ExaminationFragmentDeletionqueryBinding
 
 class ScreenshotDeletionQueryFragment :
-    ExaminationActivityFragment<ExaminationFragmentDeletionqueryBinding>(){
+    ExaminationActivityFragment<ExaminationFragmentDeletionqueryBinding>(ExaminationFragmentDeletionqueryBinding::class.java){
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
