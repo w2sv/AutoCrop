@@ -11,11 +11,10 @@ import processing.android.PFragment
 class FlowFieldContainer(context: Context, attr: AttributeSet)
     : FrameLayout(context, attr){
 
-        init {
-            val activity = (context as FragmentActivity)
+    init {
+        val activity = (context as FragmentActivity)
 
-            val screenResolution = screenResolution(activity.windowManager)
-            PFragment(FlowFieldSketch(screenResolution.x, screenResolution.y)).setView(this, activity)
-
-        }
+        val screenResolution = screenResolution(activity.windowManager)
+        PFragment(FlowFieldSketch(screenResolution.x, screenResolution.y)).setView(this, activity)
     }
+}
