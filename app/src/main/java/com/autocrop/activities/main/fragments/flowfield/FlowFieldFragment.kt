@@ -49,7 +49,7 @@ class FlowFieldFragment:
             mapOf(
                 R.id.main_menu_item_change_save_destination_dir to { pickSaveDestinationDirContract.launch(CropFileSaveDestinationPreferences.treeUri) },
                 R.id.main_menu_item_rate_the_app to ::goToPlayStoreListing,
-                R.id.main_menu_item_about_the_app to { castedActivity.swapFragments(this@FlowFieldFragment, AboutFragment()) }
+                R.id.main_menu_item_about_the_app to { castedActivity.replaceCurrentFragmentWith(AboutFragment(), false) }
             ),
             requireView().context,
             binding.menuInflationButton
