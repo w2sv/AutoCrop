@@ -21,16 +21,8 @@ import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding
 class FlowFieldFragment:
     MainActivityFragment<MainFragmentFlowfieldBinding>() {
 
-    private lateinit var flowFieldBinding: FlowFieldBinding
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // initialize FlowFieldHandler and thus FlowField
-        flowFieldBinding = FlowFieldBinding(
-            requireActivity(),
-            binding.canvasContainer
-        )
 
         // set button onClickListeners
         setImageSelectionButtonOnClickListener()
@@ -49,7 +41,7 @@ class FlowFieldFragment:
             mapOf(
                 R.id.main_menu_item_change_save_destination_dir to { pickSaveDestinationDirContract.launch(CropFileSaveDestinationPreferences.treeUri) },
                 R.id.main_menu_item_rate_the_app to ::goToPlayStoreListing,
-                R.id.main_menu_item_about_the_app to { castedActivity.swapFragments(this@FlowFieldFragment, AboutFragment()) }
+                R.id.main_menu_item_about_the_app to { castedActivity.replaceCurrentFragmentWith(AboutFragment(), false) }
             ),
             requireView().context,
             binding.menuInflationButton

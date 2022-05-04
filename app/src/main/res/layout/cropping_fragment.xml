@@ -16,7 +16,7 @@
         android:textColor="@color/magenta_saturated">
     </TextView>
 
-    <com.autocrop.activities.cropping.fragments.cropping.CroppingProgressBar
+    <com.autocrop.activities.cropping.fragments.cropping.views.CroppingProgressBar
         android:id="@+id/cropping_progress_bar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
 
@@ -28,7 +28,7 @@
 
         android:progressDrawable="@drawable/progress_bar_cropping_activity_progress"/>
 
-    <com.autocrop.activities.cropping.fragments.cropping.CurrentImageNumberTextView
+    <com.autocrop.activities.cropping.fragments.cropping.views.CurrentImageNumberTextView
         android:id="@+id/cropping_current_image_number_text_view"
 
         android:layout_width="match_parent"
@@ -37,6 +37,6 @@
         android:gravity="center"
 
         android:textSize="17sp">
-    </com.autocrop.activities.cropping.fragments.cropping.CurrentImageNumberTextView>
+    </com.autocrop.activities.cropping.fragments.cropping.views.CurrentImageNumberTextView>
 
 </RelativeLayout>
