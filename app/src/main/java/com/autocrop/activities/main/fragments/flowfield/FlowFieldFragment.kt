@@ -100,8 +100,8 @@ class FlowFieldFragment:
     private val ifPermissionsGranted = PermissionsHandler(
         this,
         arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        "Please permit media file access in order for the app to save generated crops",
-        "You need to go to app settings and grant media file access for the app to save generated crops"
+        "You'll have to permit media file access in order for the app to save generated crops",
+        "Go to app settings and grant media file access for the app to save generated crops"
     )
 
     @Suppress("DEPRECATION")
