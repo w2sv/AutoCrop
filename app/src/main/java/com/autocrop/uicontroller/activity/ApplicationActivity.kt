@@ -19,7 +19,7 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
         this::sharedViewModel.invoke()
 
         if (savedInstanceState == null)
-            displayEntrySnackbar()
+            triggerEntrySnackbar()
     }
 
     //$$$$$$$$$$$$$$$$$$
@@ -37,7 +37,7 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
     // Snackbar displaying $
     //$$$$$$$$$$$$$$$$$$$$$$
 
-    protected open fun displayEntrySnackbar() {}
+    protected open fun triggerEntrySnackbar() {}
 
     protected fun <T> intentExtra(key: String, blacklistValue: T? = null): T? =
         intent.extras?.get(key).let {

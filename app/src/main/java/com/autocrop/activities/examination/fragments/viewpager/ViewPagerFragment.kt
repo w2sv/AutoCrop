@@ -9,21 +9,18 @@ import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
 class ViewPagerFragment:
     ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(ExaminationFragmentViewpagerBinding::class.java){
 
-    companion object{
-        private const val CURRENT_VIEW_PAGER_POSITION = "CURRENT_VIEW_PAGER_POSITION"
+    private companion object{
+        const val CURRENT_VIEW_PAGER_POSITION = "CURRENT_VIEW_PAGER_POSITION"
     }
 
     private lateinit var viewPagerHandler: ViewPagerHandler
-    private lateinit var viewModel: ViewPagerViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[ViewPagerViewModel::class.java]
-
         viewPagerHandler = ViewPagerHandler(
             binding,
-            viewModel,
+            ViewModelProvider(this)[ViewPagerViewModel::class.java],
             castedActivity,
             savedInstanceState?.getInt(CURRENT_VIEW_PAGER_POSITION)
         )

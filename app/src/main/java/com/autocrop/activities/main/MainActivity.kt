@@ -21,7 +21,7 @@ class MainActivity :
     /**
      * Notifies as to IO results from previous ExaminationActivity cycle
      */
-    override fun displayEntrySnackbar(){
+    override fun triggerEntrySnackbar(){
         intentExtra<IntArray>(IntentExtraIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)?.let {
             Handler(Looper.getMainLooper()).postDelayed(
                 {

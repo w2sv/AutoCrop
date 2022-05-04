@@ -4,11 +4,23 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.autocrop.collections.CropBundle
+import com.autocrop.utils.BlankFun
 import com.autocrop.utils.android.externalPicturesDir
 import timber.log.Timber
 
 class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?)
     : ViewModel() {
+
+    fun setAutoScrollingDoneListener(f: BlankFun){
+        autoScrollingDoneListener = f
+    }
+
+    fun consumeAutoScrollingDoneListenerIfSet() = autoScrollingDoneListener?.let {
+        it()
+        autoScrollingDoneListener = null
+    }
+
+    private var autoScrollingDoneListener: BlankFun? = null
 
     companion object{
         lateinit var cropBundles: MutableList<CropBundle>

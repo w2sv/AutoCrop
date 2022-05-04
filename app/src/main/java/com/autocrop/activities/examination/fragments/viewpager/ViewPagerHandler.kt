@@ -7,17 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.ExaminationActivity
+import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCropProcedureDialog
 import com.autocrop.uielements.CubeOutPageTransformer
 import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show
 import com.autocrop.utils.Index
-import com.autocrop.utils.android.show
-import com.autocrop.utils.android.snacky
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
@@ -27,6 +27,10 @@ class ViewPagerHandler(
     private val viewModel: ViewPagerViewModel,
     private val examinationActivity: ExaminationActivity,
     previousPosition: Int?){
+
+    private val sharedViewModel: ExaminationActivityViewModel by lazy {
+        ViewModelProvider(examinationActivity)[ExaminationActivityViewModel::class.java]
+    }
 
     private val pageChangeHandler = PageChangeHandler(viewModel)
     private val scroller: Scroller = Scroller { onScreenTouch ->
@@ -39,16 +43,12 @@ class ViewPagerHandler(
             )
         }
 
-        if (onScreenTouch){
+        if (onScreenTouch)
             binding.viewPager.setPageTransformer()
-            examinationActivity.snacky(
-                "Cancelled auto scrolling",
-                R.drawable.ic_outline_cancel_24
-            )
-                .show()
-        }
         else
             pageChangeHandler.addToOnNextScrollCompletion { binding.viewPager.setPageTransformer() }
+
+        sharedViewModel.consumeAutoScrollingDoneListenerIfSet()
     }
 
     init {
@@ -70,6 +70,7 @@ class ViewPagerHandler(
             if (!viewModel.autoScroll){
                 discardingStatisticsTv.show()
                 buttonToolbar.show()
+                sharedViewModel.consumeAutoScrollingDoneListenerIfSet()
             }
         }
     }

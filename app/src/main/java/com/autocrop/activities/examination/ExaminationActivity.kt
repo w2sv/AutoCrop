@@ -33,20 +33,22 @@ class ExaminationActivity :
             }
         )
 
-    override fun displayEntrySnackbar(){
+    override fun triggerEntrySnackbar(){
         intentExtra(IntentExtraIdentifier.N_DISMISSED_IMAGES, blacklistValue = 0)?.let {
-            snacky(
-                SpannableStringBuilder()
-                    .append("Couldn't find cropping bounds for ")
-                    .bold {
-                        color(
-                            getColorInt(R.color.holo_purple, this@ExaminationActivity)
-                        ) { append("$it") }
-                    }
-                    .append(" image".numericallyInflected(it)),
-                R.drawable.ic_error_24
-            )
-                .show()
+            sharedViewModel.setAutoScrollingDoneListener {
+                snacky(
+                    SpannableStringBuilder()
+                        .append("Couldn't find cropping bounds for ")
+                        .bold {
+                            color(
+                                getColorInt(R.color.holo_purple, this@ExaminationActivity)
+                            ) { append("$it") }
+                        }
+                        .append(" image".numericallyInflected(it)),
+                    R.drawable.ic_error_24
+                )
+                    .show()
+            }
         }
     }
 
