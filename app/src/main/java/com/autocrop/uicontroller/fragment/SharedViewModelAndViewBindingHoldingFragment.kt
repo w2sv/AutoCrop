@@ -10,6 +10,6 @@ abstract class SharedViewModelAndViewBindingHoldingFragment<A: Activity, VB: Vie
         : ViewBindingHoldingFragment<A, VB>(){
 
     protected val sharedViewModel: VM by lazy {
-        ViewModelProvider(requireActivity() as ViewModelStoreOwner)[viewModelClass]
+        ViewModelProvider(requireActivity())[viewModelClass]
     }
 }
