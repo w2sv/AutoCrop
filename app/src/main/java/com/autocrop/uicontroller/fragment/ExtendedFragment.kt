@@ -4,13 +4,18 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.autocrop.utils.BlankFun
 
 abstract class ExtendedFragment<A: Activity>: Fragment(){
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = withPostponedEnterTransition {
         super.onViewCreated(view, savedInstanceState)
         onViewCreatedCore(savedInstanceState)
+    }
+
+    private inline fun withPostponedEnterTransition(f: BlankFun){
+        postponeEnterTransition()
+        f()
         startPostponedEnterTransition()
     }
 

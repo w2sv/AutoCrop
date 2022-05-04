@@ -13,9 +13,9 @@ abstract class ViewBindingHoldingFragment<A: Activity, VB: ViewBinding> :
     ExtendedFragment<A>(),
     ViewBindingInflator<VB>{
 
-    private var _binding: VB? = null
     override val binding: VB
         get() = _binding!!
+    private var _binding: VB? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
