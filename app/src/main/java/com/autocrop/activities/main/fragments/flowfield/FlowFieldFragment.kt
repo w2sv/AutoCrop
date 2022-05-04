@@ -13,24 +13,22 @@ import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.activities.main.fragments.about.AboutFragment
+import com.autocrop.activities.main.fragments.flowfield.sketch.FlowFieldSketch
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.utils.android.*
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding
+import processing.android.PFragment
 
 class FlowFieldFragment:
     MainActivityFragment<MainFragmentFlowfieldBinding>() {
 
-    private lateinit var flowFieldBinding: FlowFieldBinding
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // initialize FlowFieldHandler and thus FlowField
-        flowFieldBinding = FlowFieldBinding(
-            requireActivity(),
-            binding.canvasContainer
-        )
+        with(screenResolution(requireActivity().windowManager)){
+            PFragment(FlowFieldSketch(x, y)).setView(binding.canvasContainer, requireActivity())
+        }
 
         // set button onClickListeners
         setImageSelectionButtonOnClickListener()
