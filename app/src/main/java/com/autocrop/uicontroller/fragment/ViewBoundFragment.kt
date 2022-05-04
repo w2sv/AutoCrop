@@ -7,10 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.autocrop.uicontroller.ViewBindingInflator
+import com.autocrop.utils.typeArgument
 
 abstract class ViewBoundFragment<VB: ViewBinding> :
     Fragment(),
     ViewBindingInflator<VB>{
+
+    @Suppress("UNCHECKED_CAST")
+    override val viewBindingClass = typeArgument() as Class<VB>
 
     override val binding: VB
         get() = _binding!!

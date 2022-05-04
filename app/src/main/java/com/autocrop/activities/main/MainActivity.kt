@@ -10,10 +10,10 @@ import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.android.*
 import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.MainBinding
+import com.w2sv.autocrop.databinding.ActivityBinding
 
 class MainActivity :
-    ApplicationActivity<MainBinding, FlowFieldFragment, MainActivityViewModel>(
+    ApplicationActivity<FlowFieldFragment, MainActivityViewModel>(
         FlowFieldFragment::class.java,
         MainActivityViewModel::class.java) {
 

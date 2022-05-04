@@ -6,6 +6,7 @@ import java.lang.reflect.Method
 
 interface ViewBindingInflator<VB: ViewBinding> {
     val binding: VB
+    val viewBindingClass: Class<VB>
 
     @Suppress("UNCHECKED_CAST")
     fun inflateViewBinding(vararg paramWithType: Pair<Any?, Class<*>>): VB{
@@ -17,6 +18,6 @@ interface ViewBindingInflator<VB: ViewBinding> {
 
     @Suppress("UNCHECKED_CAST")
     private fun inflateViewBindingMethod(vararg parameterTypes: Class<*>): Method =
-        (typeArgument() as Class<VB>)
+        viewBindingClass
             .getMethod("inflate", *parameterTypes)
 }

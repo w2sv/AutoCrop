@@ -2,12 +2,11 @@ package com.autocrop.uicontroller.activity
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.viewbinding.ViewBinding
 import com.w2sv.autocrop.R
 
-abstract class FragmentHostingActivity<VB: ViewBinding, RF: Fragment>(
+abstract class FragmentHostingActivity<RF: Fragment>(
     private val rootFragmentClass: Class<RF>)
-        : ViewBoundActivity<VB>() {
+        : ViewBoundActivity() {
 
     private val layoutId: Int by lazy { binding.root.id }
 

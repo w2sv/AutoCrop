@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import androidx.fragment.app.FragmentActivity
 import androidx.viewbinding.ViewBinding
 import com.autocrop.uicontroller.ViewBindingInflator
+import com.w2sv.autocrop.databinding.ActivityBinding
 
-abstract class ViewBoundActivity<VB: ViewBinding> :
+abstract class ViewBoundActivity :
     FragmentActivity(),
-    ViewBindingInflator<VB>{
+    ViewBindingInflator<ActivityBinding>{
+
+    override val viewBindingClass = ActivityBinding::class.java
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,7 +20,7 @@ abstract class ViewBoundActivity<VB: ViewBinding> :
     }
 
     @Suppress("UNCHECKED_CAST")
-    override val binding: VB by lazy {
+    override val binding: ActivityBinding by lazy {
         super.inflateViewBinding(layoutInflater to LayoutInflater::class.java)
     }
 }
