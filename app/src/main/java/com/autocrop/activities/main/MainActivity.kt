@@ -12,7 +12,6 @@ import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.android.*
 import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.ActivityBinding
 
 class MainActivity :
     ApplicationActivity<FlowFieldFragment, MainActivityViewModel>(

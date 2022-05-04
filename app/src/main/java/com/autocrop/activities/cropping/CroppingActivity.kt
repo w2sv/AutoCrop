@@ -9,7 +9,6 @@ import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedF
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.android.BackPressHandler
-import com.w2sv.autocrop.databinding.ActivityBinding
 
 class CroppingActivity :
     ApplicationActivity<CroppingFragment, CroppingActivityViewModel>(
