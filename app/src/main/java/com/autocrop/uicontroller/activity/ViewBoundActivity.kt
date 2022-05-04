@@ -7,7 +7,7 @@ import androidx.viewbinding.ViewBinding
 import com.autocrop.uicontroller.ViewBindingInflator
 import java.lang.reflect.Method
 
-abstract class ViewBindingHoldingActivity<VB: ViewBinding> :
+abstract class ViewBoundActivity<VB: ViewBinding> :
     FragmentActivity(),
     ViewBindingInflator<VB>{
 

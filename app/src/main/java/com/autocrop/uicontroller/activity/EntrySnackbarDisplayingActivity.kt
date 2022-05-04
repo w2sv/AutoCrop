@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.viewbinding.ViewBinding
 
 abstract class EntrySnackbarDisplayingActivity<VB: ViewBinding>
-    : ViewBindingHoldingActivity<VB>() {
+    : ViewBoundActivity<VB>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

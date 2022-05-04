@@ -1,16 +1,15 @@
 package com.autocrop.uicontroller.fragment
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.autocrop.uicontroller.ViewBindingInflator
-import java.lang.reflect.Method
 
-abstract class ViewBindingHoldingFragment<A: Activity, VB: ViewBinding> :
-    ExtendedFragment<A>(),
+abstract class ViewBoundFragment<VB: ViewBinding> :
+    Fragment(),
     ViewBindingInflator<VB>{
 
     override val binding: VB
