@@ -13,6 +13,20 @@ abstract class ApplicationActivity<VB: ViewBinding, RF: Fragment, VM: ViewModel>
         FragmentHostingActivity<VB, RF>(rootFragmentClass),
         ViewModelHolder<VM>{
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // instantiate sharedViewModel
+        this::sharedViewModel.invoke()
+
+        if (savedInstanceState == null)
+            displayEntrySnackbar()
+    }
+
+    //$$$$$$$$$$$$$$$$$$
+    // ViewModelHolder $
+    //$$$$$$$$$$$$$$$$$$
+
     override val sharedViewModel: VM by lazy {
         ViewModelProvider(this, viewModelFactory())[viewModelClass]
     }
@@ -20,14 +34,9 @@ abstract class ApplicationActivity<VB: ViewBinding, RF: Fragment, VM: ViewModel>
     protected open fun viewModelFactory(): ViewModelProvider.Factory =
         defaultViewModelProviderFactory
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        if (savedInstanceState == null)
-            displayEntrySnackbar()
-
-        this::sharedViewModel.invoke()
-    }
+    //$$$$$$$$$$$$$$$$$$$$$$
+    // Snackbar displaying $
+    //$$$$$$$$$$$$$$$$$$$$$$
 
     protected open fun displayEntrySnackbar() {}
 
