@@ -11,7 +11,7 @@ abstract class ViewBoundActivity :
     FragmentActivity(),
     ViewBindingInflator<ActivityBinding>{
 
-    override val viewBindingClass = ActivityBinding::class.java
+    override val bindingClass = ActivityBinding::class.java
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

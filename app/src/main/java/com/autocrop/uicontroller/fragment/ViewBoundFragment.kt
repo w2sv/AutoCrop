@@ -14,7 +14,7 @@ abstract class ViewBoundFragment<VB: ViewBinding> :
     ViewBindingInflator<VB>{
 
     @Suppress("UNCHECKED_CAST")
-    override val viewBindingClass = typeArgument() as Class<VB>
+    override val bindingClass = typeArgument() as Class<VB>
 
     override val binding: VB
         get() = _binding!!
