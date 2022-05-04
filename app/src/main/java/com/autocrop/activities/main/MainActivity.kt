@@ -1,5 +1,7 @@
 package com.autocrop.activities.main
 
+import android.os.Handler
+import android.os.Looper
 import android.text.SpannableStringBuilder
 import androidx.core.text.color
 import com.autocrop.activities.IntentExtraIdentifier
@@ -22,24 +24,29 @@ class MainActivity :
      */
     override fun displayEntrySnackbar(){
         intentExtra<IntArray>(IntentExtraIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)?.let {
-            val (nSavedCrops, nDeletedScreenshots) = it[0] to it[1]
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+                    val (nSavedCrops, nDeletedScreenshots) = it[0] to it[1]
 
-            when (nSavedCrops) {
-                0 -> snacky(
-                    "Discarded all crops",
-                    R.drawable.ic_outline_sentiment_dissatisfied_24
-                )
-                else -> snacky(
-                    SpannableStringBuilder().apply {
-                        append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                        color(getColorInt(NotificationColor.SUCCESS, this@MainActivity)){append(intentExtra<String>(IntentExtraIdentifier.CROP_WRITE_DIR_PATH)!!)}
-                        if (nDeletedScreenshots != 0)
-                            append(" and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} ${"screenshot".numericallyInflected(nDeletedScreenshots)}")
-                    },
-                    R.drawable.ic_baseline_done_24
-                )
-            }
-                .show()
+                    when (nSavedCrops) {
+                        0 -> snacky(
+                            "Discarded all crops",
+                            R.drawable.ic_outline_sentiment_dissatisfied_24
+                        )
+                        else -> snacky(
+                            SpannableStringBuilder().apply {
+                                append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
+                                color(getColorInt(NotificationColor.SUCCESS, this@MainActivity)){append(intentExtra<String>(IntentExtraIdentifier.CROP_WRITE_DIR_PATH)!!)}
+                                if (nDeletedScreenshots != 0)
+                                    append(" and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} ${"screenshot".numericallyInflected(nDeletedScreenshots)}")
+                            },
+                            R.drawable.ic_baseline_done_24
+                        )
+                    }
+                        .show()
+                },
+                resources.getInteger(R.integer.fade_in_duration_flowfield_fragment_buttons).toLong() / 2
+            )
         }
     }
 
