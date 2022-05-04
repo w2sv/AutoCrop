@@ -6,14 +6,14 @@ import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.global.userPreferencesInstances
-import com.autocrop.uicontroller.activity.FragmentHostingActivity
+import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.android.*
 import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainBinding
 
 class MainActivity :
-    FragmentHostingActivity<MainBinding, FlowFieldFragment, MainActivityViewModel>(
+    ApplicationActivity<MainBinding, FlowFieldFragment, MainActivityViewModel>(
         FlowFieldFragment::class.java,
         MainActivityViewModel::class.java) {
 

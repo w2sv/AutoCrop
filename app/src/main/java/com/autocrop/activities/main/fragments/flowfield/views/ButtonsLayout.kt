@@ -4,19 +4,19 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import com.autocrop.activities.main.MainActivityViewModel
-import com.autocrop.uielements.view.ViewModelRetriever
+import com.autocrop.uicontroller.ViewModelHolder
 import com.autocrop.uielements.view.fadeIn
 import com.autocrop.uielements.view.show
 import com.w2sv.autocrop.R
 
 class ButtonsLayout(context: Context, attributeSet: AttributeSet):
     RelativeLayout(context, attributeSet),
-    ViewModelRetriever<MainActivityViewModel> by MainActivityModelRetriever(context) {
+    ViewModelHolder<MainActivityViewModel> by MainActivityModelRetriever(context) {
 
     init {
-        if (viewModel.fadeInFlowFieldButtons){
+        if (sharedViewModel.fadeInFlowFieldButtons){
             fadeIn(resources.getInteger(R.integer.fade_in_duration_flowfield_fragment_buttons).toLong())
-            viewModel.fadeInFlowFieldButtons = false
+            sharedViewModel.fadeInFlowFieldButtons = false
         }
         else
             show()

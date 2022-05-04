@@ -8,15 +8,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.children
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
-import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.CropEntiretyProcedureDialog
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.DiscardAllConfirmationDialog
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SaveAllConfirmationDialog
-import com.autocrop.uielements.view.ViewModelRetriever
 
 class ButtonToolbar(context: Context, attr: AttributeSet):
-    Toolbar(context, attr),
-    ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context){
+    Toolbar(context, attr){
 
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)

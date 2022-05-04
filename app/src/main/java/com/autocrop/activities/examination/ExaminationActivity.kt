@@ -13,14 +13,14 @@ import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.Scre
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.global.CropFileSaveDestinationPreferences
-import com.autocrop.uicontroller.activity.FragmentHostingActivity
+import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.android.*
 import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ExaminationBinding
 
 class ExaminationActivity :
-    FragmentHostingActivity<ExaminationBinding, ViewPagerFragment, ExaminationActivityViewModel>(
+    ApplicationActivity<ExaminationBinding, ViewPagerFragment, ExaminationActivityViewModel>(
         ViewPagerFragment::class.java,
         ExaminationActivityViewModel::class.java) {
 

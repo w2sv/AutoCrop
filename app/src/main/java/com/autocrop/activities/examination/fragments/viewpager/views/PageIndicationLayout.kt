@@ -7,12 +7,12 @@ import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
-import com.autocrop.uielements.view.ViewModelRetriever
+import com.autocrop.uicontroller.ViewModelHolder
 import com.w2sv.autocrop.R
 
 class PageIndicationBar(context: Context, attr: AttributeSet) :
     AppCompatSeekBar(context, attr),
-    ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context) {
+    ViewModelHolder<ViewPagerViewModel> by ViewPagerViewModelRetriever(context) {
 
     /**
      * Disable manual dragging
@@ -27,7 +27,7 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
             DecelerateInterpolator::class.java to 100L
         )
 
-        viewModel.pageIndicationSeekbarPagePercentage(dataSetPosition, max)?.let { newProgress ->
+        sharedViewModel.pageIndicationSeekbarPagePercentage(dataSetPosition, max)?.let { newProgress ->
             with(ObjectAnimator.ofInt(this,"progress", newProgress)) {
                 with(if (displayBouncingAnimation(scrolledRight, newProgress)) BounceInterpolator::class.java else DecelerateInterpolator::class.java){
                     interpolator = newInstance()
@@ -46,6 +46,6 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
 
 class PageIndicationTextView(context: Context, attr: AttributeSet): PageDependentTextView(context, attr, R.string.fracture) {
     override fun updateText(position: Int){
-        text = stringResource.format(position + 1, viewModel.dataSet.size)
+        text = stringResource.format(position + 1, sharedViewModel.dataSet.size)
     }
 }

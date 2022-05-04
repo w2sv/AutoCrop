@@ -7,12 +7,12 @@ import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.fragments.cropping.CroppingFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.uicontroller.activity.FragmentHostingActivity
+import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.android.BackPressHandler
 import com.w2sv.autocrop.databinding.CroppingBinding
 
 class CroppingActivity :
-    FragmentHostingActivity<CroppingBinding, CroppingFragment, CroppingActivityViewModel>(
+    ApplicationActivity<CroppingBinding, CroppingFragment, CroppingActivityViewModel>(
         CroppingFragment::class.java,
         CroppingActivityViewModel::class.java) {
 
