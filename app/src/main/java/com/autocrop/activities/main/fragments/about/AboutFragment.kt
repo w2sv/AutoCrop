@@ -19,14 +19,14 @@ class AboutFragment:
         binding.trippyBrudinelettenImageView.setOnClickListener { it.animate(Techniques.Tada) }
 
         binding.w2svTv.setOnClickListener {
-            w2svTvAnimation = it.animate(Techniques.ZoomOutUp)
-
-            startActivity(
-                Intent(
-                    "android.intent.action.VIEW",
-                    Uri.parse("http://github.com/w2sv")
+            w2svTvAnimation = it.animate(Techniques.ZoomOutUp){
+                startActivity(
+                    Intent(
+                        "android.intent.action.VIEW",
+                        Uri.parse("http://github.com/w2sv")
+                    )
                 )
-            )
+            }
         }
     }
 

@@ -183,7 +183,7 @@ class ViewPagerHandler(
                     return
                 }
                 2 -> examinationActivity.runOnUiThread {
-                    binding.pageIndicationLayout.animate(Techniques.FlipOutY)
+                    binding.pageIndicationLayout.animate(Techniques.ZoomOut)
                 }
                 else -> Unit
             }
