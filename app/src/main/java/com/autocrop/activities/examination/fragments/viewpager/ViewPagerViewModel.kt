@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.autocrop.activities.examination.ExaminationActivityViewModel
-import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.collections.CropBundle
+import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.utils.android.mutableLiveData
 import com.autocrop.utils.rotated
 import java.util.*

@@ -5,16 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
+import com.autocrop.uicontroller.ViewBindingInflator
 import java.lang.reflect.Method
-import java.lang.reflect.ParameterizedType
 
-abstract class ViewBindingHoldingFragment<A: Activity, VB: ViewBinding>
-        : ExtendedFragment<A>(){
+abstract class ViewBindingHoldingFragment<A: Activity, VB: ViewBinding> :
+    ExtendedFragment<A>(),
+    ViewBindingInflator<VB>{
 
     private var _binding: VB? = null
-    protected val binding: VB
+    override val binding: VB
         get() = _binding!!
 
     override fun onCreateView(
@@ -22,22 +22,13 @@ abstract class ViewBindingHoldingFragment<A: Activity, VB: ViewBinding>
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
-        _binding = inflateViewBinding(container)
+        _binding = super.inflateViewBinding(
+            layoutInflater to LayoutInflater::class.java,
+            container to ViewGroup::class.java,
+            false to Boolean::class.java
+        )
         return binding.root
     }
-
-    /**
-     * @see
-     *      https://stackoverflow.com/a/67395787/12083276
-     */
-    @Suppress("UNCHECKED_CAST")
-    private fun inflateViewBinding(container: ViewGroup?): VB =
-        inflateViewBinding(null, layoutInflater, container, false) as VB
-
-    @Suppress("UNCHECKED_CAST")
-    private val inflateViewBinding: Method =
-        ((javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VB>)
-            .getMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.java)
 
     override fun onDestroyView() {
         super.onDestroyView()

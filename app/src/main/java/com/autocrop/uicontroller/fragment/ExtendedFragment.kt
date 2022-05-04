@@ -4,7 +4,6 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.autocrop.uicontroller.activity.FragmentHostingActivity
 
 abstract class ExtendedFragment<A: Activity>: Fragment(){
 

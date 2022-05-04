@@ -1,7 +1,6 @@
 package com.autocrop.utils.android
 
 import android.content.Context
-import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 
 /**
