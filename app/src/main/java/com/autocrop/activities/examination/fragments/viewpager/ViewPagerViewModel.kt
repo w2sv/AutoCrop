@@ -56,8 +56,8 @@ class ViewPagerViewModel:
     val autoScrolledInitially = BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
     val autoScroll: MutableLiveData<Boolean> = MutableLiveData(autoScrolledInitially)
 
-    val initialViewPosition: Int = (MAX_VIEWS / 2).run {
-        minus(dataSet.correspondingPosition(this))
+    fun initialViewPosition(): Int = (MAX_VIEWS / 2).run {
+        minus(dataSet.correspondingPosition(this)) + dataSet.position.value!!
     }
 
     // -------------pageIndicationSeekbar

@@ -3,11 +3,12 @@ package com.autocrop.activities.examination.fragments.viewpager
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.utils.BlankFun
+import kotlin.properties.Delegates
 
 class PageChangeHandler(private val viewModel: ViewPagerViewModel)
         : ViewPager2.OnPageChangeCallback(){
 
-    private var previousPosition = viewModel.initialViewPosition
+    private var previousPosition = -1
 
     /**
      * [viewModel].setDataSetPosition if not blocked

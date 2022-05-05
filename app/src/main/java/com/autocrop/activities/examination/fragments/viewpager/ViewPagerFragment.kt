@@ -5,7 +5,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
-import com.autocrop.uielements.setPageTransformer
+import com.autocrop.uielements.CubeOutPageTransformer
 import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show
@@ -15,10 +15,6 @@ import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
 class ViewPagerFragment:
     ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(ExaminationFragmentViewpagerBinding::class.java){
 
-    private companion object{
-        const val CURRENT_VIEW_PAGER_POSITION = "CURRENT_VIEW_PAGER_POSITION"
-    }
-
     private val viewModel: ViewPagerViewModel by lazy{
         ViewModelProvider(this)[ViewPagerViewModel::class.java]
     }
@@ -26,7 +22,7 @@ class ViewPagerFragment:
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.viewPager.initialize(savedInstanceState?.getInt(CURRENT_VIEW_PAGER_POSITION))
+        binding.viewPager.initialize()
 
         // set LiveData observers
         viewModel.dataSet.position.observe(viewLifecycleOwner){ position ->
@@ -43,7 +39,7 @@ class ViewPagerFragment:
         viewModel.autoScroll.observe(viewLifecycleOwner){ autoScroll ->
             if (!autoScroll){
                 sharedViewModel.consumeAutoScrollingDoneListenerIfSet()
-                binding.viewPager.setPageTransformer()
+                binding.viewPager.setPageTransformer(CubeOutPageTransformer())
 
                 if (!viewModel.autoScrolledInitially){
                     binding.discardingStatisticsTv.show()
@@ -72,7 +68,7 @@ class ViewPagerFragment:
             binding.pageIndicationLayout.show()
     }
 
-    private fun ViewPager2.initialize(previousPosition: Int?){
+    private fun ViewPager2.initialize(){
         // set adapter + first view
         adapter = CropPagerAdapter(
             this,
@@ -80,18 +76,16 @@ class ViewPagerFragment:
             castedActivity::invokeSubsequentFragment
         )
 
-        setCurrentItem(
-            previousPosition ?: viewModel.initialViewPosition,
-            false
+        // register onPageChangeCallbacks
+        registerOnPageChangeCallback(
+            PageChangeHandler(
+                viewModel
+            )
         )
 
-        // register onPageChangeCallbacks
-        registerOnPageChangeCallback(PageChangeHandler(viewModel))
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        outState.putInt(CURRENT_VIEW_PAGER_POSITION, binding.viewPager.currentItem)
+        setCurrentItem(
+            viewModel.initialViewPosition(),
+            false
+        )
     }
 }
