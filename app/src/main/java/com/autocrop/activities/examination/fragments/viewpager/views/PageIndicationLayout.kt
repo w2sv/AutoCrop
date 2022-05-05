@@ -3,12 +3,14 @@ package com.autocrop.activities.examination.fragments.viewpager.views
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
+import android.view.animation.BaseInterpolator
 import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.uicontroller.ViewModelHolder
 import com.w2sv.autocrop.R
+import kotlin.math.roundToInt
 
 class PageIndicationBar(context: Context, attr: AttributeSet) :
     AppCompatSeekBar(context, attr),
@@ -27,21 +29,28 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
             DecelerateInterpolator::class.java to 100L
         )
 
-        sharedViewModel.pageIndicationSeekbarPagePercentage(dataSetPosition, max)?.let { newProgress ->
+        progress(dataSetPosition)?.let { newProgress ->
             with(ObjectAnimator.ofInt(this,"progress", newProgress)) {
-                with(if (displayBouncingAnimation(scrolledRight, newProgress)) BounceInterpolator::class.java else DecelerateInterpolator::class.java){
-                    interpolator = newInstance()
-                    duration = animationDuration.getValue(this)
+                with(interpolator(scrolledRight, newProgress)){
+                    interpolator = this
+                    duration = animationDuration.getValue(javaClass)
                 }
                 start()
             }
         }
     }
 
-    private fun displayBouncingAnimation(scrolledRight: Boolean, newProgress: Int): Boolean =
-        listOf(progress, newProgress).let {
-            (it == listOf(0, 100) && !scrolledRight) || (it == listOf(100, 0) && scrolledRight)
-        }
+    private fun progress(pageIndex: Int): Int? =
+        if (sharedViewModel.dataSet.size == 1)
+            null
+        else
+            (max.toFloat() / (sharedViewModel.dataSet.lastIndex).toFloat() * pageIndex).roundToInt()
+
+    private fun interpolator(scrolledRight: Boolean, newProgress: Int): BaseInterpolator =
+        if ((progress == 0 && newProgress == 100 && scrolledRight) || progress == 100 && newProgress == 0 && !scrolledRight)
+            BounceInterpolator()
+        else
+            DecelerateInterpolator()
 }
 
 class PageIndicationTextView(context: Context, attr: AttributeSet): PageDependentTextView(context, attr, R.string.fracture) {

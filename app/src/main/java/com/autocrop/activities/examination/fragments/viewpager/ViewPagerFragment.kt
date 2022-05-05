@@ -23,8 +23,13 @@ class ViewPagerFragment:
         super.onViewCreated(view, savedInstanceState)
 
         binding.viewPager.initialize()
+        setLiveDataObservers()
 
-        // set LiveData observers
+        if (viewModel.dataSet.size > 1)
+            binding.pageIndicationLayout.show()
+    }
+
+    private fun setLiveDataObservers(){
         viewModel.dataSet.position.observe(viewLifecycleOwner){ position ->
             binding.discardingStatisticsTv.updateText(position)
 
@@ -34,28 +39,30 @@ class ViewPagerFragment:
             }
         }
 
-        val scroller = Scroller(viewModel.autoScroll)
+        var scroller: Scroller? = null
 
         viewModel.autoScroll.observe(viewLifecycleOwner){ autoScroll ->
-            if (!autoScroll){
+            if (autoScroll){
+                binding.autoScrollingTextView.show()
+                scroller = Scroller(viewModel.autoScroll).apply {
+                    run(binding.viewPager, viewModel.maxAutoScrolls())
+                }
+            }
+            else{
                 sharedViewModel.consumeAutoScrollingDoneListenerIfSet()
                 binding.viewPager.setPageTransformer(CubeOutPageTransformer())
 
-                if (!viewModel.autoScrolledInitially){
-                    binding.discardingStatisticsTv.show()
-                    binding.buttonToolbar.show()
-                }
-                else {
-                    scroller.cancel()
+                if (scroller is Scroller){
+                    scroller!!.cancel()
                     crossFade(
                         binding.autoScrollingTextView,
                         binding.discardingStatisticsTv, binding.buttonToolbar
                     )
                 }
-            }
-            else{
-                binding.autoScrollingTextView.show()
-                scroller.run(binding.viewPager, viewModel.maxScrolls())
+                else{
+                    binding.discardingStatisticsTv.show()
+                    binding.buttonToolbar.show()
+                }
             }
         }
 
@@ -63,20 +70,15 @@ class ViewPagerFragment:
             if (dataSet.size == 1)
                 binding.pageIndicationLayout.animate(Techniques.ZoomOut)
         }
-
-        if (viewModel.dataSet.size > 1)
-            binding.pageIndicationLayout.show()
     }
 
     private fun ViewPager2.initialize(){
-        // set adapter + first view
         adapter = CropPagerAdapter(
             this,
             viewModel,
             castedActivity::invokeSubsequentFragment
         )
 
-        // register onPageChangeCallbacks
         registerOnPageChangeCallback(
             PageChangeHandler(
                 viewModel

@@ -43,7 +43,7 @@ class CropPagerAdapter(
 
                     init {
                         fragmentActivity.supportFragmentManager.setFragmentResultListener(
-                            SingleCropProcedureDialog.PROCEDURE_SELECTED, fragmentActivity){_, bundle ->
+                            SingleCropProcedureDialog.PROCEDURE_SELECTED, fragmentActivity){ _, bundle ->
                             onCropProcedureSelected(
                                 bundle.getInt(SingleCropProcedureDialog.DATA_SET_POSITION_OUT)
                             )

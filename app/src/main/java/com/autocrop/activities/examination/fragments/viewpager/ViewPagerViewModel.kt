@@ -10,7 +10,6 @@ import com.autocrop.utils.BlankFun
 import com.autocrop.utils.android.mutableLiveData
 import com.autocrop.utils.rotated
 import java.util.*
-import kotlin.math.roundToInt
 
 class ViewPagerViewModel:
     ViewModel(){
@@ -28,49 +27,43 @@ class ViewPagerViewModel:
         }
     }
 
-    val scrolledRight: LiveData<Boolean> by lazy {
-        MutableLiveData(true)
-    }
+    var scrolledRight = false
 
-    private var blockSubsequentPageRelatedViewsUpdate = false
+    private var updatePageRelatedViews = true
     fun blockSubsequentPageRelatedViewsUpdate(){
-        blockSubsequentPageRelatedViewsUpdate = true
+        updatePageRelatedViews = false
     }
 
     fun setDataSetPosition(viewPosition: Int, onScrollRight: Boolean? = null){
-        if (!blockSubsequentPageRelatedViewsUpdate){
-            onScrollRight?.let { scrolledRight.mutableLiveData.postValue(it) }
+        if (updatePageRelatedViews){
+            onScrollRight?.let {
+                scrolledRight = it
+            }
             dataSet.position.mutableLiveData.postValue(dataSet.correspondingPosition(viewPosition))
         }
         else
-            blockSubsequentPageRelatedViewsUpdate = false
+            updatePageRelatedViews = true
     }
-
-    fun maxScrolls(): Int =
-        dataSet.size - dataSet.position.value!!
 
     // -------------Additional parameters
 
     companion object { const val MAX_VIEWS: Int = Int.MAX_VALUE }
 
-    val autoScrolledInitially = BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
-    val autoScroll: MutableLiveData<Boolean> = MutableLiveData(autoScrolledInitially)
+    val autoScroll: MutableLiveData<Boolean> = MutableLiveData(
+        BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
+    )
+
+    fun maxAutoScrolls(): Int =
+        dataSet.size - dataSet.position.value!!
 
     fun initialViewPosition(): Int = (MAX_VIEWS / 2).run {
         minus(dataSet.correspondingPosition(this)) + dataSet.position.value!!
     }
-
-    // -------------pageIndicationSeekbar
-
-    fun pageIndicationSeekbarPagePercentage(pageIndex: Int, max: Int): Int? =
-        if (dataSet.size == 1)
-            null
-        else
-            (max.toFloat() / (dataSet.lastIndex).toFloat() * pageIndex).roundToInt()
 }
 
 class ViewPagerDataSet(private val cropBundles: MutableList<CropBundle>) :
-    MutableList<CropBundle> by cropBundles, LiveData<List<CropBundle>>(){
+    LiveData<MutableList<CropBundle>>(),
+    MutableList<CropBundle> by cropBundles {
 
     val position: LiveData<Int> by lazy {
         MutableLiveData(0)
