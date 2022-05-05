@@ -16,26 +16,24 @@ class ViewPagerViewModel:
 
     val dataSet = ViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 
-    val dataSetPosition: LiveData<Int> by lazy {
-        MutableLiveData(0)
-    }
     val scrolledRight: LiveData<Boolean> by lazy {
         MutableLiveData(true)
     }
 
     fun setDataSetPosition(viewPosition: Int, onScrollRight: Boolean? = null){
         onScrollRight?.let { scrolledRight.mutableLiveData.postValue(it) }
-        dataSetPosition.mutableLiveData.postValue(dataSet.correspondingPosition(viewPosition))
+        dataSet.position.mutableLiveData.postValue(dataSet.correspondingPosition(viewPosition))
     }
 
     fun maxScrolls(): Int =
-        dataSet.size - dataSetPosition.value!!
+        dataSet.size - dataSet.position.value!!
 
     // -------------Additional parameters
 
     companion object { const val MAX_VIEWS: Int = Int.MAX_VALUE }
 
-    var autoScroll: Boolean = BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
+    val autoScrolledInitially = BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
+    val autoScroll: MutableLiveData<Boolean> = MutableLiveData(autoScrolledInitially)
 
     val initialViewPosition: Int = (MAX_VIEWS / 2).run {
         minus(dataSet.correspondingPosition(this))
@@ -53,12 +51,14 @@ class ViewPagerViewModel:
 class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) :
     MutableList<CropBundle> by cropBundles{
 
-    // -------------Position Trackers
+    val position: LiveData<Int> by lazy {
+        MutableLiveData(0)
+    }
 
     /**
      * For keeping track of #page
      */
-    var tailPosition: Int = lastIndex
+    private var tailPosition: Int = lastIndex
 
     // ----------------Position Conversion
 

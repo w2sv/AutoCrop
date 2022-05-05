@@ -1,11 +1,8 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
-import android.app.Activity
 import android.os.Handler
 import android.os.Looper
-import android.widget.TextView
 import androidx.viewpager2.widget.ViewPager2
-import com.autocrop.uielements.view.show
 import java.util.*
 
 /**
@@ -14,9 +11,7 @@ import java.util.*
 class Scroller(private val onCancelListener: (onScreenTouch: Boolean) -> Unit) {
     private lateinit var timer: Timer
 
-    fun run(viewPager2: ViewPager2, maxScrolls: Int, autoScrollingTv: TextView) {
-        (viewPager2.context as Activity).runOnUiThread { autoScrollingTv.show() }
-
+    fun run(viewPager2: ViewPager2, maxScrolls: Int) {
         timer = Timer().apply {
             schedule(
                 object : TimerTask() {
