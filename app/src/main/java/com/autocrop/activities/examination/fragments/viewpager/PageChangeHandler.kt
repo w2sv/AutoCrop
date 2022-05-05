@@ -8,7 +8,6 @@ class PageChangeHandler(private val viewModel: ViewPagerViewModel)
         : ViewPager2.OnPageChangeCallback(){
 
     private var previousPosition = viewModel.initialViewPosition
-    var blockViewUpdatingOnNextPageChange = false
 
     /**
      * [viewModel].setDataSetPosition if not blocked
@@ -16,30 +15,14 @@ class PageChangeHandler(private val viewModel: ViewPagerViewModel)
     override fun onPageSelected(position: Int) {
         super.onPageSelected(position)
 
-        if (blockViewUpdatingOnNextPageChange)
-            blockViewUpdatingOnNextPageChange = false
-        else {
-            viewModel.setDataSetPosition(position, position > previousPosition)
-            previousPosition = position
-        }
-    }
-
-    private var onNextScrollCompletion: BlankFun? = null
-    fun addToOnNextScrollCompletion(function: BlankFun){
-        onNextScrollCompletion = onNextScrollCompletion?.let {
-            {
-                it()
-                function()
-            }
-        } ?: function
+        viewModel.setDataSetPosition(position, position > previousPosition)
+        previousPosition = position
     }
 
     override fun onPageScrollStateChanged(state: Int) {
         super.onPageScrollStateChanged(state)
 
-        if (state == ViewPager.SCROLL_STATE_IDLE && onNextScrollCompletion != null){
-            onNextScrollCompletion!!()
-            onNextScrollCompletion = null
-        }
+        if (state == ViewPager.SCROLL_STATE_IDLE)
+            viewModel.consumeScrollStateIdleListenerIfSet()
     }
 }

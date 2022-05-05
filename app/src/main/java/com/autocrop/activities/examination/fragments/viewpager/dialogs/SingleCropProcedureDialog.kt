@@ -26,7 +26,7 @@ class SingleCropProcedureDialog
         const val PROCEDURE_SELECTED = "ON_PROCEDURE_SELECTED"
     }
 
-    var cropBundleProcessingJob: Job? = null
+    var processingJob: Job? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(activity).run {
@@ -41,7 +41,7 @@ class SingleCropProcedureDialog
 
             setNegativeButton("No, discard") { _, _ -> triggerOnProcedureSelected(dataSetPosition) }
             setPositiveButton("Yes") { _, _ ->
-                cropBundleProcessingJob = lifecycleScope.executeAsyncTask(
+                processingJob = lifecycleScope.executeAsyncTask(
                     { saveCrop(
                         dataSetPosition,
                         BooleanUserPreferences.deleteScreenshots,

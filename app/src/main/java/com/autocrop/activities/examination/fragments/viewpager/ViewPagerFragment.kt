@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.uielements.setPageTransformer
+import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show
+import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
 
 class ViewPagerFragment:
@@ -36,22 +38,34 @@ class ViewPagerFragment:
             }
         }
 
+        val scroller = Scroller(viewModel.autoScroll)
+
         viewModel.autoScroll.observe(viewLifecycleOwner){ autoScroll ->
             if (!autoScroll){
                 sharedViewModel.consumeAutoScrollingDoneListenerIfSet()
+                binding.viewPager.setPageTransformer()
 
                 if (!viewModel.autoScrolledInitially){
                     binding.discardingStatisticsTv.show()
                     binding.buttonToolbar.show()
                 }
-                else
+                else {
+                    scroller.cancel()
                     crossFade(
                         binding.autoScrollingTextView,
                         binding.discardingStatisticsTv, binding.buttonToolbar
                     )
+                }
             }
-            else
+            else{
                 binding.autoScrollingTextView.show()
+                scroller.run(binding.viewPager, viewModel.maxScrolls())
+            }
+        }
+
+        viewModel.dataSet.observe(viewLifecycleOwner){ dataSet ->
+            if (dataSet.size == 1)
+                binding.pageIndicationLayout.animate(Techniques.ZoomOut)
         }
 
         if (viewModel.dataSet.size > 1)
@@ -59,25 +73,10 @@ class ViewPagerFragment:
     }
 
     private fun ViewPager2.initialize(previousPosition: Int?){
-        val pageChangeHandler = PageChangeHandler(viewModel)
-        val scroller = Scroller { onScreenTouch ->
-            viewModel.autoScroll.postValue(false)
-
-            if (onScreenTouch)
-                binding.viewPager.setPageTransformer()
-            else
-                pageChangeHandler.addToOnNextScrollCompletion {
-                    binding.viewPager.setPageTransformer()
-                }
-        }
-
         // set adapter + first view
         adapter = CropPagerAdapter(
             this,
             viewModel,
-            pageChangeHandler,
-            scroller,
-            binding.pageIndicationLayout,
             castedActivity::invokeSubsequentFragment
         )
 
@@ -87,14 +86,7 @@ class ViewPagerFragment:
         )
 
         // register onPageChangeCallbacks
-        registerOnPageChangeCallback(pageChangeHandler)
-
-        // run Scroller and display respective text view if applicable;
-        // otherwise display discardedTextView and set page transformer
-        if (viewModel.autoScroll.value!!)
-            scroller.run(this, viewModel.maxScrolls())
-        else
-            setPageTransformer()
+        registerOnPageChangeCallback(PageChangeHandler(viewModel))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

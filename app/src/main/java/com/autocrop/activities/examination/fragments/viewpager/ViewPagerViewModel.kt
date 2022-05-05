@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.collections.CropBundle
 import com.autocrop.global.BooleanUserPreferences
+import com.autocrop.utils.BlankFun
 import com.autocrop.utils.android.mutableLiveData
 import com.autocrop.utils.rotated
 import java.util.*
@@ -16,13 +17,33 @@ class ViewPagerViewModel:
 
     val dataSet = ViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 
+    private var scrollStateIdleListener: BlankFun? = null
+    fun setScrollStateIdleListener(f: BlankFun){
+        scrollStateIdleListener = f
+    }
+    fun consumeScrollStateIdleListenerIfSet(){
+        scrollStateIdleListener?.let {
+            it()
+            scrollStateIdleListener = null
+        }
+    }
+
     val scrolledRight: LiveData<Boolean> by lazy {
         MutableLiveData(true)
     }
 
+    private var blockSubsequentPageRelatedViewsUpdate = false
+    fun blockSubsequentPageRelatedViewsUpdate(){
+        blockSubsequentPageRelatedViewsUpdate = true
+    }
+
     fun setDataSetPosition(viewPosition: Int, onScrollRight: Boolean? = null){
-        onScrollRight?.let { scrolledRight.mutableLiveData.postValue(it) }
-        dataSet.position.mutableLiveData.postValue(dataSet.correspondingPosition(viewPosition))
+        if (!blockSubsequentPageRelatedViewsUpdate){
+            onScrollRight?.let { scrolledRight.mutableLiveData.postValue(it) }
+            dataSet.position.mutableLiveData.postValue(dataSet.correspondingPosition(viewPosition))
+        }
+        else
+            blockSubsequentPageRelatedViewsUpdate = false
     }
 
     fun maxScrolls(): Int =
@@ -48,8 +69,8 @@ class ViewPagerViewModel:
             (max.toFloat() / (dataSet.lastIndex).toFloat() * pageIndex).roundToInt()
 }
 
-class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) :
-    MutableList<CropBundle> by cropBundles{
+class ViewPagerDataSet(private val cropBundles: MutableList<CropBundle>) :
+    MutableList<CropBundle> by cropBundles, LiveData<List<CropBundle>>(){
 
     val position: LiveData<Int> by lazy {
         MutableLiveData(0)
@@ -69,6 +90,10 @@ class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) :
 
     fun removingAtTail(position: Int): Boolean = tailPosition == position
     fun viewPositionIncrement(removingAtTail: Boolean): Int = if (removingAtTail) -1 else 1
+
+    override fun removeAt(index: Int): CropBundle =
+        cropBundles.removeAt(index)
+            .also { postValue(this) }
 
     /**
      * Remove element at [removePosition]

@@ -11,23 +11,22 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCropProcedureDialog
-import com.autocrop.uielements.view.animate
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.Index
-import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 
 class CropPagerAdapter(
     private val viewPager2: ViewPager2,
     private val viewModel: ViewPagerViewModel,
-    private val pageChangeHandler: PageChangeHandler,
-    private val scroller: Scroller,
-    private val pageIndicationLayout: View,
     private val lastCropProcessedListener: BlankFun):
         RecyclerView.Adapter<CropPagerAdapter.CropViewHolder>() {
 
-    val cropProcedureDialog = SingleCropProcedureDialog()
-    val fragmentActivity = (viewPager2.context as FragmentActivity)
+    val cropProcedureDialog: SingleCropProcedureDialog by lazy{
+        SingleCropProcedureDialog()
+    }
+    val fragmentActivity: FragmentActivity by lazy{
+        viewPager2.context as FragmentActivity
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     inner class CropViewHolder(view: ImageView)
@@ -56,7 +55,7 @@ class CropPagerAdapter(
                      */
                     override fun onTouch(v: View?, event: MotionEvent?): Boolean =
                         if (viewModel.autoScroll.value!!) {
-                            scroller.cancel(true)
+                            viewModel.autoScroll.postValue(false)
                             false
                         }
                         else
@@ -105,23 +104,15 @@ class CropPagerAdapter(
      * hide pageIndicationSeekBar AND/OR
      * removes view, procedure action has been selected for, from pager
      */
-    private fun onCropProcedureSelected(dataSetPosition: Index){
-        when(viewModel.dataSet.size - 1){
-            0 -> {
-                cropProcedureDialog.cropBundleProcessingJob?.run {
-                    invokeOnCompletion {
-                        lastCropProcessedListener()
-                    }
-                } ?: lastCropProcessedListener()
-                return
-            }
-            1 -> fragmentActivity.runOnUiThread {
-                pageIndicationLayout.animate(Techniques.ZoomOut)
-            }
-            else -> Unit
-        }
-        removeView(dataSetPosition)
-    }
+    private fun onCropProcedureSelected(dataSetPosition: Index) =
+        if (viewModel.dataSet.size == 1)
+            cropProcedureDialog.processingJob?.run {
+                invokeOnCompletion {
+                    lastCropProcessedListener()
+                }
+            } ?: lastCropProcessedListener()
+        else
+            removeView(dataSetPosition)
 
     /**
      * • scroll to subsequent position
@@ -135,10 +126,10 @@ class CropPagerAdapter(
         val newViewPosition = viewPager2.currentItem + viewModel.dataSet.viewPositionIncrement(removingAtDataSetTail)
 
         // scroll to newViewPosition with blocked pageDependentViewUpdating
-        pageChangeHandler.blockViewUpdatingOnNextPageChange = true
+        viewModel.blockSubsequentPageRelatedViewsUpdate()
         viewPager2.setCurrentItem(newViewPosition, true)
 
-        pageChangeHandler.addToOnNextScrollCompletion {
+        viewModel.setScrollStateIdleListener {
             // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
             // aligning with newViewPosition
             viewModel.dataSet.removeAtAndRealign(dataSetPosition, removingAtDataSetTail, newViewPosition)
