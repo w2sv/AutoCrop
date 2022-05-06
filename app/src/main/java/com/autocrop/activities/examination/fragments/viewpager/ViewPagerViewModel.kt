@@ -7,7 +7,8 @@ import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.collections.CropBundle
 import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.utils.BlankFun
-import com.autocrop.utils.android.mutableLiveData
+import com.autocrop.utils.Consumable
+import com.autocrop.utilsandroid.mutableLiveData
 import com.autocrop.utils.rotated
 import java.util.*
 
@@ -16,23 +17,9 @@ class ViewPagerViewModel:
 
     val dataSet = ViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 
-    private var scrollStateIdleListener: BlankFun? = null
-    fun setScrollStateIdleListener(f: BlankFun){
-        scrollStateIdleListener = f
-    }
-    fun consumeScrollStateIdleListenerIfSet(){
-        scrollStateIdleListener?.let {
-            it()
-            scrollStateIdleListener = null
-        }
-    }
-
-    var scrolledRight = false
-
-    private var updatePageRelatedViews = true
-    fun blockSubsequentPageRelatedViewsUpdate(){
-        updatePageRelatedViews = false
-    }
+    //$$$$$$$$$$$$
+    // Scrolling $
+    //$$$$$$$$$$$$
 
     fun setDataSetPosition(viewPosition: Int, onScrollRight: Boolean? = null){
         if (updatePageRelatedViews){
@@ -45,9 +32,22 @@ class ViewPagerViewModel:
             updatePageRelatedViews = true
     }
 
-    // -------------Additional parameters
+    var scrolledRight = false
 
-    companion object { const val MAX_VIEWS: Int = Int.MAX_VALUE }
+    //$$$$$$$$$$$$$$$
+    // View Removal $
+    //$$$$$$$$$$$$$$$
+
+    private var updatePageRelatedViews = true
+    fun blockSubsequentPageRelatedViewsUpdate(){
+        updatePageRelatedViews = false
+    }
+
+    val scrollStateIdleListenerConsumable: Consumable<BlankFun> = Consumable()
+
+    //$$$$$$$$$$$$$
+    // AutoScroll $
+    //$$$$$$$$$$$$$
 
     val autoScroll: MutableLiveData<Boolean> = MutableLiveData(
         BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
@@ -55,6 +55,12 @@ class ViewPagerViewModel:
 
     fun maxAutoScrolls(): Int =
         dataSet.size - dataSet.position.value!!
+
+    //$$$$$$$$
+    // Views $
+    //$$$$$$$$
+
+    companion object { const val MAX_VIEWS: Int = Int.MAX_VALUE }
 
     fun initialViewPosition(): Int = (MAX_VIEWS / 2).run {
         minus(dataSet.correspondingPosition(this)) + dataSet.position.value!!
@@ -64,6 +70,9 @@ class ViewPagerViewModel:
 class ViewPagerDataSet(private val cropBundles: MutableList<CropBundle>) :
     LiveData<MutableList<CropBundle>>(),
     MutableList<CropBundle> by cropBundles {
+
+    val containsSingleElement: Boolean
+        get() = size == 1
 
     val position: LiveData<Int> by lazy {
         MutableLiveData(0)

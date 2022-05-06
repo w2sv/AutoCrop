@@ -1,4 +1,4 @@
-package com.autocrop.utils.android
+package com.autocrop.utilsandroid
 
 import android.app.Activity
 import android.content.Intent

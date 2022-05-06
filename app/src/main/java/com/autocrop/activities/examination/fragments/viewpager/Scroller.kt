@@ -4,7 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.viewpager2.widget.ViewPager2
-import com.autocrop.utils.android.mutableLiveData
+import com.autocrop.utilsandroid.mutableLiveData
 import java.util.*
 
 /**

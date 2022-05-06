@@ -12,7 +12,7 @@ import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.uielements.makeIconsVisible
 import com.autocrop.uielements.persistMenuAfterClick
 import com.autocrop.utils.BlankFun
-import com.autocrop.utils.android.getColorInt
+import com.autocrop.utilsandroid.getColorInt
 import com.w2sv.autocrop.R
 
 class FlowFieldFragmentMenu(itemId2OnCLickListener: Map<Int, BlankFun>, context: Context, anchor: View)

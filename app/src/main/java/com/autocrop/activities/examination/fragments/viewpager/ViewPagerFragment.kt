@@ -25,7 +25,7 @@ class ViewPagerFragment:
         binding.viewPager.initialize()
         setLiveDataObservers()
 
-        if (viewModel.dataSet.size > 1)
+        if (!viewModel.dataSet.containsSingleElement)
             binding.pageIndicationLayout.show()
     }
 
@@ -35,7 +35,7 @@ class ViewPagerFragment:
 
             viewModel.dataSet.pageIndex(position).let{ pageIndex ->
                 binding.pageIndicationTv.updateText(pageIndex)
-                binding.pageIndicationBar.update(pageIndex, viewModel.scrolledRight.value!!)
+                binding.pageIndicationBar.update(pageIndex, viewModel.scrolledRight)
             }
         }
 
@@ -49,7 +49,7 @@ class ViewPagerFragment:
                 }
             }
             else{
-                sharedViewModel.consumeAutoScrollingDoneListenerIfSet()
+                sharedViewModel.autoScrollingDoneListenerConsumable.consume()?.let { it() }
                 binding.viewPager.setPageTransformer(CubeOutPageTransformer())
 
                 if (scroller is Scroller){

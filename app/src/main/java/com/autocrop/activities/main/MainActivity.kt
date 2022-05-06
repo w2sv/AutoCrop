@@ -9,7 +9,7 @@ import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.global.userPreferencesInstances
 import com.autocrop.uicontroller.activity.ApplicationActivity
-import com.autocrop.utils.android.*
+import com.autocrop.utilsandroid.*
 import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
 

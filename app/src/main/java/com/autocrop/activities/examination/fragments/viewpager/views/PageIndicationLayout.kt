@@ -41,7 +41,7 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
     }
 
     private fun progress(pageIndex: Int): Int? =
-        if (sharedViewModel.dataSet.size == 1)
+        if (sharedViewModel.dataSet.containsSingleElement)
             null
         else
             (max.toFloat() / (sharedViewModel.dataSet.lastIndex).toFloat() * pageIndex).roundToInt()

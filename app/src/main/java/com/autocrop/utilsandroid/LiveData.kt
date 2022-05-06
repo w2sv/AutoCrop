@@ -1,4 +1,4 @@
-package com.autocrop.utils.android
+package com.autocrop.utilsandroid
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

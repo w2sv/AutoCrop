@@ -24,6 +24,8 @@ class PageChangeHandler(private val viewModel: ViewPagerViewModel)
         super.onPageScrollStateChanged(state)
 
         if (state == ViewPager.SCROLL_STATE_IDLE)
-            viewModel.consumeScrollStateIdleListenerIfSet()
+            viewModel.scrollStateIdleListenerConsumable.consume()?.let {
+                it()
+            }
     }
 }

@@ -14,7 +14,7 @@ import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.global.CropFileSaveDestinationPreferences
-import com.autocrop.utils.android.*
+import com.autocrop.utilsandroid.*
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding
 

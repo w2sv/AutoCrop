@@ -14,7 +14,7 @@ import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.activity.ApplicationActivity
-import com.autocrop.utils.android.*
+import com.autocrop.utilsandroid.*
 import com.autocrop.utils.numericallyInflected
 import com.w2sv.autocrop.R
 
@@ -35,7 +35,7 @@ class ExaminationActivity :
 
     override fun triggerEntrySnackbar(){
         intentExtra(IntentExtraIdentifier.N_DISMISSED_IMAGES, blacklistValue = 0)?.let {
-            sharedViewModel.setAutoScrollingDoneListener {
+            sharedViewModel.autoScrollingDoneListenerConsumable.set {
                 snacky(
                     SpannableStringBuilder()
                         .append("Couldn't find cropping bounds for ")

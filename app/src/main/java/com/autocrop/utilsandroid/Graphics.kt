@@ -1,4 +1,4 @@
-package com.autocrop.utils.android
+package com.autocrop.utilsandroid
 
 import android.graphics.Point
 import android.view.WindowManager

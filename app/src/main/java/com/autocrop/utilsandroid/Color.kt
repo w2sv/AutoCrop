@@ -1,4 +1,4 @@
-package com.autocrop.utils.android
+package com.autocrop.utilsandroid
 
 import android.content.Context
 import androidx.annotation.ColorRes

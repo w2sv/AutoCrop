@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import com.autocrop.activities.main.fragments.flowfield.sketch.FlowFieldSketch
-import com.autocrop.utils.android.screenResolution
+import com.autocrop.utilsandroid.screenResolution
 import processing.android.PFragment
 
 class FlowFieldContainer(context: Context, attr: AttributeSet)
