@@ -47,7 +47,7 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
             (max.toFloat() / (sharedViewModel.dataSet.lastIndex).toFloat() * pageIndex).roundToInt()
 
     private fun interpolator(scrolledRight: Boolean, newProgress: Int): BaseInterpolator =
-        if ((progress == 0 && newProgress == 100 && scrolledRight) || progress == 100 && newProgress == 0 && !scrolledRight)
+        if ((progress == 0 && newProgress == 100 && !scrolledRight) || progress == 100 && newProgress == 0 && scrolledRight)
             BounceInterpolator()
         else
             DecelerateInterpolator()
