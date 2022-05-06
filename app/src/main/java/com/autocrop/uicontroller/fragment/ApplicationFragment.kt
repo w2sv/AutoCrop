@@ -3,6 +3,7 @@ package com.autocrop.uicontroller.fragment
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
@@ -20,12 +21,6 @@ abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
         onViewCreatedCore(savedInstanceState)
     }
 
-    private inline fun withPostponedEnterTransition(f: BlankFun){
-        postponeEnterTransition()
-        f()
-        startPostponedEnterTransition()
-    }
-
     open fun onViewCreatedCore(savedInstanceState: Bundle?){}
 
     /**
@@ -39,4 +34,10 @@ abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
     override val sharedViewModel: VM by lazy {
         ViewModelProvider(requireActivity())[viewModelClass]
     }
+}
+
+private inline fun Fragment.withPostponedEnterTransition(f: BlankFun){
+    postponeEnterTransition()
+    f()
+    startPostponedEnterTransition()
 }

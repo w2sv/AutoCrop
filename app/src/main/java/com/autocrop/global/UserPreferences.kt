@@ -2,8 +2,8 @@ package com.autocrop.global
 
 import android.content.SharedPreferences
 import android.net.Uri
-import com.autocrop.utilsandroid.buildDocumentUriFromTreeUri
 import com.autocrop.utils.logBeforehand
+import com.autocrop.utilsandroid.buildDocumentUriFromTreeUri
 import timber.log.Timber
 import java.util.*
 

@@ -8,8 +8,8 @@ import com.autocrop.collections.CropBundle
 import com.autocrop.global.BooleanUserPreferences
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.Consumable
-import com.autocrop.utilsandroid.mutableLiveData
 import com.autocrop.utils.rotated
+import com.autocrop.utilsandroid.mutableLiveData
 import java.util.*
 
 class ViewPagerViewModel:

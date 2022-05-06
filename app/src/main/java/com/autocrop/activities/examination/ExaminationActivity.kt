@@ -14,8 +14,8 @@ import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.activity.ApplicationActivity
-import com.autocrop.utilsandroid.*
 import com.autocrop.utils.numericallyInflected
+import com.autocrop.utilsandroid.*
 import com.w2sv.autocrop.R
 
 class ExaminationActivity :

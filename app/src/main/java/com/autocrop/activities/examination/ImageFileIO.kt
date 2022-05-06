@@ -7,11 +7,11 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import com.autocrop.collections.CropBundle
+import com.autocrop.utils.logBeforehand
 import com.autocrop.utilsandroid.deleteImageMediaFile
 import com.autocrop.utilsandroid.fileName
 import com.autocrop.utilsandroid.queryImageFileMediaColumn
 import com.autocrop.utilsandroid.saveBitmap
-import com.autocrop.utils.logBeforehand
 import timber.log.Timber
 
 /**

@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.graphics.Point
 import android.view.MotionEvent
 import android.view.View
-import com.autocrop.utilsandroid.manhattanNorm
 import com.autocrop.utils.logAfterwards
+import com.autocrop.utilsandroid.manhattanNorm
 
 /**
  * Enables distinction between pulling up navigation bar and clicks
