@@ -17,7 +17,7 @@ abstract class PageDependentTextView(context: Context, attr: AttributeSet, strin
 }
 
 class DiscardingStatisticsTextView(context: Context, attr: AttributeSet):
-    PageDependentTextView(context, attr, R.string.discarded) {
+    PageDependentTextView(context, attr, R.string.removed) {
 
     override fun updateText(position: Int) {
         with(sharedViewModel.dataSet[position]) {
