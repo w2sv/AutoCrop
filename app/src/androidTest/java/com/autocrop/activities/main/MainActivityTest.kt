@@ -7,6 +7,8 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import androidx.test.core.app.ActivityScenario
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
@@ -14,6 +16,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isClickable
 import androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
 import androidx.test.filters.FlakyTest
 import androidx.test.runner.permission.PermissionRequester
+import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.global.BooleanUserPreferences
@@ -21,6 +24,7 @@ import com.autocrop.utilsandroid.MimeTypes
 import com.w2sv.autocrop.R
 import de.mannodermaus.junit5.ActivityScenarioExtension
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.equalTo
 import org.junit.Assert
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -44,11 +48,6 @@ internal class MainActivityTest {
     @RegisterExtension
     val scenarioExtension = ActivityScenarioExtension.launch<MainActivity>()
 
-    @BeforeEach
-    fun recreateActivity(scenario: ActivityScenario<MainActivity>){
-        scenario.recreate()
-    }
-
     @Test
     fun canvasContainerVisible() {
         viewInteractionById(R.id.canvas_container)
@@ -56,10 +55,13 @@ internal class MainActivityTest {
     }
 
 //    @Test
-//    fun appExitOnBackPressed(scenario: ActivityScenario<MainActivity>){
+//    fun appExit(scenario: ActivityScenario<MainActivity>){
 //        scenario.onActivity {
 //            it.onBackPressed()
-//            Assert.assertTrue(it.isFinishing)
+//            Handler(Looper.getMainLooper()).postDelayed(
+//                { Assert.assertTrue(it.isDestroyed) },
+//                500
+//            )
 //        }
 //    }
 
@@ -150,7 +152,6 @@ internal class MainActivityTest {
             }
 
             @Test
-            @FlakyTest
             fun autoScroll() {
                 val userPreferencesValueBeforeClick = BooleanUserPreferences.autoScroll
 
@@ -163,7 +164,6 @@ internal class MainActivityTest {
             }
 
             @Test
-            @FlakyTest
             fun rateTheApp() = intentTester{
                 popupMenuItemByTextId(R.string.menu_item_rate_the_app)
                     .perform(ViewActions.click())
@@ -197,7 +197,6 @@ internal class MainActivityTest {
                 }
 
                 @Test
-                @FlakyTest
                 fun invocation(scenario: ActivityScenario<MainActivity>){
                     scenario.onActivity {
                         Assert.assertTrue(it.supportFragmentManager.findFragmentById(R.id.layout) is AboutFragment)
@@ -205,7 +204,6 @@ internal class MainActivityTest {
                 }
 
                 @Test
-                @FlakyTest
                 fun returnToFlowFieldFragmentByBackPress(scenario: ActivityScenario<MainActivity>){
                     scenario.onActivity {
                         it.onBackPressed()
@@ -222,29 +220,48 @@ internal class MainActivityTest {
     }
 }
 
-//internal class TestMainActivityOnCropWriteUrisAvailability{
-//    @JvmField
-//    @RegisterExtension
-//    val scenarioExtension = ActivityScenarioExtension.launch<MainActivity>(
-//        Intent(
-//            AutoCrop(),
-//            MainActivity::class.java
-//        ).putParcelableArrayListExtra(
-//            IntentExtraIdentifier.CROP_SAVING_URIS,
-//            ArrayList()
-//        )
-//    )
-//
-//    @BeforeEach
-//    fun recreateActivity(){
-//        scenarioExtension.scenario.recreate()
-//    }
-//
-//    @Test
-//    fun cropSharingButton(){
-//        with(viewInteractionById(R.id.crop_sharing_button)){
-//            check(isCompletelyDisplayed())
-//            check(isClickable())
-//        }
-//    }
-//}
+internal class CropSharingButtonTest{
+
+    private val cropSavingUris = ArrayList<Uri>(
+        listOf(
+            Uri.Builder().authority("something").build()
+        )
+    )
+
+    @JvmField
+    @RegisterExtension
+    val scenarioExtension = ActivityScenarioExtension.launch<MainActivity>(
+        Intent(ApplicationProvider.getApplicationContext(), MainActivity::class.java)
+            .putParcelableArrayListExtra(IntentExtraIdentifier.CROP_SAVING_URIS, cropSavingUris)
+    )
+
+    private val button: ViewInteraction
+        get() = viewInteractionById(R.id.crop_sharing_button)
+
+    @Test
+    fun layout(){
+        with(button){
+            check(isCompletelyDisplayed())
+            check(isClickable())
+        }
+    }
+
+    @Test
+    fun cropShareIntentEmission() = intentTester {
+        button
+            .perform(ViewActions.click())
+
+        intended(
+            allOf(
+                hasAction(Intent.ACTION_CHOOSER),
+                hasExtra(
+                    equalTo(Intent.EXTRA_INTENT), allOf(
+                        hasExtra(Intent.EXTRA_STREAM, cropSavingUris),
+                        hasType(MimeTypes.IMAGE),
+                        hasAction(Intent.ACTION_SEND_MULTIPLE)
+                    )
+                )
+            )
+        )
+    }
+}
