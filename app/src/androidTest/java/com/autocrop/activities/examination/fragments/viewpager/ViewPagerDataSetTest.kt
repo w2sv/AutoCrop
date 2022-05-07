@@ -3,7 +3,7 @@ package com.autocrop.activities.examination.fragments.viewpager
 import android.graphics.Bitmap
 import androidx.core.graphics.createBitmap
 import androidx.core.net.toUri
-import com.autocrop.types.CropBundle
+import com.autocrop.collections.CropBundle
 import org.junit.Assert
 import org.junit.jupiter.api.*
 import org.junit.jupiter.params.ParameterizedTest
@@ -14,13 +14,12 @@ import org.junit.jupiter.params.provider.ValueSource
 internal class ViewPagerDataSetTest {
 
     private val initialSize = 10
-    private val initialTailPosition = 9
-
     private var viewPagerDataSet = ViewPagerDataSet(
         (0 until initialSize)
             .map { CropBundle(it.toString().toUri(), createBitmap(1, 1, Bitmap.Config.ARGB_8888), it, it) }
             .toMutableList()
     )
+    private val initialTailPosition = viewPagerDataSet.lastIndex
 
     @Test
     fun correctInitialization(){

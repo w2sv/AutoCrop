@@ -59,7 +59,7 @@ object BooleanUserPreferences : UserPreferences<Boolean>(
     /**
      * Expose values as variables for convenience
      */
-    val conductAutoScrolling: Boolean
+    val autoScroll: Boolean
         get() = getValue(Keys.CONDUCT_AUTO_SCROLLING)
     val deleteScreenshots: Boolean
         get() = getValue(Keys.DELETE_SCREENSHOTS)

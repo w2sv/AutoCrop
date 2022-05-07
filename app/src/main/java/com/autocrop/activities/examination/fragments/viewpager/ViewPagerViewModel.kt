@@ -50,7 +50,7 @@ class ViewPagerViewModel:
     //$$$$$$$$$$$$$
 
     val autoScroll: MutableLiveData<Boolean> = MutableLiveData(
-        BooleanUserPreferences.conductAutoScrolling && dataSet.size > 1
+        BooleanUserPreferences.autoScroll && dataSet.size > 1
     )
 
     fun maxAutoScrolls(): Int =
@@ -81,7 +81,7 @@ class ViewPagerDataSet(private val cropBundles: MutableList<CropBundle>) :
     /**
      * For keeping track of #page
      */
-    private var tailPosition: Int = lastIndex
+    var tailPosition: Int = lastIndex
 
     // ----------------Position Conversion
 
