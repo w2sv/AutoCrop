@@ -72,6 +72,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
+          heap-size: 256M
           script: echo "Generated AVD snapshot for caching."
 
       - name: Run Instrumentation tests
@@ -83,4 +84,5 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
+          heap-size: 256M
           script: ./gradlew connectedCheck
