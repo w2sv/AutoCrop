@@ -35,7 +35,7 @@ jobs:
     name: Build and run instrumentation tests on various devices
     runs-on: macos-latest  # allows for hardware acceleration through HAXM
     strategy:
-      fail-fast: true  # continue if one strategy fails
+      fail-fast: false  # continue if one strategy fails
 
       # paired value syntax: @https://stackoverflow.com/a/68940067/12083276
       # @https://docs.github.com/en/actions/using-jobs/using-a-build-matrix-for-your-jobs
@@ -72,7 +72,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
-          heap-size: 256M
+          heap-size: 512M
           script: echo "Generated AVD snapshot for caching."
 
       - name: Run Instrumentation tests
@@ -84,5 +84,5 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          heap-size: 256M
+          heap-size: 512M
           script: ./gradlew connectedCheck
