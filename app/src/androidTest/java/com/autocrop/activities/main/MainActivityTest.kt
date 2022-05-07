@@ -24,11 +24,10 @@ import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.RegisterExtension
-import utils.UserPreferencesModifier
 import utils.espresso.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class MainActivityTest: UserPreferencesModifier() {
+internal class MainActivityTest {
 
     @BeforeAll
     fun grantPermissionsIfRequired(){
@@ -66,12 +65,9 @@ internal class MainActivityTest: UserPreferencesModifier() {
 
     @Nested
     inner class ImageSelectionButton{
-        private val id: Int = R.id.image_selection_button
-
         @Test
         fun visibleAndClickable(){
-            assertTextContainment(id, R.string.image_selection_button)
-            with(viewInteractionById(id)){
+            with(viewInteractionByTextId(R.string.image_selection_button)){
                 check(isClickable())
                 check(isCompletelyDisplayed())
             }
@@ -85,7 +81,8 @@ internal class MainActivityTest: UserPreferencesModifier() {
         @FlakyTest
         fun triggersMultipleImageSelectionIntent() = intentTester {
             retryFlakyAction(SLOW_TIMEOUT) {
-                clickView(id)
+                viewInteractionByTextId(R.string.image_selection_button)
+                    .perform(ViewActions.click())
             }
 
             intended(
