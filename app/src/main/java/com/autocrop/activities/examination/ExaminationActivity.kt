@@ -97,24 +97,15 @@ class ExaminationActivity :
                 MainActivity::class.java
             )
                 .apply {
-                    with(sharedViewModel){
-                        putExtra(
-                            IntentExtraIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS,
-                            intArrayOf(
-                                nSavedCrops,
-                                nDeletedScreenshots
-                            )
+                    putExtra(
+                        IntentExtraIdentifier.EXAMINATION_ACTIVITY_RESULTS,
+                        byteArrayOf(sharedViewModel.nSavedCrops.toByte(), sharedViewModel.nDeletedScreenshots.toByte()) + sharedViewModel.cropWriteDirIdentifier().toByteArray()
+                    )
+                    if (sharedViewModel.cropSavingUris.isNotEmpty())
+                        putParcelableArrayListExtra(
+                            IntentExtraIdentifier.CROP_SAVING_URIS,
+                            ArrayList(sharedViewModel.cropSavingUris)
                         )
-                        putExtra(
-                            IntentExtraIdentifier.CROP_WRITE_DIR_PATH,
-                            cropWriteDirIdentifier()
-                        )
-                        if (cropSavingUris.isNotEmpty())
-                            putParcelableArrayListExtra(
-                                IntentExtraIdentifier.CROP_SAVING_URIS,
-                                ArrayList(cropSavingUris)
-                            )
-                    }
                 }
         )
         ActivityTransitions.RETURN(this)

@@ -22,10 +22,10 @@ class MainActivity :
      * Notifies as to IO results from previous ExaminationActivity cycle
      */
     override fun triggerEntrySnackbar(){
-        intentExtra<IntArray>(IntentExtraIdentifier.N_SAVED_CROPS_WITH_N_DELETED_SCREENSHOTS)?.let {
+        intentExtra<ByteArray>(IntentExtraIdentifier.EXAMINATION_ACTIVITY_RESULTS)?.let {
             Handler(Looper.getMainLooper()).postDelayed(
                 {
-                    val (nSavedCrops, nDeletedScreenshots) = it[0] to it[1]
+                    val nSavedCrops = it[0].toInt()
 
                     when (nSavedCrops) {
                         0 -> snacky(
@@ -35,9 +35,12 @@ class MainActivity :
                         else -> snacky(
                             SpannableStringBuilder().apply {
                                 append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                                color(getColorInt(NotificationColor.SUCCESS, this@MainActivity)){append(intentExtra<String>(IntentExtraIdentifier.CROP_WRITE_DIR_PATH)!!)}
-                                if (nDeletedScreenshots != 0)
-                                    append(" and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} ${"screenshot".numericallyInflected(nDeletedScreenshots)}")
+                                color(getColorInt(NotificationColor.SUCCESS, this@MainActivity)){append(it.slice(2..it.lastIndex).toString())}
+
+                                it[1].toInt().let { nDeletedScreenshots ->
+                                    if (nDeletedScreenshots != 0)
+                                        append(" and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} ${"screenshot".numericallyInflected(nDeletedScreenshots)}")
+                                }
                             },
                             R.drawable.ic_baseline_done_24
                         )
