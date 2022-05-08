@@ -8,7 +8,7 @@ on: [push, pull_request]
 env:
   ARCH: x86_64
   JAVA_VERSION: 11
-  DEVICE: Nexus 6P
+  DEVICE: Nexus 6
 
 jobs:
   run-unit-tests:
