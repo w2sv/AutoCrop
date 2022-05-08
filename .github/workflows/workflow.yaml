@@ -8,7 +8,7 @@ on: [push, pull_request]
 env:
   ARCH: x86_64
   JAVA_VERSION: 11
-  DEVICE: Nexus 6
+  DEVICE: Nexus 6P
 
 jobs:
   run-unit-tests:
@@ -72,7 +72,6 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
-          heap-size: 512M
           script: echo "Generated AVD snapshot for caching."
 
       - name: Run Instrumentation tests
@@ -84,5 +83,4 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          heap-size: 512M
           script: ./gradlew connectedCheck
