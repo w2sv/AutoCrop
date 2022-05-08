@@ -35,12 +35,12 @@ jobs:
     name: Build and run instrumentation tests on various devices
     runs-on: macos-latest  # allows for hardware acceleration through HAXM
     strategy:
-      fail-fast: true  # continue if one strategy fails
+      fail-fast: false  # continue if one strategy fails
 
       # paired value syntax: @https://stackoverflow.com/a/68940067/12083276
       # @https://docs.github.com/en/actions/using-jobs/using-a-build-matrix-for-your-jobs
       matrix:  
-        api: [28, 29, 30, 31]
+        api: [26, 28, 30, 31]  # 29 failing with inconceivable OOM error on MainActivityTest entry
     steps:
       - name: Checkout current repository in ubuntu's file system
         uses: actions/checkout@v3 
@@ -72,7 +72,6 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
-          heap-size: 256M
           script: echo "Generated AVD snapshot for caching."
 
       - name: Run Instrumentation tests
@@ -84,5 +83,4 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          heap-size: 256M
           script: ./gradlew connectedCheck
