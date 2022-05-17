@@ -23,8 +23,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="70dp"
 
-        android:layout_width="130dp"
-        android:layout_height="130dp"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
 
         android:background="@drawable/logo"
         android:contentDescription="@null">
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
 
         android:layout_alignTop="@+id/logo_iv"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="170dp"
         android:layout_centerHorizontal="true">
 
         <TextView

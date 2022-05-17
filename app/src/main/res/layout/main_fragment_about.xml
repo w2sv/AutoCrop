@@ -23,8 +23,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="110dp"
 
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="190dp"
+        android:layout_height="190dp"
 
         android:background="@drawable/logo"
         android:contentDescription="@null">
