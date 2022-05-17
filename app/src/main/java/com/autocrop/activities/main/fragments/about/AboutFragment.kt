@@ -16,7 +16,7 @@ class AboutFragment:
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         binding.appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
-        binding.trippyBrudinelettenImageView.setOnClickListener { it.animate(Techniques.Tada) }
+        binding.logoIv.setOnClickListener { it.animate(Techniques.Tada) }
 
         binding.w2svTv.setOnClickListener {
             w2svTvAnimation = it.animate(Techniques.ZoomOutUp){

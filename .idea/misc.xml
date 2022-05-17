@@ -35,6 +35,8 @@
         <entry key="app/src/main/res/drawable/ic_round_save_24.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/ic_sharp_star_rate_24.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/image_brudineletten.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/logo_background.xml" value="0.205" />
+        <entry key="app/src/main/res/drawable/logo_round.xml" value="0.205" />
         <entry key="app/src/main/res/drawable/progress_bar_circular_save_all_crops.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/progress_bar_cropping_activity_progress.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/seekbar_thumb_examination_activity.xml" value="0.1105" />
@@ -80,6 +82,8 @@
         <entry key="app/src/main/res/mipmap-anydpi-v26/brudineletten_round.xml" value="0.1815" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1815" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1815" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/logo.xml" value="0.205" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/logo_round.xml" value="0.205" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/trippy_brudineletten.xml" value="0.1825" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/trippy_brudineletten_round.xml" value="0.1825" />
       </map>

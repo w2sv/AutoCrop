@@ -30,8 +30,8 @@
 
         android:name="com.autocrop.application.AutoCrop"
 
-        android:icon="@mipmap/trippy_brudineletten"
-        android:roundIcon="@mipmap/trippy_brudineletten_round"
+        android:icon="@mipmap/logo"
+        android:roundIcon="@mipmap/logo_round"
 
         android:theme="@style/Theme.App.Splash"
 
@@ -51,7 +51,7 @@
         <!-- Activities -->
 
         <activity
-            android:name="com.autocrop.activities.splash.SplashActivity"
+            android:name="com.autocrop.activities.splash.FuckTheNewSplashApiActivity"
             android:exported="true">
 
             <intent-filter>
