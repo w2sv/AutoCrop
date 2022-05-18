@@ -22,3 +22,6 @@ fun Context.uriPermissionGranted(uri: Uri, permissionCode: Int): Boolean =
 
 fun buildDocumentUriFromTreeUri(treeUri: Uri): Uri =
     DocumentsContract.buildDocumentUriUsingTree(treeUri, DocumentsContract.getTreeDocumentId(treeUri))
+
+fun documentUriPathIdentifier(documentUri: Uri): String =
+    documentUri.pathSegments[1]

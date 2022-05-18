@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.autocrop.collections.CropBundle
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.Consumable
+import com.autocrop.utilsandroid.documentUriPathIdentifier
 import com.autocrop.utilsandroid.externalPicturesDir
 import timber.log.Timber
 
@@ -59,7 +60,7 @@ class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?)
 
     fun cropWriteDirIdentifier(): String =
         validSaveDirDocumentUri?.let {
-            it.pathSegments[1]
+            documentUriPathIdentifier(it)
         } ?: externalPicturesDir.path
 
     /**

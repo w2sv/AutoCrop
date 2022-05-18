@@ -84,7 +84,7 @@ object CropFileSaveDestinationPreferences: UserPreferences<Uri?>(sortedMapOf(Key
     override fun put(key: String?, value: Uri?): Uri? {
         if (key == Keys.TREE_URI && value != getOrDefault(Keys.TREE_URI, null))
             documentUri = buildDocumentUriFromTreeUri(value!!)
-                .also { Timber.i("Set documentUri $it") }
+                .also { Timber.i("Set new documentUri: $it") }
         return super.put(key, value)
     }
 

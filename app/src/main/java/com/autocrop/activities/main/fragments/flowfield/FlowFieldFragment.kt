@@ -7,8 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.text.color
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
@@ -36,31 +38,20 @@ class FlowFieldFragment:
     private fun setMenuInflationButtonOnClickListener() =
         binding.menuInflationButton.setOnClickListener { popupMenu.show() }
 
-    private val popupMenu: FlowFieldFragmentMenu by lazy {
+    private val popupMenu by lazy {
         FlowFieldFragmentMenu(
             mapOf(
-                R.id.main_menu_item_change_save_destination_dir to { pickSaveDestinationDirContract.launch(CropFileSaveDestinationPreferences.treeUri) },
+                R.id.main_menu_item_change_save_destination_dir to ::pickCropSaveDestinationDir,
                 R.id.main_menu_item_rate_the_app to ::goToPlayStoreListing,
-                R.id.main_menu_item_about_the_app to { castedActivity.replaceCurrentFragmentWith(AboutFragment(), false) }
+                R.id.main_menu_item_about_the_app to ::invokeAboutFragment
             ),
             requireView().context,
             binding.menuInflationButton
         )
     }
 
-    private fun goToPlayStoreListing() =
-        try{
-            startActivity(
-                Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse("https://play.google.com/store/apps/details?id=${requireContext().packageName}")
-                    setPackage("com.android.vending")
-                }
-            )
-        } catch (e: ActivityNotFoundException){
-            requireActivity()
-                .snacky("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
-                .show()
-        }
+    private fun pickCropSaveDestinationDir() =
+        pickSaveDestinationDirContract.launch(CropFileSaveDestinationPreferences.treeUri)
 
     private val pickSaveDestinationDirContract = registerForActivityResult(
         object: ActivityResultContracts.OpenDocumentTree(){
@@ -75,13 +66,45 @@ class FlowFieldFragment:
         }
     ) {
         it?.let { treeUri ->
-            requireActivity().applicationContext.contentResolver.takePersistableUriPermission(
-                treeUri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-            )
-            CropFileSaveDestinationPreferences.treeUri = treeUri
+            if (CropFileSaveDestinationPreferences.treeUri != treeUri){
+                CropFileSaveDestinationPreferences.treeUri = treeUri
+
+                with(requireActivity()){
+                    applicationContext.contentResolver.takePersistableUriPermission(
+                        treeUri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
+                    snacky(
+                        SpannableStringBuilder()
+                            .append("Crops will be saved to ")
+                            .color(getColorInt(NotificationColor.SUCCESS, requireContext())){
+                                append(
+                                    documentUriPathIdentifier(CropFileSaveDestinationPreferences.documentUri!!)
+                                )
+                            }
+                    )
+                        .show()
+                }
+            }
         }
     }
+
+    private fun invokeAboutFragment() =
+        castedActivity.replaceCurrentFragmentWith(AboutFragment(), false)
+
+    private fun goToPlayStoreListing() =
+        try{
+            startActivity(
+                Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse("https://play.google.com/store/apps/details?id=${requireContext().packageName}")
+                    setPackage("com.android.vending")
+                }
+            )
+        } catch (e: ActivityNotFoundException){
+            requireActivity()
+                .snacky("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
+                .show()
+        }
 
     //$$$$$$$$$$$$$$$$$$
     // Image Selection $
