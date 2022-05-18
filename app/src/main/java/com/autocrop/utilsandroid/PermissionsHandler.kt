@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
+import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.w2sv.autocrop.R
@@ -12,7 +13,7 @@ import de.mateware.snacky.Snacky
 import timber.log.Timber
 
 class PermissionsHandler(
-    private val fragment: Fragment,
+    private val activity: ComponentActivity,
     private val requiredPermissions: Array<String>,
     private val snackbarMessageOnPermissionDenial: String,
     private val snackbarMessageOnRequestSuppression: String){
@@ -23,7 +24,7 @@ class PermissionsHandler(
      */
     private val pendingPermissions: List<String>
         get() = requiredPermissions.filter {
-            nonRedundantManifestPermissions.contains(it) && !fragment.requireActivity().permissionGranted(it)
+            nonRedundantManifestPermissions.contains(it) && !activity.permissionGranted(it)
         }
 
     /**
@@ -31,7 +32,7 @@ class PermissionsHandler(
      * that is whose maxSdkVersion (also manually declared in Manifest) <= Build version
      */
     private val nonRedundantManifestPermissions: Array<String> by lazy {
-        fragment.requireContext().run {
+        activity.run {
             packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
                 .requestedPermissions ?: arrayOf()
         }
@@ -49,7 +50,7 @@ class PermissionsHandler(
             permissionRequestContract.launch(pendingPermissions.toTypedArray())
         }
 
-    private val permissionRequestContract = fragment.registerForActivityResult(
+    private val permissionRequestContract = activity.registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ){ onRequestPermissionsResult(it) }
 
@@ -64,7 +65,7 @@ class PermissionsHandler(
      */
     private fun onRequestPermissionsResult(permission2Granted: Map<String, Boolean>){
         if (permission2Granted.values.any { !it }){
-            fragment.requireActivity().run {
+            activity.run {
                 if (shouldShowRequestPermissionRationale)
                     permissionDeniedSnacky()
                 else
@@ -81,7 +82,7 @@ class PermissionsHandler(
     }
 
     private val shouldShowRequestPermissionRationale: Boolean
-        get() = fragment.shouldShowRequestPermissionRationale(pendingPermissions[0])
+        get() = activity.shouldShowRequestPermissionRationale(pendingPermissions[0])
 
     private fun Activity.permissionDeniedSnacky(): Snacky.Builder =
         snacky(
@@ -96,14 +97,14 @@ class PermissionsHandler(
         )
             .setActionText("Settings")
             .setActionClickListener {
-                fragment.startActivity(
+                activity.startActivity(
                     Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                         .apply {
-                            data = Uri.fromParts("package", fragment.requireContext().packageName, null)
+                            data = Uri.fromParts("package", activity.packageName, null)
                         }
                 )
             }
-}
 
-private fun Activity.permissionGranted(permission: String): Boolean =
-    checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
+    private fun Activity.permissionGranted(permission: String): Boolean =
+        checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
+}

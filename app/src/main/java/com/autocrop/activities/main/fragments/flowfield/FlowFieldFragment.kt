@@ -45,7 +45,7 @@ class FlowFieldFragment:
                 R.id.main_menu_item_rate_the_app to ::goToPlayStoreListing,
                 R.id.main_menu_item_about_the_app to ::invokeAboutFragment
             ),
-            requireView().context,
+            requireContext(),
             binding.menuInflationButton
         )
     }
@@ -121,7 +121,7 @@ class FlowFieldFragment:
     }
 
     private val ifPermissionsGranted = PermissionsHandler(
-        this,
+        requireActivity(),
         arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
         "You'll have to permit media file access in order for the app to save generated crops",
         "Go to app settings and grant media file access in order for the app to save generated crops"
