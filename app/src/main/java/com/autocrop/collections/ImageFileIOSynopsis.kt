@@ -1,6 +1,6 @@
 package com.autocrop.collections
 
-data class CropIOResults(
+data class ImageFileIOSynopsis(
     val nSavedCrops: Int,
     val nDeletedScreenshots: Int,
     val cropWriteDirIdentifier: String) {

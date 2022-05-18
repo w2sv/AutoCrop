@@ -7,7 +7,7 @@ import androidx.core.text.color
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.autocrop.collections.CropIOResults
+import com.autocrop.collections.ImageFileIOSynopsis
 import com.autocrop.global.userPreferencesInstances
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.numericallyInflected
@@ -26,7 +26,7 @@ class MainActivity :
         intentExtra<ByteArray>(IntentExtraIdentifier.EXAMINATION_ACTIVITY_RESULTS)?.let {
             Handler(Looper.getMainLooper()).postDelayed(
                 {
-                    CropIOResults(it).run{
+                    ImageFileIOSynopsis(it).run{
                         when (nSavedCrops) {
                             0 -> snacky(
                                 "Discarded all crops",

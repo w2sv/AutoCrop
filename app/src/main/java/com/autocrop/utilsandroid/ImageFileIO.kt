@@ -14,13 +14,15 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
+import java.lang.NullPointerException
 
 object MimeTypes{
     const val IMAGE = "image/*"
     const val JPEG = "image/jpeg"
 }
 
-val externalPicturesDir: File = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)  // TODO
+@Suppress("DEPRECATION")
+val externalPicturesDir: File = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
 
 //$$$$$$$$$
 // Saving $
@@ -95,25 +97,34 @@ private object GetOutputStream{
  *
  * @return flag indicating whether image was successfully deleted
  */
+@Suppress("DEPRECATION")
 fun ContentResolver.deleteImageMediaFile(uri: Uri): Boolean =
-    (
-            delete(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                "${MediaStore.Images.Media.DATA}=?",
-                arrayOf(queryImageFileMediaColumn(uri, MediaStore.Images.Media.DATA))
-            ) != 0
-    )
-        .also{ Timber.i(if (it) "Successfully deleted screenshot" else "Couldn't delete screenshot") }
+    try {
+        (
+                delete(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    "${MediaStore.Images.Media._ID}=?",
+                    arrayOf(queryImageFileMediaColumn(uri, MediaStore.Images.Media._ID))
+                ) != 0
+        )
+            .also{ Timber.i(if (it) "Successfully deleted screenshot" else "Couldn't delete screenshot") }
+    } catch (e: NullPointerException){
+        false
+            .also { Timber.i(e) }
+    }
+
 
 /**
  * @see
  *      https://stackoverflow.com/a/16511111/12083276
- *
- * Alternative solution: https://stackoverflow.com/a/38568666/12083276
  */
-fun ContentResolver.queryImageFileMediaColumn(uri: Uri, mediaColumn: String, selection: String? = null, selectionArgs: Array<String>? = null): String =
-    query(uri, arrayOf(mediaColumn), selection, selectionArgs, null)!!.run {
-        moveToFirst()
-        getString(getColumnIndexOrThrow(mediaColumn))!!
-            .also { close() }
-    }
+fun ContentResolver.queryImageFileMediaColumn(
+    uri: Uri,
+    mediaColumn: String,
+    selection: String? = null,
+    selectionArgs: Array<String>? = null): String =
+        query(uri, arrayOf(mediaColumn), selection, selectionArgs, null)!!.run {
+            moveToFirst()
+            getString(getColumnIndexOrThrow(mediaColumn))!!
+                .also { close() }
+        }

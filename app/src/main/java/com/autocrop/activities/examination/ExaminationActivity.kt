@@ -12,7 +12,7 @@ import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.collections.CropIOResults
+import com.autocrop.collections.ImageFileIOSynopsis
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.numericallyInflected
@@ -100,7 +100,7 @@ class ExaminationActivity :
                 .apply {
                     putExtra(
                         IntentExtraIdentifier.EXAMINATION_ACTIVITY_RESULTS,
-                        CropIOResults(
+                        ImageFileIOSynopsis(
                             sharedViewModel.nSavedCrops,
                             sharedViewModel.nDeletedScreenshots,
                             sharedViewModel.cropWriteDirIdentifier()
