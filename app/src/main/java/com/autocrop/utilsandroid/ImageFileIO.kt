@@ -14,7 +14,6 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
-import java.lang.NullPointerException
 
 object MimeTypes{
     const val IMAGE = "image/*"

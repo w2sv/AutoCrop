@@ -68,7 +68,7 @@ class CroppingFragment
         else
             // delay briefly to assure progress bar having reached 100% before UI change
             Handler(Looper.getMainLooper()).postDelayed(
-                { castedActivity.replaceCurrentFragmentWith(CroppingFailedFragment()) },
+                { typedActivity.replaceCurrentFragmentWith(CroppingFailedFragment()) },
                 resources.getInteger(R.integer.small_delay).toLong()
             )
     }

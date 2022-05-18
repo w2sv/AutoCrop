@@ -76,7 +76,7 @@ class ViewPagerFragment:
         adapter = CropPagerAdapter(
             this,
             viewModel,
-            castedActivity::invokeSubsequentFragment
+            typedActivity::invokeSubsequentFragment
         )
 
         registerOnPageChangeCallback(

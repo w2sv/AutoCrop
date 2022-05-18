@@ -12,7 +12,7 @@ class CroppingFailedFragment
         super.onViewCreated(view, savedInstanceState)
         
         binding.croppingUnsuccessfulGotItButton.setOnClickListener {
-            castedActivity.returnToMainActivity()
+            typedActivity.returnToMainActivity()
         }
     }
 }

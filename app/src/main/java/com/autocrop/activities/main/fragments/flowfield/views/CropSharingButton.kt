@@ -1,27 +1,30 @@
 package com.autocrop.activities.main.fragments.flowfield.views
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
 import com.autocrop.activities.IntentExtraIdentifier
+import com.autocrop.activities.main.MainActivity
+import com.autocrop.uielements.view.ParentActivityRetriever
+import com.autocrop.uielements.view.ParentActivityRetrievingView
 import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.show
 import com.autocrop.utilsandroid.MimeTypes
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 
-class CropSharingButton(context: Context, attrs: AttributeSet)
-    : AppCompatImageButton(context, attrs){
+class CropSharingButton(context: Context, attrs: AttributeSet):
+    AppCompatImageButton(context, attrs),
+    ParentActivityRetriever<MainActivity> by ParentActivityRetrievingView(context){
 
     /**
      * If CROP_SAVING_URIS available from previous ExaminationActivity cycle show and
      * setOnClickListener
      */
     init {
-        (context as Activity).intent.extras?.getParcelableArrayList<Uri>(IntentExtraIdentifier.CROP_SAVING_URIS)?.let {
+        activity.intent.extras?.getParcelableArrayList<Uri>(IntentExtraIdentifier.CROP_SAVING_URIS)?.let {
             show()
             setOnClickListener(it)
         }

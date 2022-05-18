@@ -90,7 +90,7 @@ class FlowFieldFragment:
     }
 
     private fun invokeAboutFragment() =
-        castedActivity.replaceCurrentFragmentWith(AboutFragment(), false)
+        typedActivity.replaceCurrentFragmentWith(AboutFragment(), false)
 
     private fun goToPlayStoreListing() =
         try{
@@ -115,17 +115,18 @@ class FlowFieldFragment:
      * then launch [selectImages] if all granted
      */
     private fun setImageSelectionButtonOnClickListener() = binding.imageSelectionButton.setOnClickListener {
-        ifPermissionsGranted {
+        requestWritePermissionOrRun {
             selectImages()
         }
     }
 
-    private val ifPermissionsGranted = PermissionsHandler(
-        requireActivity(),
-        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        "You'll have to permit media file access in order for the app to save generated crops",
-        "Go to app settings and grant media file access in order for the app to save generated crops"
-    )
+    private val requestWritePermissionOrRun: PermissionsHandler =
+        PermissionsHandler(
+            this,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            "You'll have to permit media file access in order for the app to save generated crops",
+            "Go to app settings and grant media file access in order for the app to save generated crops"
+        )
 
     @Suppress("DEPRECATION")
     private fun selectImages() =
@@ -143,22 +144,17 @@ class FlowFieldFragment:
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == RESULT_OK) {
-            when (requestCode) {
-                IntentCode.IMAGE_SELECTION.ordinal -> {
-                    startActivity(
-                        Intent(
-                            requireActivity(),
-                            CroppingActivity::class.java
-                        )
-                            .putParcelableArrayListExtra(
-                                IntentExtraIdentifier.SELECTED_IMAGE_URIS,
-                                ArrayList(data?.clipDataItems()!!.map { it.uri })
-                            )
+        if (resultCode == RESULT_OK && requestCode == IntentCode.IMAGE_SELECTION.ordinal)
+            startActivity(
+                Intent(
+                    requireActivity(),
+                    CroppingActivity::class.java
+                )
+                    .putParcelableArrayListExtra(
+                        IntentExtraIdentifier.SELECTED_IMAGE_URIS,
+                        ArrayList(data?.clipDataItems()!!.map { it.uri })
                     )
-                }
-            }
-        }
+            )
     }
 
     private enum class IntentCode {

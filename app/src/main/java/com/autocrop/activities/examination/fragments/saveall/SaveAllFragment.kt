@@ -12,13 +12,13 @@ class SaveAllFragment :
     ExaminationActivityFragment<ExaminationFragmentSaveallBinding>(ExaminationFragmentSaveallBinding::class.java) {
 
     /**
-     * Launch async [processRemainingCropBundles] task, call [castedActivity].invokeSubsequentFragment
+     * Launch async [processRemainingCropBundles] task, call [typedActivity].invokeSubsequentFragment
      * onPostExecute
      */
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         lifecycleScope.executeAsyncTask(
             { processRemainingCropBundles(BooleanUserPreferences.deleteScreenshots)},
-            { castedActivity.invokeSubsequentFragment() }
+            { typedActivity.invokeSubsequentFragment() }
         )
     }
 
