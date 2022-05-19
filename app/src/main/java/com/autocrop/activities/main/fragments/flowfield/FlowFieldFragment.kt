@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.color
 import com.autocrop.activities.IntentExtraIdentifier
@@ -51,9 +52,9 @@ class FlowFieldFragment:
     }
 
     private fun pickCropSaveDestinationDir() =
-        pickSaveDestinationDirContract.launch(CropFileSaveDestinationPreferences.treeUri)
+        pickSaveDestinationDir.launch(CropFileSaveDestinationPreferences.treeUri)
 
-    private val pickSaveDestinationDirContract = registerForActivityResult(
+    private val pickSaveDestinationDir = registerForActivityResult(
         object: ActivityResultContracts.OpenDocumentTree(){
             override fun createIntent(context: Context, input: Uri?): Intent =
                 super.createIntent(context, input)
@@ -110,13 +111,27 @@ class FlowFieldFragment:
     // Image Selection $
     //$$$$$$$$$$$$$$$$$$
 
+    private val selectImages = registerForActivityResult(ActivityResultContracts.GetMultipleContents()){ uris ->
+        if (uris.isNotEmpty())
+            startActivity(
+                Intent(
+                    requireActivity(),
+                    CroppingActivity::class.java
+                )
+                    .putParcelableArrayListExtra(
+                        IntentExtraIdentifier.SELECTED_IMAGE_URIS,
+                        ArrayList(uris)
+                    )
+            )
+    }
+
     /**
      * Launch [selectImages] if all permissions granted, otherwise request required permissions and
      * then launch [selectImages] if all granted
      */
     private fun setImageSelectionButtonOnClickListener() = binding.imageSelectionButton.setOnClickListener {
         requestWritePermissionOrRun {
-            selectImages()
+            selectImages.launch(MimeTypes.IMAGE)
         }
     }
 
@@ -127,37 +142,4 @@ class FlowFieldFragment:
             "You'll have to permit media file access in order for the app to save generated crops",
             "Go to app settings and grant media file access in order for the app to save generated crops"
         )
-
-    @Suppress("DEPRECATION")
-    private fun selectImages() =
-        startActivityForResult(
-            Intent(Intent.ACTION_PICK)
-                .apply {
-                    type = MimeTypes.IMAGE
-                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                },
-            IntentCode.IMAGE_SELECTION.ordinal
-        )
-
-    @Deprecated("Deprecated in Java")
-    @Suppress("DEPRECATION")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == RESULT_OK && requestCode == IntentCode.IMAGE_SELECTION.ordinal)
-            startActivity(
-                Intent(
-                    requireActivity(),
-                    CroppingActivity::class.java
-                )
-                    .putParcelableArrayListExtra(
-                        IntentExtraIdentifier.SELECTED_IMAGE_URIS,
-                        ArrayList(data?.clipDataItems()!!.map { it.uri })
-                    )
-            )
-    }
-
-    private enum class IntentCode {
-        IMAGE_SELECTION
-    }
 }
