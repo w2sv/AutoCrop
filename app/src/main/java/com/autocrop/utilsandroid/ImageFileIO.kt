@@ -96,14 +96,13 @@ private object GetOutputStream{
  *
  * @return flag indicating whether image was successfully deleted
  */
-@Suppress("DEPRECATION")
 fun ContentResolver.deleteImageMediaFile(uri: Uri): Boolean =
     try {
         (
                 delete(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    "${MediaStore.Images.Media._ID}=?",
-                    arrayOf(queryImageFileMediaColumn(uri, MediaStore.Images.Media._ID))
+                    "${MediaStore.Images.Media.DATA}=?",
+                    arrayOf(queryImageFileMediaColumn(uri, MediaStore.Images.Media.DATA))
                 ) != 0
         )
             .also{ Timber.i(if (it) "Successfully deleted screenshot" else "Couldn't delete screenshot") }
@@ -111,7 +110,6 @@ fun ContentResolver.deleteImageMediaFile(uri: Uri): Boolean =
         false
             .also { Timber.i(e) }
     }
-
 
 /**
  * @see

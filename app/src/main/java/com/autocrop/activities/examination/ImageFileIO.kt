@@ -4,8 +4,11 @@ import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.os.Build
+import android.provider.DocumentsContract
+import android.provider.DocumentsProvider
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
+import androidx.documentfile.provider.DocumentFile
 import com.autocrop.collections.CropBundle
 import com.autocrop.utils.logBeforehand
 import com.autocrop.utilsandroid.deleteImageMediaFile
@@ -88,8 +91,7 @@ private fun Context.attemptImageFileDeletion(uri: Uri): DeletionResult = logBefo
         false to uri.mediaUriWithAppendedId(this)
             .also { Timber.i("Returned mediaUriWithAppendedId") }
     else
-        contentResolver.deleteImageMediaFile(uri) to null
-            .also { Timber.i("Triggered immediate image file deletion") }
+        DocumentFile.fromSingleUri(this, uri)!!.delete() to null
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -102,4 +104,6 @@ private fun Uri.mediaUriWithAppendedId(context: Context): Uri =
 
 @RequiresApi(Build.VERSION_CODES.Q)
 private fun Context.mediaUriId(uri: Uri): Long =
-    contentResolver.queryImageFileMediaColumn(uri, MediaStore.Images.Media._ID).toLong()
+    MediaStore.getMediaUri(this, uri)!!.lastPathSegment!!.toLong()
+
+//    contentResolver.queryImageFileMediaColumn(MediaStore.getMediaUri(this, uri)!!, MediaStore.Images.Media._ID).toLong()
