@@ -32,7 +32,7 @@
 
             <!-- Menu Inflation -->
 
-            <com.autocrop.activities.main.fragments.flowfield.views.MenuInflationImageButton
+            <com.autocrop.activities.main.fragments.flowfield.views.MenuInflationButton
                 android:id="@+id/menu_inflation_button"
                 android:layout_width="@dimen/button_flowfield_fragment_sidebar"
                 android:layout_height="@dimen/button_flowfield_fragment_sidebar"

@@ -12,15 +12,15 @@ import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragmentMenu
 import com.autocrop.global.CropFileSaveDestinationPreferences
 import com.autocrop.uicontroller.ViewModelRetriever
-import com.autocrop.uielements.view.ParentActivityRetriever
-import com.autocrop.uielements.view.ParentActivityRetrievingView
+import com.autocrop.uielements.view.ActivityRetriever
+import com.autocrop.uielements.view.ContextBasedActivityRetriever
 import com.autocrop.utilsandroid.show
 import com.autocrop.utilsandroid.snacky
 import com.w2sv.autocrop.R
 
-class MenuInflationImageButton(context: Context, attributeSet: AttributeSet) :
+class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
     AppCompatImageButton(context, attributeSet),
-    ParentActivityRetriever<MainActivity> by ParentActivityRetrievingView(context),
+    ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context),
     ViewModelRetriever<MainActivityViewModel> by MainActivityViewModelRetriever(context) {
 
     init {
