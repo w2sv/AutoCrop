@@ -96,7 +96,6 @@ private object GetOutputStream{
  *
  * @return flag indicating whether image was successfully deleted
  */
-@Suppress("DEPRECATION")
 fun ContentResolver.deleteImageMediaFile(uri: Uri): Boolean =
     try {
         (
