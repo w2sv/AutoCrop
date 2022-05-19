@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import com.autocrop.uicontroller.ViewModelHolder
+import com.autocrop.uicontroller.ViewModelRetriever
 
-abstract class ViewModelHoldingView<VM: ViewModel, VMSO: ViewModelStoreOwner>(context: Context, viewModelClass: Class<VM>)
-    : ViewModelHolder<VM> {
+abstract class ContextBasedViewModelRetriever<VM: ViewModel, VMSO: ViewModelStoreOwner>(context: Context, viewModelClass: Class<VM>)
+    : ViewModelRetriever<VM> {
 
     /**
      * Retrieve instance of [VM] through converted context
