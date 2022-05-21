@@ -128,8 +128,8 @@ class FlowFieldFragment:
             "Go to app settings and grant media file access in order for the app to save generated crops"
         )
 
-    @Suppress("DEPRECATION")
     private fun selectImages() =
+        @Suppress("DEPRECATION")
         startActivityForResult(
             Intent(Intent.ACTION_PICK)
                 .apply {
