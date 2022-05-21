@@ -91,7 +91,10 @@ private fun Context.attemptImageFileDeletion(uri: Uri): DeletionResult = logBefo
         false to uri.mediaUriWithAppendedId(this)
             .also { Timber.i("Returned mediaUriWithAppendedId") }
     else
-        DocumentFile.fromSingleUri(this, uri)!!.delete() to null
+        MediaStore.getMediaUri()
+
+    DocumentsContract.deleteDocument(contentResolver, uri) to null
+//        DocumentFile.fromSingleUri(this, uri)!!.delete() to null
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
