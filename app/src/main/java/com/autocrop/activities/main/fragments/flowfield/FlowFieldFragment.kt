@@ -31,18 +31,21 @@ class FlowFieldFragment:
             lifecycle.addObserver(it)
         }
 
-        sharedViewModel.selectImages = registerForActivityResult(ActivityResultContracts.GetMultipleContents()){ uris ->
-            if (uris.isNotEmpty())
-                startActivity(
-                    Intent(
-                        requireActivity(),
-                        CroppingActivity::class.java
-                    )
-                        .putParcelableArrayListExtra(
-                            IntentExtraIdentifier.SELECTED_IMAGE_URIS,
-                            ArrayList(uris)
+        sharedViewModel.selectImages = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            activityResult.data?.let { intent ->
+                intent.clipData?.let { clipData ->
+                    startActivity(
+                        Intent(
+                            requireActivity(),
+                            CroppingActivity::class.java
                         )
-                )
+                            .putParcelableArrayListExtra(
+                                IntentExtraIdentifier.SELECTED_IMAGE_URIS,
+                                ArrayList((0 until clipData.itemCount).map { clipData.getItemAt(it).uri })
+                            )
+                    )
+                }
+            }
         }
 
         sharedViewModel.pickSaveDestinationDir = registerForActivityResult(object: ActivityResultContracts.OpenDocumentTree(){

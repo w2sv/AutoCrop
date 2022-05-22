@@ -101,8 +101,8 @@ fun ContentResolver.deleteImageMediaFile(uri: Uri): Boolean =
         (
                 delete(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    "${MediaStore.Images.Media.DATA}=?",
-                    arrayOf(queryImageFileMediaColumn(uri, MediaStore.Images.Media.DATA))
+                    "${MediaStore.Images.Media._ID}=?",
+                    arrayOf(queryImageFileMediaColumn(uri, MediaStore.Images.Media._ID))
                 ) != 0
         )
             .also{ Timber.i(if (it) "Successfully deleted screenshot" else "Couldn't delete screenshot") }
