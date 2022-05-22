@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import com.autocrop.utilsandroid.TypedActivityRetriever
 
-interface ParentActivityRetriever<A: Activity>
+interface ActivityRetriever<A: Activity>
     : TypedActivityRetriever<A> {
 
     val activity: Activity
@@ -13,8 +13,8 @@ interface ParentActivityRetriever<A: Activity>
 }
 
 @Suppress("UNCHECKED_CAST")
-class ParentActivityRetrievingView<A: Activity>(private val context: Context)
-    : ParentActivityRetriever<A> {
+class ContextBasedActivityRetriever<A: Activity>(private val context: Context)
+    : ActivityRetriever<A> {
 
     override val activity: Activity
         get() = context as Activity

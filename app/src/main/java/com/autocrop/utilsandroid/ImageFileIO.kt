@@ -111,7 +111,6 @@ fun ContentResolver.deleteImageMediaFile(uri: Uri): Boolean =
             .also { Timber.i(e) }
     }
 
-
 /**
  * @see
  *      https://stackoverflow.com/a/16511111/12083276

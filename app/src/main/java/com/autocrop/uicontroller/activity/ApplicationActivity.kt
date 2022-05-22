@@ -4,13 +4,13 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.uicontroller.ViewModelHolder
+import com.autocrop.uicontroller.ViewModelRetriever
 
 abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
     rootFragmentClass: Class<RF>,
     viewModelClass: Class<VM>) :
         FragmentHostingActivity<RF>(rootFragmentClass),
-        ViewModelHolder<VM>{
+        ViewModelRetriever<VM>{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

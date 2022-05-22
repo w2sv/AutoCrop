@@ -4,12 +4,12 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.ProgressBar
 import com.autocrop.activities.cropping.CroppingActivityViewModel
-import com.autocrop.activities.cropping.fragments.CroppingActivityViewModelHoldingView
-import com.autocrop.uicontroller.ViewModelHolder
+import com.autocrop.activities.cropping.fragments.CroppingActivityViewModelRetriever
+import com.autocrop.uicontroller.ViewModelRetriever
 
 class CroppingProgressBar(context: Context, attr: AttributeSet):
     ProgressBar(context, attr),
-    ViewModelHolder<CroppingActivityViewModel> by CroppingActivityViewModelHoldingView(context){
+    ViewModelRetriever<CroppingActivityViewModel> by CroppingActivityViewModelRetriever(context){
         init {
             max = sharedViewModel.nSelectedImages
         }

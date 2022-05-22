@@ -6,14 +6,14 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
-import com.autocrop.uicontroller.ViewModelHolder
+import com.autocrop.uicontroller.ViewModelRetriever
 import com.autocrop.utilsandroid.TypedActivityRetriever
 
 abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
     viewModelClass: Class<VM>,
     bindingClass: Class<VB>):
         ViewBoundFragment<VB>(bindingClass),
-        ViewModelHolder<VM>,
+        ViewModelRetriever<VM>,
         TypedActivityRetriever<A>{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){

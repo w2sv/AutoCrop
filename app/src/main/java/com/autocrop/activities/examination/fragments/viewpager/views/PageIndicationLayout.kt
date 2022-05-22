@@ -8,13 +8,13 @@ import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
-import com.autocrop.uicontroller.ViewModelHolder
+import com.autocrop.uicontroller.ViewModelRetriever
 import com.w2sv.autocrop.R
 import kotlin.math.roundToInt
 
 class PageIndicationBar(context: Context, attr: AttributeSet) :
     AppCompatSeekBar(context, attr),
-    ViewModelHolder<ViewPagerViewModel> by ViewPagerViewModelRetriever(context) {
+    ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context) {
 
     /**
      * Disable manual dragging
