@@ -32,14 +32,15 @@ class FlowFieldFragmentMenu(itemId2OnCLickListener: Map<Int, BlankFun>, context:
      * Sets check and [setOnMenuItemClickListener]
      */
     private fun setCheckableItems(context: Context) = mapOf(
-        R.id.main_menu_item_conduct_auto_scrolling to BooleanUserPreferences.Keys.CONDUCT_AUTO_SCROLLING
+        R.id.main_menu_item_conduct_auto_scrolling to BooleanUserPreferences.Keys.AUTO_SCROLL
     )
         .forEach { (id, userPreferencesKey) ->
             with(menu.findItem(id)){
-                isChecked = BooleanUserPreferences.getValue(userPreferencesKey)
+                val value = BooleanUserPreferences.getValue(userPreferencesKey)
+                isChecked = value
 
                 setOnMenuItemClickListener { item ->
-                    BooleanUserPreferences.toggle(userPreferencesKey)
+                    BooleanUserPreferences[userPreferencesKey] = !value
                     isChecked = !isChecked
                     item.persistMenuAfterClick(context)
                 }

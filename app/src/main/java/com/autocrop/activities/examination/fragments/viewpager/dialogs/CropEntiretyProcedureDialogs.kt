@@ -26,9 +26,7 @@ class SaveAllConfirmationDialog
                 setTitle("Save all crops?")
                 setMultiChoiceItems(arrayOf("Delete corresponding screenshots"), booleanArrayOf(
                     BooleanUserPreferences.deleteScreenshots)){ _, _, _ ->
-                    BooleanUserPreferences.toggle(
-                        BooleanUserPreferences.Keys.DELETE_SCREENSHOTS
-                    )
+                    BooleanUserPreferences.deleteScreenshots = !BooleanUserPreferences.deleteScreenshots
                 }
 
                 setNegativeButton("No") { _, _ -> }

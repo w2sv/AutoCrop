@@ -5,10 +5,9 @@ import android.net.Uri
 import com.autocrop.utils.logBeforehand
 import com.autocrop.utilsandroid.buildDocumentUriFromTreeUri
 import timber.log.Timber
-import java.util.*
 
-abstract class UserPreferences<T>(default: SortedMap<String, T>)
-    : SortedMap<String, T> by default{
+abstract class UserPreferences<T>(protected val map: MutableMap<String, T>)
+    : MutableMap<String, T> by map{
 
     /**
      * Also copy set values to [lastDiscSyncState] before exiting function
@@ -45,43 +44,39 @@ abstract class UserPreferences<T>(default: SortedMap<String, T>)
  * having a global impact
  */
 object BooleanUserPreferences : UserPreferences<Boolean>(
-    sortedMapOf(
-        Keys.CONDUCT_AUTO_SCROLLING to true,
+    mutableMapOf(
+        Keys.AUTO_SCROLL to true,
         Keys.DELETE_SCREENSHOTS to false
     )
 ) {
 
     object Keys {
-        const val CONDUCT_AUTO_SCROLLING: String = "CONDUCT_AUTO_SCROLL"
-        const val DELETE_SCREENSHOTS: String = "DELETE_SCREENSHOTS"
+        const val AUTO_SCROLL: String = "autoScroll"
+        const val DELETE_SCREENSHOTS: String = "deleteScreenshots"
     }
 
     /**
-     * Expose values as variables for convenience
+     * Expose values as delegated variables for convenience
      */
-    val autoScroll: Boolean
-        get() = getValue(Keys.CONDUCT_AUTO_SCROLLING)
-    val deleteScreenshots: Boolean
-        get() = getValue(Keys.DELETE_SCREENSHOTS)
-
-    fun toggle(key: String){
-        put(key, !getValue(key))
-    }
+    var autoScroll: Boolean by map
+    var deleteScreenshots: Boolean by map
 
     override fun SharedPreferences.writeValue(key: String, value: Boolean) = edit().putBoolean(key, value).apply()
     override fun SharedPreferences.getValue(key: String, defaultValue: Boolean): Boolean = getBoolean(key, defaultValue)
 }
 
-object CropFileSaveDestinationPreferences: UserPreferences<Uri?>(sortedMapOf(Keys.TREE_URI to null)) {
+object CropFileSaveDestinationPreferences: UserPreferences<Uri?>(
+    mutableMapOf(Keys.TREE_URI to null)
+) {
 
     object Keys {
-        const val TREE_URI: String = "IMAGE_SAVE_DESTINATION_TREE_URI"
+        const val TREE_URI: String = "treeUri"
     }
 
     /**
      * Inherently build [documentUri] upon setting new [treeUri]
      */
-    override fun put(key: String?, value: Uri?): Uri? {
+    override fun put(key: String, value: Uri?): Uri? {
         if (key == Keys.TREE_URI && value != getOrDefault(Keys.TREE_URI, null))
             documentUri = buildDocumentUriFromTreeUri(value!!)
                 .also { Timber.i("Set new documentUri: $it") }
