@@ -4,10 +4,10 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 /**
-    @see:
-        https://stackoverflow.com/a/52814429/12083276
+ * @see:
+ *     https://stackoverflow.com/a/52814429/12083276
  */
-inline fun <T> mapObserver(
+inline fun <T> mapDelegateObserver(
     map: MutableMap<String, T>,
     crossinline observe: ((property: KProperty<*>, oldValue: T, newValue: T) -> Unit)
 )
@@ -15,9 +15,8 @@ inline fun <T> mapObserver(
 
     return object : ReadWriteProperty<Any?, T> {
 
-        override fun getValue(thisRef: Any?, property: KProperty<*>): T {
-            return map.getValue(property.name)
-        }
+        override fun getValue(thisRef: Any?, property: KProperty<*>): T =
+            map.getValue(property.name)
 
         override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
             val oldValue = getValue(thisRef, property)

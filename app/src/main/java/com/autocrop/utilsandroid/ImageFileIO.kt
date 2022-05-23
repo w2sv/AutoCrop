@@ -36,7 +36,9 @@ fun ContentResolver.saveBitmap(bitmap: Bitmap, fileName: String, parentDocumentU
     val (outputStream, writeUri) = when {
         parentDocumentUri != null -> GetOutputStream.fromParentDocument(fileName, this, parentDocumentUri)
         apiNotNewerThanQ -> GetOutputStream.untilQ(fileName)
-        else -> GetOutputStream.postQ(fileName, this)
+        else -> @RequiresApi(Build.VERSION_CODES.Q) {
+            GetOutputStream.postQ(fileName, this)
+        }
     }
 
     return (bitmap.compressToStream(outputStream) to writeUri)

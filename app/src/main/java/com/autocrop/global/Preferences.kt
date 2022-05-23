@@ -3,7 +3,7 @@ package com.autocrop.global
 import android.content.SharedPreferences
 import android.net.Uri
 import com.autocrop.utils.logBeforehand
-import com.autocrop.utils.mapObserver
+import com.autocrop.utils.mapDelegateObserver
 import com.autocrop.utilsandroid.buildDocumentUriFromTreeUri
 import timber.log.Timber
 
@@ -50,7 +50,6 @@ object BooleanPreferences : Preferences<Boolean>(
         "deleteScreenshots" to false
     )
 ) {
-
     /**
      * Expose values as delegated variables for convenience
      */
@@ -68,7 +67,7 @@ object CropSavingPreferences: Preferences<Uri?>(
     /**
      * Inherently build [documentUri] upon setting new [treeUri]
      */
-    var treeUri: Uri? by mapObserver(map){ _, oldValue, newValue ->
+    var treeUri: Uri? by mapDelegateObserver(map){ _, oldValue, newValue ->
         if (newValue != null && oldValue != newValue)
             documentUri = buildDocumentUriFromTreeUri(newValue)
                 .also { Timber.i("Set new documentUri: $it") }
