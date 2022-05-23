@@ -11,7 +11,7 @@ import androidx.core.text.color
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
-import com.autocrop.global.CropFileSaveDestinationPreferences
+import com.autocrop.global.CropSavingPreferences
 import com.autocrop.utilsandroid.*
 import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding
 
@@ -59,8 +59,8 @@ class FlowFieldFragment:
                     }
         }) {
             it?.let { treeUri ->
-                if (CropFileSaveDestinationPreferences.treeUri != treeUri){
-                    CropFileSaveDestinationPreferences.treeUri = treeUri
+                if (CropSavingPreferences.treeUri != treeUri){
+                    CropSavingPreferences.treeUri = treeUri
 
                     requireContext().contentResolver.takePersistableUriPermission(
                         treeUri,
@@ -71,7 +71,7 @@ class FlowFieldFragment:
                             .append("Crops will be saved to ")
                             .color(getColorInt(NotificationColor.SUCCESS, requireContext())){
                                 append(
-                                    documentUriPathIdentifier(CropFileSaveDestinationPreferences.documentUri!!)
+                                    documentUriPathIdentifier(CropSavingPreferences.documentUri!!)
                                 )
                             }
                     )

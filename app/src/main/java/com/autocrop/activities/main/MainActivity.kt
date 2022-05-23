@@ -8,7 +8,7 @@ import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.collections.ImageFileIOSynopsis
-import com.autocrop.global.userPreferencesInstances
+import com.autocrop.global.preferencesInstances
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.numericallyInflected
 import com.autocrop.utilsandroid.*
@@ -64,13 +64,13 @@ class MainActivity :
     }
 
     /**
-     * Write changed values of each [userPreferencesInstances] element to SharedPreferences
+     * Write changed values of each [preferencesInstances] element to SharedPreferences
      */
     override fun onStop() {
         super.onStop()
 
         with(lazy { getApplicationWideSharedPreferences() }){
-            userPreferencesInstances.forEach {
+            preferencesInstances.forEach {
                 it.writeChangedValuesToSharedPreferences(this)
             }
         }

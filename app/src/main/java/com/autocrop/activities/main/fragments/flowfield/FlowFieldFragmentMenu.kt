@@ -8,7 +8,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.core.view.children
-import com.autocrop.global.BooleanUserPreferences
+import com.autocrop.global.BooleanPreferences
 import com.autocrop.uielements.makeIconsVisible
 import com.autocrop.uielements.persistMenuAfterClick
 import com.autocrop.utils.BlankFun
@@ -32,15 +32,15 @@ class FlowFieldFragmentMenu(itemId2OnCLickListener: Map<Int, BlankFun>, context:
      * Sets check and [setOnMenuItemClickListener]
      */
     private fun setCheckableItems(context: Context) = mapOf(
-        R.id.main_menu_item_conduct_auto_scrolling to BooleanUserPreferences.Keys.AUTO_SCROLL
+        R.id.main_menu_item_auto_scroll to "autoScroll"
     )
         .forEach { (id, userPreferencesKey) ->
             with(menu.findItem(id)){
-                val value = BooleanUserPreferences.getValue(userPreferencesKey)
+                val value = BooleanPreferences.getValue(userPreferencesKey)
                 isChecked = value
 
                 setOnMenuItemClickListener { item ->
-                    BooleanUserPreferences[userPreferencesKey] = !value
+                    BooleanPreferences[userPreferencesKey] = !value
                     isChecked = !isChecked
                     item.persistMenuAfterClick(context)
                 }

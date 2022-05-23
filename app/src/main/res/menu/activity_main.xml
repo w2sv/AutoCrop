@@ -12,7 +12,7 @@
         android:enabled="false"/>
 
         <item
-            android:id="@+id/main_menu_item_conduct_auto_scrolling"
+            android:id="@+id/main_menu_item_auto_scroll"
             android:icon="@drawable/ic_baseline_redo_24"
             android:title="@string/menu_item_auto_scroll"
             android:checkable="true"/>

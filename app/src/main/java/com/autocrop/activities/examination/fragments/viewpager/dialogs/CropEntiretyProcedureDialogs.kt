@@ -3,7 +3,7 @@ package com.autocrop.activities.examination.fragments.viewpager.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import com.autocrop.global.BooleanUserPreferences
+import com.autocrop.global.BooleanPreferences
 import com.autocrop.uielements.ExtendedDialogFragment
 
 abstract class CropEntiretyProcedureDialog
@@ -25,8 +25,8 @@ class SaveAllConfirmationDialog
             .run {
                 setTitle("Save all crops?")
                 setMultiChoiceItems(arrayOf("Delete corresponding screenshots"), booleanArrayOf(
-                    BooleanUserPreferences.deleteScreenshots)){ _, _, _ ->
-                    BooleanUserPreferences.deleteScreenshots = !BooleanUserPreferences.deleteScreenshots
+                    BooleanPreferences.deleteScreenshots)){ _, _, _ ->
+                    BooleanPreferences.deleteScreenshots = !BooleanPreferences.deleteScreenshots
                 }
 
                 setNegativeButton("No") { _, _ -> }

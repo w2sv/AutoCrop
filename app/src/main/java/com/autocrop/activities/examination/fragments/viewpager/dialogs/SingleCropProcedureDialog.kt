@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
-import com.autocrop.global.BooleanUserPreferences
+import com.autocrop.global.BooleanPreferences
 import com.autocrop.uielements.ExtendedDialogFragment
 import com.autocrop.utils.executeAsyncTask
 import kotlinx.coroutines.Job
@@ -33,9 +33,9 @@ class SingleCropProcedureDialog
             setTitle("Save crop?")
 
             setMultiChoiceItems(arrayOf("Delete corresponding screenshot"), booleanArrayOf(
-                BooleanUserPreferences.deleteScreenshots)
+                BooleanPreferences.deleteScreenshots)
             ){ _, _, _ ->
-                BooleanUserPreferences.deleteScreenshots = !BooleanUserPreferences.deleteScreenshots
+                BooleanPreferences.deleteScreenshots = !BooleanPreferences.deleteScreenshots
             }
 
             val dataSetPosition = requireArguments().getInt(DATA_SET_POSITION_IN)
@@ -45,7 +45,7 @@ class SingleCropProcedureDialog
                 processingJob = lifecycleScope.executeAsyncTask(
                     { saveCrop(
                         dataSetPosition,
-                        BooleanUserPreferences.deleteScreenshots,
+                        BooleanPreferences.deleteScreenshots,
                         ViewModelProvider(requireActivity() as ExaminationActivity)[ExaminationActivityViewModel::class.java])
                     }
                 )

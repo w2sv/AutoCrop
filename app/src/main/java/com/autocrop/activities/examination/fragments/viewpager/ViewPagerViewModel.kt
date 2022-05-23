@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.collections.CropBundle
-import com.autocrop.global.BooleanUserPreferences
+import com.autocrop.global.BooleanPreferences
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.Consumable
 import com.autocrop.utils.rotated
@@ -50,7 +50,7 @@ class ViewPagerViewModel:
     //$$$$$$$$$$$$$
 
     val autoScroll: MutableLiveData<Boolean> = MutableLiveData(
-        BooleanUserPreferences.autoScroll && dataSet.size > 1
+        BooleanPreferences.autoScroll && dataSet.size > 1
     )
 
     fun maxAutoScrolls(): Int =

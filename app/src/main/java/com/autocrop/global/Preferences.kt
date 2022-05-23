@@ -3,10 +3,11 @@ package com.autocrop.global
 import android.content.SharedPreferences
 import android.net.Uri
 import com.autocrop.utils.logBeforehand
+import com.autocrop.utils.mapObserver
 import com.autocrop.utilsandroid.buildDocumentUriFromTreeUri
 import timber.log.Timber
 
-abstract class UserPreferences<T>(protected val map: MutableMap<String, T>)
+abstract class Preferences<T>(protected val map: MutableMap<String, T>)
     : MutableMap<String, T> by map{
 
     /**
@@ -43,17 +44,12 @@ abstract class UserPreferences<T>(protected val map: MutableMap<String, T>)
  * Singleton encapsulating entirety of parameters set by user
  * having a global impact
  */
-object BooleanUserPreferences : UserPreferences<Boolean>(
+object BooleanPreferences : Preferences<Boolean>(
     mutableMapOf(
-        Keys.AUTO_SCROLL to true,
-        Keys.DELETE_SCREENSHOTS to false
+        "autoScroll" to true,
+        "deleteScreenshots" to false
     )
 ) {
-
-    object Keys {
-        const val AUTO_SCROLL: String = "autoScroll"
-        const val DELETE_SCREENSHOTS: String = "deleteScreenshots"
-    }
 
     /**
      * Expose values as delegated variables for convenience
@@ -65,29 +61,18 @@ object BooleanUserPreferences : UserPreferences<Boolean>(
     override fun SharedPreferences.getValue(key: String, defaultValue: Boolean): Boolean = getBoolean(key, defaultValue)
 }
 
-object CropFileSaveDestinationPreferences: UserPreferences<Uri?>(
-    mutableMapOf(Keys.TREE_URI to null)
+object CropSavingPreferences: Preferences<Uri?>(
+    mutableMapOf("treeUri" to null)
 ) {
-
-    object Keys {
-        const val TREE_URI: String = "treeUri"
-    }
-
+    
     /**
      * Inherently build [documentUri] upon setting new [treeUri]
      */
-    override fun put(key: String, value: Uri?): Uri? {
-        if (key == Keys.TREE_URI && value != getOrDefault(Keys.TREE_URI, null))
-            documentUri = buildDocumentUriFromTreeUri(value!!)
+    var treeUri: Uri? by mapObserver(map){ _, oldValue, newValue ->
+        if (newValue != null && oldValue != newValue)
+            documentUri = buildDocumentUriFromTreeUri(newValue)
                 .also { Timber.i("Set new documentUri: $it") }
-        return super.put(key, value)
     }
-
-    var treeUri: Uri?
-        get() = getValue(Keys.TREE_URI)
-        set(value) {
-            put(Keys.TREE_URI, value)
-        }
 
     var documentUri: Uri? = null
 
@@ -99,4 +84,4 @@ object CropFileSaveDestinationPreferences: UserPreferences<Uri?>(
         }
 }
 
-val userPreferencesInstances = arrayOf(BooleanUserPreferences, CropFileSaveDestinationPreferences)
+val preferencesInstances = arrayOf(BooleanPreferences, CropSavingPreferences)

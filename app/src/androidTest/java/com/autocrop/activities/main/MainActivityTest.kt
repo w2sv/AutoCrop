@@ -19,7 +19,7 @@ import androidx.test.runner.permission.PermissionRequester
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.autocrop.global.BooleanUserPreferences
+import com.autocrop.global.BooleanPreferences
 import com.autocrop.utilsandroid.MimeTypes
 import com.w2sv.autocrop.R
 import de.mannodermaus.junit5.ActivityScenarioExtension
@@ -153,14 +153,14 @@ internal class MainActivityTest {
 
             @Test
             fun autoScroll() {
-                val userPreferencesValueBeforeClick = BooleanUserPreferences.autoScroll
+                val userPreferencesValueBeforeClick = BooleanPreferences.autoScroll
 
                 with(popupMenuItemByTextId(R.string.menu_item_auto_scroll)){
                     perform(ViewActions.click())
                     check(isDisplayed())  // check menu is being persisted on click
                 }
 
-                Assert.assertEquals(!userPreferencesValueBeforeClick, BooleanUserPreferences.autoScroll)
+                Assert.assertEquals(!userPreferencesValueBeforeClick, BooleanPreferences.autoScroll)
             }
 
             @Test
