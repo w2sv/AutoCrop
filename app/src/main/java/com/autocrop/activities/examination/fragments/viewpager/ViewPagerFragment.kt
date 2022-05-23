@@ -49,7 +49,7 @@ class ViewPagerFragment:
                 }
             }
             else{
-                sharedViewModel.autoScrollingDoneListenerConsumable.consume()?.let { it() }
+                sharedViewModel.autoScrollingDoneListenerConsumable?.let { it() }
                 binding.viewPager.setPageTransformer(CubeOutPageTransformer())
 
                 if (scroller is Scroller){

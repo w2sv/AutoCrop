@@ -36,7 +36,7 @@ class ExaminationActivity :
 
     override fun triggerEntrySnackbar(){
         intentExtra(IntentExtraIdentifier.N_DISMISSED_IMAGES, blacklistValue = 0)?.let {
-            sharedViewModel.autoScrollingDoneListenerConsumable.set {
+            sharedViewModel.autoScrollingDoneListenerConsumable = {
                 snacky(
                     SpannableStringBuilder()
                         .append("Couldn't find cropping bounds for ")

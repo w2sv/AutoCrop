@@ -1,11 +1,16 @@
 package com.autocrop.utils
 
-class Consumable<T>(private var value: T? = null){
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
-    fun consume(): T? = value
-        .also { value = null }
+class Consumable<T>(private var value: T? = null)
+    : ReadWriteProperty<Any, T?> {
 
-    fun set(value: T){
+    override fun getValue(thisRef: Any, property: KProperty<*>): T? =
+        value
+            .also { value = null }
+
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: T?){
         this.value = value
     }
 }

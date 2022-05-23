@@ -17,7 +17,7 @@ class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?)
         lateinit var cropBundles: MutableList<CropBundle>
     }
 
-    val autoScrollingDoneListenerConsumable: Consumable<BlankFun> = Consumable()
+    var autoScrollingDoneListenerConsumable by Consumable<BlankFun>()
 
     val nSavedCrops: Int
         get() = _nSavedCrops

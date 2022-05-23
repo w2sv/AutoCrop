@@ -129,7 +129,7 @@ class CropPagerAdapter(
         viewModel.blockSubsequentPageRelatedViewsUpdate()
         viewPager2.setCurrentItem(newViewPosition, true)
 
-        viewModel.scrollStateIdleListenerConsumable.set {
+        viewModel.scrollStateIdleListenerConsumable = {
             // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
             // aligning with newViewPosition
             viewModel.dataSet.removeAtAndRealign(dataSetPosition, removingAtDataSetTail, newViewPosition)

@@ -43,7 +43,7 @@ class ViewPagerViewModel:
         updatePageRelatedViews = false
     }
 
-    val scrollStateIdleListenerConsumable: Consumable<BlankFun> = Consumable()
+    var scrollStateIdleListenerConsumable by Consumable<BlankFun>()
 
     //$$$$$$$$$$$$$
     // AutoScroll $
