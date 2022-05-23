@@ -69,11 +69,13 @@ object CropSavingPreferences: Preferences<Uri?>(
      */
     var treeUri: Uri? by mapDelegateObserver(map){ _, oldValue, newValue ->
         if (newValue != null && oldValue != newValue)
-            documentUri = buildDocumentUriFromTreeUri(newValue)
+            _documentUri = buildDocumentUriFromTreeUri(newValue)
                 .also { Timber.i("Set new documentUri: $it") }
     }
 
-    var documentUri: Uri? = null
+    val documentUri: Uri?
+        get() = _documentUri
+    private var _documentUri: Uri? = null
 
     override fun SharedPreferences.writeValue(key: String, value: Uri?) =
         edit().putString(key, value?.run { toString() }).apply()
