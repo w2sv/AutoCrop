@@ -23,6 +23,9 @@ class MainActivity :
         FlowFieldFragment::class.java,
         MainActivityViewModel::class.java) {
 
+    /**
+     * [launchReviewFlow] on Activity reentry
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
