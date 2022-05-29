@@ -1,5 +1,6 @@
 package com.autocrop.activities.main
 
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.SpannableStringBuilder
@@ -12,12 +13,37 @@ import com.autocrop.global.preferencesInstances
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.numericallyInflected
 import com.autocrop.utilsandroid.*
+import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.android.play.core.review.model.ReviewErrorCode
 import com.w2sv.autocrop.R
+import timber.log.Timber
 
 class MainActivity :
     ApplicationActivity<FlowFieldFragment, MainActivityViewModel>(
         FlowFieldFragment::class.java,
         MainActivityViewModel::class.java) {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (intent.extras != null)
+            launchReviewFlow()
+    }
+
+    private fun launchReviewFlow(){
+        val manager = ReviewManagerFactory.create(this)
+
+        manager
+            .requestReviewFlow()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful)
+                    task.result?.let {
+                        manager.launchReviewFlow(this, it)
+                    }
+                else
+                    Timber.i(task.exception)
+            }
+    }
 
     /**
      * Notifies as to IO results from previous ExaminationActivity cycle

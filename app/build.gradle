@@ -111,6 +111,9 @@ dependencies {
     implementation 'com.daimajia.androidanimations:library:2.4@aar'
     implementation 'com.daimajia.easing:library:2.4@aar'
 
+    // In-App Reviews
+    implementation 'com.google.android.play:review-ktx:2.0.0'
+
     // ----------TESTS------------
 
     def JUNIT_VERSION = "5.8.2"
