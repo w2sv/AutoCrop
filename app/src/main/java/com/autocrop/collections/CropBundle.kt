@@ -10,7 +10,9 @@ data class CropBundle(
     val screenshotUri: Uri,
     val crop: Bitmap,
     val discardedPercentage: Int,
-    val approximateDiscardedFileSize: Int) {
+    val approximateDiscardedFileSize: Int,
+    val bottomOffset: Int,
+    val topOffset: Int) {
 
     /**
      * @return [hashCode] of [screenshotUri], since per definition in and itself unambiguous

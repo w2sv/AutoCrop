@@ -1,0 +1,7 @@
+package com.autocrop.activities.examination.fragments.comparison
+
+import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
+import com.w2sv.autocrop.databinding.ExaminationFragmentShowOriginalScreenshotBinding
+
+class ShowOriginalScreenshotFragment
+    : ExaminationActivityFragment<ExaminationFragmentShowOriginalScreenshotBinding>(ExaminationFragmentShowOriginalScreenshotBinding::class.java)

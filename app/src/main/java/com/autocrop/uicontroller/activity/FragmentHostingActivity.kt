@@ -31,10 +31,10 @@ abstract class FragmentHostingActivity<RF: Fragment>(
             .commit()
     }
 
-    protected fun rootFragment(): Fragment? =
+    fun rootFragment(): Fragment? =
         supportFragmentManager.findFragmentByTag(ROOT_FRAGMENT_TAG)
 
-    protected fun currentFragment(): Fragment? =
+    fun currentFragment(): Fragment? =
         supportFragmentManager.findFragmentById(layoutId)
 
     private companion object{

@@ -46,10 +46,8 @@ class CroppingFragment
         sharedViewModel.uris.subList(sharedViewModel.currentImageNumber.value!!, sharedViewModel.uris.size).forEach { uri ->
 
             // attempt to crop image, upon success add resulting CropBundle to sharedViewModel
-            croppedImage(BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))!!)?.run {
-                sharedViewModel.cropBundles.add(
-                    CropBundle(uri, first, second, third)
-                )
+            croppedImage(uri, requireContext().contentResolver)?.let { cropBundle ->
+                sharedViewModel.cropBundles.add(cropBundle)
             }
 
             // advance progress bar, screenshot number text view

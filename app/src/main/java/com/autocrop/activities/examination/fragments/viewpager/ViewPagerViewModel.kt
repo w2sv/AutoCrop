@@ -12,8 +12,8 @@ import com.autocrop.utils.rotated
 import com.autocrop.utilsandroid.mutableLiveData
 import java.util.*
 
-class ViewPagerViewModel:
-    ViewModel(){
+class ViewPagerViewModel
+    : ViewModel(){
 
     val dataSet = ViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 
@@ -73,6 +73,9 @@ class ViewPagerDataSet(private val cropBundles: MutableList<CropBundle>) :
 
     val containsSingleElement: Boolean
         get() = size == 1
+
+    val currentCropBundle: CropBundle
+        get() = get(position.value!!)
 
     val position: LiveData<Int> by lazy {
         MutableLiveData(0)

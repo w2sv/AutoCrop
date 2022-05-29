@@ -1,13 +1,18 @@
 package com.autocrop.activities.cropping.fragments.cropping
 
+import android.content.ContentResolver
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import com.autocrop.collections.CropBundle
 import kotlin.math.roundToInt
 
 private typealias BorderPair = Pair<Int, Int>
 private typealias BorderPairs = List<BorderPair>
 private typealias BorderPairCandidates = MutableList<BorderPair>
 
-fun croppedImage(image: Bitmap): Triple<Bitmap, Int, Int>?{
+fun croppedImage(uri: Uri, contentResolver: ContentResolver): CropBundle?{
+    val image = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
     val borderPairCandidates: BorderPairs = getCroppingBorderPairCandidates(image, image.height - 1)
         .filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(image)
         .also { if (it.isEmpty())
@@ -16,19 +21,22 @@ fun croppedImage(image: Bitmap): Triple<Bitmap, Int, Int>?{
 
     // find cropping border pair of maximal crop height
     val upperBoundMargin = 2
-    val (y: Int, height: Int) = borderPairCandidates.maxByOrNull {it.second - it.first}!!.let { maxSizeBorderPair ->
+    val (y: Int, cropHeight: Int) = borderPairCandidates.maxByOrNull {it.second - it.first}!!.let { maxSizeBorderPair ->
         (maxSizeBorderPair.first + 1).let { y ->
             y to maxSizeBorderPair.second - y - upperBoundMargin
         }
     }
     val discardedPercentage: Float = image.height.toFloat().run {
-        minus(height.toFloat()) / this
+        minus(cropHeight.toFloat()) / this
     }
 
-    return Triple(
-        Bitmap.createBitmap(image,0, y, image.width, height),
+    return CropBundle(
+        uri,
+        Bitmap.createBitmap(image,0, y, image.width, cropHeight),
         (discardedPercentage * 100).roundToInt(),
-        (discardedPercentage * image.approximatedJpegFileSizeInKB).roundToInt()
+        (discardedPercentage * image.approximatedJpegFileSizeInKB).roundToInt(),
+        image.height - y - cropHeight,
+        y
     )
 }
 

@@ -16,7 +16,7 @@ class ViewPagerFragment:
     ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(ExaminationFragmentViewpagerBinding::class.java){
 
     private val viewModel: ViewPagerViewModel by lazy{
-        ViewModelProvider(this)[ViewPagerViewModel::class.java]
+        ViewModelProvider(requireActivity())[ViewPagerViewModel::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
