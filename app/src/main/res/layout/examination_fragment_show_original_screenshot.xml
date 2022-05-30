@@ -5,27 +5,12 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/crop_iv"
+        android:id="@+id/iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
         android:contentDescription="TODO"
 
-        android:adjustViewBounds="false"
-        android:cropToPadding="false"
-
-        android:transitionName="@string/crop_transition_name"
-
-        android:background="@color/brudi_pink"/>
-
-    <ImageView
-        android:id="@+id/screenshot_iv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:contentDescription="TODO"
-
-        android:background="@color/neutral_background"
-        android:visibility="invisible"/>
+        android:background="@color/neutral_background"/>
 
 </RelativeLayout>

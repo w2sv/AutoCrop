@@ -46,7 +46,10 @@ abstract class FragmentHostingActivity<RF: Fragment>(
         val rightFlipAnimationIds = R.animator.card_flip_right_in to R.animator.card_flip_right_out
     }
 
-    fun replaceCurrentFragmentWith(fragment: Fragment, flipRight: Boolean? = null, additionalCalls: ((FragmentTransaction) -> FragmentTransaction)? = null){
+    fun replaceCurrentFragmentWith(fragment: Fragment,
+                                   flipRight: Boolean? = null,
+                                   addToBackStack: Boolean = false,
+                                   additionalCalls: ((FragmentTransaction) -> FragmentTransaction)? = null){
         supportFragmentManager
             .beginTransaction()
             .setReorderingAllowed(true)
@@ -59,6 +62,8 @@ abstract class FragmentHostingActivity<RF: Fragment>(
                 additionalCalls?.let {
                     it(this)
                 }
+                if (addToBackStack)
+                    addToBackStack(null)
             }
             .replace(layoutId, fragment)
             .commit()

@@ -1,5 +1,6 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
@@ -20,15 +21,17 @@ class ViewPagerFragment:
         ViewModelProvider(requireActivity())[ViewPagerViewModel::class.java]
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
 
         sharedElementEnterTransition = TransitionInflater.from(requireContext())
             .inflateTransition(android.R.transition.move)
+        sharedElementReturnTransition = TransitionInflater.from(requireContext())
+            .inflateTransition(android.R.transition.move)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreatedCore(savedInstanceState: Bundle?) {
+        super.onViewCreatedCore(savedInstanceState)
 
         binding.viewPager.initialize()
         setLiveDataObservers()

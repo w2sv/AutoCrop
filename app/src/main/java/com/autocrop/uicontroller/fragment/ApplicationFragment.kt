@@ -3,6 +3,8 @@ package com.autocrop.uicontroller.fragment
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
@@ -22,7 +24,9 @@ abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
         super.onViewCreated(view, savedInstanceState)
         onViewCreatedCore(savedInstanceState)
 
-        startPostponedEnterTransition()
+        (view.parent as? ViewGroup)?.doOnPreDraw {
+            startPostponedEnterTransition()
+        }
     }
 
     open fun onViewCreatedCore(savedInstanceState: Bundle?){}

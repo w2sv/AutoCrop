@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -32,13 +33,13 @@ class CropPagerAdapter(
     inner class CropViewHolder(view: ImageView)
         : RecyclerView.ViewHolder(view) {
 
-        val cropView: ImageView = view.findViewById(R.id.image_view_examination_view_pager)
+        val cropImageView: ImageView = view.findViewById(R.id.image_view_examination_view_pager)
 
         /**
          * Set onTouchListener through implementation of ImmersiveViewOnTouchListener
          */
         init {
-            cropView.setOnTouchListener(
+            cropImageView.setOnTouchListener(
                 object : ImmersiveViewOnTouchListener() {
 
                     init {
@@ -83,15 +84,20 @@ class CropPagerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CropViewHolder =
         CropViewHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.examination_view_pager_image_view, parent, false)
-                    as ImageView
+                .inflate(R.layout.examination_view_pager_image_view, parent, false) as ImageView
         )
 
     /**
      * Defines crop setting wrt [position]
      */
-    override fun onBindViewHolder(holder: CropViewHolder, position: Index) =
-        holder.cropView.setImageBitmap(viewModel.dataSet.atCorrespondingPosition(position).crop)
+    override fun onBindViewHolder(holder: CropViewHolder, position: Index){
+        holder.cropImageView.apply{
+            val cropBundle = viewModel.dataSet.atCorrespondingPosition(position)
+
+            setImageBitmap(cropBundle.crop)
+            ViewCompat.setTransitionName(this, cropBundle.hashCode().toString())
+        }
+    }
 
     override fun getItemCount(): Int =
         if (viewModel.dataSet.size > 1) ViewPagerViewModel.MAX_VIEWS else 1
@@ -148,7 +154,7 @@ class CropPagerAdapter(
      */
     private fun resetViewsAround(position: Index){
         val nPreloadedViewsToEitherSide = 3
-
+        
         notifyItemRangeChanged(position - nPreloadedViewsToEitherSide, nPreloadedViewsToEitherSide * 2 + 1)
     }
 }

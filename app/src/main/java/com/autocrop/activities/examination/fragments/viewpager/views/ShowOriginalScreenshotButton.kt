@@ -25,13 +25,13 @@ class ShowOriginalScreenshotButton(context: Context, attributeSet: AttributeSet)
 
             typedActivity.replaceCurrentFragmentWith(
                 ShowOriginalScreenshotFragment(),
-                additionalCalls = { fragmentTransaction ->
-                    fragmentTransaction.addSharedElement(
-                        cropImageView,
-                        cropImageView.transitionName
-                    )
-                }
-            )
+                addToBackStack = true
+            ){ fragmentTransaction ->
+                fragmentTransaction.addSharedElement(
+                    cropImageView,
+                    cropImageView.transitionName
+                )
+            }
         }
     }
 }
