@@ -80,13 +80,12 @@ class CropPagerAdapter(
     /**
      * Defines creation of CropViewHolder
      */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CropViewHolder {
-        return CropViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CropViewHolder =
+        CropViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.examination_view_pager_image_view, parent, false)
                     as ImageView
         )
-    }
 
     /**
      * Defines crop setting wrt [position]

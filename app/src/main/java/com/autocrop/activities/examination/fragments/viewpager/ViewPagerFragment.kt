@@ -3,6 +3,7 @@ package com.autocrop.activities.examination.fragments.viewpager
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.uielements.CubeOutPageTransformer
@@ -17,6 +18,13 @@ class ViewPagerFragment:
 
     private val viewModel: ViewPagerViewModel by lazy{
         ViewModelProvider(requireActivity())[ViewPagerViewModel::class.java]
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        sharedElementEnterTransition = TransitionInflater.from(requireContext())
+            .inflateTransition(android.R.transition.move)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,8 +63,8 @@ class ViewPagerFragment:
                 if (scroller is Scroller){
                     scroller!!.cancel()
                     crossFade(
-                        binding.autoScrollingTextView,
-                        binding.discardingStatisticsTv, binding.buttonToolbar
+                        arrayOf(binding.autoScrollingTextView),
+                        arrayOf(binding.discardingStatisticsTv, binding.buttonToolbar)
                     )
                 }
                 else{

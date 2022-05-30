@@ -79,7 +79,11 @@ class ExaminationActivity :
     override fun onBackPressed(){
         currentFragment().let {
             when (it) {
-                is ShowOriginalScreenshotFragment -> replaceCurrentFragmentWith(ViewPagerFragment())
+                is ShowOriginalScreenshotFragment -> replaceCurrentFragmentWith(ViewPagerFragment()){ fragmentTransaction ->
+                    it.binding.cropIv.let { cropView ->
+                        fragmentTransaction.addSharedElement(cropView, cropView.transitionName)
+                    }
+                }
                 is AppTitleFragment -> Unit
                 is SaveAllFragment -> {
                     snacky(

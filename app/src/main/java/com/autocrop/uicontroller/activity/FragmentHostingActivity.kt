@@ -1,7 +1,9 @@
 package com.autocrop.uicontroller.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.w2sv.autocrop.R
 
 abstract class FragmentHostingActivity<RF: Fragment>(
@@ -44,7 +46,7 @@ abstract class FragmentHostingActivity<RF: Fragment>(
         val rightFlipAnimationIds = R.animator.card_flip_right_in to R.animator.card_flip_right_out
     }
 
-    fun replaceCurrentFragmentWith(fragment: Fragment, flipRight: Boolean? = null){
+    fun replaceCurrentFragmentWith(fragment: Fragment, flipRight: Boolean? = null, additionalCalls: ((FragmentTransaction) -> FragmentTransaction)? = null){
         supportFragmentManager
             .beginTransaction()
             .setReorderingAllowed(true)
@@ -53,6 +55,9 @@ abstract class FragmentHostingActivity<RF: Fragment>(
                     with(if (it) rightFlipAnimationIds else leftFlipAnimationIds){
                         setCustomAnimations(first, second)
                     }
+                }
+                additionalCalls?.let {
+                    it(this)
                 }
             }
             .replace(layoutId, fragment)

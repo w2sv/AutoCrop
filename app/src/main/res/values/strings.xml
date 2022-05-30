@@ -38,5 +38,6 @@
     <string name="by">By:</string>
     <string name="w2sv">W2SV</string>
     <string name="show_original">Show Original</string>
+    <string name="crop_transition_name">CROP_TRANSITION</string>
 
 </resources>

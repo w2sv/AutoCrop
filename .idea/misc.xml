@@ -71,6 +71,7 @@
         <entry key="app/src/main/res/layout/examination_fragment_comparison.xml" value="0.21462163317657118" />
         <entry key="app/src/main/res/layout/examination_fragment_deletionquery.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/examination_fragment_saveall.xml" value="0.21547669944420692" />
+        <entry key="app/src/main/res/layout/examination_fragment_show_original_screenshot.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/examination_fragment_viewpager.xml" value="0.2625" />
         <entry key="app/src/main/res/layout/examination_view_pager_image_view.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/main.xml" value="0.21547669944420692" />
