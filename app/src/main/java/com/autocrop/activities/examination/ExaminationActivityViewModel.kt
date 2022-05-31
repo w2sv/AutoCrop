@@ -8,6 +8,7 @@ import com.autocrop.utils.BlankFun
 import com.autocrop.utils.Consumable
 import com.autocrop.utilsandroid.documentUriPathIdentifier
 import com.autocrop.utilsandroid.externalPicturesDir
+import kotlinx.coroutines.Job
 import timber.log.Timber
 
 class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?)
@@ -62,6 +63,8 @@ class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?)
         validSaveDirDocumentUri?.let {
             documentUriPathIdentifier(it)
         } ?: externalPicturesDir.path
+
+    var singleCropSavingJob: Job? = null
 
     /**
      * Clear [cropBundles]

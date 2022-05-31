@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.ImageView
+<com.autocrop.activities.examination.fragments.viewpager.views.CropImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:viewBindingIgnore="true"
@@ -11,4 +11,4 @@
 
     android:scaleType="fitCenter"
     android:adjustViewBounds="false">
-</android.widget.ImageView>
+</com.autocrop.activities.examination.fragments.viewpager.views.CropImageView>

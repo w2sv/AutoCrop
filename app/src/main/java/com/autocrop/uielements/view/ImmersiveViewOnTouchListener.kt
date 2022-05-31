@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager
+package com.autocrop.uielements.view
 
 import android.annotation.SuppressLint
 import android.graphics.Point
@@ -11,7 +11,8 @@ import com.autocrop.utilsandroid.manhattanNorm
  * Enables distinction between pulling up navigation bar and clicks
  * whilst employing immersive view app layout
  */
-abstract class ImmersiveViewOnTouchListener: View.OnTouchListener {
+abstract class ImmersiveViewOnTouchListener
+    : View.OnTouchListener {
 
     companion object{
         private fun isClick(touchEventStartPoint: Point, touchEventEndPoint: Point): Boolean{

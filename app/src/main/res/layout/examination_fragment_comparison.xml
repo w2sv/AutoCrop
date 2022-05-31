@@ -24,6 +24,6 @@
 
         android:textStyle="bold"
         android:textColor="@color/accentuated_tv"
-        android:textSize="16sp"/>
+        android:textSize="18sp"/>
 
 </RelativeLayout>

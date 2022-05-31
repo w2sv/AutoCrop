@@ -4,14 +4,12 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.global.BooleanPreferences
 import com.autocrop.uielements.ExtendedDialogFragment
 import com.autocrop.utils.executeAsyncTask
-import kotlinx.coroutines.Job
 
 /**
  * Class accounting for procedure dialog display upon screen click,
@@ -20,13 +18,14 @@ import kotlinx.coroutines.Job
 class SingleCropProcedureDialog
         : ExtendedDialogFragment() {
 
+    private val sharedViewModel: ExaminationActivityViewModel by activityViewModels()
+
     companion object{
         const val DATA_SET_POSITION_IN = "DATA_SET_POSITION_IN"
         const val DATA_SET_POSITION_OUT = "DATA_SET_POSITION_OUT"
+
         const val PROCEDURE_SELECTED = "ON_PROCEDURE_SELECTED"
     }
-
-    var processingJob: Job? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(activity).run {
@@ -42,11 +41,12 @@ class SingleCropProcedureDialog
 
             setNegativeButton("No, discard") { _, _ -> triggerOnProcedureSelected(dataSetPosition) }
             setPositiveButton("Yes") { _, _ ->
-                processingJob = lifecycleScope.executeAsyncTask(
-                    { saveCrop(
-                        dataSetPosition,
-                        BooleanPreferences.deleteScreenshots,
-                        ViewModelProvider(requireActivity() as ExaminationActivity)[ExaminationActivityViewModel::class.java])
+                sharedViewModel.singleCropSavingJob = lifecycleScope.executeAsyncTask(
+                    {
+                        saveCrop(
+                            dataSetPosition,
+                            BooleanPreferences.deleteScreenshots
+                        )
                     }
                 )
                 triggerOnProcedureSelected(dataSetPosition)
@@ -55,10 +55,8 @@ class SingleCropProcedureDialog
             create()
         }
 
-    private fun saveCrop(dataSetPosition: Int, deleteScreenshot: Boolean, sharedViewModel: ExaminationActivityViewModel): Void?{
+    private fun saveCrop(dataSetPosition: Int, deleteScreenshot: Boolean) =
         sharedViewModel.processCropBundle(dataSetPosition, deleteScreenshot, requireContext())
-        return null
-    }
 
     private fun triggerOnProcedureSelected(dataSetPosition: Int) =
         requireActivity().supportFragmentManager.setFragmentResult(

@@ -1,18 +1,19 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.autocrop.activities.examination.ExaminationActivity
+import com.autocrop.activities.examination.ExaminationActivityViewModel
+import com.autocrop.activities.examination.ExaminationActivityViewModelRetriever
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCropProcedureDialog
 import com.autocrop.collections.CropBundle
+import com.autocrop.uicontroller.ViewModelRetriever
+import com.autocrop.uielements.view.ActivityRetriever
+import com.autocrop.uielements.view.ContextBasedActivityRetriever
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.Index
 import com.w2sv.autocrop.R
@@ -23,62 +24,25 @@ class CropPagerAdapter(
     private val viewPager2: ViewPager2,
     private val viewModel: ViewPagerViewModel,
     private val lastCropProcessedListener: BlankFun):
-        RecyclerView.Adapter<CropPagerAdapter.CropViewHolder>() {
+        RecyclerView.Adapter<CropPagerAdapter.CropViewHolder>(),
+        ViewModelRetriever<ExaminationActivityViewModel> by ExaminationActivityViewModelRetriever(viewPager2.context),
+        ActivityRetriever<ExaminationActivity> by ContextBasedActivityRetriever(viewPager2.context) {
 
-    val cropProcedureDialog: SingleCropProcedureDialog by lazy{
-        SingleCropProcedureDialog()
-    }
-    val fragmentActivity: FragmentActivity by lazy{
-        viewPager2.context as FragmentActivity
+    init {
+        fragmentActivity.supportFragmentManager.setFragmentResultListener(
+            SingleCropProcedureDialog.PROCEDURE_SELECTED,
+            fragmentActivity
+        ){ _, bundle ->
+            onCropProcedureSelected(
+                bundle.getInt(SingleCropProcedureDialog.DATA_SET_POSITION_OUT)
+            )
+        }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    inner class CropViewHolder(view: ImageView)
+    class CropViewHolder(view: ImageView)
         : RecyclerView.ViewHolder(view) {
 
         val cropImageView: ImageView = view.findViewById(R.id.image_view_examination_view_pager)
-
-        /**
-         * Set onTouchListener through implementation of ImmersiveViewOnTouchListener
-         */
-        init {
-            cropImageView.setOnTouchListener(
-                object : ImmersiveViewOnTouchListener() {
-
-                    init {
-                        fragmentActivity.supportFragmentManager.setFragmentResultListener(
-                            SingleCropProcedureDialog.PROCEDURE_SELECTED, fragmentActivity){ _, bundle ->
-                            onCropProcedureSelected(
-                                bundle.getInt(SingleCropProcedureDialog.DATA_SET_POSITION_OUT)
-                            )
-                        }
-                    }
-
-                    /**
-                     * Cancel scroller upon touch if running
-                     */
-                    override fun onTouch(v: View?, event: MotionEvent?): Boolean =
-                        if (viewModel.autoScroll.value == true) {
-                            viewModel.autoScroll.postValue(false)
-                            false
-                        }
-                        else
-                            super.onTouch(v, event)
-
-                    /**
-                     * Invoke CropProcedureDialog
-                     */
-                    override fun onClick() = with(cropProcedureDialog) {
-                        arguments = bundleOf(
-                            SingleCropProcedureDialog.DATA_SET_POSITION_IN to viewModel.dataSet.correspondingPosition(
-                                adapterPosition
-                            )
-                        )
-                        show(fragmentActivity.supportFragmentManager)
-                    }
-                }
-            )
-        }
     }
 
     /**
@@ -113,8 +77,8 @@ class CropPagerAdapter(
      * removes view, procedure action has been selected for, from pager
      */
     private fun onCropProcedureSelected(dataSetPosition: Index) =
-        if (viewModel.dataSet.size == 1)
-            cropProcedureDialog.processingJob?.run {
+        if (viewModel.dataSet.containsSingleElement)
+            sharedViewModel.singleCropSavingJob?.run{
                 invokeOnCompletion {
                     lastCropProcessedListener()
                 }
