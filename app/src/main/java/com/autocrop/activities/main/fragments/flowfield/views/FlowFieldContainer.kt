@@ -5,8 +5,8 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.fragments.flowfield.sketch.FlowFieldSketch
-import com.autocrop.uielements.view.ActivityRetriever
-import com.autocrop.uielements.view.ContextBasedActivityRetriever
+import com.autocrop.retriever.activity.ActivityRetriever
+import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.utilsandroid.screenResolution
 import processing.android.PFragment
 

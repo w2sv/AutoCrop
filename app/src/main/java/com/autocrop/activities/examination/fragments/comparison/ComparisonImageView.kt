@@ -15,9 +15,9 @@ import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.activities.examination.fragments.viewpager.transitionName
 import com.autocrop.collections.CropBundle
-import com.autocrop.uicontroller.ViewModelRetriever
-import com.autocrop.uielements.view.ActivityRetriever
-import com.autocrop.uielements.view.ContextBasedActivityRetriever
+import com.autocrop.retriever.viewmodel.ViewModelRetriever
+import com.autocrop.retriever.activity.ActivityRetriever
+import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.utilsandroid.mutableLiveData
 import com.autocrop.utilsandroid.toggle
 

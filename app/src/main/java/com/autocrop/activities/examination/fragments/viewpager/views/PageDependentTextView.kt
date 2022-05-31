@@ -5,7 +5,7 @@ import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import androidx.core.text.bold
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
-import com.autocrop.uicontroller.ViewModelRetriever
+import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.uielements.view.StringResourceEquippedTextView
 import com.w2sv.autocrop.R
 

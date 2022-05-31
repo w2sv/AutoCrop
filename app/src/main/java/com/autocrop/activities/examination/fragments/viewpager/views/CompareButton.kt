@@ -6,8 +6,8 @@ import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatButton
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.fragments.comparison.ComparisonFragment
-import com.autocrop.uielements.view.ActivityRetriever
-import com.autocrop.uielements.view.ContextBasedActivityRetriever
+import com.autocrop.retriever.activity.ActivityRetriever
+import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.w2sv.autocrop.R
 
 class CompareButton(context: Context, attributeSet: AttributeSet):

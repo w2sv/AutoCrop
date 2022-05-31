@@ -11,9 +11,9 @@ import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragmentMenu
 import com.autocrop.global.CropSavingPreferences
-import com.autocrop.uicontroller.ViewModelRetriever
-import com.autocrop.uielements.view.ActivityRetriever
-import com.autocrop.uielements.view.ContextBasedActivityRetriever
+import com.autocrop.retriever.viewmodel.ViewModelRetriever
+import com.autocrop.retriever.activity.ActivityRetriever
+import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.utilsandroid.show
 import com.autocrop.utilsandroid.snacky
 import com.w2sv.autocrop.R

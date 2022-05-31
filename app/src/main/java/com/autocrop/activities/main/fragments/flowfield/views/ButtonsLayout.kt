@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import com.autocrop.activities.main.MainActivityViewModel
-import com.autocrop.uicontroller.ViewModelRetriever
+import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.uielements.view.fadeIn
 import com.autocrop.uielements.view.show
 import com.w2sv.autocrop.R

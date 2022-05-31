@@ -11,9 +11,9 @@ import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.ExaminationActivityViewModelRetriever
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCropProcedureDialog
 import com.autocrop.collections.CropBundle
-import com.autocrop.uicontroller.ViewModelRetriever
-import com.autocrop.uielements.view.ActivityRetriever
-import com.autocrop.uielements.view.ContextBasedActivityRetriever
+import com.autocrop.retriever.viewmodel.ViewModelRetriever
+import com.autocrop.retriever.activity.ActivityRetriever
+import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.Index
 import com.w2sv.autocrop.R

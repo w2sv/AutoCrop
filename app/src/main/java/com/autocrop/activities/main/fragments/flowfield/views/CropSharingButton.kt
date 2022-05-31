@@ -7,8 +7,8 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.uielements.view.ActivityRetriever
-import com.autocrop.uielements.view.ContextBasedActivityRetriever
+import com.autocrop.retriever.activity.ActivityRetriever
+import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.show
 import com.autocrop.utilsandroid.MimeTypes
@@ -17,7 +17,7 @@ import com.w2sv.autocrop.R
 
 class CropSharingButton(context: Context, attrs: AttributeSet):
     AppCompatImageButton(context, attrs),
-    ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context){
+    ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context) {
 
     /**
      * If CROP_SAVING_URIS available from previous ExaminationActivity cycle show and

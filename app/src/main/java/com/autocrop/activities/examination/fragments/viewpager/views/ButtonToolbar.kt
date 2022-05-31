@@ -12,8 +12,8 @@ import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.CropEntiretyProcedureDialog
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.DiscardAllConfirmationDialog
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SaveAllConfirmationDialog
-import com.autocrop.uielements.view.ActivityRetriever
-import com.autocrop.uielements.view.ContextBasedActivityRetriever
+import com.autocrop.retriever.activity.ActivityRetriever
+import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 
 class ButtonToolbar(context: Context, attr: AttributeSet):
     Toolbar(context, attr){
@@ -29,7 +29,7 @@ class ButtonToolbar(context: Context, attr: AttributeSet):
 
 abstract class CropEntiretyRegardingButton(context: Context, attr: AttributeSet, private val dialogClass: CropEntiretyProcedureDialog):
     AppCompatButton(context, attr),
-    ActivityRetriever<ExaminationActivity> by ContextBasedActivityRetriever(context){
+    ActivityRetriever<ExaminationActivity> by ContextBasedActivityRetriever(context) {
 
     init {
         fragmentActivity.supportFragmentManager.setFragmentResultListener(

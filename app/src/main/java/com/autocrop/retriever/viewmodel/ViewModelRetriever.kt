@@ -1,4 +1,4 @@
-package com.autocrop.uicontroller
+package com.autocrop.retriever.viewmodel
 
 import androidx.lifecycle.ViewModel
 

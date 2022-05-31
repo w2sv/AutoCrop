@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.widget.ProgressBar
 import com.autocrop.activities.cropping.CroppingActivityViewModel
 import com.autocrop.activities.cropping.fragments.CroppingActivityViewModelRetriever
-import com.autocrop.uicontroller.ViewModelRetriever
+import com.autocrop.retriever.viewmodel.ViewModelRetriever
 
 class CroppingProgressBar(context: Context, attr: AttributeSet):
     ProgressBar(context, attr),
