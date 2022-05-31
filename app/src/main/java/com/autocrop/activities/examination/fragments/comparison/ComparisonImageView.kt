@@ -18,12 +18,8 @@ import com.autocrop.collections.CropBundle
 import com.autocrop.uicontroller.ViewModelRetriever
 import com.autocrop.uielements.view.ActivityRetriever
 import com.autocrop.uielements.view.ContextBasedActivityRetriever
-import com.autocrop.uielements.view.ContextBasedViewModelRetriever
 import com.autocrop.utilsandroid.mutableLiveData
 import com.autocrop.utilsandroid.toggle
-
-class ComparisonViewModelRetriever(context: Context)
-    : ContextBasedViewModelRetriever<ComparisonViewModel, ExaminationActivity>(context, ComparisonViewModel::class.java)
 
 class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet),
