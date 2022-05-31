@@ -1,40 +1,29 @@
 package com.autocrop.uielements.view
 
 import android.annotation.SuppressLint
-import android.graphics.Point
 import android.view.MotionEvent
 import android.view.View
+import com.autocrop.utils.Consumable
 import com.autocrop.utils.logAfterwards
-import com.autocrop.utilsandroid.manhattanNorm
+import com.autocrop.utilsandroid.isClick
 
-/**
- * Enables distinction between pulling up navigation bar and clicks
- * whilst employing immersive view app layout
- */
 abstract class ImmersiveViewOnTouchListener
     : View.OnTouchListener {
 
-    companion object{
-        private fun isClick(touchEventStartPoint: Point, touchEventEndPoint: Point): Boolean{
-            val clickIdentificationCoordinateThreshold = 100
-
-            return manhattanNorm(touchEventStartPoint, touchEventEndPoint) < clickIdentificationCoordinateThreshold
-        }
-    }
-
-    private var touchEventStartPoint: Point? = null
+    private var touchStart by Consumable<MotionEvent>()
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View?, event: MotionEvent?): Boolean = logAfterwards("Called onTouch") {
         when (event?.action) {
-            MotionEvent.ACTION_DOWN -> touchEventStartPoint = event.point
-            MotionEvent.ACTION_UP -> if (isClick(touchEventStartPoint!!, event.point)) onClick().also { touchEventStartPoint = null }
+            MotionEvent.ACTION_DOWN -> touchStart = event
+            MotionEvent.ACTION_UP -> touchStart?.let {
+                if (isClick(it, event))
+                    onClick()
+            }
+            else -> Unit
         }
         return true
     }
-
-    private val MotionEvent.point: Point
-        get() = Point(x.toInt(), y.toInt())
 
     abstract fun onClick()
 }

@@ -42,7 +42,7 @@ class CropPagerAdapter(
     class CropViewHolder(view: ImageView)
         : RecyclerView.ViewHolder(view) {
 
-        val cropImageView: ImageView = view.findViewById(R.id.image_view_examination_view_pager)
+        val cropImageView: ImageView = view.findViewById(R.id.crop_iv)
     }
 
     /**
@@ -51,7 +51,7 @@ class CropPagerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CropViewHolder =
         CropViewHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.examination_view_pager_image_view, parent, false) as ImageView
+                .inflate(R.layout.examination_crop_view_holder, parent, false) as ImageView
         )
 
     /**

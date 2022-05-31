@@ -1,7 +1,9 @@
 package com.autocrop.utilsandroid
 
 import android.graphics.Point
+import android.view.MotionEvent
 import android.view.WindowManager
+import androidx.constraintlayout.widget.ConstraintSet
 import kotlin.math.abs
 
 /**
@@ -14,5 +16,11 @@ fun screenResolution(windowManager: WindowManager): Point =
         windowManager.defaultDisplay.getRealSize(this)
     }
 
-fun manhattanNorm(a: Point, b: Point): Int =
+fun isClick(a: MotionEvent, b: MotionEvent): Boolean{
+    val clickIdentificationCoordinateThreshold = 100
+
+    return manhattanNorm(a, b) < clickIdentificationCoordinateThreshold
+}
+
+private fun manhattanNorm(a: MotionEvent, b: MotionEvent): Float =
     abs(a.x - b.x) + abs(a.y - b.y)
