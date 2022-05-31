@@ -41,5 +41,6 @@
     <string name="crop_transition_name">CROP_TRANSITION</string>
     <string name="compare_crop_with_original_screenshot">Compare crop with original screenshot</string>
     <string name="original">Original</string>
+    <string name="crop">Crop</string>
 
 </resources>

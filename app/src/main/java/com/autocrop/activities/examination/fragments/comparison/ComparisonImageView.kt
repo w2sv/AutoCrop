@@ -9,39 +9,62 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
+import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.activities.examination.fragments.viewpager.transitionName
-import com.autocrop.activities.examination.fragments.viewpager.views.ViewPagerViewModelRetriever
 import com.autocrop.collections.CropBundle
 import com.autocrop.uicontroller.ViewModelRetriever
+import com.autocrop.uielements.view.ActivityRetriever
+import com.autocrop.uielements.view.ContextBasedActivityRetriever
+import com.autocrop.uielements.view.ContextBasedViewModelRetriever
+import com.autocrop.utilsandroid.mutableLiveData
+import com.autocrop.utilsandroid.toggle
+
+class ComparisonViewModelRetriever(context: Context)
+    : ContextBasedViewModelRetriever<ComparisonViewModel, ExaminationActivity>(context, ComparisonViewModel::class.java)
 
 class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet),
-    ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context){
+    ActivityRetriever<ExaminationActivity> by ContextBasedActivityRetriever(context),
+    ViewModelRetriever<ComparisonViewModel> by ComparisonViewModelRetriever(context) {
 
-    // TODO: move into ViewModel
-    private val cropBundle: CropBundle = sharedViewModel.dataSet.currentCropBundle
+    private val cropBundle: CropBundle = ViewModelProvider(activity as ViewModelStoreOwner)[ViewPagerViewModel::class.java].dataSet.currentCropBundle
     private val screenshot: Bitmap = BitmapFactory.decodeStream(context.contentResolver.openInputStream(cropBundle.screenshotUri))
 
     init {
         ViewCompat.setTransitionName(this, cropBundle.transitionName())
 
-        var displayingScreenshot = true
-        val insetCrop = InsetDrawable(BitmapDrawable(resources, cropBundle.crop), 0, cropBundle.topOffset, 0, cropBundle.bottomOffset)
-
         setOnClickListener {
-            if (displayingScreenshot)
+            val insetCrop = InsetDrawable(
+                BitmapDrawable(resources, cropBundle.crop),
+                0,
+                cropBundle.topOffset,
+                0,
+                cropBundle.bottomOffset
+            )
+
+            if (sharedViewModel.displayingScreenshot.value!!)
                 setImageDrawable(insetCrop)
             else
                 showScreenshot()
 
-            displayingScreenshot = !displayingScreenshot
+            sharedViewModel.displayingScreenshot.toggle()
         }
     }
 
-    fun prepareExitTransition(){
+    fun onEnterTransitionEnd(rootLayoutParams: RelativeLayout.LayoutParams){
         showMarginalizedCrop()
+
+        layoutParams = rootLayoutParams
+        showScreenshot()
+
+        sharedViewModel.displayingScreenshot.mutableLiveData.postValue(true)
     }
+
+    fun prepareExitTransition() =
+        showMarginalizedCrop()
 
     private val marginalizedCropLayoutParams: RelativeLayout.LayoutParams by lazy {
         (layoutParams as RelativeLayout.LayoutParams).apply {
@@ -49,12 +72,12 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
         }
     }
 
-    fun showMarginalizedCrop(){
+    private fun showMarginalizedCrop(){
         layoutParams = marginalizedCropLayoutParams
         setImageBitmap(cropBundle.crop)
     }
 
-    fun showScreenshot(){
+    private fun showScreenshot(){
         setImageBitmap(screenshot)
     }
 }
