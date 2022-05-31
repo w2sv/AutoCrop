@@ -57,10 +57,10 @@ class MainActivity :
      * invoke [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app
      */
     override fun onBackPressed(){
-        if (currentFragment() is AboutFragment)
-            replaceCurrentFragmentWith(FlowFieldFragment(), false)
-        else
-            finishAffinity()
+        when (currentFragment()){
+            is AboutFragment -> supportFragmentManager.popBackStack()
+            else -> finishAffinity()
+        }
     }
 
     /**

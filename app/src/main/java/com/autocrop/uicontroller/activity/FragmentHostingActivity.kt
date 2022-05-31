@@ -56,7 +56,7 @@ abstract class FragmentHostingActivity<RF: Fragment>(
             .apply {
                 flipRight?.let {
                     with(if (it) rightFlipAnimationIds else leftFlipAnimationIds){
-                        setCustomAnimations(first, second)
+                        setCustomAnimations(first, second, first, second)
                     }
                 }
                 additionalCalls?.let {

@@ -58,5 +58,9 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
         }
 
     private fun invokeAboutFragment() =
-        typedActivity.replaceCurrentFragmentWith(AboutFragment(), false)
+        typedActivity.replaceCurrentFragmentWith(
+            AboutFragment(),
+            flipRight = false,
+            addToBackStack = true
+        )
 }
