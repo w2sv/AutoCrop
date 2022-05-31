@@ -58,7 +58,7 @@ class CropPagerAdapter(
                      * Cancel scroller upon touch if running
                      */
                     override fun onTouch(v: View?, event: MotionEvent?): Boolean =
-                        if (viewModel.autoScroll.value!!) {
+                        if (viewModel.autoScroll.value == true) {
                             viewModel.autoScroll.postValue(false)
                             false
                         }
