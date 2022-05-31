@@ -52,7 +52,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:background="@android:color/black"/>
+        android:background="@color/neutral_background"/>
+
+    <!--    Page Indication Layout-->
 
     <RelativeLayout
         android:layout_width="145dp"
@@ -64,13 +66,14 @@
         android:layout_alignParentEnd="true"
 
         android:layout_marginTop="26dp"
-        android:layout_marginEnd="20dp"
-
-        android:visibility="invisible">
+        android:layout_marginEnd="20dp">
 
         <!-- https://en.proft.me/2018/02/5/decorating-seekbar-android/ -->
+
         <com.autocrop.activities.examination.fragments.viewpager.views.PageIndicationBar
             android:id="@+id/page_indication_bar"
+            android:visibility="invisible"
+
             android:layout_width="120dp"
             android:layout_height="wrap_content"
 
@@ -106,11 +109,12 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/auto_scrolling_text_view"
+        android:id="@+id/auto_scrolling_tv"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/button_toolbar"
 
+        android:layout_alignTop="@+id/button_toolbar"
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="20dp"
 
@@ -123,20 +127,9 @@
 
     </TextView>
 
-    <com.autocrop.activities.examination.fragments.viewpager.views.ShowOriginalScreenshotButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
-        android:layout_marginEnd="20dp"
-        android:layout_alignParentEnd="true"
-
-        android:background="@android:color/transparent"
-        android:text="@string/show_original" />
-
     <com.autocrop.activities.examination.fragments.viewpager.views.DiscardingStatisticsTextView
         android:id="@+id/discarding_statistics_tv"
+        android:visibility="invisible"
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -147,8 +140,21 @@
         android:layout_marginHorizontal="30dp"
 
         android:textSize="13sp"
-        android:textColor="@color/light_gray"
+        android:textColor="@color/light_gray"/>
 
-        android:visibility="invisible"/>
+    <com.autocrop.activities.examination.fragments.viewpager.views.CompareButton
+        android:id="@+id/compare_button"
+        android:visibility="invisible"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="35dp"
+        android:layout_marginEnd="20dp"
+        android:layout_alignParentEnd="true"
+
+        android:background="@android:color/transparent"
+        android:text="@string/compare" />
 
 </RelativeLayout>

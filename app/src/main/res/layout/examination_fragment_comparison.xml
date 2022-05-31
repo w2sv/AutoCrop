@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.autocrop.activities.examination.fragments.comparison.ComparisonImageView
+        android:id="@+id/comparison_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:contentDescription="@string/compare_crop_with_original_screenshot"
+
+        android:background="@color/neutral_background"/>
+
+    <TextView
+        android:id="@+id/status_tv"
+        android:visibility="visible"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="50dp"
+
+        android:text="@string/original"
+        android:textColor="@color/accentuated_tv"
+        android:textSize="16sp"/>
+
+</RelativeLayout>

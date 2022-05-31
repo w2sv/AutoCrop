@@ -37,7 +37,9 @@
     <string name="got_it">Got it</string>
     <string name="by">By:</string>
     <string name="w2sv">W2SV</string>
-    <string name="show_original">Show Original</string>
+    <string name="compare">Compare</string>
     <string name="crop_transition_name">CROP_TRANSITION</string>
+    <string name="compare_crop_with_original_screenshot">Compare crop with original screenshot</string>
+    <string name="original">Original</string>
 
 </resources>

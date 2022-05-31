@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
-import com.autocrop.activities.examination.fragments.comparison.ShowOriginalScreenshotFragment
+import com.autocrop.activities.examination.fragments.comparison.ComparisonFragment
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
@@ -79,8 +79,10 @@ class ExaminationActivity :
     override fun onBackPressed(){
         currentFragment().let {
             when (it) {
-                is ShowOriginalScreenshotFragment -> supportFragmentManager.popBackStack()
-                is AppTitleFragment -> Unit
+                is ComparisonFragment -> {
+                    it.prepareExitTransition()
+                    supportFragmentManager.popBackStack()
+                }
                 is SaveAllFragment -> {
                     snacky(
                         "Wait until crops have been saved",
@@ -88,7 +90,8 @@ class ExaminationActivity :
                     )
                         .show()
             }
-                else -> handleBackPress()
+                is ViewPagerFragment -> handleBackPress()
+                else -> Unit
             }
         }
     }

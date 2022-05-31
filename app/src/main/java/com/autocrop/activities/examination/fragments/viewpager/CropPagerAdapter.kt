@@ -12,9 +12,12 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCropProcedureDialog
+import com.autocrop.collections.CropBundle
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.Index
 import com.w2sv.autocrop.R
+
+fun CropBundle.transitionName(): String = hashCode().toString()
 
 class CropPagerAdapter(
     private val viewPager2: ViewPager2,
@@ -95,7 +98,7 @@ class CropPagerAdapter(
             val cropBundle = viewModel.dataSet.atCorrespondingPosition(position)
 
             setImageBitmap(cropBundle.crop)
-            ViewCompat.setTransitionName(this, cropBundle.hashCode().toString())
+            ViewCompat.setTransitionName(this, cropBundle.transitionName())
         }
     }
 

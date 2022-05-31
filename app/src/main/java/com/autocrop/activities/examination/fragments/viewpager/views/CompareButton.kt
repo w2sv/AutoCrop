@@ -1,32 +1,35 @@
 package com.autocrop.activities.examination.fragments.viewpager.views
 
 import android.content.Context
-import android.os.Bundle
 import android.util.AttributeSet
+import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.recyclerview.widget.RecyclerView
 import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.activities.examination.fragments.comparison.ShowOriginalScreenshotFragment
+import com.autocrop.activities.examination.fragments.comparison.ComparisonFragment
+import com.autocrop.activities.examination.fragments.viewpager.CropPagerAdapter
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.uicontroller.ViewModelRetriever
+import com.autocrop.uielements.recyclerView
 import com.autocrop.uielements.view.ActivityRetriever
 import com.autocrop.uielements.view.ContextBasedActivityRetriever
 import com.w2sv.autocrop.R
 
-class ShowOriginalScreenshotButton(context: Context, attributeSet: AttributeSet):
+class CompareButton(context: Context, attributeSet: AttributeSet):
     AppCompatButton(context, attributeSet),
-    ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context),
     ActivityRetriever<ExaminationActivity> by ContextBasedActivityRetriever(context) {
 
     init {
         setOnClickListener {
-            val cropImageView = activity.findViewById<ImageView>(R.id.image_view_examination_view_pager)
-
             typedActivity.replaceCurrentFragmentWith(
-                ShowOriginalScreenshotFragment(),
+                ComparisonFragment(),
                 addToBackStack = true
             ){ fragmentTransaction ->
+                val cropImageView = (typedActivity.currentFragment() as ViewPagerFragment).binding.viewPager.run {
+                    (recyclerView.findViewHolderForAdapterPosition(currentItem) as CropPagerAdapter.CropViewHolder).cropImageView
+                }
                 fragmentTransaction.addSharedElement(
                     cropImageView,
                     cropImageView.transitionName

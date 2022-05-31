@@ -2,7 +2,6 @@ package com.autocrop.activities.examination.fragments.viewpager
 
 import android.content.Context
 import android.os.Bundle
-import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
@@ -24,8 +23,6 @@ class ViewPagerFragment:
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        sharedElementEnterTransition = TransitionInflater.from(requireContext())
-            .inflateTransition(android.R.transition.move)
         sharedElementReturnTransition = TransitionInflater.from(requireContext())
             .inflateTransition(android.R.transition.move)
     }
@@ -37,7 +34,7 @@ class ViewPagerFragment:
         setLiveDataObservers()
 
         if (!viewModel.dataSet.containsSingleElement)
-            binding.pageIndicationLayout.show()
+            binding.pageIndicationBar.show()
     }
 
     private fun setLiveDataObservers(){
@@ -54,7 +51,7 @@ class ViewPagerFragment:
 
         viewModel.autoScroll.observe(viewLifecycleOwner){ autoScroll ->
             if (autoScroll){
-                binding.autoScrollingTextView.show()
+                binding.autoScrollingTv.show()
                 scroller = Scroller(viewModel.autoScroll).apply {
                     run(binding.viewPager, viewModel.maxAutoScrolls())
                 }
@@ -63,23 +60,27 @@ class ViewPagerFragment:
                 sharedViewModel.autoScrollingDoneListenerConsumable?.let { it() }
                 binding.viewPager.setPageTransformer(CubeOutPageTransformer())
 
-                if (scroller is Scroller){
+                if (scroller != null){
                     scroller!!.cancel()
                     crossFade(
-                        arrayOf(binding.autoScrollingTextView),
-                        arrayOf(binding.discardingStatisticsTv, binding.buttonToolbar)
+                        arrayOf(binding.autoScrollingTv),
+                        arrayOf(binding.discardingStatisticsTv, binding.buttonToolbar, binding.compareButton)
                     )
                 }
                 else{
-                    binding.discardingStatisticsTv.show()
-                    binding.buttonToolbar.show()
+                    with(binding){
+                        listOf(discardingStatisticsTv, buttonToolbar, compareButton)
+                            .forEach {
+                                it.show()
+                            }
+                    }
                 }
             }
         }
 
         viewModel.dataSet.observe(viewLifecycleOwner){ dataSet ->
             if (dataSet.size == 1)
-                binding.pageIndicationLayout.animate(Techniques.ZoomOut)
+                binding.pageIndicationBar.animate(Techniques.ZoomOut)
         }
     }
 
