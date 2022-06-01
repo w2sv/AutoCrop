@@ -1,56 +1,42 @@
 package com.autocrop.activities.cropping.fragments.cropping
 
-import android.content.ContentResolver
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import com.autocrop.collections.CropBundle
-import kotlin.math.roundToInt
 
-private typealias BorderPair = Pair<Int, Int>
-private typealias BorderPairs = List<BorderPair>
-private typealias BorderPairCandidates = MutableList<BorderPair>
+private typealias Borders = Pair<Int, Int>
 
-fun croppedImage(uri: Uri, contentResolver: ContentResolver): CropBundle?{
-    val image = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
-    val borderPairCandidates: BorderPairs = getCroppingBorderPairCandidates(image, image.height - 1)
-        .filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(image)
+fun cropped(screenshot: Bitmap, uri: Uri): CropBundle?{
+    val borderPairCandidates: List<Borders> = borderPairCandidates(screenshot)
+        .filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(screenshot)
         .also { if (it.isEmpty())
             return null
         }
 
-    // find cropping border pair of maximal crop height
-    val upperBoundMargin = 2
-    val (y: Int, cropHeight: Int) = borderPairCandidates.maxByOrNull {it.second - it.first}!!.let { maxSizeBorderPair ->
+    val (cropTopEdge: Int, cropHeight: Int) = maxHeightCropParameters(borderPairCandidates)
+
+    return CropBundle(uri, screenshot, cropTopEdge, cropHeight)
+}
+
+fun maxHeightCropParameters(borderCandidates: List<Borders>): Pair<Int, Int> =
+    borderCandidates.maxByOrNull {it.second - it.first}!!.let { maxSizeBorderPair ->
+        val upperBoundMargin = 2
+
         (maxSizeBorderPair.first + 1).let { y ->
             y to maxSizeBorderPair.second - y - upperBoundMargin
         }
     }
-    val discardedPercentage: Float = image.height.toFloat().run {
-        minus(cropHeight.toFloat()) / this
-    }
 
-    return CropBundle(
-        uri,
-        Bitmap.createBitmap(image,0, y, image.width, cropHeight),
-        (discardedPercentage * 100).roundToInt(),
-        (discardedPercentage * image.approximatedJpegFileSizeInKB).roundToInt(),
-        image.height - y - cropHeight,
-        y
-    )
-}
-
-private val Bitmap.approximatedJpegFileSizeInKB: Int
-    get() = allocationByteCount / 10 / 1024
-
-private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): BorderPairs {
+private fun borderPairCandidates(image: Bitmap): List<Borders> {
     val nPixelComparisonsPerRow = 5
+
+    val lastRowIndex = image.height - 1
 
     val sampleStep: Int = image.width / nPixelComparisonsPerRow
     fun searchRange(startIndex: Int): IntRange = (startIndex until lastRowIndex)
 
-    fun getLowerBoundIndex(queryStartInd: Int, candidates: BorderPairCandidates = mutableListOf()): BorderPairCandidates {
-        fun getUpperBoundIndex(lowerBoundIndex: Int, candidates: BorderPairCandidates): BorderPairCandidates {
+    fun getLowerBoundIndex(queryStartInd: Int, candidates: MutableList<Borders>): MutableList<Borders> {
+        fun getUpperBoundIndex(lowerBoundIndex: Int, candidates: MutableList<Borders>): MutableList<Borders> {
             var precedingRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(lowerBoundIndex, sampleStep)
 
             for (i in searchRange(lowerBoundIndex + 1)){
@@ -58,7 +44,7 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
 
                 if (precedingRowHasFluctuation && !currentRowHasFluctuation){
                     candidates.add(
-                        BorderPair(
+                        Borders(
                             lowerBoundIndex,
                             i
                         )
@@ -69,7 +55,7 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
             }
 
             candidates.add(
-                BorderPair(
+                Borders(
                     lowerBoundIndex,
                     lastRowIndex
                 )
@@ -90,7 +76,7 @@ private fun getCroppingBorderPairCandidates(image: Bitmap, lastRowIndex: Int): B
         return candidates
     }
 
-    return getLowerBoundIndex(0)
+    return getLowerBoundIndex(0, mutableListOf())
         .toList()
 }
 
@@ -102,7 +88,7 @@ private fun Bitmap.hasFluctuationThroughoutRow(y: Int, sampleStep: Int): Boolean
      getPixel(it, y) == getPixel(it - sampleStep, y)
 }
 
-private fun BorderPairs.filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(image: Bitmap): BorderPairs {
+private fun List<Borders>.filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(image: Bitmap): List<Borders> {
     val widthQueryOffsetPercentage = 0.4f
 
     val horizontalQueryOffset: Int = (image.width * widthQueryOffsetPercentage).toInt()

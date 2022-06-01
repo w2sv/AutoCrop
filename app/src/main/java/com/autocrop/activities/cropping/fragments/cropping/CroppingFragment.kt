@@ -13,7 +13,6 @@ import com.autocrop.activities.cropping.fragments.CroppingActivityFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
-import com.autocrop.collections.CropBundle
 import com.autocrop.utils.executeAsyncTask
 import com.autocrop.utils.logBeforehand
 import com.w2sv.autocrop.R
@@ -46,7 +45,10 @@ class CroppingFragment
         sharedViewModel.uris.subList(sharedViewModel.currentImageNumber.value!!, sharedViewModel.uris.size).forEach { uri ->
 
             // attempt to crop image, upon success add resulting CropBundle to sharedViewModel
-            croppedImage(uri, requireContext().contentResolver)?.let { cropBundle ->
+            cropped(
+                BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri)),
+                uri
+            )?.let { cropBundle ->
                 sharedViewModel.cropBundles.add(cropBundle)
             }
 

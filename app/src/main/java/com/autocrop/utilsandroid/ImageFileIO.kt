@@ -15,6 +15,12 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 
+/**
+ * In KB
+ */
+fun Bitmap.approximateJpegSize(): Int =
+    allocationByteCount / 10 / 1024
+
 object MimeTypes{
     const val IMAGE = "image/*"
     const val JPEG = "image/jpeg"

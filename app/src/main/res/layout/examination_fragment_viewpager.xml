@@ -143,6 +143,21 @@
         android:textColor="@color/light_gray"/>
 
     <com.autocrop.activities.examination.fragments.viewpager.views.CompareButton
+        android:id="@+id/cropping_button"
+        android:visibility="visible"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="85dp"
+        android:layout_marginEnd="20dp"
+        android:layout_alignParentEnd="true"
+
+        android:background="@android:color/transparent"
+        android:text="Crop Manually" />
+
+    <com.autocrop.activities.examination.fragments.viewpager.views.CompareButton
         android:id="@+id/compare_button"
         android:visibility="invisible"
 

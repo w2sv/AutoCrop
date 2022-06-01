@@ -1,6 +1,7 @@
 package com.autocrop.activities.examination
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.text.SpannableStringBuilder
 import androidx.core.text.bold
 import androidx.core.text.color
@@ -24,6 +25,18 @@ class ExaminationActivity :
     ApplicationActivity<ViewPagerFragment, ExaminationActivityViewModel>(
         ViewPagerFragment::class.java,
         ExaminationActivityViewModel::class.java) {
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        @Suppress("DEPRECATION")
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == ViewPagerFragment.MANUAL_CROP_REQUEST_CODE) {
+            (currentFragment() as ViewPagerFragment).handleConfiguredCrop(
+                configuredCrop = BitmapFactory.decodeStream(contentResolver.openInputStream(data?.data!!))
+            )
+        }
+    }
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
         ExaminationActivityViewModelFactory(

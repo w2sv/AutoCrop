@@ -1,7 +1,11 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
@@ -11,7 +15,10 @@ import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show
 import com.daimajia.androidanimations.library.Techniques
+import com.lyrebirdstudio.croppylib.Croppy
+import com.lyrebirdstudio.croppylib.main.CropRequest
 import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
+import java.io.InputStream
 
 class ViewPagerFragment:
     ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(ExaminationFragmentViewpagerBinding::class.java){
@@ -27,14 +34,33 @@ class ViewPagerFragment:
             .inflateTransition(android.R.transition.move)
     }
 
+    companion object{
+        const val MANUAL_CROP_REQUEST_CODE = 69
+    }
+
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         super.onViewCreatedCore(savedInstanceState)
 
         binding.viewPager.initialize()
         setLiveDataObservers()
 
+        binding.croppingButton?.setOnClickListener {
+            Croppy.start(
+                requireActivity(),
+                CropRequest.Auto(
+                    viewModel.dataSet.currentCropBundle.screenshotUri,
+                    requestCode = MANUAL_CROP_REQUEST_CODE
+                )
+            )
+        }
+
         if (!viewModel.dataSet.containsSingleElement)
             binding.pageIndicationBar.show()
+    }
+
+    fun handleConfiguredCrop(configuredCrop: Bitmap){
+        viewModel.dataSet.currentCropBundle.crop = configuredCrop
+        binding.viewPager.adapter!!.notifyItemChanged(viewModel.dataSet.position.value!!)
     }
 
     private fun setLiveDataObservers(){
