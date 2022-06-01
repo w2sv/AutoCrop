@@ -8,7 +8,7 @@ import kotlin.math.roundToInt
 /**
  * Encapsulation of entirety of data being associated with crop
  */
-data class CropBundle(val screenshotParameters: ScreenshotParameters, var crop: Crop) {
+data class CropBundle(val screenshot: ScreenshotParameters, var crop: Crop) {
 
     constructor(screenshotUri: Uri, screenshot: Bitmap, cropTopEdge: Int, cropHeight: Int)
         : this(
@@ -28,20 +28,20 @@ data class CropBundle(val screenshotParameters: ScreenshotParameters, var crop: 
         (_discardedPercentage() * 100).roundToInt()
 
     fun discardedFileSize(): Int =
-        (_discardedPercentage() * screenshotParameters.approximateJpegSize).roundToInt()
+        (_discardedPercentage() * screenshot.approximateJpegSize).roundToInt()
 
     private fun _discardedPercentage(): Float =
-        (screenshotParameters.height - crop.bitmap.height).toFloat() / screenshotParameters.height.toFloat()
+        (screenshot.height - crop.bitmap.height).toFloat() / screenshot.height.toFloat()
 
     /**
-     * @return [hashCode] of [screenshotParameters].uri, since per definition in and itself unambiguous
+     * @return [hashCode] of [screenshot].uri, since per definition in and itself unambiguous
      */
-    override fun hashCode(): Int = screenshotParameters.uri.hashCode()
+    override fun hashCode(): Int = screenshot.uri.hashCode()
     override fun equals(other: Any?): Boolean =
         when{
             (this === other) -> true
             (javaClass != other?.javaClass) -> false
-            else -> screenshotParameters.uri == (other as CropBundle).screenshotParameters.uri
+            else -> screenshot.uri == (other as CropBundle).screenshot.uri
         }
 }
 

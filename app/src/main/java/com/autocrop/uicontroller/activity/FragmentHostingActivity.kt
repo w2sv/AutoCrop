@@ -39,6 +39,10 @@ abstract class FragmentHostingActivity<RF: Fragment>(
     fun currentFragment(): Fragment? =
         supportFragmentManager.findFragmentById(layoutId)
 
+    @Suppress("UNCHECKED_CAST")
+    fun <T: Fragment> castCurrentFragment(): T =
+        currentFragment() as T
+
     private companion object{
         const val ROOT_FRAGMENT_TAG = "ROOT_FRAGMENT"
 

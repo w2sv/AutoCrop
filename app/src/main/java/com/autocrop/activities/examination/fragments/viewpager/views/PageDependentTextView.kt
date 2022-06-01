@@ -23,9 +23,9 @@ class DiscardingStatisticsTextView(context: Context, attr: AttributeSet):
         with(sharedViewModel.dataSet[position]) {
             text = SpannableStringBuilder()
                 .append(stringResource)
-                .bold { append(" ${discardedPercentage}%") }
+                .bold { append(" ${discardedPercentage()}%") }
                 .append("=")
-                .bold { append("${approximateDiscardedFileSize}kb") }
+                .bold { append("${discardedFileSize()}kb") }
         }
     }
 }

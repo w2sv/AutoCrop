@@ -27,18 +27,18 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     ViewModelRetriever<ComparisonViewModel> by ComparisonViewModelRetriever(context) {
 
     private val cropBundle: CropBundle = ViewModelProvider(activity as ViewModelStoreOwner)[ViewPagerViewModel::class.java].dataSet.currentCropBundle
-    private val screenshot: Bitmap = BitmapFactory.decodeStream(context.contentResolver.openInputStream(cropBundle.screenshotUri))
+    private val screenshot: Bitmap = BitmapFactory.decodeStream(context.contentResolver.openInputStream(cropBundle.screenshot.uri))
 
     init {
         ViewCompat.setTransitionName(this, cropBundle.transitionName())
 
         setOnClickListener {
             val insetCrop = InsetDrawable(
-                BitmapDrawable(resources, cropBundle.crop),
+                BitmapDrawable(resources, cropBundle.crop.bitmap),
                 0,
-                cropBundle.topOffset,
+                cropBundle.crop.topOffset,
                 0,
-                cropBundle.bottomOffset
+                cropBundle.crop.bottomOffset
             )
 
             if (sharedViewModel.displayingScreenshot.value!!)
@@ -64,13 +64,13 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
 
     private val marginalizedCropLayoutParams: RelativeLayout.LayoutParams by lazy {
         (layoutParams as RelativeLayout.LayoutParams).apply {
-            setMargins(0, cropBundle.topOffset, 0, cropBundle.bottomOffset)
+            setMargins(0, cropBundle.crop.topOffset, 0, cropBundle.crop.bottomOffset)
         }
     }
 
     private fun showMarginalizedCrop(){
         layoutParams = marginalizedCropLayoutParams
-        setImageBitmap(cropBundle.crop)
+        setImageBitmap(cropBundle.crop.bitmap)
     }
 
     private fun showScreenshot(){

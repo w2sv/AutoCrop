@@ -1,15 +1,13 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
+import com.autocrop.collections.Crop
 import com.autocrop.uielements.CubeOutPageTransformer
 import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
@@ -18,7 +16,6 @@ import com.daimajia.androidanimations.library.Techniques
 import com.lyrebirdstudio.croppylib.Croppy
 import com.lyrebirdstudio.croppylib.main.CropRequest
 import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
-import java.io.InputStream
 
 class ViewPagerFragment:
     ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(ExaminationFragmentViewpagerBinding::class.java){
@@ -48,7 +45,7 @@ class ViewPagerFragment:
             Croppy.start(
                 requireActivity(),
                 CropRequest.Auto(
-                    viewModel.dataSet.currentCropBundle.screenshotUri,
+                    viewModel.dataSet.currentCropBundle.screenshot.uri,
                     requestCode = MANUAL_CROP_REQUEST_CODE
                 )
             )
@@ -59,7 +56,7 @@ class ViewPagerFragment:
     }
 
     fun handleConfiguredCrop(configuredCrop: Bitmap){
-        viewModel.dataSet.currentCropBundle.crop = configuredCrop
+        viewModel.dataSet.currentCropBundle.crop = Crop(configuredCrop, -1, -1)  // TODO
         binding.viewPager.adapter!!.notifyItemChanged(viewModel.dataSet.position.value!!)
     }
 

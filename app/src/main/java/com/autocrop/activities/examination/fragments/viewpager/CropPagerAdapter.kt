@@ -61,7 +61,7 @@ class CropPagerAdapter(
         holder.cropImageView.apply{
             val cropBundle = viewModel.dataSet.atCorrespondingPosition(position)
 
-            setImageBitmap(cropBundle.crop)
+            setImageBitmap(cropBundle.crop.bitmap)
             ViewCompat.setTransitionName(this, cropBundle.transitionName())
         }
     }

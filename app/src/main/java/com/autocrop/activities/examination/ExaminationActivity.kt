@@ -32,7 +32,7 @@ class ExaminationActivity :
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == ViewPagerFragment.MANUAL_CROP_REQUEST_CODE) {
-            (currentFragment() as ViewPagerFragment).handleConfiguredCrop(
+            castCurrentFragment<ViewPagerFragment>().handleConfiguredCrop(
                 configuredCrop = BitmapFactory.decodeStream(contentResolver.openInputStream(data?.data!!))
             )
         }
