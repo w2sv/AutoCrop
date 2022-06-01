@@ -6,8 +6,11 @@ import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatButton
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.fragments.comparison.ComparisonFragment
+import com.autocrop.activities.examination.fragments.viewpager.CropPagerAdapter
+import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
+import com.autocrop.uielements.recyclerView
 import com.w2sv.autocrop.R
 
 class CompareButton(context: Context, attributeSet: AttributeSet):
@@ -20,7 +23,10 @@ class CompareButton(context: Context, attributeSet: AttributeSet):
                 ComparisonFragment(),
                 addToBackStack = true
             ){ fragmentTransaction ->
-                val cropImageView = findViewById<ImageView>(R.id.crop_iv)
+                val cropImageView = (typedActivity.currentFragment() as ViewPagerFragment).binding.viewPager.run {
+                    (recyclerView.findViewHolderForAdapterPosition(currentItem) as CropPagerAdapter.CropViewHolder).cropImageView
+                }
+
                 fragmentTransaction.addSharedElement(
                     cropImageView,
                     cropImageView.transitionName

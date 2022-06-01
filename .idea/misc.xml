@@ -67,6 +67,7 @@
         <entry key="app/src/main/res/layout/cropping_fragment_failed.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/cropping_fragment_unsuccessful.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/examination.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/examination_crop_view_holder.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/examination_fragment_apptitle.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/examination_fragment_comparison.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/examination_fragment_deletionquery.xml" value="0.21547669944420692" />

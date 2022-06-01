@@ -2,10 +2,7 @@ package com.autocrop.activities.examination.fragments.comparison
 
 import android.content.Context
 import android.os.Bundle
-import android.view.View
 import android.widget.RelativeLayout
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
@@ -41,7 +38,7 @@ class ComparisonFragment
         val viewModel = ViewModelProvider(requireActivity())[ComparisonViewModel::class.java]
 
         viewModel.displayingScreenshot.observe(viewLifecycleOwner){
-            binding.statusTv.text = resources.getString(if (it) R.string.original else R.string.crop)
+            binding.statusTv.text = resources.getString(if (it) R.string.original else R.string.cropped)
         }
     }
 
