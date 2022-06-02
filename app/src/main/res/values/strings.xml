@@ -42,5 +42,7 @@
     <string name="compare_crop_with_original_screenshot">Compare crop with original screenshot</string>
     <string name="original">Original</string>
     <string name="cropped">Cropped</string>
+    <string name="inflate_options_popup_menu">Inflate options popup menu</string>
+    <string name="adjust_crop">Adjust Crop</string>
 
 </resources>

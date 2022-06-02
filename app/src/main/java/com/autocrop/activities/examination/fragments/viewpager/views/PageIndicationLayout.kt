@@ -9,6 +9,7 @@ import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
+import com.autocrop.uielements.view.show
 import com.w2sv.autocrop.R
 import kotlin.math.roundToInt
 
@@ -16,11 +17,11 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
     AppCompatSeekBar(context, attr),
     ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context) {
 
-    /**
-     * Disable manual dragging
-     */
     init {
-        isEnabled = false
+        isEnabled = false  // disable manual dragging
+
+        if (!sharedViewModel.dataSet.containsSingleElement)
+            show()
     }
 
     fun update(dataSetPosition: Int, scrolledRight: Boolean) {

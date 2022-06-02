@@ -81,6 +81,8 @@
         <entry key="app/src/main/res/layout/slide_item_container_examination_activity.xml" value="0.1276595744680851" />
         <entry key="app/src/main/res/layout/toolbar_examination_activity.xml" value="0.213768115942029" />
         <entry key="app/src/main/res/menu/activity_main.xml" value="0.2625" />
+        <entry key="app/src/main/res/menu/fragment_flowfield.xml" value="0.21547669944420692" />
+        <entry key="app/src/main/res/menu/fragment_viewpager.xml" value="0.21462163317657118" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/brudineletten.xml" value="0.13" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/brudineletten_round.xml" value="0.1815" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1815" />

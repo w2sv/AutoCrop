@@ -13,14 +13,12 @@ import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show
 import com.daimajia.androidanimations.library.Techniques
-import com.lyrebirdstudio.croppylib.Croppy
-import com.lyrebirdstudio.croppylib.main.CropRequest
 import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
 
-class ViewPagerFragment:
-    ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(ExaminationFragmentViewpagerBinding::class.java){
+class ViewPagerFragment :
+    ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(ExaminationFragmentViewpagerBinding::class.java) {
 
-    private val viewModel: ViewPagerViewModel by lazy{
+    private val viewModel: ViewPagerViewModel by lazy {
         ViewModelProvider(requireActivity())[ViewPagerViewModel::class.java]
     }
 
@@ -31,40 +29,23 @@ class ViewPagerFragment:
             .inflateTransition(android.R.transition.move)
     }
 
-    companion object{
-        const val MANUAL_CROP_REQUEST_CODE = 69
-    }
-
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         super.onViewCreatedCore(savedInstanceState)
 
         binding.viewPager.initialize()
         setLiveDataObservers()
-
-        binding.croppingButton?.setOnClickListener {
-            Croppy.start(
-                requireActivity(),
-                CropRequest.Auto(
-                    viewModel.dataSet.currentCropBundle.screenshot.uri,
-                    requestCode = MANUAL_CROP_REQUEST_CODE
-                )
-            )
-        }
-
-        if (!viewModel.dataSet.containsSingleElement)
-            binding.pageIndicationBar.show()
     }
 
-    fun handleConfiguredCrop(configuredCrop: Bitmap){
+    fun handleConfiguredCrop(configuredCrop: Bitmap) {
         viewModel.dataSet.currentCropBundle.crop = Crop(configuredCrop, -1, -1)  // TODO
         binding.viewPager.adapter!!.notifyItemChanged(viewModel.dataSet.position.value!!)
     }
 
-    private fun setLiveDataObservers(){
-        viewModel.dataSet.position.observe(viewLifecycleOwner){ position ->
+    private fun setLiveDataObservers() {
+        viewModel.dataSet.position.observe(viewLifecycleOwner) { position ->
             binding.discardingStatisticsTv.updateText(position)
 
-            viewModel.dataSet.pageIndex(position).let{ pageIndex ->
+            viewModel.dataSet.pageIndex(position).let { pageIndex ->
                 binding.pageIndicationTv.updateText(pageIndex)
                 binding.pageIndicationBar.update(pageIndex, viewModel.scrolledRight)
             }
@@ -72,27 +53,29 @@ class ViewPagerFragment:
 
         var scroller: Scroller? = null
 
-        viewModel.autoScroll.observe(viewLifecycleOwner){ autoScroll ->
-            if (autoScroll){
+        viewModel.autoScroll.observe(viewLifecycleOwner) { autoScroll ->
+            if (autoScroll) {
                 binding.autoScrollingTv.show()
                 scroller = Scroller(viewModel.autoScroll).apply {
                     run(binding.viewPager, viewModel.maxAutoScrolls())
                 }
-            }
-            else{
+            } else {
                 sharedViewModel.autoScrollingDoneListenerConsumable?.let { it() }
                 binding.viewPager.setPageTransformer(CubeOutPageTransformer())
 
-                if (scroller != null){
+                if (scroller != null) {
                     scroller!!.cancel()
                     crossFade(
                         arrayOf(binding.autoScrollingTv),
-                        arrayOf(binding.discardingStatisticsTv, binding.buttonToolbar, binding.compareButton)
+                        arrayOf(
+                            binding.discardingStatisticsTv,
+                            binding.buttonToolbar,
+                            binding.menuInflationButton
+                        )
                     )
-                }
-                else{
-                    with(binding){
-                        listOf(discardingStatisticsTv, buttonToolbar, compareButton)
+                } else {
+                    with(binding) {
+                        listOf(discardingStatisticsTv, buttonToolbar, binding.menuInflationButton)
                             .forEach {
                                 it.show()
                             }
@@ -101,13 +84,13 @@ class ViewPagerFragment:
             }
         }
 
-        viewModel.dataSet.observe(viewLifecycleOwner){ dataSet ->
+        viewModel.dataSet.observe(viewLifecycleOwner) { dataSet ->
             if (dataSet.size == 1)
                 binding.pageIndicationBar.animate(Techniques.ZoomOut)
         }
     }
 
-    private fun ViewPager2.initialize(){
+    private fun ViewPager2.initialize() {
         adapter = CropPagerAdapter(
             this,
             viewModel,

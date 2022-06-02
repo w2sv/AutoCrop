@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
+
+    <!--  Examination  -->
+
+    <item
+        android:id="@+id/menu_item_compare"
+        android:title="@string/compare"/>
+
+    <item
+        android:id="@+id/menu_item_adjust_crop"
+        android:title="@string/adjust_crop"/>
+
+</menu>

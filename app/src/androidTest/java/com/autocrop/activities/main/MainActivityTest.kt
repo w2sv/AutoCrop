@@ -114,7 +114,7 @@ internal class MainActivityTest {
 
             @BeforeEach
             fun inflateMenu(){
-                if (!viewInteractionById(R.menu.activity_main).isDisplayed())
+                if (!viewInteractionById(R.menu.fragment_flowfield).isDisplayed())
                     retryFlakyAction {
                         inflationButton.perform(ViewActions.click())
                     }

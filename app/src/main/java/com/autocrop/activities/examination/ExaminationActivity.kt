@@ -12,6 +12,7 @@ import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.comparison.ComparisonFragment
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
+import com.autocrop.activities.examination.fragments.viewpager.views.MenuInflationButton.Companion.MANUAL_CROP_REQUEST_CODE
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.collections.ImageFileIOSynopsis
@@ -31,10 +32,12 @@ class ExaminationActivity :
         @Suppress("DEPRECATION")
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == ViewPagerFragment.MANUAL_CROP_REQUEST_CODE) {
-            castCurrentFragment<ViewPagerFragment>().handleConfiguredCrop(
-                configuredCrop = BitmapFactory.decodeStream(contentResolver.openInputStream(data?.data!!))
-            )
+        if (resultCode == RESULT_OK && requestCode == MANUAL_CROP_REQUEST_CODE) {
+            data?.data?.let { localUri ->
+                castCurrentFragment<ViewPagerFragment>().handleConfiguredCrop(
+                    configuredCrop = BitmapFactory.decodeStream(contentResolver.openInputStream(localUri))
+                )
+            }
         }
     }
 
