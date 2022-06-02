@@ -2,6 +2,7 @@ package com.autocrop.activities.examination.fragments.viewpager
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Rect
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.transition.TransitionInflater
@@ -36,8 +37,8 @@ class ViewPagerFragment :
         setLiveDataObservers()
     }
 
-    fun handleConfiguredCrop(configuredCrop: Bitmap) {
-        viewModel.dataSet.currentCropBundle.crop = Crop(configuredCrop, -1, -1)  // TODO
+    fun handleAdjustedCrop(adjustedCrop: Bitmap, adjustedCropRect: Rect) {
+        viewModel.dataSet.currentCropBundle.crop = Crop(adjustedCrop, adjustedCropRect)
 
         with(binding.viewPager.adapter!!){
             notifyItemChanged(binding.viewPager.currentItem)

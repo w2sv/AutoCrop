@@ -113,7 +113,7 @@ dependencies {
     implementation 'com.daimajia.easing:library:2.4@aar'
 
     // Manual Cropping
-    implementation 'com.github.lyrebirdstudio:Croppy:0.2'
+    implementation 'com.github.w2sv:Croppy:0.2.6'
 
     // ----------TESTS------------
 

@@ -16,10 +16,13 @@ import com.autocrop.uielements.ExtendedPopupMenu
 import com.autocrop.uielements.recyclerView
 import com.lyrebirdstudio.croppylib.Croppy
 import com.lyrebirdstudio.croppylib.main.CropRequest
+import com.lyrebirdstudio.croppylib.main.CroppyTheme
+
 import com.w2sv.autocrop.R
 
 class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
-    AbstractMenuInflationButton(context, attributeSet) {
+    AbstractMenuInflationButton(context, attributeSet),
+    ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context){
 
     companion object {
         const val MANUAL_CROP_REQUEST_CODE = 69
@@ -45,7 +48,9 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
                     activity,
                     CropRequest.Auto(
                         sharedViewModel.dataSet.currentCropBundle.screenshot.uri,
-                        requestCode = MANUAL_CROP_REQUEST_CODE
+                        requestCode = MANUAL_CROP_REQUEST_CODE,
+                        initialCropRect = sharedViewModel.dataSet.currentCropBundle.crop.rect,
+                        croppyTheme = CroppyTheme(R.color.magenta_bright)
                     )
                 )
             }

@@ -1,6 +1,7 @@
 package com.autocrop.activities.cropping.fragments.cropping
 
 import android.graphics.Bitmap
+import android.graphics.Rect
 import android.net.Uri
 import com.autocrop.collections.CropBundle
 
@@ -13,18 +14,14 @@ fun cropped(screenshot: Bitmap, uri: Uri): CropBundle?{
             return null
         }
 
-    val (cropTopEdge: Int, cropHeight: Int) = maxHeightCropParameters(borderPairCandidates)
+    val (topEdge: Int, bottomEdge: Int) = maxHeightCropParameters(borderPairCandidates)
 
-    return CropBundle(uri, screenshot, cropTopEdge, cropHeight)
+    return CropBundle(uri, screenshot, Rect(0, topEdge, screenshot.width, bottomEdge))
 }
 
 fun maxHeightCropParameters(borderCandidates: List<Borders>): Pair<Int, Int> =
     borderCandidates.maxByOrNull {it.second - it.first}!!.let { maxSizeBorderPair ->
-        val upperBoundMargin = 2
-
-        (maxSizeBorderPair.first + 1).let { y ->
-            y to maxSizeBorderPair.second - y - upperBoundMargin
-        }
+        (maxSizeBorderPair.first + 1) to maxSizeBorderPair.second - 2
     }
 
 private fun borderPairCandidates(image: Bitmap): List<Borders> {

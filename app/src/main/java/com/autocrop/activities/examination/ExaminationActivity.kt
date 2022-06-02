@@ -20,6 +20,7 @@ import com.autocrop.global.CropSavingPreferences
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.numericallyInflected
 import com.autocrop.utilsandroid.*
+import com.lyrebirdstudio.croppylib.main.CroppyActivity
 import com.w2sv.autocrop.R
 
 class ExaminationActivity :
@@ -33,10 +34,13 @@ class ExaminationActivity :
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RESULT_OK && requestCode == MANUAL_CROP_REQUEST_CODE) {
-            data?.data?.let { localUri ->
-                castCurrentFragment<ViewPagerFragment>().handleConfiguredCrop(
-                    configuredCrop = BitmapFactory.decodeStream(contentResolver.openInputStream(localUri))
-                )
+            data?.let { intent ->
+                intent.data?.let { localUri ->
+                    castCurrentFragment<ViewPagerFragment>().handleAdjustedCrop(
+                        adjustedCrop = BitmapFactory.decodeStream(contentResolver.openInputStream(localUri)),
+                        adjustedCropRect = CroppyActivity.getCropRect(intent)
+                    )
+                }
             }
         }
     }

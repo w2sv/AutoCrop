@@ -1,6 +1,7 @@
 package com.autocrop.collections
 
 import android.graphics.Bitmap
+import android.graphics.Rect
 import android.net.Uri
 import com.autocrop.utilsandroid.approximateJpegSize
 import kotlin.math.roundToInt
@@ -10,7 +11,7 @@ import kotlin.math.roundToInt
  */
 data class CropBundle(val screenshot: ScreenshotParameters, var crop: Crop) {
 
-    constructor(screenshotUri: Uri, screenshot: Bitmap, cropTopEdge: Int, cropHeight: Int)
+    constructor(screenshotUri: Uri, screenshot: Bitmap, cropRect: Rect)
         : this(
             ScreenshotParameters(
                 screenshotUri,
@@ -18,9 +19,8 @@ data class CropBundle(val screenshot: ScreenshotParameters, var crop: Crop) {
                 screenshot.approximateJpegSize()
             ),
             Crop(
-                Bitmap.createBitmap(screenshot,0, cropTopEdge, screenshot.width, cropHeight),
-                screenshot.height - cropTopEdge - cropHeight,
-                cropTopEdge
+                Bitmap.createBitmap(screenshot,0, cropRect.top, screenshot.width, cropRect.height()),
+                cropRect
             )
         )
 
@@ -29,6 +29,9 @@ data class CropBundle(val screenshot: ScreenshotParameters, var crop: Crop) {
 
     fun discardedFileSize(): Int =
         (_discardedPercentage() * screenshot.approximateJpegSize).roundToInt()
+
+    fun bottomOffset(): Int =
+        screenshot.height - crop.rect.bottom
 
     private fun _discardedPercentage(): Float =
         (screenshot.height - crop.bitmap.height).toFloat() / screenshot.height.toFloat()
@@ -42,6 +45,5 @@ data class ScreenshotParameters(
 
 data class Crop(
     val bitmap: Bitmap,
-    val bottomOffset: Int,
-    val topOffset: Int
+    val rect: Rect
 )

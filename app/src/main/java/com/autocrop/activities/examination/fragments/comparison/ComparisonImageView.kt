@@ -19,7 +19,7 @@ import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.utilsandroid.mutableLiveData
-import com.autocrop.utilsandroid.toggle
+import com.autocrop.utilsandroid.toggleValue
 
 class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet),
@@ -36,9 +36,9 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
             val insetCrop = InsetDrawable(
                 BitmapDrawable(resources, cropBundle.crop.bitmap),
                 0,
-                cropBundle.crop.topOffset,
+                cropBundle.crop.rect.top,
                 0,
-                cropBundle.crop.bottomOffset
+                cropBundle.bottomOffset()
             )
 
             if (sharedViewModel.displayingScreenshot.value!!)
@@ -46,7 +46,7 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
             else
                 showScreenshot()
 
-            sharedViewModel.displayingScreenshot.toggle()
+            sharedViewModel.displayingScreenshot.toggleValue()
         }
     }
 
@@ -64,7 +64,12 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
 
     private val marginalizedCropLayoutParams: RelativeLayout.LayoutParams by lazy {
         (layoutParams as RelativeLayout.LayoutParams).apply {
-            setMargins(0, cropBundle.crop.topOffset, 0, cropBundle.crop.bottomOffset)
+            setMargins(
+                0,
+                cropBundle.crop.rect.top,
+                0,
+                cropBundle.bottomOffset()
+            )
         }
     }
 
