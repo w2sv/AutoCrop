@@ -38,7 +38,14 @@ class ViewPagerFragment :
 
     fun handleConfiguredCrop(configuredCrop: Bitmap) {
         viewModel.dataSet.currentCropBundle.crop = Crop(configuredCrop, -1, -1)  // TODO
-        binding.viewPager.adapter!!.notifyItemChanged(viewModel.dataSet.position.value!!)
+
+        with(binding.viewPager.adapter!!){
+            notifyItemChanged(binding.viewPager.currentItem)
+            if (viewModel.dataSet.size == 2){
+                notifyItemChanged(binding.viewPager.currentItem - 2)
+                notifyItemChanged(binding.viewPager.currentItem + 2)
+            }
+        }
     }
 
     private fun setLiveDataObservers() {

@@ -32,17 +32,6 @@ data class CropBundle(val screenshot: ScreenshotParameters, var crop: Crop) {
 
     private fun _discardedPercentage(): Float =
         (screenshot.height - crop.bitmap.height).toFloat() / screenshot.height.toFloat()
-
-    /**
-     * @return [hashCode] of [screenshot].uri, since per definition in and itself unambiguous
-     */
-    override fun hashCode(): Int = screenshot.uri.hashCode()
-    override fun equals(other: Any?): Boolean =
-        when{
-            (this === other) -> true
-            (javaClass != other?.javaClass) -> false
-            else -> screenshot.uri == (other as CropBundle).screenshot.uri
-        }
 }
 
 data class ScreenshotParameters(
