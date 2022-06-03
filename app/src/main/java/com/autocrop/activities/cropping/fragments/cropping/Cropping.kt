@@ -2,29 +2,29 @@ package com.autocrop.activities.cropping.fragments.cropping
 
 import android.graphics.Bitmap
 import android.graphics.Rect
-import android.net.Uri
-import com.autocrop.collections.CropBundle
 
-private typealias Borders = Pair<Int, Int>
+private typealias Edges = Pair<Int, Int>
+val Edges.top: Int get() = first
+val Edges.bottom: Int get() = second
 
-fun cropped(screenshot: Bitmap, uri: Uri): CropBundle?{
-    val borderPairCandidates: List<Borders> = borderPairCandidates(screenshot)
+fun cropRect(screenshot: Bitmap): Rect?{
+    val borderPairCandidates: List<Edges> = borderPairCandidates(screenshot)
         .filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(screenshot)
         .also { if (it.isEmpty())
             return null
         }
 
-    val (topEdge: Int, bottomEdge: Int) = maxHeightCropParameters(borderPairCandidates)
+    val (topEdge: Int, bottomEdge: Int) = maxHeightCropEdges(borderPairCandidates)
 
-    return CropBundle(uri, screenshot, Rect(0, topEdge, screenshot.width, bottomEdge))
+    return Rect(0, topEdge, screenshot.width, bottomEdge)
 }
 
-fun maxHeightCropParameters(borderCandidates: List<Borders>): Pair<Int, Int> =
-    borderCandidates.maxByOrNull {it.second - it.first}!!.let { maxSizeBorderPair ->
-        (maxSizeBorderPair.first + 1) to maxSizeBorderPair.second - 2
+fun maxHeightCropEdges(borderCandidates: List<Edges>): Edges =
+    borderCandidates.maxByOrNull {it.bottom - it.top}!!.let { maxSizeBorderPair ->
+        (maxSizeBorderPair.top + 1) to maxSizeBorderPair.bottom - 2
     }
 
-private fun borderPairCandidates(image: Bitmap): List<Borders> {
+private fun borderPairCandidates(image: Bitmap): List<Edges> {
     val nPixelComparisonsPerRow = 5
 
     val lastRowIndex = image.height - 1
@@ -32,31 +32,21 @@ private fun borderPairCandidates(image: Bitmap): List<Borders> {
     val sampleStep: Int = image.width / nPixelComparisonsPerRow
     fun searchRange(startIndex: Int): IntRange = (startIndex until lastRowIndex)
 
-    fun getLowerBoundIndex(queryStartInd: Int, candidates: MutableList<Borders>): MutableList<Borders> {
-        fun getUpperBoundIndex(lowerBoundIndex: Int, candidates: MutableList<Borders>): MutableList<Borders> {
+    fun getTopEdge(queryStartInd: Int, candidates: MutableList<Edges>): MutableList<Edges> {
+        fun getBottomEdge(lowerBoundIndex: Int, candidates: MutableList<Edges>): MutableList<Edges> {
             var precedingRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(lowerBoundIndex, sampleStep)
 
             for (i in searchRange(lowerBoundIndex + 1)){
                 val currentRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(i, sampleStep)
 
                 if (precedingRowHasFluctuation && !currentRowHasFluctuation){
-                    candidates.add(
-                        Borders(
-                            lowerBoundIndex,
-                            i
-                        )
-                    )
-                    return getLowerBoundIndex(i + 1, candidates)
+                    candidates.add(lowerBoundIndex to i)
+                    return getTopEdge(i + 1, candidates)
                 }
                 precedingRowHasFluctuation = currentRowHasFluctuation
             }
 
-            candidates.add(
-                Borders(
-                    lowerBoundIndex,
-                    lastRowIndex
-                )
-            )
+            candidates.add(lowerBoundIndex to lastRowIndex)
             return candidates
         }
 
@@ -66,14 +56,14 @@ private fun borderPairCandidates(image: Bitmap): List<Borders> {
             val currentRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(i + 1, sampleStep)
 
             if (!precedingRowHasFluctuation && currentRowHasFluctuation)
-                return getUpperBoundIndex(i + 1, candidates)
+                return getBottomEdge(i + 1, candidates)
             precedingRowHasFluctuation = currentRowHasFluctuation
         }
 
         return candidates
     }
 
-    return getLowerBoundIndex(0, mutableListOf())
+    return getTopEdge(0, mutableListOf())
         .toList()
 }
 
@@ -85,12 +75,11 @@ private fun Bitmap.hasFluctuationThroughoutRow(y: Int, sampleStep: Int): Boolean
      getPixel(it, y) == getPixel(it - sampleStep, y)
 }
 
-private fun List<Borders>.filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(image: Bitmap): List<Borders> {
+private fun List<Edges>.filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(image: Bitmap): List<Edges> {
     val widthQueryOffsetPercentage = 0.4f
-
     val horizontalQueryOffset: Int = (image.width * widthQueryOffsetPercentage).toInt()
-    return this
-        .filter{
+
+    return filter{
                 borderPair -> (horizontalQueryOffset..image.width-horizontalQueryOffset)
             .all{
                 image.hasFluctuationThroughoutColumn(it, borderPair.first, borderPair.second - borderPair.first)

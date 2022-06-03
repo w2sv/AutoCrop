@@ -37,8 +37,8 @@ class ViewPagerFragment :
         setLiveDataObservers()
     }
 
-    fun handleAdjustedCrop(adjustedCrop: Bitmap, adjustedCropRect: Rect) {
-        viewModel.dataSet.currentCropBundle.crop = Crop(adjustedCrop, adjustedCropRect)
+    fun handleAdjustedCrop(adjustedCrop: Crop) {
+        viewModel.dataSet.currentCropBundle.setAdjustedCrop(adjustedCrop)
 
         with(binding.viewPager.adapter!!){
             notifyItemChanged(binding.viewPager.currentItem)
@@ -68,7 +68,7 @@ class ViewPagerFragment :
                     run(binding.viewPager, viewModel.maxAutoScrolls())
                 }
             } else {
-                sharedViewModel.autoScrollingDoneListenerConsumable?.let { it() }
+                sharedViewModel.autoScrollingDoneListenerConsumable?.invoke()
                 binding.viewPager.setPageTransformer(CubeOutPageTransformer())
 
                 if (scroller != null) {

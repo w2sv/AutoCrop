@@ -5,36 +5,53 @@ import android.graphics.Rect
 import android.net.Uri
 import com.autocrop.utilsandroid.approximateJpegSize
 import kotlin.math.roundToInt
+import kotlin.properties.Delegates
 
 /**
  * Encapsulation of entirety of data being associated with crop
  */
 data class CropBundle(val screenshot: ScreenshotParameters, var crop: Crop) {
 
+    init {
+        calculateCompositeParameters()
+    }
+
     constructor(screenshotUri: Uri, screenshot: Bitmap, cropRect: Rect)
-        : this(
-            ScreenshotParameters(
-                screenshotUri,
-                screenshot.height,
-                screenshot.approximateJpegSize()
-            ),
-            Crop(
-                Bitmap.createBitmap(screenshot,0, cropRect.top, screenshot.width, cropRect.height()),
-                cropRect
-            )
+            : this(
+        ScreenshotParameters(
+            screenshotUri,
+            screenshot.height,
+            screenshot.approximateJpegSize()
+        ),
+        Crop(
+            Bitmap.createBitmap(screenshot,0, cropRect.top, screenshot.width, cropRect.height()),
+            cropRect
         )
+    )
 
-    fun discardedPercentage(): Int =
-        (_discardedPercentage() * 100).roundToInt()
+    val discardedPercentage: Int get() = _discardedPercentage
 
-    fun discardedFileSize(): Int =
-        (_discardedPercentage() * screenshot.approximateJpegSize).roundToInt()
+    private var _discardedPercentage: Int by Delegates.notNull()
+    val discardedFileSize: Int get() = _discardedFileSize
 
-    fun bottomOffset(): Int =
-        screenshot.height - crop.rect.bottom
+    private var _discardedFileSize: Int by Delegates.notNull()
+    val bottomOffset: Int get() = _bottomOffset
 
-    private fun _discardedPercentage(): Float =
-        (screenshot.height - crop.bitmap.height).toFloat() / screenshot.height.toFloat()
+    private var _bottomOffset: Int by Delegates.notNull()
+
+    private fun calculateCompositeParameters(){
+        ((screenshot.height - crop.bitmap.height).toFloat() / screenshot.height.toFloat()).let { discardedPercentageF ->
+            _discardedPercentage = (discardedPercentageF * 100).roundToInt()
+            _discardedFileSize = (discardedPercentageF * screenshot.approximateJpegSize).roundToInt()
+        }
+
+        _bottomOffset = screenshot.height - crop.rect.bottom
+    }
+
+    fun setAdjustedCrop(adjustedCrop: Crop){
+        crop = adjustedCrop
+        calculateCompositeParameters()
+    }
 }
 
 data class ScreenshotParameters(

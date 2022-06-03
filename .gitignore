@@ -84,3 +84,4 @@ lint/reports/
 
 # Android Profiling
 *.hprof
+/croppylib/

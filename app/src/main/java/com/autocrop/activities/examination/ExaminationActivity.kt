@@ -15,6 +15,7 @@ import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.Scre
 import com.autocrop.activities.examination.fragments.viewpager.views.MenuInflationButton.Companion.MANUAL_CROP_REQUEST_CODE
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.main.MainActivity
+import com.autocrop.collections.Crop
 import com.autocrop.collections.ImageFileIOSynopsis
 import com.autocrop.global.CropSavingPreferences
 import com.autocrop.uicontroller.activity.ApplicationActivity
@@ -37,8 +38,10 @@ class ExaminationActivity :
             data?.let { intent ->
                 intent.data?.let { localUri ->
                     castCurrentFragment<ViewPagerFragment>().handleAdjustedCrop(
-                        adjustedCrop = BitmapFactory.decodeStream(contentResolver.openInputStream(localUri)),
-                        adjustedCropRect = CroppyActivity.getCropRect(intent)
+                        Crop(
+                            bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(localUri)),
+                            rect = CroppyActivity.getCropRect(intent)
+                        )
                     )
                 }
             }

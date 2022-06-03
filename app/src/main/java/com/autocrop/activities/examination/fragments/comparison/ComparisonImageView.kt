@@ -38,7 +38,7 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
                 0,
                 cropBundle.crop.rect.top,
                 0,
-                cropBundle.bottomOffset()
+                cropBundle.bottomOffset
             )
 
             if (sharedViewModel.displayingScreenshot.value!!)
@@ -68,7 +68,7 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
                 0,
                 cropBundle.crop.rect.top,
                 0,
-                cropBundle.bottomOffset()
+                cropBundle.bottomOffset
             )
         }
     }

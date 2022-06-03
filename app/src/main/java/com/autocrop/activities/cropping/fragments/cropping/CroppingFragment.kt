@@ -13,6 +13,7 @@ import com.autocrop.activities.cropping.fragments.CroppingActivityFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
+import com.autocrop.collections.CropBundle
 import com.autocrop.utils.executeAsyncTask
 import com.autocrop.utils.logBeforehand
 import com.w2sv.autocrop.R
@@ -45,11 +46,16 @@ class CroppingFragment
         sharedViewModel.uris.subList(sharedViewModel.currentImageNumber.value!!, sharedViewModel.uris.size).forEach { uri ->
 
             // attempt to crop image, upon success add resulting CropBundle to sharedViewModel
-            cropped(
-                BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri)),
-                uri
-            )?.let { cropBundle ->
-                sharedViewModel.cropBundles.add(cropBundle)
+            val screenshotBitmap = BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))
+
+            cropRect(screenshotBitmap)?.let { cropRect ->
+                sharedViewModel.cropBundles.add(
+                    CropBundle(
+                        uri,
+                        screenshotBitmap,
+                        cropRect
+                    )
+                )
             }
 
             // advance progress bar, screenshot number text view
@@ -60,7 +66,7 @@ class CroppingFragment
 
     /**
      * Starts either Examination- or MainActivity depending on whether or not any
-     * of the selected images has been successfully cropped
+     * of the selected images has been successfully cropRect
      */
     private fun startExaminationActivityOrInvokeCroppingFailureFragment() = logBeforehand("Async Cropping task finished") {
         if (sharedViewModel.cropBundles.isNotEmpty())
