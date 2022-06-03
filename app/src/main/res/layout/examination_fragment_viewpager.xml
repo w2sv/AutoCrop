@@ -87,8 +87,9 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/auto_scrolling_tv"
+    <com.autocrop.activities.examination.fragments.viewpager.views.CancelAutoScrollButton
+        android:id="@+id/cancel_autoscroll_button"
+        android:visibility="invisible"
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -97,14 +98,13 @@
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="20dp"
 
-        android:text="@string/auto_scrolling"
+        android:text="@string/cancel_autoscroll"
         android:textColor="@color/accentuated_tv"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:background="@android:color/transparent">
 
-        android:visibility="invisible">
-
-    </TextView>
+    </com.autocrop.activities.examination.fragments.viewpager.views.CancelAutoScrollButton>
 
     <com.autocrop.activities.examination.fragments.viewpager.views.DiscardingStatisticsTextView
         android:id="@+id/discarding_statistics_tv"
