@@ -66,13 +66,13 @@ class ExaminationActivity :
                         .append("Couldn't find cropping bounds for ")
                         .bold {
                             color(
-                                getColorInt(R.color.holo_purple, this@ExaminationActivity)
+                                getColorInt(R.color.accentuated_tv, this@ExaminationActivity)
                             ) { append("$it") }
                         }
                         .append(" image".numericallyInflected(it)),
                     R.drawable.ic_error_24
                 )
-                    .show()
+                    .buildAndShow()
             }
         }
     }
@@ -111,7 +111,7 @@ class ExaminationActivity :
                         "Wait until crops have been saved",
                         R.drawable.ic_baseline_front_hand_24
                     )
-                        .show()
+                        .buildAndShow()
             }
                 is ViewPagerFragment -> handleBackPress()
                 else -> Unit

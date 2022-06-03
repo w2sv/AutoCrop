@@ -30,7 +30,7 @@ class BackPressHandler(
 
             snackbarDisplayActivity
                 .snacky(snackbarMessage)
-                .show()
+                .buildAndShow()
         }
         else
             return onSecondPress()

@@ -75,7 +75,7 @@ class FlowFieldFragment:
                                 )
                             }
                     )
-                        .show()
+                        .buildAndShow()
                 }
             }
         }

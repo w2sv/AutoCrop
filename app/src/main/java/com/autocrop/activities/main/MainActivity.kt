@@ -46,7 +46,7 @@ class MainActivity :
                             )
                         }
                     }
-                        .show()
+                        .buildAndShow()
                 },
                 resources.getInteger(R.integer.fade_in_duration_flowfield_fragment_buttons).toLong() / 2
             )

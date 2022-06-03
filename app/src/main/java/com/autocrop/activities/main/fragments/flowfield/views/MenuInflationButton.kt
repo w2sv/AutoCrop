@@ -16,9 +16,8 @@ import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.uielements.AbstractMenuInflationButton
 import com.autocrop.uielements.ExtendedPopupMenu
-import com.autocrop.uielements.makeIconsVisible
 import com.autocrop.uielements.persistMenuAfterClick
-import com.autocrop.utilsandroid.show
+import com.autocrop.utilsandroid.buildAndShow
 import com.autocrop.utilsandroid.snacky
 import com.w2sv.autocrop.R
 
@@ -66,7 +65,7 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet)
                 } catch (e: ActivityNotFoundException){
                     activity
                         .snacky("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
-                        .show()
+                        .buildAndShow()
                 }
 
             private fun invokeAboutFragment() =

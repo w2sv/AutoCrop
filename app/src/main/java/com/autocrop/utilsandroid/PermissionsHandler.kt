@@ -7,7 +7,6 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -81,7 +80,7 @@ class PermissionsHandler(
                 else
                     permissionRequestingSuppressedSnacky()
             }
-                .show()
+                .buildAndShow()
 
             Timber.i("Not all required permissions were granted: $permission2Granted")
         }

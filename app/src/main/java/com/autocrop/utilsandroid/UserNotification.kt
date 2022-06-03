@@ -29,5 +29,5 @@ fun Activity.snacky(
             .setDuration(Snacky.LENGTH_LONG)
             .setActivity(this)
 
-fun Snacky.Builder.show() =
+fun Snacky.Builder.buildAndShow() =
     build().show()

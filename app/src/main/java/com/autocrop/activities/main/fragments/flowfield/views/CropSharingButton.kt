@@ -20,7 +20,7 @@ class CropSharingButton(context: Context, attrs: AttributeSet):
     ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context) {
 
     /**
-     * If CROP_SAVING_URIS available from previous ExaminationActivity cycle show and
+     * If CROP_SAVING_URIS available from previous ExaminationActivity cycle buildAndShow and
      * setOnClickListener
      */
     init {

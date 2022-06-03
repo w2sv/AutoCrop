@@ -3,13 +3,13 @@ package com.autocrop.activities.examination.fragments.comparison
 import android.content.Context
 import android.os.Bundle
 import android.widget.RelativeLayout
-import androidx.lifecycle.ViewModelProvider
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.uielements.view.remove
-import com.w2sv.autocrop.R
+import com.autocrop.utilsandroid.buildAndShow
+import com.autocrop.utilsandroid.snacky
 import com.w2sv.autocrop.databinding.ExaminationFragmentComparisonBinding
 
 class ComparisonFragment
@@ -35,11 +35,10 @@ class ComparisonFragment
     }
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
-        val viewModel = ViewModelProvider(requireActivity())[ComparisonViewModel::class.java]
-
-        viewModel.displayingScreenshot.observe(viewLifecycleOwner){
-            binding.statusTv.text = resources.getString(if (it) R.string.original else R.string.cropped)
-        }
+        if (savedInstanceState == null)
+            requireActivity()
+                .snacky("Tap screen to toggle between original screenshot and crop")
+                .buildAndShow()
     }
 
     fun prepareExitTransition(){
