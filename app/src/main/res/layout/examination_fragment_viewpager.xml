@@ -91,7 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_alignTop="@+id/button_toolbar"
+        android:layout_alignTop="@+id/menu_inflation_button"
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="20dp"
 
@@ -103,46 +103,6 @@
         android:visibility="invisible">
 
     </TextView>
-
-    <!-- Toolbar -->
-
-    <com.autocrop.activities.examination.fragments.viewpager.views.ButtonToolbar
-        android:id="@+id/button_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@android:color/transparent"
-        android:visibility="invisible"
-        android:elevation="4dp">
-
-        <!-- Button -->
-
-        <!-- Dismiss All -->
-
-        <com.autocrop.activities.examination.fragments.viewpager.views.DiscardAllButton
-            android:id="@+id/discard_all_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:background="@android:color/transparent"
-            android:text="@string/discard_all_button"
-            android:textStyle="bold"
-            android:textColor="@color/magenta_saturated"
-            android:translationX="-10dp" />
-
-        <!-- Save All -->
-
-        <com.autocrop.activities.examination.fragments.viewpager.views.SaveAllButton
-            android:id="@+id/save_all_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:background="@android:color/transparent"
-            android:text="@string/save_all_button"
-            android:textStyle="bold"
-            android:textColor="@color/magenta_saturated"
-            android:translationX="-10dp"/>
-
-    </com.autocrop.activities.examination.fragments.viewpager.views.ButtonToolbar>
 
     <com.autocrop.activities.examination.fragments.viewpager.views.DiscardingStatisticsTextView
         android:id="@+id/discarding_statistics_tv"

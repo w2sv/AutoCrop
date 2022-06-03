@@ -111,10 +111,12 @@ dependencies {
     implementation 'com.github.mohammadatif:Animatoo:master'
     implementation 'com.daimajia.androidanimations:library:2.4@aar'
     implementation 'com.daimajia.easing:library:2.4@aar'
-    implementation project(path: ':croppylib')
 
     // Manual Cropping
     //    implementation 'com.github.w2sv:Croppy:0.2.71'
+    implementation project(path: ':croppylib')
+
+    implementation 'com.getbase:floatingactionbutton:1.10.1'
 
     // ----------TESTS------------
 

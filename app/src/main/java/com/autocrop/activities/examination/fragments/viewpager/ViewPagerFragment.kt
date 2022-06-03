@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
+import com.anshul.gooey.GooeyMenu
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.collections.Crop
 import com.autocrop.uielements.CubeOutPageTransformer
@@ -77,13 +78,13 @@ class ViewPagerFragment :
                         arrayOf(binding.autoScrollingTv),
                         arrayOf(
                             binding.discardingStatisticsTv,
-                            binding.buttonToolbar,
+//                            binding.buttonToolbar,
                             binding.menuInflationButton
                         )
                     )
                 } else {
                     with(binding) {
-                        listOf(discardingStatisticsTv, buttonToolbar, binding.menuInflationButton)
+                        listOf(discardingStatisticsTv, binding.menuInflationButton)
                             .forEach {
                                 it.show()
                             }

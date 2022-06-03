@@ -30,14 +30,13 @@ data class CropBundle(val screenshot: ScreenshotParameters, var crop: Crop) {
     )
 
     val discardedPercentage: Int get() = _discardedPercentage
+    private var _discardedPercentage = -1
 
-    private var _discardedPercentage: Int by Delegates.notNull()
     val discardedFileSize: Int get() = _discardedFileSize
+    private var _discardedFileSize = -1
 
-    private var _discardedFileSize: Int by Delegates.notNull()
     val bottomOffset: Int get() = _bottomOffset
-
-    private var _bottomOffset: Int by Delegates.notNull()
+    private var _bottomOffset = -1
 
     private fun calculateCompositeParameters(){
         ((screenshot.height - crop.bitmap.height).toFloat() / screenshot.height.toFloat()).let { discardedPercentageF ->
