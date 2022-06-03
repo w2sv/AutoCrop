@@ -4,46 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Toolbar -->
-
-    <com.autocrop.activities.examination.fragments.viewpager.views.ButtonToolbar
-        android:id="@+id/button_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@android:color/transparent"
-        android:visibility="invisible"
-        android:elevation="4dp">
-
-        <!-- Button -->
-
-        <!-- Dismiss All -->
-
-        <com.autocrop.activities.examination.fragments.viewpager.views.DiscardAllButton
-            android:id="@+id/discard_all_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:background="@android:color/transparent"
-            android:text="@string/discard_all_button"
-            android:textStyle="bold"
-            android:textColor="@color/magenta_saturated"
-            android:translationX="-10dp" />
-
-        <!-- Save All -->
-
-        <com.autocrop.activities.examination.fragments.viewpager.views.SaveAllButton
-            android:id="@+id/save_all_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:background="@android:color/transparent"
-            android:text="@string/save_all_button"
-            android:textStyle="bold"
-            android:textColor="@color/magenta_saturated"
-            android:translationX="-10dp"/>
-
-    </com.autocrop.activities.examination.fragments.viewpager.views.ButtonToolbar>
-
     <!-- View Pager -->
 
     <androidx.viewpager2.widget.ViewPager2
@@ -53,6 +13,22 @@
         android:layout_height="match_parent"
 
         android:background="@color/neutral_background"/>
+
+    <com.autocrop.activities.examination.fragments.viewpager.views.MenuInflationButton
+        android:id="@+id/menu_inflation_button"
+        android:visibility="visible"
+
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+
+        android:layout_alignParentTop="true"
+
+        android:layout_marginTop="40dp"
+        android:layout_marginHorizontal="35dp"
+
+        android:background="@drawable/ic_dot_menu_24"
+        android:backgroundTint="@color/light_gray"
+        android:contentDescription="@string/inflate_options_popup_menu" />
 
     <!--    Page Indication Layout-->
 
@@ -109,23 +85,6 @@
 
     </RelativeLayout>
 
-    <com.autocrop.activities.examination.fragments.viewpager.views.MenuInflationButton
-        android:id="@+id/menu_inflation_button"
-        android:visibility="visible"
-
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/page_indication_layout"
-
-        android:layout_marginTop="50dp"
-        android:layout_marginHorizontal="35dp"
-
-        android:background="@drawable/ic_dot_menu_24"
-        android:backgroundTint="@color/light_gray"
-        android:contentDescription="@string/inflate_options_popup_menu" />
-
     <TextView
         android:id="@+id/auto_scrolling_tv"
 
@@ -144,6 +103,46 @@
         android:visibility="invisible">
 
     </TextView>
+
+    <!-- Toolbar -->
+
+    <com.autocrop.activities.examination.fragments.viewpager.views.ButtonToolbar
+        android:id="@+id/button_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:visibility="invisible"
+        android:elevation="4dp">
+
+        <!-- Button -->
+
+        <!-- Dismiss All -->
+
+        <com.autocrop.activities.examination.fragments.viewpager.views.DiscardAllButton
+            android:id="@+id/discard_all_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="@android:color/transparent"
+            android:text="@string/discard_all_button"
+            android:textStyle="bold"
+            android:textColor="@color/magenta_saturated"
+            android:translationX="-10dp" />
+
+        <!-- Save All -->
+
+        <com.autocrop.activities.examination.fragments.viewpager.views.SaveAllButton
+            android:id="@+id/save_all_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="@android:color/transparent"
+            android:text="@string/save_all_button"
+            android:textStyle="bold"
+            android:textColor="@color/magenta_saturated"
+            android:translationX="-10dp"/>
+
+    </com.autocrop.activities.examination.fragments.viewpager.views.ButtonToolbar>
 
     <com.autocrop.activities.examination.fragments.viewpager.views.DiscardingStatisticsTextView
         android:id="@+id/discarding_statistics_tv"
