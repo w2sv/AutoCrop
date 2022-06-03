@@ -116,8 +116,6 @@ dependencies {
     //    implementation 'com.github.w2sv:Croppy:0.2.71'
     implementation project(path: ':croppylib')
 
-    implementation 'com.getbase:floatingactionbutton:1.10.1'
-
     // ----------TESTS------------
 
     def JUNIT_VERSION = "5.8.2"

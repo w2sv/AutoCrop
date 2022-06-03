@@ -17,8 +17,6 @@
 
         <!-- Text -->
     <string name="image_selection_button">SELECT IMAGES</string>
-    <string name="save_all_button">Save All</string>
-    <string name="discard_all_button">Discard All</string>
 
         <!-- Description -->
     <string name="menu_inflation_button_description">Inflate settings menu</string>
@@ -26,9 +24,9 @@
     <string name="crop_sharing_button_description">Share saved crops</string>
 
     <!-- Menu Item Text -->
-    <string name="menu_item_group_divider_examination">Examination</string>
-    <string name="menu_item_group_divider_crop_saving">Crop Saving</string>
-    <string name="menu_item_group_divider_other">Other</string>
+    <string name="menu_item_divider_examination">Examination</string>
+    <string name="menu_item_divider_crop_saving">Crop Saving</string>
+    <string name="menu_item_divider_other">Other</string>
 
     <string name="menu_item_auto_scroll">AutoScroll</string>
     <string name="menu_item_rate_the_app">Rate the app</string>
@@ -43,6 +41,10 @@
     <string name="original">Original</string>
     <string name="cropped">Cropped</string>
     <string name="inflate_options_popup_menu">Inflate options popup menu</string>
-    <string name="adjust_crop">Adjust Crop</string>
+    <string name="adjust">Adjust</string>
+    <string name="all_crops">All Crops</string>
+    <string name="crop">Crop</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
 
 </resources>

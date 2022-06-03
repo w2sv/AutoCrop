@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/main_menu_group_divider_examination"
-        android:title="@string/menu_item_group_divider_examination"
+        android:title="@string/menu_item_divider_examination"
         android:enabled="false"/>
 
         <item
@@ -21,7 +21,7 @@
 
     <item
         android:id="@+id/main_menu_group_divider_crop_saving"
-        android:title="@string/menu_item_group_divider_crop_saving"
+        android:title="@string/menu_item_divider_crop_saving"
         android:enabled="false"/>
 
         <item
@@ -33,7 +33,7 @@
 
     <item
         android:id="@+id/main_menu_group_divider_other"
-        android:title="@string/menu_item_group_divider_other"
+        android:title="@string/menu_item_divider_other"
         android:enabled="false"/>
 
         <item

@@ -12,10 +12,6 @@ import kotlin.properties.Delegates
  */
 data class CropBundle(val screenshot: ScreenshotParameters, var crop: Crop) {
 
-    init {
-        calculateCompositeParameters()
-    }
-
     constructor(screenshotUri: Uri, screenshot: Bitmap, cropRect: Rect)
             : this(
         ScreenshotParameters(
@@ -27,18 +23,20 @@ data class CropBundle(val screenshot: ScreenshotParameters, var crop: Crop) {
             Bitmap.createBitmap(screenshot,0, cropRect.top, screenshot.width, cropRect.height()),
             cropRect
         )
-    )
+    ){
+        setCompositeParameters()
+    }
 
     val discardedPercentage: Int get() = _discardedPercentage
-    private var _discardedPercentage = -1
+    private var _discardedPercentage by Delegates.notNull<Int>()
 
     val discardedFileSize: Int get() = _discardedFileSize
-    private var _discardedFileSize = -1
+    private var _discardedFileSize by Delegates.notNull<Int>()
 
     val bottomOffset: Int get() = _bottomOffset
-    private var _bottomOffset = -1
+    private var _bottomOffset by Delegates.notNull<Int>()
 
-    private fun calculateCompositeParameters(){
+    private fun setCompositeParameters(){
         ((screenshot.height - crop.bitmap.height).toFloat() / screenshot.height.toFloat()).let { discardedPercentageF ->
             _discardedPercentage = (discardedPercentageF * 100).roundToInt()
             _discardedFileSize = (discardedPercentageF * screenshot.approximateJpegSize).roundToInt()
@@ -49,7 +47,7 @@ data class CropBundle(val screenshot: ScreenshotParameters, var crop: Crop) {
 
     fun setAdjustedCrop(adjustedCrop: Crop){
         crop = adjustedCrop
-        calculateCompositeParameters()
+        setCompositeParameters()
     }
 }
 

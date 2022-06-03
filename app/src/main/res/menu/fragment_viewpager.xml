@@ -6,12 +6,37 @@
 
     <!--  Examination  -->
 
-    <item
-        android:id="@+id/menu_item_compare"
-        android:title="@string/compare"/>
+    <!--    Crop-->
 
     <item
-        android:id="@+id/menu_item_adjust_crop"
-        android:title="@string/adjust_crop"/>
+        android:id="@+id/menu_divider_crop"
+        android:title="@string/crop"
+        android:enabled="false"/>
 
+        <item
+            android:id="@+id/menu_item_compare"
+            android:title="@string/compare"
+            android:icon="@drawable/ic_baseline_image_search_24"/>
+
+        <item
+            android:id="@+id/menu_item_adjust_crop"
+            android:title="@string/adjust"
+            android:icon="@drawable/ic_baseline_crop_24"/>
+
+    <!--    Crop Entirety-->
+
+    <item
+        android:id="@+id/menu_divider_all_crops"
+        android:title="@string/all_crops"
+        android:enabled="false"/>
+
+        <item
+            android:id="@+id/menu_item_save_all"
+            android:title="@string/save"
+            android:icon="@drawable/ic_round_save_24"/>
+
+        <item
+            android:id="@+id/menu_item_discard_all"
+            android:title="@string/discard"
+            android:icon="@drawable/ic_cancel_24"/>
 </menu>

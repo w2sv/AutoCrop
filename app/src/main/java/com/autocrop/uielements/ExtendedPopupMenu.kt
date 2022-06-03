@@ -31,8 +31,13 @@ abstract class ExtendedPopupMenu(context: Context, anchor: View, @MenuRes menuRe
                 }
         }
 
+    protected fun setIcons(context: Context, @ColorRes colorRes: Int){
+        setIconColor(context, colorRes)
+        menu.makeIconsVisible()
+    }
+
     @Suppress("DEPRECATION")
-    protected fun setIconColor(context: Context, @ColorRes colorRes: Int) =
+    private fun setIconColor(context: Context, @ColorRes colorRes: Int) =
         menu.children.forEach {
             it.icon?.setColorFilter(
                 getColorInt(colorRes, context),

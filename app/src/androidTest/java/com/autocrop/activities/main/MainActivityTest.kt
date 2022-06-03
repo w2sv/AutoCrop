@@ -139,9 +139,9 @@ internal class MainActivityTest {
             @Test
             fun groupDividersVisibleAndNotClickable(){
                 listOf(
-                    R.string.menu_item_group_divider_crop_saving,
-                    R.string.menu_item_group_divider_examination,
-                    R.string.menu_item_group_divider_other
+                    R.string.menu_item_divider_crop_saving,
+                    R.string.menu_item_divider_examination,
+                    R.string.menu_item_divider_other
                 )
                     .forEach {
                         with(popupMenuItemByTextId(it)){

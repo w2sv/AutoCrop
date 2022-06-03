@@ -32,7 +32,7 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet)
             ViewModelRetriever<MainActivityViewModel> by MainActivityViewModelRetriever(context) {
 
             init{
-                setIconColor(context, R.color.magenta_bright)
+                setIcons(context, R.color.magenta_bright)
                 setCheckableItems(context)
                 setItemOnClickListeners(
                     mapOf(
@@ -49,7 +49,6 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet)
                         R.id.main_menu_group_divider_other
                     )
                 )
-                menu.makeIconsVisible()
             }
 
             private fun pickCropSaveDestinationDir() =

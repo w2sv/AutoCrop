@@ -1,13 +1,10 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Rect
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
-import com.anshul.gooey.GooeyMenu
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.collections.Crop
 import com.autocrop.uielements.CubeOutPageTransformer
@@ -78,7 +75,6 @@ class ViewPagerFragment :
                         arrayOf(binding.autoScrollingTv),
                         arrayOf(
                             binding.discardingStatisticsTv,
-//                            binding.buttonToolbar,
                             binding.menuInflationButton
                         )
                     )
