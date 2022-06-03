@@ -79,12 +79,8 @@ class ViewPagerFragment :
                         )
                     )
                 } else {
-                    with(binding) {
-                        listOf(discardingStatisticsTv, binding.menuInflationButton)
-                            .forEach {
-                                it.show()
-                            }
-                    }
+                    binding.discardingStatisticsTv.show()
+                    binding.menuInflationButton.show()
                 }
             }
         }
