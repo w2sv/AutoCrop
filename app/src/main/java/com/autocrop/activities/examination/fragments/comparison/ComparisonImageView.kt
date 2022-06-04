@@ -19,7 +19,6 @@ import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.utilsandroid.mutableLiveData
-import com.autocrop.utilsandroid.toggleValue
 
 class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet),
@@ -28,25 +27,21 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
 
     private val cropBundle: CropBundle = ViewModelProvider(activity as ViewModelStoreOwner)[ViewPagerViewModel::class.java].dataSet.currentCropBundle
     private val screenshot: Bitmap = BitmapFactory.decodeStream(context.contentResolver.openInputStream(cropBundle.screenshot.uri))
+    private val insetCropDrawable = InsetDrawable(
+        BitmapDrawable(resources, cropBundle.crop.bitmap),
+        0,
+        cropBundle.crop.rect.top,
+        0,
+        cropBundle.bottomOffset
+    )
 
     init {
         ViewCompat.setTransitionName(this, cropBundle.transitionName())
 
         setOnClickListener {
-            val insetCrop = InsetDrawable(
-                BitmapDrawable(resources, cropBundle.crop.bitmap),
-                0,
-                cropBundle.crop.rect.top,
-                0,
-                cropBundle.bottomOffset
-            )
-
-            if (sharedViewModel.displayingScreenshot.value!!)
-                setImageDrawable(insetCrop)
-            else
-                showScreenshot()
-
-            sharedViewModel.displayingScreenshot.toggleValue()
+            sharedViewModel.displayScreenshot.value?.let {
+                sharedViewModel.displayScreenshot.mutableLiveData.postValue(!it)
+            } ?: sharedViewModel.displayScreenshot.mutableLiveData.postValue(false)
         }
     }
 
@@ -55,8 +50,6 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
 
         layoutParams = rootLayoutParams
         showScreenshot()
-
-        sharedViewModel.displayingScreenshot.mutableLiveData.postValue(true)
     }
 
     fun prepareExitTransition() =
@@ -78,7 +71,18 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
         setImageBitmap(cropBundle.crop.bitmap)
     }
 
+    fun update(displayScreenshot: Boolean){
+        if (displayScreenshot)
+            showScreenshot()
+        else
+            showInsetCrop()
+    }
+
     private fun showScreenshot(){
         setImageBitmap(screenshot)
+    }
+
+    private fun showInsetCrop(){
+        setImageDrawable(insetCropDrawable)
     }
 }

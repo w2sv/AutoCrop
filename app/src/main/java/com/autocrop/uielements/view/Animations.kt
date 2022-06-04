@@ -43,5 +43,7 @@ fun View.fadeIn(duration: Long = DEFAULT_DURATION){
 }
 
 fun View.fadeOut(duration: Long = DEFAULT_DURATION){
-    animate(Techniques.FadeOut, duration)
+    animate(Techniques.FadeOut, duration){
+        remove()
+    }
 }

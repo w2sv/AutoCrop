@@ -61,7 +61,7 @@ class ViewPagerFragment :
 
         viewModel.autoScroll.observe(viewLifecycleOwner) { autoScroll ->
             if (autoScroll) {
-                binding.autoScrollingTv.show()
+                binding.cancelAutoScrollButton.show()
                 scroller = Scroller(viewModel.autoScroll).apply {
                     run(binding.viewPager, viewModel.maxAutoScrolls())
                 }
@@ -72,7 +72,7 @@ class ViewPagerFragment :
                 if (scroller != null) {
                     scroller!!.cancel()
                     crossFade(
-                        arrayOf(binding.autoScrollingTv),
+                        arrayOf(binding.cancelAutoScrollButton),
                         arrayOf(
                             binding.discardingStatisticsTv,
                             binding.menuInflationButton

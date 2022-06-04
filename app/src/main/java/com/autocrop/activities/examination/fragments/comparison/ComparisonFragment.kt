@@ -3,6 +3,7 @@ package com.autocrop.activities.examination.fragments.comparison
 import android.content.Context
 import android.os.Bundle
 import android.widget.RelativeLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
@@ -35,14 +36,20 @@ class ComparisonFragment
     }
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null)
+        if (ComparisonViewModel.displayInstructionSnackbar){
             requireActivity()
                 .snacky("Tap screen to toggle between original screenshot and crop")
                 .buildAndShow()
+            ComparisonViewModel.displayInstructionSnackbar = false
+        }
+
+        val viewModel: ComparisonViewModel = ViewModelProvider(this)[ComparisonViewModel::class.java]
+        viewModel.displayScreenshot.observe(viewLifecycleOwner){
+            binding.comparisonIv.update(it)
+        }
     }
 
     fun prepareExitTransition(){
-        binding.statusTv.remove()
         binding.comparisonIv.prepareExitTransition()
     }
 }

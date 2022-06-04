@@ -88,7 +88,7 @@
     </RelativeLayout>
 
     <com.autocrop.activities.examination.fragments.viewpager.views.CancelAutoScrollButton
-        android:id="@+id/cancel_autoscroll_button"
+        android:id="@+id/cancel_auto_scroll_button"
         android:visibility="invisible"
 
         android:layout_width="wrap_content"
