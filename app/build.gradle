@@ -77,7 +77,7 @@ android {
     }
     buildFeatures {
         viewBinding true
-        dataBinding true
+//        dataBinding true
     }
 }
 
@@ -91,8 +91,8 @@ dependencies {
     implementation files('libs/processing-core.jar')
 
     // Androidx
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
 
@@ -104,7 +104,7 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Snackbar
-    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'com.google.android.material:material:1.6.1'
     implementation 'com.github.matecode:Snacky:1.1.5'
 
     // Animations
@@ -113,7 +113,6 @@ dependencies {
     implementation 'com.daimajia.easing:library:2.4@aar'
 
     // Manual Cropping
-    //    implementation 'com.github.w2sv:Croppy:0.2.71'
     implementation project(path: ':croppylib')
 
     // ----------TESTS------------
