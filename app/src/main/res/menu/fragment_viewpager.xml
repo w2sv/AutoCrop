@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/menu_divider_crop"
-        android:title="@string/crop"
+        android:title="@string/current_crop"
         android:enabled="false"/>
 
         <item

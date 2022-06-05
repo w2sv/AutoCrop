@@ -6,7 +6,7 @@
     <string name="fracture">%1$d/%2$d</string>
     <string name="crops_processing_in_progress">Processing crops…</string>
     <string name="cropping_failure">No cropping borders found</string>
-    <string name="cancel_autoscroll">Cancel AutoScroll</string>
+    <string name="cancel_autoscroll">Cancel Scroll</string>
     <string name="removed">removed</string>
     <string name="cropping_failure_instruction_text_view">Make sure your selected screenshots comprise a continuous monochromatic border both above and below the core image area</string>
 
@@ -43,7 +43,7 @@
     <string name="inflate_options_popup_menu">Inflate options popup menu</string>
     <string name="adjust">Adjust</string>
     <string name="all_crops">All Crops</string>
-    <string name="crop">Crop</string>
+    <string name="current_crop">Current Crop</string>
     <string name="save">Save</string>
     <string name="discard">Discard</string>
 

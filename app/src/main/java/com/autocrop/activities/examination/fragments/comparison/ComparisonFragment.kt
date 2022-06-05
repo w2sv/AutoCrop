@@ -16,6 +16,7 @@ import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewMode
 import com.autocrop.activities.examination.fragments.viewpager.transitionName
 import com.autocrop.utilsandroid.buildAndShow
 import com.autocrop.utilsandroid.snacky
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ExaminationFragmentComparisonBinding
 
 class ComparisonFragment
@@ -49,6 +50,7 @@ class ComparisonFragment
                         if (ComparisonViewModel.displayInstructionSnackbar){
                             requireActivity()
                                 .snacky("Tap screen to toggle between original screenshot and crop")
+                                .setIcon(R.drawable.ic_outline_info_24)
                                 .buildAndShow()
                             ComparisonViewModel.displayInstructionSnackbar = false
                         }
