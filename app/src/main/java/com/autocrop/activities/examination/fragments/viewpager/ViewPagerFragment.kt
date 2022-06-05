@@ -2,6 +2,8 @@ package com.autocrop.activities.examination.fragments.viewpager
 
 import android.content.Context
 import android.os.Bundle
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
@@ -17,17 +19,13 @@ import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
 class ViewPagerFragment :
     ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(ExaminationFragmentViewpagerBinding::class.java) {
 
-    private val viewModel: ViewPagerViewModel by lazy {
-        ViewModelProvider(requireActivity())[ViewPagerViewModel::class.java]
-    }
+    private val viewModel by viewModels<ViewPagerViewModel>(::requireActivity)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        val transition = TransitionInflater.from(context)
+        sharedElementReturnTransition = TransitionInflater.from(context)
             .inflateTransition(android.R.transition.move)
-        sharedElementEnterTransition = transition
-        sharedElementReturnTransition = transition
     }
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {

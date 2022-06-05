@@ -5,13 +5,14 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.InsetDrawable
-import android.os.Handler
-import android.os.Looper
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
+import com.autocrop.activities.examination.fragments.viewpager.transitionName
+import kotlin.properties.Delegates
 
 class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet){
@@ -37,38 +38,40 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
         )
     }
 
-    private var displayingScreenshot: Boolean? = false
+    private var displayingScreenshot by Delegates.notNull<Boolean>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        setOnClickListener {
-            displayingScreenshot?.let {
-                if (it)
-                    showInsetCrop()
-                else
-                    showScreenshot()
+        ViewCompat.setTransitionName(this, sharedViewModel.cropBundle.transitionName())
 
-                displayingScreenshot = !it
-            }
-        }
+        setCrop(marginalized = true)
     }
 
     fun onSharedElementEnterTransitionEnd(rootLayoutParams: RelativeLayout.LayoutParams){
-        showMarginalizedCrop()
+        layoutParams = rootLayoutParams
+        setScreenshot()
 
-//        Handler(Looper.getMainLooper()).postDelayed(
-//            {
-//                layoutParams = rootLayoutParams
-//                showScreenshot()
-//                    .also { displayingScreenshot = true }
-//            },
-//            250
-//        )
+        displayingScreenshot = true
+
+        setOnClickListener{
+            if (displayingScreenshot)
+                setCrop()
+            else
+                setScreenshot()
+
+            displayingScreenshot = !displayingScreenshot
+        }
     }
 
-    fun prepareExitTransition() =
-        showMarginalizedCrop()
+    private fun setCrop(marginalized: Boolean = false){
+        if (marginalized){
+            layoutParams = marginalizedCropLayoutParams
+            setImageBitmap(sharedViewModel.cropBundle.crop.bitmap)
+        }
+        else
+            setImageDrawable(insetCropDrawable)
+    }
 
     private val marginalizedCropLayoutParams: RelativeLayout.LayoutParams by lazy {
         (layoutParams as RelativeLayout.LayoutParams).apply {
@@ -81,16 +84,10 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
         }
     }
 
-    private fun showMarginalizedCrop(){
-        layoutParams = marginalizedCropLayoutParams
-        setImageBitmap(sharedViewModel.cropBundle.crop.bitmap)
-    }
-
-    private fun showScreenshot(){
+    private fun setScreenshot(){
         setImageBitmap(screenshot)
     }
 
-    private fun showInsetCrop(){
-        setImageDrawable(insetCropDrawable)
-    }
+    fun prepareSharedElementExitTransition() =
+        setCrop(marginalized = true)
 }

@@ -67,7 +67,8 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
                     fragmentTransaction.addSharedElement(
                         cropImageView,
                         cropImageView.transitionName
-                    ).also { println("transitionName: ${cropImageView.transitionName}") }
+                    )
+                        .also { println("transitionName: ${cropImageView.transitionName}") }
                 }
             }
 

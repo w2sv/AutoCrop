@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.RelativeLayout
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.transition.Transition
@@ -19,28 +21,23 @@ import com.w2sv.autocrop.databinding.ExaminationFragmentComparisonBinding
 class ComparisonFragment
     : ExaminationActivityFragment<ExaminationFragmentComparisonBinding>(ExaminationFragmentComparisonBinding::class.java){
 
-    private val viewModel by lazy {
-        ViewModelProvider(
-            this,
-            ComparisonViewModelFactory(
-                ViewModelProvider(activity as ViewModelStoreOwner)[ViewPagerViewModel::class.java].dataSet.currentCropBundle
-            )
-        )[ComparisonViewModel::class.java]
-    }
+    private lateinit var viewModel: ComparisonViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        val transition = TransitionInflater.from(context)
+        viewModel = viewModels<ComparisonViewModel>{
+            val viewPagerViewModel by activityViewModels<ViewPagerViewModel>()
+
+            ComparisonViewModelFactory(
+                viewPagerViewModel.dataSet.currentCropBundle
+            )
+        }.value
+
+        sharedElementEnterTransition = TransitionInflater.from(context)
             .inflateTransition(android.R.transition.move)
             .addListener(object: TransitionListenerAdapter(){
                 private var enterTransitionCompleted = false
-
-                override fun onTransitionStart(transition: Transition) {
-                    super.onTransitionStart(transition)
-
-                    println("transition start")
-                }
 
                 override fun onTransitionEnd(transition: Transition) {
                     super.onTransitionEnd(transition)
@@ -51,14 +48,9 @@ class ComparisonFragment
                     }
                 }
             })
-        sharedElementEnterTransition = transition
-        sharedElementReturnTransition = transition
     }
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
-        ViewCompat.setTransitionName(binding.comparisonIv, viewModel.cropBundle.transitionName())
-        println("transitionName ComparisonFragment: ${viewModel.cropBundle.transitionName()}")
-
         if (ComparisonViewModel.displayInstructionSnackbar){
             requireActivity()
                 .snacky("Tap screen to toggle between original screenshot and crop")
@@ -67,7 +59,6 @@ class ComparisonFragment
         }
     }
 
-    fun prepareExitTransition(){
-        binding.comparisonIv.prepareExitTransition()
-    }
+    fun prepareExitTransition() =
+        binding.comparisonIv.prepareSharedElementExitTransition()
 }
