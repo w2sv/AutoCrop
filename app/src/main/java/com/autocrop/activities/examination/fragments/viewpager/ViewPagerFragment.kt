@@ -2,9 +2,7 @@ package com.autocrop.activities.examination.fragments.viewpager
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment

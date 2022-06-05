@@ -3,8 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Pixel Field Container -->
-
     <com.autocrop.activities.main.fragments.flowfield.views.FlowFieldContainer
         android:id="@+id/canvas_container"
         android:layout_width="match_parent"
@@ -34,13 +32,13 @@
 
             <com.autocrop.activities.main.fragments.flowfield.views.MenuInflationButton
                 android:id="@+id/menu_inflation_button"
-                android:layout_width="@dimen/button_flowfield_fragment_sidebar"
-                android:layout_height="@dimen/button_flowfield_fragment_sidebar"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
 
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentTop="true"
 
-                android:background="@drawable/ic_dot_menu_24"
+                android:background="@drawable/ic_sharp_menu_24"
                 android:backgroundTint="@android:color/darker_gray"
                 android:contentDescription="@string/menu_inflation_button_description" />
 
@@ -48,8 +46,8 @@
 
             <com.autocrop.activities.main.fragments.flowfield.views.CropSharingButton
                 android:id="@+id/crop_sharing_button"
-                android:layout_width="@dimen/button_flowfield_fragment_sidebar"
-                android:layout_height="@dimen/button_flowfield_fragment_sidebar"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
 
                 android:layout_centerHorizontal="true"
 

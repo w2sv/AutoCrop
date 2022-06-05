@@ -16,7 +16,7 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
         super.onCreate(savedInstanceState)
 
         // instantiate sharedViewModel
-        this::sharedViewModel.invoke()
+        ::sharedViewModel.invoke()
 
         if (savedInstanceState == null)
             triggerEntrySnackbar()
