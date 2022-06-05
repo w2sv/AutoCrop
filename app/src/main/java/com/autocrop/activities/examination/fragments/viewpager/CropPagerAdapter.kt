@@ -41,7 +41,6 @@ class CropPagerAdapter(
 
     class CropViewHolder(view: ImageView)
         : RecyclerView.ViewHolder(view) {
-
         val cropImageView: ImageView = view.findViewById(R.id.crop_iv)
     }
 

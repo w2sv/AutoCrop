@@ -2,6 +2,7 @@ package com.autocrop.activities.examination.fragments.viewpager.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.ImageView
 import androidx.appcompat.widget.PopupMenu
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.fragments.comparison.ComparisonFragment
@@ -53,18 +54,6 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
                 setIcons(context, R.color.magenta_bright)
             }
 
-            private fun launchManualCroppingActivity() {
-                Croppy.start(
-                    activity,
-                    CropRequest.Auto(
-                        sharedViewModel.dataSet.currentCropBundle.screenshot.uri,
-                        requestCode = MANUAL_CROP_REQUEST_CODE,
-                        initialCropRect = sharedViewModel.dataSet.currentCropBundle.crop.rect,
-                        croppyTheme = CroppyTheme(R.color.magenta_bright)
-                    )
-                )
-            }
-
             private fun launchComparisonFragment() {
                 typedActivity.replaceCurrentFragmentWith(
                     ComparisonFragment(),
@@ -78,8 +67,20 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
                     fragmentTransaction.addSharedElement(
                         cropImageView,
                         cropImageView.transitionName
-                    )
+                    ).also { println("transitionName: ${cropImageView.transitionName}") }
                 }
+            }
+
+            private fun launchManualCroppingActivity() {
+                Croppy.start(
+                    activity,
+                    CropRequest.Auto(
+                        sharedViewModel.dataSet.currentCropBundle.screenshot.uri,
+                        requestCode = MANUAL_CROP_REQUEST_CODE,
+                        initialCropRect = sharedViewModel.dataSet.currentCropBundle.crop.rect,
+                        croppyTheme = CroppyTheme(R.color.magenta_bright)
+                    )
+                )
             }
         }
 }

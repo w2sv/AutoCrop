@@ -24,8 +24,10 @@ class ViewPagerFragment :
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        sharedElementReturnTransition = TransitionInflater.from(requireContext())
+        val transition = TransitionInflater.from(context)
             .inflateTransition(android.R.transition.move)
+        sharedElementEnterTransition = transition
+        sharedElementReturnTransition = transition
     }
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {

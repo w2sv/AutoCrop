@@ -1,16 +1,18 @@
 package com.autocrop.activities.examination.fragments.comparison
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.autocrop.collections.CropBundle
 
-class ComparisonViewModel: ViewModel() {
+class ComparisonViewModelFactory(private val cropBundle: CropBundle)
+    : ViewModelProvider.Factory{
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        ComparisonViewModel(cropBundle) as T
+}
+
+class ComparisonViewModel(val cropBundle: CropBundle): ViewModel() {
     companion object{
         var displayInstructionSnackbar = true
-    }
-
-    val displayScreenshot: LiveData<Boolean> by lazy {
-        MutableLiveData()
     }
 }
