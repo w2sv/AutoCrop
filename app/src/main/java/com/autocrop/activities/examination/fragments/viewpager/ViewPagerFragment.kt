@@ -60,12 +60,15 @@ class ViewPagerFragment :
         viewModel.autoScroll.observe(viewLifecycleOwner) { autoScroll ->
             if (autoScroll) {
                 binding.cancelAutoScrollButton.show()
+                binding.viewPager.isUserInputEnabled = false
                 scroller = Scroller(viewModel.autoScroll).apply {
                     run(binding.viewPager, viewModel.maxAutoScrolls())
                 }
             } else {
                 sharedViewModel.autoScrollingDoneListenerConsumable?.invoke()
+
                 binding.viewPager.setPageTransformer(CubeOutPageTransformer())
+                binding.viewPager.isUserInputEnabled = true
 
                 if (scroller != null) {
                     scroller!!.cancel()
