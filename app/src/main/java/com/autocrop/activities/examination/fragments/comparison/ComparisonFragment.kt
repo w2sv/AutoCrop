@@ -45,18 +45,16 @@ class ComparisonFragment
                     if (!enterTransitionCompleted){
                         binding.comparisonIv.onSharedElementEnterTransitionEnd(binding.root.layoutParams as RelativeLayout.LayoutParams)
                         enterTransitionCompleted = true
+
+                        if (ComparisonViewModel.displayInstructionSnackbar){
+                            requireActivity()
+                                .snacky("Tap screen to toggle between original screenshot and crop")
+                                .buildAndShow()
+                            ComparisonViewModel.displayInstructionSnackbar = false
+                        }
                     }
                 }
             })
-    }
-
-    override fun onViewCreatedCore(savedInstanceState: Bundle?) {
-        if (ComparisonViewModel.displayInstructionSnackbar){
-            requireActivity()
-                .snacky("Tap screen to toggle between original screenshot and crop")
-                .buildAndShow()
-            ComparisonViewModel.displayInstructionSnackbar = false
-        }
     }
 
     fun prepareExitTransition() =
