@@ -7,6 +7,9 @@ private typealias Edges = Pair<Int, Int>  // TODO
 val Edges.top: Int get() = first
 val Edges.bottom: Int get() = second
 
+fun Bitmap.cropped(rect: Rect): Bitmap =
+    Bitmap.createBitmap(this,0, rect.top, width, rect.height())
+
 fun cropRect(screenshot: Bitmap): Rect?{
     val borderPairCandidates: List<Edges> = borderPairCandidates(screenshot)
         .filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(screenshot)

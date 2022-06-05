@@ -3,6 +3,7 @@ package com.autocrop.collections
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.net.Uri
+import com.autocrop.activities.cropping.fragments.cropping.cropped
 import com.autocrop.utilsandroid.approximateJpegSize
 import java.lang.reflect.Constructor
 import kotlin.math.roundToInt
@@ -64,7 +65,7 @@ sealed class Crop(
 ){
     class FromScreenshot(screenshot: Bitmap, rect: Rect)
         : Crop(
-            Bitmap.createBitmap(screenshot,0, rect.top, screenshot.width, rect.height()),
+            screenshot.cropped(rect),
             rect
         )
 }

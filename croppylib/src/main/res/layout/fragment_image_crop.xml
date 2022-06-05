@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="viewState"
             type="com.lyrebirdstudio.croppylib.state.CropFragmentViewState" />
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -43,10 +43,10 @@
                             android:layout_centerVertical="true"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:clickable="true"
+                            android:focusable="true"
                             android:padding="@dimen/padding_16dp"
                             app:srcCompat="@drawable/ic_cancel"
                             app:tint="@color/white" />
-
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -54,19 +54,6 @@
                             android:layout_centerInParent="true"
                             android:gravity="center"
                             android:orientation="horizontal">
-
-                            <androidx.appcompat.widget.AppCompatTextView
-                                android:id="@+id/buttonSizeWidth"
-                                android:layout_width="@dimen/width_button_bitmap_dimension"
-                                android:layout_height="@dimen/height_button_bitmap_dimension"
-                                android:layout_marginRight="@dimen/margin_4dp"
-                                android:background="@drawable/background_rounded_text"
-                                android:gravity="center"
-                                android:maxLength="6"
-                                android:text="@{viewState.getWidthButtonText(context)}"
-                                android:textColor="@color/white"
-                                android:textStyle="bold" />
-
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/buttonSizeHeight"

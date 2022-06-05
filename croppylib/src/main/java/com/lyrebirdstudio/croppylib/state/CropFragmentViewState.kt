@@ -18,29 +18,6 @@ data class CropFragmentViewState(
     val sizeInputData: SizeInputData? = null
 ) {
 
-    fun getWidthButtonText(context: Context): Spannable {
-        Log.v("TEST", "text:${croppyTheme.accentColor}")
-        if (sizeInputData?.widthValue?.isNaN() == true) {
-            return SpannableString("")
-        }
-        val width = sizeInputData?.widthValue?.roundToInt().toString()
-        val wordtoSpan = SpannableString("W $width")
-        wordtoSpan.setSpan(
-            ForegroundColorSpan(ContextCompat.getColor(context, croppyTheme.accentColor)),
-            0,
-            1,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        wordtoSpan.setSpan(
-            ForegroundColorSpan(ContextCompat.getColor(context, R.color.white)),
-            1,
-            wordtoSpan.length - 1,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-
-        return wordtoSpan
-    }
-
     fun getHeightButtonText(context: Context): Spannable {
         if (sizeInputData?.heightValue?.isNaN() == true) {
             return SpannableString("")
