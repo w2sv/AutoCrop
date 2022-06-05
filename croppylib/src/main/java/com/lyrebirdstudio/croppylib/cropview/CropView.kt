@@ -11,7 +11,6 @@ import androidx.core.graphics.toRect
 import androidx.core.graphics.toRectF
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.main.CroppyTheme
-import com.lyrebirdstudio.croppylib.ui.CroppedBitmapData
 import com.lyrebirdstudio.croppylib.util.extensions.*
 import com.lyrebirdstudio.croppylib.util.model.AnimatableRectF
 import com.lyrebirdstudio.croppylib.util.model.Corner
@@ -400,14 +399,11 @@ class CropView @JvmOverloads constructor(
     /**
      * Get cropped bitmap.
      */
-    fun getCroppedData(): CroppedBitmapData {
+    fun getCropRect(): Rect {
         val croppedBitmapRect = getCropSizeOriginal()
 
         if (bitmapRect.intersect(croppedBitmapRect).not()) {
-            return CroppedBitmapData(
-                croppedBitmap = bitmap,
-                croppingRect = croppedBitmapRect.toRect()
-            )
+            return croppedBitmapRect.toRect()
         }
 
         val cropLeft = if (croppedBitmapRect.left.roundToInt() < bitmapRect.left) {
@@ -434,16 +430,8 @@ class CropView @JvmOverloads constructor(
             croppedBitmapRect.bottom.roundToInt()
         }
 
-        bitmap?.let {
-            val croppedBitmap = Bitmap.createBitmap(
-                it, cropLeft, cropTop, cropRight - cropLeft, cropBottom - cropTop
-            )
-            return CroppedBitmapData(
-                croppedBitmap = croppedBitmap,
-                croppingRect = Rect(cropLeft, cropTop, cropRight, cropBottom)
-            )
-        }
-
+        if (bitmap != null)
+            return Rect(cropLeft, cropTop, cropRight, cropBottom)
         throw IllegalStateException("Bitmap is null.")
     }
 

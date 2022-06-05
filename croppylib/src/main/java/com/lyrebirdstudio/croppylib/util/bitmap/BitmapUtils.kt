@@ -1,37 +1,17 @@
 package com.lyrebirdstudio.croppylib.util.bitmap
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.exifinterface.media.ExifInterface
-import com.lyrebirdstudio.croppylib.ui.CroppedBitmapData
 import com.lyrebirdstudio.croppylib.util.extensions.rotateBitmap
-import io.reactivex.Completable
 import io.reactivex.Single
-import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 
 object BitmapUtils {
 
     private const val MAX_SIZE = 1024
-
-
-    fun saveBitmap(croppedBitmapData: CroppedBitmapData, file: File): Completable {
-        return Completable.create {
-            try {
-                FileOutputStream(file).use { out ->
-                    croppedBitmapData.croppedBitmap?.compress(Bitmap.CompressFormat.PNG, 100, out)
-                    it.onComplete()
-                }
-            } catch (e: Exception) {
-                it.onError(e)
-            }
-
-        }
-    }
 
     fun resize(uri: Uri, context: Context): Single<ResizedBitmap> {
         return Single.create {

@@ -78,7 +78,7 @@ android {
     buildFeatures {
         viewBinding true
         // noinspection DataBindingWithoutKapt
-        dataBinding true  // required by croppylib; internal enabling not sufficient
+        dataBinding true  // exclusively required by croppylib; internal enabling not sufficient
     }
 }
 

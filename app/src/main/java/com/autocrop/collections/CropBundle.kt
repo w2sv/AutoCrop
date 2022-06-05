@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 import android.net.Uri
 import com.autocrop.utilsandroid.approximateJpegSize
+import java.lang.reflect.Constructor
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
@@ -19,8 +20,8 @@ data class CropBundle(val screenshot: ScreenshotParameters, var crop: Crop) {
             screenshot.height,
             screenshot.approximateJpegSize()
         ),
-        Crop(
-            Bitmap.createBitmap(screenshot,0, cropRect.top, screenshot.width, cropRect.height()),
+        Crop.FromScreenshot(
+            screenshot,
             cropRect
         )
     ){
@@ -51,13 +52,19 @@ data class CropBundle(val screenshot: ScreenshotParameters, var crop: Crop) {
     }
 }
 
-data class ScreenshotParameters(
+class ScreenshotParameters(
     val uri: Uri,
     val height: Int,
     val approximateJpegSize: Int
 )
 
-data class Crop(
+sealed class Crop(
     val bitmap: Bitmap,
     val rect: Rect
-)
+){
+    class FromScreenshot(screenshot: Bitmap, rect: Rect)
+        : Crop(
+            Bitmap.createBitmap(screenshot,0, rect.top, screenshot.width, rect.height()),
+            rect
+        )
+}

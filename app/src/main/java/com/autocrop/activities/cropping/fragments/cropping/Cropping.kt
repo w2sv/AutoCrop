@@ -3,7 +3,7 @@ package com.autocrop.activities.cropping.fragments.cropping
 import android.graphics.Bitmap
 import android.graphics.Rect
 
-private typealias Edges = Pair<Int, Int>
+private typealias Edges = Pair<Int, Int>  // TODO
 val Edges.top: Int get() = first
 val Edges.bottom: Int get() = second
 

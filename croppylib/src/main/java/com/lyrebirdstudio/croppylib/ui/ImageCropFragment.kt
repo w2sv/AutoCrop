@@ -1,6 +1,6 @@
 package com.lyrebirdstudio.croppylib.ui
 
-import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +18,7 @@ class ImageCropFragment : Fragment() {
     private val binding: FragmentImageCropBinding by inflate(R.layout.fragment_image_crop)
     private lateinit var viewModel: ImageCropViewModel
 
-    var onApplyClicked: ((CroppedBitmapData) -> Unit)? = null
+    var onApplyClicked: ((Rect) -> Unit)? = null
     var onCancelClicked: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +47,7 @@ class ImageCropFragment : Fragment() {
         }
 
         binding.imageViewApply.setOnClickListener {
-            onApplyClicked?.invoke(binding.cropView.getCroppedData())
+            onApplyClicked?.invoke(binding.cropView.getCropRect())
         }
 
         with(binding.cropView) {

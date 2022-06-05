@@ -3,6 +3,7 @@ package com.autocrop.utilsandroid
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -20,6 +21,9 @@ import java.io.OutputStream
  */
 fun Bitmap.approximateJpegSize(): Int =
     allocationByteCount / 10 / 1024
+
+fun ContentResolver.openBitmap(uri: Uri): Bitmap =
+    BitmapFactory.decodeStream(openInputStream(uri))
 
 object MimeTypes{
     const val IMAGE = "image/*"

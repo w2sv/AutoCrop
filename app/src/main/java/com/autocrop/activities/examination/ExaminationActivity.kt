@@ -1,7 +1,6 @@
 package com.autocrop.activities.examination
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.text.SpannableStringBuilder
 import androidx.core.text.bold
 import androidx.core.text.color
@@ -12,8 +11,8 @@ import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.comparison.ComparisonFragment
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
-import com.autocrop.activities.examination.fragments.viewpager.views.MenuInflationButton.Companion.MANUAL_CROP_REQUEST_CODE
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
+import com.autocrop.activities.examination.fragments.viewpager.views.MenuInflationButton.Companion.MANUAL_CROP_REQUEST_CODE
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.collections.Crop
 import com.autocrop.collections.ImageFileIOSynopsis
@@ -36,10 +35,10 @@ class ExaminationActivity :
 
         if (resultCode == RESULT_OK && requestCode == MANUAL_CROP_REQUEST_CODE) {
             data?.let { intent ->
-                intent.data?.let { localUri ->
+                intent.data?.let { screenshotUri ->
                     castCurrentFragment<ViewPagerFragment>().handleAdjustedCrop(
-                        Crop(
-                            bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(localUri)),
+                        Crop.FromScreenshot(
+                            screenshot = contentResolver.openBitmap(screenshotUri),
                             rect = CroppyActivity.getCropRect(intent)
                         )
                     )

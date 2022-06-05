@@ -35,8 +35,16 @@ class CroppyActivity : AppCompatActivity() {
                     R.id.containerCroppy,
                     ImageCropFragment.newInstance(cropRequest)
                         .apply {
-                            onApplyClicked = {
-                                viewModel.saveBitmap(cropRequest = cropRequest, croppedBitmapData = it)
+                            onApplyClicked = { cropRect ->
+                                setResult(
+                                    Activity.RESULT_OK,
+                                    Intent()
+                                        .apply {
+                                            data = cropRequest.sourceUri
+                                            putExtra(KEY_CROP_RECT_STRING_EXTRA, cropRect.flattenToString())
+                                        }
+                                )
+                                finish()
                             }
 
                             onCancelClicked = {
@@ -46,18 +54,6 @@ class CroppyActivity : AppCompatActivity() {
                         }
                 )
                 .commitAllowingStateLoss()
-        }
-
-        viewModel.getSaveBitmapLiveData().observe(this) { (uri, rect) ->
-            setResult(
-                Activity.RESULT_OK,
-                Intent()
-                    .apply {
-                        data = uri
-                        putExtra(KEY_CROP_RECT_STRING_EXTRA, rect.flattenToString())
-                    }
-            )
-            finish()
         }
     }
 

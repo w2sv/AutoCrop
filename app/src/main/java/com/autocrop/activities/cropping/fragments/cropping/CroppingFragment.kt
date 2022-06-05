@@ -16,6 +16,7 @@ import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.collections.CropBundle
 import com.autocrop.utils.executeAsyncTask
 import com.autocrop.utils.logBeforehand
+import com.autocrop.utilsandroid.openBitmap
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CroppingFragmentBinding
 import kotlinx.coroutines.Job
@@ -46,7 +47,7 @@ class CroppingFragment
         sharedViewModel.uris.subList(sharedViewModel.currentImageNumber.value!!, sharedViewModel.uris.size).forEach { uri ->
 
             // attempt to crop image, upon success add resulting CropBundle to sharedViewModel
-            val screenshotBitmap = BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))
+            val screenshotBitmap = requireContext().contentResolver.openBitmap(uri)
 
             cropRect(screenshotBitmap)?.let { cropRect ->
                 sharedViewModel.cropBundles.add(
