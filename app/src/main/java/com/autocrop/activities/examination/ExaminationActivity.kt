@@ -42,6 +42,11 @@ class ExaminationActivity :
                             rect = CroppyActivity.getCropRect(intent)
                         )
                     )
+                    snacky(
+                        "Adjusted crop",
+                        R.drawable.ic_baseline_done_24
+                    )
+                        .buildAndShow()
                 }
             }
         }
