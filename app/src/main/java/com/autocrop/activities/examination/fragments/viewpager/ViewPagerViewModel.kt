@@ -9,13 +9,13 @@ import com.autocrop.global.BooleanPreferences
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.Consumable
 import com.autocrop.utils.rotated
-import com.autocrop.utilsandroid.mutableLiveData
+import com.autocrop.utilsandroid.MutableListLiveData
 import java.util.*
 
 class ViewPagerViewModel
     : ViewModel(){
 
-    val dataSet = ViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
+    val dataSet: ViewPagerDataSet = ViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 
     //$$$$$$$$$$$$$$$
     // View Removal $
@@ -49,12 +49,8 @@ class ViewPagerViewModel
     }
 }
 
-class ViewPagerDataSet(private val cropBundles: MutableList<CropBundle>) :
-    LiveData<MutableList<CropBundle>>(),
-    MutableList<CropBundle> by cropBundles {
-
-    val containsSingleElement: Boolean
-        get() = size == 1
+class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) :
+    MutableListLiveData<CropBundle>(cropBundles) {
 
     val currentCropBundle: CropBundle
         get() = get(currentPosition.value!!)
@@ -77,7 +73,7 @@ class ViewPagerDataSet(private val cropBundles: MutableList<CropBundle>) :
     }
 
     /**
-     * For keeping track of #page
+     * For keeping track of #pageIndex
      */
     private var tailPosition: Int = lastIndex
 
@@ -90,10 +86,6 @@ class ViewPagerDataSet(private val cropBundles: MutableList<CropBundle>) :
 
     fun removingAtTail(position: Int): Boolean = tailPosition == position
     fun viewPositionIncrement(removingAtTail: Boolean): Int = if (removingAtTail) -1 else 1
-
-    override fun removeAt(index: Int): CropBundle =
-        cropBundles.removeAt(index)
-            .also { postValue(this) }
 
     /**
      * Remove element at [removePosition]

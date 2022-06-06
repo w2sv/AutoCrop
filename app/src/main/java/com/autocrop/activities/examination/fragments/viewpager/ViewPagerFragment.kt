@@ -8,7 +8,6 @@ import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.collections.Crop
-import com.autocrop.uielements.BidirectionalRecyclerViewAdapter
 import com.autocrop.uielements.CubeOutPageTransformer
 import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
@@ -50,8 +49,13 @@ class ViewPagerFragment :
             binding.discardingStatisticsTv.updateText(position)
 
             dataSet.pageIndex(position).let { pageIndex ->
-                binding.pageIndicationTv.updateText(pageIndex)
-                binding.pageIndicationBar.update(pageIndex)
+                val page = pageIndex + 1
+
+                binding.pageIndicationTv.updateText(page)
+                binding.pageIndicationBar.update(
+                    pageIndex,
+                    bouncingAnimationBlocked = autoScroll.value == true && page == dataSet.size
+                )
             }
         }
 
@@ -87,6 +91,8 @@ class ViewPagerFragment :
         }
 
         dataSet.observe(viewLifecycleOwner) { dataSet ->
+            println("dataSet.size = ${dataSet.size}")
+
             if (dataSet.size == 1)
                 binding.pageIndicationBar.animate(Techniques.ZoomOut)
         }

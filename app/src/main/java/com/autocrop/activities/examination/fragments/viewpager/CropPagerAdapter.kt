@@ -78,7 +78,7 @@ class CropPagerAdapter(
      * removes view, procedure action has been selected for, from pager
      */
     private fun onCropProcedureSelected(dataSetPosition: Index) =
-        if (viewModel.dataSet.containsSingleElement)
+        if (viewModel.dataSet.size == 1)
             sharedViewModel.singleCropSavingJob?.run{
                 invokeOnCompletion {
                     lastCropProcessedListener()
@@ -92,7 +92,7 @@ class CropPagerAdapter(
      * • remove cropBundle from dataSet
      * • rotate dataSet such that it will subsequently align with the determined newViewPosition again
      * • reset preloaded views around newViewPosition
-     * • updateIfApplicable page dependent views
+     * • updateIfApplicable pageIndex dependent views
      */
     private fun removeView(dataSetPosition: Index) {
         val removingAtDataSetTail = viewModel.dataSet.removingAtTail(dataSetPosition)

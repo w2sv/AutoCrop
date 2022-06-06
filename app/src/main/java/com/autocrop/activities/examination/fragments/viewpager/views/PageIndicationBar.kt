@@ -19,11 +19,11 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
     init {
         isEnabled = false  // disable manual dragging
 
-        if (!sharedViewModel.dataSet.containsSingleElement)
+        if (sharedViewModel.dataSet.size != 1)
             show()
     }
 
-    fun update(dataSetPosition: Int) {
+    fun update(dataSetPosition: Int, bouncingAnimationBlocked: Boolean) {
         val animationDuration = mapOf(
             BounceInterpolator::class.java to 400L,
             DecelerateInterpolator::class.java to 100L
@@ -31,7 +31,7 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
 
         progress(dataSetPosition)?.let { newProgress ->
             with(ObjectAnimator.ofInt(this, "progress", newProgress)) {
-                getInterpolator(newProgress).let{ interpolator ->
+                getInterpolator(newProgress, bouncingAnimationBlocked).let{ interpolator ->
                     this.interpolator = interpolator
                     duration = animationDuration.getValue(interpolator.javaClass)
                 }
@@ -41,13 +41,13 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
     }
 
     private fun progress(pageIndex: Int): Int? =
-        if (sharedViewModel.dataSet.containsSingleElement)
+        if (sharedViewModel.dataSet.size == 1)
             null
         else
             (max.toFloat() / (sharedViewModel.dataSet.lastIndex).toFloat() * pageIndex).roundToInt()
 
-    private fun getInterpolator(newProgress: Int): BaseInterpolator =
-        if (setOf(0, 100) == setOf(progress, newProgress))
+    private fun getInterpolator(newProgress: Int, bouncingAnimationBlocked: Boolean): BaseInterpolator =
+        if (!bouncingAnimationBlocked && setOf(0, 100) == setOf(progress, newProgress))
             BounceInterpolator()
         else
             DecelerateInterpolator()
