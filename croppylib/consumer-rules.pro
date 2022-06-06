@@ -4,3 +4,5 @@
     long producerIndex;
     long consumerIndex;
 }
+
+-keepclassmembers class com.lyrebirdstudio.croppylib.utils.model.AnimatableRectF.** { *; }

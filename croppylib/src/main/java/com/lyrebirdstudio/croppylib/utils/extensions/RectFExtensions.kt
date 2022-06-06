@@ -22,7 +22,7 @@ fun AnimatableRectF.animateTo(target: AnimatableRectF, onUpdate: (RectF) -> Unit
     }
 
     AnimatorSet()
-        .apply { playTogether(animateLeft, animateTop, animateRight, animateBottom) }
+        .apply { playTogether(animateLeft, animateRight, animateTop, animateBottom) }
         .apply { interpolator = AccelerateDecelerateInterpolator() }
         .apply { duration = 300 }
         .start()
