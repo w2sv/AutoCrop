@@ -59,8 +59,6 @@ fun Matrix.animateToMatrix(
         .apply { interpolator = AccelerateDecelerateInterpolator() }
         .apply { duration = 300 }
         .start()
-
-
 }
 
 fun Matrix.getScaleX(): Float {

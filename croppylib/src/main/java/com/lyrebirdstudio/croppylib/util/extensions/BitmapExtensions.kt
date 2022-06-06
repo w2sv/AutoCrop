@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.Matrix
 import androidx.exifinterface.media.ExifInterface
 
-
 fun Bitmap.rotateBitmap(orientation: Int): Bitmap {
     val matrix = Matrix()
     when (orientation) {

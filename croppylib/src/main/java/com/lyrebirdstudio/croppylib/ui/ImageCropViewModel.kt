@@ -13,12 +13,32 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import kotlin.properties.Delegates
 
 class ImageCropViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private var cropRequest: CropRequest? = null
+    var cropRequest: CropRequest
+        get() = _cropRequest!!
+        set(value) {
+            _cropRequest = value
+        }
+    private var _cropRequest: CropRequest? by Delegates.observable(null){ _, _, newValue ->
+        compositeDisposable.add(
+            BitmapUtils
+                .resize(newValue!!.sourceUri, app.applicationContext)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(Consumer { resizedBitmapLiveData.value = it })
+        )
+
+        with(cropViewStateLiveData){
+            postValue(
+                value?.onThemeChanged(croppyTheme = newValue.croppyTheme)
+            )
+        }
+    }
 
     private val cropViewStateLiveData = MutableLiveData<CropFragmentViewState>()
         .apply {
@@ -26,23 +46,6 @@ class ImageCropViewModel(private val app: Application) : AndroidViewModel(app) {
         }
 
     private val resizedBitmapLiveData = MutableLiveData<ResizedBitmap>()
-
-    fun setCropRequest(cropRequest: CropRequest) {
-        this.cropRequest = cropRequest
-
-        BitmapUtils
-            .resize(cropRequest.sourceUri, app.applicationContext)
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(Consumer { resizedBitmapLiveData.value = it })
-            .also { compositeDisposable.add(it) }
-
-
-        cropViewStateLiveData.value =
-            cropViewStateLiveData.value?.onThemeChanged(croppyTheme = cropRequest.croppyTheme)
-    }
-
-    fun getCropRequest(): CropRequest? = cropRequest
 
     fun getCropViewStateLiveData(): LiveData<CropFragmentViewState> = cropViewStateLiveData
 

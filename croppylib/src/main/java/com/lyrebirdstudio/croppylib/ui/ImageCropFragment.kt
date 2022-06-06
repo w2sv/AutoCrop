@@ -2,21 +2,26 @@ package com.lyrebirdstudio.croppylib.ui
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.databinding.FragmentImageCropBinding
 import com.lyrebirdstudio.croppylib.main.CropRequest
-import com.lyrebirdstudio.croppylib.state.CropFragmentViewState
-import com.lyrebirdstudio.croppylib.util.delegate.inflate
+import kotlin.math.roundToInt
 
 class ImageCropFragment : Fragment() {
 
-    private val binding: FragmentImageCropBinding by inflate(R.layout.fragment_image_crop)
-    private lateinit var viewModel: ImageCropViewModel
+    private val binding: FragmentImageCropBinding get() = _binding!!
+    private var _binding: FragmentImageCropBinding? = null
+
+    private val viewModel by viewModels<ImageCropViewModel>()
 
     var onApplyClicked: ((Rect) -> Unit)? = null
     var onCancelClicked: (() -> Unit)? = null
@@ -24,12 +29,12 @@ class ImageCropFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[ImageCropViewModel::class.java]
-            .apply {
-                setCropRequest(
-                    arguments?.getParcelable(KEY_BUNDLE_CROP_REQUEST) ?: CropRequest.empty()
-                )
-            }
+        viewModel.cropRequest = arguments?.getParcelable(KEY_BUNDLE_CROP_REQUEST)!!
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onCreateView(
@@ -37,10 +42,14 @@ class ImageCropFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentImageCropBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
 
-        viewModel.getCropRequest()?.let {
-            binding.cropView.setTheme(it.croppyTheme)
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.cropView.setTheme(viewModel.cropRequest.croppyTheme)
 
         binding.imageViewCancel.setOnClickListener {
             onCancelClicked?.invoke()
@@ -50,8 +59,7 @@ class ImageCropFragment : Fragment() {
             onApplyClicked?.invoke(binding.cropView.getCropRect())
         }
 
-        with(binding.cropView) {
-
+        binding.cropView.apply{
             onInitialized = {
                 viewModel.updateCropSize(binding.cropView.getCropSizeOriginal())
             }
@@ -61,29 +69,36 @@ class ImageCropFragment : Fragment() {
             }
         }
 
-        return binding.root
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
         viewModel
             .getCropViewStateLiveData()
-            .observe(viewLifecycleOwner, this@ImageCropFragment::renderViewState)
+            .observe(viewLifecycleOwner){
+                binding.heightDisplayButton.text = if (it.height?.isNaN() == true)
+                    ""
+                else
+                    SpannableString("H ${it.height?.roundToInt()}").apply {
+                        setSpan(
+                            ForegroundColorSpan(ContextCompat.getColor(requireContext(), it.croppyTheme.accentColor)),
+                            0,
+                            1,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        setSpan(
+                            ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.white)),
+                            1,
+                            length - 1,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                    }
+            }
 
         viewModel
             .getResizedBitmapLiveData()
             .observe(viewLifecycleOwner) {
                 binding.cropView.setBitmap(
                     it.bitmap,
-                    viewModel.getCropRequest()?.initialCropRect
+                    viewModel.cropRequest.initialCropRect
                 )
             }
-    }
-
-    private fun renderViewState(cropFragmentViewState: CropFragmentViewState) {
-        binding.viewState = cropFragmentViewState
-        binding.executePendingBindings()
     }
 
     companion object {

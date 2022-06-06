@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.databinding.ActivityCroppyBinding
@@ -20,9 +19,13 @@ class CroppyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val cropRequest = intent.getParcelableExtra(KEY_CROP_REQUEST) ?: CropRequest.empty()
+        val cropRequest: CropRequest = intent.getParcelableExtra(KEY_CROP_REQUEST)!!
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_croppy)
+        binding = ActivityCroppyBinding.inflate(layoutInflater)
+            .apply {
+                setContentView(root)
+            }
+
         viewModel = ViewModelProvider(this)[CroppyActivityViewModel::class.java]
             .apply {
                 exitActivityAnimation = cropRequest.exitActivityAnimation

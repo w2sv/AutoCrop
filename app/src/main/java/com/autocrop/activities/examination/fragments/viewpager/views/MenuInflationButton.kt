@@ -75,7 +75,7 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
 
                 Croppy.start(
                     activity,
-                    CropRequest.Auto(
+                    CropRequest(
                         sharedViewModel.dataSet.currentCropBundle.screenshot.uri,
                         requestCode = MANUAL_CROP_REQUEST_CODE,
                         initialCropRect = sharedViewModel.dataSet.currentCropBundle.crop.rect,
