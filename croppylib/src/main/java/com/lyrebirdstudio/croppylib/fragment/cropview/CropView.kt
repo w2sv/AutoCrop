@@ -194,9 +194,9 @@ class CropView @JvmOverloads constructor(
      */
     private var maskBitmap: Bitmap? = null
 
-//    private val bitmapGestureListener = object : BitmapGestureHandler.BitmapGestureListener {
-//        override fun onDoubleTap(motionEvent: MotionEvent) {
-//
+    private val bitmapGestureListener = object : BitmapGestureHandler.BitmapGestureListener {
+        override fun onDoubleTap(motionEvent: MotionEvent) {
+
 //            if (isBitmapScaleExceedMaxLimit(DOUBLE_TAP_SCALE_FACTOR)) {
 //
 //                val resetMatrix = Matrix()
@@ -226,9 +226,9 @@ class CropView @JvmOverloads constructor(
 //                notifyCropRectChanged()
 //                invalidate()
 //            }
-//        }
-//
-//        override fun onScale(scaleFactor: Float, focusX: Float, focusY: Float) {
+        }
+
+        override fun onScale(scaleFactor: Float, focusX: Float, focusY: Float) {
 //
 //            /**
 //             * Return if new calculated bitmap matrix will exceed scale
@@ -261,19 +261,23 @@ class CropView @JvmOverloads constructor(
 //            notifyCropRectChanged()
 //
 //            invalidate()
-//        }
-//
-//        override fun onScroll(distanceX: Float, distanceY: Float) {
-//            bitmapMatrix.postTranslate(-distanceX, -distanceY)
-//            invalidate()
-//        }
-//
-//        override fun onEnd() {
-//            settleDraggedBitmap()
-//        }
-//    }
+        }
 
-//    private val bitmapGestureHandler = BitmapGestureHandler(context, bitmapGestureListener)
+        override fun onScroll(distanceX: Float, distanceY: Float) {
+            cropRect.top -= distanceY
+            cropRect.bottom -= distanceY
+
+            updateExceedMaxBorders()
+            notifyCropRectChanged()
+            invalidate()
+        }
+
+        override fun onEnd() {
+            settleDraggedBitmap()
+        }
+    }
+
+    private val bitmapGestureHandler = BitmapGestureHandler(context, bitmapGestureListener)
 
     init {
         setWillNotDraw(false)
@@ -304,7 +308,8 @@ class CropView @JvmOverloads constructor(
                 draggingState = when {
                     isCorner(corner) -> DraggingCorner(corner)
                     isEdge(edge) -> DraggingEdge(edge)
-                    else -> DraggingState.Idle
+                    event.withinRectangle(cropRect) -> DraggingState.DraggingCropRect
+                    else -> DraggingState.DraggingBitmap
                 }
 
                 calculateMinRect()
@@ -327,23 +332,23 @@ class CropView @JvmOverloads constructor(
                     else -> Unit
                 }
             }
-//            ACTION_UP -> {
-//                minRect.setEmpty()
-//                maxRect.setEmpty()
-//                when (draggingState) {
-//                    is DraggingEdge, is DraggingCorner -> {
-//                        calculateCenterTarget()
-//                        animateBitmapToCenterTarget()
-//                        animateCropRectToCenterTarget()
-//                    }
-//                    else -> Unit
-//                }
-//            }
+            ACTION_UP -> {
+                minRect.setEmpty()
+                maxRect.setEmpty()
+                when (draggingState) {
+                    is DraggingEdge, is DraggingCorner -> {
+                        calculateCenterTarget()
+                        animateBitmapToCenterTarget()
+                        animateCropRectToCenterTarget()
+                    }
+                    else -> Unit
+                }
+            }
         }
 
-//        if (draggingState == DraggingState.DraggingBitmap) {
-//            bitmapGestureHandler.onTouchEvent(event)
-//        }
+        if (draggingState == DraggingState.DraggingCropRect) {
+            bitmapGestureHandler.onTouchEvent(event)
+        }
 
         invalidate()
         return true

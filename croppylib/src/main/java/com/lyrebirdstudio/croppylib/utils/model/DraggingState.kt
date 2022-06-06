@@ -6,6 +6,7 @@ sealed class DraggingState {
     data class DraggingEdge(var edge: Edge) : DraggingState()
 
     object DraggingBitmap : DraggingState()
+    object DraggingCropRect: DraggingState()
 
     object Idle : DraggingState()
 }

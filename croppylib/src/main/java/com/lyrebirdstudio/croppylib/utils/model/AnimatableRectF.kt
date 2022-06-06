@@ -12,11 +12,11 @@ class AnimatableRectF : RectF() {
         this.bottom = bottom
     }
 
-//    fun setRight(right: Float) {
-//        this.right = right
-//    }
-//
-//    fun setLeft(left: Float) {
-//        this.left = left
-//    }
+    fun setRight(right: Float) {
+        this.right = right
+    }
+
+    fun setLeft(left: Float) {
+        this.left = left
+    }
 }

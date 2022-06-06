@@ -5,6 +5,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.MotionEvent
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.constraintlayout.widget.ConstraintSet
 import com.lyrebirdstudio.croppylib.utils.model.AnimatableRectF
 import com.lyrebirdstudio.croppylib.utils.model.Corner
 import com.lyrebirdstudio.croppylib.utils.model.Edge
@@ -21,7 +22,7 @@ fun AnimatableRectF.animateTo(target: AnimatableRectF, onUpdate: (RectF) -> Unit
     }
 
     AnimatorSet()
-        .apply { playTogether(animateLeft, animateRight, animateTop, animateBottom) }
+        .apply { playTogether(animateLeft, animateTop, animateRight, animateBottom) }
         .apply { interpolator = AccelerateDecelerateInterpolator() }
         .apply { duration = 300 }
         .start()
@@ -87,6 +88,9 @@ fun RectF.getCornerTouch(touchEvent: MotionEvent, touchThreshold: Float = 50f): 
         else -> Corner.NONE
     }
 }
+
+fun MotionEvent.withinRectangle(rectF: RectF): Boolean =
+    x >= rectF.left && x <= rectF.right && y >= rectF.bottom && y <= rectF.top
 
 fun RectF.getHypotenus(): Float {
     return hypot(height().toDouble(), width().toDouble()).toFloat()
