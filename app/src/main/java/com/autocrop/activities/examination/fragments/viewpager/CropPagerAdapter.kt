@@ -97,7 +97,7 @@ class CropPagerAdapter(
         val newViewPosition = viewPager2.currentItem + viewModel.dataSet.viewPositionIncrement(removingAtDataSetTail)
 
         // scroll to newViewPosition with blocked pageDependentViewUpdating
-        viewModel.blockSubsequentPageRelatedViewsUpdate()
+        viewModel.dataSet.blockSubsequentPositionUpdate()
         viewPager2.setCurrentItem(newViewPosition, true)
 
         viewModel.scrollStateIdleListenerConsumable = {
@@ -109,7 +109,7 @@ class CropPagerAdapter(
             resetViewsAround(newViewPosition)
 
             // update views
-            viewModel.setDataSetPosition(newViewPosition)
+            viewModel.dataSet.updatePosition(newViewPosition)
         }
     }
 

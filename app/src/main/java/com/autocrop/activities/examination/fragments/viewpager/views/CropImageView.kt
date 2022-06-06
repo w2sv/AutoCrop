@@ -43,7 +43,7 @@ class CropImageView(context: Context, attributeSet: AttributeSet):
                  */
                 override fun onClick() = with(cropProcedureDialog) {
                     arguments = bundleOf(
-                        SingleCropProcedureDialog.DATA_SET_POSITION_IN to sharedViewModel.dataSet.position.value!!
+                        SingleCropProcedureDialog.DATA_SET_POSITION_IN to sharedViewModel.dataSet.currentPosition.value!!
                     )
                     show(fragmentActivity.supportFragmentManager)
                 }

@@ -6,16 +6,13 @@ import androidx.viewpager2.widget.ViewPager2
 class PageChangeHandler(private val viewModel: ViewPagerViewModel)
         : ViewPager2.OnPageChangeCallback(){
 
-    private var previousPosition = -1
-
     /**
      * [viewModel].setDataSetPosition if not blocked
      */
     override fun onPageSelected(position: Int) {
         super.onPageSelected(position)
 
-        viewModel.setDataSetPosition(position, position > previousPosition)
-        previousPosition = position
+        viewModel.dataSet.updatePosition(position)
     }
 
     override fun onPageScrollStateChanged(state: Int) {

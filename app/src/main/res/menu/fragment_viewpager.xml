@@ -4,9 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
 
-    <!--  Examination  -->
-
-    <!--    Crop-->
+    <!-- Current Crop-->
 
     <item
         android:id="@+id/menu_divider_crop"
@@ -23,7 +21,7 @@
             android:title="@string/adjust"
             android:icon="@drawable/ic_baseline_crop_24"/>
 
-    <!--    Crop Entirety-->
+    <!-- All Crops -->
 
     <item
         android:id="@+id/menu_divider_all_crops"

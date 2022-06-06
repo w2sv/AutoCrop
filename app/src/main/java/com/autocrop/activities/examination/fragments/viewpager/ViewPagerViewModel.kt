@@ -17,31 +17,9 @@ class ViewPagerViewModel
 
     val dataSet = ViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 
-    //$$$$$$$$$$$$
-    // Scrolling $
-    //$$$$$$$$$$$$
-
-    fun setDataSetPosition(viewPosition: Int, onScrollRight: Boolean? = null){
-        if (updatePageRelatedViews){
-            onScrollRight?.let {
-                scrolledRight = it
-            }
-            dataSet.position.mutableLiveData.postValue(dataSet.correspondingPosition(viewPosition))
-        }
-        else
-            updatePageRelatedViews = true
-    }
-
-    var scrolledRight = false
-
     //$$$$$$$$$$$$$$$
     // View Removal $
     //$$$$$$$$$$$$$$$
-
-    private var updatePageRelatedViews = true
-    fun blockSubsequentPageRelatedViewsUpdate(){
-        updatePageRelatedViews = false
-    }
 
     var scrollStateIdleListenerConsumable by Consumable<BlankFun>()
 
@@ -49,21 +27,25 @@ class ViewPagerViewModel
     // AutoScroll $
     //$$$$$$$$$$$$$
 
-    val autoScroll: MutableLiveData<Boolean> = MutableLiveData(
-        BooleanPreferences.autoScroll && dataSet.size > 1
-    )
+    val autoScroll: LiveData<Boolean> by lazy {
+        MutableLiveData(
+            BooleanPreferences.autoScroll && dataSet.size > 1
+        )
+    }
 
-    fun maxAutoScrolls(): Int =
-        dataSet.size - dataSet.position.value!!
+    val maxAutoScrolls: Int
+        get() = dataSet.size - dataSet.currentPosition.value!!
 
     //$$$$$$$$
     // Views $
     //$$$$$$$$
 
-    companion object { const val MAX_VIEWS: Int = Int.MAX_VALUE }
+    companion object {
+        const val MAX_VIEWS: Int = Int.MAX_VALUE
+    }
 
-    fun initialViewPosition(): Int = (MAX_VIEWS / 2).run {
-        minus(dataSet.correspondingPosition(this)) + dataSet.position.value!!
+    fun initialViewPosition(): Int = (MAX_VIEWS / 2).let { halvedMaxViews ->
+        halvedMaxViews - dataSet.correspondingPosition(halvedMaxViews) + dataSet.currentPosition.value!!
     }
 }
 
@@ -75,16 +57,29 @@ class ViewPagerDataSet(private val cropBundles: MutableList<CropBundle>) :
         get() = size == 1
 
     val currentCropBundle: CropBundle
-        get() = get(position.value!!)
+        get() = get(currentPosition.value!!)
 
-    val position: LiveData<Int> by lazy {
+    val currentPosition: LiveData<Int> by lazy {
         MutableLiveData(0)
+    }
+
+    private var blockSubsequentPositionUpdate = false
+
+    fun blockSubsequentPositionUpdate(){
+        blockSubsequentPositionUpdate = true
+    }
+
+    fun updatePosition(viewPosition: Int){
+        if (blockSubsequentPositionUpdate)
+            blockSubsequentPositionUpdate = false
+        else
+            currentPosition.mutableLiveData.postValue(correspondingPosition(viewPosition))
     }
 
     /**
      * For keeping track of #page
      */
-    var tailPosition: Int = lastIndex
+    private var tailPosition: Int = lastIndex
 
     // ----------------Position Conversion
 

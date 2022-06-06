@@ -2,18 +2,16 @@ package com.autocrop.activities.examination.fragments.viewpager
 
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.LiveData
 import androidx.viewpager2.widget.ViewPager2
-import com.autocrop.utilsandroid.mutableLiveData
+import com.autocrop.utils.BlankFun
 import java.util.*
 
 /**
- * Class accounting for automatic scrolling at the start of crop examination
+ * Class accounting for automatic scrolling
  */
-class Scroller(private val scroll: LiveData<Boolean>):
-    Timer() {
+class AutoScroller: Timer() {
 
-    fun run(viewPager2: ViewPager2, maxScrolls: Int) {
+    fun run(viewPager2: ViewPager2, maxScrolls: Int, onFinishedListener: BlankFun) {
         schedule(
             object : TimerTask() {
                 private var conductedScrolls: Int = 0
@@ -23,11 +21,13 @@ class Scroller(private val scroll: LiveData<Boolean>):
                         with(viewPager2) {
                             setCurrentItem(currentItem + 1, true)
                         }
-                        conductedScrolls++
 
+                        conductedScrolls++
                         if (conductedScrolls == maxScrolls){
-                            scroll.mutableLiveData.postValue(false)
-                            return@post this@Scroller.cancel()
+                            onFinishedListener()
+                            this@AutoScroller.cancel()
+
+                            return@post
                         }
                     }
                 }

@@ -24,7 +24,7 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
             show()
     }
 
-    fun update(dataSetPosition: Int, scrolledRight: Boolean) {
+    fun update(dataSetPosition: Int) {
         val animationDuration = mapOf(
             BounceInterpolator::class.java to 400L,
             DecelerateInterpolator::class.java to 100L
@@ -32,9 +32,9 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
 
         progress(dataSetPosition)?.let { newProgress ->
             with(ObjectAnimator.ofInt(this,"progress", newProgress)) {
-                with(interpolator(scrolledRight, newProgress)){
-                    interpolator = this
-                    duration = animationDuration.getValue(javaClass)
+                getInterpolator(newProgress).let{ interpolator ->
+                    this.interpolator = interpolator
+                    duration = animationDuration.getValue(interpolator.javaClass)
                 }
                 start()
             }
@@ -47,8 +47,8 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
         else
             (max.toFloat() / (sharedViewModel.dataSet.lastIndex).toFloat() * pageIndex).roundToInt()
 
-    private fun interpolator(scrolledRight: Boolean, newProgress: Int): BaseInterpolator =
-        if ((progress == 0 && newProgress == 100 && !scrolledRight) || progress == 100 && newProgress == 0 && scrolledRight)
+    private fun getInterpolator(newProgress: Int): BaseInterpolator =
+        if (setOf(0, 100) == setOf(progress, newProgress))
             BounceInterpolator()
         else
             DecelerateInterpolator()
