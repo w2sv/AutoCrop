@@ -10,7 +10,6 @@ import java.util.*
  * Class accounting for automatic scrolling
  */
 class AutoScroller: Timer() {
-
     fun run(viewPager2: ViewPager2, maxScrolls: Int, onFinishedListener: BlankFun) {
         schedule(
             object : TimerTask() {

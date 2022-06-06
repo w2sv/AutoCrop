@@ -10,7 +10,6 @@ import androidx.appcompat.widget.AppCompatSeekBar
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.uielements.view.show
-import com.w2sv.autocrop.R
 import kotlin.math.roundToInt
 
 class PageIndicationBar(context: Context, attr: AttributeSet) :
@@ -31,7 +30,7 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
         )
 
         progress(dataSetPosition)?.let { newProgress ->
-            with(ObjectAnimator.ofInt(this,"progress", newProgress)) {
+            with(ObjectAnimator.ofInt(this, "progress", newProgress)) {
                 getInterpolator(newProgress).let{ interpolator ->
                     this.interpolator = interpolator
                     duration = animationDuration.getValue(interpolator.javaClass)
@@ -52,10 +51,4 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
             BounceInterpolator()
         else
             DecelerateInterpolator()
-}
-
-class PageIndicationTextView(context: Context, attr: AttributeSet): PageDependentTextView(context, attr, R.string.fracture) {
-    override fun updateText(position: Int){
-        text = stringResource.format(position + 1, sharedViewModel.dataSet.size)
-    }
 }

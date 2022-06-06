@@ -12,15 +12,13 @@ class PageChangeHandler(private val viewModel: ViewPagerViewModel)
     override fun onPageSelected(position: Int) {
         super.onPageSelected(position)
 
-        viewModel.dataSet.updatePosition(position)
+        viewModel.dataSet.currentPosition.updateIfApplicable(position)
     }
 
     override fun onPageScrollStateChanged(state: Int) {
         super.onPageScrollStateChanged(state)
 
         if (state == ViewPager.SCROLL_STATE_IDLE)
-            viewModel.scrollStateIdleListenerConsumable?.let {
-                it()
-            }
+            viewModel.scrollStateIdleListenerConsumable?.invoke()
     }
 }

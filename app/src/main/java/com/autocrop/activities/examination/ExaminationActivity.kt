@@ -36,7 +36,7 @@ class ExaminationActivity :
         if (resultCode == RESULT_OK && requestCode == MANUAL_CROP_REQUEST_CODE) {
             data?.let { intent ->
                 intent.data?.let { screenshotUri ->
-                    castCurrentFragment<ViewPagerFragment>().handleAdjustedCrop(
+                    castCurrentFragment<ViewPagerFragment>().processAdjustedCrop(
                         Crop.FromScreenshot(
                             screenshot = contentResolver.openBitmap(screenshotUri),
                             rect = CroppyActivity.getCropRect(intent)

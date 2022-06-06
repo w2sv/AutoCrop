@@ -11,20 +11,22 @@ import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.ExaminationActivityViewModelRetriever
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCropProcedureDialog
 import com.autocrop.collections.CropBundle
-import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
+import com.autocrop.retriever.viewmodel.ViewModelRetriever
+import com.autocrop.uielements.BidirectionalRecyclerViewAdapter
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.Index
 import com.w2sv.autocrop.R
 
-fun CropBundle.transitionName(): String = hashCode().toString()
+fun CropBundle.transitionName(): String =
+    hashCode().toString()
 
 class CropPagerAdapter(
     private val viewPager2: ViewPager2,
     private val viewModel: ViewPagerViewModel,
     private val lastCropProcessedListener: BlankFun):
-        RecyclerView.Adapter<CropPagerAdapter.CropViewHolder>(),
+        BidirectionalRecyclerViewAdapter<CropPagerAdapter.CropViewHolder>(),
         ViewModelRetriever<ExaminationActivityViewModel> by ExaminationActivityViewModelRetriever(viewPager2.context),
         ActivityRetriever<ExaminationActivity> by ContextBasedActivityRetriever(viewPager2.context) {
 
@@ -90,14 +92,14 @@ class CropPagerAdapter(
      * • remove cropBundle from dataSet
      * • rotate dataSet such that it will subsequently align with the determined newViewPosition again
      * • reset preloaded views around newViewPosition
-     * • update page dependent views
+     * • updateIfApplicable page dependent views
      */
     private fun removeView(dataSetPosition: Index) {
         val removingAtDataSetTail = viewModel.dataSet.removingAtTail(dataSetPosition)
         val newViewPosition = viewPager2.currentItem + viewModel.dataSet.viewPositionIncrement(removingAtDataSetTail)
 
         // scroll to newViewPosition with blocked pageDependentViewUpdating
-        viewModel.dataSet.blockSubsequentPositionUpdate()
+        viewModel.dataSet.currentPosition.blockSubsequentUpdate()
         viewPager2.setCurrentItem(newViewPosition, true)
 
         viewModel.scrollStateIdleListenerConsumable = {
@@ -105,22 +107,11 @@ class CropPagerAdapter(
             // aligning with newViewPosition
             viewModel.dataSet.removeAtAndRealign(dataSetPosition, removingAtDataSetTail, newViewPosition)
 
-            // update surrounding views
-            resetViewsAround(newViewPosition)
+            // updateIfApplicable surrounding views
+            resetCachedViewsAround(newViewPosition)
 
-            // update views
-            viewModel.dataSet.updatePosition(newViewPosition)
+            // updateIfApplicable views
+            viewModel.dataSet.currentPosition.updateIfApplicable(newViewPosition)
         }
-    }
-
-    /**
-     * Triggers reloading of preloaded views surrounding the one sitting at [position]
-     *
-     * Recycler View preloads and cashes 3 views to either side of the one being currently displayed
-     */
-    private fun resetViewsAround(position: Index){
-        val nPreloadedViewsToEitherSide = 3
-        
-        notifyItemRangeChanged(position - nPreloadedViewsToEitherSide, nPreloadedViewsToEitherSide * 2 + 1)
     }
 }

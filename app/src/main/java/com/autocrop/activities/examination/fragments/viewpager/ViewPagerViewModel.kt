@@ -59,21 +59,21 @@ class ViewPagerDataSet(private val cropBundles: MutableList<CropBundle>) :
     val currentCropBundle: CropBundle
         get() = get(currentPosition.value!!)
 
-    val currentPosition: LiveData<Int> by lazy {
-        MutableLiveData(0)
-    }
+    val currentPosition = CurrentPosition(0)
 
-    private var blockSubsequentPositionUpdate = false
+    inner class CurrentPosition(value: Int): LiveData<Int>(value){
+        fun updateIfApplicable(viewPosition: Int){
+            if (blockSubsequentPositionUpdate)
+                blockSubsequentPositionUpdate = false
+            else
+                postValue(correspondingPosition(viewPosition))
+        }
 
-    fun blockSubsequentPositionUpdate(){
-        blockSubsequentPositionUpdate = true
-    }
+        fun blockSubsequentUpdate(){
+            blockSubsequentPositionUpdate = true
+        }
 
-    fun updatePosition(viewPosition: Int){
-        if (blockSubsequentPositionUpdate)
-            blockSubsequentPositionUpdate = false
-        else
-            currentPosition.mutableLiveData.postValue(correspondingPosition(viewPosition))
+        private var blockSubsequentPositionUpdate = false
     }
 
     /**
