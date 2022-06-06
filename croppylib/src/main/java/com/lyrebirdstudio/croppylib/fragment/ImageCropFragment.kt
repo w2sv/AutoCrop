@@ -1,4 +1,4 @@
-package com.lyrebirdstudio.croppylib.ui
+package com.lyrebirdstudio.croppylib.fragment
 
 import android.graphics.Rect
 import android.os.Bundle
@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.databinding.FragmentImageCropBinding
-import com.lyrebirdstudio.croppylib.main.CropRequest
+import com.lyrebirdstudio.croppylib.CropRequest
 import kotlin.math.roundToInt
 
 class ImageCropFragment : Fragment() {

@@ -1,18 +1,17 @@
-package com.lyrebirdstudio.croppylib.ui
+package com.lyrebirdstudio.croppylib.fragment
 
 import android.app.Application
 import android.graphics.RectF
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.lyrebirdstudio.croppylib.main.CropRequest
-import com.lyrebirdstudio.croppylib.state.CropFragmentViewState
-import com.lyrebirdstudio.croppylib.util.bitmap.BitmapUtils
-import com.lyrebirdstudio.croppylib.util.bitmap.ResizedBitmap
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
+import com.lyrebirdstudio.croppylib.CropRequest
+import com.lyrebirdstudio.croppylib.utils.bitmap.BitmapUtils
+import com.lyrebirdstudio.croppylib.utils.bitmap.ResizedBitmap
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.functions.Consumer
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlin.properties.Delegates
 
 class ImageCropViewModel(private val app: Application) : AndroidViewModel(app) {

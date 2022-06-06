@@ -1,4 +1,4 @@
-package com.lyrebirdstudio.croppylib.util.bitmap
+package com.lyrebirdstudio.croppylib.utils.bitmap
 
 import android.graphics.Bitmap
 

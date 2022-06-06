@@ -1,4 +1,4 @@
-package com.lyrebirdstudio.croppylib.cropview
+package com.lyrebirdstudio.croppylib.fragment.cropview
 
 import android.content.Context
 import android.graphics.*
@@ -10,17 +10,17 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.toRect
 import androidx.core.graphics.toRectF
 import com.lyrebirdstudio.croppylib.R
-import com.lyrebirdstudio.croppylib.main.CroppyTheme
-import com.lyrebirdstudio.croppylib.util.extensions.*
-import com.lyrebirdstudio.croppylib.util.model.AnimatableRectF
-import com.lyrebirdstudio.croppylib.util.model.Corner
-import com.lyrebirdstudio.croppylib.util.model.Corner.*
-import com.lyrebirdstudio.croppylib.util.model.Corner.NONE
-import com.lyrebirdstudio.croppylib.util.model.DraggingState
-import com.lyrebirdstudio.croppylib.util.model.DraggingState.DraggingCorner
-import com.lyrebirdstudio.croppylib.util.model.DraggingState.DraggingEdge
-import com.lyrebirdstudio.croppylib.util.model.Edge
-import com.lyrebirdstudio.croppylib.util.model.Edge.*
+import com.lyrebirdstudio.croppylib.CroppyTheme
+import com.lyrebirdstudio.croppylib.utils.extensions.*
+import com.lyrebirdstudio.croppylib.utils.model.AnimatableRectF
+import com.lyrebirdstudio.croppylib.utils.model.Corner
+import com.lyrebirdstudio.croppylib.utils.model.Corner.*
+import com.lyrebirdstudio.croppylib.utils.model.Corner.NONE
+import com.lyrebirdstudio.croppylib.utils.model.DraggingState
+import com.lyrebirdstudio.croppylib.utils.model.DraggingState.DraggingCorner
+import com.lyrebirdstudio.croppylib.utils.model.DraggingState.DraggingEdge
+import com.lyrebirdstudio.croppylib.utils.model.Edge
+import com.lyrebirdstudio.croppylib.utils.model.Edge.*
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -194,86 +194,86 @@ class CropView @JvmOverloads constructor(
      */
     private var maskBitmap: Bitmap? = null
 
-    private val bitmapGestureListener = object : BitmapGestureHandler.BitmapGestureListener {
-        override fun onDoubleTap(motionEvent: MotionEvent) {
+//    private val bitmapGestureListener = object : BitmapGestureHandler.BitmapGestureListener {
+//        override fun onDoubleTap(motionEvent: MotionEvent) {
+//
+//            if (isBitmapScaleExceedMaxLimit(DOUBLE_TAP_SCALE_FACTOR)) {
+//
+//                val resetMatrix = Matrix()
+//                val scale = max(
+//                    cropRect.width() / bitmapRect.width(),
+//                    cropRect.height() / bitmapRect.height()
+//                )
+//                resetMatrix.setScale(scale, scale)
+//
+//                val translateX = (viewWidth - bitmapRect.width() * scale) / 2f + marginInPixelSize
+//                val translateY = (viewHeight - bitmapRect.height() * scale) / 2f + marginInPixelSize
+//                resetMatrix.postTranslate(translateX, translateY)
+//
+//                bitmapMatrix.animateToMatrix(resetMatrix) {
+//                    notifyCropRectChanged()
+//                    invalidate()
+//                }
+//
+//                return
+//            }
+//
+//            bitmapMatrix.animateScaleToPoint(
+//                DOUBLE_TAP_SCALE_FACTOR,
+//                motionEvent.x,
+//                motionEvent.y
+//            ) {
+//                notifyCropRectChanged()
+//                invalidate()
+//            }
+//        }
+//
+//        override fun onScale(scaleFactor: Float, focusX: Float, focusY: Float) {
+//
+//            /**
+//             * Return if new calculated bitmap matrix will exceed scale
+//             * point then early return.
+//             * Otherwise continue and do calculation and apply to bitmap matrix.
+//             */
+//            if (isBitmapScaleExceedMaxLimit(scaleFactor)) {
+//                return
+//            }
+//
+//            zoomInverseMatrix.reset()
+//            bitmapMatrix.invert(zoomInverseMatrix)
+//
+//            /**
+//             * Inverse focus points
+//             */
+//            zoomFocusPoint[0] = focusX
+//            zoomFocusPoint[1] = focusY
+//            zoomInverseMatrix.mapPoints(zoomFocusPoint)
+//
+//            /**
+//             * Scale bitmap matrix
+//             */
+//            bitmapMatrix.preScale(
+//                scaleFactor,
+//                scaleFactor,
+//                zoomFocusPoint[0],
+//                zoomFocusPoint[1]
+//            )
+//            notifyCropRectChanged()
+//
+//            invalidate()
+//        }
+//
+//        override fun onScroll(distanceX: Float, distanceY: Float) {
+//            bitmapMatrix.postTranslate(-distanceX, -distanceY)
+//            invalidate()
+//        }
+//
+//        override fun onEnd() {
+//            settleDraggedBitmap()
+//        }
+//    }
 
-            if (isBitmapScaleExceedMaxLimit(DOUBLE_TAP_SCALE_FACTOR)) {
-
-                val resetMatrix = Matrix()
-                val scale = max(
-                    cropRect.width() / bitmapRect.width(),
-                    cropRect.height() / bitmapRect.height()
-                )
-                resetMatrix.setScale(scale, scale)
-
-                val translateX = (viewWidth - bitmapRect.width() * scale) / 2f + marginInPixelSize
-                val translateY = (viewHeight - bitmapRect.height() * scale) / 2f + marginInPixelSize
-                resetMatrix.postTranslate(translateX, translateY)
-
-                bitmapMatrix.animateToMatrix(resetMatrix) {
-                    notifyCropRectChanged()
-                    invalidate()
-                }
-
-                return
-            }
-
-            bitmapMatrix.animateScaleToPoint(
-                DOUBLE_TAP_SCALE_FACTOR,
-                motionEvent.x,
-                motionEvent.y
-            ) {
-                notifyCropRectChanged()
-                invalidate()
-            }
-        }
-
-        override fun onScale(scaleFactor: Float, focusX: Float, focusY: Float) {
-
-            /**
-             * Return if new calculated bitmap matrix will exceed scale
-             * point then early return.
-             * Otherwise continue and do calculation and apply to bitmap matrix.
-             */
-            if (isBitmapScaleExceedMaxLimit(scaleFactor)) {
-                return
-            }
-
-            zoomInverseMatrix.reset()
-            bitmapMatrix.invert(zoomInverseMatrix)
-
-            /**
-             * Inverse focus points
-             */
-            zoomFocusPoint[0] = focusX
-            zoomFocusPoint[1] = focusY
-            zoomInverseMatrix.mapPoints(zoomFocusPoint)
-
-            /**
-             * Scale bitmap matrix
-             */
-            bitmapMatrix.preScale(
-                scaleFactor,
-                scaleFactor,
-                zoomFocusPoint[0],
-                zoomFocusPoint[1]
-            )
-            notifyCropRectChanged()
-
-            invalidate()
-        }
-
-        override fun onScroll(distanceX: Float, distanceY: Float) {
-            bitmapMatrix.postTranslate(-distanceX, -distanceY)
-            invalidate()
-        }
-
-        override fun onEnd() {
-            settleDraggedBitmap()
-        }
-    }
-
-    private val bitmapGestureHandler = BitmapGestureHandler(context, bitmapGestureListener)
+//    private val bitmapGestureHandler = BitmapGestureHandler(context, bitmapGestureListener)
 
     init {
         setWillNotDraw(false)
@@ -293,9 +293,8 @@ class CropView @JvmOverloads constructor(
      * Handles touches
      */
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event == null) {
+        if (event == null)
             return false
-        }
 
         when (event.action) {
             ACTION_DOWN -> {
@@ -325,21 +324,23 @@ class CropView @JvmOverloads constructor(
                         updateExceedMinBorders()
                         notifyCropRectChanged()
                     }
+                    else -> Unit
                 }
             }
-            ACTION_UP -> {
-                minRect.setEmpty()
-                maxRect.setEmpty()
-                when (draggingState) {
-                    is DraggingEdge, is DraggingCorner -> {
-                        calculateCenterTarget()
-                        animateBitmapToCenterTarget()
-                        animateCropRectToCenterTarget()
-                    }
-                }
-            }
+//            ACTION_UP -> {
+//                minRect.setEmpty()
+//                maxRect.setEmpty()
+//                when (draggingState) {
+//                    is DraggingEdge, is DraggingCorner -> {
+//                        calculateCenterTarget()
+//                        animateBitmapToCenterTarget()
+//                        animateCropRectToCenterTarget()
+//                    }
+//                    else -> Unit
+//                }
+//            }
         }
-//
+
 //        if (draggingState == DraggingState.DraggingBitmap) {
 //            bitmapGestureHandler.onTouchEvent(event)
 //        }
@@ -359,7 +360,7 @@ class CropView @JvmOverloads constructor(
         }
 
         canvas?.save()
-        canvas?.clipRect(cropRect, Region.Op.DIFFERENCE)
+        canvas?.clipRect(cropRect)
         canvas?.drawColor(maskBackgroundColor)
         canvas?.restore()
 
@@ -861,7 +862,7 @@ class CropView @JvmOverloads constructor(
     }
 
     /**
-     * If user miminize the croprect, we need to
+     * If user minimizes the crop rect, we need to
      * calculate target centered rectangle according to
      * current cropRect aspect ratio and size. With this
      * target rectangle, we can animate crop rect to
@@ -885,7 +886,7 @@ class CropView @JvmOverloads constructor(
     }
 
     /**
-     * When user change cropRect size by dragging it, cropRect
+     * When user changes cropRect size by dragging it, cropRect
      * should be animated to center without changing aspect ratio,
      * meanwhile bitmap matrix should be take selected crop rect to
      * the center. This methods take selected crop rect to the cennter.
@@ -908,7 +909,7 @@ class CropView @JvmOverloads constructor(
     }
 
     /**
-     * Animates current croprect to the center position
+     * Animates current crop rect to the center position
      */
     private fun animateCropRectToCenterTarget() {
         cropRect.animateTo(targetRect) {

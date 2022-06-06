@@ -15,9 +15,9 @@ import com.autocrop.uielements.AbstractMenuInflationButton
 import com.autocrop.uielements.ExtendedPopupMenu
 import com.autocrop.uielements.recyclerView
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
-import com.lyrebirdstudio.croppylib.Croppy
-import com.lyrebirdstudio.croppylib.main.CropRequest
-import com.lyrebirdstudio.croppylib.main.CroppyTheme
+import com.lyrebirdstudio.croppylib.CropRequest
+import com.lyrebirdstudio.croppylib.CroppyTheme
+import com.lyrebirdstudio.croppylib.launchCroppyActivity
 import com.w2sv.autocrop.R
 
 class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
@@ -73,7 +73,7 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
             private fun launchManualCroppingActivity() {
                 val transitionAnimation = Animatoo::animateInAndOut
 
-                Croppy.start(
+                launchCroppyActivity(
                     activity,
                     CropRequest(
                         sharedViewModel.dataSet.currentCropBundle.screenshot.uri,

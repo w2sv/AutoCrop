@@ -1,4 +1,4 @@
-package com.lyrebirdstudio.croppylib.main
+package com.lyrebirdstudio.croppylib
 
 import android.content.Context
 import android.graphics.Rect

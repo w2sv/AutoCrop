@@ -1,7 +1,7 @@
-package com.lyrebirdstudio.croppylib.state
+package com.lyrebirdstudio.croppylib.fragment
 
 import android.graphics.RectF
-import com.lyrebirdstudio.croppylib.main.CroppyTheme
+import com.lyrebirdstudio.croppylib.CroppyTheme
 
 data class CropFragmentViewState(
     val croppyTheme: CroppyTheme = CroppyTheme(),

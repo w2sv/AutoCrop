@@ -1,11 +1,11 @@
-package com.lyrebirdstudio.croppylib.util.bitmap
+package com.lyrebirdstudio.croppylib.utils.bitmap
 
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.exifinterface.media.ExifInterface
-import com.lyrebirdstudio.croppylib.util.extensions.rotateBitmap
-import io.reactivex.Single
+import com.lyrebirdstudio.croppylib.utils.extensions.rotateBitmap
+import io.reactivex.rxjava3.core.Single
 import java.io.IOException
 import java.io.InputStream
 

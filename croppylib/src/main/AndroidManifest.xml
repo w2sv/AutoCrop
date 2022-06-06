@@ -3,7 +3,7 @@
     package="com.lyrebirdstudio.croppylib">
 
     <application>
-        <activity android:name=".main.CroppyActivity" />
+        <activity android:name=".activity.CroppyActivity" />
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.lyrebirdstudio.croppylib.util.model
+package com.lyrebirdstudio.croppylib.utils.model
 
 sealed class DraggingState {
     data class DraggingCorner(var corner: Corner) : DraggingState()

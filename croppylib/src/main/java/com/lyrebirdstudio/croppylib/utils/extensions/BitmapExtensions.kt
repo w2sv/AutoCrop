@@ -1,4 +1,4 @@
-package com.lyrebirdstudio.croppylib.util.extensions
+package com.lyrebirdstudio.croppylib.utils.extensions
 
 import android.graphics.Bitmap
 import android.graphics.Matrix

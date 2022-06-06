@@ -1,6 +1,6 @@
-package com.lyrebirdstudio.croppylib.util.model
+package com.lyrebirdstudio.croppylib.utils.model
 
-import com.lyrebirdstudio.croppylib.util.model.Corner.*
+import com.lyrebirdstudio.croppylib.utils.model.Corner.*
 
 enum class Corner {
     NONE,

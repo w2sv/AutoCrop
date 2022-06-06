@@ -1,4 +1,4 @@
-package com.lyrebirdstudio.croppylib.cropview
+package com.lyrebirdstudio.croppylib.fragment.cropview
 
 import android.content.Context
 import android.view.GestureDetector
@@ -13,11 +13,8 @@ class BitmapGestureHandler(
 
     interface BitmapGestureListener {
         fun onScale(scaleFactor: Float, focusX: Float, focusY: Float)
-
         fun onScroll(distanceX: Float, distanceY: Float)
-
         fun onDoubleTap(motionEvent: MotionEvent)
-
         fun onEnd()
     }
 

@@ -1,8 +1,7 @@
-package com.lyrebirdstudio.croppylib.main
+package com.lyrebirdstudio.croppylib
 
 import android.os.Parcelable
 import androidx.annotation.ColorRes
-import com.lyrebirdstudio.croppylib.R
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

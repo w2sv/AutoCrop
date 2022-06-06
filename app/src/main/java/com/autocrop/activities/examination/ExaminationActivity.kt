@@ -20,7 +20,7 @@ import com.autocrop.global.CropSavingPreferences
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.numericallyInflected
 import com.autocrop.utilsandroid.*
-import com.lyrebirdstudio.croppylib.main.CroppyActivity
+import com.lyrebirdstudio.croppylib.activity.CroppyActivity
 import com.w2sv.autocrop.R
 
 class ExaminationActivity :

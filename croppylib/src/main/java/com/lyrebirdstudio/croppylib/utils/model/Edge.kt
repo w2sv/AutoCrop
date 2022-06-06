@@ -1,6 +1,6 @@
-package com.lyrebirdstudio.croppylib.util.model
+package com.lyrebirdstudio.croppylib.utils.model
 
-import com.lyrebirdstudio.croppylib.util.model.Edge.*
+import com.lyrebirdstudio.croppylib.utils.model.Edge.*
 
 enum class Edge {
     NONE,
