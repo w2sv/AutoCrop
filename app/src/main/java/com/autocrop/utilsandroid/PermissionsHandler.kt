@@ -21,12 +21,16 @@ class PermissionsHandler(
     private val snackbarMessageOnRequestSuppression: String)
         : DefaultLifecycleObserver{
 
-    lateinit var requestPermissions: ActivityResultLauncher<Array<String>>
+    private lateinit var requestPermissions: ActivityResultLauncher<Array<String>>
 
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
 
-        requestPermissions = (activity as ComponentActivity).activityResultRegistry.register("key", owner, ActivityResultContracts.RequestMultiplePermissions()) {
+        requestPermissions = (activity as ComponentActivity).activityResultRegistry.register(
+            "unused",
+            owner,
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) {
             onRequestPermissionsResult(it)
         }
     }
