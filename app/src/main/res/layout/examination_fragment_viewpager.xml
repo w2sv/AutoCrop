@@ -44,7 +44,7 @@
         android:layout_alignParentEnd="true"
 
         android:layout_marginTop="23dp"
-        android:layout_marginEnd="14dp">
+        android:layout_marginEnd="18dp">
 
         <!-- https://en.proft.me/2018/02/5/decorating-seekbar-android/ -->
 
