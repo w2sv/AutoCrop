@@ -640,18 +640,8 @@ class CropView @JvmOverloads constructor(
      */
     private fun onCornerPositionChanged(corner: Corner, motionEvent: MotionEvent) {
         when (corner) {
-            TOP_RIGHT -> {
-                cropRect.setTop(motionEvent.y)
-            }
-            TOP_LEFT -> {
-                cropRect.setTop(motionEvent.y)
-            }
-            BOTTOM_RIGHT -> {
-                cropRect.setBottom(motionEvent.y)
-            }
-            BOTTOM_LEFT -> {
-                cropRect.setBottom(motionEvent.y)
-            }
+            TOP_RIGHT, TOP_LEFT -> cropRect.top = motionEvent.y
+            BOTTOM_RIGHT, BOTTOM_LEFT -> cropRect.bottom = motionEvent.y
             else -> return
         }
     }
@@ -667,8 +657,8 @@ class CropView @JvmOverloads constructor(
         bitmapMatrix.mapRect(bitmapBorderRect, bitmapRect)
 
         when (edge) {
-            TOP -> cropRect.setTop(motionEvent.y)
-            BOTTOM -> cropRect.setBottom(motionEvent.y)
+            TOP -> cropRect.top = motionEvent.y
+            BOTTOM -> cropRect.bottom = motionEvent.y
             else -> return
         }
     }
