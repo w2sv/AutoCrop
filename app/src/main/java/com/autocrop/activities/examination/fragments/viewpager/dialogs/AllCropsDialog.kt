@@ -3,8 +3,6 @@ package com.autocrop.activities.examination.fragments.viewpager.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.text.SpannableStringBuilder
-import androidx.core.text.bold
 import com.autocrop.global.BooleanPreferences
 import com.autocrop.uielements.ExtendedDialogFragment
 
@@ -19,12 +17,7 @@ class AllCropsDialog
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(requireContext())
             .apply {
-                setTitle(
-                    SpannableStringBuilder()
-                        .append("Save ")
-                        .bold { append("all") }
-                        .append(" crops?")
-                )
+                setTitle("Save all crops?")
 
                 setMultiChoiceItems(
                     arrayOf("Delete corresponding screenshots"),
