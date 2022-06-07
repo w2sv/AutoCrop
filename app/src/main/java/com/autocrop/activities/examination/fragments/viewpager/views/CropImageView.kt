@@ -39,26 +39,7 @@ class CropImageView(context: Context, attributeSet: AttributeSet):
     }
 
     private fun setAllCropsDialog(){
-        val keyToFragmentResultListener = mapOf(
-            AllCropsDialog.SAVE_ALL_FRAGMENT_RESULT_KEY to {
-                typedActivity.replaceCurrentFragmentWith(
-                    SaveAllFragment(),
-                    true
-                )
-            },
-            AllCropsDialog.DISCARD_ALL_FRAGMENT_RESULT_KEY to {
-                typedActivity.returnToMainActivity()
-            }
-        )
-
-        keyToFragmentResultListener.entries.forEach { (key, fragmentResultListener) ->
-            fragmentActivity.supportFragmentManager.setFragmentResultListener(
-                key,
-                activity as LifecycleOwner
-            )
-            {_, _ -> fragmentResultListener()}
-        }
-
+        setAllCropsDialogFragmentResultListeners()
         setOnLongClickListener {
             if (sharedViewModel.dataSet.size == 1)
                 performClick()
@@ -70,6 +51,25 @@ class CropImageView(context: Context, attributeSet: AttributeSet):
                 else
                     false
             }
+        }
+    }
+
+    private fun setAllCropsDialogFragmentResultListeners(){
+        mapOf(
+            AllCropsDialog.SAVE_ALL_FRAGMENT_RESULT_KEY to {
+                typedActivity.replaceCurrentFragmentWith(
+                    SaveAllFragment(),
+                    true
+                )
+            },
+            AllCropsDialog.DISCARD_ALL_FRAGMENT_RESULT_KEY to {
+                typedActivity.returnToMainActivity()
+            }
+        ).entries.forEach { (key, fragmentResultListener) ->
+            fragmentActivity.supportFragmentManager.setFragmentResultListener(
+                key,
+                activity as LifecycleOwner
+            ){_, _ -> fragmentResultListener()}
         }
     }
 }
