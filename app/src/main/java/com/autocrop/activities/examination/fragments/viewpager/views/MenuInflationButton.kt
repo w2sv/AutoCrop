@@ -38,16 +38,7 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
                 setItemOnClickListeners(
                     mapOf(
                         R.id.menu_item_compare to ::launchComparisonFragment,
-                        R.id.menu_item_adjust_crop to ::launchManualCroppingActivity,
-                        R.id.menu_item_save_all to SaveAllButton(context)::onClickListener,
-                        R.id.menu_item_discard_all to DiscardAllButton(context)::onClickListener
-                    )
-                )
-                styleGroupDividers(
-                    context,
-                    arrayOf(
-                        R.id.menu_divider_crop,
-                        R.id.menu_divider_all_crops
+                        R.id.menu_item_adjust_crop to ::launchManualCroppingActivity
                     )
                 )
                 setIcons(context, R.color.magenta_bright)

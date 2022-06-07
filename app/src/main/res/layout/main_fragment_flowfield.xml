@@ -38,7 +38,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentTop="true"
 
-                android:background="@drawable/ic_sharp_menu_24"
+                android:background="@drawable/ic_dot_menu_24"
                 android:backgroundTint="@android:color/darker_gray"
                 android:contentDescription="@string/menu_inflation_button_description" />
 

@@ -28,7 +28,7 @@
         android:layout_marginTop="26dp"
         android:layout_marginHorizontal="35dp"
 
-        android:background="@drawable/ic_sharp_menu_24"
+        android:background="@drawable/ic_dot_menu_24"
         android:backgroundTint="@color/light_gray"
         android:contentDescription="@string/inflate_options_popup_menu" />
 

@@ -9,7 +9,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.ExaminationActivityViewModelRetriever
-import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCropProcedureDialog
+import com.autocrop.activities.examination.fragments.viewpager.dialogs.CurrentCropDialog
 import com.autocrop.collections.CropBundle
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
@@ -32,11 +32,11 @@ class CropPagerAdapter(
 
     init {
         fragmentActivity.supportFragmentManager.setFragmentResultListener(
-            SingleCropProcedureDialog.PROCEDURE_SELECTED,
+            CurrentCropDialog.PROCEDURE_SELECTED,
             fragmentActivity
         ){ _, bundle ->
             onCropProcedureSelected(
-                bundle.getInt(SingleCropProcedureDialog.DATA_SET_POSITION_OUT)
+                bundle.getInt(CurrentCropDialog.DATA_SET_POSITION_OUT)
             )
         }
     }

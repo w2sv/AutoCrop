@@ -15,7 +15,7 @@ import com.autocrop.utils.executeAsyncTask
  * Class accounting for procedure dialog display upon screen click,
  * defining respective procedure effects
  */
-class SingleCropProcedureDialog
+class CurrentCropDialog
         : ExtendedDialogFragment() {
 
     private val sharedViewModel: ExaminationActivityViewModel by activityViewModels()
