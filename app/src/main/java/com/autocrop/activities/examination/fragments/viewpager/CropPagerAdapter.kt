@@ -14,7 +14,7 @@ import com.autocrop.collections.CropBundle
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
-import com.autocrop.uielements.BidirectionalRecyclerViewAdapter
+import com.autocrop.uielements.recyclerview.BidirectionalRecyclerViewAdapter
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.Index
 import com.w2sv.autocrop.R

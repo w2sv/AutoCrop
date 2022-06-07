@@ -8,7 +8,7 @@ import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.collections.Crop
-import com.autocrop.uielements.CubeOutPageTransformer
+import com.autocrop.uielements.recyclerview.CubeOutPageTransformer
 import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show

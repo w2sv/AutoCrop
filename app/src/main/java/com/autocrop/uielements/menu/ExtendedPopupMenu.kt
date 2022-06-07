@@ -1,4 +1,4 @@
-package com.autocrop.uielements
+package com.autocrop.uielements.menu
 
 import android.content.Context
 import android.graphics.PorterDuff
@@ -12,7 +12,7 @@ import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.core.view.children
 import com.autocrop.utils.BlankFun
-import com.autocrop.utilsandroid.getColorInt
+import com.autocrop.utilsandroid.getThemedColor
 import com.w2sv.autocrop.R
 
 abstract class ExtendedPopupMenu(context: Context, anchor: View, @MenuRes menuResourceId: Int)
@@ -40,7 +40,7 @@ abstract class ExtendedPopupMenu(context: Context, anchor: View, @MenuRes menuRe
     private fun setIconColor(context: Context, @ColorRes colorRes: Int) =
         menu.children.forEach {
             it.icon?.setColorFilter(
-                getColorInt(colorRes, context),
+                context.getThemedColor(colorRes),
                 PorterDuff.Mode.SRC_ATOP
             )
         }
@@ -49,12 +49,7 @@ abstract class ExtendedPopupMenu(context: Context, anchor: View, @MenuRes menuRe
         dividerItemResources
             .forEach { id ->
                 with(menu.findItem(id)){
-                    title = SpannableStringBuilder().italic { color(
-                        getColorInt(
-                            R.color.dark_gray,
-                            context
-                        )
-                    ) {append(title)} }
+                    title = SpannableStringBuilder().italic { color(context.getThemedColor(R.color.dark_gray)) {append(title)} }
                 }
             }
 }

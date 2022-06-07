@@ -1,11 +1,8 @@
-package com.autocrop.uielements
+package com.autocrop.uielements.menu
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.view.menu.MenuBuilder
 
 fun MenuItem.persistMenuAfterClick(context: Context): MenuItem =
     run {
@@ -16,12 +13,3 @@ fun MenuItem.persistMenuAfterClick(context: Context): MenuItem =
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean = false
         })
     }
-
-/**
- * @see
- *      https://www.material.io/components/menus/android#dropdown-menus=
- *      https://stackoverflow.com/questions/15454995/popupmenu-with-icons
- */
-@SuppressLint("RestrictedApi")
-fun Menu.makeIconsVisible() =
-    (this as MenuBuilder).setOptionalIconsVisible(true)

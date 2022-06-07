@@ -1,4 +1,4 @@
-package com.autocrop.uielements
+package com.autocrop.uielements.menu
 
 import android.content.Context
 import android.util.AttributeSet
@@ -9,6 +9,7 @@ abstract class AbstractMenuInflationButton(context: Context, attributeSet: Attri
     : AppCompatImageButton(context, attributeSet) {
 
     init {
+        @Suppress("LeakingThis")
         setOnClickListener {
             popupMenu.show()
         }

@@ -10,8 +10,8 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.toRect
 import androidx.core.graphics.toRectF
-import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.CroppyTheme
+import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.utils.extensions.*
 import com.lyrebirdstudio.croppylib.utils.model.AnimatableRectF
 import com.lyrebirdstudio.croppylib.utils.model.Corner

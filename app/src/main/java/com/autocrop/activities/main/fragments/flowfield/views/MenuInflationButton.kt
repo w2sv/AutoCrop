@@ -14,9 +14,9 @@ import com.autocrop.global.CropSavingPreferences
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
-import com.autocrop.uielements.AbstractMenuInflationButton
-import com.autocrop.uielements.ExtendedPopupMenu
-import com.autocrop.uielements.persistMenuAfterClick
+import com.autocrop.uielements.menu.AbstractMenuInflationButton
+import com.autocrop.uielements.menu.ExtendedPopupMenu
+import com.autocrop.uielements.menu.persistMenuAfterClick
 import com.autocrop.utilsandroid.buildAndShow
 import com.autocrop.utilsandroid.snacky
 import com.w2sv.autocrop.R

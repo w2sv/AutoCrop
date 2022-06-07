@@ -23,7 +23,7 @@ fun Activity.snacky(
                     setIcon(it)
                 }
                 textColorRes?.let {
-                    setTextColor(getColorInt(it, this@snacky))
+                    setTextColor(this@snacky.getThemedColor(it))
                 }
             }
             .setDuration(Snacky.LENGTH_LONG)

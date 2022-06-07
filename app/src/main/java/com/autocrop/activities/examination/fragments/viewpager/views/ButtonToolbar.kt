@@ -1,8 +1,6 @@
 package com.autocrop.activities.examination.fragments.viewpager.views
 
 import android.content.Context
-import android.util.AttributeSet
-import android.view.MenuItem
 import androidx.lifecycle.LifecycleOwner
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment

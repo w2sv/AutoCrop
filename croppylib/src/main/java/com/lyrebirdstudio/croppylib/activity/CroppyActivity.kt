@@ -7,9 +7,9 @@ import android.graphics.Rect
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.lyrebirdstudio.croppylib.CropRequest
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.databinding.ActivityCroppyBinding
-import com.lyrebirdstudio.croppylib.CropRequest
 import com.lyrebirdstudio.croppylib.fragment.ImageCropFragment
 
 class CroppyActivity : AppCompatActivity() {

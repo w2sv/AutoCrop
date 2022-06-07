@@ -1,6 +1,7 @@
 package com.autocrop.activities.examination.fragments.comparison
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.autocrop.collections.CropBundle
 
 class ComparisonViewModelFactory(private val cropBundle: CropBundle)

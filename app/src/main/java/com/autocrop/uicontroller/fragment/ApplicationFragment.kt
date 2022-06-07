@@ -8,8 +8,8 @@ import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
-import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.retriever.activity.TypedActivityRetriever
+import com.autocrop.retriever.viewmodel.ViewModelRetriever
 
 abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
     viewModelClass: Class<VM>,

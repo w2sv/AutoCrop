@@ -69,7 +69,7 @@ class FlowFieldFragment:
                     requireActivity().snacky(
                         SpannableStringBuilder()
                             .append("Crops will be saved to ")
-                            .color(getColorInt(NotificationColor.SUCCESS, requireContext())){
+                            .color(requireContext().getThemedColor(NotificationColor.SUCCESS)){
                                 append(
                                     documentUriPathIdentifier(CropSavingPreferences.documentUri!!)
                                 )

@@ -35,7 +35,7 @@ class MainActivity :
                             else -> snacky(
                                 SpannableStringBuilder().apply {
                                     append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                                    color(getColorInt(NotificationColor.SUCCESS, this@MainActivity)){
+                                    color(this@MainActivity.getThemedColor(NotificationColor.SUCCESS)){
                                         append(cropWriteDirIdentifier)
                                     }
 

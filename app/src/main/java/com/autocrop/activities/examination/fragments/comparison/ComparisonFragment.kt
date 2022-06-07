@@ -1,19 +1,14 @@
 package com.autocrop.activities.examination.fragments.comparison
 
 import android.content.Context
-import android.os.Bundle
 import android.widget.RelativeLayout
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
-import com.autocrop.activities.examination.fragments.viewpager.transitionName
 import com.autocrop.utilsandroid.buildAndShow
 import com.autocrop.utilsandroid.snacky
 import com.w2sv.autocrop.R

@@ -11,9 +11,9 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.lyrebirdstudio.croppylib.CropRequest
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.databinding.FragmentImageCropBinding
-import com.lyrebirdstudio.croppylib.CropRequest
 import kotlin.math.roundToInt
 
 class ImageCropFragment : Fragment() {

@@ -3,7 +3,6 @@ package com.autocrop.utilsandroid
 import android.graphics.Point
 import android.view.MotionEvent
 import android.view.WindowManager
-import androidx.constraintlayout.widget.ConstraintSet
 import kotlin.math.abs
 
 /**

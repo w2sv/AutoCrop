@@ -70,7 +70,7 @@ class ExaminationActivity :
                         .append("Couldn't find cropping bounds for ")
                         .bold {
                             color(
-                                getColorInt(R.color.accentuated_tv, this@ExaminationActivity)
+                                this@ExaminationActivity.getThemedColor(R.color.accentuated_tv)
                             ) { append("$it") }
                         }
                         .append(" image".numericallyInflected(it)),
