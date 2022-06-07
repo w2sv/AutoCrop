@@ -1,32 +1,10 @@
 package com.lyrebirdstudio.croppylib.utils.extensions
 
 import android.graphics.RectF
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.view.MotionEvent
-import android.view.animation.AccelerateDecelerateInterpolator
-import androidx.constraintlayout.widget.ConstraintSet
-import com.lyrebirdstudio.croppylib.utils.model.AnimatableRectF
 import com.lyrebirdstudio.croppylib.utils.model.Corner
 import com.lyrebirdstudio.croppylib.utils.model.Edge
 import kotlin.math.hypot
-
-fun AnimatableRectF.animateTo(target: AnimatableRectF, onUpdate: (RectF) -> Unit = {}) {
-
-    val animateLeft = ObjectAnimator.ofFloat(this, "left", left, target.left)
-    val animateRight = ObjectAnimator.ofFloat(this, "right", right, target.right)
-    val animateTop = ObjectAnimator.ofFloat(this, "top", top, target.top)
-    val animateBottom = ObjectAnimator.ofFloat(this, "bottom", bottom, target.bottom)
-    animateBottom.addUpdateListener {
-        onUpdate.invoke(this)
-    }
-
-    AnimatorSet()
-        .apply { playTogether(animateLeft, animateRight, animateTop, animateBottom) }
-        .apply { interpolator = AccelerateDecelerateInterpolator() }
-        .apply { duration = 300 }
-        .start()
-}
 
 fun RectF.getEdgeTouch(touchEvent: MotionEvent, touchThreshold: Float = 50f): Edge {
     val isLeft = touchEvent.x < left + touchThreshold &&
@@ -90,7 +68,7 @@ fun RectF.getCornerTouch(touchEvent: MotionEvent, touchThreshold: Float = 50f): 
 }
 
 fun MotionEvent.withinRectangle(rectF: RectF): Boolean =
-    x >= rectF.left && x <= rectF.right && y >= rectF.bottom && y <= rectF.top
+    x > rectF.left && x < rectF.right && y > rectF.top && y < rectF.bottom
 
 fun RectF.getHypotenus(): Float {
     return hypot(height().toDouble(), width().toDouble()).toFloat()

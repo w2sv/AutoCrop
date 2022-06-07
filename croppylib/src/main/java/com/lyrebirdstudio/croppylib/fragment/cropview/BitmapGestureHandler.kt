@@ -54,9 +54,7 @@ class BitmapGestureHandler(
     }
 
     private val scaleDetector = ScaleGestureDetector(context, scaleListener)
-
     private val scrollDetector = GestureDetector(context, scrollListener)
-
     private val doubleTapDetector = GestureDetector(context, doubleTapListener)
 
     fun onTouchEvent(motionEvent: MotionEvent) :Boolean {
@@ -67,7 +65,7 @@ class BitmapGestureHandler(
         /**
          * Detect if scrolling end. Call onEnd.
          */
-        if(motionEvent.action == ACTION_UP){
+        if (motionEvent.action == ACTION_UP){
             if(isScrolling){
                 isScrolling = false
                 bitmapGestureListener.onEnd()
@@ -75,6 +73,5 @@ class BitmapGestureHandler(
         }
 
         return scale || scroll || doubleTap
-
     }
 }
