@@ -2,8 +2,6 @@ package com.autocrop.activities.main.fragments.about
 
 import android.animation.Animator
 import android.animation.AnimatorInflater
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +9,7 @@ import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.BooleanPreferences
 import com.autocrop.uielements.view.animate
 import com.autocrop.utilsandroid.buildAndShow
+import com.autocrop.utilsandroid.goToWebpage
 import com.autocrop.utilsandroid.snacky
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
@@ -58,22 +57,12 @@ class AboutFragment:
         logoIv.setOnClickListener { it.animate(Techniques.Tada) }
         w2svTv.setOnClickListener {
             w2svTvAnimation = it.animate(Techniques.ZoomOutUp){
-                startActivity(
-                    Intent(
-                        "android.intent.action.VIEW",
-                        Uri.parse("http://github.com/w2sv")
-                    )
-                )
+                requireActivity().goToWebpage("http://github.com/w2sv")
             }
         }
         copyrightTv.setOnClickListener{
             copyrightTvAnimation = it.animate(Techniques.ZoomOutRight){
-                startActivity(
-                    Intent(
-                        "android.intent.action.VIEW",
-                        Uri.parse("https://github.com/w2sv/AutoCrop/blob/master/LICENSE")
-                    )
-                )
+                requireActivity().goToWebpage("https://github.com/w2sv/AutoCrop/blob/master/LICENSE")
             }
         }
     }
