@@ -50,6 +50,7 @@
         <entry key="app/src/main/res/drawable/splash_background.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/splash_screen.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/trippy_brudineletten_background.xml" value="0.1825" />
+        <entry key="app/src/main/res/layout-land/cropping_fragment_failed.xml" value="0.22241835834068843" />
         <entry key="app/src/main/res/layout-land/cropping_fragment_unsuccessful.xml" value="0.2222222222222222" />
         <entry key="app/src/main/res/layout-land/examination_fragment_viewpager.xml" value="0.2222222222222222" />
         <entry key="app/src/main/res/layout-land/main_fragment_about.xml" value="0.2222222222222222" />
@@ -80,7 +81,7 @@
         <entry key="app/src/main/res/layout/examination_fragment_deletionquery.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/examination_fragment_saveall.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/examination_fragment_show_original_screenshot.xml" value="0.21547669944420692" />
-        <entry key="app/src/main/res/layout/examination_fragment_viewpager.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/examination_fragment_viewpager.xml" value="0.17452402538531278" />
         <entry key="app/src/main/res/layout/examination_view_pager_image_view.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/main.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/main_fragment_about.xml" value="0.2625" />

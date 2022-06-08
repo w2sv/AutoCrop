@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.core.text.bold
 import androidx.core.text.color
-import androidx.core.text.italic
 import com.autocrop.uielements.ExtendedDialogFragment
 import com.autocrop.utils.BlankFun
 import com.autocrop.utilsandroid.getColoredIcon
@@ -29,11 +28,11 @@ class InstructionsDialog: ExtendedDialogFragment(){
                 setMessage(
                     SpannableStringBuilder()
                         .color(context.getThemedColor(R.color.accentuated_tv)){append("•")}
-                        .append(" Tap screen once to save/delete")
+                        .append(" Tap screen once to save/discard")
                         .bold { append(" current") }
                         .append(" crop \uD83D\uDC47\n\n")
                         .color(context.getThemedColor(R.color.accentuated_tv)){append("•")}
-                        .append(" Tap screen and hold to save/delete")
+                        .append(" Tap screen and hold to save/discard")
                         .bold { append(" all") }
                         .append(" crops 👇⏳")
                 )

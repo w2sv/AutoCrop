@@ -16,6 +16,7 @@ class ViewPagerViewModel
     : ViewModel(){
 
     var displayedEntrySnackbar = false
+    var scroller: Scroller? = null
 
     val dataSet: ViewPagerDataSet = ViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 

@@ -74,6 +74,8 @@
     </com.autocrop.activities.main.fragments.about.VersionTextView>
 
     <com.autocrop.activities.main.fragments.about.CopyrightTextView
+        android:id="@+id/copyright_tv"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 

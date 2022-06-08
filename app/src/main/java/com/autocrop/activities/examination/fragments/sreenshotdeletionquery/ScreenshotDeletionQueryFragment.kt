@@ -37,7 +37,9 @@ class ScreenshotDeletionQueryFragment :
     private val screenshotDeletionQueryContract = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()){
         // increment sharedViewModel.nDeletedScreenshots if deletion request emitted
         if (it.resultCode == Activity.RESULT_OK)
-            sharedViewModel.incrementNDeletedScreenshotsByDeletionQueryScreenshotUris()
+            with(sharedViewModel){
+                nDeletedScreenshots += deletionQueryScreenshotUris.size
+            }
 
         // launch appTitleFragment after small delay for UX smoothness
         Handler(Looper.getMainLooper()).postDelayed(

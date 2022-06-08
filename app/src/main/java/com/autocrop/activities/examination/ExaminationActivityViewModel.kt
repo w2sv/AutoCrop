@@ -16,52 +16,6 @@ class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?, va
         lateinit var cropBundles: MutableList<CropBundle>
     }
 
-    val nSavedCrops: Int
-        get() = _nSavedCrops
-    private var _nSavedCrops = 0
-
-    val nDeletedScreenshots: Int
-        get() = _nDeletedScreenshots
-    private var _nDeletedScreenshots = 0
-
-    val cropSavingUris = mutableListOf<Uri>()
-
-    fun processCropBundle(cropBundlesPosition: Int, deleteScreenshot: Boolean, context: Context){
-        val (savingResult, deletionResult) = context.processCropBundle(
-            cropBundles[cropBundlesPosition],
-            validSaveDirDocumentUri,
-            deleteScreenshot
-        )
-        with(savingResult){
-            if (first)
-                cropSavingUris.add(second)
-        }
-        deletionResult?.second?.let {
-            deletionQueryScreenshotUris.add(it)
-            Timber.i("Added $it to deletionQueryScreenshotUris")
-        }
-
-        incrementImageFileIOCounters(deletionResult?.first ?: false)
-    }
-
-    private fun incrementImageFileIOCounters(deletedScreenshot: Boolean){
-        _nSavedCrops++
-        if (deletedScreenshot)
-            _nDeletedScreenshots++
-    }
-
-    val deletionQueryScreenshotUris: MutableList<Uri> = mutableListOf()
-    fun incrementNDeletedScreenshotsByDeletionQueryScreenshotUris(){
-        _nDeletedScreenshots += deletionQueryScreenshotUris.size
-    }
-
-    fun cropWriteDirIdentifier(): String =
-        validSaveDirDocumentUri?.let {
-            documentUriPathIdentifier(it)
-        } ?: externalPicturesDir.path
-
-    var singleCropSavingJob: Job? = null
-
     /**
      * Clear [cropBundles]
      */
@@ -70,4 +24,41 @@ class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?, va
 
         cropBundles.clear()
     }
+
+    var singleCropSavingJob: Job? = null
+
+    var nSavedCrops = 0
+    var nDeletedScreenshots = 0
+
+    val cropSavingUris = mutableListOf<Uri>()
+    val deletionQueryScreenshotUris = mutableListOf<Uri>()
+
+    fun processCropBundle(cropBundlesPosition: Int, deleteScreenshot: Boolean, context: Context){
+        val (savingResult, deletionResult) = context.processCropBundle(
+            cropBundles[cropBundlesPosition],
+            validSaveDirDocumentUri,
+            deleteScreenshot
+        )
+
+        savingResult.let{ (successful, uri) ->
+            if (successful) {
+                cropSavingUris.add(uri)
+                nSavedCrops++
+            }
+        }
+
+        deletionResult?.let { (successful, uri) ->
+            uri?.let {
+                deletionQueryScreenshotUris.add(it)
+                Timber.i("Added $it to deletionQueryScreenshotUris")
+            }
+            if (successful)
+                nDeletedScreenshots++
+        }
+    }
+
+    fun cropWriteDirIdentifier(): String =
+        validSaveDirDocumentUri?.let {
+            documentUriPathIdentifier(it)
+        } ?: externalPicturesDir.path
 }

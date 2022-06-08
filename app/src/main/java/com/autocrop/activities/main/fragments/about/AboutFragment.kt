@@ -21,27 +21,26 @@ class AboutFragment:
     MainActivityFragment<MainFragmentAboutBinding>(MainFragmentAboutBinding::class.java){
 
     private var w2svTvAnimation: YoYo.YoYoString? = null
+    private var copyrightTvAnimation: YoYo.YoYoString? = null
 
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator? =
-        if (enter)
+        if (enter && !BooleanPreferences.aboutFragmentInstructionsShown)
             AnimatorInflater.loadAnimator(activity, nextAnim)
                 .apply {
                     addListener(object : Animator.AnimatorListener {
                         override fun onAnimationStart(animation: Animator?) {}
                         override fun onAnimationEnd(animation: Animator?) {
-                            if (!BooleanPreferences.aboutFragmentInstructionsShown) {
-                                Handler(Looper.getMainLooper()).postDelayed(
-                                    {
-                                        requireActivity()
-                                            .snacky("Pro tip: check out what happens if you click on the various view elements")
-                                            .setIcon(R.drawable.ic_outline_info_24)
-                                            .setDuration(4000)
-                                            .buildAndShow()
-                                        BooleanPreferences.aboutFragmentInstructionsShown = true
-                                    },
-                                    resources.getInteger(R.integer.delay_medium).toLong()
-                                )
-                            }
+                            Handler(Looper.getMainLooper()).postDelayed(
+                                {
+                                    requireActivity()
+                                        .snacky("Pro tip: check out what happens if you click on the various view elements")
+                                        .setIcon(R.drawable.ic_outline_info_24)
+                                        .setDuration(4000)
+                                        .buildAndShow()
+                                    BooleanPreferences.aboutFragmentInstructionsShown = true
+                                },
+                                resources.getInteger(R.integer.delay_minimal).toLong()
+                            )
                         }
                         override fun onAnimationCancel(animation: Animator?) {}
                         override fun onAnimationRepeat(animation: Animator?) {}
@@ -57,7 +56,6 @@ class AboutFragment:
     private fun MainFragmentAboutBinding.setOnClickListeners(){
         appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
         logoIv.setOnClickListener { it.animate(Techniques.Tada) }
-
         w2svTv.setOnClickListener {
             w2svTvAnimation = it.animate(Techniques.ZoomOutUp){
                 startActivity(
@@ -68,17 +66,29 @@ class AboutFragment:
                 )
             }
         }
+        copyrightTv.setOnClickListener{
+            copyrightTvAnimation = it.animate(Techniques.ZoomOutRight){
+                startActivity(
+                    Intent(
+                        "android.intent.action.VIEW",
+                        Uri.parse("https://github.com/w2sv/AutoCrop/blob/master/LICENSE")
+                    )
+                )
+            }
+        }
     }
 
     override fun onStop() {
         super.onStop()
 
         w2svTvAnimation?.stop(true)
+        copyrightTvAnimation?.stop(true)
     }
 
     override fun onResume() {
         super.onResume()
 
         w2svTvAnimation = null
+        copyrightTvAnimation = null
     }
 }

@@ -44,19 +44,10 @@ class ViewPagerFragment :
         super.onViewCreatedCore(savedInstanceState)
 
         binding.viewPager.initialize()
-        viewModel.setLiveDataObservers(savedInstanceState)
+        viewModel.setLiveDataObservers()
     }
 
-    fun processAdjustedCrop(adjustedCrop: Crop) {
-        viewModel.dataSet.currentCropBundle.crop = adjustedCrop
-
-        (binding.viewPager.adapter!! as CropPagerAdapter).notifyItemChanged(
-            binding.viewPager.currentItem,
-            viewModel.dataSet.size
-        )
-    }
-
-    private fun ViewPagerViewModel.setLiveDataObservers(savedInstanceState: Bundle?) {
+    private fun ViewPagerViewModel.setLiveDataObservers() {
         dataSet.currentPosition.observe(viewLifecycleOwner) { position ->
             binding.discardingStatisticsTv.updateText(position)
 
@@ -71,12 +62,10 @@ class ViewPagerFragment :
             }
         }
 
-        var autoScroller: AutoScroller? = null
-
         autoScroll.observe(viewLifecycleOwner) { autoScroll ->
             if (autoScroll) {
                 binding.cancelAutoScrollButton.show()
-                autoScroller = AutoScroller().apply {
+                scroller = Scroller().apply {
                     run(binding.viewPager, maxAutoScrolls){
                         this@setLiveDataObservers.autoScroll.mutableLiveData.postValue(false)
                     }
@@ -89,7 +78,7 @@ class ViewPagerFragment :
                     binding.menuInflationButton
                 )
 
-                autoScroller?.let {
+                scroller?.let {
                     it.cancel()
                     crossFade(
                         arrayOf(binding.cancelAutoScrollButton),
@@ -97,22 +86,20 @@ class ViewPagerFragment :
                     )
                 } ?: manualScrollingStateViews.forEach { it.show() }
 
-                if (savedInstanceState == null){
-                    if (!BooleanPreferences.viewPagerInstructionsShown)
-                        Handler(Looper.getMainLooper()).postDelayed(
-                            {
-                                InstructionsDialog()
-                                    .apply {
-                                        positiveButtonOnClickListener = ::displayDismissedScreenshotsSnackbar
-                                    }
-                                    .show(parentFragmentManager)
-                                BooleanPreferences.viewPagerInstructionsShown = true
-                            },
-                            resources.getInteger(R.integer.delay_minimal).toLong()
-                        )
-                    else
-                        displayDismissedScreenshotsSnackbar()
-                }
+                if (!BooleanPreferences.viewPagerInstructionsShown)
+                    Handler(Looper.getMainLooper()).postDelayed(
+                        {
+                            InstructionsDialog()
+                                .apply {
+                                    positiveButtonOnClickListener = ::displayDismissedScreenshotsSnackbarIfApplicable
+                                }
+                                .show(parentFragmentManager)
+                            BooleanPreferences.viewPagerInstructionsShown = true
+                        },
+                        resources.getInteger(R.integer.delay_minimal).toLong()
+                    )
+                else
+                    displayDismissedScreenshotsSnackbarIfApplicable()
 
             }
             binding.viewPager.isUserInputEnabled = !autoScroll
@@ -124,7 +111,7 @@ class ViewPagerFragment :
         }
     }
 
-    private fun displayDismissedScreenshotsSnackbar(){
+    private fun displayDismissedScreenshotsSnackbarIfApplicable(){
         if (!viewModel.displayedEntrySnackbar){
             sharedViewModel.nDismissedScreenshots?.let {
                 requireActivity().snacky(
@@ -161,5 +148,27 @@ class ViewPagerFragment :
             viewModel.initialViewPosition(),
             false
         )
+    }
+
+    /**
+     * Forward [adjustedCrop] to [viewModel].dataSet and notify viewPager.adapter
+     */
+    fun processAdjustedCrop(adjustedCrop: Crop) {
+        viewModel.dataSet.currentCropBundle.crop = adjustedCrop
+
+        (binding.viewPager.adapter!! as CropPagerAdapter).notifyItemChanged(
+            binding.viewPager.currentItem,
+            viewModel.dataSet.size
+        )
+    }
+
+    /**
+     * Cancel and nullify scroller if set, i.e. running
+     */
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        viewModel.scroller?.cancel()
+        viewModel.scroller = null
     }
 }
