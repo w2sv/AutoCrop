@@ -34,14 +34,12 @@ class ComparisonFragment
         sharedElementEnterTransition = TransitionInflater.from(context)
             .inflateTransition(android.R.transition.move)
             .addListener(object: TransitionListenerAdapter(){
-                private var enterTransitionCompleted = false
-
                 override fun onTransitionEnd(transition: Transition) {
                     super.onTransitionEnd(transition)
 
-                    if (!enterTransitionCompleted){
+                    if (!viewModel.enterTransitionCompleted){
                         binding.comparisonIv.onSharedElementEnterTransitionEnd(binding.root.layoutParams as RelativeLayout.LayoutParams)
-                        enterTransitionCompleted = true
+                        viewModel.enterTransitionCompleted = true
 
                         if (!BooleanPreferences.comparisonInstructionsShown){
                             requireActivity()

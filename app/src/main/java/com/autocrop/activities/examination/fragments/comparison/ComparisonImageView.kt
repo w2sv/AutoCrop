@@ -12,7 +12,6 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.autocrop.activities.examination.fragments.viewpager.transitionName
-import kotlin.properties.Delegates
 
 class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet){
@@ -38,30 +37,33 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
         )
     }
 
-    private var displayingScreenshot by Delegates.notNull<Boolean>()
-
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
         ViewCompat.setTransitionName(this, sharedViewModel.cropBundle.transitionName())
 
-        setCrop(marginalized = true)
+        setOnClickListener{
+            sharedViewModel.displayScreenshot = !sharedViewModel.displayScreenshot
+            set()
+        }
+
+        if (!sharedViewModel.enterTransitionCompleted)
+            setCrop(marginalized = true)
+        else
+            set()
+    }
+
+    private fun set(){
+        if (sharedViewModel.displayScreenshot)
+            setScreenshot()
+        else
+            setCrop()
     }
 
     fun onSharedElementEnterTransitionEnd(rootLayoutParams: RelativeLayout.LayoutParams){
         layoutParams = rootLayoutParams
         setScreenshot()
-
-        displayingScreenshot = true
-
-        setOnClickListener{
-            if (displayingScreenshot)
-                setCrop()
-            else
-                setScreenshot()
-
-            displayingScreenshot = !displayingScreenshot
-        }
+        sharedViewModel.displayScreenshot = true
     }
 
     private fun setCrop(marginalized: Boolean = false){
@@ -88,6 +90,7 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
         setImageBitmap(screenshot)
     }
 
-    fun prepareSharedElementExitTransition() =
+    fun prepareSharedElementExitTransition(){
         setCrop(marginalized = true)
+    }
 }

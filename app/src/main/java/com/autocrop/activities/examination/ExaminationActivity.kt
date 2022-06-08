@@ -1,7 +1,6 @@
 package com.autocrop.activities.examination
 
 import android.content.Intent
-import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentExtraIdentifier
