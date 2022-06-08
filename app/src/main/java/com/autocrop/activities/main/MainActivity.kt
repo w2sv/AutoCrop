@@ -21,7 +21,8 @@ import timber.log.Timber
 class MainActivity :
     ApplicationActivity<FlowFieldFragment, MainActivityViewModel>(
         FlowFieldFragment::class.java,
-        MainActivityViewModel::class.java) {
+        MainActivityViewModel::class.java,
+        preferencesInstances) {
 
     /**
      * [launchReviewFlow] on Activity reentry
@@ -58,7 +59,7 @@ class MainActivity :
     /**
      * Notifies as to IO results from previous ExaminationActivity cycle
      */
-    override fun triggerEntrySnackbar(){
+    override fun showEntrySnackbar(){
         sharedViewModel.imageFileIOSynopsis?.run {
             Handler(Looper.getMainLooper()).postDelayed(
                 {
@@ -92,19 +93,6 @@ class MainActivity :
         when (currentFragment()){
             is AboutFragment -> supportFragmentManager.popBackStack()
             else -> finishAffinity()
-        }
-    }
-
-    /**
-     * Write changed values of each [preferencesInstances] element to SharedPreferences
-     */
-    override fun onStop() {
-        super.onStop()
-
-        with(lazy { getApplicationWideSharedPreferences() }){
-            preferencesInstances.forEach {
-                it.writeChangedValuesToSharedPreferences(this)
-            }
         }
     }
 }

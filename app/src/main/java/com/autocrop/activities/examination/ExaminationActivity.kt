@@ -13,6 +13,7 @@ import com.autocrop.activities.examination.fragments.viewpager.views.MenuInflati
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.collections.Crop
 import com.autocrop.collections.ImageFileIOSynopsis
+import com.autocrop.global.BooleanPreferences
 import com.autocrop.global.CropSavingPreferences
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utilsandroid.*
@@ -23,7 +24,8 @@ import de.mateware.snacky.Snacky
 class ExaminationActivity :
     ApplicationActivity<ViewPagerFragment, ExaminationActivityViewModel>(
         ViewPagerFragment::class.java,
-        ExaminationActivityViewModel::class.java) {
+        ExaminationActivityViewModel::class.java,
+        accessedPreferenceInstances = arrayOf(BooleanPreferences)) {
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

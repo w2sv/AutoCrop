@@ -91,4 +91,4 @@ object CropSavingPreferences: Preferences<Uri?>(
         }
 }
 
-val preferencesInstances = arrayOf(BooleanPreferences, CropSavingPreferences)
+val preferencesInstances: Array<Preferences<*>> = arrayOf(BooleanPreferences, CropSavingPreferences)
