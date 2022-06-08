@@ -5,17 +5,35 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
+import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.w2sv.autocrop.R
 import de.mateware.snacky.Snacky
 import timber.log.Timber
 
 class PermissionsHandler(
-    private val fragment: Fragment,
+    private val activity: Activity,
     private val requiredPermissions: Array<String>,
     private val snackbarMessageOnPermissionDenial: String,
-    private val snackbarMessageOnRequestSuppression: String){
+    private val snackbarMessageOnRequestSuppression: String)
+        : DefaultLifecycleObserver{
+
+    private lateinit var requestPermissions: ActivityResultLauncher<Array<String>>
+
+    override fun onCreate(owner: LifecycleOwner) {
+        super.onCreate(owner)
+
+        requestPermissions = (activity as ComponentActivity).activityResultRegistry.register(
+            "unused",
+            owner,
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) {
+            onRequestPermissionsResult(it)
+        }
+    }
 
     /**
      * Returns [requiredPermissions] which are also [nonRedundantManifestPermissions] and haven't
@@ -23,7 +41,7 @@ class PermissionsHandler(
      */
     private val pendingPermissions: List<String>
         get() = requiredPermissions.filter {
-            nonRedundantManifestPermissions.contains(it) && !fragment.requireActivity().permissionGranted(it)
+            nonRedundantManifestPermissions.contains(it) && !activity.permissionGranted(it)
         }
 
     /**
@@ -31,7 +49,7 @@ class PermissionsHandler(
      * that is whose maxSdkVersion (also manually declared in Manifest) <= Build version
      */
     private val nonRedundantManifestPermissions: Array<String> by lazy {
-        fragment.requireContext().run {
+        activity.run {
             packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
                 .requestedPermissions ?: arrayOf()
         }
@@ -39,19 +57,15 @@ class PermissionsHandler(
 
     /**
      * Function wrapper either directly running [onPermissionsGranted] if all permissions granted, otherwise sets
-     * [onPermissionsGranted] to [onPermissionsGranted] and launches [permissionRequestContract]
+     * [onPermissionsGranted] to [onPermissionsGranted] and launches [requestPermissions]
      */
-    operator fun invoke(onPermissionsGranted: () -> Unit): Unit =
+    fun requestPermissionsOrRun(onPermissionsGranted: () -> Unit): Unit =
         if (pendingPermissions.isEmpty())
             onPermissionsGranted()
         else{
             this.onPermissionsGranted = onPermissionsGranted
-            permissionRequestContract.launch(pendingPermissions.toTypedArray())
+            requestPermissions.launch(pendingPermissions.toTypedArray())
         }
-
-    private val permissionRequestContract = fragment.registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ){ onRequestPermissionsResult(it) }
 
     /**
      * Temporary callable to be set before, and to be cleared on exiting of [onRequestPermissionsResult]
@@ -64,13 +78,13 @@ class PermissionsHandler(
      */
     private fun onRequestPermissionsResult(permission2Granted: Map<String, Boolean>){
         if (permission2Granted.values.any { !it }){
-            fragment.requireActivity().run {
+            activity.run {
                 if (shouldShowRequestPermissionRationale)
                     permissionDeniedSnacky()
                 else
                     permissionRequestingSuppressedSnacky()
             }
-                .show()
+                .buildAndShow()
 
             Timber.i("Not all required permissions were granted: $permission2Granted")
         }
@@ -81,25 +95,21 @@ class PermissionsHandler(
     }
 
     private val shouldShowRequestPermissionRationale: Boolean
-        get() = fragment.shouldShowRequestPermissionRationale(pendingPermissions[0])
+        get() = activity.shouldShowRequestPermissionRationale(pendingPermissions[0])
 
     private fun Activity.permissionDeniedSnacky(): Snacky.Builder =
-        snacky(
-            snackbarMessageOnPermissionDenial,
-            R.drawable.ic_error_24
-        )
+        snacky(snackbarMessageOnPermissionDenial)
+            .setIcon(R.drawable.ic_error_24)
 
     private fun Activity.permissionRequestingSuppressedSnacky(): Snacky.Builder =
-        snacky(
-            snackbarMessageOnRequestSuppression,
-            R.drawable.ic_error_24
-        )
+        snacky(snackbarMessageOnRequestSuppression)
+            .setIcon(R.drawable.ic_error_24)
             .setActionText("Settings")
             .setActionClickListener {
-                fragment.startActivity(
+                activity.startActivity(
                     Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                         .apply {
-                            data = Uri.fromParts("package", fragment.requireContext().packageName, null)
+                            data = Uri.fromParts("package", activity.packageName, null)
                         }
                 )
             }

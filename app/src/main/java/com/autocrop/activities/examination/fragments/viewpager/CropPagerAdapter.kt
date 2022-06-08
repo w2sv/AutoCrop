@@ -1,98 +1,71 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.os.bundleOf
-import androidx.fragment.app.FragmentActivity
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.autocrop.activities.examination.fragments.viewpager.dialogs.SingleCropProcedureDialog
+import com.autocrop.activities.examination.ExaminationActivity
+import com.autocrop.activities.examination.ExaminationActivityViewModel
+import com.autocrop.activities.examination.ExaminationActivityViewModelRetriever
+import com.autocrop.activities.examination.fragments.viewpager.dialogs.CurrentCropDialog
+import com.autocrop.collections.CropBundle
+import com.autocrop.retriever.activity.ActivityRetriever
+import com.autocrop.retriever.activity.ContextBasedActivityRetriever
+import com.autocrop.retriever.viewmodel.ViewModelRetriever
+import com.autocrop.uielements.recyclerview.BidirectionalRecyclerViewAdapter
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.Index
 import com.w2sv.autocrop.R
+
+fun CropBundle.transitionName(): String =
+    hashCode().toString()
 
 class CropPagerAdapter(
     private val viewPager2: ViewPager2,
     private val viewModel: ViewPagerViewModel,
     private val lastCropProcessedListener: BlankFun):
-        RecyclerView.Adapter<CropPagerAdapter.CropViewHolder>() {
+        BidirectionalRecyclerViewAdapter<CropPagerAdapter.CropViewHolder>(),
+        ViewModelRetriever<ExaminationActivityViewModel> by ExaminationActivityViewModelRetriever(viewPager2.context),
+        ActivityRetriever<ExaminationActivity> by ContextBasedActivityRetriever(viewPager2.context) {
 
-    val cropProcedureDialog: SingleCropProcedureDialog by lazy{
-        SingleCropProcedureDialog()
-    }
-    val fragmentActivity: FragmentActivity by lazy{
-        viewPager2.context as FragmentActivity
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    inner class CropViewHolder(view: ImageView)
-        : RecyclerView.ViewHolder(view) {
-
-        val cropView: ImageView = view.findViewById(R.id.image_view_examination_view_pager)
-
-        /**
-         * Set onTouchListener through implementation of ImmersiveViewOnTouchListener
-         */
-        init {
-            cropView.setOnTouchListener(
-                object : ImmersiveViewOnTouchListener() {
-
-                    init {
-                        fragmentActivity.supportFragmentManager.setFragmentResultListener(
-                            SingleCropProcedureDialog.PROCEDURE_SELECTED, fragmentActivity){ _, bundle ->
-                            onCropProcedureSelected(
-                                bundle.getInt(SingleCropProcedureDialog.DATA_SET_POSITION_OUT)
-                            )
-                        }
-                    }
-
-                    /**
-                     * Cancel scroller upon touch if running
-                     */
-                    override fun onTouch(v: View?, event: MotionEvent?): Boolean =
-                        if (viewModel.autoScroll.value!!) {
-                            viewModel.autoScroll.postValue(false)
-                            false
-                        }
-                        else
-                            super.onTouch(v, event)
-
-                    /**
-                     * Invoke CropProcedureDialog
-                     */
-                    override fun onClick() = with(cropProcedureDialog) {
-                        arguments = bundleOf(
-                            SingleCropProcedureDialog.DATA_SET_POSITION_IN to viewModel.dataSet.correspondingPosition(
-                                adapterPosition
-                            )
-                        )
-                        show(fragmentActivity.supportFragmentManager)
-                    }
-                }
+    init {
+        fragmentActivity.supportFragmentManager.setFragmentResultListener(
+            CurrentCropDialog.PROCEDURE_SELECTED,
+            fragmentActivity
+        ){ _, bundle ->
+            onCropProcedureSelected(
+                bundle.getInt(CurrentCropDialog.DATA_SET_POSITION_OUT)
             )
         }
+    }
+
+    class CropViewHolder(view: ImageView)
+        : RecyclerView.ViewHolder(view) {
+        val cropImageView: ImageView = view.findViewById(R.id.crop_iv)
     }
 
     /**
      * Defines creation of CropViewHolder
      */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CropViewHolder {
-        return CropViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CropViewHolder =
+        CropViewHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.examination_view_pager_image_view, parent, false)
-                    as ImageView
+                .inflate(R.layout.examination_cropimageviewholder, parent, false) as ImageView
         )
-    }
 
     /**
      * Defines crop setting wrt [position]
      */
-    override fun onBindViewHolder(holder: CropViewHolder, position: Index) =
-        holder.cropView.setImageBitmap(viewModel.dataSet.atCorrespondingPosition(position).crop)
+    override fun onBindViewHolder(holder: CropViewHolder, position: Index){
+        holder.cropImageView.apply{
+            val cropBundle = viewModel.dataSet.atCorrespondingPosition(position)
+
+            setImageBitmap(cropBundle.crop.bitmap)
+            ViewCompat.setTransitionName(this, cropBundle.transitionName())
+        }
+    }
 
     override fun getItemCount(): Int =
         if (viewModel.dataSet.size > 1) ViewPagerViewModel.MAX_VIEWS else 1
@@ -106,7 +79,7 @@ class CropPagerAdapter(
      */
     private fun onCropProcedureSelected(dataSetPosition: Index) =
         if (viewModel.dataSet.size == 1)
-            cropProcedureDialog.processingJob?.run {
+            sharedViewModel.singleCropSavingJob?.run{
                 invokeOnCompletion {
                     lastCropProcessedListener()
                 }
@@ -119,37 +92,26 @@ class CropPagerAdapter(
      * • remove cropBundle from dataSet
      * • rotate dataSet such that it will subsequently align with the determined newViewPosition again
      * • reset preloaded views around newViewPosition
-     * • update page dependent views
+     * • updateIfApplicable pageIndex dependent views
      */
     private fun removeView(dataSetPosition: Index) {
         val removingAtDataSetTail = viewModel.dataSet.removingAtTail(dataSetPosition)
         val newViewPosition = viewPager2.currentItem + viewModel.dataSet.viewPositionIncrement(removingAtDataSetTail)
 
         // scroll to newViewPosition with blocked pageDependentViewUpdating
-        viewModel.blockSubsequentPageRelatedViewsUpdate()
+        viewModel.dataSet.currentPosition.blockSubsequentUpdate()
         viewPager2.setCurrentItem(newViewPosition, true)
 
-        viewModel.scrollStateIdleListenerConsumable.set {
+        viewModel.scrollStateIdleListenerConsumable = {
             // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
             // aligning with newViewPosition
             viewModel.dataSet.removeAtAndRealign(dataSetPosition, removingAtDataSetTail, newViewPosition)
 
-            // update surrounding views
-            resetViewsAround(newViewPosition)
+            // updateIfApplicable surrounding views
+            resetCachedViewsAround(newViewPosition)
 
-            // update views
-            viewModel.setDataSetPosition(newViewPosition)
+            // updateIfApplicable views
+            viewModel.dataSet.currentPosition.updateIfApplicable(newViewPosition)
         }
-    }
-
-    /**
-     * Triggers reloading of preloaded views surrounding the one sitting at [position]
-     *
-     * Recycler View preloads and cashes 3 views to either side of the one being currently displayed
-     */
-    private fun resetViewsAround(position: Index){
-        val nPreloadedViewsToEitherSide = 3
-
-        notifyItemRangeChanged(position - nPreloadedViewsToEitherSide, nPreloadedViewsToEitherSide * 2 + 1)
     }
 }

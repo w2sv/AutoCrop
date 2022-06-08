@@ -4,7 +4,6 @@
     <color name="dark_gray">#656565</color>
 
     <color name="light_green">#008577</color>
-
     <color name="ocean_blue">#1a0ac7</color>
 
     <color name="brudi_pink">#FF3F7F</color>
@@ -12,7 +11,7 @@
     <color name="magenta_saturated">#911945</color>
     <color name="magenta_dark">#7F1F3F</color>
     <color name="wine_red">#B00020</color>
-    <color name="holo_purple">@android:color/holo_purple</color>
 
     <color name="accentuated_tv">@color/magenta_bright</color>
+    <color name="neutral_background">#000000</color>
 </resources>

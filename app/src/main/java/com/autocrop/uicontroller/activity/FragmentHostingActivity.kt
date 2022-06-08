@@ -2,6 +2,7 @@ package com.autocrop.uicontroller.activity
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.w2sv.autocrop.R
 
 abstract class FragmentHostingActivity<RF: Fragment>(
@@ -27,15 +28,23 @@ abstract class FragmentHostingActivity<RF: Fragment>(
         supportFragmentManager
             .beginTransaction()
             .setReorderingAllowed(true)
-            .add(layoutId, rootFragmentClass.newInstance(), ROOT_FRAGMENT_TAG)
+            .add(
+                layoutId,
+                rootFragmentClass.newInstance(),
+                ROOT_FRAGMENT_TAG
+            )
             .commit()
     }
 
-    protected fun rootFragment(): Fragment? =
+    fun rootFragment(): Fragment? =
         supportFragmentManager.findFragmentByTag(ROOT_FRAGMENT_TAG)
 
-    protected fun currentFragment(): Fragment? =
+    fun currentFragment(): Fragment? =
         supportFragmentManager.findFragmentById(layoutId)
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T: Fragment> castCurrentFragment(): T =
+        currentFragment() as T
 
     private companion object{
         const val ROOT_FRAGMENT_TAG = "ROOT_FRAGMENT"
@@ -44,16 +53,24 @@ abstract class FragmentHostingActivity<RF: Fragment>(
         val rightFlipAnimationIds = R.animator.card_flip_right_in to R.animator.card_flip_right_out
     }
 
-    fun replaceCurrentFragmentWith(fragment: Fragment, flipRight: Boolean? = null){
+    fun replaceCurrentFragmentWith(fragment: Fragment,
+                                   flipRight: Boolean? = null,
+                                   addToBackStack: Boolean = false,
+                                   additionalCalls: ((FragmentTransaction) -> FragmentTransaction)? = null){
         supportFragmentManager
             .beginTransaction()
             .setReorderingAllowed(true)
             .apply {
                 flipRight?.let {
                     with(if (it) rightFlipAnimationIds else leftFlipAnimationIds){
-                        setCustomAnimations(first, second)
+                        setCustomAnimations(first, second, first, second)
                     }
                 }
+                additionalCalls?.let {
+                    it(this)
+                }
+                if (addToBackStack)
+                    addToBackStack(null)
             }
             .replace(layoutId, fragment)
             .commit()

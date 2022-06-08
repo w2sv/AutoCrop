@@ -3,7 +3,9 @@
     <integer name="card_flip_time_full">500</integer>
     <integer name="card_flip_time_half">250</integer>
 
-    <integer name="view_animation_duration">1000</integer>
-    <integer name="small_delay">200</integer>
-    <integer name="fade_in_duration_flowfield_fragment_buttons">3000</integer>
+    <integer name="duration_view_animation">1000</integer>
+    <integer name="duration_fade_in_flowfield_fragment_buttons">3000</integer>
+
+    <integer name="delay_minimal">200</integer>
+    <integer name="delay_medium">500</integer>
 </resources>

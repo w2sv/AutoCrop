@@ -3,5 +3,5 @@
     <dimen name="error_icon_cropping_failure_screen">28dip</dimen>
     <dimen name="error_icon_cropping_failure_horizontal_margin">-42dip</dimen>
     <dimen name="error_icon_cropping_failure_vertical_margin">-1dip</dimen>
-    <dimen name="button_flowfield_fragment_sidebar">28dp</dimen>
+    <dimen name="icon_size">28dp</dimen>
 </resources>

@@ -14,17 +14,22 @@
         <entry key="app/src/main/res/drawable/ic_autocrop_logo.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/ic_autocrop_logo_1_.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/ic_baseline_check_box_24.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_baseline_crop_24.xml" value="0.2055" />
         <entry key="app/src/main/res/drawable/ic_baseline_done_24.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_baseline_front_hand_24.xml" value="0.1825" />
+        <entry key="app/src/main/res/drawable/ic_baseline_image_search_24.xml" value="0.2055" />
         <entry key="app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.2675" />
+        <entry key="app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.2055" />
         <entry key="app/src/main/res/drawable/ic_baseline_redo_24.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/ic_baseline_rocket_launch_24.xml" value="0.2675" />
         <entry key="app/src/main/res/drawable/ic_baseline_room_24.xml" value="0.2675" />
         <entry key="app/src/main/res/drawable/ic_baseline_rowing_24.xml" value="0.2675" />
+        <entry key="app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.2055" />
         <entry key="app/src/main/res/drawable/ic_brudineletten_regular.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_brudineletten_web.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_camera.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/ic_camera_24.xml" value="0.2515" />
+        <entry key="app/src/main/res/drawable/ic_cancel_24.xml" value="0.2055" />
         <entry key="app/src/main/res/drawable/ic_dot_menu_24.xml" value="0.1485" />
         <entry key="app/src/main/res/drawable/ic_error.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_error_24.xml" value="0.2515" />
@@ -33,6 +38,7 @@
         <entry key="app/src/main/res/drawable/ic_outline_info_24.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/ic_outline_sentiment_dissatisfied_24.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_round_save_24.xml" value="0.1815" />
+        <entry key="app/src/main/res/drawable/ic_sharp_menu_24.xml" value="0.128" />
         <entry key="app/src/main/res/drawable/ic_sharp_star_rate_24.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/image_brudineletten.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/logo_background.xml" value="0.205" />
@@ -44,6 +50,7 @@
         <entry key="app/src/main/res/drawable/splash_background.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/splash_screen.xml" value="0.1815" />
         <entry key="app/src/main/res/drawable/trippy_brudineletten_background.xml" value="0.1825" />
+        <entry key="app/src/main/res/layout-land/cropping_fragment_failed.xml" value="0.22241835834068843" />
         <entry key="app/src/main/res/layout-land/cropping_fragment_unsuccessful.xml" value="0.2222222222222222" />
         <entry key="app/src/main/res/layout-land/examination_fragment_viewpager.xml" value="0.2222222222222222" />
         <entry key="app/src/main/res/layout-land/main_fragment_about.xml" value="0.2222222222222222" />
@@ -67,10 +74,14 @@
         <entry key="app/src/main/res/layout/cropping_fragment_failed.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/cropping_fragment_unsuccessful.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/examination.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/examination_crop_view_holder.xml" value="0.21547669944420692" />
+        <entry key="app/src/main/res/layout/examination_cropimageviewholder.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/examination_fragment_apptitle.xml" value="0.21547669944420692" />
+        <entry key="app/src/main/res/layout/examination_fragment_comparison.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/examination_fragment_deletionquery.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/examination_fragment_saveall.xml" value="0.21547669944420692" />
-        <entry key="app/src/main/res/layout/examination_fragment_viewpager.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/examination_fragment_show_original_screenshot.xml" value="0.21547669944420692" />
+        <entry key="app/src/main/res/layout/examination_fragment_viewpager.xml" value="0.17452402538531278" />
         <entry key="app/src/main/res/layout/examination_view_pager_image_view.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/main.xml" value="0.21547669944420692" />
         <entry key="app/src/main/res/layout/main_fragment_about.xml" value="0.2625" />
@@ -78,6 +89,8 @@
         <entry key="app/src/main/res/layout/slide_item_container_examination_activity.xml" value="0.1276595744680851" />
         <entry key="app/src/main/res/layout/toolbar_examination_activity.xml" value="0.213768115942029" />
         <entry key="app/src/main/res/menu/activity_main.xml" value="0.2625" />
+        <entry key="app/src/main/res/menu/fragment_flowfield.xml" value="0.21547669944420692" />
+        <entry key="app/src/main/res/menu/fragment_viewpager.xml" value="0.21462163317657118" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/brudineletten.xml" value="0.13" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/brudineletten_round.xml" value="0.1815" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1815" />
@@ -86,6 +99,11 @@
         <entry key="app/src/main/res/mipmap-anydpi-v26/logo_round.xml" value="0.205" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/trippy_brudineletten.xml" value="0.1825" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/trippy_brudineletten_round.xml" value="0.1825" />
+        <entry key="croppylib/src/main/res/drawable/background_rounded_text.xml" value="0.2055" />
+        <entry key="croppylib/src/main/res/drawable/ic_cancel.xml" value="0.2055" />
+        <entry key="croppylib/src/main/res/drawable/ic_check.xml" value="0.2055" />
+        <entry key="croppylib/src/main/res/layout/activity_croppy.xml" value="0.21547669944420692" />
+        <entry key="croppylib/src/main/res/layout/fragment_image_crop.xml" value="0.21547669944420692" />
       </map>
     </option>
   </component>

@@ -3,6 +3,7 @@ package com.autocrop.utilsandroid
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -14,6 +15,15 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
+
+/**
+ * In KB
+ */
+fun Bitmap.approximateJpegSize(): Int =
+    allocationByteCount / 10 / 1024
+
+fun ContentResolver.openBitmap(uri: Uri): Bitmap =
+    BitmapFactory.decodeStream(openInputStream(uri))
 
 object MimeTypes{
     const val IMAGE = "image/*"
@@ -36,7 +46,9 @@ fun ContentResolver.saveBitmap(bitmap: Bitmap, fileName: String, parentDocumentU
     val (outputStream, writeUri) = when {
         parentDocumentUri != null -> GetOutputStream.fromParentDocument(fileName, this, parentDocumentUri)
         apiNotNewerThanQ -> GetOutputStream.untilQ(fileName)
-        else -> GetOutputStream.postQ(fileName, this)
+        else -> @RequiresApi(Build.VERSION_CODES.Q) {
+            GetOutputStream.postQ(fileName, this)
+        }
     }
 
     return (bitmap.compressToStream(outputStream) to writeUri)
@@ -110,7 +122,6 @@ fun ContentResolver.deleteImageMediaFile(uri: Uri): Boolean =
         false
             .also { Timber.i(e) }
     }
-
 
 /**
  * @see

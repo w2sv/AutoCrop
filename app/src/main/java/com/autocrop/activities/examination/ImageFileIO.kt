@@ -31,7 +31,7 @@ typealias DeletionResult = Pair<Boolean, Uri?>
 typealias SavingResult = Pair<Boolean, Uri>
 
 /**
- * Saves [CropBundle.crop] under [cropFileName] depending on [CropBundle.screenshotUri]
+ * Saves [CropBundle.crop] under [cropFileName] depending on [CropBundle.screenshot].uri
  * Deletes/triggers deletion of respective screenshot depending on [deleteScreenshot]
  */
 fun Context.processCropBundle(
@@ -40,12 +40,12 @@ fun Context.processCropBundle(
     deleteScreenshot: Boolean): Pair<SavingResult, DeletionResult?>{
 
     val cropSavingResult = contentResolver.saveBitmap(
-        cropBundle.crop,
-        cropFileName(cropBundle.screenshotUri.fileName),
+        cropBundle.crop.bitmap,
+        cropFileName(cropBundle.screenshot.uri.fileName),
         validSaveDirDocumentUri
     )
     val screenshotDeletionResult = if (deleteScreenshot)
-        attemptImageFileDeletion(cropBundle.screenshotUri)
+        attemptImageFileDeletion(cropBundle.screenshot.uri)
     else
         null
 

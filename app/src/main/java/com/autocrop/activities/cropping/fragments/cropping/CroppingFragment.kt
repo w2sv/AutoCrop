@@ -1,7 +1,6 @@
 package com.autocrop.activities.cropping.fragments.cropping
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,6 +15,7 @@ import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.collections.CropBundle
 import com.autocrop.utils.executeAsyncTask
 import com.autocrop.utils.logBeforehand
+import com.autocrop.utilsandroid.openBitmap
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CroppingFragmentBinding
 import kotlinx.coroutines.Job
@@ -46,9 +46,15 @@ class CroppingFragment
         sharedViewModel.uris.subList(sharedViewModel.currentImageNumber.value!!, sharedViewModel.uris.size).forEach { uri ->
 
             // attempt to crop image, upon success add resulting CropBundle to sharedViewModel
-            croppedImage(BitmapFactory.decodeStream(requireContext().contentResolver.openInputStream(uri))!!)?.run {
+            val screenshotBitmap = requireContext().contentResolver.openBitmap(uri)
+
+            cropRect(screenshotBitmap)?.let { cropRect ->
                 sharedViewModel.cropBundles.add(
-                    CropBundle(uri, first, second, third)
+                    CropBundle(
+                        uri,
+                        screenshotBitmap,
+                        cropRect
+                    )
                 )
             }
 
@@ -60,7 +66,7 @@ class CroppingFragment
 
     /**
      * Starts either Examination- or MainActivity depending on whether or not any
-     * of the selected images has been successfully cropped
+     * of the selected images has been successfully cropRect
      */
     private fun startExaminationActivityOrInvokeCroppingFailureFragment() = logBeforehand("Async Cropping task finished") {
         if (sharedViewModel.cropBundles.isNotEmpty())
@@ -69,7 +75,7 @@ class CroppingFragment
             // delay briefly to assure progress bar having reached 100% before UI change
             Handler(Looper.getMainLooper()).postDelayed(
                 { typedActivity.replaceCurrentFragmentWith(CroppingFailedFragment()) },
-                resources.getInteger(R.integer.small_delay).toLong()
+                resources.getInteger(R.integer.delay_minimal).toLong()
             )
     }
 

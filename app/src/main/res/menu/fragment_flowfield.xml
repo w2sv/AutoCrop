@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
+
+    <!--  Examination  -->
+
+    <item
+        android:id="@+id/main_menu_group_divider_examination"
+        android:title="@string/menu_item_divider_examination"
+        android:enabled="false"/>
+
+        <item
+            android:id="@+id/main_menu_item_auto_scroll"
+            android:icon="@drawable/ic_baseline_redo_24"
+            android:title="@string/menu_item_auto_scroll"
+            android:checkable="true"/>
+
+    <!--  Crop Saving  -->
+
+    <item
+        android:id="@+id/main_menu_group_divider_crop_saving"
+        android:title="@string/menu_item_divider_crop_saving"
+        android:enabled="false"/>
+
+        <item
+            android:id="@+id/main_menu_item_change_save_destination_dir"
+            android:icon="@drawable/ic_round_save_24"
+            android:title="@string/menu_item_change_directory"/>
+
+    <!--  Other  -->
+
+    <item
+        android:id="@+id/main_menu_group_divider_other"
+        android:title="@string/menu_item_divider_other"
+        android:enabled="false"/>
+
+        <item
+            android:id="@+id/main_menu_item_about_the_app"
+            android:icon="@drawable/ic_outline_info_24"
+            android:title="@string/menu_item_about"/>
+
+        <item
+            android:id="@+id/main_menu_item_rate_the_app"
+            android:icon="@drawable/ic_sharp_star_rate_24"
+            android:title="@string/menu_item_rate_the_app"/>
+
+</menu>

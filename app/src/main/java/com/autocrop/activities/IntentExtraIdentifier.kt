@@ -1,11 +1,9 @@
 package com.autocrop.activities
 
 object IntentExtraIdentifier {
-    val SELECTED_IMAGE_URIS = intentExtraIdentifier("selected_image_uri_strings")
-    val N_DISMISSED_IMAGES = intentExtraIdentifier("n_dismissed_images")
+    const val SELECTED_IMAGE_URIS = "com.autocrop.selected_image_uri_strings"
+    const val N_DISMISSED_IMAGES = "com.autocrop.n_dismissed_images"
 
-    val EXAMINATION_ACTIVITY_RESULTS = intentExtraIdentifier("examination_activity_results")
-    val CROP_SAVING_URIS = intentExtraIdentifier("crop_saving_uris")
-
-    private fun intentExtraIdentifier(name: String): String = "com.autocrop.$name"
+    const val EXAMINATION_ACTIVITY_RESULTS = "com.autocrop.examination_activity_results"
+    const val CROP_SAVING_URIS = "com.autocrop.crop_saving_uris"
 }

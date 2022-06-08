@@ -1,57 +1,65 @@
 package com.autocrop.activities.examination
 
 import android.content.Intent
-import android.text.SpannableStringBuilder
-import androidx.core.text.bold
-import androidx.core.text.color
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
+import com.autocrop.activities.examination.fragments.comparison.ComparisonFragment
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
+import com.autocrop.activities.examination.fragments.viewpager.views.MenuInflationButton.Companion.MANUAL_CROP_REQUEST_CODE
 import com.autocrop.activities.main.MainActivity
+import com.autocrop.collections.Crop
 import com.autocrop.collections.ImageFileIOSynopsis
-import com.autocrop.global.CropFileSaveDestinationPreferences
+import com.autocrop.global.BooleanPreferences
+import com.autocrop.global.CropSavingPreferences
 import com.autocrop.uicontroller.activity.ApplicationActivity
-import com.autocrop.utils.numericallyInflected
 import com.autocrop.utilsandroid.*
+import com.lyrebirdstudio.croppylib.activity.CroppyActivity
 import com.w2sv.autocrop.R
+import de.mateware.snacky.Snacky
 
 class ExaminationActivity :
     ApplicationActivity<ViewPagerFragment, ExaminationActivityViewModel>(
         ViewPagerFragment::class.java,
-        ExaminationActivityViewModel::class.java) {
+        ExaminationActivityViewModel::class.java,
+        accessedPreferenceInstances = arrayOf(BooleanPreferences)) {
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        @Suppress("DEPRECATION")
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK && requestCode == MANUAL_CROP_REQUEST_CODE) {
+            data?.let { intent ->
+                intent.data?.let { screenshotUri ->
+                    castCurrentFragment<ViewPagerFragment>().processAdjustedCrop(
+                        Crop.FromScreenshot(
+                            screenshot = contentResolver.openBitmap(screenshotUri),
+                            rect = CroppyActivity.getCropRect(intent)
+                        )
+                    )
+                    snacky("Adjusted crop")
+                        .setIcon(R.drawable.ic_baseline_done_24)
+                        .setDuration(Snacky.LENGTH_SHORT)
+                        .buildAndShow()
+                }
+            }
+        }
+    }
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
         ExaminationActivityViewModelFactory(
-            validSaveDirDocumentUri = CropFileSaveDestinationPreferences.documentUri?.let{
+            validSaveDirDocumentUri = CropSavingPreferences.documentUri?.let{
                 if (uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
                     it
                 else
                     null
-            }
+            },
+            nDismissedScreenshots = getIntentExtra(IntentExtraIdentifier.N_DISMISSED_IMAGES, blacklistValue = 0)
         )
-
-    override fun triggerEntrySnackbar(){
-        intentExtra(IntentExtraIdentifier.N_DISMISSED_IMAGES, blacklistValue = 0)?.let {
-            sharedViewModel.autoScrollingDoneListenerConsumable.set {
-                snacky(
-                    SpannableStringBuilder()
-                        .append("Couldn't find cropping bounds for ")
-                        .bold {
-                            color(
-                                getColorInt(R.color.holo_purple, this@ExaminationActivity)
-                            ) { append("$it") }
-                        }
-                        .append(" image".numericallyInflected(it)),
-                    R.drawable.ic_error_24
-                )
-                    .show()
-            }
-        }
-    }
 
     //$$$$$$$$$$$$$$$$
     // Post Creation $
@@ -76,17 +84,19 @@ class ExaminationActivity :
     }
 
     override fun onBackPressed(){
-        supportFragmentManager.findFragmentById(binding.root.id)?.let { currentFragment ->
-            when (currentFragment) {
-                is AppTitleFragment -> Unit
-                is SaveAllFragment -> {
-                    snacky(
-                        "Wait until crops have been saved",
-                        R.drawable.ic_baseline_front_hand_24
-                    )
-                        .show()
+        currentFragment().let {
+            when (it) {
+                is ComparisonFragment -> {
+                    it.prepareExitTransition()
+                    supportFragmentManager.popBackStack()
                 }
-                else -> handleBackPress()
+                is SaveAllFragment -> {
+                    snacky("Wait until crops have been saved")
+                        .setIcon(R.drawable.ic_baseline_front_hand_24)
+                        .buildAndShow()
+            }
+                is ViewPagerFragment -> handleBackPress()
+                else -> Unit
             }
         }
     }

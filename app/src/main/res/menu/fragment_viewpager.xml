@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
+
+    <item
+        android:id="@+id/menu_item_compare"
+        android:title="@string/compare"
+        android:icon="@drawable/ic_baseline_image_search_24"/>
+
+    <item
+        android:id="@+id/menu_item_adjust_crop"
+        android:title="@string/adjust"
+        android:icon="@drawable/ic_baseline_crop_24"/>
+</menu>

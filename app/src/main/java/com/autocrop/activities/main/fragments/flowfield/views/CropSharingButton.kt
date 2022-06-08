@@ -7,8 +7,8 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.uielements.view.ParentActivityRetriever
-import com.autocrop.uielements.view.ParentActivityRetrievingView
+import com.autocrop.retriever.activity.ActivityRetriever
+import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.show
 import com.autocrop.utilsandroid.MimeTypes
@@ -17,10 +17,10 @@ import com.w2sv.autocrop.R
 
 class CropSharingButton(context: Context, attrs: AttributeSet):
     AppCompatImageButton(context, attrs),
-    ParentActivityRetriever<MainActivity> by ParentActivityRetrievingView(context){
+    ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context) {
 
     /**
-     * If CROP_SAVING_URIS available from previous ExaminationActivity cycle show and
+     * If CROP_SAVING_URIS available from previous ExaminationActivity cycle buildAndShow and
      * setOnClickListener
      */
     init {
@@ -30,7 +30,7 @@ class CropSharingButton(context: Context, attrs: AttributeSet):
         }
         animate(
             Techniques.Tada,
-            delay = resources.getInteger(R.integer.fade_in_duration_flowfield_fragment_buttons).toLong() / 2
+            delay = resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong() / 2
         )
     }
 

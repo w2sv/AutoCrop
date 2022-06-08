@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.annotation.ColorRes
 
 /**
- * Convenience fun
+ * Convenience
  */
-fun getColorInt(@ColorRes id: Int, context: Context): Int =
-    context.resources.getColor(id, context.theme)
+fun Context.getThemedColor(@ColorRes id: Int): Int =
+    resources.getColor(id, theme)

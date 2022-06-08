@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.autocrop.activities.examination.fragments.viewpager.views.CropImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:viewBindingIgnore="true"
+
+    android:id="@+id/crop_iv"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:scaleType="fitCenter"
+    android:adjustViewBounds="false">
+</com.autocrop.activities.examination.fragments.viewpager.views.CropImageView>

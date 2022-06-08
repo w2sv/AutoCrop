@@ -9,7 +9,7 @@ import android.os.Looper
  * upon second within $RESET_DURATION trigger $secondPressAction,
  */
 class BackPressHandler(
-    private val snackbarDisplayActivity: Activity,
+    private val activity: Activity,
     private val snackbarMessage: String,
     private val onSecondPress: () -> Unit) {
 
@@ -20,19 +20,18 @@ class BackPressHandler(
     var pressedOnce: Boolean = false
 
     operator fun invoke() {
-        if (!pressedOnce){
-            pressedOnce = true
-
-            Handler(Looper.getMainLooper()).postDelayed(
-                { pressedOnce = false },
-                RESET_DURATION
-            )
-
-            snackbarDisplayActivity
-                .snacky(snackbarMessage)
-                .show()
-        }
-        else
+        if (pressedOnce)
             return onSecondPress()
+
+        pressedOnce = true
+
+        activity
+            .snacky(snackbarMessage)
+            .buildAndShow()
+
+        Handler(Looper.getMainLooper()).postDelayed(
+            { pressedOnce = false },
+            RESET_DURATION
+        )
     }
 }

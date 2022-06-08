@@ -3,8 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Pixel Field Container -->
-
     <com.autocrop.activities.main.fragments.flowfield.views.FlowFieldContainer
         android:id="@+id/canvas_container"
         android:layout_width="match_parent"
@@ -32,10 +30,10 @@
 
             <!-- Menu Inflation -->
 
-            <ImageButton
+            <com.autocrop.activities.main.fragments.flowfield.views.MenuInflationButton
                 android:id="@+id/menu_inflation_button"
-                android:layout_width="@dimen/button_flowfield_fragment_sidebar"
-                android:layout_height="@dimen/button_flowfield_fragment_sidebar"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
 
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentTop="true"
@@ -48,8 +46,8 @@
 
             <com.autocrop.activities.main.fragments.flowfield.views.CropSharingButton
                 android:id="@+id/crop_sharing_button"
-                android:layout_width="@dimen/button_flowfield_fragment_sidebar"
-                android:layout_height="@dimen/button_flowfield_fragment_sidebar"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
 
                 android:layout_centerHorizontal="true"
 
@@ -66,7 +64,7 @@
 
         <!-- Image Selection -->
 
-        <Button
+        <com.autocrop.activities.main.fragments.flowfield.views.ImageSelectionButton
             android:id="@+id/image_selection_button"
             style="@style/Base.Widget.AppCompat.Button.Colored"
             android:background="@drawable/button_image_selection"

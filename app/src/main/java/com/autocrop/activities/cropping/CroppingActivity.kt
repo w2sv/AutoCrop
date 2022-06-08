@@ -22,7 +22,10 @@ class CroppingActivity :
 
     fun returnToMainActivity() {
         startActivity(
-            Intent(this, MainActivity::class.java)
+            Intent(
+                this,
+                MainActivity::class.java
+            )
         )
         ActivityTransitions.RETURN(this)
     }

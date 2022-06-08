@@ -6,7 +6,7 @@
     <string name="fracture">%1$d/%2$d</string>
     <string name="crops_processing_in_progress">Processing crops…</string>
     <string name="cropping_failure">No cropping borders found</string>
-    <string name="auto_scrolling">AutoScrolling</string>
+    <string name="cancel_autoscroll">Cancel Scroll</string>
     <string name="removed">removed</string>
     <string name="cropping_failure_instruction_text_view">Make sure your selected screenshots comprise a continuous monochromatic border both above and below the core image area</string>
 
@@ -17,8 +17,6 @@
 
         <!-- Text -->
     <string name="image_selection_button">SELECT IMAGES</string>
-    <string name="save_all_button">Save All</string>
-    <string name="discard_all_button">Discard All</string>
 
         <!-- Description -->
     <string name="menu_inflation_button_description">Inflate settings menu</string>
@@ -26,9 +24,9 @@
     <string name="crop_sharing_button_description">Share saved crops</string>
 
     <!-- Menu Item Text -->
-    <string name="menu_item_group_divider_examination">Examination</string>
-    <string name="menu_item_group_divider_crop_saving">Crop Saving</string>
-    <string name="menu_item_group_divider_other">Other</string>
+    <string name="menu_item_divider_examination">Examination</string>
+    <string name="menu_item_divider_crop_saving">Crop Saving</string>
+    <string name="menu_item_divider_other">Other</string>
 
     <string name="menu_item_auto_scroll">AutoScroll</string>
     <string name="menu_item_rate_the_app">Rate the app</string>
@@ -37,5 +35,16 @@
     <string name="got_it">Got it</string>
     <string name="by">By:</string>
     <string name="w2sv">W2SV</string>
+    <string name="compare">Compare</string>
+    <string name="crop_transition_name">CROP_TRANSITION</string>
+    <string name="compare_crop_with_original_screenshot">Compare crop with original screenshot</string>
+    <string name="original">Original</string>
+    <string name="cropped">Cropped</string>
+    <string name="inflate_options_popup_menu">Inflate options popup menu</string>
+    <string name="adjust">Adjust</string>
+    <string name="all_crops">All Crops</string>
+    <string name="current_crop">Current Crop</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
 
 </resources>
