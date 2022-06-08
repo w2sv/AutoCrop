@@ -4,21 +4,17 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.autocrop.collections.CropBundle
-import com.autocrop.utils.BlankFun
-import com.autocrop.utils.Consumable
 import com.autocrop.utilsandroid.documentUriPathIdentifier
 import com.autocrop.utilsandroid.externalPicturesDir
 import kotlinx.coroutines.Job
 import timber.log.Timber
 
-class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?)
+class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?, val nDismissedScreenshots: Int?)
     : ViewModel() {
 
     companion object{
         lateinit var cropBundles: MutableList<CropBundle>
     }
-
-    var autoScrollingDoneListenerConsumable by Consumable<BlankFun>()
 
     val nSavedCrops: Int
         get() = _nSavedCrops

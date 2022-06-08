@@ -98,16 +98,12 @@ class PermissionsHandler(
         get() = activity.shouldShowRequestPermissionRationale(pendingPermissions[0])
 
     private fun Activity.permissionDeniedSnacky(): Snacky.Builder =
-        snacky(
-            snackbarMessageOnPermissionDenial,
-            R.drawable.ic_error_24
-        )
+        snacky(snackbarMessageOnPermissionDenial)
+            .setIcon(R.drawable.ic_error_24)
 
     private fun Activity.permissionRequestingSuppressedSnacky(): Snacky.Builder =
-        snacky(
-            snackbarMessageOnRequestSuppression,
-            R.drawable.ic_error_24
-        )
+        snacky(snackbarMessageOnRequestSuppression)
+            .setIcon(R.drawable.ic_error_24)
             .setActionText("Settings")
             .setActionClickListener {
                 activity.startActivity(

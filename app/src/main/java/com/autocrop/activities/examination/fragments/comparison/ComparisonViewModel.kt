@@ -12,8 +12,4 @@ class ComparisonViewModelFactory(private val cropBundle: CropBundle)
         ComparisonViewModel(cropBundle) as T
 }
 
-class ComparisonViewModel(val cropBundle: CropBundle): ViewModel() {
-    companion object{
-        var displayInstructionSnackbar = true
-    }
-}
+class ComparisonViewModel(val cropBundle: CropBundle): ViewModel()

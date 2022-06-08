@@ -39,7 +39,7 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
 
     protected open fun triggerEntrySnackbar() {}
 
-    protected fun <T> intentExtra(key: String, blacklistValue: T? = null): T? =
+    protected fun <T> getIntentExtra(key: String, blacklistValue: T? = null): T? =
         intent.extras?.get(key).let {
             if (blacklistValue == null || it != blacklistValue)
                 @Suppress("UNCHECKED_CAST")

@@ -47,14 +47,20 @@ abstract class Preferences<T>(protected val map: MutableMap<String, T>)
 object BooleanPreferences : Preferences<Boolean>(
     mutableMapOf(
         "autoScroll" to true,
-        "deleteScreenshots" to false
+        "deleteScreenshots" to false,
+        "viewPagerInstructionsShown" to false,
+        "comparisonInstructionsShown" to false,
+        "aboutFragmentInstructionsShown" to false
     )
 ) {
     /**
      * Expose values as delegated variables for convenience
      */
-    var autoScroll: Boolean by map
-    var deleteScreenshots: Boolean by map
+    var autoScroll by map
+    var deleteScreenshots by map
+    var viewPagerInstructionsShown by map
+    var comparisonInstructionsShown by map
+    var aboutFragmentInstructionsShown by map
 
     override fun SharedPreferences.writeValue(key: String, value: Boolean) = edit().putBoolean(key, value).apply()
     override fun SharedPreferences.getValue(key: String, defaultValue: Boolean): Boolean = getBoolean(key, defaultValue)

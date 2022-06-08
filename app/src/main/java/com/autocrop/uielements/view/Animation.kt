@@ -13,7 +13,7 @@ fun View.animate(technique: Techniques,
                  delay: Long? = null,
                  onEnd: BlankFun? = null): YoYo.YoYoString =
     YoYo.with(technique)
-        .duration(if (duration != DEFAULT_DURATION) duration else context.resources.getInteger(R.integer.view_animation_duration).toLong())
+        .duration(if (duration != DEFAULT_DURATION) duration else context.resources.getInteger(R.integer.duration_view_animation).toLong())
         .apply {
             onEnd?.let {
                 onEnd {it()}

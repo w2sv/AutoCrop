@@ -15,7 +15,7 @@ class ButtonsLayout(context: Context, attributeSet: AttributeSet):
 
     init {
         if (sharedViewModel.fadeInFlowFieldButtons){
-            fadeIn(resources.getInteger(R.integer.fade_in_duration_flowfield_fragment_buttons).toLong())
+            fadeIn(resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong())
             sharedViewModel.fadeInFlowFieldButtons = false
         }
         else

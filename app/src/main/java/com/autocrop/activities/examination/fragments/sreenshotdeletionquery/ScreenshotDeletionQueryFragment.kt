@@ -44,7 +44,7 @@ class ScreenshotDeletionQueryFragment :
             {
                 typedActivity.replaceCurrentFragmentWith(AppTitleFragment(), true)
             },
-            resources.getInteger(R.integer.small_delay).toLong()
+            resources.getInteger(R.integer.delay_minimal).toLong()
         )
     }
 }

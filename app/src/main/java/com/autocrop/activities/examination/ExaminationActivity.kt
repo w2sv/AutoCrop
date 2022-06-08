@@ -1,9 +1,6 @@
 package com.autocrop.activities.examination
 
 import android.content.Intent
-import android.text.SpannableStringBuilder
-import androidx.core.text.bold
-import androidx.core.text.color
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentExtraIdentifier
@@ -18,10 +15,10 @@ import com.autocrop.collections.Crop
 import com.autocrop.collections.ImageFileIOSynopsis
 import com.autocrop.global.CropSavingPreferences
 import com.autocrop.uicontroller.activity.ApplicationActivity
-import com.autocrop.utils.numericallyInflected
 import com.autocrop.utilsandroid.*
 import com.lyrebirdstudio.croppylib.activity.CroppyActivity
 import com.w2sv.autocrop.R
+import de.mateware.snacky.Snacky
 
 class ExaminationActivity :
     ApplicationActivity<ViewPagerFragment, ExaminationActivityViewModel>(
@@ -42,10 +39,9 @@ class ExaminationActivity :
                             rect = CroppyActivity.getCropRect(intent)
                         )
                     )
-                    snacky(
-                        "Adjusted crop",
-                        R.drawable.ic_baseline_done_24
-                    )
+                    snacky("Adjusted crop")
+                        .setIcon(R.drawable.ic_baseline_done_24)
+                        .setDuration(Snacky.LENGTH_SHORT)
                         .buildAndShow()
                 }
             }
@@ -59,27 +55,9 @@ class ExaminationActivity :
                     it
                 else
                     null
-            }
+            },
+            nDismissedScreenshots = getIntentExtra(IntentExtraIdentifier.N_DISMISSED_IMAGES, blacklistValue = 0)
         )
-
-    override fun triggerEntrySnackbar(){
-        intentExtra(IntentExtraIdentifier.N_DISMISSED_IMAGES, blacklistValue = 0)?.let {
-            sharedViewModel.autoScrollingDoneListenerConsumable = {
-                snacky(
-                    SpannableStringBuilder()
-                        .append("Couldn't find cropping bounds for ")
-                        .bold {
-                            color(
-                                this@ExaminationActivity.getThemedColor(R.color.accentuated_tv)
-                            ) { append("$it") }
-                        }
-                        .append(" image".numericallyInflected(it)),
-                    R.drawable.ic_error_24
-                )
-                    .buildAndShow()
-            }
-        }
-    }
 
     //$$$$$$$$$$$$$$$$
     // Post Creation $
@@ -111,10 +89,8 @@ class ExaminationActivity :
                     supportFragmentManager.popBackStack()
                 }
                 is SaveAllFragment -> {
-                    snacky(
-                        "Wait until crops have been saved",
-                        R.drawable.ic_baseline_front_hand_24
-                    )
+                    snacky("Wait until crops have been saved")
+                        .setIcon(R.drawable.ic_baseline_front_hand_24)
                         .buildAndShow()
             }
                 is ViewPagerFragment -> handleBackPress()

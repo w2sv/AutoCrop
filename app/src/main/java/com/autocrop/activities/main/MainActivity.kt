@@ -23,15 +23,13 @@ class MainActivity :
      * Notifies as to IO results from previous ExaminationActivity cycle
      */
     override fun triggerEntrySnackbar(){
-        intentExtra<ByteArray>(IntentExtraIdentifier.EXAMINATION_ACTIVITY_RESULTS)?.let {
+        getIntentExtra<ByteArray>(IntentExtraIdentifier.EXAMINATION_ACTIVITY_RESULTS)?.let {
             Handler(Looper.getMainLooper()).postDelayed(
                 {
                     ImageFileIOSynopsis(it).run{
                         when (nSavedCrops) {
-                            0 -> snacky(
-                                "Discarded all crops",
-                                R.drawable.ic_outline_sentiment_dissatisfied_24
-                            )
+                            0 -> snacky("Discarded all crops")
+                                .setIcon(R.drawable.ic_outline_sentiment_dissatisfied_24)
                             else -> snacky(
                                 SpannableStringBuilder().apply {
                                     append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
@@ -41,14 +39,14 @@ class MainActivity :
 
                                     if (nDeletedScreenshots != 0)
                                         append(" and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} ${"screenshot".numericallyInflected(nDeletedScreenshots)}")
-                                },
-                                R.drawable.ic_baseline_done_24
+                                }
                             )
+                                .setIcon(R.drawable.ic_baseline_done_24)
                         }
                     }
                         .buildAndShow()
                 },
-                resources.getInteger(R.integer.fade_in_duration_flowfield_fragment_buttons).toLong() / 2
+                resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong() / 2
             )
         }
     }

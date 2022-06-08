@@ -1,12 +1,20 @@
 package com.autocrop.activities.main.fragments.about
 
+import android.animation.Animator
+import android.animation.AnimatorInflater
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import com.autocrop.activities.main.fragments.MainActivityFragment
+import com.autocrop.global.BooleanPreferences
 import com.autocrop.uielements.view.animate
+import com.autocrop.utilsandroid.buildAndShow
+import com.autocrop.utilsandroid.snacky
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentAboutBinding
 
 class AboutFragment:
@@ -14,11 +22,43 @@ class AboutFragment:
 
     private var w2svTvAnimation: YoYo.YoYoString? = null
 
-    override fun onViewCreatedCore(savedInstanceState: Bundle?) {
-        binding.appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
-        binding.logoIv.setOnClickListener { it.animate(Techniques.Tada) }
+    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator? =
+        if (enter)
+            AnimatorInflater.loadAnimator(activity, nextAnim)
+                .apply {
+                    addListener(object : Animator.AnimatorListener {
+                        override fun onAnimationStart(animation: Animator?) {}
+                        override fun onAnimationEnd(animation: Animator?) {
+                            if (!BooleanPreferences.aboutFragmentInstructionsShown) {
+                                Handler(Looper.getMainLooper()).postDelayed(
+                                    {
+                                        requireActivity()
+                                            .snacky("Pro tip: check out what happens if you click on the various view elements")
+                                            .setIcon(R.drawable.ic_outline_info_24)
+                                            .setDuration(4000)
+                                            .buildAndShow()
+                                        BooleanPreferences.aboutFragmentInstructionsShown = true
+                                    },
+                                    resources.getInteger(R.integer.delay_medium).toLong()
+                                )
+                            }
+                        }
+                        override fun onAnimationCancel(animation: Animator?) {}
+                        override fun onAnimationRepeat(animation: Animator?) {}
+                    })
+                }
+        else
+            super.onCreateAnimator(transit, enter, nextAnim)
 
-        binding.w2svTv.setOnClickListener {
+    override fun onViewCreatedCore(savedInstanceState: Bundle?) {
+        binding.setOnClickListeners()
+    }
+
+    private fun MainFragmentAboutBinding.setOnClickListeners(){
+        appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
+        logoIv.setOnClickListener { it.animate(Techniques.Tada) }
+
+        w2svTv.setOnClickListener {
             w2svTvAnimation = it.animate(Techniques.ZoomOutUp){
                 startActivity(
                     Intent(

@@ -30,7 +30,7 @@ class CropSharingButton(context: Context, attrs: AttributeSet):
         }
         animate(
             Techniques.Tada,
-            delay = resources.getInteger(R.integer.fade_in_duration_flowfield_fragment_buttons).toLong() / 2
+            delay = resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong() / 2
         )
     }
 
