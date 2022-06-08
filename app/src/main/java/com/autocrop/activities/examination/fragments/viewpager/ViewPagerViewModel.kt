@@ -15,6 +15,8 @@ import java.util.*
 class ViewPagerViewModel
     : ViewModel(){
 
+    var displayedEntrySnackbar = false
+
     val dataSet: ViewPagerDataSet = ViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 
     //$$$$$$$$$$$$$$$

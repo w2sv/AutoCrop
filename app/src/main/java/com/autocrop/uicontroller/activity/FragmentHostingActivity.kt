@@ -28,7 +28,11 @@ abstract class FragmentHostingActivity<RF: Fragment>(
         supportFragmentManager
             .beginTransaction()
             .setReorderingAllowed(true)
-            .add(layoutId, rootFragmentClass.newInstance(), ROOT_FRAGMENT_TAG)
+            .add(
+                layoutId,
+                rootFragmentClass.newInstance(),
+                ROOT_FRAGMENT_TAG
+            )
             .commit()
     }
 
