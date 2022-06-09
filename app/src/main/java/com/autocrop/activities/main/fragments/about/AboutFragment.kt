@@ -8,6 +8,7 @@ import android.os.Looper
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.BooleanPreferences
 import com.autocrop.uielements.view.animate
+import com.autocrop.utilsandroid.BoilerplateLessAnimatorListener
 import com.autocrop.utilsandroid.buildAndShow
 import com.autocrop.utilsandroid.goToWebpage
 import com.autocrop.utilsandroid.snacky
@@ -26,23 +27,20 @@ class AboutFragment:
         if (enter && !BooleanPreferences.aboutFragmentInstructionsShown)
             AnimatorInflater.loadAnimator(activity, nextAnim)
                 .apply {
-                    addListener(object : Animator.AnimatorListener {
-                        override fun onAnimationStart(animation: Animator?) {}
+                    addListener(object : BoilerplateLessAnimatorListener() {
                         override fun onAnimationEnd(animation: Animator?) {
                             Handler(Looper.getMainLooper()).postDelayed(
                                 {
                                     requireActivity()
                                         .snacky("Pro tip: check out what happens if you click on the various view elements")
                                         .setIcon(R.drawable.ic_outline_info_24)
-                                        .setDuration(4000)
+                                        .setDuration(resources.getInteger(R.integer.duration_snackbar_long))
                                         .buildAndShow()
                                     BooleanPreferences.aboutFragmentInstructionsShown = true
                                 },
                                 resources.getInteger(R.integer.delay_minimal).toLong()
                             )
                         }
-                        override fun onAnimationCancel(animation: Animator?) {}
-                        override fun onAnimationRepeat(animation: Animator?) {}
                     })
                 }
         else
@@ -67,17 +65,13 @@ class AboutFragment:
         }
     }
 
+    /**
+     * Stop and reset animations going off screen
+     */
     override fun onStop() {
         super.onStop()
 
         w2svTvAnimation?.stop(true)
         copyrightTvAnimation?.stop(true)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        w2svTvAnimation = null
-        copyrightTvAnimation = null
     }
 }
