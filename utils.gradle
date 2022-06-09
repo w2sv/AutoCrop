@@ -1,10 +1,19 @@
+/**
+ * @param file: encapsulating '.properties' file
+ * @return comprised properties as mapping
+ */
 static def loadedProperties(File file){
     def properties = new Properties()
     properties.load(new FileInputStream(file))
     return properties
 }
 
-// @https://stackoverflow.com/a/23290820/12083276
+/**
+ * Expose functions
+ *
+ * @see:
+ *  https://stackoverflow.com/a/23290820/12083276
+ */
 ext {
     loadedProperties = this.&loadedProperties
 }

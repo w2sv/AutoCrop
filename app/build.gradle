@@ -9,6 +9,7 @@ apply from: "$rootDir/utils.gradle"
 
 android {
     signingConfigs {
+        // create release signingConfig from keystore.properties file, if present
         release {
             rootProject.file("keystore.properties").with{propertyFile ->
                 if (propertyFile.exists()){
@@ -47,9 +48,6 @@ android {
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
     }
     buildTypes {
-//        debug {
-//            testCoverageEnabled true
-//        }
         release {
             signingConfig signingConfigs.release
 
@@ -57,7 +55,7 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            debuggable false
+            debuggable false  // set to true to get logs whilst in release mode
         }
     }
     compileOptions {
@@ -73,7 +71,7 @@ android {
         animationsDisabled = true
     }
     packagingOptions {
-        resources.excludes.add("META-INF/*")
+        resources.excludes.add("META-INF/*")  // fixes build error
     }
     buildFeatures {
         viewBinding true
