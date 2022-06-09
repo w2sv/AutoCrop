@@ -7,11 +7,17 @@ import com.autocrop.utils.mapDelegateObserver
 import com.autocrop.utilsandroid.buildDocumentUriFromTreeUri
 import timber.log.Timber
 
+/**
+ * Base for KEY to VALUE map delegator objects, the content of which is to be stored in [SharedPreferences]
+ */
 abstract class Preferences<T>(protected val map: MutableMap<String, T>)
     : MutableMap<String, T> by map{
 
     /**
-     * Also copy set values to [lastDiscSyncState] before exiting function
+     * init{} substitute, hence to be called before whatever sort of object usage
+     *
+     * Initializes values with the ones contained in [sharedPreferences] instance
+     * and copies them to [lastDiscSyncState]
      */
     fun initializeFromSharedPreferences(sharedPreferences: SharedPreferences) = logBeforehand("Initializing ${javaClass.name} from SharedPreferences") {
         forEach{ (key, defaultValue) ->
@@ -21,16 +27,14 @@ abstract class Preferences<T>(protected val map: MutableMap<String, T>)
         lastDiscSyncState = toMutableMap()
     }
 
-    protected abstract fun SharedPreferences.writeValue(key: String, value: T)
-    protected abstract fun SharedPreferences.getValue(key: String, defaultValue: T): T
-
     fun writeChangedValuesToSharedPreferences(sharedPreferences: Lazy<SharedPreferences>) =
         entries
             .filter { lastDiscSyncState.getValue(it.key) != it.value }
             .forEach {
                 sharedPreferences.value.writeValue(it.key, it.value)
-                lastDiscSyncState[it.key] = it.value
                 Timber.i("Wrote ${it.key}=${it.value} to shared preferences")
+
+                lastDiscSyncState[it.key] = it.value
             }
 
     /**
@@ -38,6 +42,12 @@ abstract class Preferences<T>(protected val map: MutableMap<String, T>)
      * to reduce number of IO operations
      */
     private lateinit var lastDiscSyncState: MutableMap<String, T>
+
+    /**
+     * Type-specific value fetching from and writing to [SharedPreferences]
+     */
+    protected abstract fun SharedPreferences.writeValue(key: String, value: T)
+    protected abstract fun SharedPreferences.getValue(key: String, defaultValue: T): T
 }
 
 /**
@@ -62,12 +72,16 @@ object BooleanPreferences : Preferences<Boolean>(
     var comparisonInstructionsShown by map
     var aboutFragmentInstructionsShown by map
 
-    override fun SharedPreferences.writeValue(key: String, value: Boolean) = edit().putBoolean(key, value).apply()
+    override fun SharedPreferences.writeValue(key: String, value: Boolean){
+        edit().putBoolean(key, value).apply()
+    }
     override fun SharedPreferences.getValue(key: String, defaultValue: Boolean): Boolean = getBoolean(key, defaultValue)
 }
 
-object CropSavingPreferences: Preferences<Uri?>(
-    mutableMapOf("treeUri" to null)
+object UriPreferences: Preferences<Uri?>(
+    mutableMapOf(
+        "treeUri" to null
+    )
 ) {
     
     /**
@@ -83,12 +97,13 @@ object CropSavingPreferences: Preferences<Uri?>(
         get() = _documentUri
     private var _documentUri: Uri? = null
 
-    override fun SharedPreferences.writeValue(key: String, value: Uri?) =
+    override fun SharedPreferences.writeValue(key: String, value: Uri?){
         edit().putString(key, value?.run { toString() }).apply()
+    }
     override fun SharedPreferences.getValue(key: String, defaultValue: Uri?): Uri? =
         getString(key, defaultValue.run { this?.toString() })?.run {
             Uri.parse(this)
         }
 }
 
-val preferencesInstances: Array<Preferences<*>> = arrayOf(BooleanPreferences, CropSavingPreferences)
+val preferencesInstances: Array<Preferences<*>> = arrayOf(BooleanPreferences, UriPreferences)
