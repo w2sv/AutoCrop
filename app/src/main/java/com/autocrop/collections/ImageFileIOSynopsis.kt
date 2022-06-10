@@ -1,5 +1,9 @@
 package com.autocrop.collections
 
+/**
+ * Enables transfer of respective data via Intent through encoding to & decoding
+ * from ByteArray
+ */
 data class ImageFileIOSynopsis(
     val nSavedCrops: Int,
     val nDeletedScreenshots: Int,
