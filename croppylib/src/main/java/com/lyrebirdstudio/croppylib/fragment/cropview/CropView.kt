@@ -11,6 +11,7 @@ import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.toRect
 import androidx.core.graphics.toRectF
+import com.lyrebirdstudio.croppylib.CroppyTheme
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.utils.extensions.*
 import com.lyrebirdstudio.croppylib.utils.model.AnimatableRectF
@@ -166,7 +167,7 @@ class CropView @JvmOverloads constructor(
     private lateinit var initialCropRect: Rect
     private lateinit var onCropRectSizeChanged: ((RectF) -> Unit)
 
-    fun initialize(bitmap: Bitmap, initialCropRect: Rect, accentColor: Int, onCropRectSizeChanged: ((RectF) -> Unit)) {
+    fun initialize(bitmap: Bitmap, initialCropRect: Rect, theme: CroppyTheme, onCropRectSizeChanged: ((RectF) -> Unit)) {
         this.bitmap = bitmap
         this.initialCropRect = initialCropRect
         this.onCropRectSizeChanged = onCropRectSizeChanged
@@ -174,13 +175,19 @@ class CropView @JvmOverloads constructor(
         bitmapRect.set(
             0f,
             0f,
-            this.bitmap.width.toFloat(),
-            this.bitmap.height.toFloat(),
+            bitmap.width.toFloat(),
+            bitmap.height.toFloat(),
         )
 
+        applyTheme(theme)
+    }
+
+    private fun applyTheme(theme: CroppyTheme){
+        setBackgroundColor(context.getColor(theme.backgroundColor))
+
         accentPaint = Paint().apply {
-            color = context.getColor(accentColor)
-            strokeWidth = 3F
+            color = context.getColor(theme.accentColor)
+            strokeWidth = 6F
             style = Paint.Style.STROKE
         }
     }
@@ -202,6 +209,11 @@ class CropView @JvmOverloads constructor(
 
         requestLayout()
         invalidate()
+    }
+
+    fun reset(){
+        initializeView()
+        notifyCropRectChanged()
     }
 
     private val bitmapGestureListener = object : BitmapGestureHandler.BitmapGestureListener {
@@ -381,7 +393,7 @@ class CropView @JvmOverloads constructor(
         canvas?.restore()
 
         drawGrid(canvas)
-//        drawCornerToggles(canvas)
+        drawCornerToggles(canvas)
     }
 
     fun getCropRect(): Rect =
@@ -431,22 +443,6 @@ class CropView @JvmOverloads constructor(
 
         canvas?.drawLine(
             cropRect.left,
-            cropRect.top,
-            cropRect.right,
-            cropRect.top,
-            accentPaint
-        )
-
-        canvas?.drawLine(
-            cropRect.left,
-            cropRect.bottom,
-            cropRect.right,
-            cropRect.bottom,
-            accentPaint
-        )
-
-        canvas?.drawLine(
-            cropRect.left,
             cropRect.bottom,
             cropRect.left,
             cropRect.top,
@@ -459,6 +455,22 @@ class CropView @JvmOverloads constructor(
             cropRect.right,
             cropRect.top,
             cropPaint
+        )
+
+        canvas?.drawLine(
+            cropRect.left,
+            cropRect.top,
+            cropRect.right,
+            cropRect.top,
+            accentPaint
+        )
+
+        canvas?.drawLine(
+            cropRect.left,
+            cropRect.bottom,
+            cropRect.right,
+            cropRect.bottom,
+            accentPaint
         )
 
         /**
@@ -498,88 +510,88 @@ class CropView @JvmOverloads constructor(
         )
     }
 
-//    /**
-//     * Draw corner lines and toggles
-//     */
-//    private fun drawCornerToggles(canvas: Canvas?) {
-//        /**
-//         * Top left toggle
-//         */
-//        canvas?.drawLine(
-//            cropRect.left - gridLineWidthInPixel,
-//            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            cropRect.left + cornerToggleLengthInPixel,
-//            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            highlightPaint
-//        )
-//
-//        canvas?.drawLine(
-//            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            cropRect.top - gridLineWidthInPixel,
-//            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            cropRect.top + cornerToggleLengthInPixel,
-//            highlightPaint
-//        )
-//
-//        /**
-//         * Top Right toggle
-//         */
-//
-//        canvas?.drawLine(
-//            cropRect.right - cornerToggleLengthInPixel,
-//            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            cropRect.right + gridLineWidthInPixel,
-//            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            highlightPaint
-//        )
-//
-//        canvas?.drawLine(
-//            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            cropRect.top - gridLineWidthInPixel,
-//            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            cropRect.top + cornerToggleLengthInPixel,
-//            highlightPaint
-//        )
-//
-//        /**
-//         * Bottom Left toggle
-//         */
-//
-//        canvas?.drawLine(
-//            cropRect.left - gridLineWidthInPixel,
-//            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            cropRect.left + cornerToggleLengthInPixel,
-//            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            highlightPaint
-//        )
-//
-//        canvas?.drawLine(
-//            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            cropRect.bottom + gridLineWidthInPixel,
-//            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            cropRect.bottom - cornerToggleLengthInPixel,
-//            highlightPaint
-//        )
-//
-//        /**
-//         * Bottom Right toggle
-//         */
-//        canvas?.drawLine(
-//            cropRect.right - cornerToggleLengthInPixel,
-//            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            cropRect.right + gridLineWidthInPixel,
-//            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            highlightPaint
-//        )
-//
-//        canvas?.drawLine(
-//            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            cropRect.bottom + gridLineWidthInPixel,
-//            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            cropRect.bottom - cornerToggleLengthInPixel,
-//            highlightPaint
-//        )
-//    }
+    /**
+     * Draw corner lines and toggles
+     */
+    private fun drawCornerToggles(canvas: Canvas?) {
+        /**
+         * Top left toggle
+         */
+        canvas?.drawLine(
+            cropRect.left - gridLineWidthInPixel,
+            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            cropRect.left + cornerToggleLengthInPixel,
+            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            accentPaint
+        )
+
+        canvas?.drawLine(
+            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            cropRect.top - gridLineWidthInPixel,
+            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            cropRect.top + cornerToggleLengthInPixel,
+            accentPaint
+        )
+
+        /**
+         * Top Right toggle
+         */
+
+        canvas?.drawLine(
+            cropRect.right - cornerToggleLengthInPixel,
+            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            cropRect.right + gridLineWidthInPixel,
+            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            accentPaint
+        )
+
+        canvas?.drawLine(
+            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            cropRect.top - gridLineWidthInPixel,
+            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            cropRect.top + cornerToggleLengthInPixel,
+            accentPaint
+        )
+
+        /**
+         * Bottom Left toggle
+         */
+
+        canvas?.drawLine(
+            cropRect.left - gridLineWidthInPixel,
+            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            cropRect.left + cornerToggleLengthInPixel,
+            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            accentPaint
+        )
+
+        canvas?.drawLine(
+            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            cropRect.bottom + gridLineWidthInPixel,
+            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            cropRect.bottom - cornerToggleLengthInPixel,
+            accentPaint
+        )
+
+        /**
+         * Bottom Right toggle
+         */
+        canvas?.drawLine(
+            cropRect.right - cornerToggleLengthInPixel,
+            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            cropRect.right + gridLineWidthInPixel,
+            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            accentPaint
+        )
+
+        canvas?.drawLine(
+            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            cropRect.bottom + gridLineWidthInPixel,
+            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            cropRect.bottom - cornerToggleLengthInPixel,
+            accentPaint
+        )
+    }
 
     /**
      * Initializes bitmap matrix
@@ -836,7 +848,6 @@ class CropView @JvmOverloads constructor(
     private fun animateCropRectToCenterTarget() {
         cropRect.animateTo(targetRect) {
             invalidate()
-            notifyCropRectChanged()
         }
     }
 

@@ -3,4 +3,5 @@
 
     <string name="width">Width</string>
     <string name="height">Height</string>
+    <string name="reset">Reset</string>
 </resources>

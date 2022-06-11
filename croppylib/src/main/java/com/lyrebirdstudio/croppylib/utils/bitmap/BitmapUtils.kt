@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.exifinterface.media.ExifInterface
 import com.lyrebirdstudio.croppylib.utils.extensions.rotateBitmap
-import io.reactivex.rxjava3.core.Single
 import java.io.IOException
 import java.io.InputStream
 

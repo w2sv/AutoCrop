@@ -5,5 +5,8 @@ import androidx.annotation.ColorRes
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class CroppyTheme(@ColorRes val accentColor: Int = R.color.blue)
+data class CroppyTheme(
+    @ColorRes val accentColor: Int = R.color.blue,
+    @ColorRes val backgroundColor: Int = R.color.colorCropBackground
+)
     : Parcelable
