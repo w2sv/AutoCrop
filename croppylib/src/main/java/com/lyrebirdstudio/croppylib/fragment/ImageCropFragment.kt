@@ -6,13 +6,13 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.toRect
 import androidx.core.text.color
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.lyrebirdstudio.croppylib.CropRequest
 import com.lyrebirdstudio.croppylib.databinding.FragmentImageCropBinding
+import com.lyrebirdstudio.croppylib.utils.bitmap.resizedBitmap
 import com.lyrebirdstudio.croppylib.utils.extensions.asMutable
 
 class ImageCropFragment : Fragment() {
@@ -35,9 +35,11 @@ class ImageCropFragment : Fragment() {
     }
 
     private val viewModel by viewModels<ImageCropViewModel>{
+        val cropRequest = arguments?.getParcelable<CropRequest>(KEY_BUNDLE_CROP_REQUEST)!!
+
         ImageCropViewModelFactory(
-            requireActivity().application, 
-            arguments?.getParcelable(KEY_BUNDLE_CROP_REQUEST)!!
+            resizedBitmap(cropRequest.sourceUri, requireContext()),
+            cropRequest
         )
     }
 
@@ -49,25 +51,26 @@ class ImageCropFragment : Fragment() {
 
         binding.setOnClickListeners()
 
-        binding.cropView.apply{
-            setAccentColor(viewModel.cropRequest.croppyTheme.accentColor)
-
-            onCropRectSizeChanged = { cropRectF ->
-                val cropRect = cropRectF.toRect()
-
-                viewModel.cropHeight.asMutable.postValue(cropRect.height())
-            }
-
-            initialize(viewModel.resizedBitmap, viewModel.cropRequest.initialCropRect)
+        binding.cropView.initialize(
+            viewModel.bitmap,
+            viewModel.cropRequest.initialCropRect,
+            viewModel.cropRequest.croppyTheme.accentColor
+        ){ cropRectF ->
+            viewModel.cropRect.asMutable.postValue(cropRectF.toRect())
         }
 
-        viewModel.cropHeight
+        viewModel.cropRect
             .observe(viewLifecycleOwner){
-                SpannableStringBuilder()
-                    .color(ContextCompat.getColor(requireContext(), viewModel.cropRequest.croppyTheme.accentColor)) {append("H")}
-                    .append(" $it")
+                binding.heightTv.text = styledText("H", it.height())
+                binding.y1Tv.text = styledText("Y1", it.top)
+                binding.y2Tv.text = styledText("Y2", it.bottom)
             }
     }
+
+    private fun styledText(unit: String, value: Int): SpannableStringBuilder =
+        SpannableStringBuilder()
+            .color(requireContext().getColor(viewModel.cropRequest.croppyTheme.accentColor)) {append(unit)}
+            .append(" $value")
 
     private fun FragmentImageCropBinding.setOnClickListeners(){
         imageViewCancel.setOnClickListener {

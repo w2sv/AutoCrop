@@ -8,8 +8,7 @@ import android.view.ScaleGestureDetector
 
 class BitmapGestureHandler(
     context: Context,
-    private val bitmapGestureListener: BitmapGestureListener
-) {
+    private val bitmapGestureListener: BitmapGestureListener) {
 
     interface BitmapGestureListener {
         fun onScale(scaleFactor: Float, focusX: Float, focusY: Float)
@@ -57,21 +56,21 @@ class BitmapGestureHandler(
     private val scrollDetector = GestureDetector(context, scrollListener)
     private val doubleTapDetector = GestureDetector(context, doubleTapListener)
 
-    fun onTouchEvent(motionEvent: MotionEvent) :Boolean {
-        val scale = scaleDetector.onTouchEvent(motionEvent)
+    fun onTouchEvent(motionEvent: MotionEvent): Boolean {
+//        val scale = scaleDetector.onTouchEvent(motionEvent)
         val scroll = scrollDetector.onTouchEvent(motionEvent)
-        val doubleTap = doubleTapDetector.onTouchEvent(motionEvent)
+//        val doubleTap = doubleTapDetector.onTouchEvent(motionEvent)
 
         /**
          * Detect if scrolling end. Call onEnd.
          */
         if (motionEvent.action == ACTION_UP){
-            if(isScrolling){
+            if (isScrolling){
                 isScrolling = false
                 bitmapGestureListener.onEnd()
             }
         }
 
-        return scale || scroll || doubleTap
+        return scroll
     }
 }

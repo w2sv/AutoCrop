@@ -45,13 +45,33 @@
                         android:orientation="horizontal">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/heightDisplayButton"
+                            android:id="@+id/height_tv"
                             android:layout_width="@dimen/width_button_bitmap_dimension"
                             android:layout_height="@dimen/height_button_bitmap_dimension"
                             android:layout_marginLeft="@dimen/margin_4dp"
                             android:background="@drawable/background_rounded_text"
                             android:gravity="center"
                             android:maxLength="6"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/y1_tv"
+                            android:layout_width="@dimen/width_button_bitmap_dimension"
+                            android:layout_height="@dimen/height_button_bitmap_dimension"
+                            android:layout_marginLeft="@dimen/margin_4dp"
+                            android:background="@drawable/background_rounded_text"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/y2_tv"
+                            android:layout_width="@dimen/width_button_bitmap_dimension"
+                            android:layout_height="@dimen/height_button_bitmap_dimension"
+                            android:layout_marginLeft="@dimen/margin_4dp"
+                            android:background="@drawable/background_rounded_text"
+                            android:gravity="center"
                             android:textColor="@color/white"
                             android:textStyle="bold" />
 
@@ -78,7 +98,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/recyclerViewAspectRatios"
-            android:layout_marginTop="?attr/actionBarSize" />
+            android:layout_marginTop="?attr/actionBarSize"
+            android:backgroundTint="@color/colorCropBackground"
+            android:layerType="hardware"/>
 
     </RelativeLayout>
 

@@ -1,18 +1,16 @@
 package com.lyrebirdstudio.croppylib.fragment
 
-import android.app.Application
 import android.graphics.Bitmap
-import androidx.lifecycle.AndroidViewModel
+import android.graphics.Rect
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.lyrebirdstudio.croppylib.CropRequest
-import com.lyrebirdstudio.croppylib.utils.bitmap.resizedBitmap
 
-class ImageCropViewModel(private val app: Application, val cropRequest: CropRequest)
-    : AndroidViewModel(app) {
+class ImageCropViewModel(val bitmap: Bitmap, val cropRequest: CropRequest)
+    : ViewModel() {
 
-    val cropHeight: LiveData<Int> by lazy{
-        MutableLiveData(cropRequest.initialCropRect.height())
+    val cropRect: LiveData<Rect> by lazy {
+        MutableLiveData(cropRequest.initialCropRect)
     }
-    val resizedBitmap: Bitmap = resizedBitmap(cropRequest.sourceUri, app.applicationContext)
 }
