@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.exifinterface.media.ExifInterface
-import com.lyrebirdstudio.croppylib.utils.extensions.rotateBitmap
+import com.lyrebirdstudio.croppylib.utils.extensions.rotated
 import java.io.IOException
 import java.io.InputStream
 
@@ -38,7 +38,7 @@ fun resizedBitmap(uri: Uri, context: Context): Bitmap{
             inSampleSize = scale
         }
     )!!
-        .rotateBitmap(getOrientation(context.contentResolver.openInputStream(uri)))
+        .rotated(getOrientation(context.contentResolver.openInputStream(uri)))
 }
 
 private fun getOrientation(inputStream: InputStream?): Int {

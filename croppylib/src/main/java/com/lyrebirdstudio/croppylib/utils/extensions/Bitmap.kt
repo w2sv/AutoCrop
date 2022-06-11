@@ -2,9 +2,10 @@ package com.lyrebirdstudio.croppylib.utils.extensions
 
 import android.graphics.Bitmap
 import android.graphics.Matrix
+import android.graphics.RectF
 import androidx.exifinterface.media.ExifInterface
 
-fun Bitmap.rotateBitmap(orientation: Int): Bitmap {
+fun Bitmap.rotated(orientation: Int): Bitmap {
     val matrix = Matrix()
     when (orientation) {
         ExifInterface.ORIENTATION_NORMAL -> return this
@@ -44,3 +45,6 @@ fun Bitmap.rotateBitmap(orientation: Int): Bitmap {
         return this
     }
 }
+
+fun Bitmap.maintainedPercentage(cropHeight: Float): Float =
+    1 - (height.toFloat() - cropHeight) / height.toFloat()

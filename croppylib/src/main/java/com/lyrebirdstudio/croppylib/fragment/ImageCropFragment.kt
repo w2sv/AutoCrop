@@ -13,12 +13,10 @@ import androidx.fragment.app.viewModels
 import com.lyrebirdstudio.croppylib.CropRequest
 import com.lyrebirdstudio.croppylib.databinding.FragmentImageCropBinding
 import com.lyrebirdstudio.croppylib.utils.bitmap.resizedBitmap
-import com.lyrebirdstudio.croppylib.utils.extensions.asMutable
-import com.lyrebirdstudio.croppylib.utils.extensions.hideSystemBars
-import com.lyrebirdstudio.croppylib.utils.extensions.remove
-import com.lyrebirdstudio.croppylib.utils.extensions.rounded
+import com.lyrebirdstudio.croppylib.utils.extensions.*
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 class ImageCropFragment : Fragment() {
 
@@ -67,22 +65,22 @@ class ImageCropFragment : Fragment() {
             viewModel.cropRequest.initialCropRect,
             viewModel.cropRequest.croppyTheme
         ){ cropRectF ->
-            viewModel.cropRect.asMutable.postValue(cropRectF.toRect())
+            viewModel.cropRectF.asMutable.postValue(cropRectF)
         }
 
         binding.resetButton.setTextColor(requireContext().getColor(viewModel.cropRequest.croppyTheme.accentColor))
 
-        viewModel.cropRect
-            .observe(viewLifecycleOwner){
-                binding.heightTv.text = styledText("H", min(it.height(), viewModel.bitmap.height))
-                binding.y1Tv.text = styledText("Y1", max(it.top, 0))
-                binding.y2Tv.text = styledText("Y2", min(it.bottom, viewModel.bitmap.height))
+        viewModel.cropRectF
+            .observe(viewLifecycleOwner){ cropRectF ->
+                binding.heightTv.text = styledText("H", min(cropRectF.height().roundToInt(), viewModel.bitmap.height))
+                binding.y1Tv.text = styledText("Y1", max(cropRectF.top.roundToInt(), 0))
+                binding.y2Tv.text = styledText("Y2", min(cropRectF.bottom.roundToInt(), viewModel.bitmap.height))
                 binding.percentageTv.text = styledText(
                     "%",
-                    (100 - (viewModel.bitmap.height.toFloat() - it.height().toFloat()) / viewModel.bitmap.height.toFloat() * 100).rounded(1)
+                    (viewModel.bitmap.maintainedPercentage(cropRectF.height()) * 100).rounded(1)
                 )
 
-                binding.resetButton.visibility = if (it != viewModel.cropRequest.initialCropRect)
+                binding.resetButton.visibility = if (cropRectF != viewModel.cropRequest.initialCropRect)
                     View.VISIBLE
                 else
                     View.GONE
@@ -95,17 +93,16 @@ class ImageCropFragment : Fragment() {
             .append(" $value")
 
     private fun FragmentImageCropBinding.setOnClickListeners(){
-        imageViewCancel.setOnClickListener {
+        cancelButton.setOnClickListener {
             onCancelClicked()
         }
 
-        imageViewApply.setOnClickListener {
-            onApplyClicked(cropView.getCropRect())
+        applyButton.setOnClickListener {
+            onApplyClicked(cropView.getCropRect().toRect())
         }
 
         resetButton.setOnClickListener {
             cropView.reset()
-            it.remove()
         }
     }
 

@@ -100,12 +100,13 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@id/bottom_button_row"
 
-            android:layout_marginTop="-20dp"
+            android:layout_marginTop="-30dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
 
             android:background="@drawable/background_reset_button"
             android:text="@string/reset"
+            android:textStyle="italic"
             android:textSize="15sp"
             tools:ignore="RelativeOverlap" />
 
@@ -116,19 +117,19 @@
             android:layout_width="match_parent"
 
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="10dp"
 
             android:orientation="horizontal"
             android:gravity="center">
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/imageViewCancel"
+                android:id="@+id/cancel_button"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
                 android:layout_gravity="center"
-                android:layout_marginHorizontal="8dp"
+                android:layout_marginHorizontal="18dp"
 
                 android:background="@drawable/background_bottom_buttons"
                 android:padding="13dp"
@@ -136,13 +137,13 @@
                 app:srcCompat="@drawable/ic_cancel" />
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/imageViewApply"
+                android:id="@+id/apply_button"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
                 android:layout_gravity="center"
-                android:layout_marginHorizontal="8dp"
+                android:layout_marginHorizontal="18dp"
 
                 android:background="@drawable/background_bottom_buttons"
                 android:padding="13dp"

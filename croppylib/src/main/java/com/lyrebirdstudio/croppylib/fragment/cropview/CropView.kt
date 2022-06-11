@@ -7,10 +7,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.MotionEvent.*
 import android.view.View
-import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.toRect
-import androidx.core.graphics.toRectF
 import com.lyrebirdstudio.croppylib.CroppyTheme
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.utils.extensions.*
@@ -24,7 +21,6 @@ import com.lyrebirdstudio.croppylib.utils.model.Edge
 import com.lyrebirdstudio.croppylib.utils.model.Edge.*
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.roundToInt
 
 class CropView @JvmOverloads constructor(
     context: Context,
@@ -164,10 +160,10 @@ class CropView @JvmOverloads constructor(
     }
 
     private lateinit var bitmap: Bitmap
-    private lateinit var initialCropRect: Rect
+    private lateinit var initialCropRect: RectF
     private lateinit var onCropRectSizeChanged: ((RectF) -> Unit)
 
-    fun initialize(bitmap: Bitmap, initialCropRect: Rect, theme: CroppyTheme, onCropRectSizeChanged: ((RectF) -> Unit)) {
+    fun initialize(bitmap: Bitmap, initialCropRect: RectF, theme: CroppyTheme, onCropRectSizeChanged: ((RectF) -> Unit)) {
         this.bitmap = bitmap
         this.initialCropRect = initialCropRect
         this.onCropRectSizeChanged = onCropRectSizeChanged
@@ -213,7 +209,7 @@ class CropView @JvmOverloads constructor(
 
     fun reset(){
         initializeView()
-        notifyCropRectChanged()
+        notifyCropRectChanged(returnInitial = true)
     }
 
     private val bitmapGestureListener = object : BitmapGestureHandler.BitmapGestureListener {
@@ -396,16 +392,11 @@ class CropView @JvmOverloads constructor(
         drawCornerToggles(canvas)
     }
 
-    fun getCropRect(): Rect =
-        getCropSizeOriginal()
-            .max(bitmapRect)
-            .toRect()
-
     /**
      * Current crop size depending on original bitmap.
      * Returns rectangle as pixel values.
      */
-    private fun getCropSizeOriginal(): RectF {
+    fun getCropRect(): RectF {
         return RectF().apply {
             val cropRectOnOriginalBitmapMatrix = Matrix()
                 .apply {
@@ -614,10 +605,10 @@ class CropView @JvmOverloads constructor(
     /**
      * Initializes crop rect with bitmap.
      */
-    private fun initializeCropRect(initialCropRect: Rect?) {
+    private fun initializeCropRect(initialCropRect: RectF) {
         bitmapMatrix.mapRect(
             cropRect,
-            initialCropRect?.toRectF() ?: RectF(0f, 0f, bitmapRect.width(), bitmapRect.height())
+            initialCropRect
         )
     }
 
@@ -873,8 +864,8 @@ class CropView @JvmOverloads constructor(
         ) <= bitmapMinRect.width()
     }
 
-    private fun notifyCropRectChanged() {
-        onCropRectSizeChanged(getCropSizeOriginal())
+    private fun notifyCropRectChanged(returnInitial: Boolean = false) {
+        onCropRectSizeChanged(if (returnInitial) initialCropRect else getCropRect())
     }
 
     companion object {

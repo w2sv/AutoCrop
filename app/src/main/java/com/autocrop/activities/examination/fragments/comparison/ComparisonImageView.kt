@@ -62,8 +62,8 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
 
     fun onSharedElementEnterTransitionEnd(rootLayoutParams: RelativeLayout.LayoutParams){
         layoutParams = rootLayoutParams
-        setScreenshot()
         sharedViewModel.displayScreenshot = true
+        set()
     }
 
     private fun setCrop(marginalized: Boolean = false){
