@@ -7,10 +7,10 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.MotionEvent.*
 import android.view.View
+import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.toRect
 import androidx.core.graphics.toRectF
-import com.lyrebirdstudio.croppylib.CroppyTheme
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.utils.extensions.*
 import com.lyrebirdstudio.croppylib.utils.model.AnimatableRectF
@@ -31,9 +31,7 @@ class CropView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    var onInitialized: (() -> Unit)? = null
-
-    var observeCropRectOnOriginalBitmapChanged: ((RectF) -> Unit)? = null
+    lateinit var onCropRectSizeChanged: ((RectF) -> Unit)
 
     private val cropRectOnOriginalBitmapMatrix = Matrix()
 
@@ -176,6 +174,46 @@ class CropView @JvmOverloads constructor(
      */
     private var maskBitmap: Bitmap? = null
 
+    init {
+        setWillNotDraw(false)
+        setLayerType(LAYER_TYPE_HARDWARE, null)
+        setBackgroundColor(ContextCompat.getColor(context, R.color.colorCropBackground))
+    }
+
+    fun initialize(bitmap: Bitmap, initialCropRect: Rect?) {
+        this.bitmap = bitmap
+
+        bitmapRect.set(
+            0f,
+            0f,
+            this.bitmap?.width?.toFloat() ?: 0f,
+            this.bitmap?.height?.toFloat() ?: 0f
+        )
+
+        initializeView(initialCropRect)
+    }
+
+    private fun initializeView(initialCropRect: Rect?){
+        val bitmapMinRectSize = max(bitmapRect.width(), bitmapRect.height()) / MAX_SCALE
+        bitmapMinRect.set(0f, 0f, bitmapMinRectSize, bitmapMinRectSize)
+
+        viewWidth = measuredWidth.toFloat() - (marginInPixelSize * 2)
+        viewHeight = measuredHeight.toFloat() - (marginInPixelSize * 2)
+
+        viewRect.set(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
+
+        createMaskBitmap()
+        initializeBitmapMatrix()
+        initializeCropRect(initialCropRect)
+
+        requestLayout()
+        invalidate()
+    }
+
+    fun setAccentColor(@ColorRes accentColor: Int) {
+        accentPaint.color = ContextCompat.getColor(context, accentColor)
+    }
+
     private val bitmapGestureListener = object : BitmapGestureHandler.BitmapGestureListener {
         override fun onDoubleTap(motionEvent: MotionEvent) {
 
@@ -260,18 +298,13 @@ class CropView @JvmOverloads constructor(
 
     private val bitmapGestureHandler = BitmapGestureHandler(context, bitmapGestureListener)
 
-    init {
-        setWillNotDraw(false)
-        setLayerType(LAYER_TYPE_HARDWARE, null)
-        setBackgroundColor(ContextCompat.getColor(context, R.color.colorCropBackground))
-    }
-
     /**
      * Initialize necessary rects, bitmaps, canvas here.
      */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        initialize(null)
+
+        initializeView(null)
     }
 
     /**
@@ -365,39 +398,11 @@ class CropView @JvmOverloads constructor(
 //        drawCornerToggles(canvas)
     }
 
-    /**
-     * Set bitmap from outside of this view.
-     * Calculates bitmap rect and bitmap min rect.
-     */
-    fun setBitmap(bitmap: Bitmap?, initialCropRect: Rect?) {
-        this.bitmap = bitmap
-
-        bitmapRect.set(
-            0f,
-            0f,
-            this.bitmap?.width?.toFloat() ?: 0f,
-            this.bitmap?.height?.toFloat() ?: 0f
-        )
-
-        val bitmapMinRectSize = max(bitmapRect.width(), bitmapRect.height()) / MAX_SCALE
-        bitmapMinRect.set(0f, 0f, bitmapMinRectSize, bitmapMinRectSize)
-
-        initialize(initialCropRect)
-
-        requestLayout()
-        invalidate()
-    }
-
-    fun setTheme(croppyTheme: CroppyTheme) {
-        highlightPaint.color = ContextCompat.getColor(context, croppyTheme.accentColor)
-    }
-
     fun getCropRect(): Rect {
         val croppedBitmapRect = getCropSizeOriginal()
 
-        if (bitmapRect.intersect(croppedBitmapRect).not()) {
+        if (!bitmapRect.intersect(croppedBitmapRect))
             return croppedBitmapRect.toRect()
-        }
 
         val cropLeft = if (croppedBitmapRect.left.roundToInt() < bitmapRect.left) {
             bitmapRect.left.toInt()
@@ -432,30 +437,12 @@ class CropView @JvmOverloads constructor(
      * Current crop size depending on original bitmap.
      * Returns rectangle as pixel values.
      */
-    fun getCropSizeOriginal(): RectF {
+    private fun getCropSizeOriginal(): RectF {
         val cropSizeOriginal = RectF()
         cropRectOnOriginalBitmapMatrix.reset()
         bitmapMatrix.invert(cropRectOnOriginalBitmapMatrix)
         cropRectOnOriginalBitmapMatrix.mapRect(cropSizeOriginal, cropRect)
         return cropSizeOriginal
-    }
-
-    /**
-     * Initialize
-     */
-    private fun initialize(initialCropRect: Rect?) {
-        viewWidth = measuredWidth.toFloat() - (marginInPixelSize * 2)
-        viewHeight = measuredHeight.toFloat() - (marginInPixelSize * 2)
-
-        viewRect.set(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
-
-        createMaskBitmap()
-        initializeBitmapMatrix()
-        initializeCropRect(initialCropRect)
-
-        onInitialized?.invoke()
-
-        invalidate()
     }
 
     /**
@@ -472,7 +459,7 @@ class CropView @JvmOverloads constructor(
         style = Paint.Style.STROKE
     }
 
-    private val highlightPaint = Paint().apply {
+    private val accentPaint = Paint().apply {
         color = Color.WHITE
         strokeWidth = 3F
         style = Paint.Style.STROKE
@@ -492,7 +479,7 @@ class CropView @JvmOverloads constructor(
             cropRect.top,
             cropRect.right,
             cropRect.top,
-            highlightPaint
+            accentPaint
         )
 
         canvas?.drawLine(
@@ -500,7 +487,7 @@ class CropView @JvmOverloads constructor(
             cropRect.bottom,
             cropRect.right,
             cropRect.bottom,
-            highlightPaint
+            accentPaint
         )
 
         canvas?.drawLine(
@@ -556,9 +543,9 @@ class CropView @JvmOverloads constructor(
         )
     }
 
-    /**
-     * Draw corner lines and toggles
-     */
+//    /**
+//     * Draw corner lines and toggles
+//     */
 //    private fun drawCornerToggles(canvas: Canvas?) {
 //        /**
 //         * Top left toggle
@@ -1027,7 +1014,7 @@ class CropView @JvmOverloads constructor(
     }
 
     private fun notifyCropRectChanged() {
-        observeCropRectOnOriginalBitmapChanged?.invoke(getCropSizeOriginal())
+        onCropRectSizeChanged(getCropSizeOriginal())
     }
 
     companion object {

@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 open class CropRequest(
     open val sourceUri: Uri,
     open val requestCode: Int,
-    open val initialCropRect: Rect?,
+    open val initialCropRect: Rect,
     open val croppyTheme: CroppyTheme,
     open val exitActivityAnimation: ((Context) -> Unit)?
     ) : Parcelable
