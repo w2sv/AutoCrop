@@ -127,13 +127,6 @@ class CropView @JvmOverloads constructor(
     private val zoomFocusPoint = FloatArray(2)
 
     /**
-     * This value holds inverted matrix when user scale
-     * bitmap image with two finger. This value initialized to
-     * avoid memory allocation every time user pinch zoom.
-     */
-    private val zoomInverseMatrix = Matrix()
-
-    /**
      * Crop rect grid line width
      */
     private val gridLineWidthInPixel = resources.getDimension(R.dimen.grid_line_width)
@@ -245,6 +238,13 @@ class CropView @JvmOverloads constructor(
 //            }
         }
 
+        /**
+         * This value holds inverted matrix when user scale
+         * bitmap image with two finger. This value initialized to
+         * avoid memory allocation every time user pinch zoom.
+         */
+        private val zoomInverseMatrix = Matrix()
+
         override fun onScale(scaleFactor: Float, focusX: Float, focusY: Float) {
 //
 //            /**
@@ -252,9 +252,8 @@ class CropView @JvmOverloads constructor(
 //             * point then early return.
 //             * Otherwise continue and do calculation and apply to bitmap matrix.
 //             */
-//            if (isBitmapScaleExceedMaxLimit(scaleFactor)) {
+//            if (isBitmapScaleExceedMaxLimit(scaleFactor))
 //                return
-//            }
 //
 //            zoomInverseMatrix.reset()
 //            bitmapMatrix.invert(zoomInverseMatrix)
@@ -275,7 +274,6 @@ class CropView @JvmOverloads constructor(
 //                zoomFocusPoint[0],
 //                zoomFocusPoint[1]
 //            )
-//            notifyCropRectChanged()
 //
 //            invalidate()
         }
@@ -291,10 +289,6 @@ class CropView @JvmOverloads constructor(
                 notifyCropRectChanged()
                 invalidate()
             }
-        }
-
-        override fun onEnd() {
-//            settleDraggedBitmap()
         }
     }
 
@@ -330,12 +324,6 @@ class CropView @JvmOverloads constructor(
             }
             ACTION_MOVE -> {
                 when (val state = draggingState) {
-                    is DraggingCorner -> {
-                        onCornerPositionChanged(state.corner, event)
-                        updateExceedMaxBorders()
-                        updateExceedMinBorders()
-                        notifyCropRectChanged()
-                    }
                     is DraggingEdge -> {
                         onEdgePositionChanged(state.edge, event)
                         updateExceedMaxBorders()
@@ -349,17 +337,11 @@ class CropView @JvmOverloads constructor(
                 minRect.setEmpty()
                 maxRect.setEmpty()
                 when (draggingState) {
-                    is DraggingEdge, is DraggingCorner -> {
+                    is DraggingEdge, is DraggingState.DraggingCropRect -> {
                         calculateCenterTarget()
 
                         animateBitmapToCenterTarget()
                         animateCropRectToCenterTarget()
-                    }
-                    is DraggingState.DraggingCropRect -> {
-//                        calculateCenterTarget()
-
-//                        animateBitmapToCenterTarget()
-//                        animateCropRectToCenterTarget()
                     }
                     else -> Unit
                 }
@@ -857,74 +839,6 @@ class CropView @JvmOverloads constructor(
             notifyCropRectChanged()
         }
     }
-
-    /**
-     * when user drag bitmap too much, we need to settle bitmap matrix
-     * back to the possible closest edge.
-     */
-//    private fun settleDraggedBitmap() {
-//        val draggedBitmapRect = RectF()
-//        bitmapMatrix.mapRect(draggedBitmapRect, bitmapRect)
-//
-//        /**
-//         * Scale dragged matrix if it needs to
-//         */
-//        val widthScale = cropRect.width() / draggedBitmapRect.width()
-//        val heightScale = cropRect.height() / draggedBitmapRect.height()
-//        var scale = 1.0f
-//
-//        if (widthScale > 1.0f || heightScale > 1.0f) {
-//            scale = max(widthScale, heightScale)
-//        }
-//
-//        /**
-//         * Calculate new scaled matrix for dragged bitmap matrix
-//         */
-//        val scaledRect = RectF()
-//        val scaledMatrix = Matrix()
-//        scaledMatrix.setScale(scale, scale)
-//        scaledMatrix.mapRect(scaledRect, draggedBitmapRect)
-//
-//
-//        /**
-//         * Calculate translateX
-//         */
-//        var translateX = 0f
-//        if (scaledRect.left > cropRect.left) {
-//            translateX = cropRect.left - scaledRect.left
-//        }
-//
-//        if (scaledRect.right < cropRect.right) {
-//            translateX = cropRect.right - scaledRect.right
-//        }
-//
-//        /**
-//         * Calculate translateX
-//         */
-//        var translateY = 0f
-//        if (scaledRect.top > cropRect.top) {
-//            translateY = cropRect.top - scaledRect.top
-//        }
-//
-//        if (scaledRect.bottom < cropRect.bottom) {
-//            translateY = cropRect.bottom - scaledRect.bottom
-//        }
-//
-//        /**
-//         * New temp bitmap matrix
-//         */
-//        val newBitmapMatrix = bitmapMatrix.clone()
-//
-//        val matrix = Matrix()
-//        matrix.setScale(scale, scale)
-//        matrix.postTranslate(translateX, translateY)
-//        newBitmapMatrix.postConcat(matrix)
-//
-//        bitmapMatrix.animateToMatrix(newBitmapMatrix) {
-//            invalidate()
-//            notifyCropRectChanged()
-//        }
-//    }
 
     /**
      * Pretend a bitmap matrix value if scale factor will be applied to
