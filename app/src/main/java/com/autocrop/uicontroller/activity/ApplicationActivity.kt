@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.global.Preferences
+import com.autocrop.global.PreferencesArray
 import com.autocrop.global.preferencesInstances
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.utilsandroid.getApplicationWideSharedPreferences
@@ -12,7 +13,7 @@ import com.autocrop.utilsandroid.getApplicationWideSharedPreferences
 abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
     rootFragmentClass: Class<RF>,
     viewModelClass: Class<VM>,
-    private val accessedPreferenceInstances: Array<Preferences<*>>? = null) :
+    private val accessedPreferenceInstances: PreferencesArray? = null) :
         FragmentHostingActivity<RF>(rootFragmentClass),
         ViewModelRetriever<VM> {
 
@@ -26,15 +27,11 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
             onSavedInstanceStateNull()
     }
 
-    protected open fun onSavedInstanceStateNull(){
-        showEntrySnackbar()
-    }
+    protected open fun onSavedInstanceStateNull(){}
 
     //$$$$$$$$$$$$$$$$$$$$$$
     // Snackbar displaying $
     //$$$$$$$$$$$$$$$$$$$$$$
-
-    protected open fun showEntrySnackbar() {}
 
     protected fun <T> getIntentExtra(key: String, blacklistValue: T? = null): T? =
         intent.extras?.get(key).let {

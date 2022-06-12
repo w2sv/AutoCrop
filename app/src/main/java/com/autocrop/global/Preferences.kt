@@ -108,4 +108,5 @@ object UriPreferences: Preferences<Uri?>(
         }
 }
 
-val preferencesInstances: Array<Preferences<*>> = arrayOf(BooleanPreferences, UriPreferences)
+typealias PreferencesArray = Array<Preferences<*>>
+val preferencesInstances: PreferencesArray = arrayOf(BooleanPreferences, UriPreferences)

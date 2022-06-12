@@ -74,33 +74,28 @@ class MainActivity :
     }
 
     private fun ImageFileIOSynopsis.showAsSnackbar(){
-        when (nSavedCrops) {
-            0 -> snacky("Discarded all crops")
-                .setIcon(R.drawable.ic_outline_sentiment_dissatisfied_24)
-            else -> snacky(
-                SpannableStringBuilder().apply {
-                    append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                    color(this@MainActivity.getThemedColor(NotificationColor.SUCCESS)) {
-                        append(cropWriteDirIdentifier)
-                    }
-                    if (nDeletedScreenshots != 0)
-                        append(
-                            " and deleted ${
-                                if (nDeletedScreenshots == nSavedCrops)
-                                    "corresponding"
-                                else
-                                    nDeletedScreenshots
-                            } ${
-                                "screenshot".numericallyInflected(
-                                    nDeletedScreenshots
-                                )
-                            }"
-                        )
-                }
-            )
-                .setIcon(R.drawable.ic_baseline_done_24)
+        val textAndIcon = if (nSavedCrops == 0)
+            "Discarded all crops" to R.drawable.ic_outline_sentiment_dissatisfied_24
+        else
+            SpannableStringBuilder().apply {
+                append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
+                color(getThemedColor(NotificationColor.SUCCESS)) {append(cropWriteDirIdentifier)}
+                if (nDeletedScreenshots != 0)
+                    append(
+                        " and deleted ${
+                            if (nDeletedScreenshots == nSavedCrops)
+                                "corresponding"
+                            else
+                                nDeletedScreenshots
+                        } ${"screenshot".numericallyInflected(nDeletedScreenshots)}"
+                    )
+            } to R.drawable.ic_baseline_done_24
+
+        with(textAndIcon){
+            snacky(first)
+                .setIcon(second)
+                .buildAndShow()
         }
-            .buildAndShow()
     }
 
     private fun onButtonsHalfFadedIn(runnable: Runnable){

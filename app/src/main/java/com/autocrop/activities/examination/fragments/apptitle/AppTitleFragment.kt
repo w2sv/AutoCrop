@@ -11,7 +11,14 @@ class AppTitleFragment
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         binding.appTitleTextView.animate(
-            listOf(Techniques.Shake, Techniques.Wobble, Techniques.Wave, Techniques.Tada).random()
-        ){typedActivity.returnToMainActivity()}
+            listOf(
+                Techniques.Shake,
+                Techniques.Wobble,
+                Techniques.Wave,
+                Techniques.Tada
+            )
+                .random(),
+            onEnd = typedActivity::returnToMainActivity
+        )
     }
 }
