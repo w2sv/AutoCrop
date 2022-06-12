@@ -3,6 +3,7 @@ package com.autocrop.activities.examination.fragments.viewpager.views
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.graphics.toRectF
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.fragments.comparison.ComparisonFragment
 import com.autocrop.activities.examination.fragments.viewpager.CropPagerAdapter
@@ -69,8 +70,11 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
                     CropRequest(
                         sharedViewModel.dataSet.currentCropBundle.screenshot.uri,
                         requestCode = MANUAL_CROP_REQUEST_CODE,
-                        initialCropRect = sharedViewModel.dataSet.currentCropBundle.crop.rect,
-                        croppyTheme = CroppyTheme(R.color.magenta_bright),
+                        initialCropRect = sharedViewModel.dataSet.currentCropBundle.crop.rect.toRectF(),
+                        croppyTheme = CroppyTheme(
+                            accentColor = R.color.magenta_bright,
+                            backgroundColor = R.color.magenta_dark
+                        ),
                         exitActivityAnimation = transitionAnimation
                     )
                 )

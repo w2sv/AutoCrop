@@ -1,6 +1,5 @@
 package com.autocrop.activities.main
 
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.SpannableStringBuilder
@@ -13,7 +12,10 @@ import com.autocrop.collections.ImageFileIOSynopsis
 import com.autocrop.global.preferencesInstances
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.numericallyInflected
-import com.autocrop.utilsandroid.*
+import com.autocrop.utilsandroid.NotificationColor
+import com.autocrop.utilsandroid.buildAndShow
+import com.autocrop.utilsandroid.getThemedColor
+import com.autocrop.utilsandroid.snacky
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.w2sv.autocrop.R
 import timber.log.Timber
@@ -22,15 +24,12 @@ class MainActivity :
     ApplicationActivity<FlowFieldFragment, MainActivityViewModel>(
         FlowFieldFragment::class.java,
         MainActivityViewModel::class.java,
-        preferencesInstances) {
+        accessedPreferenceInstances = preferencesInstances) {
 
-    /**
-     * [launchReviewFlow] on Activity reentry
-     */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onSavedInstanceStateNull() {
+        super.onSavedInstanceStateNull()
 
-        if (savedInstanceState == null && sharedViewModel.imageFileIOSynopsis?.nSavedCrops != 0)
+        if (sharedViewModel.imageFileIOSynopsis?.nSavedCrops != 0)
             launchReviewFlow()
     }
 

@@ -1,6 +1,7 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.view.ViewCompat
@@ -41,7 +42,7 @@ class CropPagerAdapter(
         }
     }
 
-    class CropViewHolder(view: ImageView)
+    class CropViewHolder(view: View)
         : RecyclerView.ViewHolder(view) {
         val cropImageView: ImageView = view.findViewById(R.id.crop_iv)
     }
@@ -52,7 +53,7 @@ class CropPagerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CropViewHolder =
         CropViewHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.examination_cropimageviewholder, parent, false) as ImageView
+                .inflate(R.layout.examination_cropimageviewholder, parent, false)
         )
 
     /**

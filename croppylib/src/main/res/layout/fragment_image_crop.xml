@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,30 +18,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
-            android:background="@color/colorCropToolbar"
-            android:clickable="true"
-            android:focusable="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            android:background="@color/colorCropAlpha">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/imageViewCancel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:padding="@dimen/padding_16dp"
-                        app:srcCompat="@drawable/ic_cancel"
-                        app:tint="@color/white" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -50,42 +32,124 @@
                         android:orientation="horizontal">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/heightDisplayButton"
+                            android:id="@+id/height_tv"
                             android:layout_width="@dimen/width_button_bitmap_dimension"
                             android:layout_height="@dimen/height_button_bitmap_dimension"
+                            android:layout_marginStart="@dimen/margin_4dp"
                             android:layout_marginLeft="@dimen/margin_4dp"
                             android:background="@drawable/background_rounded_text"
                             android:gravity="center"
                             android:maxLength="6"
                             android:textColor="@color/white"
+                            android:textStyle="bold"/>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/percentage_tv"
+                            android:layout_width="@dimen/width_button_bitmap_dimension"
+                            android:layout_height="@dimen/height_button_bitmap_dimension"
+                            android:layout_marginStart="@dimen/margin_4dp"
+                            android:layout_marginLeft="@dimen/margin_4dp"
+                            android:background="@drawable/background_rounded_text"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/y1_tv"
+                            android:layout_width="@dimen/width_button_bitmap_dimension"
+                            android:layout_height="@dimen/height_button_bitmap_dimension"
+                            android:layout_marginStart="@dimen/margin_4dp"
+                            android:layout_marginLeft="@dimen/margin_4dp"
+                            android:background="@drawable/background_rounded_text"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/y2_tv"
+                            android:layout_width="@dimen/width_button_bitmap_dimension"
+                            android:layout_height="@dimen/height_button_bitmap_dimension"
+                            android:layout_marginStart="@dimen/margin_4dp"
+                            android:layout_marginLeft="@dimen/margin_4dp"
+                            android:background="@drawable/background_rounded_text"
+                            android:gravity="center"
+                            android:textColor="@color/white"
                             android:textStyle="bold" />
 
                     </LinearLayout>
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/imageViewApply"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:padding="@dimen/padding_16dp"
-                        app:srcCompat="@drawable/ic_check"
-                        app:tint="@color/white" />
-
                 </RelativeLayout>
-
-            </LinearLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 
         <com.lyrebirdstudio.croppylib.fragment.cropview.CropView
-            android:id="@+id/cropView"
+            android:id="@+id/crop_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/recyclerViewAspectRatios"
-            android:layout_marginTop="?attr/actionBarSize" />
+            android:layout_marginTop="?attr/actionBarSize"
+            android:layerType="hardware"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/reset_button"
+            android:visibility="visible"
+
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/bottom_button_row"
+
+            android:layout_marginTop="-30dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+
+            android:background="@drawable/background_reset_button"
+            android:text="@string/reset"
+            android:textStyle="italic"
+            android:textSize="15sp"
+            tools:ignore="RelativeOverlap" />
+
+        <LinearLayout
+            android:id="@+id/bottom_button_row"
+
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/cancel_button"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="18dp"
+
+                android:background="@drawable/background_bottom_buttons"
+                android:padding="13dp"
+
+                app:srcCompat="@drawable/ic_cancel" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/apply_button"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="18dp"
+
+                android:background="@drawable/background_bottom_buttons"
+                android:padding="13dp"
+                app:srcCompat="@drawable/ic_check" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

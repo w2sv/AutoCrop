@@ -43,8 +43,4 @@ dependencies {
 
     //Architecture Components
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-
-    //RxJava & RxAndroid
-    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
-    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
 }

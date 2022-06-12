@@ -23,7 +23,11 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
         ::sharedViewModel.invoke()
 
         if (savedInstanceState == null)
-            showEntrySnackbar()
+            onSavedInstanceStateNull()
+    }
+
+    protected open fun onSavedInstanceStateNull(){
+        showEntrySnackbar()
     }
 
     //$$$$$$$$$$$$$$$$$$

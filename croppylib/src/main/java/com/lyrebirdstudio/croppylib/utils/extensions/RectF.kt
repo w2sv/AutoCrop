@@ -4,7 +4,39 @@ import android.graphics.RectF
 import android.view.MotionEvent
 import com.lyrebirdstudio.croppylib.utils.model.Corner
 import com.lyrebirdstudio.croppylib.utils.model.Edge
+import java.lang.Float.min
 import kotlin.math.hypot
+import kotlin.math.max
+
+fun RectF.max(other: RectF): RectF =
+    RectF(
+        max(left, other.left),
+        max(top, other.top),
+        min(right, other.right),
+        min(bottom, other.bottom)
+    )
+
+fun RectF.maxed(other: RectF){
+    left = max(left, other.left)
+    top = max(top, other.top)
+    right = min(right, other.right)
+    bottom = min(bottom, other.bottom)
+}
+
+fun RectF.min(other: RectF): RectF =
+    RectF(
+        min(left, other.left),
+        min(top, other.top),
+        max(right, other.right),
+        max(bottom, other.bottom)
+    )
+
+fun RectF.mind(other: RectF){
+    left = min(left, other.left)
+    top = min(top, other.top)
+    right = max(right, other.right)
+    bottom = max(bottom, other.bottom)
+}
 
 fun RectF.getEdgeTouch(touchEvent: MotionEvent, touchThreshold: Float = 50f): Edge {
     val isLeft = touchEvent.x < left + touchThreshold &&

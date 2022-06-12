@@ -14,7 +14,7 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.collections.Crop
 import com.autocrop.collections.ImageFileIOSynopsis
 import com.autocrop.global.BooleanPreferences
-import com.autocrop.global.CropSavingPreferences
+import com.autocrop.global.UriPreferences
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utilsandroid.*
 import com.lyrebirdstudio.croppylib.activity.CroppyActivity
@@ -52,7 +52,7 @@ class ExaminationActivity :
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
         ExaminationActivityViewModelFactory(
-            validSaveDirDocumentUri = CropSavingPreferences.documentUri?.let{
+            validSaveDirDocumentUri = UriPreferences.documentUri?.let{
                 if (uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
                     it
                 else

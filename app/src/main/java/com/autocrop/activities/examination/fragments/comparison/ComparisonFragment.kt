@@ -1,6 +1,8 @@
 package com.autocrop.activities.examination.fragments.comparison
 
 import android.content.Context
+import android.os.Bundle
+import android.view.View
 import android.widget.RelativeLayout
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -53,6 +55,15 @@ class ComparisonFragment
             })
     }
 
-    fun prepareExitTransition() =
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.displayScreenshot.observe(viewLifecycleOwner){
+            binding.comparisonIv.set(it, viewModel.enterTransitionCompleted)
+        }
+    }
+
+    fun prepareExitTransition(){
         binding.comparisonIv.prepareSharedElementExitTransition()
+    }
 }

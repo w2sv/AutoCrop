@@ -8,8 +8,6 @@ import android.view.MotionEvent
 import android.view.MotionEvent.*
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.toRect
-import androidx.core.graphics.toRectF
 import com.lyrebirdstudio.croppylib.CroppyTheme
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.utils.extensions.*
@@ -23,19 +21,12 @@ import com.lyrebirdstudio.croppylib.utils.model.Edge
 import com.lyrebirdstudio.croppylib.utils.model.Edge.*
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.roundToInt
 
 class CropView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
-    var onInitialized: (() -> Unit)? = null
-
-    var observeCropRectOnOriginalBitmapChanged: ((RectF) -> Unit)? = null
-
-    private val cropRectOnOriginalBitmapMatrix = Matrix()
 
     /**
      * Touch threshold for corners and edges
@@ -45,7 +36,7 @@ class CropView @JvmOverloads constructor(
     /**
      * Main rect which is drawn to canvas.
      */
-    private val cropRect: AnimatableRectF =
+    private var cropRect: AnimatableRectF =
         AnimatableRectF()
 
     /**
@@ -103,11 +94,6 @@ class CropView @JvmOverloads constructor(
     private var viewHeight = 0f
 
     /**
-     * Original bitmap value
-     */
-    private var bitmap: Bitmap? = null
-
-    /**
      * Bitmap matrix to draw bitmap on canvas
      */
     private val bitmapMatrix: Matrix = Matrix()
@@ -136,13 +122,6 @@ class CropView @JvmOverloads constructor(
      * allocation every time user scale bitmap with fingers.
      */
     private val zoomFocusPoint = FloatArray(2)
-
-    /**
-     * This value holds inverted matrix when user scale
-     * bitmap image with two finger. This value initialized to
-     * avoid memory allocation every time user pinch zoom.
-     */
-    private val zoomInverseMatrix = Matrix()
 
     /**
      * Crop rect grid line width
@@ -175,6 +154,63 @@ class CropView @JvmOverloads constructor(
      * Mask bitmap
      */
     private var maskBitmap: Bitmap? = null
+
+    init {
+        setWillNotDraw(false)
+    }
+
+    private lateinit var bitmap: Bitmap
+    private lateinit var initialCropRect: RectF
+    private lateinit var onCropRectSizeChanged: ((RectF) -> Unit)
+
+    fun initialize(bitmap: Bitmap, initialCropRect: RectF, theme: CroppyTheme, onCropRectSizeChanged: ((RectF) -> Unit)) {
+        this.bitmap = bitmap
+        this.initialCropRect = initialCropRect
+        this.onCropRectSizeChanged = onCropRectSizeChanged
+
+        bitmapRect.set(
+            0f,
+            0f,
+            bitmap.width.toFloat(),
+            bitmap.height.toFloat(),
+        )
+
+        applyTheme(theme)
+    }
+
+    private fun applyTheme(theme: CroppyTheme){
+        setBackgroundColor(context.getColor(theme.backgroundColor))
+
+        accentPaint = Paint().apply {
+            color = context.getColor(theme.accentColor)
+            strokeWidth = 6F
+            style = Paint.Style.STROKE
+        }
+    }
+
+    private val bitmapBorderRect = RectF()
+
+    private fun initializeView(){
+        val bitmapMinRectSize = max(bitmapRect.width(), bitmapRect.height()) / MAX_SCALE
+        bitmapMinRect.set(0f, 0f, bitmapMinRectSize, bitmapMinRectSize)
+
+        viewWidth = measuredWidth.toFloat() - (marginInPixelSize * 2)
+        viewHeight = measuredHeight.toFloat() - (marginInPixelSize * 2)
+
+        viewRect.set(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
+
+        createMaskBitmap()
+        initializeBitmapMatrix()
+        initializeCropRect(initialCropRect)
+
+        requestLayout()
+        invalidate()
+    }
+
+    fun reset(){
+        initializeView()
+        notifyCropRectChanged(returnInitial = true)
+    }
 
     private val bitmapGestureListener = object : BitmapGestureHandler.BitmapGestureListener {
         override fun onDoubleTap(motionEvent: MotionEvent) {
@@ -210,6 +246,13 @@ class CropView @JvmOverloads constructor(
 //            }
         }
 
+        /**
+         * This value holds inverted matrix when user scale
+         * bitmap image with two finger. This value initialized to
+         * avoid memory allocation every time user pinch zoom.
+         */
+        private val zoomInverseMatrix = Matrix()
+
         override fun onScale(scaleFactor: Float, focusX: Float, focusY: Float) {
 //
 //            /**
@@ -217,9 +260,8 @@ class CropView @JvmOverloads constructor(
 //             * point then early return.
 //             * Otherwise continue and do calculation and apply to bitmap matrix.
 //             */
-//            if (isBitmapScaleExceedMaxLimit(scaleFactor)) {
+//            if (isBitmapScaleExceedMaxLimit(scaleFactor))
 //                return
-//            }
 //
 //            zoomInverseMatrix.reset()
 //            bitmapMatrix.invert(zoomInverseMatrix)
@@ -240,38 +282,33 @@ class CropView @JvmOverloads constructor(
 //                zoomFocusPoint[0],
 //                zoomFocusPoint[1]
 //            )
-//            notifyCropRectChanged()
 //
 //            invalidate()
         }
 
         override fun onScroll(distanceX: Float, distanceY: Float) {
-            cropRect.top -= distanceY
-            cropRect.bottom -= distanceY
+            val topNew = cropRect.top - distanceY
+            val bottomNew = cropRect.bottom - distanceY
 
-            notifyCropRectChanged()
-            invalidate()
-        }
+            if (topNew > bitmapBorderRect.top && bottomNew < bitmapBorderRect.bottom){
+                cropRect.top = topNew
+                cropRect.bottom = bottomNew
 
-        override fun onEnd() {
-            settleDraggedBitmap()
+                notifyCropRectChanged()
+                invalidate()
+            }
         }
     }
 
     private val bitmapGestureHandler = BitmapGestureHandler(context, bitmapGestureListener)
-
-    init {
-        setWillNotDraw(false)
-        setLayerType(LAYER_TYPE_HARDWARE, null)
-        setBackgroundColor(ContextCompat.getColor(context, R.color.colorCropBackground))
-    }
 
     /**
      * Initialize necessary rects, bitmaps, canvas here.
      */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        initialize(null)
+
+        initializeView()
     }
 
     /**
@@ -286,17 +323,15 @@ class CropView @JvmOverloads constructor(
             ACTION_DOWN -> {
                 setDraggingState(event)
 
-                calculateMinRect()
-                calculateMaxRect()
+                if (draggingState !is DraggingState.Idle){
+                    setBitmapBorderRect()
+
+                    calculateMinRect()
+                    calculateMaxRect()
+                }
             }
             ACTION_MOVE -> {
                 when (val state = draggingState) {
-                    is DraggingCorner -> {
-                        onCornerPositionChanged(state.corner, event)
-                        updateExceedMaxBorders()
-                        updateExceedMinBorders()
-                        notifyCropRectChanged()
-                    }
                     is DraggingEdge -> {
                         onEdgePositionChanged(state.edge, event)
                         updateExceedMaxBorders()
@@ -310,17 +345,11 @@ class CropView @JvmOverloads constructor(
                 minRect.setEmpty()
                 maxRect.setEmpty()
                 when (draggingState) {
-                    is DraggingEdge, is DraggingCorner -> {
+                    is DraggingEdge, is DraggingState.DraggingCropRect -> {
                         calculateCenterTarget()
 
                         animateBitmapToCenterTarget()
                         animateCropRectToCenterTarget()
-                    }
-                    is DraggingState.DraggingCropRect -> {
-                        calculateCenterTarget()
-
-                        animateBitmapToCenterTarget()
-//                        animateCropRectToCenterTarget()
                     }
                     else -> Unit
                 }
@@ -352,9 +381,7 @@ class CropView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        bitmap?.let { bitmap ->
-            canvas?.drawBitmap(bitmap, bitmapMatrix, emptyPaint)
-        }
+        canvas?.drawBitmap(bitmap, bitmapMatrix, emptyPaint)
 
         canvas?.save()
         canvas?.clipRect(cropRect)
@@ -362,100 +389,22 @@ class CropView @JvmOverloads constructor(
         canvas?.restore()
 
         drawGrid(canvas)
-//        drawCornerToggles(canvas)
-    }
-
-    /**
-     * Set bitmap from outside of this view.
-     * Calculates bitmap rect and bitmap min rect.
-     */
-    fun setBitmap(bitmap: Bitmap?, initialCropRect: Rect?) {
-        this.bitmap = bitmap
-
-        bitmapRect.set(
-            0f,
-            0f,
-            this.bitmap?.width?.toFloat() ?: 0f,
-            this.bitmap?.height?.toFloat() ?: 0f
-        )
-
-        val bitmapMinRectSize = max(bitmapRect.width(), bitmapRect.height()) / MAX_SCALE
-        bitmapMinRect.set(0f, 0f, bitmapMinRectSize, bitmapMinRectSize)
-
-        initialize(initialCropRect)
-
-        requestLayout()
-        invalidate()
-    }
-
-    fun setTheme(croppyTheme: CroppyTheme) {
-        highlightPaint.color = ContextCompat.getColor(context, croppyTheme.accentColor)
-    }
-
-    fun getCropRect(): Rect {
-        val croppedBitmapRect = getCropSizeOriginal()
-
-        if (bitmapRect.intersect(croppedBitmapRect).not()) {
-            return croppedBitmapRect.toRect()
-        }
-
-        val cropLeft = if (croppedBitmapRect.left.roundToInt() < bitmapRect.left) {
-            bitmapRect.left.toInt()
-        } else {
-            croppedBitmapRect.left.roundToInt()
-        }
-
-        val cropTop = if (croppedBitmapRect.top.roundToInt() < bitmapRect.top) {
-            bitmapRect.top.toInt()
-        } else {
-            croppedBitmapRect.top.roundToInt()
-        }
-
-        val cropRight = if (croppedBitmapRect.right.roundToInt() > bitmapRect.right) {
-            bitmapRect.right.toInt()
-        } else {
-            croppedBitmapRect.right.roundToInt()
-        }
-
-        val cropBottom = if (croppedBitmapRect.bottom.roundToInt() > bitmapRect.bottom) {
-            bitmapRect.bottom.toInt()
-        } else {
-            croppedBitmapRect.bottom.roundToInt()
-        }
-
-        if (bitmap != null)
-            return Rect(cropLeft, cropTop, cropRight, cropBottom)
-        throw IllegalStateException("Bitmap is null.")
+        drawCornerToggles(canvas)
     }
 
     /**
      * Current crop size depending on original bitmap.
      * Returns rectangle as pixel values.
      */
-    fun getCropSizeOriginal(): RectF {
-        val cropSizeOriginal = RectF()
-        cropRectOnOriginalBitmapMatrix.reset()
-        bitmapMatrix.invert(cropRectOnOriginalBitmapMatrix)
-        cropRectOnOriginalBitmapMatrix.mapRect(cropSizeOriginal, cropRect)
-        return cropSizeOriginal
-    }
+    fun getCropRect(): RectF {
+        return RectF().apply {
+            val cropRectOnOriginalBitmapMatrix = Matrix()
+                .apply {
+                    bitmapMatrix.invert(this)
+                }
 
-    /**
-     * Initialize
-     */
-    private fun initialize(initialCropRect: Rect?) {
-        viewWidth = measuredWidth.toFloat() - (marginInPixelSize * 2)
-        viewHeight = measuredHeight.toFloat() - (marginInPixelSize * 2)
-
-        viewRect.set(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
-
-        createMaskBitmap()
-        initializeBitmapMatrix()
-        initializeCropRect(initialCropRect)
-
-        onInitialized?.invoke()
-
-        invalidate()
+            cropRectOnOriginalBitmapMatrix.mapRect(this, cropRect)
+        }
     }
 
     /**
@@ -472,11 +421,7 @@ class CropView @JvmOverloads constructor(
         style = Paint.Style.STROKE
     }
 
-    private val highlightPaint = Paint().apply {
-        color = Color.WHITE
-        strokeWidth = 3F
-        style = Paint.Style.STROKE
-    }
+    private lateinit var accentPaint: Paint
 
     /**
      * Draw crop rect as a grid.
@@ -489,22 +434,6 @@ class CropView @JvmOverloads constructor(
 
         canvas?.drawLine(
             cropRect.left,
-            cropRect.top,
-            cropRect.right,
-            cropRect.top,
-            highlightPaint
-        )
-
-        canvas?.drawLine(
-            cropRect.left,
-            cropRect.bottom,
-            cropRect.right,
-            cropRect.bottom,
-            highlightPaint
-        )
-
-        canvas?.drawLine(
-            cropRect.left,
             cropRect.bottom,
             cropRect.left,
             cropRect.top,
@@ -517,6 +446,22 @@ class CropView @JvmOverloads constructor(
             cropRect.right,
             cropRect.top,
             cropPaint
+        )
+
+        canvas?.drawLine(
+            cropRect.left,
+            cropRect.top,
+            cropRect.right,
+            cropRect.top,
+            accentPaint
+        )
+
+        canvas?.drawLine(
+            cropRect.left,
+            cropRect.bottom,
+            cropRect.right,
+            cropRect.bottom,
+            accentPaint
         )
 
         /**
@@ -559,85 +504,85 @@ class CropView @JvmOverloads constructor(
     /**
      * Draw corner lines and toggles
      */
-//    private fun drawCornerToggles(canvas: Canvas?) {
-//        /**
-//         * Top left toggle
-//         */
-//        canvas?.drawLine(
-//            cropRect.left - gridLineWidthInPixel,
-//            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            cropRect.left + cornerToggleLengthInPixel,
-//            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            highlightPaint
-//        )
-//
-//        canvas?.drawLine(
-//            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            cropRect.top - gridLineWidthInPixel,
-//            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            cropRect.top + cornerToggleLengthInPixel,
-//            highlightPaint
-//        )
-//
-//        /**
-//         * Top Right toggle
-//         */
-//
-//        canvas?.drawLine(
-//            cropRect.right - cornerToggleLengthInPixel,
-//            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            cropRect.right + gridLineWidthInPixel,
-//            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            highlightPaint
-//        )
-//
-//        canvas?.drawLine(
-//            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            cropRect.top - gridLineWidthInPixel,
-//            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            cropRect.top + cornerToggleLengthInPixel,
-//            highlightPaint
-//        )
-//
-//        /**
-//         * Bottom Left toggle
-//         */
-//
-//        canvas?.drawLine(
-//            cropRect.left - gridLineWidthInPixel,
-//            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            cropRect.left + cornerToggleLengthInPixel,
-//            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            highlightPaint
-//        )
-//
-//        canvas?.drawLine(
-//            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            cropRect.bottom + gridLineWidthInPixel,
-//            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
-//            cropRect.bottom - cornerToggleLengthInPixel,
-//            highlightPaint
-//        )
-//
-//        /**
-//         * Bottom Right toggle
-//         */
-//        canvas?.drawLine(
-//            cropRect.right - cornerToggleLengthInPixel,
-//            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            cropRect.right + gridLineWidthInPixel,
-//            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            highlightPaint
-//        )
-//
-//        canvas?.drawLine(
-//            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            cropRect.bottom + gridLineWidthInPixel,
-//            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
-//            cropRect.bottom - cornerToggleLengthInPixel,
-//            highlightPaint
-//        )
-//    }
+    private fun drawCornerToggles(canvas: Canvas?) {
+        /**
+         * Top left toggle
+         */
+        canvas?.drawLine(
+            cropRect.left - gridLineWidthInPixel,
+            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            cropRect.left + cornerToggleLengthInPixel,
+            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            accentPaint
+        )
+
+        canvas?.drawLine(
+            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            cropRect.top - gridLineWidthInPixel,
+            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            cropRect.top + cornerToggleLengthInPixel,
+            accentPaint
+        )
+
+        /**
+         * Top Right toggle
+         */
+
+        canvas?.drawLine(
+            cropRect.right - cornerToggleLengthInPixel,
+            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            cropRect.right + gridLineWidthInPixel,
+            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            accentPaint
+        )
+
+        canvas?.drawLine(
+            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            cropRect.top - gridLineWidthInPixel,
+            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            cropRect.top + cornerToggleLengthInPixel,
+            accentPaint
+        )
+
+        /**
+         * Bottom Left toggle
+         */
+
+        canvas?.drawLine(
+            cropRect.left - gridLineWidthInPixel,
+            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            cropRect.left + cornerToggleLengthInPixel,
+            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            accentPaint
+        )
+
+        canvas?.drawLine(
+            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            cropRect.bottom + gridLineWidthInPixel,
+            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthInPixel,
+            cropRect.bottom - cornerToggleLengthInPixel,
+            accentPaint
+        )
+
+        /**
+         * Bottom Right toggle
+         */
+        canvas?.drawLine(
+            cropRect.right - cornerToggleLengthInPixel,
+            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            cropRect.right + gridLineWidthInPixel,
+            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            accentPaint
+        )
+
+        canvas?.drawLine(
+            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            cropRect.bottom + gridLineWidthInPixel,
+            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthInPixel,
+            cropRect.bottom - cornerToggleLengthInPixel,
+            accentPaint
+        )
+    }
 
     /**
      * Initializes bitmap matrix
@@ -649,15 +594,21 @@ class CropView @JvmOverloads constructor(
         val translateX = (viewWidth - bitmapRect.width() * scale) / 2f + marginInPixelSize
         val translateY = (viewHeight - bitmapRect.height() * scale) / 2f + marginInPixelSize
         bitmapMatrix.postTranslate(translateX, translateY)
+
+        setBitmapBorderRect()
+    }
+
+    private fun setBitmapBorderRect(){
+        bitmapMatrix.mapRect(bitmapBorderRect, bitmapRect)
     }
 
     /**
      * Initializes crop rect with bitmap.
      */
-    private fun initializeCropRect(initialCropRect: Rect?) {
+    private fun initializeCropRect(initialCropRect: RectF) {
         bitmapMatrix.mapRect(
             cropRect,
-            initialCropRect?.toRectF() ?: RectF(0f, 0f, bitmapRect.width(), bitmapRect.height())
+            initialCropRect
         )
     }
 
@@ -682,9 +633,6 @@ class CropView @JvmOverloads constructor(
      * be change on cropRect is changed.
      */
     private fun onEdgePositionChanged(edge: Edge, motionEvent: MotionEvent) {
-        val bitmapBorderRect = RectF()
-        bitmapMatrix.mapRect(bitmapBorderRect, bitmapRect)
-
         when (edge) {
             TOP -> cropRect.top = motionEvent.y
             BOTTOM -> cropRect.bottom = motionEvent.y
@@ -768,14 +716,7 @@ class CropView @JvmOverloads constructor(
      * drag cropRect
      */
     private fun calculateMaxRect() {
-        val borderRect = RectF().apply {
-            val bitmapBorderRect = RectF()
-            bitmapMatrix.mapRect(bitmapBorderRect, bitmapRect)
-            top = max(bitmapBorderRect.top, viewRect.top)
-            right = min(bitmapBorderRect.right, viewRect.right)
-            bottom = min(bitmapBorderRect.bottom, viewRect.bottom)
-            left = max(bitmapBorderRect.left, viewRect.left)
-        }
+        val borderRect = bitmapBorderRect.max(viewRect)
 
         when (val state = draggingState) {
             is DraggingEdge -> {
@@ -837,46 +778,12 @@ class CropView @JvmOverloads constructor(
         }
     }
 
-    /**
-     * If user exceed its limit we override cropRect borders
-     */
     private fun updateExceedMaxBorders() {
-        if (cropRect.left < maxRect.left) {
-            cropRect.left = maxRect.left
-        }
-
-        if (cropRect.top < maxRect.top) {
-            cropRect.top = maxRect.top
-        }
-
-        if (cropRect.right > maxRect.right) {
-            cropRect.right = maxRect.right
-        }
-
-        if (cropRect.bottom > maxRect.bottom) {
-            cropRect.bottom = maxRect.bottom
-        }
+        cropRect.maxed(maxRect)
     }
 
-    /**
-     * If user exceed its limit we override cropRect borders
-     */
     private fun updateExceedMinBorders() {
-        if (cropRect.left > minRect.left) {
-            cropRect.left = minRect.left
-        }
-
-        if (cropRect.top > minRect.top) {
-            cropRect.top = minRect.top
-        }
-
-        if (cropRect.right < minRect.right) {
-            cropRect.right = minRect.right
-        }
-
-        if (cropRect.bottom < minRect.bottom) {
-            cropRect.bottom = minRect.bottom
-        }
+        cropRect.mind(minRect)
     }
 
     /**
@@ -932,75 +839,6 @@ class CropView @JvmOverloads constructor(
     private fun animateCropRectToCenterTarget() {
         cropRect.animateTo(targetRect) {
             invalidate()
-            notifyCropRectChanged()
-        }
-    }
-
-    /**
-     * when user drag bitmap too much, we need to settle bitmap matrix
-     * back to the possible closest edge.
-     */
-    private fun settleDraggedBitmap() {
-        val draggedBitmapRect = RectF()
-        bitmapMatrix.mapRect(draggedBitmapRect, bitmapRect)
-
-        /**
-         * Scale dragged matrix if it needs to
-         */
-        val widthScale = cropRect.width() / draggedBitmapRect.width()
-        val heightScale = cropRect.height() / draggedBitmapRect.height()
-        var scale = 1.0f
-
-        if (widthScale > 1.0f || heightScale > 1.0f) {
-            scale = max(widthScale, heightScale)
-        }
-
-        /**
-         * Calculate new scaled matrix for dragged bitmap matrix
-         */
-        val scaledRect = RectF()
-        val scaledMatrix = Matrix()
-        scaledMatrix.setScale(scale, scale)
-        scaledMatrix.mapRect(scaledRect, draggedBitmapRect)
-
-
-        /**
-         * Calculate translateX
-         */
-        var translateX = 0f
-        if (scaledRect.left > cropRect.left) {
-            translateX = cropRect.left - scaledRect.left
-        }
-
-        if (scaledRect.right < cropRect.right) {
-            translateX = cropRect.right - scaledRect.right
-        }
-
-        /**
-         * Calculate translateX
-         */
-        var translateY = 0f
-        if (scaledRect.top > cropRect.top) {
-            translateY = cropRect.top - scaledRect.top
-        }
-
-        if (scaledRect.bottom < cropRect.bottom) {
-            translateY = cropRect.bottom - scaledRect.bottom
-        }
-
-        /**
-         * New temp bitmap matrix
-         */
-        val newBitmapMatrix = bitmapMatrix.clone()
-
-        val matrix = Matrix()
-        matrix.setScale(scale, scale)
-        matrix.postTranslate(translateX, translateY)
-        newBitmapMatrix.postConcat(matrix)
-
-        bitmapMatrix.animateToMatrix(newBitmapMatrix) {
-            invalidate()
-            notifyCropRectChanged()
         }
     }
 
@@ -1026,8 +864,8 @@ class CropView @JvmOverloads constructor(
         ) <= bitmapMinRect.width()
     }
 
-    private fun notifyCropRectChanged() {
-        observeCropRectOnOriginalBitmapChanged?.invoke(getCropSizeOriginal())
+    private fun notifyCropRectChanged(returnInitial: Boolean = false) {
+        onCropRectSizeChanged(if (returnInitial) initialCropRect else getCropRect())
     }
 
     companion object {

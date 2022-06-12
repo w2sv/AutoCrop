@@ -2,40 +2,26 @@ package com.lyrebirdstudio.croppylib.fragment
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.core.graphics.toRect
+import androidx.core.text.color
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.lyrebirdstudio.croppylib.CropRequest
-import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.databinding.FragmentImageCropBinding
+import com.lyrebirdstudio.croppylib.utils.bitmap.resizedBitmap
+import com.lyrebirdstudio.croppylib.utils.extensions.*
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 class ImageCropFragment : Fragment() {
 
     private val binding: FragmentImageCropBinding get() = _binding!!
     private var _binding: FragmentImageCropBinding? = null
-
-    private val viewModel by viewModels<ImageCropViewModel>()
-
-    var onApplyClicked: ((Rect) -> Unit)? = null
-    var onCancelClicked: (() -> Unit)? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewModel.cropRequest = arguments?.getParcelable(KEY_BUNDLE_CROP_REQUEST)!!
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,63 +32,81 @@ class ImageCropFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        requireActivity().hideSystemBars()
+    }
+
+    private val viewModel by viewModels<ImageCropViewModel>{
+        val cropRequest = arguments?.getParcelable<CropRequest>(KEY_BUNDLE_CROP_REQUEST)!!
+
+        ImageCropViewModelFactory(
+            resizedBitmap(cropRequest.sourceUri, requireContext()),
+            cropRequest
+        )
+    }
+
+    lateinit var onApplyClicked: ((Rect) -> Unit)
+    lateinit var onCancelClicked: (() -> Unit)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.cropView.setTheme(viewModel.cropRequest.croppyTheme)
+        binding.setOnClickListeners()
 
-        binding.imageViewCancel.setOnClickListener {
-            onCancelClicked?.invoke()
+        binding.cropView.initialize(
+            viewModel.bitmap,
+            viewModel.cropRequest.initialCropRect,
+            viewModel.cropRequest.croppyTheme
+        ){ cropRectF ->
+            viewModel.cropRectF.asMutable.postValue(cropRectF)
         }
 
-        binding.imageViewApply.setOnClickListener {
-            onApplyClicked?.invoke(binding.cropView.getCropRect())
-        }
+        binding.resetButton.setTextColor(requireContext().getColor(viewModel.cropRequest.croppyTheme.accentColor))
 
-        binding.cropView.apply{
-            onInitialized = {
-                viewModel.updateCropSize(binding.cropView.getCropSizeOriginal())
-            }
-
-            observeCropRectOnOriginalBitmapChanged = {
-                viewModel.updateCropSize(binding.cropView.getCropSizeOriginal())
-            }
-        }
-
-        viewModel
-            .getCropViewStateLiveData()
-            .observe(viewLifecycleOwner){
-                binding.heightDisplayButton.text = if (it.height?.isNaN() == true)
-                    ""
-                else
-                    SpannableString("H ${it.height?.roundToInt()}").apply {
-                        setSpan(
-                            ForegroundColorSpan(ContextCompat.getColor(requireContext(), it.croppyTheme.accentColor)),
-                            0,
-                            1,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        setSpan(
-                            ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.white)),
-                            1,
-                            length - 1,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                    }
-            }
-
-        viewModel
-            .getResizedBitmapLiveData()
-            .observe(viewLifecycleOwner) {
-                binding.cropView.setBitmap(
-                    it.bitmap,
-                    viewModel.cropRequest.initialCropRect
+        viewModel.cropRectF
+            .observe(viewLifecycleOwner){ cropRectF ->
+                binding.heightTv.text = styledText("H", min(cropRectF.height().roundToInt(), viewModel.bitmap.height))
+                binding.y1Tv.text = styledText("Y1", max(cropRectF.top.roundToInt(), 0))
+                binding.y2Tv.text = styledText("Y2", min(cropRectF.bottom.roundToInt(), viewModel.bitmap.height))
+                binding.percentageTv.text = styledText(
+                    "%",
+                    (viewModel.bitmap.maintainedPercentage(cropRectF.height()) * 100).rounded(1)
                 )
+
+                binding.resetButton.visibility = if (cropRectF != viewModel.cropRequest.initialCropRect)
+                    View.VISIBLE
+                else
+                    View.GONE
             }
     }
 
-    companion object {
+    private fun styledText(unit: String, value: Any): SpannableStringBuilder =
+        SpannableStringBuilder()
+            .color(requireContext().getColor(viewModel.cropRequest.croppyTheme.accentColor)) {append(unit)}
+            .append(" $value")
 
+    private fun FragmentImageCropBinding.setOnClickListeners(){
+        cancelButton.setOnClickListener {
+            onCancelClicked()
+        }
+
+        applyButton.setOnClickListener {
+            onApplyClicked(cropView.getCropRect().toRect())
+        }
+
+        resetButton.setOnClickListener {
+            cropView.reset()
+        }
+    }
+
+    companion object {
         private const val KEY_BUNDLE_CROP_REQUEST = "KEY_BUNDLE_CROP_REQUEST"
 
         @JvmStatic

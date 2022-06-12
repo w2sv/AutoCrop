@@ -20,12 +20,12 @@ class CroppyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val cropRequest: CropRequest = intent.getParcelableExtra(KEY_CROP_REQUEST)!!
-
         binding = ActivityCroppyBinding.inflate(layoutInflater)
             .apply {
                 setContentView(root)
             }
+
+        val cropRequest: CropRequest = intent.getParcelableExtra(KEY_CROP_REQUEST)!!
 
         viewModel = ViewModelProvider(this)[CroppyActivityViewModel::class.java]
             .apply {

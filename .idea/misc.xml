@@ -99,6 +99,8 @@
         <entry key="app/src/main/res/mipmap-anydpi-v26/logo_round.xml" value="0.205" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/trippy_brudineletten.xml" value="0.1825" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/trippy_brudineletten_round.xml" value="0.1825" />
+        <entry key="croppylib/src/main/res/drawable/background_botton_buttons.xml" value="0.216" />
+        <entry key="croppylib/src/main/res/drawable/background_reset_button.xml" value="0.216" />
         <entry key="croppylib/src/main/res/drawable/background_rounded_text.xml" value="0.2055" />
         <entry key="croppylib/src/main/res/drawable/ic_cancel.xml" value="0.2055" />
         <entry key="croppylib/src/main/res/drawable/ic_check.xml" value="0.2055" />

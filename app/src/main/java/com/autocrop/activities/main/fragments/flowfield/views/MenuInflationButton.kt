@@ -10,7 +10,7 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.global.BooleanPreferences
-import com.autocrop.global.CropSavingPreferences
+import com.autocrop.global.UriPreferences
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
@@ -51,7 +51,7 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet)
             }
 
             private fun pickCropSaveDestinationDir() =
-                sharedViewModel.pickSaveDestinationDir.launch(CropSavingPreferences.treeUri)
+                sharedViewModel.pickSaveDestinationDir.launch(UriPreferences.treeUri)
 
             private fun goToPlayStoreListing() =
                 try{
