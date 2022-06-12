@@ -14,7 +14,7 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
     viewModelClass: Class<VM>,
     private val accessedPreferenceInstances: Array<Preferences<*>>? = null) :
         FragmentHostingActivity<RF>(rootFragmentClass),
-    ViewModelRetriever<VM> {
+        ViewModelRetriever<VM> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,17 +30,6 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
         showEntrySnackbar()
     }
 
-    //$$$$$$$$$$$$$$$$$$
-    // ViewModelHolder $
-    //$$$$$$$$$$$$$$$$$$
-
-    override val sharedViewModel: VM by lazy {
-        ViewModelProvider(this, viewModelFactory())[viewModelClass]
-    }
-
-    protected open fun viewModelFactory(): ViewModelProvider.Factory =
-        defaultViewModelProviderFactory
-
     //$$$$$$$$$$$$$$$$$$$$$$
     // Snackbar displaying $
     //$$$$$$$$$$$$$$$$$$$$$$
@@ -55,6 +44,17 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
             else
                 null
         }
+
+    //$$$$$$$$$$$$$$$$$$
+    // ViewModelHolder $
+    //$$$$$$$$$$$$$$$$$$
+
+    override val sharedViewModel: VM by lazy {
+        ViewModelProvider(this, viewModelFactory())[viewModelClass]
+    }
+
+    protected open fun viewModelFactory(): ViewModelProvider.Factory =
+        defaultViewModelProviderFactory
 
     /**
      * Write changed values of each [preferencesInstances] element to SharedPreferences

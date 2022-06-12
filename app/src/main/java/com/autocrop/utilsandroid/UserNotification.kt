@@ -9,18 +9,12 @@ object NotificationColor {
     const val SUCCESS: Int = R.color.light_green
 }
 
-fun Activity.snacky(text: CharSequence,
-                    @ColorRes textColorRes: Int? = null): Snacky.Builder =
+fun Activity.snacky(text: CharSequence, duration: Int = Snacky.LENGTH_LONG): Snacky.Builder =
         Snacky
             .builder()
             .setText(text)
             .centerText()
-            .apply {
-                textColorRes?.let {
-                    setTextColor(this@snacky.getThemedColor(it))
-                }
-            }
-            .setDuration(Snacky.LENGTH_LONG)
+            .setDuration(duration)
             .setActivity(this)
 
 fun Snacky.Builder.buildAndShow() =

@@ -12,6 +12,7 @@ import com.autocrop.collections.ImageFileIOSynopsis
 import com.autocrop.global.BooleanPreferences
 import com.autocrop.global.preferencesInstances
 import com.autocrop.uicontroller.activity.ApplicationActivity
+import com.autocrop.utils.BlankFun
 import com.autocrop.utils.numericallyInflected
 import com.autocrop.utilsandroid.NotificationColor
 import com.autocrop.utilsandroid.buildAndShow
@@ -27,23 +28,6 @@ class MainActivity :
         MainActivityViewModel::class.java,
         accessedPreferenceInstances = preferencesInstances) {
 
-    override fun onSavedInstanceStateNull() {
-        super.onSavedInstanceStateNull()
-
-        if (!BooleanPreferences.welcomeMessageShown){
-            onButtonsHalfFadedIn{
-                snacky(
-                    "Great to have you on board! \uD83D\uDE80"
-                )
-                    .buildAndShow()
-            }
-            BooleanPreferences.welcomeMessageShown = true
-        }
-
-        else if (sharedViewModel.imageFileIOSynopsis?.nSavedCrops != 0)
-            launchReviewFlow()
-    }
-
     override fun viewModelFactory(): ViewModelProvider.Factory =
         MainActivityViewModelFactory(
             imageFileIOSynopsis = getIntentExtra<ByteArray>(IntentExtraIdentifier.EXAMINATION_ACTIVITY_RESULTS)?.let {
@@ -51,19 +35,72 @@ class MainActivity :
             }
         )
 
-    private fun launchReviewFlow(){
-        val manager = ReviewManagerFactory.create(this)
-
-        manager
-            .requestReviewFlow()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful)
-                    task.result?.let {
-                        manager.launchReviewFlow(this, it)
-                    }
-                else
-                    Timber.i(task.exception)
+    override fun onSavedInstanceStateNull() {
+        if (!BooleanPreferences.welcomeMessageShown){
+            onButtonsHalfFadedIn{
+                snacky(
+                    "Good to have you on board! \uD83D\uDD25 Now select some screenshots and save your first AutoCrops! \uD83D\uDE80",
+                    duration = resources.getInteger(R.integer.duration_snackbar_extra_long)
+                )
+                    .buildAndShow()
             }
+            BooleanPreferences.welcomeMessageShown = true
+        }
+        else{
+            sharedViewModel.imageFileIOSynopsis?.run {
+                val showAsSnackbarOnButtonsHalfFadedIn: BlankFun = { onButtonsHalfFadedIn { showAsSnackbar() } }
+
+                if (nSavedCrops != 0)
+                    launchReviewFlow(showAsSnackbarOnButtonsHalfFadedIn)
+                else
+                    showAsSnackbarOnButtonsHalfFadedIn()
+            }
+        }
+    }
+
+    private fun launchReviewFlow(onFinishedListener: BlankFun){
+        with(ReviewManagerFactory.create(this)){
+            requestReviewFlow()
+                .addOnCompleteListener { task ->
+                    task.result?.let {
+                        launchReviewFlow(this@MainActivity, it)
+                            .addOnCompleteListener{ onFinishedListener() }
+                    } ?: run {
+                        Timber.i(task.exception)
+                        onFinishedListener()
+                    }
+            }
+        }
+    }
+
+    private fun ImageFileIOSynopsis.showAsSnackbar(){
+        when (nSavedCrops) {
+            0 -> snacky("Discarded all crops")
+                .setIcon(R.drawable.ic_outline_sentiment_dissatisfied_24)
+            else -> snacky(
+                SpannableStringBuilder().apply {
+                    append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
+                    color(this@MainActivity.getThemedColor(NotificationColor.SUCCESS)) {
+                        append(cropWriteDirIdentifier)
+                    }
+                    if (nDeletedScreenshots != 0)
+                        append(
+                            " and deleted ${
+                                if (nDeletedScreenshots == nSavedCrops)
+                                    "corresponding"
+                                else
+                                    nDeletedScreenshots
+                            } ${
+                                "screenshot".numericallyInflected(
+                                    nDeletedScreenshots
+                                )
+                            }"
+                        )
+                }
+            )
+                .setIcon(R.drawable.ic_baseline_done_24)
+        }
+            .buildAndShow()
     }
 
     private fun onButtonsHalfFadedIn(runnable: Runnable){
@@ -71,39 +108,6 @@ class MainActivity :
             runnable,
             resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong() / 2
         )
-    }
-
-    /**
-     * Notifies as to IO results from previous ExaminationActivity cycle
-     */
-    override fun showEntrySnackbar(){
-        sharedViewModel.imageFileIOSynopsis?.run {
-            onButtonsHalfFadedIn {
-                when (nSavedCrops) {
-                    0 -> snacky("Discarded all crops")
-                        .setIcon(R.drawable.ic_outline_sentiment_dissatisfied_24)
-                    else -> snacky(
-                        SpannableStringBuilder().apply {
-                            append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                            color(this@MainActivity.getThemedColor(NotificationColor.SUCCESS)) {
-                                append(cropWriteDirIdentifier)
-                            }
-
-                            if (nDeletedScreenshots != 0)
-                                append(
-                                    " and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} ${
-                                        "screenshot".numericallyInflected(
-                                            nDeletedScreenshots
-                                        )
-                                    }"
-                                )
-                        }
-                    )
-                        .setIcon(R.drawable.ic_baseline_done_24)
-                }
-                    .buildAndShow()
-            }
-        }
     }
 
     /**

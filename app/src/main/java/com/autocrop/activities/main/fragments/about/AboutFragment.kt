@@ -32,9 +32,11 @@ class AboutFragment:
                             Handler(Looper.getMainLooper()).postDelayed(
                                 {
                                     requireActivity()
-                                        .snacky("Pro tip: check out what happens if you click on the various view elements")
+                                        .snacky(
+                                            "Pro tip: check out what happens if you click on the various view elements",
+                                            duration = resources.getInteger(R.integer.duration_snackbar_long)
+                                        )
                                         .setIcon(R.drawable.ic_outline_info_24)
-                                        .setDuration(resources.getInteger(R.integer.duration_snackbar_long))
                                         .buildAndShow()
                                     BooleanPreferences.aboutFragmentInstructionsShown = true
                                 },
