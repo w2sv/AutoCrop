@@ -53,6 +53,7 @@ class ComparisonFragment
             })
     }
 
-    fun prepareExitTransition() =
+    fun prepareExitTransition(){
         binding.comparisonIv.prepareSharedElementExitTransition()
+    }
 }
