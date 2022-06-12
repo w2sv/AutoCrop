@@ -1,5 +1,7 @@
 package com.autocrop.activities.examination.fragments.comparison
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.autocrop.collections.CropBundle
 import kotlin.properties.Delegates
@@ -7,5 +9,7 @@ import kotlin.properties.Delegates
 class ComparisonViewModel(val cropBundle: CropBundle): ViewModel(){
     var enterTransitionCompleted = false
 
-    var displayScreenshot by Delegates.notNull<Boolean>()
+    val displayScreenshot: LiveData<Boolean> by lazy {
+        MutableLiveData()
+    }
 }

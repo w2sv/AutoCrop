@@ -22,7 +22,7 @@ import com.autocrop.uielements.view.show
 import com.autocrop.utils.numericallyInflected
 import com.autocrop.utilsandroid.buildAndShow
 import com.autocrop.utilsandroid.getThemedColor
-import com.autocrop.utilsandroid.mutableLiveData
+import com.autocrop.utilsandroid.asMutable
 import com.autocrop.utilsandroid.snacky
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
@@ -67,7 +67,7 @@ class ViewPagerFragment :
                 binding.cancelAutoScrollButton.show()
                 scroller = Scroller().apply {
                     run(binding.viewPager, maxAutoScrolls){
-                        this@setLiveDataObservers.autoScroll.mutableLiveData.postValue(false)
+                        this@setLiveDataObservers.autoScroll.asMutable.postValue(false)
                     }
                 }
             } else {

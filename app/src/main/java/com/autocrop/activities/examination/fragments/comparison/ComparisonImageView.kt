@@ -12,6 +12,8 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.autocrop.activities.examination.fragments.viewpager.transitionName
+import com.autocrop.utilsandroid.asMutable
+import com.autocrop.utilsandroid.toggle
 
 class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet){
@@ -43,27 +45,20 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
         ViewCompat.setTransitionName(this, sharedViewModel.cropBundle.transitionName())
 
         setOnClickListener{
-            sharedViewModel.displayScreenshot = !sharedViewModel.displayScreenshot
-            set()
+            sharedViewModel.displayScreenshot.toggle()
         }
-
-        if (!sharedViewModel.enterTransitionCompleted)
-            setCrop(marginalized = true)
-        else
-            set()
     }
 
-    private fun set(){
-        if (sharedViewModel.displayScreenshot)
+    fun set(displayScreenshot: Boolean, enterTransitionCompleted: Boolean){
+        if (displayScreenshot)
             setScreenshot()
         else
-            setCrop()
+            setCrop(marginalized = !enterTransitionCompleted)
     }
 
     fun onSharedElementEnterTransitionEnd(rootLayoutParams: RelativeLayout.LayoutParams){
         layoutParams = rootLayoutParams
-        sharedViewModel.displayScreenshot = true
-        set()
+        sharedViewModel.displayScreenshot.asMutable.postValue(true)
     }
 
     private fun setCrop(marginalized: Boolean = false){
