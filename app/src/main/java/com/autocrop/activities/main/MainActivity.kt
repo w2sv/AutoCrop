@@ -9,6 +9,7 @@ import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.collections.ImageFileIOSynopsis
+import com.autocrop.global.BooleanPreferences
 import com.autocrop.global.preferencesInstances
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.numericallyInflected
@@ -29,7 +30,17 @@ class MainActivity :
     override fun onSavedInstanceStateNull() {
         super.onSavedInstanceStateNull()
 
-        if (sharedViewModel.imageFileIOSynopsis?.nSavedCrops != 0)
+        if (!BooleanPreferences.welcomeMessageShown){
+            onButtonsHalfFadedIn{
+                snacky(
+                    "Great to have you on board! \uD83D\uDE80"
+                )
+                    .buildAndShow()
+            }
+            BooleanPreferences.welcomeMessageShown = true
+        }
+
+        else if (sharedViewModel.imageFileIOSynopsis?.nSavedCrops != 0)
             launchReviewFlow()
     }
 
@@ -55,33 +66,43 @@ class MainActivity :
             }
     }
 
+    private fun onButtonsHalfFadedIn(runnable: Runnable){
+        Handler(Looper.getMainLooper()).postDelayed(
+            runnable,
+            resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong() / 2
+        )
+    }
+
     /**
      * Notifies as to IO results from previous ExaminationActivity cycle
      */
     override fun showEntrySnackbar(){
         sharedViewModel.imageFileIOSynopsis?.run {
-            Handler(Looper.getMainLooper()).postDelayed(
-                {
-                    when (nSavedCrops) {
-                        0 -> snacky("Discarded all crops")
-                            .setIcon(R.drawable.ic_outline_sentiment_dissatisfied_24)
-                        else -> snacky(
-                            SpannableStringBuilder().apply {
-                                append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                                color(this@MainActivity.getThemedColor(NotificationColor.SUCCESS)){
-                                    append(cropWriteDirIdentifier)
-                                }
-
-                                if (nDeletedScreenshots != 0)
-                                    append(" and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} ${"screenshot".numericallyInflected(nDeletedScreenshots)}")
+            onButtonsHalfFadedIn {
+                when (nSavedCrops) {
+                    0 -> snacky("Discarded all crops")
+                        .setIcon(R.drawable.ic_outline_sentiment_dissatisfied_24)
+                    else -> snacky(
+                        SpannableStringBuilder().apply {
+                            append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
+                            color(this@MainActivity.getThemedColor(NotificationColor.SUCCESS)) {
+                                append(cropWriteDirIdentifier)
                             }
-                        )
-                            .setIcon(R.drawable.ic_baseline_done_24)
-                    }
-                        .buildAndShow()
-                },
-                resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong() / 2
-            )
+
+                            if (nDeletedScreenshots != 0)
+                                append(
+                                    " and deleted ${if (nDeletedScreenshots == nSavedCrops) "corresponding" else nDeletedScreenshots} ${
+                                        "screenshot".numericallyInflected(
+                                            nDeletedScreenshots
+                                        )
+                                    }"
+                                )
+                        }
+                    )
+                        .setIcon(R.drawable.ic_baseline_done_24)
+                }
+                    .buildAndShow()
+            }
         }
     }
 

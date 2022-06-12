@@ -58,6 +58,7 @@ object BooleanPreferences : Preferences<Boolean>(
     mutableMapOf(
         "autoScroll" to true,
         "deleteScreenshots" to false,
+        "welcomeMessageShown" to false,
         "viewPagerInstructionsShown" to false,
         "comparisonInstructionsShown" to false,
         "aboutFragmentInstructionsShown" to false
@@ -68,6 +69,7 @@ object BooleanPreferences : Preferences<Boolean>(
      */
     var autoScroll by map
     var deleteScreenshots by map
+    var welcomeMessageShown by map
     var viewPagerInstructionsShown by map
     var comparisonInstructionsShown by map
     var aboutFragmentInstructionsShown by map
