@@ -29,8 +29,8 @@ android {
     def MIN_SDK_VERSION = 23
     def COMPILE_SDK_VERSION = 31
 
-    def VERSION_CODE = 19
-    def VERSION_NAME = '3.1.0'
+    def VERSION_CODE = 20
+    def VERSION_NAME = '3.1.1'
 
     compileSdkVersion COMPILE_SDK_VERSION
     defaultConfig {
