@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.autocrop.collections.CropBundle
-import kotlin.properties.Delegates
 
 class ComparisonViewModel(val cropBundle: CropBundle): ViewModel(){
     var enterTransitionCompleted = false

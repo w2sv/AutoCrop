@@ -20,9 +20,9 @@ import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show
 import com.autocrop.utils.numericallyInflected
+import com.autocrop.utilsandroid.asMutable
 import com.autocrop.utilsandroid.buildAndShow
 import com.autocrop.utilsandroid.getThemedColor
-import com.autocrop.utilsandroid.asMutable
 import com.autocrop.utilsandroid.snacky
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R

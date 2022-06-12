@@ -2,7 +2,6 @@ package com.lyrebirdstudio.croppylib.utils.extensions
 
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import android.graphics.RectF
 import androidx.exifinterface.media.ExifInterface
 
 fun Bitmap.rotated(orientation: Int): Bitmap {

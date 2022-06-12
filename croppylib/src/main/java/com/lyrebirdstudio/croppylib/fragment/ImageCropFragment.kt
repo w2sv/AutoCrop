@@ -13,7 +13,10 @@ import androidx.fragment.app.viewModels
 import com.lyrebirdstudio.croppylib.CropRequest
 import com.lyrebirdstudio.croppylib.databinding.FragmentImageCropBinding
 import com.lyrebirdstudio.croppylib.utils.bitmap.resizedBitmap
-import com.lyrebirdstudio.croppylib.utils.extensions.*
+import com.lyrebirdstudio.croppylib.utils.extensions.asMutable
+import com.lyrebirdstudio.croppylib.utils.extensions.hideSystemBars
+import com.lyrebirdstudio.croppylib.utils.extensions.maintainedPercentage
+import com.lyrebirdstudio.croppylib.utils.extensions.rounded
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
