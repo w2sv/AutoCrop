@@ -22,7 +22,7 @@ class InstructionsDialog: ExtendedDialogFragment(){
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(requireContext())
             .apply {
-                setTitle("Some instructions to get cha goin'")
+                setTitle("Some instructions to get cha going")
                 setIcon(context.getColoredIcon(R.drawable.ic_outline_info_24, R.color.accentuated_tv))
 
                 setMessage(
