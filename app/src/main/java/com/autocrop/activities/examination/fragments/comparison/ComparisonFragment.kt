@@ -1,8 +1,8 @@
 package com.autocrop.activities.examination.fragments.comparison
 
 import android.content.Context
-import android.os.Bundle
-import android.view.View
+import android.os.Handler
+import android.os.Looper
 import android.widget.RelativeLayout
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -12,6 +12,7 @@ import androidx.transition.TransitionListenerAdapter
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.global.BooleanPreferences
+import com.autocrop.utilsandroid.asMutable
 import com.autocrop.utilsandroid.buildAndShow
 import com.autocrop.utilsandroid.snacky
 import com.w2sv.autocrop.R
@@ -40,8 +41,14 @@ class ComparisonFragment
                     super.onTransitionEnd(transition)
 
                     if (!viewModel.enterTransitionCompleted){
-                        binding.comparisonIv.onSharedElementEnterTransitionEnd(binding.root.layoutParams as RelativeLayout.LayoutParams)
-                        viewModel.enterTransitionCompleted = true
+                        Handler(Looper.getMainLooper()).postDelayed(
+                            {
+                                viewModel.enterTransitionCompleted = true
+                                binding.comparisonIv.layoutParams = binding.root.layoutParams as RelativeLayout.LayoutParams
+                                viewModel.displayScreenshot.asMutable.postValue(true)
+                            },
+                            50
+                        )
 
                         if (!BooleanPreferences.comparisonInstructionsShown){
                             requireActivity()
@@ -53,14 +60,6 @@ class ComparisonFragment
                     }
                 }
             })
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        viewModel.displayScreenshot.observe(viewLifecycleOwner){
-            binding.comparisonIv.set(it, viewModel.enterTransitionCompleted)
-        }
     }
 
     fun prepareExitTransition(){

@@ -9,6 +9,6 @@ class ComparisonViewModel(val cropBundle: CropBundle): ViewModel(){
     var enterTransitionCompleted = false
 
     val displayScreenshot: LiveData<Boolean> by lazy {
-        MutableLiveData()
+        MutableLiveData(false)
     }
 }
