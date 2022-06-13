@@ -24,7 +24,7 @@ class ViewPagerViewModel : ViewModel(){
     // View Removal $
     //$$$$$$$$$$$$$$$
 
-    var scrollStateIdleListenerConsumable by Consumable<BlankFun>()
+    var onScrollStateIdleListenerConsumable by Consumable<BlankFun>()
 
     //$$$$$$$$$$$$$
     // AutoScroll $

@@ -11,7 +11,6 @@ import androidx.core.text.color
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.transition.TransitionInflater
-import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.AllCropsDialog
@@ -20,7 +19,6 @@ import com.autocrop.activities.examination.fragments.viewpager.dialogs.Instructi
 import com.autocrop.collections.Crop
 import com.autocrop.global.BooleanPreferences
 import com.autocrop.uielements.recyclerview.CubeOutPageTransformer
-import com.autocrop.uielements.recyclerview.ExtendedRecyclerViewAdapter
 import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show
@@ -37,6 +35,12 @@ class ViewPagerFragment :
     ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(ExaminationFragmentViewpagerBinding::class.java) {
 
     private val viewModel by viewModels<ViewPagerViewModel>(::requireActivity)
+    private val viewPagerProxy: CropViewPagerProxy by lazy {
+        CropViewPagerProxy(
+            binding.viewPager,
+            viewModel
+        )
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -78,35 +82,7 @@ class ViewPagerFragment :
                 }
             } ?: typedActivity.returnToMainActivity()
         else
-            binding.viewPager.removeView(dataSetPosition)
-    }
-
-    /**
-     * • scroll to subsequent position
-     * • remove cropBundle from dataSet
-     * • rotate dataSet such that it will subsequently align with the determined newViewPosition again
-     * • reset preloaded views around newViewPosition
-     * • updateIfApplicable pageIndex dependent views
-     */
-    private fun ViewPager2.removeView(dataSetPosition: Int) {
-        val removingAtDataSetTail = viewModel.dataSet.removingAtTail(dataSetPosition)
-        val newViewPosition = currentItem + viewModel.dataSet.viewPositionIncrement(removingAtDataSetTail)
-
-        // scroll to newViewPosition with blocked pageDependentViewUpdating
-        viewModel.dataSet.currentPosition.blockSubsequentUpdate()
-        setCurrentItem(newViewPosition, true)
-
-        viewModel.scrollStateIdleListenerConsumable = {
-            // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
-            // aligning with newViewPosition
-            viewModel.dataSet.removeAtAndRealign(dataSetPosition, removingAtDataSetTail, newViewPosition)
-
-            // reset surrounding views
-            (adapter as ExtendedRecyclerViewAdapter).resetCachedViewsAround(newViewPosition)
-
-            // update currentPosition
-            viewModel.dataSet.currentPosition.updateIfApplicable(newViewPosition)
-        }
+            viewPagerProxy.removeView(dataSetPosition)
     }
 
     private fun setAllCropsDialogFragmentResultListeners(){
@@ -131,7 +107,7 @@ class ViewPagerFragment :
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         super.onViewCreatedCore(savedInstanceState)
 
-        binding.viewPager.initialize()
+        viewPagerProxy.setInitialView()
         viewModel.setLiveDataObservers()
     }
 
@@ -217,21 +193,6 @@ class ViewPagerFragment :
             }
             viewModel.displayedEntrySnackbar = true
         }
-    }
-
-    private fun ViewPager2.initialize() {
-        adapter = CropPagerAdapter(viewModel)
-
-        registerOnPageChangeCallback(
-            PageChangeHandler(
-                viewModel
-            )
-        )
-
-        setCurrentItem(
-            viewModel.initialViewPosition(),
-            false
-        )
     }
 
     /**
