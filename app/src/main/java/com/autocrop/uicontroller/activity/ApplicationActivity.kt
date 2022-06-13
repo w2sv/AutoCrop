@@ -51,7 +51,11 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
     // ViewModelHolder $
     //$$$$$$$$$$$$$$$$$$
 
-    override val sharedViewModel: VM by ViewModelLazy(viewModelKClass, {viewModelStore}, ::viewModelFactory)
+    override val sharedViewModel: VM by ViewModelLazy(
+        viewModelKClass,
+        {viewModelStore},
+        ::viewModelFactory
+    )
 
     protected open fun viewModelFactory(): ViewModelProvider.Factory =
         defaultViewModelProviderFactory

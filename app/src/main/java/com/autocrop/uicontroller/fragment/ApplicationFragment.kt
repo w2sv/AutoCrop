@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.autocrop.retriever.activity.CustomActivityRetriever
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
@@ -33,7 +34,10 @@ abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
 
     open fun onViewCreatedCore(savedInstanceState: Bundle?){}
 
-    override val sharedViewModel: VM by createViewModelLazy(viewModelKClass, {viewModelStore})
+    override val sharedViewModel: VM by createViewModelLazy(
+        viewModelKClass,
+        {requireActivity().viewModelStore}
+    )
 
     //$$$$$$$$$$$$$$$$$$$$$$$$$$
     // CustomActivityRetriever $
