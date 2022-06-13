@@ -35,6 +35,8 @@ class MainActivity :
         )
 
     override fun onSavedInstanceStateNull() {
+        super.onSavedInstanceStateNull()
+
         if (!BooleanPreferences.welcomeMessageShown){
             onButtonsHalfFadedIn{
                 snacky(

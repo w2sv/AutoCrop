@@ -1,28 +1,18 @@
 package com.autocrop.uicontroller.activity
 
-import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.w2sv.autocrop.R
 
 abstract class FragmentHostingActivity<RF: Fragment>(
-    private val rootFragmentClass: Class<RF>)
-        : ViewBoundActivity() {
+    private val rootFragmentClass: Class<RF>) :
+        ViewBoundActivity(){
 
     private val layoutId: Int by lazy { binding.root.id }
 
-    /**
-     * Run [onCreateCore] and [launchRootFragment] if applicable
-     */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        onCreateCore()
-
-        if (savedInstanceState == null)
-            launchRootFragment()
+    protected fun onSavedInstanceStateNull() {
+        launchRootFragment()
     }
-
-    protected open fun onCreateCore() = Unit
 
     private fun launchRootFragment(){
         supportFragmentManager

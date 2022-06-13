@@ -20,19 +20,20 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
     viewModelKClass: KClass<VM>,
     private val accessedPreferenceInstances: PreferencesArray? = null) :
         FragmentHostingActivity<RF>(rootFragmentClass),
-        ViewModelRetriever<VM> {
+        ViewModelRetriever<VM>{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // instantiate sharedViewModel
-        ::sharedViewModel.invoke()
+        instantiateSharedViewModel()
 
         if (savedInstanceState == null)
             onSavedInstanceStateNull()
     }
 
-    protected open fun onSavedInstanceStateNull(){}
+    private fun instantiateSharedViewModel(){
+        ::sharedViewModel.invoke()
+    }
 
     //$$$$$$$$$$$$$$$$$$$$$$
     // Snackbar displaying $
