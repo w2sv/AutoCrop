@@ -8,10 +8,7 @@ import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import com.autocrop.collections.CropBundle
 import com.autocrop.utils.logBeforehand
-import com.autocrop.utilsandroid.deleteImageMediaFile
-import com.autocrop.utilsandroid.fileName
-import com.autocrop.utilsandroid.queryImageFileMediaColumn
-import com.autocrop.utilsandroid.saveBitmap
+import com.autocrop.utilsandroid.*
 import timber.log.Timber
 
 /**
@@ -23,12 +20,6 @@ import timber.log.Timber
  * second=!null -> first = false
  */
 typealias DeletionResult = Pair<Boolean, Uri?>
-
-/**
- * first := savingSuccessful
- * second := writeUri
- */
-typealias SavingResult = Pair<Boolean, Uri>
 
 /**
  * Saves [CropBundle.crop] under [cropFileName] depending on [CropBundle.screenshot].uri

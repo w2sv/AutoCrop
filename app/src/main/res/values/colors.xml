@@ -3,7 +3,7 @@
     <color name="light_gray">#c4c0c0</color>
     <color name="dark_gray">#656565</color>
 
-    <color name="light_green">#008577</color>
+    <color name="notification_success">#008577</color>
     <color name="ocean_blue">#1a0ac7</color>
 
     <color name="brudi_pink">#FF3F7F</color>
@@ -13,5 +13,5 @@
     <color name="wine_red">#B00020</color>
 
     <color name="accentuated_tv">@color/magenta_bright</color>
-    <color name="neutral_background">#000000</color>
+    <color name="background_neutral">#000000</color>
 </resources>

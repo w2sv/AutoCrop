@@ -43,9 +43,7 @@ class ScreenshotDeletionQueryFragment :
 
         // launch appTitleFragment after small delay for UX smoothness
         Handler(Looper.getMainLooper()).postDelayed(
-            {
-                typedActivity.replaceCurrentFragmentWith(AppTitleFragment(), true)
-            },
+            { fragmentHostingActivity.replaceCurrentFragmentWith(AppTitleFragment(), true) },
             resources.getInteger(R.integer.delay_minimal).toLong()
         )
     }

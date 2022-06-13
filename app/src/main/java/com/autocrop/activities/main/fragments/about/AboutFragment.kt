@@ -8,7 +8,7 @@ import android.os.Looper
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.BooleanPreferences
 import com.autocrop.uielements.view.animate
-import com.autocrop.utilsandroid.BoilerplateLessAnimatorListener
+import com.autocrop.utilsandroid.SimpleAnimatorListener
 import com.autocrop.utilsandroid.buildAndShow
 import com.autocrop.utilsandroid.goToWebpage
 import com.autocrop.utilsandroid.snacky
@@ -27,7 +27,7 @@ class AboutFragment:
         if (enter && !BooleanPreferences.aboutFragmentInstructionsShown)
             AnimatorInflater.loadAnimator(activity, nextAnim)
                 .apply {
-                    addListener(object : BoilerplateLessAnimatorListener() {
+                    addListener(object : SimpleAnimatorListener() {
                         override fun onAnimationEnd(animation: Animator?) {
                             Handler(Looper.getMainLooper()).postDelayed(
                                 {

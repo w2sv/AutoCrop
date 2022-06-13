@@ -50,10 +50,11 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet)
                 )
             }
 
-            private fun pickCropSaveDestinationDir() =
+            private fun pickCropSaveDestinationDir(){
                 sharedViewModel.pickSaveDestinationDir.launch(UriPreferences.treeUri)
+            }
 
-            private fun goToPlayStoreListing() =
+            private fun goToPlayStoreListing(){
                 try{
                     activity.startActivity(
                         Intent(Intent.ACTION_VIEW).apply {
@@ -67,33 +68,37 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet)
                         .snacky("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
                         .buildAndShow()
                 }
+            }
 
-            private fun invokeAboutFragment() =
-                typedActivity.replaceCurrentFragmentWith(
+            private fun invokeAboutFragment(){
+                fragmentHostingActivity.replaceCurrentFragmentWith(
                     AboutFragment(),
                     flipRight = false,
                     addToBackStack = true
                 )
+            }
 
             /**
              * Sets check and [setOnMenuItemClickListener]
              */
-            private fun setCheckableItems(context: Context) = mapOf(
-                R.id.main_menu_item_auto_scroll to "autoScroll"
-            )
-                .forEach { (id, userPreferencesKey) ->
-                    with(menu.findItem(id)){
-                        val value = BooleanPreferences.getValue(userPreferencesKey)
+            private fun setCheckableItems(context: Context){
+                mapOf(
+                    R.id.main_menu_item_auto_scroll to "autoScroll"
+                )
+                    .forEach { (id, userPreferencesKey) ->
+                        with(menu.findItem(id)){
+                            val value = BooleanPreferences.getValue(userPreferencesKey)
 
-                        isChecked = value
-                        persistMenuAfterClick(context)
-                        setOnMenuItemClickListener {
-                            BooleanPreferences[userPreferencesKey] = !value
-                            isChecked = !isChecked
+                            isChecked = value
+                            persistMenuAfterClick(context)
+                            setOnMenuItemClickListener {
+                                BooleanPreferences[userPreferencesKey] = !value
+                                isChecked = !isChecked
 
-                            false
+                                false
+                            }
                         }
                     }
-                }
+            }
         }
 }

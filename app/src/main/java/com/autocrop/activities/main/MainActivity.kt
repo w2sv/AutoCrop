@@ -14,7 +14,6 @@ import com.autocrop.global.preferencesInstances
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.numericallyInflected
-import com.autocrop.utilsandroid.NotificationColor
 import com.autocrop.utilsandroid.buildAndShow
 import com.autocrop.utilsandroid.getThemedColor
 import com.autocrop.utilsandroid.snacky
@@ -79,7 +78,7 @@ class MainActivity :
         else
             SpannableStringBuilder().apply {
                 append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                color(getThemedColor(NotificationColor.SUCCESS)) {append(cropWriteDirIdentifier)}
+                color(getThemedColor(R.color.notification_success)) {append(cropWriteDirIdentifier)}
                 if (nDeletedScreenshots != 0)
                     append(
                         " and deleted ${

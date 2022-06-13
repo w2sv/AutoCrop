@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:background="@color/neutral_background"/>
+        android:background="@color/background_neutral"/>
 
     <com.autocrop.activities.examination.fragments.viewpager.views.MenuInflationButton
         android:id="@+id/menu_inflation_button"

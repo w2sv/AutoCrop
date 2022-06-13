@@ -31,40 +31,50 @@ object MimeTypes{
 }
 
 @Suppress("DEPRECATION")
-val externalPicturesDir: File = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+val externalPicturesDir: File =
+    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
 
 //$$$$$$$$$
 // Saving $
 //$$$$$$$$$
 
 /**
+ * first := savingSuccessful
+ * second := writeUri
+ */
+typealias SavingResult = Pair<Boolean, Uri>
+
+/**
  * @see
  *      https://stackoverflow.com/a/10124040
  *      https://stackoverflow.com/a/59536115
  */
-fun ContentResolver.saveBitmap(bitmap: Bitmap, fileName: String, parentDocumentUri: Uri? = null): Pair<Boolean, Uri>{
-    val (outputStream, writeUri) = when {
-        parentDocumentUri != null -> GetOutputStream.fromParentDocument(fileName, this, parentDocumentUri)
-        apiNotNewerThanQ -> GetOutputStream.untilQ(fileName)
-        else -> @RequiresApi(Build.VERSION_CODES.Q) {
-            GetOutputStream.postQ(fileName, this)
-        }
-    }
+fun ContentResolver.saveBitmap(bitmap: Bitmap, fileName: String, parentDocumentUri: Uri? = null): SavingResult{
+    val (outputStream, writeUri) = GetOutputStream(this, fileName, parentDocumentUri)
 
-    return (bitmap.compressToStream(outputStream) to writeUri)
+    return bitmap.compressToStream(outputStream)
         .also {
             Timber.i(
-                if (it.first) "Successfully wrote $fileName" else "Couldn't write $fileName"
+                if (it) "Successfully wrote $fileName" else "Couldn't write $fileName"
             )
-        }
+        } to writeUri
 }
 
-fun Bitmap.compressToStream(stream: OutputStream) =
+fun Bitmap.compressToStream(stream: OutputStream): Boolean =
     compress(Bitmap.CompressFormat.JPEG, 100, stream)
         .also {stream.close()}
 
 private object GetOutputStream{
-    fun fromParentDocument(fileName: String, contentResolver: ContentResolver, parentDocumentUri: Uri): Pair<OutputStream, Uri> = logBeforehand("GetOutputStream.fromParentDocument") {
+    operator fun invoke(contentResolver: ContentResolver, fileName: String, parentDocumentUri: Uri?): Pair<OutputStream, Uri> =
+        when {
+            parentDocumentUri != null -> fromParentDocument(fileName, contentResolver, parentDocumentUri)
+            buildVersionNotNewerThanQ -> untilQ(fileName)
+            else -> @RequiresApi(Build.VERSION_CODES.Q) {
+                postQ(fileName, contentResolver)
+            }
+        }
+
+    private fun fromParentDocument(fileName: String, contentResolver: ContentResolver, parentDocumentUri: Uri): Pair<OutputStream, Uri> = logBeforehand("GetOutputStream.fromParentDocument") {
         DocumentsContract.createDocument(
             contentResolver,
             parentDocumentUri,
@@ -75,14 +85,14 @@ private object GetOutputStream{
         }
     }
 
-    fun untilQ(fileName: String): Pair<OutputStream, Uri> = logBeforehand("GetOutputStream.untilQ") {
+    private fun untilQ(fileName: String): Pair<OutputStream, Uri> = logBeforehand("GetOutputStream.untilQ") {
         File(externalPicturesDir, fileName).run {
             FileOutputStream(this) to Uri.fromFile(this)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    fun postQ(fileName: String, contentResolver: ContentResolver): Pair<OutputStream, Uri> = logBeforehand("GetOutputStream.postQ") {
+    private fun postQ(fileName: String, contentResolver: ContentResolver): Pair<OutputStream, Uri> = logBeforehand("GetOutputStream.postQ") {
         contentResolver.insert(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             ContentValues().apply {
@@ -111,11 +121,11 @@ private object GetOutputStream{
 fun ContentResolver.deleteImageMediaFile(uri: Uri): Boolean =
     try {
         (
-                delete(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    "${MediaStore.Images.Media._ID}=?",
-                    arrayOf(queryImageFileMediaColumn(uri, MediaStore.Images.Media._ID))
-                ) != 0
+            delete(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                "${MediaStore.Images.Media._ID}=?",
+                arrayOf(queryImageFileMediaColumn(uri, MediaStore.Images.Media._ID))
+            ) != 0
         )
             .also{ Timber.i(if (it) "Successfully deleted screenshot" else "Couldn't delete screenshot") }
     } catch (e: NullPointerException){
@@ -127,13 +137,18 @@ fun ContentResolver.deleteImageMediaFile(uri: Uri): Boolean =
  * @see
  *      https://stackoverflow.com/a/16511111/12083276
  */
-fun ContentResolver.queryImageFileMediaColumn(
-    uri: Uri,
-    mediaColumn: String,
-    selection: String? = null,
-    selectionArgs: Array<String>? = null): String =
-        query(uri, arrayOf(mediaColumn), selection, selectionArgs, null)!!.run {
-            moveToFirst()
-            getString(getColumnIndexOrThrow(mediaColumn))!!
-                .also { close() }
-        }
+fun ContentResolver.queryImageFileMediaColumn(uri: Uri,
+                                              mediaColumn: String,
+                                              selection: String? = null,
+                                              selectionArgs: Array<String>? = null): String =
+    query(
+        uri,
+        arrayOf(mediaColumn),
+        selection,
+        selectionArgs,
+        null
+    )!!.run {
+        moveToFirst()
+        getString(getColumnIndexOrThrow(mediaColumn))!!
+            .also { close() }
+    }

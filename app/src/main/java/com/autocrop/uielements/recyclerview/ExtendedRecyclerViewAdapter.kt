@@ -8,6 +8,9 @@ abstract class ExtendedRecyclerViewAdapter<VH: RecyclerView.ViewHolder>
     fun resetCachedViewsAround(position: Int){
         val nCachedViewsToEitherSide = 3
 
-        notifyItemRangeChanged(position - nCachedViewsToEitherSide, nCachedViewsToEitherSide * 2 + 1)
+        notifyItemRangeChanged(
+            position - nCachedViewsToEitherSide,
+            nCachedViewsToEitherSide * 2 + 1
+        )
     }
 }

@@ -11,6 +11,6 @@
 
         android:contentDescription="@string/compare_crop_with_original_screenshot"
 
-        android:background="@color/neutral_background"/>
+        android:background="@color/background_neutral"/>
 
 </RelativeLayout>

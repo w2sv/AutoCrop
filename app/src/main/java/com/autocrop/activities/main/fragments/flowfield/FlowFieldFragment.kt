@@ -13,6 +13,7 @@ import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.global.UriPreferences
 import com.autocrop.utilsandroid.*
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding
 
 class FlowFieldFragment:
@@ -69,7 +70,7 @@ class FlowFieldFragment:
                     requireActivity().snacky(
                         SpannableStringBuilder()
                             .append("Crops will be saved to ")
-                            .color(requireContext().getThemedColor(NotificationColor.SUCCESS)){
+                            .color(requireContext().getThemedColor(R.color.notification_success)){
                                 append(
                                     documentUriPathIdentifier(UriPreferences.documentUri!!)
                                 )

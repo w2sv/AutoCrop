@@ -46,12 +46,12 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
             }
 
             private fun launchComparisonFragment() {
-                typedActivity.replaceCurrentFragmentWith(
+                fragmentHostingActivity.replaceCurrentFragmentWith(
                     ComparisonFragment(),
                     addToBackStack = true
                 ) { fragmentTransaction ->
                     val cropImageView =
-                        typedActivity.castCurrentFragment<ViewPagerFragment>().binding.viewPager.run {
+                        fragmentHostingActivity.castCurrentFragment<ViewPagerFragment>().binding.viewPager.run {
                             (recyclerView.findViewHolderForAdapterPosition(currentItem) as CropPagerAdapter.CropViewHolder).cropImageView
                         }
 

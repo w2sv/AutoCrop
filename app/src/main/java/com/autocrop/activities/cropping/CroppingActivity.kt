@@ -1,14 +1,13 @@
 package com.autocrop.activities.cropping
 
-import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.fragments.cropping.CroppingFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
-import com.autocrop.activities.main.MainActivity
 import com.autocrop.uicontroller.activity.ApplicationActivity
+import com.autocrop.uicontroller.activity.startMainActivity
 import com.autocrop.utilsandroid.BackPressHandler
+import com.autocrop.utilsandroid.snacky
 
 class CroppingActivity :
     ApplicationActivity<CroppingFragment, CroppingActivityViewModel>(
@@ -20,34 +19,23 @@ class CroppingActivity :
             uris = intent.getParcelableArrayListExtra(IntentExtraIdentifier.SELECTED_IMAGE_URIS)!!
         )
 
-    fun returnToMainActivity() {
-        startActivity(
-            Intent(
-                this,
-                MainActivity::class.java
-            )
-        )
-        ActivityTransitions.RETURN(this)
+    /**
+     * Directly [startMainActivity] if [CroppingFailedFragment] visible,
+     * otherwise only upon confirmed back press
+     */
+    override fun onBackPressed() {
+        when (currentFragment()){
+            is CroppingFailedFragment -> startMainActivity()
+            is CroppingFragment -> handleBackPress()
+            else -> Unit
+        }
     }
 
     /**
      * Return to MainActivity on confirmed back press
      */
     private val handleBackPress = BackPressHandler(
-        this,
-        "Tap again to cancel",
-        ::returnToMainActivity
+        snacky("Tap again to cancel"),
+        ::startMainActivity
     )
-
-    /**
-     * Directly [returnToMainActivity] if [CroppingFailedFragment] visible,
-     * otherwise [returnToMainActivity] upon confirmed back press
-     */
-    override fun onBackPressed() {
-        when (currentFragment()){
-            is CroppingFailedFragment -> returnToMainActivity()
-            is CroppingFragment -> handleBackPress()
-            else -> Unit
-        }
-    }
 }

@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.collections.CropBundle
 import com.autocrop.global.BooleanPreferences
+import com.autocrop.uielements.recyclerview.BidirectionalRecyclerViewAdapter
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.Consumable
 import com.autocrop.utils.rotated
 import com.autocrop.utilsandroid.MutableListLiveData
 import java.util.*
 
-class ViewPagerViewModel
-    : ViewModel(){
+class ViewPagerViewModel : ViewModel(){
 
     var displayedEntrySnackbar = false
     var scroller: Scroller? = null
@@ -43,13 +43,10 @@ class ViewPagerViewModel
     // Views $
     //$$$$$$$$
 
-    companion object {
-        const val MAX_VIEWS: Int = Int.MAX_VALUE
-    }
-
-    fun initialViewPosition(): Int = (MAX_VIEWS / 2).let { halvedMaxViews ->
-        halvedMaxViews - dataSet.correspondingPosition(halvedMaxViews) + dataSet.currentPosition.value!!
-    }
+    fun initialViewPosition(): Int =
+        (BidirectionalRecyclerViewAdapter.N_VIEWS / 2).let { halvedMaxViews ->
+            halvedMaxViews - dataSet.correspondingPosition(halvedMaxViews) + dataSet.currentPosition.value!!
+        }
 }
 
 class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) :

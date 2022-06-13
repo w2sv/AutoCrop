@@ -2,7 +2,6 @@ package com.autocrop.activities.examination
 
 import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.comparison.ComparisonFragment
@@ -10,12 +9,12 @@ import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.examination.fragments.viewpager.views.MenuInflationButton.Companion.MANUAL_CROP_REQUEST_CODE
-import com.autocrop.activities.main.MainActivity
 import com.autocrop.collections.Crop
 import com.autocrop.collections.ImageFileIOSynopsis
 import com.autocrop.global.BooleanPreferences
 import com.autocrop.global.UriPreferences
 import com.autocrop.uicontroller.activity.ApplicationActivity
+import com.autocrop.uicontroller.activity.startMainActivity
 import com.autocrop.utilsandroid.*
 import com.lyrebirdstudio.croppylib.activity.CroppyActivity
 import com.w2sv.autocrop.R
@@ -81,9 +80,10 @@ class ExaminationActivity :
      * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
      * otherwise return to MainActivity after confirmation
      */
-    private val handleBackPress = BackPressHandler(this, "Tap again to return to main screen"){
-        returnToMainActivity()
-    }
+    private val handleBackPress = BackPressHandler(
+        snacky("Tap again to return to main screen"),
+        ::returnToMainActivity
+    )
 
     override fun onBackPressed(){
         currentFragment().let {
@@ -103,29 +103,22 @@ class ExaminationActivity :
         }
     }
 
-    fun returnToMainActivity(){
-        startActivity(
-            Intent(
-                this,
-                MainActivity::class.java
+    fun returnToMainActivity() {
+        startMainActivity{ intent ->
+            intent.putExtra(
+                IntentExtraIdentifier.EXAMINATION_ACTIVITY_RESULTS,
+                ImageFileIOSynopsis(
+                    sharedViewModel.nSavedCrops,
+                    sharedViewModel.nDeletedScreenshots,
+                    sharedViewModel.cropWriteDirIdentifier()
+                )
+                    .toByteArray()
             )
-                .apply {
-                    putExtra(
-                        IntentExtraIdentifier.EXAMINATION_ACTIVITY_RESULTS,
-                        ImageFileIOSynopsis(
-                            sharedViewModel.nSavedCrops,
-                            sharedViewModel.nDeletedScreenshots,
-                            sharedViewModel.cropWriteDirIdentifier()
-                        )
-                            .toByteArray()
-                    )
-                    if (sharedViewModel.cropSavingUris.isNotEmpty())
-                        putParcelableArrayListExtra(
-                            IntentExtraIdentifier.CROP_SAVING_URIS,
-                            ArrayList(sharedViewModel.cropSavingUris)
-                        )
-                }
-        )
-        ActivityTransitions.RETURN(this)
+            if (sharedViewModel.cropSavingUris.isNotEmpty())
+                intent.putParcelableArrayListExtra(
+                    IntentExtraIdentifier.CROP_SAVING_URIS,
+                    ArrayList(sharedViewModel.cropSavingUris)
+                )
+        }
     }
 }

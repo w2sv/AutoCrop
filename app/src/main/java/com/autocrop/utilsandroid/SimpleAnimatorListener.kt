@@ -2,7 +2,7 @@ package com.autocrop.utilsandroid
 
 import android.animation.Animator
 
-abstract class BoilerplateLessAnimatorListener: Animator.AnimatorListener {
+abstract class SimpleAnimatorListener: Animator.AnimatorListener {
     override fun onAnimationStart(animation: Animator?) {}
     override fun onAnimationEnd(animation: Animator?) {}
     override fun onAnimationCancel(animation: Animator?) {}

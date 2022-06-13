@@ -8,15 +8,16 @@ import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
-import com.autocrop.retriever.activity.TypedActivityRetriever
+import com.autocrop.retriever.activity.CustomActivityRetriever
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
+import com.autocrop.uicontroller.activity.FragmentHostingActivity
 
 abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
     viewModelClass: Class<VM>,
     bindingClass: Class<VB>):
         ViewBoundFragment<VB>(bindingClass),
-    ViewModelRetriever<VM>,
-    TypedActivityRetriever<A> {
+        ViewModelRetriever<VM>,
+        CustomActivityRetriever<A> {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         postponeEnterTransition()
@@ -31,15 +32,17 @@ abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
 
     open fun onViewCreatedCore(savedInstanceState: Bundle?){}
 
-    /**
-     * Retyped [androidx.fragment.app.Fragment.requireActivity]
-     */
-    @Suppress("UNCHECKED_CAST")
-    override val typedActivity: A by lazy {
-        requireActivity() as A
-    }
-
     override val sharedViewModel: VM by lazy {
         ViewModelProvider(requireActivity())[viewModelClass]
     }
+
+    //$$$$$$$$$$$$$$$$$$$$$$$$$$
+    // CustomActivityRetriever $
+    //$$$$$$$$$$$$$$$$$$$$$$$$$$
+    @Suppress("UNCHECKED_CAST")
+    override val typedActivity: A
+        get() = requireActivity() as A
+
+    override val fragmentHostingActivity: FragmentHostingActivity<*>
+        get() = requireActivity() as FragmentHostingActivity<*>
 }
