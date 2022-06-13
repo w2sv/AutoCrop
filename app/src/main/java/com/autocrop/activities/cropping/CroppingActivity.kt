@@ -34,8 +34,10 @@ class CroppingActivity :
     /**
      * Return to MainActivity on confirmed back press
      */
-    private val handleBackPress = BackPressHandler(
-        snacky("Tap again to cancel"),
-        ::startMainActivity
-    )
+    private val handleBackPress by lazy {
+        BackPressHandler(
+            snacky("Tap again to cancel"),
+            ::startMainActivity
+        )
+    }
 }

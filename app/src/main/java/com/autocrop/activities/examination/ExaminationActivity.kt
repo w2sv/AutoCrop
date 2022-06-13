@@ -80,10 +80,12 @@ class ExaminationActivity :
      * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
      * otherwise return to MainActivity after confirmation
      */
-    private val handleBackPress = BackPressHandler(
-        snacky("Tap again to return to main screen"),
-        ::returnToMainActivity
-    )
+    private val handleBackPress by lazy {
+        BackPressHandler(
+            snacky("Tap again to return to main screen"),
+            ::returnToMainActivity
+        )
+    }
 
     override fun onBackPressed(){
         currentFragment().let {

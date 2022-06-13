@@ -25,7 +25,7 @@ class CropImageView(context: Context, attributeSet: AttributeSet):
     }
 
     private val dialogInflationEnabled: Boolean
-        get() = sharedViewModel.autoScroll.value == true
+        get() = sharedViewModel.autoScroll.value == false
 
     private fun setCurrentCropDialog(){
         setOnClickListener {

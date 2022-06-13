@@ -35,12 +35,7 @@ class ViewPagerFragment :
     ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(ExaminationFragmentViewpagerBinding::class.java) {
 
     private val viewModel by viewModels<ViewPagerViewModel>(::requireActivity)
-    private val viewPagerProxy: CropViewPagerProxy by lazy {
-        CropViewPagerProxy(
-            binding.viewPager,
-            viewModel
-        )
-    }
+    private lateinit var viewPagerProxy: CropViewPagerProxy
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -107,7 +102,13 @@ class ViewPagerFragment :
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         super.onViewCreatedCore(savedInstanceState)
 
-        viewPagerProxy.setInitialView()
+        viewPagerProxy = CropViewPagerProxy(
+            binding.viewPager,
+            viewModel
+        )
+            .apply {
+                setInitialView()
+            }
         viewModel.setLiveDataObservers()
     }
 
