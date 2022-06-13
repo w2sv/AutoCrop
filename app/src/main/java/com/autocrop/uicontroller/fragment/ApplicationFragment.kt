@@ -5,15 +5,16 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
+import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.autocrop.retriever.activity.CustomActivityRetriever
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.uicontroller.activity.FragmentHostingActivity
+import kotlin.reflect.KClass
 
 abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
-    viewModelClass: Class<VM>,
+    viewModelKClass: KClass<VM>,
     bindingClass: Class<VB>):
         ViewBoundFragment<VB>(bindingClass),
         ViewModelRetriever<VM>,
@@ -32,9 +33,7 @@ abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
 
     open fun onViewCreatedCore(savedInstanceState: Bundle?){}
 
-    override val sharedViewModel: VM by lazy {
-        ViewModelProvider(requireActivity())[viewModelClass]
-    }
+    override val sharedViewModel: VM by createViewModelLazy(viewModelKClass, {viewModelStore})
 
     //$$$$$$$$$$$$$$$$$$$$$$$$$$
     // CustomActivityRetriever $

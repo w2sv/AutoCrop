@@ -7,6 +7,6 @@ import com.autocrop.uicontroller.fragment.ApplicationFragment
 
 abstract class CroppingActivityFragment<VB: ViewBinding>(bindingClass: Class<VB>)
     : ApplicationFragment<CroppingActivity, VB, CroppingActivityViewModel>(
-        CroppingActivityViewModel::class.java,
+        CroppingActivityViewModel::class,
         bindingClass
     )

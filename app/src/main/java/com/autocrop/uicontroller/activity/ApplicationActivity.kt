@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelLazy
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.main.MainActivity
@@ -12,10 +13,11 @@ import com.autocrop.global.PreferencesArray
 import com.autocrop.global.preferencesInstances
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.utilsandroid.getApplicationWideSharedPreferences
+import kotlin.reflect.KClass
 
 abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
     rootFragmentClass: Class<RF>,
-    viewModelClass: Class<VM>,
+    viewModelKClass: KClass<VM>,
     private val accessedPreferenceInstances: PreferencesArray? = null) :
         FragmentHostingActivity<RF>(rootFragmentClass),
         ViewModelRetriever<VM> {
@@ -49,9 +51,7 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
     // ViewModelHolder $
     //$$$$$$$$$$$$$$$$$$
 
-    override val sharedViewModel: VM by lazy {
-        ViewModelProvider(this, viewModelFactory())[viewModelClass]
-    }
+    override val sharedViewModel: VM by ViewModelLazy(viewModelKClass, {viewModelStore}, ::viewModelFactory)
 
     protected open fun viewModelFactory(): ViewModelProvider.Factory =
         defaultViewModelProviderFactory

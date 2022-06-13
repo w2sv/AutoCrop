@@ -24,7 +24,7 @@ import timber.log.Timber
 class MainActivity :
     ApplicationActivity<FlowFieldFragment, MainActivityViewModel>(
         FlowFieldFragment::class.java,
-        MainActivityViewModel::class.java,
+        MainActivityViewModel::class,
         accessedPreferenceInstances = preferencesInstances) {
 
     override fun viewModelFactory(): ViewModelProvider.Factory =

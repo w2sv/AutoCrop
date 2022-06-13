@@ -12,7 +12,7 @@ import com.autocrop.utilsandroid.snacky
 class CroppingActivity :
     ApplicationActivity<CroppingFragment, CroppingActivityViewModel>(
         CroppingFragment::class.java,
-        CroppingActivityViewModel::class.java) {
+        CroppingActivityViewModel::class) {
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
         CroppingActivityViewModelFactory(

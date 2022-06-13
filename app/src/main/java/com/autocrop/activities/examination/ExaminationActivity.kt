@@ -23,7 +23,7 @@ import de.mateware.snacky.Snacky
 class ExaminationActivity :
     ApplicationActivity<ViewPagerFragment, ExaminationActivityViewModel>(
         ViewPagerFragment::class.java,
-        ExaminationActivityViewModel::class.java,
+        ExaminationActivityViewModel::class,
         accessedPreferenceInstances = arrayOf(BooleanPreferences)) {
 
     @Deprecated("Deprecated in Java")
