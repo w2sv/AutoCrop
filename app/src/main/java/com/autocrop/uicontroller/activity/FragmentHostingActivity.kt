@@ -8,9 +8,11 @@ abstract class FragmentHostingActivity<RF: Fragment>(
     private val rootFragmentClass: Class<RF>) :
         ViewBoundActivity(){
 
-    private val layoutId: Int by lazy { binding.root.id }
+    private val layoutId: Int by lazy {
+        binding.root.id
+    }
 
-    protected fun onSavedInstanceStateNull() {
+    protected open fun onSavedInstanceStateNull() {
         launchRootFragment()
     }
 
