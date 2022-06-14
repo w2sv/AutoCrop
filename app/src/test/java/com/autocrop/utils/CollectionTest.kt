@@ -14,7 +14,7 @@ internal class CollectionTest {
         "5, 1, -3, 7",
         "0, 3, -3, 4"
     )
-    fun rotated(expected: Int, index: Int, distance: Int, collectionSize: Int) {
-        Assert.assertEquals(expected, index.rotated(distance, collectionSize))
+    fun rotatedIndex(expected: Int, index: Int, distance: Int, collectionSize: Int) {
+        Assert.assertEquals(expected, (0 until collectionSize).toList().rotatedIndex(index, distance))
     }
 }

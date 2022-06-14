@@ -10,7 +10,6 @@ import com.autocrop.utils.BlankFun
 import com.autocrop.utils.delegates.Consumable
 
 class ViewPagerViewModel : ViewModel(){
-
     var displayedEntrySnackbar = false
 
     val dataSet = BidirectionalViewPagerDataSet(ExaminationActivityViewModel.cropBundles)

@@ -1,6 +1,8 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
-import com.autocrop.utils.rotated
+import androidx.annotation.VisibleForTesting
+import com.autocrop.utils.rotatedIndex
+import com.autocrop.utils.toInt
 import com.autocrop.utilsandroid.livedata.MutableListLiveData
 import com.autocrop.utilsandroid.livedata.UpdateBlockableLiveData
 import java.util.*
@@ -14,7 +16,8 @@ class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
     /**
      * For keeping track of actual order
      */
-    private var tailPosition: Int = lastIndex
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    var tailPosition: Int = lastIndex
     private val headPosition: Int get() = (tailPosition + 1) % size
 
     // ----------------Position Conversion
@@ -29,24 +32,21 @@ class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
 
     /**
      * Remove element at [removePosition]
-     * rotate Collection such as to realign cropBundle sitting at [viewPosition] and [viewPosition]
+     * rotate Collection such as to realign cropBundle sitting at [targetViewPosition] and [targetViewPosition]
      * reset [tailPosition]
      *
-     * Retrieval of cropBundle at [viewPosition] and tail after element removal carried out by
+     * Retrieval of cropBundle at [targetViewPosition] and tail after element removal carried out by
      * storing respective hash to then look it up again -> code simplicity over efficiency
      */
-    fun removeAtAndRealign(removePosition: Int, removingAtTail: Boolean, viewPosition: Int){
-        val hashAtViewPosition = atCorrespondingPosition(viewPosition).hashCode()
-        val subsequentTailPosition = if (removingAtTail) tailPosition.rotated(-1, size) else tailPosition
-        val subsequentTailHash = get(subsequentTailPosition).hashCode()
+    fun removeAtAndRealign(removePosition: Int, removingAtTail: Boolean, targetViewPosition: Int){
+        val currentPreRemoval = correspondingPosition(targetViewPosition)
 
         removeAt(removePosition)
 
-        // rotate collection
-        Collections.rotate(
-            this,
-            correspondingPosition(viewPosition) - indexOfFirst { it.hashCode() == hashAtViewPosition })
-        tailPosition = indexOfFirst { it.hashCode() == subsequentTailHash }
+        val rotationDistance = correspondingPosition(targetViewPosition) - currentPreRemoval + (!removingAtTail).toInt()
+
+        Collections.rotate(this, rotationDistance)
+        tailPosition = rotatedIndex(tailPosition, rotationDistance - 1)
     }
 
     // --------------Page Index Retrieval

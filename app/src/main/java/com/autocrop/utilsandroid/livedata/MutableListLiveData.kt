@@ -12,5 +12,5 @@ abstract class MutableListLiveData<T>(private val delegator: MutableList<T>):
 
     override fun removeAt(index: Int): T =
         delegator.removeAt(index)
-            .also { postValue() }
+//            .also { postValue() }
 }
