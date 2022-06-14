@@ -29,23 +29,22 @@ class CropViewPagerProxy(private val viewPager2: ViewPager2, private val viewMod
      * • update pageIndex dependent views
      */
     fun removeView(dataSetPosition: Int) {
-        val removingAtDataSetTail = viewModel.dataSet.removingAtTail(dataSetPosition)
-        val newViewPosition = viewPager2.currentItem + viewModel.dataSet.viewPositionIncrement(removingAtDataSetTail)
+        val subsequentViewPosition = viewModel.dataSet.subsequentViewPosition(viewPager2.currentItem, dataSetPosition)
 
         // scroll to newViewPosition with blocked pageDependentViewUpdating
         viewModel.dataSet.currentPosition.blockSubsequentUpdate()
-        viewPager2.setCurrentItem(newViewPosition, true)
+        viewPager2.setCurrentItem(subsequentViewPosition, true)
 
         viewModel.onScrollStateIdleListenerConsumable = {
             // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
             // aligning with newViewPosition
-            viewModel.dataSet.removeAtAndRealign(dataSetPosition, removingAtDataSetTail, newViewPosition)
+            viewModel.dataSet.removeAtAndRealign(dataSetPosition, subsequentViewPosition)
 
             // reset surrounding views
-            (viewPager2.adapter as ExtendedRecyclerViewAdapter).resetCachedViewsAround(newViewPosition)
+            (viewPager2.adapter as ExtendedRecyclerViewAdapter).resetCachedViewsAround(subsequentViewPosition)
 
             // update currentPosition
-            viewModel.dataSet.currentPosition.update(newViewPosition)
+            viewModel.dataSet.currentPosition.update(subsequentViewPosition)
         }
     }
 }

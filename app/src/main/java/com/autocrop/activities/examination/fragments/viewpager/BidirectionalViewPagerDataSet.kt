@@ -22,13 +22,17 @@ class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
 
     // ----------------Position Conversion
 
-    fun correspondingPosition(viewPosition: Int): Int = viewPosition % size
-    fun atCorrespondingPosition(viewPosition: Int): T = get(correspondingPosition(viewPosition))
+    fun correspondingPosition(viewPosition: Int): Int =
+        viewPosition % size
+    fun atCorrespondingPosition(viewPosition: Int): T =
+        get(correspondingPosition(viewPosition))
 
     // ----------------Element Removal
 
-    fun removingAtTail(removePosition: Int): Boolean = tailPosition == removePosition
-    fun viewPositionIncrement(removingAtTail: Boolean): Int = if (removingAtTail) -1 else 1
+    private fun removingAtTail(removePosition: Int): Boolean =
+        tailPosition == removePosition
+    fun subsequentViewPosition(viewPosition: Int, removePosition: Int): Int =
+        viewPosition + (if (removingAtTail(removePosition)) -1 else 1)
 
     /**
      * Remove element at [removePosition]
@@ -38,16 +42,29 @@ class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
      * Retrieval of cropBundle at [targetViewPosition] and tail after element removal carried out by
      * storing respective hash to then look it up again -> code simplicity over efficiency
      */
-    fun removeAtAndRealign(removePosition: Int, removingAtTail: Boolean, targetViewPosition: Int){
-        val currentPreRemoval = correspondingPosition(targetViewPosition)
+    fun removeAtAndRealign(removePosition: Int, targetViewPosition: Int){
+        val positionPreRemoval = correspondingPosition(targetViewPosition).run {
+            if (removePosition < this)
+                minus(1)
+            else
+                this
+        }
 
         removeAt(removePosition)
 
-        val rotationDistance = correspondingPosition(targetViewPosition) - currentPreRemoval + (!removingAtTail).toInt()
+        val rotationDistance = correspondingPosition(targetViewPosition) - positionPreRemoval
 
         Collections.rotate(this, rotationDistance)
-        tailPosition = rotatedIndex(tailPosition, rotationDistance - 1)
+        tailPosition = rotatedIndex(newTailPosition(removePosition), rotationDistance)
     }
+
+    private fun newTailPosition(removedPosition: Int): Int =
+        if (removingAtTail(removedPosition))
+            rotatedIndex(tailPosition, -1)
+        else if (tailPosition > removedPosition)
+            tailPosition - 1
+        else
+            tailPosition
 
     // --------------Page Index Retrieval
 
