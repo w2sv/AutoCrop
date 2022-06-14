@@ -68,9 +68,9 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
                 launchCroppyActivity(
                     activity,
                     CropRequest(
-                        sharedViewModel.dataSet.currentCropBundle.screenshot.uri,
+                        sharedViewModel.dataSet.currentValue.screenshot.uri,
                         requestCode = MANUAL_CROP_REQUEST_CODE,
-                        initialCropRect = sharedViewModel.dataSet.currentCropBundle.crop.rect.toRectF(),
+                        initialCropRect = sharedViewModel.dataSet.currentValue.crop.rect.toRectF(),
                         croppyTheme = CroppyTheme(
                             accentColor = R.color.magenta_bright,
                             backgroundColor = R.color.magenta_dark

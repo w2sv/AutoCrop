@@ -26,7 +26,7 @@ class CropViewPagerProxy(private val viewPager2: ViewPager2, private val viewMod
      * • remove cropBundle from dataSet
      * • rotate dataSet such that it will subsequently align with the determined newViewPosition again
      * • reset preloaded views around newViewPosition
-     * • updateIfApplicable pageIndex dependent views
+     * • update pageIndex dependent views
      */
     fun removeView(dataSetPosition: Int) {
         val removingAtDataSetTail = viewModel.dataSet.removingAtTail(dataSetPosition)
@@ -45,7 +45,7 @@ class CropViewPagerProxy(private val viewPager2: ViewPager2, private val viewMod
             (viewPager2.adapter as ExtendedRecyclerViewAdapter).resetCachedViewsAround(newViewPosition)
 
             // update currentPosition
-            viewModel.dataSet.currentPosition.updateIfApplicable(newViewPosition)
+            viewModel.dataSet.currentPosition.update(newViewPosition)
         }
     }
 }

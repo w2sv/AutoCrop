@@ -58,6 +58,7 @@ object BooleanPreferences : Preferences<Boolean>(
     mutableMapOf(
         "autoScroll" to true,
         "deleteScreenshots" to false,
+
         "welcomeMessageShown" to false,
         "viewPagerInstructionsShown" to false,
         "comparisonInstructionsShown" to false,
@@ -69,6 +70,7 @@ object BooleanPreferences : Preferences<Boolean>(
      */
     var autoScroll by map
     var deleteScreenshots by map
+
     var welcomeMessageShown by map
     var viewPagerInstructionsShown by map
     var comparisonInstructionsShown by map
@@ -77,7 +79,8 @@ object BooleanPreferences : Preferences<Boolean>(
     override fun SharedPreferences.writeValue(key: String, value: Boolean){
         edit().putBoolean(key, value).apply()
     }
-    override fun SharedPreferences.getValue(key: String, defaultValue: Boolean): Boolean = getBoolean(key, defaultValue)
+    override fun SharedPreferences.getValue(key: String, defaultValue: Boolean): Boolean =
+        getBoolean(key, defaultValue)
 }
 
 object UriPreferences: Preferences<Uri?>(
@@ -100,13 +103,20 @@ object UriPreferences: Preferences<Uri?>(
     private var _documentUri: Uri? = null
 
     override fun SharedPreferences.writeValue(key: String, value: Uri?){
-        edit().putString(key, value?.run { toString() }).apply()
+        edit()
+            .putString(
+                key,
+                value?.toString()
+            ).apply()
     }
     override fun SharedPreferences.getValue(key: String, defaultValue: Uri?): Uri? =
-        getString(key, defaultValue.run { this?.toString() })?.run {
-            Uri.parse(this)
-        }
+        getString(
+            key,
+            defaultValue?.toString()
+        )
+            ?.run { Uri.parse(this) }
 }
 
 typealias PreferencesArray = Array<Preferences<*>>
+
 val preferencesInstances: PreferencesArray = arrayOf(BooleanPreferences, UriPreferences)

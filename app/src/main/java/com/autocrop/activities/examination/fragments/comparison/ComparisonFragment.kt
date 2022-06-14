@@ -30,7 +30,7 @@ class ComparisonFragment
             val viewPagerViewModel by activityViewModels<ViewPagerViewModel>()
 
             ComparisonViewModelFactory(
-                viewPagerViewModel.dataSet.currentCropBundle
+                viewPagerViewModel.dataSet.currentValue
             )
         }.value
 

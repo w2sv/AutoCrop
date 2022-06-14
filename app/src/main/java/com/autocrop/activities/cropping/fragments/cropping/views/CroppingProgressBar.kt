@@ -10,7 +10,6 @@ import com.autocrop.retriever.viewmodel.ViewModelRetriever
 class CroppingProgressBar(context: Context, attr: AttributeSet):
     ProgressBar(context, attr),
     ViewModelRetriever<CroppingActivityViewModel> by CroppingActivityViewModelRetriever(context){
-        init {
-            max = sharedViewModel.nSelectedImages
-        }
-    }
+
+    init { max = sharedViewModel.nSelectedImages }
+}

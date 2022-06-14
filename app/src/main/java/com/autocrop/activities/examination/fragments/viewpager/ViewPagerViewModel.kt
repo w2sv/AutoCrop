@@ -4,21 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.autocrop.activities.examination.ExaminationActivityViewModel
-import com.autocrop.collections.CropBundle
 import com.autocrop.global.BooleanPreferences
 import com.autocrop.uielements.recyclerview.BidirectionalRecyclerViewAdapter
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.Consumable
 import com.autocrop.utils.rotated
 import com.autocrop.utilsandroid.MutableListLiveData
+import com.autocrop.utilsandroid.UpdateBlockableLiveData
 import java.util.*
 
 class ViewPagerViewModel : ViewModel(){
 
     var displayedEntrySnackbar = false
-    var scroller: Scroller? = null
 
-    val dataSet: ViewPagerDataSet = ViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
+    val dataSet = BidirectionalViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 
     //$$$$$$$$$$$$$$$
     // View Removal $
@@ -29,6 +28,8 @@ class ViewPagerViewModel : ViewModel(){
     //$$$$$$$$$$$$$
     // AutoScroll $
     //$$$$$$$$$$$$$
+
+    var scroller: Scroller? = null
 
     val autoScroll: LiveData<Boolean> by lazy {
         MutableLiveData(
@@ -49,42 +50,26 @@ class ViewPagerViewModel : ViewModel(){
         }
 }
 
-class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) :
-    MutableListLiveData<CropBundle>(cropBundles) {
+class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
+    MutableListLiveData<T>(dataSet) {
 
-    val currentCropBundle: CropBundle
-        get() = get(currentPosition.value!!)
-
-    val currentPosition = CurrentPosition(0)
-
-    inner class CurrentPosition(value: Int): LiveData<Int>(value){
-        fun updateIfApplicable(viewPosition: Int){
-            if (blockSubsequentPositionUpdate)
-                blockSubsequentPositionUpdate = false
-            else
-                postValue(correspondingPosition(viewPosition))
-        }
-
-        fun blockSubsequentUpdate(){
-            blockSubsequentPositionUpdate = true
-        }
-
-        private var blockSubsequentPositionUpdate = false
-    }
+    val currentPosition = UpdateBlockableLiveData(0, ::correspondingPosition)
+    val currentValue: T get() = get(currentPosition.value!!)
 
     /**
-     * For keeping track of #pageIndex
+     * For keeping track of actual order
      */
     private var tailPosition: Int = lastIndex
+    private val headPosition: Int get() = (tailPosition + 1) % size
 
     // ----------------Position Conversion
 
     fun correspondingPosition(viewPosition: Int): Int = viewPosition % size
-    fun atCorrespondingPosition(viewPosition: Int): CropBundle = get(correspondingPosition(viewPosition))
+    fun atCorrespondingPosition(viewPosition: Int): T = get(correspondingPosition(viewPosition))
 
     // ----------------Element Removal
 
-    fun removingAtTail(position: Int): Boolean = tailPosition == position
+    fun removingAtTail(removePosition: Int): Boolean = tailPosition == removePosition
     fun viewPositionIncrement(removingAtTail: Boolean): Int = if (removingAtTail) -1 else 1
 
     /**
@@ -96,13 +81,14 @@ class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) :
      * storing respective hash to then look it up again -> code simplicity over efficiency
      */
     fun removeAtAndRealign(removePosition: Int, removingAtTail: Boolean, viewPosition: Int){
-        val viewPositionCropBundleHash = atCorrespondingPosition(viewPosition).hashCode()
-        val subsequentTailHash = get(if (removingAtTail) tailPosition.rotated(-1, size) else tailPosition).hashCode()
+        val hashAtViewPosition = atCorrespondingPosition(viewPosition).hashCode()
+        val subsequentTailPosition = if (removingAtTail) tailPosition.rotated(-1, size) else tailPosition
+        val subsequentTailHash = get(subsequentTailPosition).hashCode()
 
         removeAt(removePosition)
 
         // rotate collection
-        Collections.rotate(this, correspondingPosition(viewPosition) - indexOfFirst { it.hashCode() == viewPositionCropBundleHash })
+        Collections.rotate(this, correspondingPosition(viewPosition) - indexOfFirst { it.hashCode() == hashAtViewPosition })
         tailPosition = indexOfFirst { it.hashCode() == subsequentTailHash }
     }
 
@@ -110,7 +96,7 @@ class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) :
 
     fun pageIndex(position: Int): Int =
         if (position > tailPosition)
-            position - (tailPosition + 1)
+            position - headPosition
         else
             position + lastIndex - tailPosition
 }

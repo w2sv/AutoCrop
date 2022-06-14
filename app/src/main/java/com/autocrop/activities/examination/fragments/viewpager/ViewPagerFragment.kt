@@ -200,7 +200,7 @@ class ViewPagerFragment :
      * Forward [adjustedCrop] to [viewModel].dataSet and notify viewPager.adapter
      */
     fun processAdjustedCrop(adjustedCrop: Crop) {
-        viewModel.dataSet.currentCropBundle.crop = adjustedCrop
+        viewModel.dataSet.currentValue.crop = adjustedCrop
 
         (binding.viewPager.adapter!! as CropPagerAdapter).notifyItemChanged(
             binding.viewPager.currentItem,
