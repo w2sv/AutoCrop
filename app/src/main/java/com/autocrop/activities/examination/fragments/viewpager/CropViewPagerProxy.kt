@@ -36,15 +36,17 @@ class CropViewPagerProxy(private val viewPager2: ViewPager2, private val viewMod
         viewPager2.setCurrentItem(subsequentViewPosition, true)
 
         viewModel.onScrollStateIdleListenerConsumable = {
-            // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
-            // aligning with newViewPosition
-            viewModel.dataSet.removeAtAndRealign(dataSetPosition, subsequentViewPosition)
+            viewPager2.post {  // postpone to next frame due to "RecyclerView: Cannot call this method in a scroll callback. Scroll callbacks mightbe run during a measure & layout pass where you cannot change theRecyclerView data. Any method call that might change the structureof the RecyclerView or the adapter contents should be postponed tothe next frame"
+                // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
+                // aligning with newViewPosition
+                viewModel.dataSet.removeAtAndRealign(dataSetPosition, subsequentViewPosition)
 
-            // reset surrounding views
-            (viewPager2.adapter as ExtendedRecyclerViewAdapter).resetCachedViewsAround(subsequentViewPosition)
+                // reset surrounding views
+                (viewPager2.adapter as ExtendedRecyclerViewAdapter).resetCachedViewsAround(subsequentViewPosition)
 
-            // update currentPosition
-            viewModel.dataSet.currentPosition.update(subsequentViewPosition)
+                // update currentPosition
+                viewModel.dataSet.currentPosition.update(subsequentViewPosition)
+            }
         }
     }
 }
