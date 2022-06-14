@@ -9,8 +9,8 @@ import androidx.appcompat.widget.PopupMenu
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.activities.main.fragments.about.AboutFragment
-import com.autocrop.global.BooleanPreferences
-import com.autocrop.global.UriPreferences
+import com.autocrop.preferences.BooleanPreferences
+import com.autocrop.preferences.UriPreferences
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.retriever.viewmodel.ViewModelRetriever

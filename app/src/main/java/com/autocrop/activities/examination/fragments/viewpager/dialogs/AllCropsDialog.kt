@@ -3,7 +3,7 @@ package com.autocrop.activities.examination.fragments.viewpager.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import com.autocrop.global.BooleanPreferences
+import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.uielements.ExtendedDialogFragment
 
 class AllCropsDialog

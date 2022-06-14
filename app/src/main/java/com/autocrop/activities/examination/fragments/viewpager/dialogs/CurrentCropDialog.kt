@@ -7,7 +7,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.autocrop.activities.examination.ExaminationActivityViewModel
-import com.autocrop.global.BooleanPreferences
+import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.uielements.ExtendedDialogFragment
 import com.autocrop.utils.executeAsyncTask

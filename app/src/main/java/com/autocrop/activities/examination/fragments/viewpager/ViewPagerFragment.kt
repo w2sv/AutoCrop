@@ -17,13 +17,13 @@ import com.autocrop.activities.examination.fragments.viewpager.dialogs.AllCropsD
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.CurrentCropDialog
 import com.autocrop.activities.examination.fragments.viewpager.dialogs.InstructionsDialog
 import com.autocrop.collections.Crop
-import com.autocrop.global.BooleanPreferences
+import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.uielements.recyclerview.CubeOutPageTransformer
 import com.autocrop.uielements.view.animate
 import com.autocrop.uielements.view.crossFade
 import com.autocrop.uielements.view.show
 import com.autocrop.utils.numericallyInflected
-import com.autocrop.utilsandroid.asMutable
+import com.autocrop.utilsandroid.livedata.asMutable
 import com.autocrop.utilsandroid.buildAndShow
 import com.autocrop.utilsandroid.getThemedColor
 import com.autocrop.utilsandroid.snacky
@@ -114,12 +114,12 @@ class ViewPagerFragment :
 
     private fun ViewPagerViewModel.setLiveDataObservers() {
         dataSet.currentPosition.observe(viewLifecycleOwner) { position ->
-            binding.discardingStatisticsTv.updateText(position)
+            binding.discardingStatisticsTv.update(position)
 
             dataSet.pageIndex(position).let { pageIndex ->
                 val page = pageIndex + 1
 
-                binding.pageIndicationTv.updateText(page)
+                binding.pageIndicationTv.update(page)
                 binding.pageIndicationBar.update(
                     pageIndex,
                     bouncingAnimationBlocked = autoScroll.value == true && page == dataSet.size
@@ -159,7 +159,6 @@ class ViewPagerFragment :
                                     positiveButtonOnClickListener = ::displayDismissedScreenshotsSnackbarIfApplicable
                                 }
                                 .show(parentFragmentManager)
-                            BooleanPreferences.viewPagerInstructionsShown = true
                         },
                         resources.getInteger(R.integer.delay_minimal).toLong()
                     )

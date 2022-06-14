@@ -1,13 +1,14 @@
 package com.autocrop.utils
 
+import com.autocrop.utils.delegates.mapObserver
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 
-internal class MapDelegateObserverKtTest{
+internal class MapObserverKtTest{
     private val map = mutableMapOf("property" to 69)
     private var nObserverCalled = 0
 
-    private var property by mapDelegateObserver(map){ _, _, _ ->
+    private var property by mapObserver(map){ _, _, _ ->
         nObserverCalled += 1
     }
 

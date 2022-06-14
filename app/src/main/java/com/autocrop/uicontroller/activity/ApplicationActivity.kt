@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModelLazy
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.global.PreferencesArray
-import com.autocrop.global.preferencesInstances
+import com.autocrop.preferences.PreferencesArray
+import com.autocrop.preferences.preferencesInstances
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.utilsandroid.getApplicationWideSharedPreferences
 import kotlin.reflect.KClass

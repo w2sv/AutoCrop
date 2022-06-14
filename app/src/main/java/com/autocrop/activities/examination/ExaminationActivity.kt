@@ -11,8 +11,8 @@ import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.examination.fragments.viewpager.views.MenuInflationButton.Companion.MANUAL_CROP_REQUEST_CODE
 import com.autocrop.collections.Crop
 import com.autocrop.collections.ImageFileIOSynopsis
-import com.autocrop.global.BooleanPreferences
-import com.autocrop.global.UriPreferences
+import com.autocrop.preferences.BooleanPreferences
+import com.autocrop.preferences.UriPreferences
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.uicontroller.activity.startMainActivity
 import com.autocrop.utilsandroid.*

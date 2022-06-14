@@ -1,4 +1,4 @@
-package com.autocrop.utils
+package com.autocrop.utils.delegates
 
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty

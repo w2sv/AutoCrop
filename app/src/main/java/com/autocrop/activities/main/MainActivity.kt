@@ -9,8 +9,8 @@ import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.collections.ImageFileIOSynopsis
-import com.autocrop.global.BooleanPreferences
-import com.autocrop.global.preferencesInstances
+import com.autocrop.preferences.BooleanPreferences
+import com.autocrop.preferences.preferencesInstances
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.BlankFun
 import com.autocrop.utils.numericallyInflected
@@ -37,7 +37,7 @@ class MainActivity :
     override fun onSavedInstanceStateNull() {
         super.onSavedInstanceStateNull()
 
-        if (!BooleanPreferences.welcomeMessageShown){
+        if (!BooleanPreferences.welcomeMessageShown)
             onButtonsHalfFadedIn{
                 snacky(
                     "Good to have you on board! \uD83D\uDD25 Now select some screenshots and save your first AutoCrops! \uD83D\uDE80",
@@ -45,8 +45,6 @@ class MainActivity :
                 )
                     .buildAndShow()
             }
-            BooleanPreferences.welcomeMessageShown = true
-        }
         else{
             sharedViewModel.imageFileIOSynopsis?.run {
                 val showAsSnackbarOnButtonsHalfFadedIn: BlankFun = { onButtonsHalfFadedIn { showAsSnackbar() } }
