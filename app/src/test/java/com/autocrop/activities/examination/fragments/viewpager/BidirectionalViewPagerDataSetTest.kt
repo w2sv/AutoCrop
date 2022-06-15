@@ -3,9 +3,12 @@ package com.autocrop.activities.examination.fragments.viewpager
 import com.autocrop.utils.rotatedIndex
 import org.junit.Assert
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import utils.InstantExecutorExtension
 
+@ExtendWith(InstantExecutorExtension::class)
 internal class BidirectionalViewPagerDataSetTest {
 
     companion object{
@@ -69,6 +72,17 @@ internal class BidirectionalViewPagerDataSetTest {
 
     @ParameterizedTest
     @CsvSource(
+        "4, 8762, 5, 8763",
+        "4, 8762, 4, 8761",
+        "4, 8762, 3, 8763",
+        )
+    fun subsequentViewPosition(removePosition: Int, viewPosition: Int, tailPosition: Int, expected: Int){
+        val dataSet = dataSet().apply { this.tailPosition = tailPosition }
+        Assert.assertEquals(expected, dataSet.subsequentViewPosition(viewPosition, removePosition))
+    }
+
+    @ParameterizedTest
+    @CsvSource(
         "13, 13, 7",
         "13, 1, 7",
         "13, 2, 7",
@@ -100,7 +114,7 @@ internal class BidirectionalViewPagerDataSetTest {
         "34, 2132, 0",
         "17, 7, 13",
     )
-    fun removeAtAndRealign(size: Int, viewPosition: Int, tailPosition: Int) {
+    fun removeAndRealign(size: Int, viewPosition: Int, tailPosition: Int) {
         val dataSet = dataSet(size)
             .apply{this.tailPosition = tailPosition}
 

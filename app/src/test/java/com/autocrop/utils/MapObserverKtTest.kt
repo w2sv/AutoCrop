@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
 internal class MapObserverKtTest{
+
     companion object{
         var nObserverCalls = 0
     }
@@ -21,7 +22,9 @@ internal class MapObserverKtTest{
         "77, 1",
         "79, 2"
     )
-    fun functionality(newValue: Int, expectedNObserverCalls: Int){
+    fun test(newValue: Int, expectedNObserverCalls: Int){
+        property = newValue
+
         Assert.assertEquals(expectedNObserverCalls, nObserverCalls)
         Assert.assertEquals(newValue, map["property"])
         Assert.assertEquals(newValue, property)

@@ -19,7 +19,8 @@ class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     var tailPosition: Int = lastIndex
-    private val headPosition: Int get() = (tailPosition + 1) % size
+    private val headPosition: Int
+        get() = (tailPosition + 1) % size
 
     // ----------------Position Conversion
 
@@ -36,7 +37,7 @@ class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
      * @return if removing at tail -> preceding view, otherwise subsequent one
      */
     fun subsequentViewPosition(viewPosition: Int, removePosition: Int): Int =
-        viewPosition + (tailPosition == removePosition).toNonZeroInt()
+        viewPosition + (tailPosition != removePosition).toNonZeroInt()
 
     /**
      * - Removes element at [removePosition]
