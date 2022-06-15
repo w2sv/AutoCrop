@@ -4,12 +4,13 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.autocrop.collections.CropBundle
+import com.autocrop.utils.delegates.AutoSwitch
 import com.autocrop.utilsandroid.documentUriPathIdentifier
 import com.autocrop.utilsandroid.externalPicturesDir
 import kotlinx.coroutines.Job
 import timber.log.Timber
 
-class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?, val nDismissedScreenshots: Int?)
+class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?, val nDismissedScreenshots: Int)
     : ViewModel() {
 
     companion object{
@@ -24,6 +25,8 @@ class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?, va
 
         cropBundles.clear()
     }
+
+    var displayedDismissedScreenshotsSnackbar by AutoSwitch(false, switchOn = false)
 
     var singleCropSavingJob: Job? = null
 

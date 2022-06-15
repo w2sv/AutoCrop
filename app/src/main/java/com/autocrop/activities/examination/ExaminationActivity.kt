@@ -59,7 +59,7 @@ class ExaminationActivity :
                 else
                     null
             },
-            nDismissedScreenshots = getIntentExtra(IntentExtraIdentifier.N_DISMISSED_IMAGES, blacklistValue = 0)
+            nDismissedScreenshots = getIntentExtra(IntentExtraIdentifier.N_DISMISSED_IMAGES)!!
         )
 
     //$$$$$$$$$$$$$$$$

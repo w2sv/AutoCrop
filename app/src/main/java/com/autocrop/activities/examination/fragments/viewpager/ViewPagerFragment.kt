@@ -176,22 +176,21 @@ class ViewPagerFragment :
     }
 
     private fun displayDismissedScreenshotsSnackbarIfApplicable(){
-        if (!viewModel.displayedEntrySnackbar){
-            sharedViewModel.nDismissedScreenshots?.let {
+        with(sharedViewModel) {
+            if (!displayedDismissedScreenshotsSnackbar && nDismissedScreenshots != 0){
                 requireActivity().snacky(
                     SpannableStringBuilder()
                         .append("Couldn't find cropping bounds for")
                         .bold {
                             color(
                                 requireContext().getThemedColor(R.color.accentuated_tv)
-                            ) { append(" $it") }
+                            ) { append(" $nDismissedScreenshots") }
                         }
-                        .append(" image".numericallyInflected(it))
+                        .append(" image".numericallyInflected(nDismissedScreenshots))
                 )
                     .setIcon(R.drawable.ic_error_24)
                     .buildAndShow()
             }
-            viewModel.displayedEntrySnackbar = true
         }
     }
 

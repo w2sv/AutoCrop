@@ -10,13 +10,12 @@ import com.autocrop.utils.BlankFun
 import com.autocrop.utils.delegates.Consumable
 
 class ViewPagerViewModel : ViewModel(){
-    var displayedEntrySnackbar = false
-
     val dataSet = BidirectionalViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 
-    //$$$$$$$$$$$$$$$
-    // View Removal $
-    //$$$$$$$$$$$$$$$
+    fun initialViewPosition(): Int =
+        (BidirectionalRecyclerViewAdapter.N_VIEWS / 2).let { halvedMaxViews ->
+            halvedMaxViews - dataSet.correspondingPosition(halvedMaxViews) + dataSet.currentPosition.value!!
+        }
 
     var onScrollStateIdleListenerConsumable by Consumable<BlankFun>()
 
@@ -34,13 +33,4 @@ class ViewPagerViewModel : ViewModel(){
 
     val maxAutoScrolls: Int
         get() = dataSet.size - dataSet.currentPosition.value!!
-
-    //$$$$$$$$
-    // Views $
-    //$$$$$$$$
-
-    fun initialViewPosition(): Int =
-        (BidirectionalRecyclerViewAdapter.N_VIEWS / 2).let { halvedMaxViews ->
-            halvedMaxViews - dataSet.correspondingPosition(halvedMaxViews) + dataSet.currentPosition.value!!
-        }
 }

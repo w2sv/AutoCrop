@@ -115,7 +115,7 @@ internal class BidirectionalViewPagerDataSetTest {
         val newViewPagerPosition: Int = dataSet.subsequentViewPosition(viewPosition, correspondingPosition)
         val newViewPagerPositionHash = dataSet.atCorrespondingPosition(newViewPagerPosition).hashCode()
 
-        dataSet.removeAtAndRealign(correspondingPosition, newViewPagerPosition)
+        dataSet.removeAndRealign(correspondingPosition, newViewPagerPosition)
 
         Assert.assertEquals(size - 1, dataSet.size)
         Assert.assertEquals(newViewPagerPositionHash, dataSet.atCorrespondingPosition(newViewPagerPosition).hashCode())
