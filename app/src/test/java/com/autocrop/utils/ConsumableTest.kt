@@ -1,5 +1,6 @@
 package com.autocrop.utils
 
+import com.autocrop.utils.delegates.Consumable
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 

@@ -38,6 +38,8 @@
         android:layout_marginTop="70dp"
         android:gravity="center"
 
+        android:text="@string/fracture"
+
         android:textSize="17sp">
     </com.autocrop.activities.cropping.fragments.cropping.views.CurrentImageNumberTextView>
 

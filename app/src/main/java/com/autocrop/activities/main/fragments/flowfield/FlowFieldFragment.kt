@@ -11,7 +11,7 @@ import androidx.core.text.color
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
-import com.autocrop.global.UriPreferences
+import com.autocrop.preferences.UriPreferences
 import com.autocrop.utilsandroid.*
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding

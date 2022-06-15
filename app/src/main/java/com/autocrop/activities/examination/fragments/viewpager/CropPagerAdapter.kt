@@ -8,7 +8,6 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.autocrop.collections.CropBundle
 import com.autocrop.uielements.recyclerview.BidirectionalRecyclerViewAdapter
-import com.autocrop.utils.Index
 import com.w2sv.autocrop.R
 
 fun CropBundle.transitionName(): String =
@@ -34,7 +33,7 @@ class CropPagerAdapter(private val viewModel: ViewPagerViewModel)
     /**
      * Defines crop setting wrt [position]
      */
-    override fun onBindViewHolder(holder: CropViewHolder, position: Index){
+    override fun onBindViewHolder(holder: CropViewHolder, position: Int){
         holder.cropImageView.apply{
             val cropBundle = viewModel.dataSet.atCorrespondingPosition(position)
 

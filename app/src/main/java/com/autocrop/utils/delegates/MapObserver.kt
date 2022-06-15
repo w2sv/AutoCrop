@@ -1,4 +1,4 @@
-package com.autocrop.utils
+package com.autocrop.utils.delegates
 
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -7,7 +7,7 @@ import kotlin.reflect.KProperty
  * @see:
  *     https://stackoverflow.com/a/52814429/12083276
  */
-inline fun <T> mapDelegateObserver(
+inline fun <T> mapObserver(
     map: MutableMap<String, T>,
     crossinline observe: ((property: KProperty<*>, oldValue: T, newValue: T) -> Unit)
 )

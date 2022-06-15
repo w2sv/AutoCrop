@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
-import com.autocrop.global.BooleanPreferences
+import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.utils.executeAsyncTask
 import com.w2sv.autocrop.databinding.ExaminationFragmentSaveallBinding
 

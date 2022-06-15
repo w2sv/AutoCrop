@@ -16,7 +16,6 @@ import com.autocrop.collections.CropBundle
 import com.autocrop.utils.executeAsyncTask
 import com.autocrop.utils.logBeforehand
 import com.autocrop.utilsandroid.openBitmap
-import com.lyrebirdstudio.croppylib.utils.extensions.asMutable
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CroppingFragmentBinding
 import kotlinx.coroutines.Job

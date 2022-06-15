@@ -26,26 +26,27 @@ class CropViewPagerProxy(private val viewPager2: ViewPager2, private val viewMod
      * • remove cropBundle from dataSet
      * • rotate dataSet such that it will subsequently align with the determined newViewPosition again
      * • reset preloaded views around newViewPosition
-     * • updateIfApplicable pageIndex dependent views
+     * • update pageIndex dependent views
      */
     fun removeView(dataSetPosition: Int) {
-        val removingAtDataSetTail = viewModel.dataSet.removingAtTail(dataSetPosition)
-        val newViewPosition = viewPager2.currentItem + viewModel.dataSet.viewPositionIncrement(removingAtDataSetTail)
+        val subsequentViewPosition = viewModel.dataSet.subsequentViewPosition(viewPager2.currentItem, dataSetPosition)
 
         // scroll to newViewPosition with blocked pageDependentViewUpdating
         viewModel.dataSet.currentPosition.blockSubsequentUpdate()
-        viewPager2.setCurrentItem(newViewPosition, true)
+        viewPager2.setCurrentItem(subsequentViewPosition, true)
 
         viewModel.onScrollStateIdleListenerConsumable = {
-            // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
-            // aligning with newViewPosition
-            viewModel.dataSet.removeAtAndRealign(dataSetPosition, removingAtDataSetTail, newViewPosition)
+            viewPager2.post {  // postpone to next frame due to "RecyclerView: Cannot call this method in a scroll callback. Scroll callbacks mightbe run during a measure & layout pass where you cannot change theRecyclerView data. Any method call that might change the structureof the RecyclerView or the adapter contents should be postponed tothe next frame"
+                // remove cropBundle from dataSet, rotate dataSet and reset position trackers such that
+                // aligning with newViewPosition
+                viewModel.dataSet.removeAndRealign(dataSetPosition, subsequentViewPosition)
 
-            // reset surrounding views
-            (viewPager2.adapter as ExtendedRecyclerViewAdapter).resetCachedViewsAround(newViewPosition)
+                // reset surrounding views
+                (viewPager2.adapter as ExtendedRecyclerViewAdapter).resetCachedViewsAround(subsequentViewPosition)
 
-            // update currentPosition
-            viewModel.dataSet.currentPosition.updateIfApplicable(newViewPosition)
+                // update currentPosition
+                viewModel.dataSet.currentPosition.update(subsequentViewPosition)
+            }
         }
     }
 }
