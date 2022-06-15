@@ -12,16 +12,17 @@ import utils.InstantExecutorExtension
 internal class BidirectionalViewPagerDataSetTest {
 
     companion object{
-        private fun dataSet(size: Int = 10) =
+        private fun getDataSet(size: Int = 10) =
             BidirectionalViewPagerDataSet(
                 (0 until size)
                     .toMutableList()
             )
     }
 
+    private val dataSet = getDataSet()
+
     @Test
     fun correctInitialization(){
-        val dataSet = dataSet()
         Assert.assertEquals(dataSet.lastIndex, dataSet.tailPosition)
     }
 
@@ -33,7 +34,6 @@ internal class BidirectionalViewPagerDataSetTest {
         "0, 0"
     )
     fun correspondingPosition(expected: Int, viewPosition: Int) {
-        val dataSet = dataSet()
         Assert.assertEquals(expected, dataSet.correspondingPosition(viewPosition))
     }
 
@@ -43,8 +43,6 @@ internal class BidirectionalViewPagerDataSetTest {
         "0"
     )
     fun atCorrespondingPosition(viewPosition: Int){
-        val dataSet = dataSet()
-
         Assert.assertEquals(viewPosition, dataSet.atCorrespondingPosition(viewPosition))
     }
 
@@ -65,7 +63,6 @@ internal class BidirectionalViewPagerDataSetTest {
         "5, 9, 3"
     )
     fun pageIndex(tailPosition: Int, position: Int, expected: Int) {
-        val dataSet = dataSet()
         dataSet.tailPosition = tailPosition
         Assert.assertEquals(expected, dataSet.pageIndex(position))
     }
@@ -77,7 +74,7 @@ internal class BidirectionalViewPagerDataSetTest {
         "4, 8762, 3, 8763",
         )
     fun subsequentViewPosition(removePosition: Int, viewPosition: Int, tailPosition: Int, expected: Int){
-        val dataSet = dataSet().apply { this.tailPosition = tailPosition }
+        getDataSet().apply { this.tailPosition = tailPosition }
         Assert.assertEquals(expected, dataSet.subsequentViewPosition(viewPosition, removePosition))
     }
 
@@ -114,8 +111,8 @@ internal class BidirectionalViewPagerDataSetTest {
         "34, 2132, 0",
         "17, 7, 13",
     )
-    fun removeAndRealign(size: Int, viewPosition: Int, tailPosition: Int) {
-        val dataSet = dataSet(size)
+    fun removeAndRealign(size: Int, viewPosition: Int, tailPosition: Int){
+        val dataSet = getDataSet(size)
             .apply{this.tailPosition = tailPosition}
 
         val correspondingPosition = dataSet.correspondingPosition(viewPosition)
