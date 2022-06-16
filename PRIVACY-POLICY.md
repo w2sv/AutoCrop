@@ -7,9 +7,9 @@ Other configurations made by you are likewise stored locally on your device, and
 
 Should you inspite of these, the way I see it, rather unambiguous circumstances feel the necessity to contact me regarding any data privacy concern, please feel free to do so at any time. 
 
-Sincerely,  
-Janek Zangenberg
-Dresden, Germany 
+Sincerely,\
+Janek Zangenberg\
+Dresden, Germany\
 16.06.2022
 
 zangenbergjanek@googlemail.com
