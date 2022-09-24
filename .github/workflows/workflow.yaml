@@ -1,6 +1,7 @@
 # References:
 #   https://www.raywenderlich.com/10562143-continuous-integration-for-android
 #   https://dev.to/ychescale9/running-android-emulators-on-ci-from-bitrise-io-to-github-actions-3j76
+#   https://github.com/ReactiveCircus/android-emulator-runner
 
 name: CI Workflow
 on: [push, pull_request]
@@ -32,7 +33,7 @@ jobs:
   run-instrumentation-tests:
     # @https://github.com/ReactiveCircus/android-emulator-runner
 
-    name: Build and run instrumentation tests on various devices
+    name: Run instrumentation tests
     runs-on: macos-latest  # allows for hardware acceleration through HAXM
     strategy:
       fail-fast: false  # continue if one strategy fails
@@ -40,7 +41,7 @@ jobs:
       # paired value syntax: @https://stackoverflow.com/a/68940067/12083276
       # @https://docs.github.com/en/actions/using-jobs/using-a-build-matrix-for-your-jobs
       matrix:  
-        api: [26, 28, 30, 31]  # 29 failing with inconceivable OOM error on MainActivityTest entry
+        api: [26, 28, 30, 31, 32]  # 29 failing with inconceivable OOM error on MainActivityTest entry
     steps:
       - name: Checkout current repository in ubuntu's file system
         uses: actions/checkout@v3 

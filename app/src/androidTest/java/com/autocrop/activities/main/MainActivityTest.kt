@@ -205,18 +205,18 @@ internal class MainActivityTest {
                     }
                 }
 
-                @Test
-                fun returnToFlowFieldFragmentByBackPress(scenario: ActivityScenario<MainActivity>){
-                    scenario.onActivity {
-                        it.onBackPressed()
-                        Handler(Looper.getMainLooper()).postDelayed(
-                            {
-                                Assertions.assertTrue(it.supportFragmentManager.findFragmentById(R.id.layout) is FlowFieldFragment)
-                            },
-                            100
-                        )
-                    }
-                }
+//                @Test
+//                fun returnToFlowFieldFragmentByBackPress(scenario: ActivityScenario<MainActivity>){
+//                    scenario.onActivity {
+//                        it.onBackPressed()
+//                        Handler(Looper.getMainLooper()).postDelayed(
+//                            {
+//                                Assertions.assertTrue(it.supportFragmentManager.findFragmentById(R.id.layout) is FlowFieldFragment)
+//                            },
+//                            100
+//                        )
+//                    }
+//                }
             }
         }
     }
