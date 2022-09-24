@@ -3,6 +3,7 @@ package com.autocrop.activities.main.fragments.flowfield.views
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
 import com.autocrop.activities.IntentExtraIdentifier
@@ -24,7 +25,12 @@ class CropSharingButton(context: Context, attrs: AttributeSet):
      * setOnClickListener
      */
     init {
-        activity.intent.extras?.getParcelableArrayList<Uri>(IntentExtraIdentifier.CROP_SAVING_URIS)?.let {
+        (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            activity.intent.extras?.getParcelableArrayList(IntentExtraIdentifier.CROP_SAVING_URIS, Uri::class.java)
+        else
+            @Suppress("DEPRECATION")
+            activity.intent.extras?.getParcelableArrayList(IntentExtraIdentifier.CROP_SAVING_URIS))
+                ?.let {
             show()
             setOnClickListener(it)
         }

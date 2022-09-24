@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +26,12 @@ class CroppyActivity : AppCompatActivity() {
                 setContentView(root)
             }
 
-        val cropRequest: CropRequest = intent.getParcelableExtra(KEY_CROP_REQUEST)!!
+        val cropRequest: CropRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(KEY_CROP_REQUEST, CropRequest::class.java)!!
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra(KEY_CROP_REQUEST)!!
+        }
 
         viewModel = ViewModelProvider(this)[CroppyActivityViewModel::class.java]
             .apply {

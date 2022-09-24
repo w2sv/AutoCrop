@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
@@ -50,7 +51,13 @@ class PermissionsHandler(
      */
     private val nonRedundantManifestPermissions: Array<String> by lazy {
         activity.run {
-            packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
+            (
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                        packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(PackageManager.GET_PERMISSIONS.toLong()))
+                    else
+                        @Suppress("DEPRECATION")
+                        packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
+            )
                 .requestedPermissions ?: arrayOf()
         }
     }

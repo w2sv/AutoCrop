@@ -1,6 +1,7 @@
 package com.lyrebirdstudio.croppylib.fragment
 
 import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
@@ -47,7 +48,12 @@ class ImageCropFragment : Fragment() {
     }
 
     private val viewModel by viewModels<ImageCropViewModel>{
-        val cropRequest = arguments?.getParcelable<CropRequest>(KEY_BUNDLE_CROP_REQUEST)!!
+        val cropRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable(KEY_BUNDLE_CROP_REQUEST, CropRequest::class.java)!!
+        } else {
+            @Suppress("DEPRECATION")
+            arguments?.getParcelable(KEY_BUNDLE_CROP_REQUEST)!!
+        }
 
         ImageCropViewModelFactory(
             resizedBitmap(cropRequest.sourceUri, requireContext()),

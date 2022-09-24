@@ -40,6 +40,7 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
     //$$$$$$$$$$$$$$$$$$$$$$
 
     protected fun <T> getIntentExtra(key: String, blacklistValue: T? = null): T? =
+        @Suppress("DEPRECATION")
         intent.extras?.get(key).let {
             if (blacklistValue == null || it != blacklistValue)
                 @Suppress("UNCHECKED_CAST")
