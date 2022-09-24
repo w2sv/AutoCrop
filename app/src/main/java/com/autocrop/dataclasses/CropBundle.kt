@@ -6,66 +6,64 @@ import android.net.Uri
 import com.autocrop.activities.cropping.fragments.cropping.cropped
 import com.autocrop.utils.android.approximateJpegSize
 import kotlin.math.roundToInt
-import kotlin.properties.Delegates
 
 /**
- * Encapsulation of entirety of data being associated with crop
+ * Encapsulation of entirety of data associated with crop
  */
-data class CropBundle(val screenshot: ScreenshotParameters, private var _crop: Crop) {
+data class CropBundle(val screenshot: ScreenshotParameters, val crop: Crop) {
+    val discardedPercentage: Int
+    val discardedFileSize: Int
 
-    var crop: Crop
-        get() = _crop
-        set(value) {
-            _crop = value
-            calculateCompositeParameters()
-        }
-
-    constructor(screenshotUri: Uri, screenshot: Bitmap, cropRect: Rect)
-            : this(
-        ScreenshotParameters(
-            screenshotUri,
-            screenshot.height,
-            screenshot.approximateJpegSize()
-        ),
-        Crop.FromScreenshot(
-            screenshot,
-            cropRect
-        )
-    ){
-        calculateCompositeParameters()
-    }
-
-    val discardedPercentage: Int get() = _discardedPercentage
-    private var _discardedPercentage by Delegates.notNull<Int>()
-
-    val discardedFileSize: Int get() = _discardedFileSize
-    private var _discardedFileSize by Delegates.notNull<Int>()
-
-    val bottomOffset: Int get() = _bottomOffset
-    private var _bottomOffset by Delegates.notNull<Int>()
-
-    private fun calculateCompositeParameters(){
+    init {
         ((screenshot.height - crop.bitmap.height).toFloat() / screenshot.height.toFloat()).let { discardedPercentageF ->
-            _discardedPercentage = (discardedPercentageF * 100).roundToInt()
-            _discardedFileSize = (discardedPercentageF * screenshot.approximateJpegSize).roundToInt()
+            discardedPercentage = (discardedPercentageF * 100).roundToInt()
+            discardedFileSize = (discardedPercentageF * screenshot.approximateJpegSize).roundToInt()
         }
-
-        _bottomOffset = screenshot.height - crop.rect.bottom
     }
+
+    companion object{
+        fun assemble(screenshotUri: Uri, screenshot: Bitmap, cropRect: Rect): CropBundle =
+            CropBundle(
+                ScreenshotParameters(
+                    screenshotUri,
+                    screenshot.height,
+                    screenshot.approximateJpegSize()
+                ),
+                Crop.fromScreenshot(
+                    screenshot,
+                    cropRect
+                )
+            )
+    }
+
+    val bottomOffset: Int by lazy {
+        screenshot.height - crop.rect.bottom
+    }
+
+    override fun hashCode(): Int = screenshot.uri.hashCode()
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        return hashCode() == other.hashCode()
+    }
+
+    fun identifier(): String = hashCode().toString()
 }
 
-class ScreenshotParameters(
+data class ScreenshotParameters(
     val uri: Uri,
     val height: Int,
     val approximateJpegSize: Int
 )
 
-sealed class Crop(
+data class Crop(
     val bitmap: Bitmap,
-    val rect: Rect){
-    class FromScreenshot(screenshot: Bitmap, rect: Rect)
-        : Crop(
+    val rect: Rect) {
+
+    companion object{
+        fun fromScreenshot(screenshot: Bitmap, rect: Rect) = Crop(
             screenshot.cropped(rect),
             rect
         )
+    }
 }

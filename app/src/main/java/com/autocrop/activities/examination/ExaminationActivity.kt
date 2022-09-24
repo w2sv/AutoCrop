@@ -35,7 +35,7 @@ class ExaminationActivity :
             data?.let { intent ->
                 intent.data?.let { screenshotUri ->
                     castCurrentFragment<ViewPagerFragment>().processAdjustedCrop(
-                        Crop.FromScreenshot(
+                        Crop.fromScreenshot(
                             screenshot = contentResolver.openBitmap(screenshotUri),
                             rect = CroppyActivity.getCropRect(intent)
                         )

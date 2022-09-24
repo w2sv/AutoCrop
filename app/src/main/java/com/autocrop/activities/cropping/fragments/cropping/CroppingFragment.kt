@@ -50,7 +50,7 @@ class CroppingFragment
 
             cropRect(screenshotBitmap)?.let { cropRect ->
                 sharedViewModel.cropBundles.add(
-                    CropBundle(
+                    CropBundle.assemble(
                         uri,
                         screenshotBitmap,
                         cropRect

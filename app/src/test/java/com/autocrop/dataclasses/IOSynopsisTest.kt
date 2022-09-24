@@ -10,9 +10,9 @@ internal class IOSynopsisTest {
         val nDeletedScreenshots = 64
         val cropWriteDirIdentifier = "some:hyyyper SickIdentifier BroBro"
 
-        val decodedIOSynopsis = IOSynopsis(
-                IOSynopsis(nSavedCrops, nDeletedScreenshots, cropWriteDirIdentifier)
-                        .toByteArray()
+        val decodedIOSynopsis = IOSynopsis.fromByteArray(
+            IOSynopsis(nSavedCrops, nDeletedScreenshots, cropWriteDirIdentifier)
+                .toByteArray()
         )
 
         Assertions.assertEquals(nSavedCrops, decodedIOSynopsis.nSavedCrops)

@@ -42,7 +42,7 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        ViewCompat.setTransitionName(this, sharedViewModel.cropBundle.transitionName())
+        ViewCompat.setTransitionName(this, sharedViewModel.cropBundle.identifier())
 
         setOnClickListener{
             sharedViewModel.displayScreenshot.toggle()

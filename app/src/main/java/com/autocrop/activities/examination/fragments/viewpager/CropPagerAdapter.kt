@@ -6,12 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.autocrop.dataclasses.CropBundle
 import com.autocrop.ui.elements.recyclerview.BidirectionalRecyclerViewAdapter
 import com.w2sv.autocrop.R
-
-fun CropBundle.transitionName(): String =
-    hashCode().toString()
 
 class CropPagerAdapter(private val viewModel: ViewPagerViewModel)
     : BidirectionalRecyclerViewAdapter<CropPagerAdapter.CropViewHolder>(viewModel.dataSet){
@@ -38,7 +34,7 @@ class CropPagerAdapter(private val viewModel: ViewPagerViewModel)
             val cropBundle = viewModel.dataSet.atCorrespondingPosition(position)
 
             setImageBitmap(cropBundle.crop.bitmap)
-            ViewCompat.setTransitionName(this, cropBundle.transitionName())
+            ViewCompat.setTransitionName(this, cropBundle.identifier())
         }
     }
 }

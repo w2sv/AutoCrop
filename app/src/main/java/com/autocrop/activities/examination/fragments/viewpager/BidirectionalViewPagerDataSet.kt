@@ -8,7 +8,7 @@ import com.autocrop.utils.android.livedata.MutableListLiveData
 import com.autocrop.utils.android.livedata.UpdateBlockableLiveData
 import java.util.*
 
-class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
+abstract class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
     MutableListLiveData<T>(dataSet) {
 
     val currentPosition = UpdateBlockableLiveData(0, convertUpdateValue = ::correspondingPosition)

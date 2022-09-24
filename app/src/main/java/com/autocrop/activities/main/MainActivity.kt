@@ -30,7 +30,7 @@ class MainActivity :
     override fun viewModelFactory(): ViewModelProvider.Factory =
         MainActivityViewModelFactory(
             IOSynopsis = getIntentExtra<ByteArray>(IntentExtraIdentifier.EXAMINATION_ACTIVITY_RESULTS)?.let {
-                IOSynopsis(it)
+                IOSynopsis.fromByteArray(it)
             }
         )
 

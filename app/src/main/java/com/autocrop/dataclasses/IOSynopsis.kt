@@ -9,18 +9,21 @@ data class IOSynopsis(
     val nDeletedScreenshots: Int,
     val cropWriteDirIdentifier: String) {
 
-    constructor(byteArray: ByteArray): this(
-        byteArray[0].toInt(),
-        byteArray[1].toInt(),
-        byteArray
-            .slice(2 until byteArray.size)
-            .toByteArray()
-            .toString(Charsets.UTF_8)
-    )
+    companion object{
+        fun fromByteArray(byteArray: ByteArray): IOSynopsis =
+            byteArray.iterator().run {
+                IOSynopsis(
+                    nextByte().toInt(),
+                    nextByte().toInt(),
+                    asSequence().toList().toByteArray().toString(Charsets.UTF_8)
+                )
+            }
+    }
 
     fun toByteArray(): ByteArray =
         byteArrayOf(
             nSavedCrops.toByte(),
-            nDeletedScreenshots.toByte()
-        ) + cropWriteDirIdentifier.toByteArray(Charsets.UTF_8)
+            nDeletedScreenshots.toByte(),
+            *cropWriteDirIdentifier.toByteArray(Charsets.UTF_8)
+        )
 }
