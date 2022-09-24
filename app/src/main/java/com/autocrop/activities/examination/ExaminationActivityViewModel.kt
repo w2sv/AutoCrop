@@ -3,10 +3,10 @@ package com.autocrop.activities.examination
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
-import com.autocrop.collections.CropBundle
-import com.autocrop.utils.delegates.AutoSwitch
-import com.autocrop.utilsandroid.documentUriPathIdentifier
-import com.autocrop.utilsandroid.externalPicturesDir
+import com.autocrop.dataclasses.CropBundle
+import com.autocrop.utils.kotlin.delegates.AutoSwitch
+import com.autocrop.utils.android.documentUriPathIdentifier
+import com.autocrop.utils.android.externalPicturesDir
 import kotlinx.coroutines.Job
 import timber.log.Timber
 

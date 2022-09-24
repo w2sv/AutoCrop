@@ -2,6 +2,7 @@ package com.autocrop.utilsandroid.livedata
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.autocrop.utils.android.livedata.toggle
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

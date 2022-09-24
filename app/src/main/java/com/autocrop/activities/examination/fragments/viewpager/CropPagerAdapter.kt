@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.autocrop.collections.CropBundle
-import com.autocrop.uielements.recyclerview.BidirectionalRecyclerViewAdapter
+import com.autocrop.dataclasses.CropBundle
+import com.autocrop.ui.elements.recyclerview.BidirectionalRecyclerViewAdapter
 import com.w2sv.autocrop.R
 
 fun CropBundle.transitionName(): String =

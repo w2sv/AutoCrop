@@ -41,7 +41,7 @@ jobs:
       # paired value syntax: @https://stackoverflow.com/a/68940067/12083276
       # @https://docs.github.com/en/actions/using-jobs/using-a-build-matrix-for-your-jobs
       matrix:  
-        api: [26, 28, 30, 31, 32]  # 29 failing with inconceivable OOM error on MainActivityTest entry
+        api: [26, 28, 30, 31]  # 29 failing with inconceivable OOM error on MainActivityTest entry
     steps:
       - name: Checkout current repository in ubuntu's file system
         uses: actions/checkout@v3 
@@ -68,6 +68,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api }}
+          target: google_apis or playstore
           profile: ${{ env.DEVICE }}
           arch: ${{ env.ARCH }}
           force-avd-creation: false

@@ -4,8 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.ViewInteraction
@@ -18,9 +16,8 @@ import androidx.test.filters.FlakyTest
 import androidx.test.runner.permission.PermissionRequester
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
-import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.preferences.BooleanPreferences
-import com.autocrop.utilsandroid.MimeTypes
+import com.autocrop.utils.android.MimeTypes
 import com.w2sv.autocrop.R
 import de.mannodermaus.junit5.ActivityScenarioExtension
 import org.hamcrest.CoreMatchers.allOf

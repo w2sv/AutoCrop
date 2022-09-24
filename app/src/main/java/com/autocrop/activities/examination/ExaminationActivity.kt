@@ -9,13 +9,13 @@ import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
 import com.autocrop.activities.examination.fragments.viewpager.views.MenuInflationButton.Companion.MANUAL_CROP_REQUEST_CODE
-import com.autocrop.collections.Crop
-import com.autocrop.collections.ImageFileIOSynopsis
+import com.autocrop.dataclasses.Crop
+import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.uicontroller.activity.ApplicationActivity
-import com.autocrop.uicontroller.activity.startMainActivity
-import com.autocrop.utilsandroid.*
+import com.autocrop.ui.controller.activity.ApplicationActivity
+import com.autocrop.ui.controller.activity.startMainActivity
+import com.autocrop.utils.android.*
 import com.lyrebirdstudio.croppylib.activity.CroppyActivity
 import com.w2sv.autocrop.R
 import de.mateware.snacky.Snacky
@@ -109,7 +109,7 @@ class ExaminationActivity :
         startMainActivity{ intent ->
             intent.putExtra(
                 IntentExtraIdentifier.EXAMINATION_ACTIVITY_RESULTS,
-                ImageFileIOSynopsis(
+                IOSynopsis(
                     sharedViewModel.nSavedCrops,
                     sharedViewModel.nDeletedScreenshots,
                     sharedViewModel.cropWriteDirIdentifier()

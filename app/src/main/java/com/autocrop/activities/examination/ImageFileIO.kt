@@ -6,9 +6,9 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import com.autocrop.collections.CropBundle
-import com.autocrop.utils.logBeforehand
-import com.autocrop.utilsandroid.*
+import com.autocrop.dataclasses.CropBundle
+import com.autocrop.utils.kotlin.logBeforehand
+import com.autocrop.utils.android.*
 import timber.log.Timber
 
 /**

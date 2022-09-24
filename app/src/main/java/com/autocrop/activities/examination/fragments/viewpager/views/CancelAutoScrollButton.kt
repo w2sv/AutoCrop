@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatButton
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
-import com.autocrop.utilsandroid.livedata.asMutable
+import com.autocrop.utils.android.livedata.asMutable
 
 class CancelAutoScrollButton(context: Context, attributeSet: AttributeSet):
     AppCompatButton(context, attributeSet),

@@ -1,6 +1,6 @@
 package com.autocrop.activities.main.fragments.flowfield.sketch;
 
-import com.autocrop.utils.Random;
+import com.autocrop.utils.kotlin.Random;
 
 import java.util.ArrayList;
 

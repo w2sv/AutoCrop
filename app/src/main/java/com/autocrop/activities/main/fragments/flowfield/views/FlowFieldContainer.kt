@@ -7,7 +7,7 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.fragments.flowfield.sketch.FlowFieldSketch
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
-import com.autocrop.utilsandroid.resolution
+import com.autocrop.utils.android.resolution
 import processing.android.PFragment
 
 class FlowFieldContainer(context: Context, attr: AttributeSet) :

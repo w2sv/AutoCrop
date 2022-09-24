@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.fragments.cropping.CroppingFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
-import com.autocrop.uicontroller.activity.ApplicationActivity
-import com.autocrop.uicontroller.activity.startMainActivity
-import com.autocrop.utilsandroid.BackPressHandler
-import com.autocrop.utilsandroid.snacky
+import com.autocrop.ui.controller.activity.ApplicationActivity
+import com.autocrop.ui.controller.activity.startMainActivity
+import com.autocrop.utils.android.BackPressHandler
+import com.autocrop.utils.android.snacky
 
 class CroppingActivity :
     ApplicationActivity<CroppingFragment, CroppingActivityViewModel>(

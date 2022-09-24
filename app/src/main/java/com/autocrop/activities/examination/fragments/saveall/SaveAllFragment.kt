@@ -5,7 +5,7 @@ import androidx.lifecycle.lifecycleScope
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.preferences.BooleanPreferences
-import com.autocrop.utils.executeAsyncTask
+import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.w2sv.autocrop.databinding.ExaminationFragmentSaveallBinding
 
 class SaveAllFragment :

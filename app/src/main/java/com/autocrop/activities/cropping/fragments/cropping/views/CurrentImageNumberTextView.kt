@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import com.autocrop.activities.cropping.CroppingActivityViewModel
 import com.autocrop.activities.cropping.fragments.CroppingActivityViewModelRetriever
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
-import com.autocrop.uielements.ExtendedAppCompatTextView
+import com.autocrop.ui.elements.ExtendedAppCompatTextView
 
 class CurrentImageNumberTextView(context: Context, attr: AttributeSet):
     ExtendedAppCompatTextView(context, attr),

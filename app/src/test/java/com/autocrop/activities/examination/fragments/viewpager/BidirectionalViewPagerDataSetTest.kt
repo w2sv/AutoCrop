@@ -1,6 +1,6 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
-import com.autocrop.utils.rotatedIndex
+import com.autocrop.utils.kotlin.extensions.rotatedIndex
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

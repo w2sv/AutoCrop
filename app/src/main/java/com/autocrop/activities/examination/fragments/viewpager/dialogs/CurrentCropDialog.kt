@@ -9,8 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
-import com.autocrop.uielements.ExtendedDialogFragment
-import com.autocrop.utils.executeAsyncTask
+import com.autocrop.ui.elements.ExtendedDialogFragment
+import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 
 /**
  * Class accounting for procedure dialog display upon screen click,

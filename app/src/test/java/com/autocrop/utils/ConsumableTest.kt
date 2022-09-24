@@ -1,6 +1,6 @@
 package com.autocrop.utils
 
-import com.autocrop.utils.delegates.Consumable
+import com.autocrop.utils.kotlin.delegates.Consumable
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

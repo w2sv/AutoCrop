@@ -3,7 +3,7 @@ package com.autocrop.activities.examination.fragments.viewpager
 import android.os.Handler
 import android.os.Looper
 import androidx.viewpager2.widget.ViewPager2
-import com.autocrop.utils.BlankFun
+import com.autocrop.utils.kotlin.BlankFun
 import java.util.*
 
 /**

@@ -1,7 +1,7 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
 import androidx.viewpager2.widget.ViewPager2
-import com.autocrop.uielements.recyclerview.ExtendedRecyclerViewAdapter
+import com.autocrop.ui.elements.recyclerview.ExtendedRecyclerViewAdapter
 
 class CropViewPagerProxy(private val viewPager2: ViewPager2, private val viewModel: ViewPagerViewModel){
     init {

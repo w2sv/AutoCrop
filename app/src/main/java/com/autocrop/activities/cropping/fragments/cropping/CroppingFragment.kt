@@ -12,10 +12,10 @@ import com.autocrop.activities.cropping.fragments.CroppingActivityFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
-import com.autocrop.collections.CropBundle
-import com.autocrop.utils.executeAsyncTask
-import com.autocrop.utils.logBeforehand
-import com.autocrop.utilsandroid.openBitmap
+import com.autocrop.dataclasses.CropBundle
+import com.autocrop.utils.kotlin.extensions.executeAsyncTask
+import com.autocrop.utils.kotlin.logBeforehand
+import com.autocrop.utils.android.openBitmap
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CroppingFragmentBinding
 import kotlinx.coroutines.Job

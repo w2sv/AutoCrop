@@ -14,11 +14,11 @@ import com.autocrop.preferences.UriPreferences
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
-import com.autocrop.uielements.menu.AbstractMenuInflationButton
-import com.autocrop.uielements.menu.ExtendedPopupMenu
-import com.autocrop.uielements.menu.persistMenuAfterClick
-import com.autocrop.utilsandroid.buildAndShow
-import com.autocrop.utilsandroid.snacky
+import com.autocrop.ui.elements.menu.AbstractMenuInflationButton
+import com.autocrop.ui.elements.menu.ExtendedPopupMenu
+import com.autocrop.ui.elements.menu.persistMenuAfterClick
+import com.autocrop.utils.android.buildAndShow
+import com.autocrop.utils.android.snacky
 import com.w2sv.autocrop.R
 
 class MenuInflationButton(context: Context, attributeSet: AttributeSet)

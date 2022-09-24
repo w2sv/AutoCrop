@@ -4,10 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
-import com.autocrop.collections.ImageFileIOSynopsis
-import com.autocrop.utilsandroid.PermissionsHandler
+import com.autocrop.dataclasses.IOSynopsis
+import com.autocrop.utils.android.PermissionsHandler
 
-class MainActivityViewModel(val imageFileIOSynopsis: ImageFileIOSynopsis?): ViewModel() {
+class MainActivityViewModel(val IOSynopsis: IOSynopsis?): ViewModel() {
     var fadeInFlowFieldButtons = true
 
     lateinit var selectImages: ActivityResultLauncher<Intent>

@@ -12,9 +12,9 @@ import androidx.transition.TransitionListenerAdapter
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
 import com.autocrop.preferences.BooleanPreferences
-import com.autocrop.utilsandroid.livedata.asMutable
-import com.autocrop.utilsandroid.buildAndShow
-import com.autocrop.utilsandroid.snacky
+import com.autocrop.utils.android.livedata.asMutable
+import com.autocrop.utils.android.buildAndShow
+import com.autocrop.utils.android.snacky
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ExaminationFragmentComparisonBinding
 

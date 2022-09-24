@@ -1,7 +1,7 @@
 package com.autocrop.preferences
 
 import android.content.SharedPreferences
-import com.autocrop.utils.delegates.AutoSwitch
+import com.autocrop.utils.kotlin.delegates.AutoSwitch
 
 /**
  * Singleton encapsulating entirety of parameters set by user

@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.autocrop.activities.examination.fragments.viewpager.transitionName
-import com.autocrop.utilsandroid.livedata.toggle
+import com.autocrop.utils.android.livedata.toggle
 
 class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet){

@@ -1,5 +1,7 @@
 package com.autocrop.utils
 
+import com.autocrop.utils.kotlin.extensions.toInt
+import com.autocrop.utils.kotlin.extensions.toNonZeroInt
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource

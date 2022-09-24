@@ -7,9 +7,9 @@ import android.os.Handler
 import android.os.Looper
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.preferences.BooleanPreferences
-import com.autocrop.uielements.view.animate
-import com.autocrop.utilsandroid.buildAndShow
-import com.autocrop.utilsandroid.snacky
+import com.autocrop.ui.elements.view.animate
+import com.autocrop.utils.android.buildAndShow
+import com.autocrop.utils.android.snacky
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentAboutBinding

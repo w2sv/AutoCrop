@@ -9,9 +9,9 @@ import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
-import com.autocrop.uielements.view.animate
-import com.autocrop.uielements.view.show
-import com.autocrop.utilsandroid.MimeTypes
+import com.autocrop.ui.elements.view.animate
+import com.autocrop.ui.elements.view.show
+import com.autocrop.utils.android.MimeTypes
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 

@@ -1,11 +1,11 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
 import androidx.annotation.VisibleForTesting
-import com.autocrop.utils.rotatedIndex
-import com.autocrop.utils.toInt
-import com.autocrop.utils.toNonZeroInt
-import com.autocrop.utilsandroid.livedata.MutableListLiveData
-import com.autocrop.utilsandroid.livedata.UpdateBlockableLiveData
+import com.autocrop.utils.kotlin.extensions.rotatedIndex
+import com.autocrop.utils.kotlin.extensions.toInt
+import com.autocrop.utils.kotlin.extensions.toNonZeroInt
+import com.autocrop.utils.android.livedata.MutableListLiveData
+import com.autocrop.utils.android.livedata.UpdateBlockableLiveData
 import java.util.*
 
 class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :

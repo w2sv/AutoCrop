@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatButton
 import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
-import com.autocrop.utilsandroid.MimeTypes
+import com.autocrop.utils.android.MimeTypes
 
 class ImageSelectionButton(context: Context, attributeSet: AttributeSet):
     AppCompatButton(context, attributeSet),

@@ -1,7 +1,7 @@
 package com.autocrop.preferences
 
 import android.content.SharedPreferences
-import com.autocrop.utils.logBeforehand
+import com.autocrop.utils.kotlin.logBeforehand
 import timber.log.Timber
 
 /**

@@ -27,7 +27,7 @@
         android:label="@string/app_title"
         tools:replace="android:label"
 
-        android:name="com.autocrop.application.AutoCrop"
+        android:name="com.autocrop.AutoCrop"
 
         android:icon="@mipmap/logo"
         android:roundIcon="@mipmap/logo_round"

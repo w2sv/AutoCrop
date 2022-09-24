@@ -2,11 +2,11 @@ package com.autocrop.activities.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.collections.ImageFileIOSynopsis
+import com.autocrop.dataclasses.IOSynopsis
 
-class MainActivityViewModelFactory(private val imageFileIOSynopsis: ImageFileIOSynopsis?):
+class MainActivityViewModelFactory(private val IOSynopsis: IOSynopsis?):
     ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        MainActivityViewModel(imageFileIOSynopsis) as T
+        MainActivityViewModel(IOSynopsis) as T
 }

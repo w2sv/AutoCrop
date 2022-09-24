@@ -3,7 +3,7 @@ package com.autocrop.retriever.activity
 import android.app.Activity
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
-import com.autocrop.uicontroller.activity.FragmentHostingActivity
+import com.autocrop.ui.controller.activity.FragmentHostingActivity
 
 @Suppress("UNCHECKED_CAST")
 class ContextBasedActivityRetriever<A: Activity>(private val context: Context)

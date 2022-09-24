@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.core.text.bold
 import androidx.core.text.color
-import com.autocrop.uielements.ExtendedDialogFragment
-import com.autocrop.utils.BlankFun
-import com.autocrop.utilsandroid.getColoredIcon
-import com.autocrop.utilsandroid.getThemedColor
+import com.autocrop.ui.elements.ExtendedDialogFragment
+import com.autocrop.utils.kotlin.BlankFun
+import com.autocrop.utils.android.getColoredIcon
+import com.autocrop.utils.android.getThemedColor
 import com.w2sv.autocrop.R
 
 class InstructionsDialog: ExtendedDialogFragment(){

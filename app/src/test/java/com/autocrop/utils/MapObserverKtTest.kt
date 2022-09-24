@@ -1,6 +1,6 @@
 package com.autocrop.utils
 
-import com.autocrop.utils.delegates.mapObserver
+import com.autocrop.utils.kotlin.delegates.mapObserver
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource

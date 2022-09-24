@@ -12,9 +12,9 @@ import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewMode
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
-import com.autocrop.uielements.menu.AbstractMenuInflationButton
-import com.autocrop.uielements.menu.ExtendedPopupMenu
-import com.autocrop.uielements.recyclerview.recyclerView
+import com.autocrop.ui.elements.menu.AbstractMenuInflationButton
+import com.autocrop.ui.elements.menu.ExtendedPopupMenu
+import com.autocrop.ui.elements.recyclerview.recyclerView
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.lyrebirdstudio.croppylib.CropRequest
 import com.lyrebirdstudio.croppylib.CroppyTheme
