@@ -3,7 +3,7 @@
 #   https://dev.to/ychescale9/running-android-emulators-on-ci-from-bitrise-io-to-github-actions-3j76
 #   https://github.com/ReactiveCircus/android-emulator-runner
 
-name: CI Workflow
+name: Build
 on: [push, pull_request]
 
 env:
@@ -68,7 +68,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api }}
-          target: google_apis or playstore
+          target: google_apis_playstore  # necessary for api=32
           profile: ${{ env.DEVICE }}
           arch: ${{ env.ARCH }}
           force-avd-creation: false

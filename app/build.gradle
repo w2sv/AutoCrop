@@ -21,7 +21,7 @@ android {
                     keyPassword keystoreProperties["keyPassword"]
                 }
                 else
-                    println("Failed to create release signing configuration; $propertyFile.path and thus keystore credentials not present")
+                    println("Failed to create release signing configuration; $propertyFile.path not present")
             }
         }
     }
