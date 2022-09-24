@@ -3,7 +3,7 @@ package com.autocrop.activities.cropping
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.autocrop.activities.cropping.fragments.cropping.cropRect
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
@@ -29,16 +29,15 @@ class CroppingTest {
         "Screenshot_2021-02-20-23-54-58-389_com.android.chrome.png, 720, 991, 31"
     )
     fun validScreenshotCroppingResults(fileName: String, expectedWidth: Int, expectedHeight: Int, expectedRetentionPercentage: Int) {
-        val (crop, retentionPercentage) = cropRect(
+        val crop = cropRect(
             loadTestScreenshot(
                 fileName,
                 "valid-screenshots"
             )
         )!!
 
-        Assert.assertEquals(expectedWidth, crop.width)
-        Assert.assertEquals(expectedHeight, crop.height)
-        Assert.assertEquals(expectedRetentionPercentage, retentionPercentage)
+        Assertions.assertEquals(expectedWidth, crop.width())
+        Assertions.assertEquals(expectedHeight, crop.height())
     }
 
     @ParameterizedTest
@@ -55,7 +54,7 @@ class CroppingTest {
         "Screenshot_2021-04-14-18-01-45-017_com.whatsapp.png"
     ])
     fun invalidScreenshotsReturnNull(fileName: String){
-        Assert.assertNull(
+        Assertions.assertNull(
             cropRect(
                 loadTestScreenshot(
                     fileName,

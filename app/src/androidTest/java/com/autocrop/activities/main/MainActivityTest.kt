@@ -25,7 +25,6 @@ import com.w2sv.autocrop.R
 import de.mannodermaus.junit5.ActivityScenarioExtension
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.equalTo
-import org.junit.Assert
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.RegisterExtension
 import utils.espresso.*
@@ -160,7 +159,10 @@ internal class MainActivityTest {
                     check(isDisplayed())  // check menu is being persisted on click
                 }
 
-                Assert.assertEquals(!userPreferencesValueBeforeClick, BooleanPreferences.autoScroll)
+                Assertions.assertEquals(
+                    !userPreferencesValueBeforeClick,
+                    BooleanPreferences.autoScroll
+                )
             }
 
             @Test
@@ -199,7 +201,7 @@ internal class MainActivityTest {
                 @Test
                 fun invocation(scenario: ActivityScenario<MainActivity>){
                     scenario.onActivity {
-                        Assert.assertTrue(it.supportFragmentManager.findFragmentById(R.id.layout) is AboutFragment)
+                        Assertions.assertTrue(it.supportFragmentManager.findFragmentById(R.id.layout) is AboutFragment)
                     }
                 }
 
@@ -209,7 +211,7 @@ internal class MainActivityTest {
                         it.onBackPressed()
                         Handler(Looper.getMainLooper()).postDelayed(
                             {
-                                Assert.assertTrue(it.supportFragmentManager.findFragmentById(R.id.layout) is FlowFieldFragment)
+                                Assertions.assertTrue(it.supportFragmentManager.findFragmentById(R.id.layout) is FlowFieldFragment)
                             },
                             100
                         )

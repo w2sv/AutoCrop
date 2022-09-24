@@ -75,7 +75,7 @@ class ViewPagerDataSet(cropBundles: MutableList<CropBundle>) :
     /**
      * For keeping track of #pageIndex
      */
-    private var tailPosition: Int = lastIndex
+    var tailPosition: Int = lastIndex
 
     // ----------------Position Conversion
 

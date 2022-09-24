@@ -62,8 +62,7 @@ class ScreenshotParameters(
 
 sealed class Crop(
     val bitmap: Bitmap,
-    val rect: Rect
-){
+    val rect: Rect){
     class FromScreenshot(screenshot: Bitmap, rect: Rect)
         : Crop(
             screenshot.cropped(rect),

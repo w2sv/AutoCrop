@@ -1,10 +1,10 @@
 package com.autocrop.activities.examination.fragments.viewpager
 
 import android.graphics.Bitmap
+import android.graphics.Rect
 import androidx.core.graphics.createBitmap
 import androidx.core.net.toUri
 import com.autocrop.collections.CropBundle
-import org.junit.Assert
 import org.junit.jupiter.api.*
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
@@ -15,15 +15,21 @@ internal class ViewPagerDataSetTest {
     private val initialSize = 10
     private var viewPagerDataSet = ViewPagerDataSet(
         (0 until initialSize)
-            .map { CropBundle(it.toString().toUri(), createBitmap(1, 1, Bitmap.Config.ARGB_8888), it, it) }
+            .map {
+                CropBundle(
+                    it.toString().toUri(),
+                    createBitmap(1, 1, Bitmap.Config.ARGB_8888),
+                    Rect(0, 0, 1, 1)
+                )
+            }
             .toMutableList()
     )
     private val initialTailPosition = viewPagerDataSet.lastIndex
 
     @Test
     fun correctInitialization(){
-        Assert.assertEquals(initialSize, viewPagerDataSet.size)
-        Assert.assertEquals(initialTailPosition, viewPagerDataSet.tailPosition)
+        Assertions.assertEquals(initialSize, viewPagerDataSet.size)
+        Assertions.assertEquals(initialTailPosition, viewPagerDataSet.tailPosition)
     }
 
     @ParameterizedTest
@@ -34,13 +40,16 @@ internal class ViewPagerDataSetTest {
         "0, 0"
     )
     fun correspondingPosition(expected: Int, viewPosition: Int) {
-        Assert.assertEquals(expected, viewPagerDataSet.correspondingPosition(viewPosition))
+        Assertions.assertEquals(expected, viewPagerDataSet.correspondingPosition(viewPosition))
     }
 
     @Test
     fun atCorrespondingPosition(){
         val viewPosition = 2
-        Assert.assertEquals(viewPosition.toString().toUri(), viewPagerDataSet.atCorrespondingPosition(viewPosition).screenshotUri)
+        Assertions.assertEquals(
+            viewPosition.toString().toUri(),
+            viewPagerDataSet.atCorrespondingPosition(viewPosition).screenshot.uri
+        )
     }
 
     @Nested
@@ -69,7 +78,7 @@ internal class ViewPagerDataSetTest {
         )
         fun pageIndex(tailPosition: Int, position: Int, expected: Int) {
             setTailPosition(tailPosition)
-            Assert.assertEquals(expected, viewPagerDataSet.pageIndex(position))
+            Assertions.assertEquals(expected, viewPagerDataSet.pageIndex(position))
         }
 
         private fun setTailPosition(tailPosition: Int){
@@ -92,8 +101,11 @@ internal class ViewPagerDataSetTest {
 
             viewPagerDataSet.removeAtAndRealign(correspondingPosition, removingAtTail, newViewPagerPosition)
 
-            Assert.assertEquals(dataSetSize - 1, viewPagerDataSet.size)
-            Assert.assertEquals(newViewPagerPositionCropBundleHash, viewPagerDataSet.atCorrespondingPosition(newViewPagerPosition).hashCode())
+            Assertions.assertEquals(dataSetSize - 1, viewPagerDataSet.size)
+            Assertions.assertEquals(
+                newViewPagerPositionCropBundleHash,
+                viewPagerDataSet.atCorrespondingPosition(newViewPagerPosition).hashCode()
+            )
         }
     }
 }
