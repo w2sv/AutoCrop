@@ -1,9 +1,6 @@
 package com.autocrop.utils
 
-import org.junit.Assert
-import org.junit.jupiter.api.Assertions.*
-
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
@@ -15,7 +12,7 @@ internal class BooleanKtTest {
         "true, 1"
     )
     fun toInt(value: Boolean, expected: Int) {
-        Assert.assertEquals(value.toInt(), expected)
+        Assertions.assertEquals(value.toInt(), expected)
     }
 
     @ParameterizedTest
@@ -24,6 +21,6 @@ internal class BooleanKtTest {
         "true, 1"
     )
     fun toNonZeroInt(value: Boolean, expected: Int) {
-        Assert.assertEquals(value.toNonZeroInt(), expected)
+        Assertions.assertEquals(value.toNonZeroInt(), expected)
     }
 }

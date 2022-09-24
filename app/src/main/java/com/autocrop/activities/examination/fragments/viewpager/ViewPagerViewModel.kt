@@ -13,9 +13,9 @@ class ViewPagerViewModel : ViewModel(){
     val dataSet = BidirectionalViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 
     fun initialViewPosition(): Int =
-        (BidirectionalRecyclerViewAdapter.N_VIEWS / 2).let { halvedMaxViews ->
-            halvedMaxViews - dataSet.correspondingPosition(halvedMaxViews) + dataSet.currentPosition.value!!
-        }
+            (BidirectionalRecyclerViewAdapter.N_VIEWS / 2).let { halvedMaxViews ->
+                halvedMaxViews - dataSet.correspondingPosition(halvedMaxViews) + dataSet.currentPosition.value!!
+            }
 
     var onScrollStateIdleListenerConsumable by Consumable<BlankFun>()
 
@@ -27,7 +27,7 @@ class ViewPagerViewModel : ViewModel(){
 
     val autoScroll: LiveData<Boolean> by lazy {
         MutableLiveData(
-            BooleanPreferences.autoScroll && dataSet.size > 1
+                BooleanPreferences.autoScroll && dataSet.size > 1
         )
     }
 

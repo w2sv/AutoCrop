@@ -33,9 +33,9 @@ import java.util.concurrent.TimeoutException
  * `InstantTaskExecutorRule` or a similar mechanism to execute tasks synchronously.
  */
 fun <T> LiveData<T>.getOrAwaitValue(
-    time: Long = 2,
-    timeUnit: TimeUnit = TimeUnit.SECONDS,
-    afterObserve: () -> Unit = {}
+        time: Long = 2,
+        timeUnit: TimeUnit = TimeUnit.SECONDS,
+        afterObserve: () -> Unit = {}
 ): T {
     var data: T? = null
     val latch = CountDownLatch(1)
@@ -63,7 +63,7 @@ fun <T> LiveData<T>.getOrAwaitValue(
 /**
  * Observes a [LiveData] until the `block` is done executing.
  */
-suspend fun <T> LiveData<T>.observeForTesting(block: suspend  () -> Unit) {
+suspend fun <T> LiveData<T>.observeForTesting(block: suspend () -> Unit) {
     val observer = Observer<T> { }
     try {
         observeForever(observer)

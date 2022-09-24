@@ -8,7 +8,6 @@ import android.os.Looper
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.uielements.view.animate
-import com.autocrop.utilsandroid.SimpleAnimatorListener
 import com.autocrop.utilsandroid.buildAndShow
 import com.autocrop.utilsandroid.snacky
 import com.daimajia.androidanimations.library.Techniques
@@ -22,8 +21,9 @@ class AboutFragment:
         if (enter && !BooleanPreferences.aboutFragmentInstructionsShown)
             AnimatorInflater.loadAnimator(activity, nextAnim)
                 .apply {
-                    addListener(object : SimpleAnimatorListener() {
-                        override fun onAnimationEnd(animation: Animator?) {
+                    addListener(object : Animator.AnimatorListener {
+                        override fun onAnimationStart(animation: Animator) {}
+                        override fun onAnimationEnd(animation: Animator) {
                             Handler(Looper.getMainLooper()).postDelayed(
                                 {
                                     requireActivity()
@@ -37,6 +37,8 @@ class AboutFragment:
                                 resources.getInteger(R.integer.delay_minimal).toLong()
                             )
                         }
+                        override fun onAnimationCancel(animation: Animator) {}
+                        override fun onAnimationRepeat(animation: Animator) {}
                     })
                 }
         else

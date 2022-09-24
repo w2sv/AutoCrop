@@ -1,6 +1,6 @@
 package com.autocrop.utils
 
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
@@ -15,6 +15,9 @@ internal class CollectionTest {
         "0, 3, -3, 4"
     )
     fun rotatedIndex(expected: Int, index: Int, distance: Int, collectionSize: Int) {
-        Assert.assertEquals(expected, (0 until collectionSize).toList().rotatedIndex(index, distance))
+        Assertions.assertEquals(
+            expected,
+            (0 until collectionSize).toList().rotatedIndex(index, distance)
+        )
     }
 }

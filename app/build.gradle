@@ -27,13 +27,14 @@ android {
     }
 
     def MIN_SDK_VERSION = 23
-    def COMPILE_SDK_VERSION = 31
+    def COMPILE_SDK_VERSION = 33
 
     def VERSION_CODE = 21
     def VERSION_NAME = '3.1.2'
 
     compileSdkVersion COMPILE_SDK_VERSION
     defaultConfig {
+        testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'
         applicationId 'com.w2sv.autocrop'
 
         minSdkVersion MIN_SDK_VERSION
@@ -43,7 +44,6 @@ android {
         versionName VERSION_NAME
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArgument("runnerBuilder", "de.mannodermaus.junit5.AndroidJUnit5Builder")
 
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
     }
@@ -76,6 +76,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'com.w2sv.autocrop'
 }
 
 dependencies {
@@ -88,14 +89,14 @@ dependencies {
     implementation files('libs/processing-core.jar')
 
     // Androidx
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 
     // .enable @lifecycleScope
-    implementation 'androidx.fragment:fragment-ktx:1.4.1'
-    implementation 'androidx.activity:activity-ktx:1.4.0'
+    implementation 'androidx.fragment:fragment-ktx:1.5.3'
+    implementation 'androidx.activity:activity-ktx:1.6.0'
 
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'

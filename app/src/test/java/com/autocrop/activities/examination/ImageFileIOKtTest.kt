@@ -1,6 +1,6 @@
 package com.autocrop.activities.examination
 
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
@@ -12,6 +12,6 @@ internal class ImageFileIOKtTest {
         "234.png, AutoCrop_234.png"
     )
     fun cropFileNameEquality(fileName: String, expected: String) {
-        Assert.assertEquals(expected, cropFileName(fileName))
+        Assertions.assertEquals(expected, cropFileName(fileName))
     }
 }

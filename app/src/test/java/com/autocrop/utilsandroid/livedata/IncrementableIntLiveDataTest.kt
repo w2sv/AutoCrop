@@ -1,8 +1,6 @@
 package com.autocrop.utilsandroid.livedata
 
-import org.junit.Assert
-import org.junit.jupiter.api.Assertions.*
-
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import utils.InstantExecutorExtension
@@ -16,6 +14,6 @@ internal class IncrementableIntLiveDataTest {
         liveData.increment()
         liveData.increment()
 
-        Assert.assertEquals(2, liveData.value)
+        assertEquals(2, liveData.value)
     }
 }

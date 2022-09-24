@@ -678,6 +678,7 @@ class CropView @JvmOverloads constructor(
                         cropRect.right,
                         cropRect.top + minSize
                     )
+                    else -> {}
                 }
             }
             is DraggingCorner -> {
@@ -706,8 +707,10 @@ class CropView @JvmOverloads constructor(
                         cropRect.right,
                         cropRect.top + minSize
                     )
+                    else -> {}
                 }
             }
+            else -> {}
         }
     }
 
@@ -745,6 +748,7 @@ class CropView @JvmOverloads constructor(
                         cropRect.right,
                         borderRect.bottom
                     )
+                    else -> {}
                 }
             }
             is DraggingCorner -> {
@@ -773,8 +777,10 @@ class CropView @JvmOverloads constructor(
                         cropRect.right,
                         borderRect.bottom
                     )
+                    else -> {}
                 }
             }
+            else -> {}
         }
     }
 

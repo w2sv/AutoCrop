@@ -20,3 +20,6 @@ Janek Zangenberg
 
 ## License
 [GPL-3.0 License](LICENSE)
+
+## References
+Heavily configured croppylib core taken from https://github.com/lyrebirdstudio/Croppy

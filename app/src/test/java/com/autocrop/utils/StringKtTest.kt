@@ -1,10 +1,10 @@
 package com.autocrop.utils
 
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
-internal class StringKtTest{
+internal class StringKtTest {
 
     @ParameterizedTest
     @CsvSource(
@@ -13,8 +13,8 @@ internal class StringKtTest{
         "elephant, 2, elephants",
         "elephant, 652, elephants"
     )
-    fun numericallyInflected(string: String, quantity: Int, expected: String){
-        Assert.assertEquals(expected, string.numericallyInflected(quantity))
+    fun numericallyInflected(string: String, quantity: Int, expected: String) {
+        Assertions.assertEquals(expected, string.numericallyInflected(quantity))
     }
 
     @ParameterizedTest
@@ -23,7 +23,7 @@ internal class StringKtTest{
         "aYRAN, AYRAN",
         "AYRAN, AYRAN",
     )
-    fun capitalized(string: String, expected: String){
-        Assert.assertEquals(expected, string.capitalized())
+    fun capitalized(string: String, expected: String) {
+        Assertions.assertEquals(expected, string.capitalized())
     }
 }
