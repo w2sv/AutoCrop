@@ -53,16 +53,16 @@ internal class MainActivityTest {
             .check(isCompletelyDisplayed())
     }
 
-//    @Test
-//    fun appExit(scenario: ActivityScenario<MainActivity>){
-//        scenario.onActivity {
-//            it.onBackPressed()
-//            Handler(Looper.getMainLooper()).postDelayed(
-//                { Assert.assertTrue(it.isDestroyed) },
-//                500
-//            )
-//        }
-//    }
+    @Test
+    fun appExit(scenario: ActivityScenario<MainActivity>){
+        scenario.onActivity {
+            it.onBackPressed()
+            Handler(Looper.getMainLooper()).postDelayed(
+                { Assert.assertTrue(it.isDestroyed) },
+                500
+            )
+        }
+    }
 
     @Nested
     inner class ImageSelectionButton{
