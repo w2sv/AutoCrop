@@ -13,17 +13,20 @@ import utils.InstantExecutorExtension
 internal class BidirectionalViewPagerDataSetTest {
 
     companion object {
-        private fun getDataSet(size: Int = 10) =
+        private fun getDataSet(size: Int = 10, tailPosition: Int? = null) =
             BidirectionalViewPagerDataSet(
                 (0 until size)
                     .toMutableList()
             )
+                .apply {
+                    if (tailPosition != null)
+                        this.tailPosition = tailPosition
+                }
     }
-
-    private val dataSet = getDataSet()
 
     @Test
     fun correctInitialization() {
+        val dataSet = getDataSet()
         Assertions.assertEquals(dataSet.lastIndex, dataSet.tailPosition)
     }
 
@@ -35,6 +38,7 @@ internal class BidirectionalViewPagerDataSetTest {
         "0, 0"
     )
     fun correspondingPosition(expected: Int, viewPosition: Int) {
+        val dataSet = getDataSet()
         Assertions.assertEquals(expected, dataSet.correspondingPosition(viewPosition))
     }
 
@@ -44,6 +48,7 @@ internal class BidirectionalViewPagerDataSetTest {
         "0"
     )
     fun atCorrespondingPosition(viewPosition: Int) {
+        val dataSet = getDataSet()
         Assertions.assertEquals(viewPosition, dataSet.atCorrespondingPosition(viewPosition))
     }
 
@@ -64,7 +69,7 @@ internal class BidirectionalViewPagerDataSetTest {
         "5, 9, 3"
     )
     fun pageIndex(tailPosition: Int, position: Int, expected: Int) {
-        dataSet.tailPosition = tailPosition
+        val dataSet = getDataSet(tailPosition = tailPosition)
         Assertions.assertEquals(expected, dataSet.pageIndex(position))
     }
 
@@ -79,7 +84,7 @@ internal class BidirectionalViewPagerDataSetTest {
         removePosition: Int,
         expected: Int
     ) {
-        val dataSet = getDataSet().apply { this.tailPosition = tailPosition }
+        val dataSet = getDataSet(tailPosition = tailPosition)
         Assertions.assertEquals(
             expected,
             dataSet.viewPositionIncrement(removePosition)
@@ -120,8 +125,7 @@ internal class BidirectionalViewPagerDataSetTest {
         "17, 7, 13",
     )
     fun removeAndRealign(size: Int, viewPosition: Int, tailPosition: Int) {
-        val dataSet = getDataSet(size)
-            .apply { this.tailPosition = tailPosition }
+        val dataSet = getDataSet(size, tailPosition = tailPosition)
 
         val correspondingPosition = dataSet.correspondingPosition(viewPosition)
         val subsequentTailHash = dataSet[

@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.ViewInteraction
@@ -16,6 +18,7 @@ import androidx.test.filters.FlakyTest
 import androidx.test.runner.permission.PermissionRequester
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
+import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.utils.android.MimeTypes
 import com.w2sv.autocrop.R
@@ -202,18 +205,18 @@ internal class MainActivityTest {
                     }
                 }
 
-//                @Test
-//                fun returnToFlowFieldFragmentByBackPress(scenario: ActivityScenario<MainActivity>){
-//                    scenario.onActivity {
-//                        it.onBackPressed()
-//                        Handler(Looper.getMainLooper()).postDelayed(
-//                            {
-//                                Assertions.assertTrue(it.supportFragmentManager.findFragmentById(R.id.layout) is FlowFieldFragment)
-//                            },
-//                            100
-//                        )
-//                    }
-//                }
+                @Test
+                fun returnToFlowFieldFragmentByBackPress(scenario: ActivityScenario<MainActivity>){
+                    scenario.onActivity {
+                        it.onBackPressed()
+                        Handler(Looper.getMainLooper()).postDelayed(
+                            {
+                                Assertions.assertTrue(it.supportFragmentManager.findFragmentById(R.id.layout) is FlowFieldFragment)
+                            },
+                            100
+                        )
+                    }
+                }
             }
         }
     }
