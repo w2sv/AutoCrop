@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager
+package com.autocrop.activities.examination.fragments.croppager
 
 import android.content.Context
 import android.os.Bundle
@@ -9,33 +9,39 @@ import android.view.View
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.transition.TransitionInflater
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
+import com.autocrop.activities.examination.fragments.croppager.dialogs.AbstractCropDialog
+import com.autocrop.activities.examination.fragments.croppager.dialogs.CropDialog
+import com.autocrop.activities.examination.fragments.croppager.dialogs.CropEntiretyDialog
+import com.autocrop.activities.examination.fragments.croppager.dialogs.InstructionsDialog
+import com.autocrop.activities.examination.fragments.croppager.pager.CropPagerAdapter
+import com.autocrop.activities.examination.fragments.croppager.pager.CropPagerProxy
+import com.autocrop.activities.examination.fragments.croppager.viewmodel.Scroller
+import com.autocrop.activities.examination.fragments.croppager.viewmodel.ViewPagerViewModel
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
-import com.autocrop.activities.examination.fragments.viewpager.dialogs.AllCropsDialog
-import com.autocrop.activities.examination.fragments.viewpager.dialogs.CurrentCropDialog
-import com.autocrop.activities.examination.fragments.viewpager.dialogs.InstructionsDialog
 import com.autocrop.dataclasses.Crop
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.ui.elements.recyclerview.CubeOutPageTransformer
 import com.autocrop.ui.elements.view.animate
 import com.autocrop.ui.elements.view.crossFade
 import com.autocrop.ui.elements.view.show
-import com.autocrop.utils.kotlin.extensions.numericallyInflected
-import com.autocrop.utils.android.livedata.asMutable
 import com.autocrop.utils.android.buildAndShow
 import com.autocrop.utils.android.getThemedColor
+import com.autocrop.utils.android.livedata.asMutable
 import com.autocrop.utils.android.snacky
+import com.autocrop.utils.kotlin.extensions.executeAsyncTask
+import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
 
-class ViewPagerFragment :
+class CropPagerFragment :
     ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(ExaminationFragmentViewpagerBinding::class.java) {
 
     private val viewModel by viewModels<ViewPagerViewModel>(::requireActivity)
-    private lateinit var viewPagerProxy: CropViewPagerProxy
+    private lateinit var viewPagerProxy: CropPagerProxy
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -47,19 +53,8 @@ class ViewPagerFragment :
     override fun onStart() {
         super.onStart()
 
-        setCurrentCropDialogResultListener()
-        setAllCropsDialogFragmentResultListeners()
-    }
-
-    private fun setCurrentCropDialogResultListener(){
-        parentFragmentManager.setFragmentResultListener(
-            CurrentCropDialog.PROCEDURE_SELECTED,
-            requireActivity()
-        ){ _, bundle ->
-            currentCropResultReceivedListener(
-                dataSetPosition = bundle.getInt(CurrentCropDialog.DATA_SET_POSITION_ARG_KEY)
-            )
-        }
+        setCropDialogResultListener()
+        setCropEntiretyDialogResultListener()
     }
 
     /**
@@ -69,40 +64,52 @@ class ViewPagerFragment :
      * hide pageIndicationSeekBar AND/OR
      * removes view, procedure action has been selected for, from pager
      */
-    private fun currentCropResultReceivedListener(dataSetPosition: Int){
-        if (viewModel.dataSet.size == 1)
-            sharedViewModel.singleCropSavingJob?.run{
-                invokeOnCompletion {
-                    typedActivity.returnToMainActivity()
-                }
-            } ?: typedActivity.returnToMainActivity()
-        else
-            viewPagerProxy.removeView(dataSetPosition)
+    private fun setCropDialogResultListener(){
+        setFragmentResultListener(CropDialog.RESULT_REQUEST_KEY){ bundle ->
+            val dataSetPosition = bundle.getInt(CropDialog.DATA_SET_POSITION_BUNDLE_ARG_KEY)
+            val saveCrop = bundle.getBoolean(AbstractCropDialog.CONFIRMED_BUNDLE_ARG_KEY)
+
+            if (saveCrop)
+                sharedViewModel.singularCropSavingJob = lifecycleScope.executeAsyncTask(
+                    {
+                        sharedViewModel.processCropBundle(
+                            dataSetPosition,
+                            BooleanPreferences.deleteScreenshots,
+                            requireContext()
+                        )
+                    }
+                )
+
+            if (viewModel.dataSet.size == 1)
+                sharedViewModel.singularCropSavingJob?.run{
+                    invokeOnCompletion {
+                        typedActivity.invokeSubsequentFragment()
+                    }
+                } ?: typedActivity.invokeSubsequentFragment()
+            else
+                viewPagerProxy.removeView(dataSetPosition)
+        }
     }
 
-    private fun setAllCropsDialogFragmentResultListeners(){
-        mapOf(
-            AllCropsDialog.SAVE_ALL_FRAGMENT_RESULT_KEY to {
-                fragmentHostingActivity.replaceCurrentFragmentWith(
-                    SaveAllFragment(),
-                    true
-                )
-            },
-            AllCropsDialog.DISCARD_ALL_FRAGMENT_RESULT_KEY to {
+    private fun setCropEntiretyDialogResultListener(){
+        setFragmentResultListener(CropEntiretyDialog.RESULT_REQUEST_KEY){
+            if (it.getBoolean(AbstractCropDialog.CONFIRMED_BUNDLE_ARG_KEY))
+                fragmentHostingActivity.replaceCurrentFragmentWith(SaveAllFragment(),true)
+            else
                 typedActivity.returnToMainActivity()
-            }
-        ).entries.forEach { (key, fragmentResultListener) ->
-            parentFragmentManager.setFragmentResultListener(
-                key,
-                activity as LifecycleOwner,
-            ){_, _ -> fragmentResultListener()}
+        }
+    }
+
+    private fun setFragmentResultListener(requestKey: String, listener: (Bundle) -> Unit){
+        parentFragmentManager.setFragmentResultListener(requestKey, requireActivity()){ _, bundle ->
+            listener(bundle)
         }
     }
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         super.onViewCreatedCore(savedInstanceState)
 
-        viewPagerProxy = CropViewPagerProxy(
+        viewPagerProxy = CropPagerProxy(
             binding.viewPager,
             viewModel
         )

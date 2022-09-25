@@ -26,7 +26,7 @@ class ScreenshotDeletionQueryFragment :
             IntentSenderRequest.Builder(
                 MediaStore.createDeleteRequest(
                     requireContext().contentResolver,
-                    sharedViewModel.deletionQueryScreenshotUris
+                    sharedViewModel.deletionQueryUris
                 )
                     .intentSender
             )
@@ -38,7 +38,7 @@ class ScreenshotDeletionQueryFragment :
         // increment sharedViewModel.nDeletedScreenshots if deletion request emitted
         if (it.resultCode == Activity.RESULT_OK)
             with(sharedViewModel){
-                nDeletedScreenshots += deletionQueryScreenshotUris.size
+                nDeletedScreenshots += deletionQueryUris.size
             }
 
         // launch appTitleFragment after small delay for UX smoothness

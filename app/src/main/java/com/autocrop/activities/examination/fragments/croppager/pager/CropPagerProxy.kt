@@ -1,17 +1,22 @@
-package com.autocrop.activities.examination.fragments.viewpager
+package com.autocrop.activities.examination.fragments.croppager.pager
 
 import androidx.viewpager2.widget.ViewPager2
+import com.autocrop.activities.examination.fragments.croppager.viewmodel.ViewPagerViewModel
 import com.autocrop.ui.elements.recyclerview.ExtendedRecyclerViewAdapter
 
-class CropViewPagerProxy(private val viewPager2: ViewPager2, private val viewModel: ViewPagerViewModel){
+/**
+ * Proxy (=wrapper) for unextendable [viewPager2], providing additional functionality
+ */
+class CropPagerProxy(private val viewPager2: ViewPager2, private val viewModel: ViewPagerViewModel){
     init {
-        viewPager2.adapter = CropPagerAdapter(viewModel)
-
-        viewPager2.registerOnPageChangeCallback(
-            PageChangeHandler(
-                viewModel
+        with(viewPager2){
+            adapter = CropPagerAdapter(viewModel)
+            registerOnPageChangeCallback(
+                PageChangeHandler(
+                    viewModel
+                )
             )
-        )
+        }
     }
 
     fun setInitialView(){

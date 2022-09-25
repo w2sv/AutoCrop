@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager.dialogs
+package com.autocrop.activities.examination.fragments.croppager.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -13,32 +13,31 @@ import com.autocrop.utils.android.getThemedColor
 import com.w2sv.autocrop.R
 
 class InstructionsDialog: ExtendedDialogFragment(){
-    init {
-        isCancelable = false
-    }
+    init { isCancelable = false }
 
     var positiveButtonOnClickListener: BlankFun? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(requireContext())
             .apply {
-                setTitle("Some instructions to get cha going")
+                setCancelable(false)
+                setTitle("Some instructions to get ya going")
                 setIcon(context.getColoredIcon(R.drawable.ic_outline_info_24, R.color.accentuated_tv))
-
                 setMessage(
                     SpannableStringBuilder()
-                        .color(context.getThemedColor(R.color.accentuated_tv)){append("•")}
-                        .append(" Tap screen once to save/discard")
-                        .bold { append(" current") }
-                        .append(" crop \uD83D\uDC47\n\n")
-                        .color(context.getThemedColor(R.color.accentuated_tv)){append("•")}
-                        .append(" Tap screen and hold to save/discard")
-                        .bold { append(" all") }
-                        .append(" crops 👇⏳")
+                        .addFormattedInstruction("Tap screen once to save/discard", "current", "crop \uD83D\uDC47")
+                        .append("\n\n")
+                        .addFormattedInstruction("Tap screen and hold to save/discard", "all", "crops \uD83D\uDC47⏳")
                 )
-                setCancelable(false)
-
                 setPositiveButton("Got it!") { _, _ -> positiveButtonOnClickListener?.invoke() }
             }
             .create()
+
+    private fun SpannableStringBuilder.addFormattedInstruction(start: String, bold: String, end: String): SpannableStringBuilder =
+        apply {
+            color(requireContext().getThemedColor(R.color.accentuated_tv)){append("•")}
+            append(" $start")
+            bold { append(" $bold") }
+            append(" $end")
+        }
 }

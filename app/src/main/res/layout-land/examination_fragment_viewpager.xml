@@ -16,7 +16,7 @@
 
         android:background="@color/background_neutral"/>
 
-    <com.autocrop.activities.examination.fragments.viewpager.views.MenuInflationButton
+    <com.autocrop.activities.examination.fragments.croppager.views.MenuInflationButton
         android:id="@+id/menu_inflation_button"
         android:visibility="invisible"
 
@@ -48,7 +48,7 @@
 
         <!-- https://en.proft.me/2018/02/5/decorating-seekbar-android/ -->
 
-        <com.autocrop.activities.examination.fragments.viewpager.views.PageIndicationBar
+        <com.autocrop.activities.examination.fragments.croppager.views.PageIndicationBar
             android:id="@+id/page_indication_bar"
             android:visibility="invisible"
 
@@ -65,11 +65,11 @@
             android:outlineProvider="paddedBounds"
 
             android:max="100">
-        </com.autocrop.activities.examination.fragments.viewpager.views.PageIndicationBar>
+        </com.autocrop.activities.examination.fragments.croppager.views.PageIndicationBar>
 
         <!-- Page Indication Text View -->
 
-        <com.autocrop.activities.examination.fragments.viewpager.views.PageIndicationTextView
+        <com.autocrop.activities.examination.fragments.croppager.views.PageIndicationTextView
             android:id="@+id/page_indication_tv"
 
             android:layout_width="wrap_content"
@@ -87,7 +87,7 @@
 
     </RelativeLayout>
 
-    <com.autocrop.activities.examination.fragments.viewpager.views.CancelAutoScrollButton
+    <com.autocrop.activities.examination.fragments.croppager.views.CancelAutoScrollButton
         android:id="@+id/cancel_auto_scroll_button"
         android:visibility="invisible"
 
@@ -104,9 +104,9 @@
         android:textStyle="bold"
         android:background="@android:color/transparent">
 
-    </com.autocrop.activities.examination.fragments.viewpager.views.CancelAutoScrollButton>
+    </com.autocrop.activities.examination.fragments.croppager.views.CancelAutoScrollButton>
 
-    <com.autocrop.activities.examination.fragments.viewpager.views.DiscardingStatisticsTextView
+    <com.autocrop.activities.examination.fragments.croppager.views.DiscardingStatisticsTextView
         android:id="@+id/discarding_statistics_tv"
         android:visibility="invisible"
 

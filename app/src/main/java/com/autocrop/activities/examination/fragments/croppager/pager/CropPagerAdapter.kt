@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager
+package com.autocrop.activities.examination.fragments.croppager.pager
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.autocrop.activities.examination.fragments.croppager.viewmodel.ViewPagerViewModel
 import com.autocrop.ui.elements.recyclerview.BidirectionalRecyclerViewAdapter
 import com.w2sv.autocrop.R
 

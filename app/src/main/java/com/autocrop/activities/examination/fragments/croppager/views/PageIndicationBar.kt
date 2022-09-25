@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager.views
+package com.autocrop.activities.examination.fragments.croppager.views
 
 import android.animation.ObjectAnimator
 import android.content.Context
@@ -7,7 +7,7 @@ import android.view.animation.BaseInterpolator
 import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
-import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
+import com.autocrop.activities.examination.fragments.croppager.viewmodel.ViewPagerViewModel
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.ui.elements.view.show
 import kotlin.math.roundToInt

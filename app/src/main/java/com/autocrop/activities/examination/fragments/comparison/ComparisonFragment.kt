@@ -10,7 +10,7 @@ import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
-import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
+import com.autocrop.activities.examination.fragments.croppager.viewmodel.ViewPagerViewModel
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.utils.android.livedata.asMutable
 import com.autocrop.utils.android.buildAndShow

@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager
+package com.autocrop.activities.examination.fragments.croppager.viewmodel
 
 import com.autocrop.dataclasses.Crop
 import com.autocrop.dataclasses.CropBundle

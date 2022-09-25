@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager.views
+package com.autocrop.activities.examination.fragments.croppager.views
 
 import android.content.Context
 import android.text.SpannableStringBuilder

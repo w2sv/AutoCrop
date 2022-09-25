@@ -30,6 +30,8 @@ fun Context.processCropBundle(
     validSaveDirDocumentUri: Uri?,
     deleteScreenshot: Boolean): Pair<SavingResult, DeletionResult?>{
 
+    println(cropBundle.screenshot)
+
     val cropSavingResult = contentResolver.saveBitmap(
         cropBundle.crop.bitmap,
         cropFileName(cropBundle.screenshot.uri.fileName),
@@ -50,18 +52,8 @@ fun Context.processCropBundle(
 /**
  * Replaces 'screenshot' by 'AutoCrop' if present in [fileName], otherwise adds it as prefix
  */
-fun cropFileName(fileName: String): String{
-    val appName = "AutoCrop"
-
-    return fileName
-        .replace("screenshot", appName,true)
-        .run {
-            if (contains(appName))
-                this
-            else
-                "${appName}_$this"
-        }
-}
+fun cropFileName(fileName: String): String =
+    "${fileName}_AutoCropped"
 
 //$$$$$$$$$$$$$$$$$$$$$$
 // Screenshot Deletion $

@@ -1,13 +1,13 @@
-package com.autocrop.activities.examination.fragments.viewpager.views
+package com.autocrop.activities.examination.fragments.croppager.views
 
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.os.bundleOf
 import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
-import com.autocrop.activities.examination.fragments.viewpager.dialogs.AllCropsDialog
-import com.autocrop.activities.examination.fragments.viewpager.dialogs.CurrentCropDialog
+import com.autocrop.activities.examination.fragments.croppager.dialogs.CropEntiretyDialog
+import com.autocrop.activities.examination.fragments.croppager.dialogs.CropDialog
+import com.autocrop.activities.examination.fragments.croppager.viewmodel.ViewPagerViewModel
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
@@ -30,9 +30,9 @@ class CropImageView(context: Context, attributeSet: AttributeSet):
     private fun setCurrentCropDialog(){
         setOnClickListener {
             if (dialogInflationEnabled)
-                CurrentCropDialog().apply {
+                CropDialog().apply {
                     arguments = bundleOf(
-                        CurrentCropDialog.DATA_SET_POSITION_ARG_KEY to this@CropImageView.sharedViewModel.dataSet.currentPosition.value!!
+                        CropDialog.DATA_SET_POSITION_BUNDLE_ARG_KEY to this@CropImageView.sharedViewModel.dataSet.currentPosition.value!!
                     )
                 }
                     .show(fragmentActivity.supportFragmentManager)
@@ -46,7 +46,7 @@ class CropImageView(context: Context, attributeSet: AttributeSet):
             else if (sharedViewModel.dataSet.size == 1)
                 performClick()
             else{
-                AllCropsDialog().show(fragmentActivity.supportFragmentManager)
+                CropEntiretyDialog().show(fragmentActivity.supportFragmentManager)
                 true
             }
         }

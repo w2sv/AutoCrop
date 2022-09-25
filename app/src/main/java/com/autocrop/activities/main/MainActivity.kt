@@ -40,7 +40,7 @@ class MainActivity :
         if (!BooleanPreferences.welcomeMessageShown)
             onButtonsHalfFadedIn{
                 snacky(
-                    "Good to have you on board! \uD83D\uDD25 Now select some screenshots and save your first AutoCrops! \uD83D\uDE80",
+                    "Good to have you on board! \uD83D\uDD25 Now go ahead select some screenshots and save your first AutoCrops! \uD83D\uDE80",
                     duration = resources.getInteger(R.integer.duration_snackbar_extra_long)
                 )
                     .buildAndShow()

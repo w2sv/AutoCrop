@@ -7,8 +7,9 @@ import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.comparison.ComparisonFragment
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
-import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
-import com.autocrop.activities.examination.fragments.viewpager.views.MenuInflationButton.Companion.MANUAL_CROP_REQUEST_CODE
+import com.autocrop.activities.examination.fragments.croppager.CropPagerFragment
+import com.autocrop.activities.examination.fragments.croppager.views.MenuInflationButton.Companion.MANUAL_CROP_REQUEST_CODE
+import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.dataclasses.Crop
 import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
@@ -21,8 +22,8 @@ import com.w2sv.autocrop.R
 import de.mateware.snacky.Snacky
 
 class ExaminationActivity :
-    ApplicationActivity<ViewPagerFragment, ExaminationActivityViewModel>(
-        ViewPagerFragment::class.java,
+    ApplicationActivity<CropPagerFragment, ExaminationActivityViewModel>(
+        CropPagerFragment::class.java,
         ExaminationActivityViewModel::class,
         accessedPreferenceInstances = arrayOf(BooleanPreferences)) {
 
@@ -34,7 +35,7 @@ class ExaminationActivity :
         if (resultCode == RESULT_OK && requestCode == MANUAL_CROP_REQUEST_CODE) {
             data?.let { intent ->
                 intent.data?.let { screenshotUri ->
-                    castCurrentFragment<ViewPagerFragment>().processAdjustedCrop(
+                    castCurrentFragment<CropPagerFragment>().processAdjustedCrop(
                         Crop.fromScreenshot(
                             screenshot = contentResolver.openBitmap(screenshotUri),
                             rect = CroppyActivity.getCropRect(intent)
@@ -70,12 +71,15 @@ class ExaminationActivity :
      * Invoke [ScreenshotDeletionQueryFragment] in case of any screenshot uris whose deletion
      * has to be confirmed, otherwise [AppTitleFragment]
      */
-    fun invokeSubsequentFragment() =
-        if (sharedViewModel.deletionQueryScreenshotUris.isNotEmpty())
-            replaceCurrentFragmentWith(ScreenshotDeletionQueryFragment(), true)
-        else
-            replaceCurrentFragmentWith(AppTitleFragment(), false)
-
+    fun invokeSubsequentFragment(){
+        replaceCurrentFragmentWith(
+            if (sharedViewModel.deletionQueryUris.isNotEmpty())
+                ScreenshotDeletionQueryFragment()
+            else
+                AppTitleFragment(),
+            false
+        )
+    }
     /**
      * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
      * otherwise return to MainActivity after confirmation
@@ -99,7 +103,7 @@ class ExaminationActivity :
                         .setIcon(R.drawable.ic_baseline_front_hand_24)
                         .buildAndShow()
             }
-                is ViewPagerFragment -> handleBackPress()
+                is CropPagerFragment -> handleBackPress()
                 else -> Unit
             }
         }
@@ -110,16 +114,16 @@ class ExaminationActivity :
             intent.putExtra(
                 IntentExtraIdentifier.EXAMINATION_ACTIVITY_RESULTS,
                 IOSynopsis(
-                    sharedViewModel.nSavedCrops,
+                    sharedViewModel.savedCropUris.size,
                     sharedViewModel.nDeletedScreenshots,
                     sharedViewModel.cropWriteDirIdentifier()
                 )
                     .toByteArray()
             )
-            if (sharedViewModel.cropSavingUris.isNotEmpty())
+            if (sharedViewModel.savedCropUris.isNotEmpty())
                 intent.putParcelableArrayListExtra(
                     IntentExtraIdentifier.CROP_SAVING_URIS,
-                    ArrayList(sharedViewModel.cropSavingUris)
+                    ArrayList(sharedViewModel.savedCropUris)
                 )
         }
     }

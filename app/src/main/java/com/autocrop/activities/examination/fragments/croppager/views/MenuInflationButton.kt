@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager.views
+package com.autocrop.activities.examination.fragments.croppager.views
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,9 +6,9 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.graphics.toRectF
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.fragments.comparison.ComparisonFragment
-import com.autocrop.activities.examination.fragments.viewpager.CropPagerAdapter
-import com.autocrop.activities.examination.fragments.viewpager.ViewPagerFragment
-import com.autocrop.activities.examination.fragments.viewpager.ViewPagerViewModel
+import com.autocrop.activities.examination.fragments.croppager.pager.CropPagerAdapter
+import com.autocrop.activities.examination.fragments.croppager.CropPagerFragment
+import com.autocrop.activities.examination.fragments.croppager.viewmodel.ViewPagerViewModel
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
@@ -51,7 +51,7 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
                     addToBackStack = true
                 ) { fragmentTransaction ->
                     val cropImageView =
-                        fragmentHostingActivity.castCurrentFragment<ViewPagerFragment>().binding.viewPager.run {
+                        fragmentHostingActivity.castCurrentFragment<CropPagerFragment>().binding.viewPager.run {
                             (recyclerView.findViewHolderForAdapterPosition(currentItem) as CropPagerAdapter.CropViewHolder).cropImageView
                         }
 

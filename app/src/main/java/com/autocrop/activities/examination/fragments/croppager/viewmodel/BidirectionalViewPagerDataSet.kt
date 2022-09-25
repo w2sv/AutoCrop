@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager
+package com.autocrop.activities.examination.fragments.croppager.viewmodel
 
 import androidx.annotation.VisibleForTesting
 import com.autocrop.utils.kotlin.extensions.rotatedIndex

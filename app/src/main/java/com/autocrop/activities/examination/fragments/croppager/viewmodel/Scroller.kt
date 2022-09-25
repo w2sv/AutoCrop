@@ -1,4 +1,4 @@
-package com.autocrop.activities.examination.fragments.viewpager
+package com.autocrop.activities.examination.fragments.croppager.viewmodel
 
 import android.os.Handler
 import android.os.Looper

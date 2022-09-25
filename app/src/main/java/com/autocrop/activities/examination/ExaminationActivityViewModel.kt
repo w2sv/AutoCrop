@@ -28,13 +28,12 @@ class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?, va
 
     var displayedDismissedScreenshotsSnackbar by AutoSwitch(false, switchOn = false)
 
-    var singleCropSavingJob: Job? = null
+    var singularCropSavingJob: Job? = null
 
-    var nSavedCrops = 0
     var nDeletedScreenshots = 0
 
-    val cropSavingUris = mutableListOf<Uri>()
-    val deletionQueryScreenshotUris = mutableListOf<Uri>()
+    val savedCropUris = mutableListOf<Uri>()
+    val deletionQueryUris = mutableListOf<Uri>()
 
     fun processCropBundle(cropBundlesPosition: Int, deleteScreenshot: Boolean, context: Context){
         val (savingResult, deletionResult) = context.processCropBundle(
@@ -44,18 +43,16 @@ class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?, va
         )
 
         savingResult.let{ (successful, uri) ->
-            if (successful) {
-                cropSavingUris.add(uri)
-                nSavedCrops++
-            }
+            if (successful)
+                savedCropUris.add(uri)
         }
 
         deletionResult?.let { (successful, uri) ->
-            uri?.let {
-                deletionQueryScreenshotUris.add(it)
-                Timber.i("Added $it to deletionQueryScreenshotUris")
+            if (uri != null){
+                deletionQueryUris.add(uri)
+                Timber.i("Added $uri to deletionQueryScreenshotUris")
             }
-            if (successful)
+            else if (successful)
                 nDeletedScreenshots++
         }
     }

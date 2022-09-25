@@ -8,9 +8,9 @@ import com.autocrop.utils.android.approximateJpegSize
 import kotlin.math.roundToInt
 
 /**
- * Encapsulation of entirety of data associated with crop
+ * Encapsulation of data associated with crop
  */
-data class CropBundle(val screenshot: ScreenshotParameters, val crop: Crop) {
+data class CropBundle(val screenshot: Screenshot, val crop: Crop) {
     val discardedPercentage: Int
     val discardedFileSize: Int
 
@@ -24,7 +24,7 @@ data class CropBundle(val screenshot: ScreenshotParameters, val crop: Crop) {
     companion object{
         fun assemble(screenshotUri: Uri, screenshot: Bitmap, cropRect: Rect): CropBundle =
             CropBundle(
-                ScreenshotParameters(
+                Screenshot(
                     screenshotUri,
                     screenshot.height,
                     screenshot.approximateJpegSize()
@@ -40,25 +40,16 @@ data class CropBundle(val screenshot: ScreenshotParameters, val crop: Crop) {
         screenshot.height - crop.rect.bottom
     }
 
-    override fun hashCode(): Int = screenshot.uri.hashCode()
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        return hashCode() == other.hashCode()
-    }
-
     fun identifier(): String = hashCode().toString()
 }
 
-data class ScreenshotParameters(
+data class Screenshot(
     val uri: Uri,
     val height: Int,
     val approximateJpegSize: Int
 )
 
-data class Crop(
-    val bitmap: Bitmap,
-    val rect: Rect) {
+data class Crop(val bitmap: Bitmap, val rect: Rect) {
 
     companion object{
         fun fromScreenshot(screenshot: Bitmap, rect: Rect) = Crop(
