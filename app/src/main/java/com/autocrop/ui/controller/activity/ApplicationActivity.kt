@@ -3,6 +3,7 @@ package com.autocrop.ui.controller.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelLazy
@@ -22,6 +23,8 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
         FragmentHostingActivity<RF>(rootFragmentClass),
         ViewModelRetriever<VM>{
 
+    protected abstract val onBackPressedCallback: OnBackPressedCallback
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,6 +32,8 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
 
         if (savedInstanceState == null)
             onSavedInstanceStateNull()
+
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     private fun instantiateSharedViewModel(){

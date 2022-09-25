@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.SpannableStringBuilder
+import androidx.activity.OnBackPressedCallback
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.text.color
 import androidx.lifecycle.ViewModelProvider
@@ -114,10 +115,12 @@ class MainActivity :
     /**
      * invoke [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app
      */
-    override fun onBackPressed(){
-        when (currentFragment()){
-            is AboutFragment -> supportFragmentManager.popBackStack()
-            else -> finishAffinity()
+    override val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            when (currentFragment()){
+                is AboutFragment -> supportFragmentManager.popBackStack()
+                else -> finishAffinity()
+            }
         }
     }
 }

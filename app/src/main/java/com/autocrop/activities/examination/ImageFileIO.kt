@@ -49,11 +49,10 @@ fun Context.processCropBundle(
 // Crop Saving $
 //$$$$$$$$$$$$$$
 
-/**
- * Replaces 'screenshot' by 'AutoCrop' if present in [fileName], otherwise adds it as prefix
- */
 fun cropFileName(fileName: String): String =
-    "${fileName}_AutoCropped"
+    fileName.split(".").run {
+        "${first()}_AutoCropped.${last()}"
+    }
 
 //$$$$$$$$$$$$$$$$$$$$$$
 // Screenshot Deletion $

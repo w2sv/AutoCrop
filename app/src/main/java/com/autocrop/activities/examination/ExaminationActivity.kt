@@ -1,15 +1,15 @@
 package com.autocrop.activities.examination
 
 import android.content.Intent
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.comparison.ComparisonFragment
-import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
-import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
 import com.autocrop.activities.examination.fragments.croppager.CropPagerFragment
 import com.autocrop.activities.examination.fragments.croppager.views.MenuInflationButton.Companion.MANUAL_CROP_REQUEST_CODE
-import com.autocrop.activities.main.fragments.about.AboutFragment
+import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
+import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
 import com.autocrop.dataclasses.Crop
 import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
@@ -91,20 +91,22 @@ class ExaminationActivity :
         )
     }
 
-    override fun onBackPressed(){
-        currentFragment().let {
-            when (it) {
-                is ComparisonFragment -> {
-                    it.prepareExitTransition()
-                    supportFragmentManager.popBackStack()
+    override val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            currentFragment().let {
+                when (it) {
+                    is ComparisonFragment -> {
+                        it.prepareExitTransition()
+                        supportFragmentManager.popBackStack()
+                    }
+                    is SaveAllFragment -> {
+                        snacky("Wait until crops have been saved")
+                            .setIcon(R.drawable.ic_baseline_front_hand_24)
+                            .buildAndShow()
+                    }
+                    is CropPagerFragment -> handleBackPress()
+                    else -> Unit
                 }
-                is SaveAllFragment -> {
-                    snacky("Wait until crops have been saved")
-                        .setIcon(R.drawable.ic_baseline_front_hand_24)
-                        .buildAndShow()
-            }
-                is CropPagerFragment -> handleBackPress()
-                else -> Unit
             }
         }
     }

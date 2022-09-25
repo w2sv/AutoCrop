@@ -8,8 +8,9 @@ internal class ImageFileIOKtTest {
 
     @ParameterizedTest
     @CsvSource(
-        "screenshot234.png, AutoCrop234.png",
-        "234.png, AutoCrop_234.png"
+        "screenshot234.png, screenshot234_AutoCropped.png",
+        "234.png, 234_AutoCropped.png",
+        "234.jpg, 234_AutoCropped.jpg",
     )
     fun cropFileNameEquality(fileName: String, expected: String) {
         Assertions.assertEquals(expected, cropFileName(fileName))

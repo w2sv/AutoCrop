@@ -2,6 +2,7 @@ package com.autocrop.activities.cropping
 
 import android.net.Uri
 import android.os.Build
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.fragments.cropping.CroppingFragment
@@ -29,11 +30,13 @@ class CroppingActivity :
      * Directly [startMainActivity] if [CroppingFailedFragment] visible,
      * otherwise only upon confirmed back press
      */
-    override fun onBackPressed() {
-        when (currentFragment()){
-            is CroppingFailedFragment -> startMainActivity()
-            is CroppingFragment -> handleBackPress()
-            else -> Unit
+    override val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            when (currentFragment()){
+                is CroppingFailedFragment -> startMainActivity()
+                is CroppingFragment -> handleBackPress()
+                else -> Unit
+            }
         }
     }
 

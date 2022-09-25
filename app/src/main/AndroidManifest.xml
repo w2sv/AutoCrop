@@ -32,7 +32,7 @@
         android:icon="@mipmap/logo"
         android:roundIcon="@mipmap/logo_round"
 
-        android:theme="@style/Theme.App.Splash"
+        android:theme="@style/Theme.App.Main"
 
         android:requestLegacyExternalStorage="true"
 
@@ -41,17 +41,12 @@
         android:appCategory="image"
         tools:targetApi="o">
 
-        <!-- Google AdMob -->
-
-<!--        <meta-data-->
-<!--            android:name="com.google.android.gms.ads.APPLICATION_ID"-->
-<!--            android:value="ca-app-pub-1494255973790385~2659692781"/>-->
-
         <!-- Activities -->
 
         <activity
             android:name="com.autocrop.activities.main.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.App.Splash">
 
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
