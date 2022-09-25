@@ -70,20 +70,19 @@ internal class BidirectionalViewPagerDataSetTest {
 
     @ParameterizedTest
     @CsvSource(
-        "4, 8762, 5, 8763",
-        // "4, 8762, 4, 8761",  TODO
-        "4, 8762, 3, 8763",
+        "4, 5, 1",
+        "4, 3, 1",
+        "4, 4, -1",
     )
     fun subsequentViewPosition(
-        removePosition: Int,
-        viewPosition: Int,
         tailPosition: Int,
+        removePosition: Int,
         expected: Int
     ) {
-        getDataSet().apply { this.tailPosition = tailPosition }
+        val dataSet = getDataSet().apply { this.tailPosition = tailPosition }
         Assertions.assertEquals(
             expected,
-            dataSet.subsequentViewPosition(viewPosition, removePosition)
+            dataSet.viewPositionIncrement(removePosition)
         )
     }
 
@@ -133,7 +132,7 @@ internal class BidirectionalViewPagerDataSetTest {
         ].hashCode()
 
         val newViewPagerPosition: Int =
-            dataSet.subsequentViewPosition(viewPosition, correspondingPosition)
+            viewPosition + dataSet.viewPositionIncrement(correspondingPosition)
         val newViewPagerPositionHash =
             dataSet.atCorrespondingPosition(newViewPagerPosition).hashCode()
 

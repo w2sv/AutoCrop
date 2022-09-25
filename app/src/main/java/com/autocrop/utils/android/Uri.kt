@@ -4,8 +4,8 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import java.io.File
 
-val Uri.fileName: String
-    get() = File(path!!).name  // TODO: lastPathSegment ?
+fun Uri.fileName(): String =
+    File(path!!).name  // TODO: lastPathSegment ?
 
 fun buildDocumentUriFromTreeUri(treeUri: Uri): Uri =
     DocumentsContract.buildDocumentUriUsingTree(

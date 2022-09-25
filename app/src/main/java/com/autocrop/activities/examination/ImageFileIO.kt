@@ -34,7 +34,7 @@ fun Context.processCropBundle(
 
     val cropSavingResult = contentResolver.saveBitmap(
         cropBundle.crop.bitmap,
-        cropFileName(cropBundle.screenshot.uri.fileName),
+        cropFileName(cropBundle.screenshot.uri.fileName()),
         validSaveDirDocumentUri
     )
     val screenshotDeletionResult = if (deleteScreenshot)

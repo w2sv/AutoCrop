@@ -36,8 +36,8 @@ open class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
      *
      * @return if removing at tail -> preceding view, otherwise subsequent one
      */
-    fun subsequentViewPosition(viewPosition: Int, removePosition: Int): Int =
-        viewPosition + (tailPosition != removePosition).toNonZeroInt()
+    fun viewPositionIncrement(removePosition: Int): Int =
+        (tailPosition != removePosition).toNonZeroInt()
 
     /**
      * - Removes element at [removePosition]

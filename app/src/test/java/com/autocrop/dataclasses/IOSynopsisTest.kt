@@ -1,7 +1,6 @@
 package com.autocrop.dataclasses
 
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
@@ -11,7 +10,7 @@ internal class IOSynopsisTest {
         "54, 64, some:hyyyper SickIdentifier BroBro",
         "82, 0, dir",
         "0, 0, dir",
-        "127, 127, dir",
+        "21321, 98273432, dirüüüüüüüüüüü",
     )
     fun encodingAndDecoding(nSavedCrops: Int, nDeletedScreenshots: Int, dirIdentifier: String) {
         val decodedIOSynopsis = IOSynopsis.fromByteArray(

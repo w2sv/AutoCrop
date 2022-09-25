@@ -34,7 +34,7 @@ class CropPagerProxy(private val viewPager2: ViewPager2, private val viewModel: 
      * • update pageIndex dependent views
      */
     fun removeView(dataSetPosition: Int) {
-        val subsequentViewPosition = viewModel.dataSet.subsequentViewPosition(viewPager2.currentItem, dataSetPosition)
+        val subsequentViewPosition = viewPager2.currentItem + viewModel.dataSet.viewPositionIncrement(dataSetPosition)
 
         // scroll to newViewPosition with blocked pageDependentViewUpdating
         viewModel.dataSet.currentPosition.blockSubsequentUpdate()
