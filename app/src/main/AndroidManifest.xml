@@ -50,28 +50,21 @@
         <!-- Activities -->
 
         <activity
-            android:name="com.autocrop.activities.splash.FuckTheNewSplashApiActivity"
+            android:name="com.autocrop.activities.main.MainActivity"
             android:exported="true">
 
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name="com.autocrop.activities.main.MainActivity"
-            android:theme="@style/Theme.App.Main">
 
         </activity>
 
         <activity
-            android:name="com.autocrop.activities.cropping.CroppingActivity"
-            android:theme="@style/Theme.App.Main" />
+            android:name="com.autocrop.activities.cropping.CroppingActivity" />
 
         <activity
-            android:name="com.autocrop.activities.examination.ExaminationActivity"
-            android:theme="@style/Theme.App.Main" />
+            android:name="com.autocrop.activities.examination.ExaminationActivity" />
     </application>
 
 </manifest>

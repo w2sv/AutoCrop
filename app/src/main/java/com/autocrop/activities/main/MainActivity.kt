@@ -1,8 +1,10 @@
 package com.autocrop.activities.main
 
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.SpannableStringBuilder
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.text.color
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.IntentExtraIdentifier
@@ -12,11 +14,11 @@ import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.preferencesInstances
 import com.autocrop.ui.controller.activity.ApplicationActivity
-import com.autocrop.utils.kotlin.BlankFun
-import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.autocrop.utils.android.buildAndShow
 import com.autocrop.utils.android.getThemedColor
 import com.autocrop.utils.android.snacky
+import com.autocrop.utils.kotlin.BlankFun
+import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.w2sv.autocrop.R
 import timber.log.Timber
@@ -26,6 +28,12 @@ class MainActivity :
         FlowFieldFragment::class.java,
         MainActivityViewModel::class,
         accessedPreferenceInstances = preferencesInstances) {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+
+        super.onCreate(savedInstanceState)
+    }
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
         MainActivityViewModelFactory(

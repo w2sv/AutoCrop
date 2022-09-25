@@ -118,7 +118,7 @@
         android:layout_marginBottom="70dp"
         android:layout_marginHorizontal="30dp"
 
-        android:text="@string/removed"
+        android:text="@string/remove"
         android:textSize="13sp"
         android:textColor="@color/light_gray"/>
 

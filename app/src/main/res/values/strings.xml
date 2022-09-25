@@ -7,7 +7,7 @@
     <string name="crops_processing_in_progress">Processing crops…</string>
     <string name="cropping_failure">No cropping borders found</string>
     <string name="cancel_autoscroll">Cancel Scroll</string>
-    <string name="Removed">removed</string>
+    <string name="remove">Removed</string>
     <string name="cropping_failure_instruction_text_view">Make sure the selected screenshots comprise a continuous monochromatic border both above and below the core image area</string>
 
     <string name="version">Version: %1$s</string>

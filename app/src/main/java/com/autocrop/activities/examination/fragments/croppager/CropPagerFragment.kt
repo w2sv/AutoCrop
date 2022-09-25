@@ -35,10 +35,10 @@ import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.ExaminationFragmentViewpagerBinding
+import com.w2sv.autocrop.databinding.ExaminationFragmentCroppagerBinding
 
 class CropPagerFragment :
-    ExaminationActivityFragment<ExaminationFragmentViewpagerBinding>(ExaminationFragmentViewpagerBinding::class.java) {
+    ExaminationActivityFragment<ExaminationFragmentCroppagerBinding>(ExaminationFragmentCroppagerBinding::class.java) {
 
     private val viewModel by viewModels<ViewPagerViewModel>(::requireActivity)
     private lateinit var viewPagerProxy: CropPagerProxy
