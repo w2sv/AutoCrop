@@ -3,7 +3,6 @@
     <style name="Theme.App.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/magenta_bright</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/logo_foreground</item>
-        <item name="windowSplashScreenAnimationDuration">500</item>
         <item name="postSplashScreenTheme">@style/Theme.App.Main</item>
     </style>
 
