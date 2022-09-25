@@ -31,7 +31,6 @@ class MainActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
-
         super.onCreate(savedInstanceState)
     }
 
