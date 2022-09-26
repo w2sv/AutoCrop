@@ -20,7 +20,7 @@ import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.preferences.BooleanPreferences
-import com.autocrop.utils.android.MimeTypes
+import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.w2sv.autocrop.R
 import de.mannodermaus.junit5.ActivityScenarioExtension
 import org.hamcrest.CoreMatchers.allOf
@@ -76,7 +76,7 @@ internal class MainActivityTest {
 
             intended(
                 allOf(
-                    hasType(MimeTypes.IMAGE),
+                    hasType(IMAGE_MIME_TYPE),
                     hasAction(Intent.ACTION_PICK),
                     hasExtraWithKey(Intent.EXTRA_ALLOW_MULTIPLE)
                 )
@@ -261,7 +261,7 @@ internal class CropSharingButtonTest{
                 hasExtra(
                     equalTo(Intent.EXTRA_INTENT), allOf(
                         hasExtra(Intent.EXTRA_STREAM, cropSavingUris),
-                        hasType(MimeTypes.IMAGE),
+                        hasType(IMAGE_MIME_TYPE),
                         hasAction(Intent.ACTION_SEND_MULTIPLE)
                     )
                 )
