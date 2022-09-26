@@ -58,7 +58,7 @@ internal class MainActivityTest {
         scenario.onActivity {
             it.onBackPressed()
             Handler(Looper.getMainLooper()).postDelayed(
-                { Assert.assertTrue(it.isDestroyed) },
+                { Assertions.assertTrue(it.isFinishing) },
                 500
             )
         }
@@ -234,7 +234,10 @@ internal class CropSharingButtonTest{
     @RegisterExtension
     val scenarioExtension = ActivityScenarioExtension.launch<MainActivity>(
         Intent(ApplicationProvider.getApplicationContext(), MainActivity::class.java)
-            .putParcelableArrayListExtra(IntentExtraIdentifier.CROP_SAVING_URIS, cropSavingUris)
+            .putParcelableArrayListExtra(
+                IntentExtraIdentifier.CROP_SAVING_URIS,
+                cropSavingUris
+            )
     )
 
     private val button: ViewInteraction
