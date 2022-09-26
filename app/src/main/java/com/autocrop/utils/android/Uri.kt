@@ -2,10 +2,6 @@ package com.autocrop.utils.android
 
 import android.net.Uri
 import android.provider.DocumentsContract
-import java.io.File
-
-fun Uri.fileName(): String =
-    File(path!!).name  // TODO: lastPathSegment ?
 
 fun buildDocumentUriFromTreeUri(treeUri: Uri): Uri =
     DocumentsContract.buildDocumentUriUsingTree(

@@ -31,6 +31,9 @@ import utils.espresso.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class MainActivityTest {
+    @JvmField
+    @RegisterExtension
+    val scenarioExtension = ActivityScenarioExtension.launch<MainActivity>()
 
     @BeforeAll
     fun grantPermissionsIfRequired(){
@@ -43,25 +46,10 @@ internal class MainActivityTest {
                 .requestPermissions()
     }
 
-    @JvmField
-    @RegisterExtension
-    val scenarioExtension = ActivityScenarioExtension.launch<MainActivity>()
-
     @Test
     fun canvasContainerVisible() {
         viewInteractionById(R.id.canvas_container)
             .check(isCompletelyDisplayed())
-    }
-
-    @Test
-    fun appExit(scenario: ActivityScenario<MainActivity>){
-        scenario.onActivity {
-            it.onBackPressed()
-            Handler(Looper.getMainLooper()).postDelayed(
-                { Assertions.assertTrue(it.isFinishing) },
-                500
-            )
-        }
     }
 
     @Nested
@@ -218,6 +206,17 @@ internal class MainActivityTest {
                     }
                 }
             }
+        }
+    }
+
+    @Test
+    fun appExit(scenario: ActivityScenario<MainActivity>){
+        scenario.onActivity {
+            it.onBackPressed()
+            Handler(Looper.getMainLooper()).postDelayed(
+                { Assertions.assertTrue(it.isFinishing) },
+                500
+            )
         }
     }
 }

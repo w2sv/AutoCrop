@@ -34,7 +34,7 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
             0,
             sharedViewModel.cropBundle.crop.rect.top,
             0,
-            sharedViewModel.cropBundle.bottomOffset
+            sharedViewModel.cropBundle.crop.bottomOffset
         )
     }
 
@@ -74,7 +74,7 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
                 0,
                 sharedViewModel.cropBundle.crop.rect.top,
                 0,
-                sharedViewModel.cropBundle.bottomOffset
+                sharedViewModel.cropBundle.crop.bottomOffset
             )
         }
     }

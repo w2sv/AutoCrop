@@ -12,7 +12,7 @@ import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.ui.elements.view.animate
 import com.autocrop.ui.elements.view.show
-import com.autocrop.utils.android.MimeTypes
+import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 
@@ -47,7 +47,7 @@ class CropSharingButton(context: Context, attrs: AttributeSet):
                     Intent().apply {
                         action = Intent.ACTION_SEND_MULTIPLE
                         putParcelableArrayListExtra(Intent.EXTRA_STREAM, cropWriteUris)
-                        type = MimeTypes.IMAGE
+                        type = IMAGE_MIME_TYPE
                     },
                     null
                 )

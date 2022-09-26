@@ -1,11 +1,6 @@
 package com.lyrebirdstudio.croppylib.utils.extensions
 
-import java.math.RoundingMode
-import java.text.DecimalFormat
+import java.util.Locale
 
-fun Float.rounded(nDecimalPlaces: Int) =
-    DecimalFormat("#.${"#".repeat(nDecimalPlaces)}")
-        .apply {
-            roundingMode = RoundingMode.HALF_EVEN
-        }
-        .format(this)
+fun Float.rounded(nDecimalPlaces: Int): String =
+    "%.${nDecimalPlaces}f".format(this, Locale.ENGLISH)

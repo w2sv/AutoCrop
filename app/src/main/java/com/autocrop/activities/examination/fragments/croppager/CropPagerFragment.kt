@@ -1,6 +1,7 @@
 package com.autocrop.activities.examination.fragments.croppager
 
 import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -30,6 +31,7 @@ import com.autocrop.ui.elements.view.show
 import com.autocrop.utils.android.buildAndShow
 import com.autocrop.utils.android.getThemedColor
 import com.autocrop.utils.android.livedata.asMutable
+import com.autocrop.utils.android.openBitmap
 import com.autocrop.utils.android.snacky
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
@@ -202,10 +204,16 @@ class CropPagerFragment :
     }
 
     /**
-     * Forward [adjustedCrop] to [viewModel].dataSet and notify viewPager.adapter
+     * Set new [Crop] in [viewModel].dataSet.currentPosition and notify [CropPagerAdapter]
      */
-    fun processAdjustedCrop(adjustedCrop: Crop) {
-        viewModel.dataSet.replaceCurrentCrop(adjustedCrop)
+    fun processAdjustedCropRect(adjustedRect: Rect) {
+        with(viewModel.dataSet.currentValue) {
+            crop = Crop.fromScreenshot(
+                requireContext().contentResolver.openBitmap(screenshot.uri),
+                screenshot.diskUsage,
+                adjustedRect
+            )
+        }
 
         (binding.viewPager.adapter!! as CropPagerAdapter).notifyItemChanged(
             binding.viewPager.currentItem,

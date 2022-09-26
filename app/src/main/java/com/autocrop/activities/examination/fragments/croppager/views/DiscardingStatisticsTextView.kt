@@ -9,12 +9,12 @@ class DiscardingStatisticsTextView(context: Context, attr: AttributeSet):
     PageDependentTextView(context, attr) {
 
     override fun update(position: Int) {
-        with(sharedViewModel.dataSet[position]) {
+        with(sharedViewModel.dataSet[position].crop) {
             text = SpannableStringBuilder()
                 .append(template)
                 .bold { append(" ${discardedPercentage}%") }
                 .append("=")
-                .bold { append("${discardedFileSize}kb") }
+                .bold { append(discardedFileSizeFormatted) }
         }
     }
 }

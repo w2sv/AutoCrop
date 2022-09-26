@@ -10,7 +10,7 @@ import com.autocrop.utils.kotlin.BlankFun
 import com.autocrop.utils.kotlin.delegates.Consumable
 
 class ViewPagerViewModel : ViewModel(){
-    val dataSet = CropBundleDataSet(ExaminationActivityViewModel.cropBundles)
+    val dataSet = BidirectionalViewPagerDataSet(ExaminationActivityViewModel.cropBundles)
 
     fun initialViewPosition(): Int =
             (BidirectionalRecyclerViewAdapter.N_VIEWS / 2).let { halvedMaxViews ->

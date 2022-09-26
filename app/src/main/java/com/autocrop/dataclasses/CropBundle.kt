@@ -1,43 +1,30 @@
 package com.autocrop.dataclasses
 
+import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.net.Uri
+import android.provider.MediaStore
 import com.autocrop.activities.cropping.fragments.cropping.cropped
-import com.autocrop.utils.android.approximateJpegSize
+import com.autocrop.utils.android.ImageMimeType
+import com.autocrop.utils.android.queryMediaColumns
+import com.lyrebirdstudio.croppylib.utils.extensions.rounded
 import kotlin.math.roundToInt
 
 /**
  * Encapsulation of data associated with crop
  */
-data class CropBundle(val screenshot: Screenshot, val crop: Crop) {
-    val discardedPercentage: Int
-    val discardedFileSize: Int
-
-    init {
-        ((screenshot.height - crop.bitmap.height).toFloat() / screenshot.height.toFloat()).let { discardedPercentageF ->
-            discardedPercentage = (discardedPercentageF * 100).roundToInt()
-            discardedFileSize = (discardedPercentageF * screenshot.approximateJpegSize).roundToInt()
-        }
-    }
-
+data class CropBundle(val screenshot: Screenshot, var crop: Crop) {
     companion object{
-        fun assemble(screenshotUri: Uri, screenshot: Bitmap, cropRect: Rect): CropBundle =
+        fun assemble(screenshot: Screenshot, screenshotBitmap: Bitmap, cropRect: Rect): CropBundle =
             CropBundle(
-                Screenshot(
-                    screenshotUri,
-                    screenshot.height,
-                    screenshot.approximateJpegSize()
-                ),
+                screenshot,
                 Crop.fromScreenshot(
-                    screenshot,
+                    screenshotBitmap,
+                    screenshot.diskUsage,
                     cropRect
                 )
             )
-    }
-
-    val bottomOffset: Int by lazy {
-        screenshot.height - crop.rect.bottom
     }
 
     fun identifier(): String = hashCode().toString()
@@ -45,16 +32,58 @@ data class CropBundle(val screenshot: Screenshot, val crop: Crop) {
 
 data class Screenshot(
     val uri: Uri,
-    val height: Int,
-    val approximateJpegSize: Int
-)
-
-data class Crop(val bitmap: Bitmap, val rect: Rect) {
+    val diskUsage: Long,
+    val fileName: String,
+    val parsedMimeType: ImageMimeType){
 
     companion object{
-        fun fromScreenshot(screenshot: Bitmap, rect: Rect) = Crop(
-            screenshot.cropped(rect),
-            rect
-        )
+        fun fromContentResolver(contentResolver: ContentResolver, uri: Uri): Screenshot{
+            val mediaColumns = contentResolver.queryMediaColumns(
+                uri,
+                arrayOf(
+                    MediaStore.Images.Media.SIZE,
+                    MediaStore.Images.Media.DISPLAY_NAME,
+                    MediaStore.Images.Media.MIME_TYPE
+                )
+            )
+
+            return Screenshot(
+                uri,
+                mediaColumns[0].toLong(),
+                mediaColumns[1],
+                ImageMimeType.parse(mediaColumns[2]),
+            )
+        }
+    }
+}
+
+// TODO: write tests
+data class Crop(
+    val bitmap: Bitmap,
+    val rect: Rect,
+    val discardedPercentage: Int,
+    val discardedKB: Long,
+    val bottomOffset: Int) {
+
+    val discardedFileSizeFormatted: String by lazy {
+        if (discardedKB >= 1000)
+            "${(discardedKB.toFloat() / 1000).rounded(1)}mb"
+        else
+            "${discardedKB}kb"
+    }
+
+    companion object{
+        fun fromScreenshot(screenshotBitmap: Bitmap, screenshotDiskUsage: Long, rect: Rect): Crop{
+            val cropBitmap = screenshotBitmap.cropped(rect)
+            val discardedPercentageF = ((screenshotBitmap.height - cropBitmap.height).toFloat() / screenshotBitmap.height.toFloat())
+
+            return Crop(
+                cropBitmap,
+                rect,
+                (discardedPercentageF * 100).roundToInt(),
+                (discardedPercentageF * screenshotDiskUsage / 1000).roundToInt().toLong(),
+                screenshotBitmap.height - rect.bottom
+            )
+        }
     }
 }

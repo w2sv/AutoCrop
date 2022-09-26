@@ -7,8 +7,9 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import com.autocrop.dataclasses.CropBundle
-import com.autocrop.utils.kotlin.logBeforehand
 import com.autocrop.utils.android.*
+import com.autocrop.utils.kotlin.dateTimeNow
+import com.autocrop.utils.kotlin.logBeforehand
 import timber.log.Timber
 
 /**
@@ -30,11 +31,10 @@ fun Context.processCropBundle(
     validSaveDirDocumentUri: Uri?,
     deleteScreenshot: Boolean): Pair<SavingResult, DeletionResult?>{
 
-    println(cropBundle.screenshot)
-
     val cropSavingResult = contentResolver.saveBitmap(
         cropBundle.crop.bitmap,
-        cropFileName(cropBundle.screenshot.uri.fileName()),
+        cropBundle.screenshot.parsedMimeType,
+        cropFileName(cropBundle.screenshot.fileName),
         validSaveDirDocumentUri
     )
     val screenshotDeletionResult = if (deleteScreenshot)
@@ -51,7 +51,7 @@ fun Context.processCropBundle(
 
 fun cropFileName(fileName: String): String =
     fileName.split(".").run {
-        "${first()}_AutoCropped.${last()}"
+        "${first()}-AutoCropped_${dateTimeNow()}.${last()}"
     }
 
 //$$$$$$$$$$$$$$$$$$$$$$
@@ -84,4 +84,6 @@ private fun Uri.mediaUriWithAppendedId(context: Context): Uri =
 
 @RequiresApi(Build.VERSION_CODES.Q)
 private fun Context.mediaUriId(uri: Uri): Long =
-    contentResolver.queryImageFileMediaColumn(uri, MediaStore.Images.Media._ID).toLong()
+    contentResolver
+        .queryMediaColumn(uri, MediaStore.Images.Media._ID)
+        .toLong()

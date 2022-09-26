@@ -13,9 +13,10 @@ import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedF
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.dataclasses.CropBundle
+import com.autocrop.dataclasses.Screenshot
+import com.autocrop.utils.android.openBitmap
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.autocrop.utils.kotlin.logBeforehand
-import com.autocrop.utils.android.openBitmap
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CroppingFragmentBinding
 import kotlinx.coroutines.Job
@@ -51,7 +52,10 @@ class CroppingFragment
             cropRect(screenshotBitmap)?.let { cropRect ->
                 sharedViewModel.cropBundles.add(
                     CropBundle.assemble(
-                        uri,
+                        Screenshot.fromContentResolver(
+                            requireContext().contentResolver,
+                            uri
+                        ),
                         screenshotBitmap,
                         cropRect
                     )
