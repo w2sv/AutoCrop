@@ -8,12 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelLazy
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.preferences.PreferencesArray
 import com.autocrop.preferences.preferencesInstances
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.utils.android.extensions.getApplicationWideSharedPreferences
+import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import kotlin.reflect.KClass
 
 abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
@@ -92,5 +92,5 @@ fun Activity.startMainActivity(withReturnAnimation: Boolean = true, intentApplie
             }
     )
     if (withReturnAnimation)
-        ActivityTransitions.RETURN(this)
+        Animatoo.animateSwipeRight(this)
 }

@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.lifecycle.lifecycleScope
-import com.autocrop.activities.ActivityTransitions
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.fragments.CroppingActivityFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
@@ -14,9 +13,10 @@ import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.dataclasses.CropBundle
 import com.autocrop.dataclasses.Screenshot
-import com.autocrop.utils.android.openBitmap
+import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.autocrop.utils.kotlin.logBeforehand
+import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CroppingFragmentBinding
 import kotlinx.coroutines.Job
@@ -38,15 +38,18 @@ class CroppingFragment
         // launch croppingJob
         croppingJob = lifecycleScope.executeAsyncTask(
             ::cropImages,
-            { sharedViewModel.currentImageNumber.increment()},
+            { sharedViewModel.currentImageNumber.increment() },
             { startExaminationActivityOrInvokeCroppingFailureFragment() }
         )
     }
 
-    private suspend fun cropImages(publishProgress: suspend (Void?) -> Unit): Void?{
-        sharedViewModel.uris.subList(sharedViewModel.currentImageNumber.value!!, sharedViewModel.uris.size).forEach { uri ->
+    private suspend fun cropImages(publishProgress: suspend (Void?) -> Unit): Void? {
+        sharedViewModel.uris.subList(
+            sharedViewModel.currentImageNumber.value!!,
+            sharedViewModel.uris.size
+        ).forEach { uri ->
 
-            // attempt to crop image, upon success add resulting CropBundle to sharedViewModel
+            // attempt to crop image; upon success add CropBundle to sharedViewModel
             val screenshotBitmap = requireContext().contentResolver.openBitmap(uri)
 
             cropRect(screenshotBitmap)?.let { cropRect ->
@@ -72,21 +75,22 @@ class CroppingFragment
      * Starts either Examination- or MainActivity depending on whether or not any
      * of the selected images has been successfully cropRect
      */
-    private fun startExaminationActivityOrInvokeCroppingFailureFragment() = logBeforehand("Async Cropping task finished") {
-        if (sharedViewModel.cropBundles.isNotEmpty())
-            startExaminationActivity()
-        else
+    private fun startExaminationActivityOrInvokeCroppingFailureFragment() =
+        logBeforehand("Async Cropping task finished") {
+            if (sharedViewModel.cropBundles.isNotEmpty())
+                startExaminationActivity()
+            else
             // delay briefly to assure progress bar having reached 100% before UI change
-            Handler(Looper.getMainLooper()).postDelayed(
-                { fragmentHostingActivity.replaceCurrentFragmentWith(CroppingFailedFragment()) },
-                resources.getInteger(R.integer.delay_minimal).toLong()
-            )
-    }
+                Handler(Looper.getMainLooper()).postDelayed(
+                    { fragmentHostingActivity.replaceCurrentFragmentWith(CroppingFailedFragment()) },
+                    resources.getInteger(R.integer.delay_minimal).toLong()
+                )
+        }
 
     /**
      * Inherently sets [ExaminationActivityViewModel.cropBundles]
      */
-    private fun startExaminationActivity(){
+    private fun startExaminationActivity() {
         ExaminationActivityViewModel.cropBundles = sharedViewModel.cropBundles
 
         requireActivity().let { activity ->
@@ -96,7 +100,7 @@ class CroppingFragment
                     sharedViewModel.nDismissedImages
                 )
             )
-            ActivityTransitions.PROCEED(activity)
+            Animatoo.animateSwipeLeft(activity)
         }
     }
 
