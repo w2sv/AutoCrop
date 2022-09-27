@@ -2,7 +2,6 @@ package com.autocrop.activities.examination.fragments.comparison
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.InsetDrawable
 import android.util.AttributeSet
@@ -17,38 +16,36 @@ import com.autocrop.utils.android.livedata.toggle
 class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet){
 
-    val sharedViewModel by lazy{  // TODO
+    val viewModel by lazy{  // TODO
         ViewModelProvider(findViewTreeViewModelStoreOwner()!!)[ComparisonViewModel::class.java]
     }
 
     private val screenshot: Bitmap by lazy {
-        BitmapFactory.decodeStream(
-            context.contentResolver.openInputStream(
-                sharedViewModel.cropBundle.screenshot.uri
-            )
-        )
+        viewModel.cropBundle.screenshot.bitmap(context.contentResolver)
     }
+
+    private val cropMargins: Array<Int> by lazy {
+        arrayOf(0, viewModel.cropBundle.crop.rect.top, 0, viewModel.cropBundle.crop.bottomOffset)
+    }
+
     private val insetCropDrawable by lazy {
         InsetDrawable(
-            BitmapDrawable(resources, sharedViewModel.cropBundle.crop.bitmap),
-            0,
-            sharedViewModel.cropBundle.crop.rect.top,
-            0,
-            sharedViewModel.cropBundle.crop.bottomOffset
+            BitmapDrawable(resources, viewModel.cropBundle.crop.bitmap),
+            cropMargins[0], cropMargins[1], cropMargins[2], cropMargins[3]
         )
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        ViewCompat.setTransitionName(this, sharedViewModel.cropBundle.identifier())
+        ViewCompat.setTransitionName(this, viewModel.cropBundle.identifier())
 
         setOnClickListener{
-            sharedViewModel.displayScreenshot.toggle()
+            viewModel.displayScreenshot.toggle()
         }
 
-        sharedViewModel.displayScreenshot.observe(findViewTreeLifecycleOwner()!!){
-            set(it, sharedViewModel.enterTransitionCompleted)
+        viewModel.displayScreenshot.observe(findViewTreeLifecycleOwner()!!){
+            set(it, viewModel.enterTransitionCompleted)
         }
     }
 
@@ -62,7 +59,7 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     private fun setCrop(marginalized: Boolean = false){
         if (marginalized){
             layoutParams = marginalizedCropLayoutParams
-            setImageBitmap(sharedViewModel.cropBundle.crop.bitmap)
+            setImageBitmap(viewModel.cropBundle.crop.bitmap)
         }
         else
             setImageDrawable(insetCropDrawable)
@@ -70,12 +67,7 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
 
     private val marginalizedCropLayoutParams: RelativeLayout.LayoutParams by lazy {
         (layoutParams as RelativeLayout.LayoutParams).apply {
-            setMargins(
-                0,
-                sharedViewModel.cropBundle.crop.rect.top,
-                0,
-                sharedViewModel.cropBundle.crop.bottomOffset
-            )
+            setMargins(cropMargins[0], cropMargins[1], cropMargins[2], cropMargins[3])
         }
     }
 

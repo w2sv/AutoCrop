@@ -209,7 +209,7 @@ class CropPagerFragment :
     fun processAdjustedCropRect(adjustedRect: Rect) {
         with(viewModel.dataSet.currentValue) {
             crop = Crop.fromScreenshot(
-                requireContext().contentResolver.openBitmap(screenshot.uri),
+                screenshot.bitmap(requireContext().contentResolver),
                 screenshot.diskUsage,
                 adjustedRect
             )

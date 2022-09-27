@@ -35,16 +35,16 @@
     <!--    Page Indication Layout-->
 
     <RelativeLayout
+        android:id="@+id/page_indication_layout"
+
         android:layout_width="145dp"
         android:layout_height="wrap_content"
-
-        android:id="@+id/page_indication_layout"
 
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
 
         android:layout_marginTop="23dp"
-        android:layout_marginEnd="18dp">
+        android:layout_marginEnd="21dp">
 
         <!-- https://en.proft.me/2018/02/5/decorating-seekbar-android/ -->
 

@@ -2,6 +2,7 @@ package com.autocrop.dataclasses
 
 import android.content.ContentResolver
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.net.Uri
 import android.provider.MediaStore
@@ -55,6 +56,9 @@ data class Screenshot(
             )
         }
     }
+
+    fun bitmap(contentResolver: ContentResolver): Bitmap =
+        BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
 }
 
 // TODO: write tests
