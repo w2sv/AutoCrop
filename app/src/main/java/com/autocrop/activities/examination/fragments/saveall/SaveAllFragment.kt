@@ -24,7 +24,12 @@ class SaveAllFragment :
 
     private fun processRemainingCropBundles(deleteCorrespondingScreenshots: Boolean): Void? {
         ExaminationActivityViewModel.cropBundles.indices.forEach {
-            sharedViewModel.processCropBundle(it, deleteCorrespondingScreenshots, requireContext())
+            sharedViewModel.makeCropBundleProcessor(
+                it,
+                deleteCorrespondingScreenshots,
+                requireContext()
+            )
+                .invoke()
         }
         return null
     }

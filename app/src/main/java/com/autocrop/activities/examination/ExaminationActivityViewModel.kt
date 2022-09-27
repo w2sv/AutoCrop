@@ -4,11 +4,11 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.autocrop.dataclasses.CropBundle
-import com.autocrop.utils.kotlin.delegates.AutoSwitch
 import com.autocrop.utils.android.documentUriPathIdentifier
 import com.autocrop.utils.android.externalPicturesDir
+import com.autocrop.utils.kotlin.BlankFun
+import com.autocrop.utils.kotlin.delegates.AutoSwitch
 import kotlinx.coroutines.Job
-import timber.log.Timber
 
 class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?, val nDismissedScreenshots: Int)
     : ViewModel() {
@@ -33,28 +33,45 @@ class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?, va
     var nDeletedScreenshots = 0
 
     val savedCropUris = mutableListOf<Uri>()
-    val deletionQueryUris = mutableListOf<Uri>()
+    val screenshotDeletionInquiryUris = mutableListOf<Uri>()
 
-    fun processCropBundle(cropBundlesPosition: Int, deleteScreenshot: Boolean, context: Context){
-        val (savingResult, deletionResult) = context.processCropBundle(
-            cropBundles[cropBundlesPosition],
-            validSaveDirDocumentUri,
-            deleteScreenshot
+    fun makeCropBundleProcessor(cropBundlesPosition: Int,
+                                deleteScreenshot: Boolean,
+                                context: Context): BlankFun {
+        val cropBundle = cropBundles[cropBundlesPosition]
+
+        val addedScreenshotDeletionInquiryUri = addScreenshotDeletionInquiryUri(
+            deleteScreenshot,
+            context,
+            cropBundle.screenshot.uri
         )
 
-        savingResult.let{ (successful, uri) ->
-            if (successful)
-                savedCropUris.add(uri)
-        }
+        return {
+            val (savingResult, successfullyDeleted) = context.processCropBundle(
+                cropBundle,
+                validSaveDirDocumentUri,
+                deleteScreenshot && !addedScreenshotDeletionInquiryUri
+            )
 
-        deletionResult?.let { (successful, uri) ->
-            if (uri != null){
-                deletionQueryUris.add(uri)
-                Timber.i("Added $uri to deletionQueryScreenshotUris")
+            savingResult.let{ (successful, uri) ->
+                if (successful)
+                    savedCropUris.add(uri)
             }
-            else if (successful)
+
+            if (successfullyDeleted == true)
                 nDeletedScreenshots++
         }
+    }
+
+    private fun addScreenshotDeletionInquiryUri(deleteScreenshot: Boolean,
+                                                context: Context,
+                                                screenshotUri: Uri): Boolean{
+        if (deleteScreenshot)
+            context.imageDeletionInquiryUri(screenshotUri)?.let {
+                screenshotDeletionInquiryUris.add(it)
+                return true
+            }
+        return false
     }
 
     fun cropWriteDirIdentifier(): String =

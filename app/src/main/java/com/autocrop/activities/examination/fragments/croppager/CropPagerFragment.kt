@@ -72,17 +72,15 @@ class CropPagerFragment :
 
             if (saveCrop)
                 sharedViewModel.singularCropSavingJob = lifecycleScope.executeAsyncTask(
-                    {
-                        sharedViewModel.processCropBundle(
-                            dataSetPosition,
-                            BooleanPreferences.deleteScreenshots,
-                            requireContext()
-                        )
-                    }
+                    sharedViewModel.makeCropBundleProcessor(
+                        dataSetPosition,
+                        BooleanPreferences.deleteScreenshots,
+                        requireContext()
+                    )
                 )
 
             if (viewModel.dataSet.size == 1)
-                typedActivity.invokeSubsequentFragment()  // TODOOOOOOOOOOOOOOOOO
+                typedActivity.invokeSubsequentFragment()
             else
                 viewPagerProxy.removeView(dataSetPosition)
         }

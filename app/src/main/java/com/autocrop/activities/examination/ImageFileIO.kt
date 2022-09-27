@@ -26,16 +26,6 @@ import java.io.FileOutputStream
 import java.io.OutputStream
 
 /**
- * first := deletionSuccessful
- * second := [mediaUriWithAppendedId] whose deletion confirmation has to be inquired
- *
- * first == true -> second=null
- * first == false -> second?
- * second =! null -> first = false
- */
-typealias DeletionResult = Pair<Boolean, Uri?>
-
-/**
  * first := savingSuccessful
  * second := writeUri
  */
@@ -48,7 +38,7 @@ typealias SavingResult = Pair<Boolean, Uri>
 fun Context.processCropBundle(
     cropBundle: CropBundle,
     validSaveDirDocumentUri: Uri?,
-    deleteScreenshot: Boolean): Pair<SavingResult, DeletionResult?>{
+    deleteScreenshot: Boolean): Pair<SavingResult, Boolean?>{
 
     val cropSavingResult = contentResolver.saveBitmap(
         cropBundle.crop.bitmap,
@@ -56,13 +46,33 @@ fun Context.processCropBundle(
         cropFileName(cropBundle.screenshot.fileName, cropBundle.screenshot.parsedMimeType),
         validSaveDirDocumentUri
     )
-    val screenshotDeletionResult = if (deleteScreenshot)
-        attemptImageFileDeletion(cropBundle.screenshot.uri)
+    val successfullyDeleted = if (deleteScreenshot)
+        contentResolver.deleteImage(cropBundle.screenshot.uri)
     else
         null
 
-    return cropSavingResult to screenshotDeletionResult
+    return cropSavingResult to successfullyDeleted
 }
+
+fun Context.imageDeletionInquiryUri(uri: Uri): Uri? =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+        uri.mediaUriWithAppendedId(this)
+            .also { Timber.i("Returned mediaUriWithAppendedId: $it") }
+    else
+        null
+
+@RequiresApi(Build.VERSION_CODES.Q)
+private fun Uri.mediaUriWithAppendedId(context: Context): Uri =
+    ContentUris.withAppendedId(
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+        context.mediaUriId(this)
+    )
+
+@RequiresApi(Build.VERSION_CODES.Q)
+private fun Context.mediaUriId(uri: Uri): Long =
+    contentResolver
+        .queryMediaColumn(uri, MediaStore.Images.Media._ID)
+        .toLong()
 
 fun cropFileName(fileName: String, mimeType: ImageMimeType): String =
     "${fileNameWOExtension(fileName)}-AutoCropped_${dateTimeNow()}.${mimeType.fileExtension}"
@@ -137,34 +147,3 @@ private object GetOutputStream{
         }
     }
 }
-
-//$$$$$$$$$$$$$$$$$$$$$$
-// Screenshot Deletion $
-//$$$$$$$$$$$$$$$$$$$$$$
-
-/**
- * Starting from [Build.VERSION_CODES.R] deletion of external files requires explicit user permission,
- * therefore in that case merely returns retrieved [mediaUriWithAppendedId] for querying deletion confirmation
- * later on. Otherwise deletes file immediately
- */
-private fun Context.attemptImageFileDeletion(uri: Uri): DeletionResult = logBeforehand("attemptImageFileDeletion for $uri") {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        false to uri.mediaUriWithAppendedId(this)
-            .also { Timber.i("Returned mediaUriWithAppendedId: $it") }
-    else
-        contentResolver.deleteImage(uri) to null
-            .also { Timber.i("Triggered immediate image file deletion") }
-}
-
-@RequiresApi(Build.VERSION_CODES.Q)
-private fun Uri.mediaUriWithAppendedId(context: Context): Uri =
-    ContentUris.withAppendedId(
-        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-        context.mediaUriId(this)
-    )
-
-@RequiresApi(Build.VERSION_CODES.Q)
-private fun Context.mediaUriId(uri: Uri): Long =
-    contentResolver
-        .queryMediaColumn(uri, MediaStore.Images.Media._ID)
-        .toLong()

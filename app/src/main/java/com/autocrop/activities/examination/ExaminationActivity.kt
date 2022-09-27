@@ -72,7 +72,7 @@ class ExaminationActivity :
      */
     fun invokeSubsequentFragment(){
         replaceCurrentFragmentWith(
-            if (sharedViewModel.deletionQueryUris.isNotEmpty())
+            if (sharedViewModel.screenshotDeletionInquiryUris.isNotEmpty())
                 ScreenshotDeletionQueryFragment()
             else
                 AppTitleFragment(),
