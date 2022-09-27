@@ -4,11 +4,13 @@ import android.graphics.Bitmap
 
 const val IMAGE_MIME_TYPE = "image/*"
 
-enum class ImageMimeType(val string: String, val compressFormat: Bitmap.CompressFormat){
-    JPEG("image/jpeg", Bitmap.CompressFormat.JPEG),
-    PNG("image/png", Bitmap.CompressFormat.PNG),
+enum class ImageMimeType(val fileExtension: String,val compressFormat: Bitmap.CompressFormat){
+    JPEG("jpg", Bitmap.CompressFormat.JPEG),
+    PNG("png", Bitmap.CompressFormat.PNG),
     @Suppress("DEPRECATION")
-    WEBP("image/webp", Bitmap.CompressFormat.WEBP);
+    WEBP("webp", Bitmap.CompressFormat.WEBP);
+
+    val string: String get() = "image/$fileExtension"
 
     companion object{
         fun parse(type: String): ImageMimeType =

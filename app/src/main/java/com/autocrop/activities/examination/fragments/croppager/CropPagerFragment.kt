@@ -82,11 +82,7 @@ class CropPagerFragment :
                 )
 
             if (viewModel.dataSet.size == 1)
-                sharedViewModel.singularCropSavingJob?.run{
-                    invokeOnCompletion {
-                        typedActivity.invokeSubsequentFragment()
-                    }
-                } ?: typedActivity.invokeSubsequentFragment()
+                typedActivity.invokeSubsequentFragment()  // TODOOOOOOOOOOOOOOOOO
             else
                 viewPagerProxy.removeView(dataSetPosition)
         }

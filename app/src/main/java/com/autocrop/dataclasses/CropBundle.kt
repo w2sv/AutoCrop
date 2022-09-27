@@ -8,7 +8,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import com.autocrop.activities.cropping.fragments.cropping.cropped
 import com.autocrop.utils.android.ImageMimeType
-import com.autocrop.utils.android.queryMediaColumns
+import com.autocrop.utils.android.extensions.queryMediaColumns
 import com.lyrebirdstudio.croppylib.utils.extensions.rounded
 import kotlin.math.roundToInt
 
@@ -54,6 +54,7 @@ data class Screenshot(
                 mediaColumns[1],
                 ImageMimeType.parse(mediaColumns[2]),
             )
+                .also { println("Parsed screenshot: $it") }
         }
     }
 

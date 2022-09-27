@@ -13,10 +13,11 @@ import android.provider.DocumentsContract
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import com.autocrop.dataclasses.CropBundle
-import com.autocrop.utils.android.*
+import com.autocrop.utils.android.ImageMimeType
 import com.autocrop.utils.android.extensions.compressToStream
 import com.autocrop.utils.android.extensions.deleteImage
 import com.autocrop.utils.android.extensions.queryMediaColumn
+import com.autocrop.utils.android.externalPicturesDir
 import com.autocrop.utils.kotlin.dateTimeNow
 import com.autocrop.utils.kotlin.logBeforehand
 import timber.log.Timber
@@ -52,7 +53,7 @@ fun Context.processCropBundle(
     val cropSavingResult = contentResolver.saveBitmap(
         cropBundle.crop.bitmap,
         cropBundle.screenshot.parsedMimeType,
-        cropFileName(cropBundle.screenshot.fileName),
+        cropFileName(cropBundle.screenshot.fileName, cropBundle.screenshot.parsedMimeType),
         validSaveDirDocumentUri
     )
     val screenshotDeletionResult = if (deleteScreenshot)
@@ -63,10 +64,12 @@ fun Context.processCropBundle(
     return cropSavingResult to screenshotDeletionResult
 }
 
-fun cropFileName(fileName: String): String =
-    fileName.split(".").run {
-        "${first()}-AutoCropped_${dateTimeNow()}.${last()}"
-    }
+fun cropFileName(fileName: String, mimeType: ImageMimeType): String =
+    "${fileNameWOExtension(fileName)}-AutoCropped_${dateTimeNow()}.${mimeType.fileExtension}"
+
+fun fileNameWOExtension(fileName: String): String =
+    fileName.replaceAfterLast(".", "")
+        .run { slice(0 until lastIndex) }
 
 //$$$$$$$$$$$$$$
 // Crop Saving $
@@ -96,7 +99,7 @@ private object GetOutputStream{
             parentDocumentUri != null -> fromParentDocument(fileName, contentResolver, parentDocumentUri, mimeType)
             Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q -> untilQ(fileName)
             else -> @RequiresApi(Build.VERSION_CODES.Q) {
-                postQ(fileName, contentResolver)
+                postQ(fileName, contentResolver, mimeType)
             }
         }
 
@@ -121,13 +124,13 @@ private object GetOutputStream{
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun postQ(fileName: String, contentResolver: ContentResolver): Pair<OutputStream, Uri> = logBeforehand("GetOutputStream.postQ") {
+    private fun postQ(fileName: String, contentResolver: ContentResolver, mimeType: ImageMimeType): Pair<OutputStream, Uri> = logBeforehand("GetOutputStream.postQ") {
         contentResolver.insert(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
                 put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-                put(MediaStore.MediaColumns.MIME_TYPE, ImageMimeType.JPEG.string)
+                put(MediaStore.MediaColumns.MIME_TYPE, mimeType.string)
             }
         )!!.let { newUri ->
             contentResolver.openOutputStream(newUri)!! to newUri

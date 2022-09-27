@@ -18,7 +18,15 @@ class AppTitleFragment
                 Techniques.Tada
             )
                 .random(),
-            onEnd = typedActivity::returnToMainActivity
+            onEnd = ::waitTilCroppingJobFinishedOrReturnToMainActivityDirectly
         )
+    }
+
+    private fun waitTilCroppingJobFinishedOrReturnToMainActivityDirectly(){
+        sharedViewModel.singularCropSavingJob?.run{
+            invokeOnCompletion {
+                typedActivity.returnToMainActivity()
+            }
+        } ?: typedActivity.returnToMainActivity()
     }
 }
