@@ -2,7 +2,6 @@ package com.autocrop.activities.examination
 
 import android.annotation.SuppressLint
 import android.content.ContentResolver
-import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
@@ -16,7 +15,6 @@ import com.autocrop.dataclasses.CropBundle
 import com.autocrop.utils.android.ImageMimeType
 import com.autocrop.utils.android.extensions.compressToStream
 import com.autocrop.utils.android.extensions.deleteImage
-import com.autocrop.utils.android.extensions.queryMediaColumn
 import com.autocrop.utils.android.externalPicturesDir
 import com.autocrop.utils.kotlin.dateTimeNow
 import com.autocrop.utils.kotlin.logBeforehand
@@ -53,26 +51,6 @@ fun Context.processCropBundle(
 
     return cropSavingResult to successfullyDeleted
 }
-
-fun Context.imageDeletionInquiryUri(uri: Uri): Uri? =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        uri.mediaUriWithAppendedId(this)
-            .also { Timber.i("Returned mediaUriWithAppendedId: $it") }
-    else
-        null
-
-@RequiresApi(Build.VERSION_CODES.Q)
-private fun Uri.mediaUriWithAppendedId(context: Context): Uri =
-    ContentUris.withAppendedId(
-        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-        context.mediaUriId(this)
-    )
-
-@RequiresApi(Build.VERSION_CODES.Q)
-private fun Context.mediaUriId(uri: Uri): Long =
-    contentResolver
-        .queryMediaColumn(uri, MediaStore.Images.Media._ID)
-        .toLong()
 
 fun cropFileName(fileName: String, mimeType: ImageMimeType): String =
     "${fileNameWOExtension(fileName)}-AutoCropped_${dateTimeNow()}.${mimeType.fileExtension}"
