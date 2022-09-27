@@ -12,9 +12,9 @@ import androidx.transition.TransitionListenerAdapter
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.activities.examination.fragments.croppager.viewmodel.ViewPagerViewModel
 import com.autocrop.preferences.BooleanPreferences
+import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.snacky
 import com.autocrop.utils.android.livedata.asMutable
-import com.autocrop.utils.android.buildAndShow
-import com.autocrop.utils.android.snacky
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ExaminationFragmentComparisonBinding
 
@@ -54,7 +54,7 @@ class ComparisonFragment
                             requireActivity()
                                 .snacky("Tap screen to toggle between original screenshot and crop")
                                 .setIcon(R.drawable.ic_outline_info_24)
-                                .buildAndShow()
+                                .show()
                     }
                 }
             })

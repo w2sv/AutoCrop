@@ -13,7 +13,7 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.preferences.PreferencesArray
 import com.autocrop.preferences.preferencesInstances
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
-import com.autocrop.utils.android.getApplicationWideSharedPreferences
+import com.autocrop.utils.android.extensions.getApplicationWideSharedPreferences
 import kotlin.reflect.KClass
 
 abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(

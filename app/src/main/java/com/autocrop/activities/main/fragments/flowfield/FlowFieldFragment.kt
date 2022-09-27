@@ -12,7 +12,11 @@ import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.utils.android.*
+import com.autocrop.utils.android.PermissionsHandler
+import com.autocrop.utils.android.documentUriPathIdentifier
+import com.autocrop.utils.android.extensions.getThemedColor
+import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.snacky
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding
 
@@ -76,7 +80,7 @@ class FlowFieldFragment:
                                 )
                             }
                     )
-                        .buildAndShow()
+                        .show()
                 }
             }
         }

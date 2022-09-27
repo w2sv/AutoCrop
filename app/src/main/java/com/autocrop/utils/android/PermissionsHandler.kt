@@ -11,6 +11,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.snacky
 import com.w2sv.autocrop.R
 import de.mateware.snacky.Snacky
 import timber.log.Timber
@@ -91,7 +93,7 @@ class PermissionsHandler(
                 else
                     permissionRequestingSuppressedSnacky()
             }
-                .buildAndShow()
+                .show()
 
             Timber.i("Not all required permissions were granted: $permission2Granted")
         }

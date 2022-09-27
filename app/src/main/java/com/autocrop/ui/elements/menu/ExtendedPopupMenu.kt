@@ -11,8 +11,8 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.core.view.children
+import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.kotlin.BlankFun
-import com.autocrop.utils.android.getThemedColor
 import com.w2sv.autocrop.R
 
 abstract class ExtendedPopupMenu(context: Context, anchor: View, @MenuRes menuResourceId: Int)

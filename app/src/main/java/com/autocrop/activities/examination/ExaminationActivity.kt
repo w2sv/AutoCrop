@@ -10,13 +10,15 @@ import com.autocrop.activities.examination.fragments.croppager.CropPagerFragment
 import com.autocrop.activities.examination.fragments.croppager.views.MenuInflationButton.Companion.MANUAL_CROP_REQUEST_CODE
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
-import com.autocrop.dataclasses.Crop
 import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.ui.controller.activity.ApplicationActivity
 import com.autocrop.ui.controller.activity.startMainActivity
-import com.autocrop.utils.android.*
+import com.autocrop.utils.android.BackPressHandler
+import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.snacky
+import com.autocrop.utils.android.extensions.uriPermissionGranted
 import com.lyrebirdstudio.croppylib.activity.CroppyActivity
 import com.w2sv.autocrop.R
 import de.mateware.snacky.Snacky
@@ -43,7 +45,7 @@ class ExaminationActivity :
                         duration = Snacky.LENGTH_SHORT
                     )
                         .setIcon(R.drawable.ic_baseline_done_24)
-                        .buildAndShow()
+                        .show()
                 }
             }
         }
@@ -99,7 +101,7 @@ class ExaminationActivity :
                     is SaveAllFragment -> {
                         snacky("Wait until crops have been saved")
                             .setIcon(R.drawable.ic_baseline_front_hand_24)
-                            .buildAndShow()
+                            .show()
                     }
                     is CropPagerFragment -> handleBackPress()
                     else -> Unit

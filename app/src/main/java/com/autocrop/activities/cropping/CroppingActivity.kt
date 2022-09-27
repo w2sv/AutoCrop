@@ -10,7 +10,7 @@ import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedF
 import com.autocrop.ui.controller.activity.ApplicationActivity
 import com.autocrop.ui.controller.activity.startMainActivity
 import com.autocrop.utils.android.BackPressHandler
-import com.autocrop.utils.android.snacky
+import com.autocrop.utils.android.extensions.snacky
 
 class CroppingActivity :
     ApplicationActivity<CroppingFragment, CroppingActivityViewModel>(

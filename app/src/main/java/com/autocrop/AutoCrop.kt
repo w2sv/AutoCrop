@@ -2,7 +2,7 @@ package com.autocrop
 
 import android.app.Application
 import com.autocrop.preferences.preferencesInstances
-import com.autocrop.utils.android.getApplicationWideSharedPreferences
+import com.autocrop.utils.android.extensions.getApplicationWideSharedPreferences
 import com.w2sv.autocrop.BuildConfig
 import timber.log.Timber
 

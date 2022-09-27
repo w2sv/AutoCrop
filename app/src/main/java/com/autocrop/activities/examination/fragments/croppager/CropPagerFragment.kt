@@ -28,11 +28,10 @@ import com.autocrop.ui.elements.recyclerview.CubeOutPageTransformer
 import com.autocrop.ui.elements.view.animate
 import com.autocrop.ui.elements.view.crossFade
 import com.autocrop.ui.elements.view.show
-import com.autocrop.utils.android.buildAndShow
-import com.autocrop.utils.android.getThemedColor
+import com.autocrop.utils.android.extensions.getThemedColor
+import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.snacky
 import com.autocrop.utils.android.livedata.asMutable
-import com.autocrop.utils.android.openBitmap
-import com.autocrop.utils.android.snacky
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.daimajia.androidanimations.library.Techniques
@@ -198,7 +197,7 @@ class CropPagerFragment :
                         .append(" image".numericallyInflected(nDismissedScreenshots))
                 )
                     .setIcon(R.drawable.ic_error_24)
-                    .buildAndShow()
+                    .show()
             }
         }
     }

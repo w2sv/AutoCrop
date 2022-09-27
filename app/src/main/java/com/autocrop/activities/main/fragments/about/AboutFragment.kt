@@ -8,8 +8,8 @@ import android.os.Looper
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.ui.elements.view.animate
-import com.autocrop.utils.android.buildAndShow
-import com.autocrop.utils.android.snacky
+import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.snacky
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.MainFragmentAboutBinding
@@ -32,7 +32,7 @@ class AboutFragment:
                                             duration = resources.getInteger(R.integer.duration_snackbar_long)
                                         )
                                         .setIcon(R.drawable.ic_outline_info_24)
-                                        .buildAndShow()
+                                        .show()
                                 },
                                 resources.getInteger(R.integer.delay_minimal).toLong()
                             )

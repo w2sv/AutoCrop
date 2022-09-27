@@ -1,4 +1,4 @@
-package com.autocrop.utils.android
+package com.autocrop.utils.android.extensions
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -9,7 +9,7 @@ import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.ui.elements.ExtendedAppCompatTextView
 import com.autocrop.ui.elements.view.animate
-import com.autocrop.utils.android.goToWebpage
+import com.autocrop.utils.android.extensions.goToWebpage
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 

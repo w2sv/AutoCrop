@@ -15,9 +15,9 @@ import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.preferencesInstances
 import com.autocrop.ui.controller.activity.ApplicationActivity
-import com.autocrop.utils.android.buildAndShow
-import com.autocrop.utils.android.getThemedColor
-import com.autocrop.utils.android.snacky
+import com.autocrop.utils.android.extensions.getThemedColor
+import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.snacky
 import com.autocrop.utils.kotlin.BlankFun
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.google.android.play.core.review.ReviewManagerFactory
@@ -51,7 +51,7 @@ class MainActivity :
                     "Good to have you on board! \uD83D\uDD25 Now go ahead select some screenshots and save your first AutoCrops! \uD83D\uDE80",
                     duration = resources.getInteger(R.integer.duration_snackbar_extra_long)
                 )
-                    .buildAndShow()
+                    .show()
             }
         else{
             sharedViewModel.IOSynopsis?.run {
@@ -81,7 +81,7 @@ class MainActivity :
     }
 
     private fun IOSynopsis.showAsSnackbar(){
-        val textAndIcon = if (nSavedCrops == 0)
+        val (text, icon) = if (nSavedCrops == 0)
             "Discarded all crops" to R.drawable.ic_outline_sentiment_dissatisfied_24
         else
             SpannableStringBuilder().apply {
@@ -98,11 +98,9 @@ class MainActivity :
                     )
             } to R.drawable.ic_baseline_done_24
 
-        with(textAndIcon){
-            snacky(first)
-                .setIcon(second)
-                .buildAndShow()
-        }
+        snacky(text)
+            .setIcon(icon)
+            .show()
     }
 
     private fun onButtonsHalfFadedIn(runnable: Runnable){
