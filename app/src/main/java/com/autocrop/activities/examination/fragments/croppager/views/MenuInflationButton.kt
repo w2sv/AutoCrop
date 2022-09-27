@@ -64,13 +64,14 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
 
             private fun launchManualCroppingActivity() {
                 val transitionAnimation = Animatoo::animateInAndOut
+                val cropBundle = sharedViewModel.dataSet.currentValue
 
                 launchCroppyActivity(
                     activity,
                     CropRequest(
-                        sharedViewModel.dataSet.currentValue.screenshot.uri,
+                        cropBundle.screenshot.uri,
                         requestCode = MANUAL_CROP_REQUEST_CODE,
-                        initialCropRect = sharedViewModel.dataSet.currentValue.crop.rect.toRectF(),
+                        initialCropRect = cropBundle.crop.rect.toRectF(),
                         croppyTheme = CroppyTheme(
                             accentColor = R.color.magenta_bright,
                             backgroundColor = R.color.magenta_dark
