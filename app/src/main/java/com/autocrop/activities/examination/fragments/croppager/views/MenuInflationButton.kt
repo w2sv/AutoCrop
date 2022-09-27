@@ -26,7 +26,7 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
     ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context){
 
     companion object {
-        const val MANUAL_CROP_REQUEST_CODE = 69
+        const val CROPPY_ACTIVITY_REQUEST_CODE = 69
     }
 
     override fun instantiatePopupMenu(): PopupMenu =
@@ -39,7 +39,7 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
                 setItemOnClickListeners(
                     mapOf(
                         R.id.menu_item_compare to ::launchComparisonFragment,
-                        R.id.menu_item_adjust_crop to ::launchManualCroppingActivity
+                        R.id.menu_item_adjust_crop to this::launchCroppyActivity
                     )
                 )
                 setIcons(context, R.color.magenta_bright)
@@ -62,15 +62,14 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
                 }
             }
 
-            private fun launchManualCroppingActivity() {
+            private fun launchCroppyActivity() {
                 val transitionAnimation = Animatoo::animateInAndOut
                 val cropBundle = sharedViewModel.dataSet.currentValue
 
-                launchCroppyActivity(
-                    activity,
+                activity.launchCroppyActivity(
                     CropRequest(
                         cropBundle.screenshot.uri,
-                        requestCode = MANUAL_CROP_REQUEST_CODE,
+                        requestCode = CROPPY_ACTIVITY_REQUEST_CODE,
                         initialCropRect = cropBundle.crop.rect.toRectF(),
                         croppyTheme = CroppyTheme(
                             accentColor = R.color.magenta_bright,
