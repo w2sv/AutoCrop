@@ -13,7 +13,8 @@ private data class VerticalEdges(val top: Int, val bottom: Int){
 
 fun Bitmap.cropped(rect: Rect): Bitmap =
     Bitmap.createBitmap(
-        this,0,
+        this,
+        0,
         rect.top,
         width,
         rect.height()
