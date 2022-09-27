@@ -113,7 +113,7 @@ class ExaminationActivity :
     fun returnToMainActivity() {
         startMainActivity{ intent ->
             intent.putExtra(
-                IntentExtraIdentifier.EXAMINATION_ACTIVITY_RESULTS,
+                IntentExtraIdentifier.IO_SYNOPSIS,
                 IOSynopsis(
                     sharedViewModel.savedCropUris.size,
                     sharedViewModel.nDeletedScreenshots,

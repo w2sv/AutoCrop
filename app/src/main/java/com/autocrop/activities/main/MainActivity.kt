@@ -37,7 +37,7 @@ class MainActivity :
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
         MainActivityViewModelFactory(
-            IOSynopsis = getIntentExtra<ByteArray>(IntentExtraIdentifier.EXAMINATION_ACTIVITY_RESULTS)?.let {
+            IOSynopsis = getIntentExtra<ByteArray>(IntentExtraIdentifier.IO_SYNOPSIS)?.let {
                 IOSynopsis.fromByteArray(it)
             }
         )
