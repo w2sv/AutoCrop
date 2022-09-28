@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/layout/activity.xml" value="0.15534420289855072" />
+        <entry key="app/src/main/res/layout/cropping_fragment.xml" value="0.15534420289855072" />
+        <entry key="app/src/main/res/layout/cropping_fragment_failed.xml" value="0.15534420289855072" />
+        <entry key="app/src/main/res/layout/examination_cropimageviewholder.xml" value="0.15534420289855072" />
+        <entry key="app/src/main/res/layout/examination_fragment_apptitle.xml" value="0.15534420289855072" />
+        <entry key="app/src/main/res/layout/examination_fragment_croppager.xml" value="0.15534420289855072" />
+        <entry key="app/src/main/res/layout/examination_fragment_deletionquery.xml" value="0.15534420289855072" />
+        <entry key="app/src/main/res/layout/examination_fragment_saveall.xml" value="0.15534420289855072" />
+        <entry key="app/src/main/res/layout/main_fragment_about.xml" value="0.15534420289855072" />
+        <entry key="app/src/main/res/layout/main_fragment_flowfield.xml" value="0.15534420289855072" />
+      </map>
+    </option>
+  </component>
   <component name="EntryPointsManager">
     <list size="1">
       <item index="0" class="java.lang.String" itemvalue="org.junit.jupiter.api.extension.RegisterExtension" />

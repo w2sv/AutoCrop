@@ -21,7 +21,7 @@ inline fun <reified T: ViewModel>View.viewModel(type: Class<T>): T =
 class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet){
 
-    val viewModel by lazy{
+    private val viewModel by lazy{
         viewModel(ComparisonViewModel::class.java)
     }
 
@@ -43,14 +43,16 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        ViewCompat.setTransitionName(this, viewModel.cropBundle.identifier())
+        if (!isInEditMode){
+            ViewCompat.setTransitionName(this, viewModel.cropBundle.identifier())
 
-        setOnClickListener{
-            viewModel.displayScreenshot.toggle()
-        }
+            setOnClickListener{
+                viewModel.displayScreenshot.toggle()
+            }
 
-        viewModel.displayScreenshot.observe(findViewTreeLifecycleOwner()!!){
-            setDrawable(it, viewModel.enterTransitionCompleted)
+            viewModel.displayScreenshot.observe(findViewTreeLifecycleOwner()!!){
+                setDrawable(it, viewModel.enterTransitionCompleted)
+            }
         }
     }
 
