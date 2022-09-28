@@ -11,6 +11,7 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.ui.elements.view.animate
+import com.autocrop.ui.elements.view.ifNotInEditMode
 import com.autocrop.ui.elements.view.show
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.daimajia.androidanimations.library.Techniques
@@ -25,19 +26,23 @@ class CropSharingButton(context: Context, attrs: AttributeSet):
      * setOnClickListener
      */
     init {
-        (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            activity.intent.extras?.getParcelableArrayList(IntentExtraIdentifier.CROP_SAVING_URIS, Uri::class.java)
-        else
-            @Suppress("DEPRECATION")
-            activity.intent.extras?.getParcelableArrayList(IntentExtraIdentifier.CROP_SAVING_URIS))
+        ifNotInEditMode {
+            (
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                        activity.intent.extras?.getParcelableArrayList(IntentExtraIdentifier.CROP_SAVING_URIS, Uri::class.java)
+                    else
+                        @Suppress("DEPRECATION")
+                        activity.intent.extras?.getParcelableArrayList(IntentExtraIdentifier.CROP_SAVING_URIS)
+                    )
                 ?.let {
-            show()
-            setOnClickListener(it)
+                    show()
+                    setOnClickListener(it)
+                }
+            animate(
+                Techniques.Tada,
+                delay = resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong() / 2
+            )
         }
-        animate(
-            Techniques.Tada,
-            delay = resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong() / 2
-        )
     }
 
     private fun setOnClickListener(cropWriteUris: ArrayList<Uri>) =

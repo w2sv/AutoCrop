@@ -6,6 +6,7 @@ import android.widget.RelativeLayout
 import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.ui.elements.view.fadeIn
+import com.autocrop.ui.elements.view.ifNotInEditMode
 import com.autocrop.ui.elements.view.show
 import com.w2sv.autocrop.R
 
@@ -14,11 +15,13 @@ class ButtonsLayout(context: Context, attributeSet: AttributeSet):
     ViewModelRetriever<MainActivityViewModel> by MainActivityViewModelRetriever(context) {
 
     init {
-        if (sharedViewModel.fadeInFlowFieldButtons){
-            fadeIn(resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong())
-            sharedViewModel.fadeInFlowFieldButtons = false
+        ifNotInEditMode {
+            if (sharedViewModel.fadeInFlowFieldButtons){
+                fadeIn(resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong())
+                sharedViewModel.fadeInFlowFieldButtons = false
+            }
+            else
+                show()
         }
-        else
-            show()
     }
 }
