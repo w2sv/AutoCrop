@@ -45,7 +45,7 @@ fun Context.processCropBundle(
         validSaveDirDocumentUri
     )
     val successfullyDeleted = if (deleteScreenshot)
-        contentResolver.deleteImage(cropBundle.screenshot.uri)
+        contentResolver.deleteImage(cropBundle.screenshot.mediaStoreId)
     else
         null
 

@@ -8,7 +8,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import com.autocrop.activities.cropping.fragments.cropping.cropped
 import com.autocrop.utils.android.ImageMimeType
-import com.autocrop.utils.android.extensions.queryMediaColumns
+import com.autocrop.utils.android.extensions.queryMediaStoreColumns
 import com.lyrebirdstudio.croppylib.utils.extensions.rounded
 import kotlin.math.roundToInt
 
@@ -35,16 +35,18 @@ data class Screenshot(
     val uri: Uri,
     val diskUsage: Long,
     val fileName: String,
-    val parsedMimeType: ImageMimeType){
+    val parsedMimeType: ImageMimeType,
+    val mediaStoreId: Long){
 
     companion object{
         fun fromContentResolver(contentResolver: ContentResolver, uri: Uri): Screenshot{
-            val mediaColumns = contentResolver.queryMediaColumns(
+            val mediaColumns = contentResolver.queryMediaStoreColumns(
                 uri,
                 arrayOf(
                     MediaStore.Images.Media.SIZE,
                     MediaStore.Images.Media.DISPLAY_NAME,
-                    MediaStore.Images.Media.MIME_TYPE
+                    MediaStore.Images.Media.MIME_TYPE,
+                    MediaStore.Images.Media._ID
                 )
             )
 
@@ -53,6 +55,7 @@ data class Screenshot(
                 mediaColumns[0].toLong(),
                 mediaColumns[1],
                 ImageMimeType.parse(mediaColumns[2]),
+                mediaColumns[3].toLong()
             )
                 .also { println("Parsed screenshot: $it") }
         }

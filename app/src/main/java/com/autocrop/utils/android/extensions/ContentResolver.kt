@@ -18,12 +18,12 @@ fun ContentResolver.openBitmap(uri: Uri): Bitmap =
  *
  * @return flag indicating whether image was successfully deleted
  */
-fun ContentResolver.deleteImage(uri: Uri): Boolean{
+fun ContentResolver.deleteImage(mediaStoreId: Long): Boolean{
     return try{
         val rowsDeleted = delete(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             "${MediaStore.Images.Media._ID}=?",
-            arrayOf(queryMediaColumn(uri, MediaStore.Images.Media._ID))
+            arrayOf(mediaStoreId.toString())
         ) != 0
         Timber.i(
             if (rowsDeleted)
@@ -43,16 +43,10 @@ fun ContentResolver.deleteImage(uri: Uri): Boolean{
  * @see
  *      https://stackoverflow.com/a/16511111/12083276
  */
-fun ContentResolver.queryMediaColumn(uri: Uri,
-                                     mediaColumn: String,
-                                     selection: String? = null,
-                                     selectionArgs: Array<String>? = null): String =
-    queryMediaColumns(uri, arrayOf(mediaColumn), selection, selectionArgs).first()
-
-fun ContentResolver.queryMediaColumns(uri: Uri,
-                                     mediaColumns: Array<String>,
-                                     selection: String? = null,
-                                     selectionArgs: Array<String>? = null): List<String> =
+fun ContentResolver.queryMediaStoreColumns(uri: Uri,
+                                           mediaColumns: Array<String>,
+                                           selection: String? = null,
+                                           selectionArgs: Array<String>? = null): List<String> =
     query(
         uri,
         mediaColumns,
