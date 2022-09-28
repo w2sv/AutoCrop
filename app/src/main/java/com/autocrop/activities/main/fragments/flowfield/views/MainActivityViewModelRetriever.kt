@@ -6,4 +6,7 @@ import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.retriever.viewmodel.ContextBasedViewModelRetriever
 
 class MainActivityViewModelRetriever(context: Context)
-    : ContextBasedViewModelRetriever<MainActivityViewModel, MainActivity>(context, MainActivityViewModel::class.java)
+    :ContextBasedViewModelRetriever<MainActivityViewModel, MainActivity>(
+        context,
+        MainActivityViewModel::class.java
+)

@@ -5,6 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.autocrop.dataclasses.CropBundle
 
+/**
+ * Owned by [ComparisonFragment]
+ */
 class ComparisonViewModel(val cropBundle: CropBundle): ViewModel(){
     var enterTransitionCompleted = false
 

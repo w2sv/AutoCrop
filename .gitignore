@@ -38,7 +38,6 @@ captures/
 
 # IntelliJ
 *.iml
-/.idea/
 
 # Keystore files
 keystore.properties
