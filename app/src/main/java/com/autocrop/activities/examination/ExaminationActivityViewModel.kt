@@ -4,6 +4,7 @@ import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
 import androidx.lifecycle.ViewModel
 import com.autocrop.dataclasses.CropBundle
 import com.autocrop.dataclasses.Screenshot
@@ -69,17 +70,17 @@ class ExaminationActivityViewModel(private val validSaveDirDocumentUri: Uri?, va
     private fun addScreenshotDeletionInquiryUri(deleteScreenshot: Boolean,
                                                 screenshot: Screenshot): Boolean{
         if (deleteScreenshot)
-            imageDeletionInquiryUri(screenshot.uri, screenshot.mediaStoreId)?.let {
+            imageDeletionInquiryUri(screenshot.mediaStoreId)?.let {
                 screenshotDeletionInquiryUris.add(it)
                 return true
             }
         return false
     }
 
-    private fun imageDeletionInquiryUri(uri: Uri, mediaStoreId: Long): Uri? =
+    private fun imageDeletionInquiryUri(mediaStoreId: Long): Uri? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
             ContentUris.withAppendedId(
-                uri,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 mediaStoreId
             )
                 .also { Timber.i("Built contentUriWithMediaStoreImagesId: $it") }
