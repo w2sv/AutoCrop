@@ -34,7 +34,7 @@
 
             <menu>
                 <item
-                    android:id="@+id/main_menu_item_change_save_destination_dir"
+                    android:id="@+id/main_menu_item_change_crop_saving_dir"
                     android:icon="@drawable/ic_round_save_24"
                     android:title="@string/menu_item_change_directory"/>
             </menu>
@@ -48,7 +48,7 @@
             android:title="@string/menu_item_divider_other">
             <menu>
                 <item
-                    android:id="@+id/main_menu_item_about_the_app"
+                    android:id="@+id/main_menu_item_about"
                     android:icon="@drawable/ic_outline_info_24"
                     android:title="@string/menu_item_about"/>
 

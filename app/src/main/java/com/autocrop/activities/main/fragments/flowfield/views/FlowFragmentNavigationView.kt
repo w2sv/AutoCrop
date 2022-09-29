@@ -49,8 +49,8 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
             setNavigationItemSelectedListener {
                 when (it.itemId){
                     R.id.main_menu_item_share_crops -> launchCropSharingIntent()
-                    R.id.main_menu_item_change_save_destination_dir -> pickSaveDestinationDir()
-                    R.id.main_menu_item_about_the_app -> invokeAboutFragment()
+                    R.id.main_menu_item_change_crop_saving_dir -> pickSaveDestinationDir()
+                    R.id.main_menu_item_about -> invokeAboutFragment()
                     R.id.main_menu_item_go_to_github -> goToGithub()
                     R.id.main_menu_item_rate_the_app -> goToPlayStoreListing()
                 }
