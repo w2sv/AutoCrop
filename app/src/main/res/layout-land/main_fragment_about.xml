@@ -68,7 +68,7 @@
 
     </RelativeLayout>
 
-    <com.autocrop.activities.main.fragments.about.views.VersionTextView
+    <com.autocrop.activities.main.fragments.VersionTextView
         android:id="@+id/version_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
 
         android:text="@string/version"
         android:textSize="21sp">
-    </com.autocrop.activities.main.fragments.about.views.VersionTextView>
+    </com.autocrop.activities.main.fragments.VersionTextView>
 
     <com.autocrop.activities.main.fragments.about.views.CopyrightTextView
         android:id="@+id/copyright_tv"

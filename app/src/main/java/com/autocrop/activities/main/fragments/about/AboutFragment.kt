@@ -58,5 +58,6 @@ class AboutFragment:
     private fun MainFragmentAboutBinding.setOnClickListeners(){
         appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
         logoIv.setOnClickListener { it.animate(Techniques.Tada) }
+        versionTv.setOnClickListener { it.animate(Techniques.RubberBand) }
     }
 }

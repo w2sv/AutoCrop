@@ -56,7 +56,7 @@
         android:textSize="32sp"
         android:textStyle="italic"/>
 
-    <com.autocrop.activities.main.fragments.about.views.VersionTextView
+    <com.autocrop.activities.main.fragments.VersionTextView
         android:id="@+id/version_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

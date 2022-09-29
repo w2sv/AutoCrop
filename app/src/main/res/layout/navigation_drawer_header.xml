@@ -5,19 +5,30 @@
     android:layout_height="wrap_content"
 
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+
+    android:layout_marginStart="24dp"
+    android:layout_marginTop="35dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="24dp"
-
         android:text="@string/app_title"
         android:textSize="24sp"
+        android:textColor="@color/accentuated_tv"/>
+
+    <com.autocrop.activities.main.fragments.VersionTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="24dp"
+
+        android:text="@string/version"
+        android:textSize="16sp"
+        android:textStyle="italic"
 
         android:paddingBottom="30dp"/>
-
 </LinearLayout>
