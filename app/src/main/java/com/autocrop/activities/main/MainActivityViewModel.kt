@@ -7,7 +7,8 @@ import androidx.lifecycle.ViewModel
 import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.utils.android.PermissionsHandler
 
-class MainActivityViewModel(val IOSynopsis: IOSynopsis?): ViewModel() {
+class MainActivityViewModel(val ioSynopsis: IOSynopsis?,
+                            val savedCropUris: ArrayList<Uri>?) : ViewModel() {
     var fadeInFlowFieldButtons = true
 
     lateinit var selectImages: ActivityResultLauncher<Intent>

@@ -1,83 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.autocrop.activities.main.fragments.flowfield.views.FlowFieldContainer
         android:id="@+id/canvas_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-    <!-- Buttons -->
+    </com.autocrop.activities.main.fragments.flowfield.views.FlowFieldContainer>
 
-    <com.autocrop.activities.main.fragments.flowfield.views.ButtonsLayout
-        android:id="@+id/buttons_layout"
-
+    <androidx.drawerlayout.widget.DrawerLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:visibility="invisible">
+        android:id="@+id/drawer_layout">
 
-        <RelativeLayout
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
+        <!-- Buttons -->
 
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
+        <com.autocrop.activities.main.fragments.flowfield.views.ButtonsLayout
+            android:id="@+id/buttons_layout"
 
-            android:layout_marginTop="25dp"
-            android:layout_marginEnd="20dp">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
-            <!-- Menu Inflation -->
+            android:visibility="visible">
 
-            <com.autocrop.activities.main.fragments.flowfield.views.MenuInflationButton
-                android:id="@+id/menu_inflation_button"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/navigation_drawer_button_burger"
+                android:layout_height="27dp"
+                android:layout_width="27dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
 
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentTop="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/baseline_menu_24"/>
 
-                android:background="@drawable/ic_dot_menu_24"
-                android:backgroundTint="@android:color/darker_gray"
-                android:contentDescription="@string/menu_inflation_button_description" />
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/navigation_drawer_button_arrow"
+                android:layout_height="27dp"
+                android:layout_width="27dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
 
-            <!-- Crop Sharing -->
+                android:alpha="0"
 
-            <com.autocrop.activities.main.fragments.flowfield.views.CropSharingButton
-                android:id="@+id/crop_sharing_button"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
+                android:background="@android:color/transparent"
+                android:src="@drawable/baseline_arrow_back_24"/>
 
-                android:layout_centerHorizontal="true"
+            <!-- Image Selection -->
 
-                android:layout_alignTop="@id/menu_inflation_button"
-                android:layout_marginTop="40dp"
+            <com.autocrop.activities.main.fragments.flowfield.views.ImageSelectionButton
+                android:id="@+id/image_selection_button"
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:background="@drawable/button_image_selection"
 
-                android:background="@drawable/ic_baseline_share_24"
-                android:backgroundTint="@android:color/darker_gray"
-                android:contentDescription="@string/crop_sharing_button_description"
+                android:layout_width="136dp"
+                android:layout_height="143dp"
+                android:layout_centerInParent="true"
 
-                android:visibility="invisible"/>
+                android:fontFamily="sans-serif"
+                android:text="@string/image_selection_button"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@android:color/darker_gray" />
 
-        </RelativeLayout>
+        </com.autocrop.activities.main.fragments.flowfield.views.ButtonsLayout>
 
-        <!-- Image Selection -->
+        <com.autocrop.activities.main.fragments.flowfield.views.FlowFragmentNavigationView
+            android:layout_alignTop="@+id/navigation_drawer_button_burger"
+            android:layout_marginTop="30dp"
 
-        <com.autocrop.activities.main.fragments.flowfield.views.ImageSelectionButton
-            android:id="@+id/image_selection_button"
-            style="@style/Base.Widget.AppCompat.Button.Colored"
-            android:background="@drawable/button_image_selection"
+            android:id="@+id/navigation_view"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_gravity="start"
 
-            android:layout_width="136dp"
-            android:layout_height="143dp"
-            android:layout_centerInParent="true"
+            android:fitsSystemWindows="true"
 
-            android:fontFamily="sans-serif"
-            android:text="@string/image_selection_button"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@android:color/darker_gray" />
+            android:background="@android:color/transparent"
+            app:menu="@menu/fragment_flowfield"
+            app:headerLayout="@layout/navigation_drawer_header"
+            app:itemIconTint="@color/magenta_bright"/>
 
-    </com.autocrop.activities.main.fragments.flowfield.views.ButtonsLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 
 </RelativeLayout>

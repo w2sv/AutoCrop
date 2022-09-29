@@ -1,12 +1,16 @@
 package com.autocrop.activities.main
 
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.SpannableStringBuilder
+import android.view.Gravity
 import androidx.activity.OnBackPressedCallback
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.text.color
+import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
@@ -37,9 +41,14 @@ class MainActivity :
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
         MainActivityViewModelFactory(
-            IOSynopsis = getIntentExtra<ByteArray>(IntentExtraIdentifier.IO_SYNOPSIS)?.let {
+            ioSynopsis = getIntentExtra<ByteArray>(IntentExtraIdentifier.IO_SYNOPSIS)?.let {
                 IOSynopsis.fromByteArray(it)
-            }
+            },
+            savedCropUris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                intent.extras?.getParcelableArrayList(IntentExtraIdentifier.CROP_SAVING_URIS, Uri::class.java)
+            else
+                @Suppress("DEPRECATION")
+                intent.extras?.getParcelableArrayList(IntentExtraIdentifier.CROP_SAVING_URIS)
         )
 
     override fun onSavedInstanceStateNull() {
@@ -54,7 +63,7 @@ class MainActivity :
                     .show()
             }
         else{
-            sharedViewModel.IOSynopsis?.run {
+            sharedViewModel.ioSynopsis?.run {
                 val showAsSnackbarOnButtonsHalfFadedIn: BlankFun = { onButtonsHalfFadedIn { showAsSnackbar() } }
 
                 if (nSavedCrops != 0)
@@ -115,9 +124,14 @@ class MainActivity :
      */
     override val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            when (currentFragment()){
-                is AboutFragment -> supportFragmentManager.popBackStack()
-                else -> finishAffinity()
+            currentFragment().let {
+                if (it is AboutFragment)
+                    return supportFragmentManager.popBackStack()
+                (it as? FlowFieldFragment)?.binding?.drawerLayout?.run {
+                    if (isOpen)
+                        return closeDrawer(GravityCompat.START)
+                }
+                finishAffinity()
             }
         }
     }

@@ -14,7 +14,9 @@ class ButtonsLayout(context: Context, attributeSet: AttributeSet):
     RelativeLayout(context, attributeSet),
     ViewModelRetriever<MainActivityViewModel> by MainActivityViewModelRetriever(context) {
 
-    init {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
         ifNotInEditMode {
             if (sharedViewModel.fadeInFlowFieldButtons){
                 fadeIn(resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong())

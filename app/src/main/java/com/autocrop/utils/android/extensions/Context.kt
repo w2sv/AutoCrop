@@ -14,9 +14,13 @@ import androidx.core.graphics.drawable.DrawableCompat
 
 fun Context.getColoredIcon(@DrawableRes drawableId: Int, @ColorRes colorId: Int): Drawable =
     DrawableCompat.wrap(AppCompatResources.getDrawable(this, drawableId)!!).apply {
-        @Suppress("DEPRECATION")
-        setColorFilter(getThemedColor(colorId), PorterDuff.Mode.SRC_IN)
+        setColor(this@getColoredIcon, colorId)
     }
+
+fun Drawable.setColor(context: Context, @ColorRes colorId: Int){
+    @Suppress("DEPRECATION")
+    setColorFilter(context.getThemedColor(colorId), PorterDuff.Mode.SRC_IN)
+}
 
 fun Context.getThemedColor(@ColorRes id: Int): Int =
     resources.getColor(id, theme)

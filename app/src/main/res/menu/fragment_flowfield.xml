@@ -4,46 +4,64 @@
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
 
+    <item
+        android:id="@+id/main_menu_item_share_crops"
+        android:title="@string/share_crops"
+        android:enabled="false"
+        android:icon="@drawable/ic_baseline_share_24">
+    </item>
+
     <!--  Examination  -->
 
-    <item
-        android:id="@+id/main_menu_group_divider_examination"
-        android:title="@string/menu_item_divider_examination"
-        android:enabled="false"/>
-
+    <group>
         <item
-            android:id="@+id/main_menu_item_auto_scroll"
-            android:icon="@drawable/ic_baseline_redo_24"
-            android:title="@string/menu_item_auto_scroll"
-            android:checkable="true"/>
+            android:title="@string/menu_item_divider_examination">
+
+            <menu>
+                <item
+                    android:id="@+id/main_menu_item_auto_scroll"
+                    android:icon="@drawable/ic_baseline_redo_24"
+                    android:title="@string/menu_item_auto_scroll"/>
+            </menu>
+        </item>
+    </group>
 
     <!--  Crop Saving  -->
 
-    <item
-        android:id="@+id/main_menu_group_divider_crop_saving"
-        android:title="@string/menu_item_divider_crop_saving"
-        android:enabled="false"/>
-
+    <group>
         <item
-            android:id="@+id/main_menu_item_change_save_destination_dir"
-            android:icon="@drawable/ic_round_save_24"
-            android:title="@string/menu_item_change_directory"/>
+            android:title="@string/menu_item_divider_crop_saving">
+
+            <menu>
+                <item
+                    android:id="@+id/main_menu_item_change_save_destination_dir"
+                    android:icon="@drawable/ic_round_save_24"
+                    android:title="@string/menu_item_change_directory"/>
+            </menu>
+        </item>
+    </group>
 
     <!--  Other  -->
 
-    <item
-        android:id="@+id/main_menu_group_divider_other"
-        android:title="@string/menu_item_divider_other"
-        android:enabled="false"/>
-
+    <group>
         <item
-            android:id="@+id/main_menu_item_about_the_app"
-            android:icon="@drawable/ic_outline_info_24"
-            android:title="@string/menu_item_about"/>
+            android:title="@string/menu_item_divider_other">
+            <menu>
+                <item
+                    android:id="@+id/main_menu_item_about_the_app"
+                    android:icon="@drawable/ic_outline_info_24"
+                    android:title="@string/menu_item_about"/>
 
-        <item
-            android:id="@+id/main_menu_item_rate_the_app"
-            android:icon="@drawable/ic_sharp_star_rate_24"
-            android:title="@string/menu_item_rate_the_app"/>
+                <item
+                    android:id="@+id/main_menu_item_go_to_github"
+                    android:icon="@drawable/ic_github_24"
+                    android:title="@string/code"/>
 
+                <item
+                    android:id="@+id/main_menu_item_rate_the_app"
+                    android:icon="@drawable/ic_sharp_star_rate_24"
+                    android:title="@string/menu_item_rate_the_app"/>
+            </menu>
+        </item>
+    </group>
 </menu>

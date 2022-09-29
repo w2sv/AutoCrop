@@ -6,8 +6,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableStringBuilder
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.color
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.CroppingActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
@@ -22,6 +25,33 @@ import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding
 
 class FlowFieldFragment:
     MainActivityFragment<MainFragmentFlowfieldBinding>(MainFragmentFlowfieldBinding::class.java) {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.drawerLayout.addDrawerListener(object: DrawerListener{
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                val fadeOutOnDrawerOpenAlpha = 1 - slideOffset
+
+                binding.navigationDrawerButtonBurger.alpha = fadeOutOnDrawerOpenAlpha
+                binding.navigationDrawerButtonArrow.alpha = slideOffset
+
+                binding.imageSelectionButton.alpha = fadeOutOnDrawerOpenAlpha
+            }
+            override fun onDrawerOpened(drawerView: View) {}
+            override fun onDrawerClosed(drawerView: View) {}
+            override fun onDrawerStateChanged(newState: Int) {}
+        })
+
+        binding.navigationDrawerButtonArrow.setOnClickListener {
+            with(binding.drawerLayout){
+                if (isOpen)
+                    closeDrawer(GravityCompat.START)
+                else
+                    openDrawer(GravityCompat.START)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
