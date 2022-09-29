@@ -12,7 +12,7 @@ import androidx.core.text.color
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import com.autocrop.activities.IntentExtraIdentifier
-import com.autocrop.activities.cropping.CroppingActivity
+import com.autocrop.activities.cropping.CropActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.utils.android.PermissionsHandler
@@ -21,10 +21,10 @@ import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.MainFragmentFlowfieldBinding
+import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 
 class FlowFieldFragment:
-    MainActivityFragment<MainFragmentFlowfieldBinding>(MainFragmentFlowfieldBinding::class.java) {
+    MainActivityFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,7 +72,7 @@ class FlowFieldFragment:
                     startActivity(
                         Intent(
                             requireActivity(),
-                            CroppingActivity::class.java
+                            CropActivity::class.java
                         )
                             .putParcelableArrayListExtra(
                                 IntentExtraIdentifier.SELECTED_IMAGE_URIS,

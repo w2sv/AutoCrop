@@ -37,7 +37,7 @@
                 android:contentDescription="@string/main_menu_toggle"
 
                 android:background="@android:color/transparent"
-                android:src="@drawable/baseline_menu_24"/>
+                android:src="@drawable/ic_baseline_menu_24"/>
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/navigation_drawer_button_arrow"
@@ -48,7 +48,7 @@
                 android:contentDescription="@string/main_menu_toggle"
 
                 android:background="@android:color/transparent"
-                android:src="@drawable/baseline_arrow_back_24"
+                android:src="@drawable/ic_baseline_arrow_back_24"
 
                 android:alpha="0"/>
 
@@ -82,7 +82,7 @@
             android:fitsSystemWindows="true"
 
             android:background="@android:color/transparent"
-            app:menu="@menu/fragment_flowfield"
+            app:menu="@menu/flowfield"
             app:headerLayout="@layout/navigation_drawer_header"
             app:itemIconTint="@color/magenta_bright"/>
 

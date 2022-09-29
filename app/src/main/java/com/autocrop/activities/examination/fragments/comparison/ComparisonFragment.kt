@@ -16,10 +16,10 @@ import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.autocrop.utils.android.livedata.asMutable
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.ExaminationFragmentComparisonBinding
+import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 
 class ComparisonFragment
-    : ExaminationActivityFragment<ExaminationFragmentComparisonBinding>(ExaminationFragmentComparisonBinding::class.java){
+    : ExaminationActivityFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java){
 
     private lateinit var viewModel: ComparisonViewModel
 

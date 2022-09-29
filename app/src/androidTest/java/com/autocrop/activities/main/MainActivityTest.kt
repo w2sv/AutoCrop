@@ -118,7 +118,7 @@ internal class MainActivityTest {
 
             @BeforeEach
             fun openDrawer(){
-                if (!onView(withId(R.menu.fragment_flowfield)).isDisplayed())
+                if (!onView(withId(R.menu.flowfield)).isDisplayed())
                     retryFlakyAction {
                         toggleButton.perform(ViewActions.click())
                     }

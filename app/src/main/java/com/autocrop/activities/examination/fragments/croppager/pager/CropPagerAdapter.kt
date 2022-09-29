@@ -24,7 +24,7 @@ class CropPagerAdapter(private val viewModel: ViewPagerViewModel)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CropViewHolder =
         CropViewHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.examination_cropimageviewholder, parent, false)
+                .inflate(R.layout.imageview_crop, parent, false)
         )
 
     /**

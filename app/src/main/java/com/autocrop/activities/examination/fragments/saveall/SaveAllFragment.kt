@@ -6,10 +6,10 @@ import com.autocrop.activities.examination.ExaminationActivityViewModel
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
-import com.w2sv.autocrop.databinding.ExaminationFragmentSaveallBinding
+import com.w2sv.autocrop.databinding.FragmentSaveallBinding
 
 class SaveAllFragment :
-    ExaminationActivityFragment<ExaminationFragmentSaveallBinding>(ExaminationFragmentSaveallBinding::class.java) {
+    ExaminationActivityFragment<FragmentSaveallBinding>(FragmentSaveallBinding::class.java) {
 
     /**
      * Launch async [processRemainingCropBundles] task, call [typedActivity].invokeSubsequentFragment

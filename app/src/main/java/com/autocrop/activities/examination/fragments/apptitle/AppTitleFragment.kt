@@ -4,10 +4,10 @@ import android.os.Bundle
 import com.autocrop.activities.examination.fragments.ExaminationActivityFragment
 import com.autocrop.ui.elements.view.animate
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.autocrop.databinding.ExaminationFragmentApptitleBinding
+import com.w2sv.autocrop.databinding.FragmentApptitleBinding
 
 class AppTitleFragment
-    : ExaminationActivityFragment<ExaminationFragmentApptitleBinding>(ExaminationFragmentApptitleBinding::class.java) {
+    : ExaminationActivityFragment<FragmentApptitleBinding>(FragmentApptitleBinding::class.java) {
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         binding.appTitleTextView.animate(

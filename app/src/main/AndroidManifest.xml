@@ -56,7 +56,7 @@
         </activity>
 
         <activity
-            android:name="com.autocrop.activities.cropping.CroppingActivity" />
+            android:name="com.autocrop.activities.cropping.CropActivity" />
 
         <activity
             android:name="com.autocrop.activities.examination.ExaminationActivity" />

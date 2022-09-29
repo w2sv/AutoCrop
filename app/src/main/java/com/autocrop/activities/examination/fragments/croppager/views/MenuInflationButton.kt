@@ -31,7 +31,7 @@ class MenuInflationButton(context: Context, attributeSet: AttributeSet) :
 
     override fun instantiatePopupMenu(): PopupMenu =
         object :
-            ExtendedPopupMenu(context, this, R.menu.fragment_viewpager),
+            ExtendedPopupMenu(context, this, R.menu.croppager),
             ActivityRetriever<ExaminationActivity> by ContextBasedActivityRetriever(context),
             ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context) {
 

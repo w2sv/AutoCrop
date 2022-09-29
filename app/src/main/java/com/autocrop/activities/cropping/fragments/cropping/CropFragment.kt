@@ -7,7 +7,7 @@ import android.os.Looper
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.autocrop.activities.IntentExtraIdentifier
-import com.autocrop.activities.cropping.fragments.CroppingActivityFragment
+import com.autocrop.activities.cropping.fragments.CropActivityFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.activities.examination.ExaminationActivity
 import com.autocrop.activities.examination.ExaminationActivityViewModel
@@ -18,11 +18,11 @@ import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.autocrop.utils.kotlin.logBeforehand
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.CroppingFragmentBinding
+import com.w2sv.autocrop.databinding.FragmentCropBinding
 import kotlinx.coroutines.Job
 
-class CroppingFragment
-    : CroppingActivityFragment<CroppingFragmentBinding>(CroppingFragmentBinding::class.java) {
+class CropFragment
+    : CropActivityFragment<FragmentCropBinding>(FragmentCropBinding::class.java) {
 
     private lateinit var croppingJob: Job
 

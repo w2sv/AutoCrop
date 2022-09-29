@@ -12,10 +12,10 @@ import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.MainFragmentAboutBinding
+import com.w2sv.autocrop.databinding.FragmentAboutBinding
 
 class AboutFragment:
-    MainActivityFragment<MainFragmentAboutBinding>(MainFragmentAboutBinding::class.java){
+    MainActivityFragment<FragmentAboutBinding>(FragmentAboutBinding::class.java){
 
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator? =
         if (enter && !BooleanPreferences.aboutFragmentInstructionsShown)
@@ -55,7 +55,7 @@ class AboutFragment:
         }
     }
 
-    private fun MainFragmentAboutBinding.setOnClickListeners(){
+    private fun FragmentAboutBinding.setOnClickListeners(){
         appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
         logoIv.setOnClickListener { it.animate(Techniques.Tada) }
         versionTv.setOnClickListener { it.animate(Techniques.RubberBand) }
