@@ -30,36 +30,38 @@
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/navigation_drawer_button_burger"
-                android:layout_height="27dp"
-                android:layout_width="27dp"
+                android:layout_height="48dp"
+                android:layout_width="48dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="30dp"
+                android:contentDescription="@string/main_menu_toggle"
 
                 android:background="@android:color/transparent"
                 android:src="@drawable/baseline_menu_24"/>
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/navigation_drawer_button_arrow"
-                android:layout_height="27dp"
-                android:layout_width="27dp"
+                android:layout_height="48dp"
+                android:layout_width="48dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="30dp"
-
-                android:alpha="0"
+                android:contentDescription="@string/main_menu_toggle"
 
                 android:background="@android:color/transparent"
-                android:src="@drawable/baseline_arrow_back_24"/>
+                android:src="@drawable/baseline_arrow_back_24"
+
+                android:alpha="0"/>
 
             <!-- Image Selection -->
 
             <com.autocrop.activities.main.fragments.flowfield.views.ImageSelectionButton
                 android:id="@+id/image_selection_button"
-                style="@style/Base.Widget.AppCompat.Button.Colored"
-                android:background="@drawable/button_image_selection"
-
-                android:layout_width="136dp"
+                android:layout_width="143dp"
                 android:layout_height="143dp"
                 android:layout_centerInParent="true"
+
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:background="@drawable/button_image_selection"
 
                 android:fontFamily="sans-serif"
                 android:text="@string/image_selection_button"

@@ -11,13 +11,15 @@
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/main_fragment_flowfield.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/main_fragment_flowfield.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[192.168.1.234:5555]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/home/w2sv/.android/avd/Pixel_5_API_31.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -84,37 +86,9 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "BundleExportedModule": "AutoCrop.app",
-    "ExportApk.ApkPath": "/home/w2sv/Dev/android/AutoCrop/app",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
-    "android-custom-view/home/w2sv/.gradle/caches/modules-2/files-2.1/androidx.drawerlayout/drawerlayout/1.1.1/d95f7d9cd7d95cc0c038bbcf9c65f521b56fee55/drawerlayout-1.1.1-sources.jar!/androidx/drawerlayout/widget/DrawerLayout.java_SELECTED": "DrawerLayout",
-    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/comparison/ComparisonImageView.kt_SELECTED": "ComparisonImageView",
-    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/about/views/VersionTextView.kt_SELECTED": "VersionTextView",
-    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/FlowFieldFragment.kt_SELECTED": "DrawerToggleImageButton",
-    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/ButtonsLayout.kt_SELECTED": "ButtonsLayout",
-    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/CropSharingButton.kt_SELECTED": "CropSharingButton",
-    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFieldContainer.kt_SELECTED": "FlowFieldContainer",
-    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt_SELECTED": "FlowFragmentNavigationView",
-    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/ImageSelectionButton.kt_SELECTED": "ImageSelectionButton",
-    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/MenuInflationButton.kt_SELECTED": "FlowFragmentNavigationView",
-    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/ExtendedAppCompatTextView.kt_SELECTED": "ExtendedAppCompatTextView",
     "cidr.known.project.marker": "true",
-    "com.google.services.firebase.aqiPopupShown": "true",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "dart.analysis.tool.window.visible": "false",
-    "last_directory_selection": "/home/w2sv/Dev/android/AutoCrop/app/src/test/java/com/autocrop/utils",
-    "last_opened_file_path": "/home/w2sv/Dev/android/AutoCrop/app/release/3.1.3.aab",
-    "memory.settings.postsync.do.not.ask.for.project": "true",
-    "memory.settings.postsync.last.time.stamp": "1664358801017",
-    "settings.editor.selected.configurable": "memory.settings"
-  },
-  "keyToStringList": {
-    "ExportApk.BuildVariants": [
-      "release"
-    ]
+    "dart.analysis.tool.window.visible": "false"
   }
 }]]></component>
   <component name="RecentsManager">
