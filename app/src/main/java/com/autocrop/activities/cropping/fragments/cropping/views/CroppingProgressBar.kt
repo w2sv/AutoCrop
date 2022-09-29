@@ -11,7 +11,9 @@ class CroppingProgressBar(context: Context, attr: AttributeSet):
     ProgressBar(context, attr),
     ViewModelRetriever<CropActivityViewModel> by CropActivityViewModelRetriever(context){
 
-    init {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
         max = sharedViewModel.nSelectedImages
     }
 }
