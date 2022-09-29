@@ -1,6 +1,7 @@
 package com.autocrop.activities.main.fragments.flowfield.views
 
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.autocrop.activities.main.MainActivity
@@ -17,10 +18,15 @@ class FlowFieldContainer(context: Context, attr: AttributeSet) :
 
     init {
         ifNotInEditMode {
-            @Suppress("DEPRECATION")
-            with(activity.windowManager.defaultDisplay.resolution()){
-                PFragment(FlowFieldSketch(x, y))
-                    .setView(this@FlowFieldContainer, fragmentActivity)
+            val display = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                activity.display!!
+            else
+                @Suppress("DEPRECATION")
+                activity.windowManager.defaultDisplay
+
+            display.resolution().let{
+                PFragment(FlowFieldSketch(it.x, it.y))
+                    .setView(this, fragmentActivity)
             }
         }
     }

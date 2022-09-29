@@ -10,8 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/extensions/Drawable.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/test/java/com/autocrop/utils/android/ImageMimeTypeTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFieldContainer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFieldContainer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/ImageMimeType.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/ImageMimeType.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/Uri.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/Uri.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/extensions/Context.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/extensions/Context.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,8 +52,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Kotlin Class" />
         <option value="layoutResourceFile" />
+        <option value="Kotlin Class" />
+        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
@@ -100,7 +106,10 @@
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/ExtendedAppCompatTextView.kt_SELECTED": "ExtendedAppCompatTextView",
     "cidr.known.project.marker": "true",
     "com.google.services.firebase.aqiPopupShown": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
     "dart.analysis.tool.window.visible": "false",
+    "last_directory_selection": "/home/w2sv/Dev/android/AutoCrop/app/src/test/java/com/autocrop/utils",
     "last_opened_file_path": "/home/w2sv/Dev/android/AutoCrop",
     "memory.settings.postsync.do.not.ask.for.project": "true",
     "memory.settings.postsync.last.time.stamp": "1664358801017",
@@ -117,6 +126,9 @@
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/app/src/main/res" />
     </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
       <recent name="com.autocrop.activities.main.fragments" />
       <recent name="com.autocrop.utils.android" />
@@ -126,6 +138,9 @@
     </key>
     <key name="android.template.942950756">
       <recent name="com.w2sv.autocrop" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.autocrop.utils.android" />
     </key>
   </component>
   <component name="RunManager" selected="Android App.app">

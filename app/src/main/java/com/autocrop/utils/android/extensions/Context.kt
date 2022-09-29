@@ -3,7 +3,6 @@ package com.autocrop.utils.android.extensions
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Binder
@@ -16,11 +15,6 @@ fun Context.getColoredIcon(@DrawableRes drawableId: Int, @ColorRes colorId: Int)
     DrawableCompat.wrap(AppCompatResources.getDrawable(this, drawableId)!!).apply {
         setColor(this@getColoredIcon, colorId)
     }
-
-fun Drawable.setColor(context: Context, @ColorRes colorId: Int){
-    @Suppress("DEPRECATION")
-    setColorFilter(context.getThemedColor(colorId), PorterDuff.Mode.SRC_IN)
-}
 
 fun Context.getThemedColor(@ColorRes id: Int): Int =
     resources.getColor(id, theme)

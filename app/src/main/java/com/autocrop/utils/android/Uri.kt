@@ -10,4 +10,4 @@ fun buildDocumentUriFromTreeUri(treeUri: Uri): Uri =
     )
 
 fun documentUriPathIdentifier(documentUri: Uri): String =
-    documentUri.pathSegments[1]  // TODO
+    documentUri.pathSegments[1]
