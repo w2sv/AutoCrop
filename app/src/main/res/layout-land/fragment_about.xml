@@ -10,11 +10,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        style="@style/AppTitleTextView"
+        style="@style/AutoCropTVBig"
 
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="20dp"/>
 
     <ImageView
         android:id="@+id/logo_iv"
@@ -30,55 +30,19 @@
         android:contentDescription="@null">
     </ImageView>
 
-    <RelativeLayout
-        android:id="@+id/by_layout"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_alignTop="@+id/logo_iv"
-        android:layout_marginTop="170dp"
-        android:layout_centerHorizontal="true">
-
-        <TextView
-            android:id="@+id/by_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:text="@string/by"
-            android:textSize="18sp">
-        </TextView>
-
-        <com.autocrop.activities.main.fragments.about.views.W2SVTextView
-            android:id="@+id/w2sv_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_alignBaseline="@+id/by_tv"
-            android:layout_marginTop="25dp"
-
-            android:layout_alignStart="@+id/by_tv"
-            android:layout_marginStart="30dp"
-
-            android:text="@string/w2sv"
-            android:textColor="@android:color/holo_purple"
-            android:textSize="25sp"
-            android:textStyle="italic">
-        </com.autocrop.activities.main.fragments.about.views.W2SVTextView>
-
-    </RelativeLayout>
-
     <com.autocrop.activities.main.fragments.VersionTextView
         android:id="@+id/version_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_alignTop="@id/by_layout"
+        android:layout_alignBottom="@id/logo_iv"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
+        android:layout_marginBottom="-60dp"
 
         android:text="@string/version"
-        android:textSize="21sp">
+        style="@style/Shadow"
+        android:textSize="28sp"
+        android:textColor="@android:color/holo_purple">
     </com.autocrop.activities.main.fragments.VersionTextView>
 
     <com.autocrop.activities.main.fragments.about.views.CopyrightTextView
@@ -88,7 +52,7 @@
         android:layout_height="wrap_content"
 
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="20dp"
         android:layout_centerHorizontal="true"
 
         android:text="@string/copyright"

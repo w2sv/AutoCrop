@@ -47,12 +47,7 @@ class AboutFragment:
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         binding.setOnClickListeners()
 
-        listOf(
-            binding.copyrightTv,
-            binding.w2svTv
-        ).forEach {
-            viewLifecycleOwner.lifecycle.addObserver(it)
-        }
+        viewLifecycleOwner.lifecycle.addObserver(binding.copyrightTv)
     }
 
     private fun FragmentAboutBinding.setOnClickListeners(){

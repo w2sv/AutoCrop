@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        style="@style/AppTitleTextView"
+        style="@style/AutoCropTVBig"
         android:id="@+id/app_title_text_view"
 
         android:layout_width="wrap_content"

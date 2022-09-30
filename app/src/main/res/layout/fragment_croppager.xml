@@ -16,22 +16,6 @@
 
         android:background="@color/background_neutral"/>
 
-    <com.autocrop.activities.examination.fragments.croppager.views.MenuInflationButton
-        android:id="@+id/menu_inflation_button"
-        android:visibility="invisible"
-
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
-
-        android:layout_alignParentTop="true"
-
-        android:layout_marginTop="26dp"
-        android:layout_marginHorizontal="35dp"
-
-        android:background="@drawable/ic_dot_menu_24"
-        android:backgroundTint="@color/light_gray"
-        android:contentDescription="@string/inflate_options_popup_menu" />
-
     <!--    Page Indication Layout-->
 
     <RelativeLayout
@@ -94,9 +78,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_alignTop="@+id/menu_inflation_button"
         android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
 
         android:text="@string/cancel_autoscroll"
         android:textColor="@color/accentuated_tv"
@@ -121,5 +104,30 @@
         android:text="@string/remove"
         android:textSize="13sp"
         android:textColor="@color/light_gray"/>
+
+    <com.autocrop.activities.examination.fragments.croppager.views.ManualCropButton
+        android:id="@+id/manual_crop_button"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@id/discarding_statistics_tv"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="23dp"
+        android:background="@drawable/ic_baseline_crop_24"
+        android:backgroundTint="@color/magenta_bright"
+        android:contentDescription="@string/manually_adjust_the_crop"
+        android:visibility="invisible"/>
+
+    <com.autocrop.activities.examination.fragments.croppager.views.ComparisonButton
+        android:id="@+id/comparison_button"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_alignEnd="@id/manual_crop_button"
+        android:layout_alignBottom="@id/manual_crop_button"
+        android:layout_marginEnd="48dp"
+        android:background="@drawable/ic_baseline_image_search_24"
+        android:backgroundTint="@color/magenta_bright"
+        android:contentDescription="@string/compare_crop_and_original_screenshot"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

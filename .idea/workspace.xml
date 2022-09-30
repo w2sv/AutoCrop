@@ -10,8 +10,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/ComparisonButton.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/ManualCropButton.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/elements/ExtendedAppCompatImageButton.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/CroppingProgressBar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/CroppingProgressBar.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/examination/ExaminationActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/examination/ExaminationActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/MenuInflationButton.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/about/AboutFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/about/AboutFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/about/views/W2SVTextView.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/elements/menu/AbstractMenuInflationButton.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/elements/menu/ExtendedPopupMenu.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/elements/menu/Menu.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/elements/menu/MenuItem.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout-land/fragment_about.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout-land/fragment_about.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout-land/fragment_croppager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout-land/fragment_croppager.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_about.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_about.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_apptitle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_apptitle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_flowfield.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_flowfield.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/navigation_drawer_header.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/navigation_drawer_header.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/menu/croppager.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,8 +69,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="layoutResourceFile" />
-        <option value="Kotlin Class" />
         <option value="JUnit5 Test Class" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -86,9 +107,18 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.cidr.known.project.marker": "true",
+    "android-custom-view/home/w2sv/.gradle/caches/modules-2/files-2.1/androidx.appcompat/appcompat/1.5.1/ffb6d2b7e47daaa4a24b434db111ab9e411c33a0/appcompat-1.5.1-sources.jar!/androidx/appcompat/widget/AppCompatImageButton.java_SELECTED": "AppCompatImageButton",
+    "android-custom-view/home/w2sv/Android/Sdk/sources/android-33/android/widget/ImageButton.java_SELECTED": "ImageButton",
+    "android-custom-view/home/w2sv/Android/Sdk/sources/android-33/android/widget/ImageView.java_SELECTED": "ImageView",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/CroppingProgressBar.kt_SELECTED": "CroppingProgressBar",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/comparison/ComparisonImageView.kt_SELECTED": "ComparisonImageView",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/CropImageView.kt_SELECTED": "CropImageView",
-    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/MenuInflationButton.kt_SELECTED": "MenuInflationButton",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/MenuInflationButton.kt_SELECTED": "ComparisonButton",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/PageIndicationBar.kt_SELECTED": "PageIndicationBar",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/PageIndicationTextView.kt_SELECTED": "PageIndicationTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/about/views/W2SVTextView.kt_SELECTED": "W2SVTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/ExtendedAppCompatImageButton.kt_SELECTED": "ExtendedAppCompatImageButton",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/menu/AbstractMenuInflationButton.kt_SELECTED": "AbstractMenuInflationButton",
     "cidr.known.project.marker": "true",
     "dart.analysis.tool.window.visible": "false",
     "project.structure.last.edited": "Modules",
@@ -110,11 +140,11 @@
       <recent name="" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.autocrop.activities.examination.fragments.croppager.views" />
       <recent name="com.autocrop.activities.main.fragments" />
       <recent name="com.autocrop.utils.android" />
       <recent name="com.autocrop.activities.examination.fragments.croppager.pager" />
       <recent name="com.autocrop.activities.examination.fragments.croppager.dialogs" />
-      <recent name="com.autocrop.activities.examination.fragments.viewpager.viewmodel" />
     </key>
     <key name="android.template.942950756">
       <recent name="com.w2sv.autocrop" />

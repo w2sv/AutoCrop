@@ -7,7 +7,7 @@ import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.examination.fragments.comparison.ComparisonFragment
 import com.autocrop.activities.examination.fragments.croppager.CropPagerFragment
-import com.autocrop.activities.examination.fragments.croppager.views.MenuInflationButton.Companion.CROPPY_ACTIVITY_REQUEST_CODE
+import com.autocrop.activities.examination.fragments.croppager.views.ManualCropButton.Companion.CROPPY_ACTIVITY_REQUEST_CODE
 import com.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.examination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
 import com.autocrop.dataclasses.IOSynopsis

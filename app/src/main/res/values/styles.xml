@@ -30,18 +30,23 @@
 
     </style>
 
-    <!--    App Title TextView-->
-
-    <style name="AppTitleTextView">
-        <item name="android:textSize">42sp</item>
-        <item name="android:text">@string/app_title</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/magenta_saturated</item>
-
+    <style name="Shadow">
         <item name="android:shadowColor">@android:color/black</item>
         <item name="android:shadowDx">5</item>
         <item name="android:shadowDy">5</item>
         <item name="android:shadowRadius">2</item>
+    </style>
+
+    <!--    App Title TextView-->
+
+    <style name="AutoCropTV" parent="Shadow">
+        <item name="android:text">@string/app_title</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/magenta_saturated</item>
+    </style>
+
+    <style name="AutoCropTVBig" parent="AutoCropTV">
+        <item name="android:textSize">46sp</item>
     </style>
 
 </resources>

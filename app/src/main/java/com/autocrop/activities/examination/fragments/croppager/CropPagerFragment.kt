@@ -140,9 +140,10 @@ class CropPagerFragment :
             } else {
                 binding.viewPager.setPageTransformer(CubeOutPageTransformer())
 
-                val manualScrollingStateViews = arrayOf<View>(
+                val manualScrollingStateViews = arrayOf(
                     binding.discardingStatisticsTv,
-                    binding.menuInflationButton
+                    binding.comparisonButton as View,
+                    binding.manualCropButton as View
                 )
 
                 scroller?.let {
