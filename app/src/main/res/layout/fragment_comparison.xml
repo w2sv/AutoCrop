@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.autocrop.activities.examination.fragments.comparison.ComparisonImageView
+    <com.autocrop.activities.iodetermination.fragments.comparison.ComparisonImageView
         android:id="@+id/comparison_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

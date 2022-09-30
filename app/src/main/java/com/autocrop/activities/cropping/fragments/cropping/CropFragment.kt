@@ -9,8 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.fragments.CropActivityFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
-import com.autocrop.activities.examination.ExaminationActivity
-import com.autocrop.activities.examination.ExaminationActivityViewModel
+import com.autocrop.activities.iodetermination.IODeterminationActivity
+import com.autocrop.activities.iodetermination.IODeterminationActivityViewModel
 import com.autocrop.dataclasses.CropBundle
 import com.autocrop.dataclasses.Screenshot
 import com.autocrop.utils.android.extensions.openBitmap
@@ -88,14 +88,14 @@ class CropFragment
         }
 
     /**
-     * Inherently sets [ExaminationActivityViewModel.cropBundles]
+     * Inherently sets [IODeterminationActivityViewModel.cropBundles]
      */
     private fun startExaminationActivity() {
-        ExaminationActivityViewModel.cropBundles = sharedViewModel.cropBundles
+        IODeterminationActivityViewModel.cropBundles = sharedViewModel.cropBundles
 
         requireActivity().let { activity ->
             startActivity(
-                Intent(activity, ExaminationActivity::class.java).putExtra(
+                Intent(activity, IODeterminationActivity::class.java).putExtra(
                     IntentExtraIdentifier.N_DISMISSED_IMAGES,
                     sharedViewModel.nDismissedImages
                 )

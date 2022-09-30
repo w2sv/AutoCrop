@@ -32,7 +32,7 @@
 
         <!-- https://en.proft.me/2018/02/5/decorating-seekbar-android/ -->
 
-        <com.autocrop.activities.examination.fragments.croppager.views.PageIndicationBar
+        <com.autocrop.activities.iodetermination.fragments.croppager.views.PageIndicationBar
             android:id="@+id/page_indication_bar"
             android:visibility="invisible"
 
@@ -49,11 +49,11 @@
             android:outlineProvider="paddedBounds"
 
             android:max="100">
-        </com.autocrop.activities.examination.fragments.croppager.views.PageIndicationBar>
+        </com.autocrop.activities.iodetermination.fragments.croppager.views.PageIndicationBar>
 
         <!-- Page Indication Text View -->
 
-        <com.autocrop.activities.examination.fragments.croppager.views.PageIndicationTextView
+        <com.autocrop.activities.iodetermination.fragments.croppager.views.PageIndicationTextView
             android:id="@+id/page_indication_tv"
 
             android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
 
     </RelativeLayout>
 
-    <com.autocrop.activities.examination.fragments.croppager.views.CancelAutoScrollButton
+    <com.autocrop.activities.iodetermination.fragments.croppager.views.CancelAutoScrollButton
         android:id="@+id/cancel_auto_scroll_button"
         android:visibility="invisible"
 
@@ -87,9 +87,9 @@
         android:textStyle="bold"
         android:background="@android:color/transparent">
 
-    </com.autocrop.activities.examination.fragments.croppager.views.CancelAutoScrollButton>
+    </com.autocrop.activities.iodetermination.fragments.croppager.views.CancelAutoScrollButton>
 
-    <com.autocrop.activities.examination.fragments.croppager.views.DiscardingStatisticsTextView
+    <com.autocrop.activities.iodetermination.fragments.croppager.views.DiscardingStatisticsTextView
         android:id="@+id/discarding_statistics_tv"
         android:visibility="invisible"
 
@@ -104,7 +104,7 @@
         android:textSize="13sp"
         android:textColor="@color/light_gray"/>
 
-    <com.autocrop.activities.examination.fragments.croppager.views.ManualCropButton
+    <com.autocrop.activities.iodetermination.fragments.croppager.views.ManualCropButton
         android:id="@+id/manual_crop_button"
         android:layout_width="28dp"
         android:layout_height="28dp"
@@ -117,7 +117,7 @@
         android:contentDescription="@string/manually_adjust_the_crop"
         android:visibility="invisible"/>
 
-    <com.autocrop.activities.examination.fragments.croppager.views.ComparisonButton
+    <com.autocrop.activities.iodetermination.fragments.croppager.views.ComparisonButton
         android:id="@+id/comparison_button"
         android:layout_width="28dp"
         android:layout_height="28dp"

@@ -59,7 +59,7 @@
             android:name="com.autocrop.activities.cropping.CropActivity" />
 
         <activity
-            android:name="com.autocrop.activities.examination.ExaminationActivity" />
+            android:name="com.autocrop.activities.iodetermination.IODeterminationActivity" />
     </application>
 
 </manifest>
