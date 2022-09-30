@@ -73,7 +73,7 @@ internal class MainActivityTest {
     inner class ImageSelectionButton{
         @Test
         fun visibleAndClickable(){
-            with(onView(withText(R.string.image_selection_button))){
+            with(onView(withText(R.string.select_images))){
                 check(isClickable())
                 check(isCompletelyDisplayed())
             }
@@ -87,7 +87,7 @@ internal class MainActivityTest {
         @FlakyTest
         fun triggersMultipleImageSelectionIntent() = intentTester {
             retryFlakyAction(SLOW_TIMEOUT) {
-                onView(withText(R.string.image_selection_button))
+                onView(withText(R.string.select_images))
                     .perform(ViewActions.click())
             }
 

@@ -58,11 +58,8 @@
                 android:layout_height="143dp"
                 android:layout_centerInParent="true"
 
-                style="@style/Base.Widget.AppCompat.Button.Colored"
                 android:background="@drawable/button_image_selection"
-
-                android:fontFamily="sans-serif"
-                android:text="@string/image_selection_button"
+                android:text="@string/select_images"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@android:color/darker_gray" />
 

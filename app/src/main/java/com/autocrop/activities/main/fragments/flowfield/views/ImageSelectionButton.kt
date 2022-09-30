@@ -12,18 +12,20 @@ class ImageSelectionButton(context: Context, attributeSet: AttributeSet):
     AppCompatButton(context, attributeSet),
     ViewModelRetriever<MainActivityViewModel> by MainActivityViewModelRetriever(context) {
 
-        init {
-            setOnClickListener {
-                with(sharedViewModel){
-                    permissionsHandler.requestPermissionsOrRun {
-                        selectImages.launch(
-                            Intent(Intent.ACTION_PICK).apply {
-                                type = IMAGE_MIME_TYPE
-                                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                            }
-                        )
-                    }
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
+        setOnClickListener {
+            with(sharedViewModel){
+                permissionsHandler.requestPermissionsOrRun {
+                    selectImages.launch(
+                        Intent(Intent.ACTION_PICK).apply {
+                            type = IMAGE_MIME_TYPE
+                            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                        }
+                    )
                 }
             }
         }
     }
+}

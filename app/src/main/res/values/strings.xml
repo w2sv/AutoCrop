@@ -1,7 +1,7 @@
 <resources>
     <string name="app_title">AutoCrop</string>
 
-    <string name="image_selection_button">SELECT IMAGES</string>
+    <string name="select_images">SELECT IMAGES</string>
     <string name="menu_inflation_button_description">Inflate settings menu</string>
     <string name="screenshot_button_description">Capture Flow Field image</string>
     <string name="crop_sharing_button_description">Share saved crops</string>
