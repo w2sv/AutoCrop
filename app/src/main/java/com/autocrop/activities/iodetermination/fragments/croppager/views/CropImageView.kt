@@ -5,17 +5,18 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.os.bundleOf
 import com.autocrop.activities.iodetermination.IODeterminationActivity
-import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropEntiretyDialog
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropDialog
-import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.ViewPagerViewModel
+import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropEntiretyDialog
+import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
-import com.autocrop.retriever.viewmodel.ViewModelRetriever
+import com.autocrop.ui.elements.view.activityViewModelLazy
 
 class CropImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet),
-    ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context),
     ActivityRetriever<IODeterminationActivity> by ContextBasedActivityRetriever(context) {
+
+    private val viewModel by activityViewModelLazy<CropPagerViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -25,14 +26,14 @@ class CropImageView(context: Context, attributeSet: AttributeSet):
     }
 
     private val dialogInflationEnabled: Boolean
-        get() = sharedViewModel.autoScroll.value == false
+        get() = !viewModel.autoScroll.value!!
 
     private fun setCurrentCropDialog(){
         setOnClickListener {
             if (dialogInflationEnabled)
                 CropDialog().apply {
                     arguments = bundleOf(
-                        CropDialog.DATA_SET_POSITION_BUNDLE_ARG_KEY to this@CropImageView.sharedViewModel.dataSet.currentPosition.value!!
+                        CropDialog.DATA_SET_POSITION_BUNDLE_ARG_KEY to viewModel.dataSet.currentPosition.value!!
                     )
                 }
                     .show(fragmentActivity.supportFragmentManager)
@@ -43,7 +44,7 @@ class CropImageView(context: Context, attributeSet: AttributeSet):
         setOnLongClickListener {
             if (!dialogInflationEnabled)
                 false
-            else if (sharedViewModel.dataSet.size == 1)
+            else if (viewModel.dataSet.size == 1)
                 performClick()
             else{
                 CropEntiretyDialog().show(fragmentActivity.supportFragmentManager)

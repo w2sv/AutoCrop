@@ -14,7 +14,7 @@ import com.autocrop.activities.iodetermination.IODeterminationActivityViewModel
 import com.autocrop.dataclasses.CropBundle
 import com.autocrop.dataclasses.Screenshot
 import com.autocrop.utils.android.extensions.openBitmap
-import com.autocrop.utils.kotlin.extensions.executeAsyncTask
+import com.autocrop.utils.kotlin.extensions.executeAsyncTaskWithProgressUpdateReceiver
 import com.autocrop.utils.kotlin.logBeforehand
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.autocrop.R
@@ -30,22 +30,22 @@ class CropFragment
         super.onViewCreated(view, savedInstanceState)
 
         // attach views to currentCropNumber observable
-        sharedViewModel.currentImageNumber.observe(viewLifecycleOwner) {
-            binding.croppingCurrentImageNumberTextView.updateText(it)
+        sharedViewModel.liveImageNumber.observe(viewLifecycleOwner) {
+            binding.progressTv.update(it)
             binding.croppingProgressBar.progress = it
         }
 
         // launch croppingJob
-        croppingJob = lifecycleScope.executeAsyncTask(
+        croppingJob = lifecycleScope.executeAsyncTaskWithProgressUpdateReceiver(
             ::cropImages,
-            { sharedViewModel.currentImageNumber.increment() },
+            { sharedViewModel.liveImageNumber.increment() },
             { startExaminationActivityOrInvokeCroppingFailureFragment() }
         )
     }
 
     private suspend fun cropImages(publishProgress: suspend (Void?) -> Unit): Void? {
         sharedViewModel.uris.subList(
-            sharedViewModel.currentImageNumber.value!!,
+            sharedViewModel.liveImageNumber.value!!,
             sharedViewModel.uris.size
         ).forEach { uri ->
 

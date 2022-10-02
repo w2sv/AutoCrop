@@ -16,7 +16,7 @@
     <string name="menu_item_change_directory">Change Directory</string>
 
     <string name="cropping_in_progress">Cropping…</string>
-    <string name="fracture">%1$d/%2$d</string>
+    <string name="fraction">%1$d/%2$d</string>
     <string name="crops_processing_in_progress">Processing crops…</string>
     <string name="cropping_failure">No cropping borders found</string>
     <string name="cancel_autoscroll">Cancel Scroll</string>

@@ -5,18 +5,17 @@ import android.content.Intent
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatButton
 import com.autocrop.activities.main.MainActivityViewModel
-import com.autocrop.retriever.viewmodel.ViewModelRetriever
+import com.autocrop.ui.elements.view.activityViewModel
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 
 class ImageSelectionButton(context: Context, attributeSet: AttributeSet):
-    AppCompatButton(context, attributeSet),
-    ViewModelRetriever<MainActivityViewModel> by MainActivityViewModelRetriever(context) {
+    AppCompatButton(context, attributeSet) {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
         setOnClickListener {
-            with(sharedViewModel){
+            with(activityViewModel<MainActivityViewModel>()){
                 permissionsHandler.requestPermissionsOrRun {
                     selectImages.launch(
                         Intent(Intent.ACTION_PICK).apply {

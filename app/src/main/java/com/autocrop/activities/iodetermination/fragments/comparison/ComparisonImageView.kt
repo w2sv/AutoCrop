@@ -5,25 +5,17 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.InsetDrawable
 import android.util.AttributeSet
-import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.ViewCompat
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.lifecycle.findViewTreeViewModelStoreOwner
+import com.autocrop.ui.elements.view.viewModelLazy
 import com.autocrop.utils.android.livedata.toggle
-
-inline fun <reified T: ViewModel>View.viewModel(type: Class<T>): T =
-    ViewModelProvider(findViewTreeViewModelStoreOwner()!!)[type]
 
 class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet){
 
-    private val viewModel by lazy{
-        viewModel(ComparisonViewModel::class.java)
-    }
+    private val viewModel by viewModelLazy<ComparisonViewModel>()
 
     private val screenshot: Bitmap by lazy {
         viewModel.cropBundle.screenshot.bitmap(context.contentResolver)

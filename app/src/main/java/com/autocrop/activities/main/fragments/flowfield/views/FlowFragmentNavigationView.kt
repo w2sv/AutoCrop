@@ -17,7 +17,7 @@ import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
-import com.autocrop.retriever.viewmodel.ViewModelRetriever
+import com.autocrop.ui.elements.view.activityViewModelLazy
 import com.autocrop.ui.elements.view.ifNotInEditMode
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.show
@@ -27,14 +27,15 @@ import com.w2sv.autocrop.R
 
 class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
     NavigationView(context, attributeSet),
-    ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context),
-    ViewModelRetriever<MainActivityViewModel> by MainActivityViewModelRetriever(context){
+    ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context){
+
+    private val viewModel by activityViewModelLazy<MainActivityViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
         ifNotInEditMode {
-            if (sharedViewModel.savedCropUris != null)
+            if (viewModel.savedCropUris != null)
                 with(menu.findItem(R.id.main_menu_item_share_crops)){
                     isVisible = true
                     actionView = ImageView(context).apply {
@@ -73,7 +74,7 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
             Intent.createChooser(
                 Intent().apply {
                     action = Intent.ACTION_SEND_MULTIPLE
-                    putParcelableArrayListExtra(Intent.EXTRA_STREAM, sharedViewModel.savedCropUris)
+                    putParcelableArrayListExtra(Intent.EXTRA_STREAM, viewModel.savedCropUris)
                     type = IMAGE_MIME_TYPE
                 },
                 null
@@ -82,7 +83,7 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
     }
 
     private fun pickSaveDestinationDir(){
-        sharedViewModel.pickSaveDestinationDir.launch(UriPreferences.treeUri)
+        viewModel.pickSaveDestinationDir.launch(UriPreferences.treeUri)
     }
 
     private fun goToPlayStoreListing(){

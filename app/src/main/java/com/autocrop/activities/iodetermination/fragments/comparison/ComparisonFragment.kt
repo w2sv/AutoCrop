@@ -10,7 +10,7 @@ import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
 import com.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
-import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.ViewPagerViewModel
+import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
@@ -27,7 +27,7 @@ class ComparisonFragment
         super.onAttach(context)
 
         viewModel = viewModels<ComparisonViewModel>{
-            val viewPagerViewModel by activityViewModels<ViewPagerViewModel>()
+            val viewPagerViewModel by activityViewModels<CropPagerViewModel>()
 
             ComparisonViewModelFactory(
                 viewPagerViewModel.dataSet.currentValue

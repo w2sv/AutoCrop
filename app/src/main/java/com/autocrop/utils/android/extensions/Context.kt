@@ -1,6 +1,8 @@
 package com.autocrop.utils.android.extensions
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
@@ -34,3 +36,6 @@ fun Context.uriPermissionGranted(uri: Uri, permissionCode: Int): Boolean =
         Binder.getCallingUid(),
         permissionCode
     ) == PackageManager.PERMISSION_GRANTED
+
+tailrec fun Context.getActivity(): Activity? =
+    this as? Activity ?: (this as? ContextWrapper)?.baseContext?.getActivity()

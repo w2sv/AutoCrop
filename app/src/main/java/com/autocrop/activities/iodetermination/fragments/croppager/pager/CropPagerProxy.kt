@@ -1,13 +1,13 @@
 package com.autocrop.activities.iodetermination.fragments.croppager.pager
 
 import androidx.viewpager2.widget.ViewPager2
-import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.ViewPagerViewModel
+import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.autocrop.ui.elements.recyclerview.ExtendedRecyclerViewAdapter
 
 /**
  * Proxy (=wrapper) for unextendable [viewPager2], providing additional functionality
  */
-class CropPagerProxy(private val viewPager2: ViewPager2, private val viewModel: ViewPagerViewModel){
+class CropPagerProxy(private val viewPager2: ViewPager2, private val viewModel: CropPagerViewModel){
     init {
         with(viewPager2){
             adapter = CropPagerAdapter(viewModel)

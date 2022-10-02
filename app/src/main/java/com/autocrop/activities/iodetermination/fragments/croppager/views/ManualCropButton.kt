@@ -4,11 +4,11 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.core.graphics.toRectF
 import com.autocrop.activities.iodetermination.IODeterminationActivity
-import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.ViewPagerViewModel
+import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
-import com.autocrop.retriever.viewmodel.ViewModelRetriever
 import com.autocrop.ui.elements.ExtendedAppCompatImageButton
+import com.autocrop.ui.elements.view.activityViewModel
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.lyrebirdstudio.croppylib.CropRequest
 import com.lyrebirdstudio.croppylib.CroppyTheme
@@ -17,7 +17,6 @@ import com.w2sv.autocrop.R
 
 class ManualCropButton(context: Context, attributeSet: AttributeSet)
     : ExtendedAppCompatImageButton(context, attributeSet),
-    ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context),
     ActivityRetriever<IODeterminationActivity> by ContextBasedActivityRetriever(context) {
 
     companion object {
@@ -25,8 +24,7 @@ class ManualCropButton(context: Context, attributeSet: AttributeSet)
     }
 
     override fun onClickListener() {
-        val transitionAnimation = Animatoo::animateInAndOut
-        val cropBundle = sharedViewModel.dataSet.currentValue
+        val cropBundle = activityViewModel<CropPagerViewModel>().dataSet.currentValue
 
         activity.launchCroppyActivity(
             CropRequest(
@@ -37,9 +35,9 @@ class ManualCropButton(context: Context, attributeSet: AttributeSet)
                     accentColor = R.color.magenta_bright,
                     backgroundColor = R.color.magenta_dark
                 ),
-                exitActivityAnimation = transitionAnimation
+                exitActivityAnimation = Animatoo::animateInAndOut
             )
         )
-        transitionAnimation(context)
+        Animatoo.animateInAndOut(context)
     }
 }

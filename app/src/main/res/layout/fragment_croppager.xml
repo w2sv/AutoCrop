@@ -53,7 +53,7 @@
 
         <!-- Page Indication Text View -->
 
-        <com.autocrop.activities.iodetermination.fragments.croppager.views.PageIndicationTextView
+        <com.autocrop.activities.iodetermination.fragments.croppager.views.PositionTextView
             android:id="@+id/page_indication_tv"
 
             android:layout_width="wrap_content"
@@ -62,7 +62,7 @@
             android:layout_alignBaseline="@+id/page_indication_bar"
             android:layout_alignParentEnd="true"
 
-            android:text="@string/fracture"
+            android:text="@string/fraction"
             android:textColor="@color/light_gray"
             android:textSize="15sp"
             android:textStyle="italic"

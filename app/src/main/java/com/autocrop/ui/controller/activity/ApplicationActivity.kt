@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.preferences.PreferencesArray
 import com.autocrop.preferences.preferencesInstances
-import com.autocrop.retriever.viewmodel.ViewModelRetriever
+import com.autocrop.retriever.viewmodel.SharedViewModelRetriever
 import com.autocrop.utils.android.extensions.getApplicationWideSharedPreferences
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import kotlin.reflect.KClass
@@ -21,7 +21,7 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
     viewModelKClass: KClass<VM>,
     private val accessedPreferenceInstances: PreferencesArray? = null) :
         FragmentHostingActivity<RF>(rootFragmentClass),
-        ViewModelRetriever<VM>{
+        SharedViewModelRetriever<VM>{
 
     protected abstract val onBackPressedCallback: OnBackPressedCallback
 

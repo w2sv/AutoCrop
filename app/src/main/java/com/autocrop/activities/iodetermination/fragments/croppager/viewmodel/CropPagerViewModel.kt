@@ -9,7 +9,7 @@ import com.autocrop.ui.elements.recyclerview.BidirectionalRecyclerViewAdapter
 import com.autocrop.utils.kotlin.BlankFun
 import com.autocrop.utils.kotlin.delegates.Consumable
 
-class ViewPagerViewModel : ViewModel(){
+class CropPagerViewModel : ViewModel(){
     val dataSet = BidirectionalViewPagerDataSet(IODeterminationActivityViewModel.cropBundles)
 
     fun initialViewPosition(): Int =

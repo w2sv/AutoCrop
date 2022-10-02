@@ -10,27 +10,47 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_priority_high_24.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_crop_24_border.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_image_search_24_border.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/shape_oval_border.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/saveall/SaveAllProgressTextView.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/saveall/SaveAllViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/elements/FractionTextView.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/CropActivityViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/CropActivityViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/CropActivityViewModelRetriever.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/CropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/CropFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/CroppingProgressBar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/CroppingProgressBar.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/CurrentImageNumberTextView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/ProgressTextView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/ComparisonFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/ComparisonFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/ComparisonImageView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/ComparisonImageView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/pager/CropPagerAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/pager/CropPagerAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/pager/CropPagerProxy.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/pager/CropPagerProxy.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/pager/PageChangeHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/pager/PageChangeHandler.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/viewmodel/ViewPagerViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/viewmodel/CropPagerViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/CancelAutoScrollButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/CancelAutoScrollButton.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/CropImageView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/CropImageView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/DiscardingStatisticsTextView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/DiscardingStatisticsTextView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ManualCropButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ManualCropButton.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PageDependentTextView.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PageIndicationBar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PageIndicationBar.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PageIndicationTextView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PositionTextView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ViewPagerViewModelRetriever.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/saveall/SaveAllFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/saveall/SaveAllFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/ButtonsLayout.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/ButtonsLayout.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/extensions/Activity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/extensions/Activity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/button_image_selection.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/shape_imageselection_button.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_crop_24.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_image_search_24.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_dot_menu_24.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/progress_bar_circular_save_all_crops.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/shape_circular_progress_bar_save_all.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/progress_bar_cropping_activity_progress.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/gradient_progress_bar_cropping_progress.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/ImageSelectionButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/ImageSelectionButton.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/MainActivityViewModelRetriever.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/retriever/viewmodel/ContextBasedViewModelRetriever.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/retriever/viewmodel/ViewModelRetriever.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/retriever/viewmodel/SharedViewModelRetriever.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/activity/ApplicationActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/activity/ApplicationActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/fragment/ApplicationFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/fragment/ApplicationFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/elements/view/View.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/elements/view/View.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/kotlin/extensions/CoroutineScope.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/kotlin/extensions/CoroutineScope.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/shape_circular_progress_bar_save_all.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/shape_circular_progress_bar_save_all.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout-land/fragment_croppager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout-land/fragment_croppager.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_crop.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_crop.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_flowfield.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_flowfield.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_saveall.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_saveall.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/menu/flowfield.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/menu/flowfield.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,9 +87,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JUnit5 Test Class" />
-        <option value="Kotlin Class" />
         <option value="layoutResourceFile" />
         <option value="resourceFile" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -110,16 +130,32 @@
     "android-custom-view/home/w2sv/Android/Sdk/sources/android-33/android/widget/ImageButton.java_SELECTED": "ImageButton",
     "android-custom-view/home/w2sv/Android/Sdk/sources/android-33/android/widget/ImageView.java_SELECTED": "ImageView",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/CroppingProgressBar.kt_SELECTED": "CroppingProgressBar",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/CurrentImageNumberTextView.kt_SELECTED": "CurrentImageNumberTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/ProgressTextView.kt_SELECTED": "ProgressTextView",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/comparison/ComparisonImageView.kt_SELECTED": "ComparisonImageView",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/CropImageView.kt_SELECTED": "CropImageView",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/MenuInflationButton.kt_SELECTED": "ComparisonButton",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/PageIndicationBar.kt_SELECTED": "PageIndicationBar",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/PageIndicationTextView.kt_SELECTED": "PageIndicationTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/ComparisonImageView.kt_SELECTED": "ComparisonImageView",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/CancelAutoScrollButton.kt_SELECTED": "CancelAutoScrollButton",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ComparisonButton.kt_SELECTED": "ComparisonButton",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/CropImageView.kt_SELECTED": "CropImageView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/DiscardingStatisticsTextView.kt_SELECTED": "DiscardingStatisticsTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ManualCropButton.kt_SELECTED": "ManualCropButton",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PageDependentTextView.kt_SELECTED": "PageDependentTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PageIndicationBar.kt_SELECTED": "PageIndicationBar",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PageIndicationTextView.kt_SELECTED": "PageIndicationTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/saveall/ProgressTV.kt_SELECTED": "SaveAllProgressTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/saveall/SaveAllProgressTextView.kt_SELECTED": "SaveAllProgressTextView",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/about/views/W2SVTextView.kt_SELECTED": "W2SVTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/ButtonsLayout.kt_SELECTED": "ButtonsLayout",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFieldContainer.kt_SELECTED": "FlowFieldContainer",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt_SELECTED": "FlowFragmentNavigationView",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/ImageSelectionButton.kt_SELECTED": "ImageSelectionButton",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/ExtendedAppCompatImageButton.kt_SELECTED": "ExtendedAppCompatImageButton",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/ExtendedAppCompatTextView.kt_SELECTED": "ExtendedAppCompatTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/FractionTextView.kt_SELECTED": "FractionTextView",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/menu/AbstractMenuInflationButton.kt_SELECTED": "AbstractMenuInflationButton",
     "cidr.known.project.marker": "true",
     "dart.analysis.tool.window.visible": "false",
@@ -144,11 +180,11 @@
       <recent name="" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.autocrop.activities.iodetermination.fragments.saveall" />
       <recent name="com.autocrop.activities.examination.fragments.croppager.views" />
       <recent name="com.autocrop.activities.main.fragments" />
       <recent name="com.autocrop.utils.android" />
       <recent name="com.autocrop.activities.examination.fragments.croppager.pager" />
-      <recent name="com.autocrop.activities.examination.fragments.croppager.dialogs" />
     </key>
     <key name="android.template.942950756">
       <recent name="com.w2sv.autocrop" />

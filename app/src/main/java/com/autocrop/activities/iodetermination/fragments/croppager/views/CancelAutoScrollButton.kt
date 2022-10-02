@@ -3,19 +3,18 @@ package com.autocrop.activities.iodetermination.fragments.croppager.views
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatButton
-import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.ViewPagerViewModel
-import com.autocrop.retriever.viewmodel.ViewModelRetriever
+import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
+import com.autocrop.ui.elements.view.activityViewModel
 import com.autocrop.utils.android.livedata.asMutable
 
 class CancelAutoScrollButton(context: Context, attributeSet: AttributeSet):
-    AppCompatButton(context, attributeSet),
-    ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context){
+    AppCompatButton(context, attributeSet){
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
         setOnClickListener {
-            sharedViewModel.autoScroll.asMutable.postValue(false)
+            activityViewModel<CropPagerViewModel>().autoScroll.asMutable.postValue(false)
         }
     }
 }

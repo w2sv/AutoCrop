@@ -9,7 +9,7 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.core.text.bold
 import androidx.core.text.color
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.TransitionInflater
 import com.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
@@ -19,8 +19,8 @@ import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropE
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.InstructionsDialog
 import com.autocrop.activities.iodetermination.fragments.croppager.pager.CropPagerAdapter
 import com.autocrop.activities.iodetermination.fragments.croppager.pager.CropPagerProxy
+import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Scroller
-import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.ViewPagerViewModel
 import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.autocrop.dataclasses.Crop
 import com.autocrop.preferences.BooleanPreferences
@@ -41,7 +41,7 @@ import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 class CropPagerFragment :
     IODeterminationActivityFragment<FragmentCroppagerBinding>(FragmentCroppagerBinding::class.java) {
 
-    private val viewModel by viewModels<ViewPagerViewModel>(::requireActivity)
+    private val viewModel by activityViewModels<CropPagerViewModel>()
     private lateinit var viewPagerProxy: CropPagerProxy
 
     override fun onAttach(context: Context) {
@@ -114,7 +114,7 @@ class CropPagerFragment :
         viewModel.setLiveDataObservers()
     }
 
-    private fun ViewPagerViewModel.setLiveDataObservers() {
+    private fun CropPagerViewModel.setLiveDataObservers() {
         dataSet.currentPosition.observe(viewLifecycleOwner) { position ->
             binding.discardingStatisticsTv.update(position)
 

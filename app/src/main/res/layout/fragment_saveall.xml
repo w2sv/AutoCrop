@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -7,27 +8,40 @@
 
     <TextView
         android:id="@+id/processing_crops_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="80dp"
-        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@id/circular_progress_bar"
+        android:layout_marginTop="-70dp"
 
         android:text="@string/crops_processing_in_progress"
-        android:textColor="@color/magenta_dark"
+        android:textColor="@color/magenta_saturated"
         android:textSize="30sp"
         android:textStyle="bold" />
 
     <!-- Circular progress bar -->
 
     <ProgressBar
-        android:id="@+id/indeterminateBar"
-        style="?android:progressBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="140dp"
+        android:id="@+id/circular_progress_bar"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
 
-        android:indeterminateDrawable="@drawable/shape_circular_progress_bar_save_all"
-        android:indeterminateDuration="@android:integer/config_longAnimTime" />
+        android:layout_centerInParent="true"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:indeterminateDrawable="@drawable/shape_circular_progress_bar_save_all"/>
+
+    <com.autocrop.activities.iodetermination.fragments.saveall.SaveAllProgressTextView
+        android:id="@+id/progress_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@id/circular_progress_bar"
+        android:layout_marginBottom="-60dp"
+
+        android:text="@string/fraction"
+        android:textSize="20sp"
+        android:textColor="@color/magenta_saturated"/>
+
+</RelativeLayout>

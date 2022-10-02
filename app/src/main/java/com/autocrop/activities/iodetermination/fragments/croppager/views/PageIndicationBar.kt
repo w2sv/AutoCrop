@@ -7,15 +7,16 @@ import android.view.animation.BaseInterpolator
 import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
-import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.ViewPagerViewModel
-import com.autocrop.retriever.viewmodel.ViewModelRetriever
+import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
+import com.autocrop.ui.elements.view.activityViewModelLazy
 import com.autocrop.ui.elements.view.ifNotInEditMode
 import com.autocrop.ui.elements.view.show
 import kotlin.math.roundToInt
 
 class PageIndicationBar(context: Context, attr: AttributeSet) :
-    AppCompatSeekBar(context, attr),
-    ViewModelRetriever<ViewPagerViewModel> by ViewPagerViewModelRetriever(context) {
+    AppCompatSeekBar(context, attr) {
+
+    private val viewModel by activityViewModelLazy<CropPagerViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -23,7 +24,7 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
         ifNotInEditMode {
             isEnabled = false  // disable manual dragging
 
-            if (sharedViewModel.dataSet.size != 1)
+            if (viewModel.dataSet.size != 1)
                 show()
         }
     }
@@ -46,10 +47,10 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
     }
 
     private fun progress(pageIndex: Int): Int? =
-        if (sharedViewModel.dataSet.size == 1)
+        if (viewModel.dataSet.size == 1)
             null
         else
-            (max.toFloat() / (sharedViewModel.dataSet.lastIndex).toFloat() * pageIndex).roundToInt()
+            (max.toFloat() / (viewModel.dataSet.lastIndex).toFloat() * pageIndex).roundToInt()
 
     private fun getInterpolator(newProgress: Int, bouncingAnimationBlocked: Boolean): BaseInterpolator =
         if (!bouncingAnimationBlocked && setOf(0, 100) == setOf(progress, newProgress))

@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.ViewPagerViewModel
+import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.autocrop.ui.elements.recyclerview.BidirectionalRecyclerViewAdapter
 import com.w2sv.autocrop.R
 
-class CropPagerAdapter(private val viewModel: ViewPagerViewModel)
+class CropPagerAdapter(private val viewModel: CropPagerViewModel)
     : BidirectionalRecyclerViewAdapter<CropPagerAdapter.CropViewHolder>(viewModel.dataSet){
 
     class CropViewHolder(view: View)

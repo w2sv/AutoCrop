@@ -29,16 +29,15 @@
         android:progress="0"
         android:progressDrawable="@drawable/gradient_progress_bar_cropping_progress"/>
 
-    <com.autocrop.activities.cropping.fragments.cropping.views.CurrentImageNumberTextView
-        android:id="@+id/cropping_current_image_number_text_view"
+    <com.autocrop.activities.cropping.fragments.cropping.views.ProgressTextView
+        android:id="@+id/progress_tv"
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="70dp"
         android:gravity="center"
 
-        android:text="@string/fracture"
-        android:textSize="17sp">
-    </com.autocrop.activities.cropping.fragments.cropping.views.CurrentImageNumberTextView>
+        android:text="@string/fraction"
+        android:textSize="17sp"/>
 
 </RelativeLayout>

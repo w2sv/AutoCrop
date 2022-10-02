@@ -2,9 +2,9 @@ package com.autocrop.activities.iodetermination.fragments.croppager.pager
 
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
-import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.ViewPagerViewModel
+import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 
-class PageChangeHandler(private val viewModel: ViewPagerViewModel)
+class PageChangeHandler(private val viewModel: CropPagerViewModel)
         : ViewPager2.OnPageChangeCallback(){
 
     override fun onPageSelected(position: Int) {

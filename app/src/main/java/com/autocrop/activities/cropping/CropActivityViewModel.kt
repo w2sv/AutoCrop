@@ -11,5 +11,5 @@ class CropActivityViewModel(val uris: ArrayList<Uri>): ViewModel(){
     val nDismissedImages: Int get() = nSelectedImages - cropBundles.size
 
     val cropBundles: MutableList<CropBundle> = mutableListOf()
-    val currentImageNumber = IncrementableIntLiveData(0)
+    val liveImageNumber = IncrementableIntLiveData(0)
 }

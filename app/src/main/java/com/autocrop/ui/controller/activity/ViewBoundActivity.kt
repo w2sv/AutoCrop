@@ -3,7 +3,6 @@ package com.autocrop.ui.controller.activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
 import com.autocrop.ui.controller.ViewBindingInflator
 import com.w2sv.autocrop.databinding.ActivityBinding
 
