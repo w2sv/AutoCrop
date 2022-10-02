@@ -79,13 +79,14 @@
         android:layout_height="wrap_content"
 
         android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
+
+        android:paddingHorizontal="3dp"
 
         android:text="@string/cancel_autoscroll"
         android:textColor="@color/accentuated_tv"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:background="@android:color/transparent">
+        android:textSize="14sp"
+        android:background="@drawable/shape_oval_border">
 
     </com.autocrop.activities.iodetermination.fragments.croppager.views.CancelAutoScrollButton>
 
