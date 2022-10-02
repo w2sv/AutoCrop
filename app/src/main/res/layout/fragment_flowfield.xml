@@ -67,7 +67,7 @@
 
         <com.autocrop.activities.main.fragments.flowfield.views.FlowFragmentNavigationView
             android:layout_alignTop="@+id/navigation_drawer_button_burger"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="50dp"
 
             android:id="@+id/navigation_view"
             android:layout_height="match_parent"
