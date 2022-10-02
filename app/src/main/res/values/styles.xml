@@ -46,7 +46,7 @@
     <style name="AutoCropTV" parent="Shadow">
         <item name="android:text">@string/app_title</item>
         <item name="android:textColor">@color/magenta_saturated</item>
-        <item name="android:fontFamily">@font/aadhunik</item>
+        <item name="android:fontFamily">@font/liberta</item>
     </style>
 
     <style name="AutoCropTVBig" parent="AutoCropTV">
