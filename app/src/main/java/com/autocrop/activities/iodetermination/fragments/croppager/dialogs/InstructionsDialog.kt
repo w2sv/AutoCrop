@@ -22,7 +22,7 @@ class InstructionsDialog: ExtendedDialogFragment(){
             .apply {
                 setCancelable(false)
                 setTitle("Some instructions to get ya going")
-                setIcon(context.getColoredIcon(R.drawable.ic_outline_info_24, R.color.accentuated_tv))
+                setIcon(context.getColoredIcon(R.drawable.ic_outline_info_24, R.color.highlighted_text_view))
                 setMessage(
                     SpannableStringBuilder()
                         .addFormattedInstruction("Tap screen once to save/discard", "current", "crop \uD83D\uDC47")
@@ -35,7 +35,7 @@ class InstructionsDialog: ExtendedDialogFragment(){
 
     private fun SpannableStringBuilder.addFormattedInstruction(start: String, bold: String, end: String): SpannableStringBuilder =
         apply {
-            color(requireContext().getThemedColor(R.color.accentuated_tv)){append("•")}
+            color(requireContext().getThemedColor(R.color.highlighted_text_view)){append("•")}
             append(" $start")
             bold { append(" $bold") }
             append(" $end")

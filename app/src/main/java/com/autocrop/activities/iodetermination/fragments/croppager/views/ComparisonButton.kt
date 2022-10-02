@@ -9,7 +9,7 @@ import com.autocrop.activities.iodetermination.fragments.croppager.pager.CropPag
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.ui.elements.ExtendedAppCompatImageButton
-import com.autocrop.ui.elements.recyclerview.recyclerView
+import com.autocrop.utils.android.extensions.recyclerView
 
 class ComparisonButton(context: Context, attributeSet: AttributeSet):
     ExtendedAppCompatImageButton(context, attributeSet),

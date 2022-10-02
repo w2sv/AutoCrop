@@ -25,11 +25,10 @@ import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.autocrop.dataclasses.Crop
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.ui.elements.recyclerview.CubeOutPageTransformer
-import com.autocrop.ui.elements.view.animate
-import com.autocrop.ui.elements.view.crossFade
-import com.autocrop.ui.elements.view.show
-import com.autocrop.utils.android.extensions.getThemedColor
+import com.autocrop.utils.android.extensions.animate
+import com.autocrop.utils.android.extensions.crossFade
 import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.snacky
 import com.autocrop.utils.android.livedata.asMutable
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
@@ -186,7 +185,7 @@ class CropPagerFragment :
                         .append("Couldn't find cropping bounds for")
                         .bold {
                             color(
-                                requireContext().getThemedColor(R.color.accentuated_tv)
+                                requireContext().getThemedColor(R.color.highlighted_text_view)
                             ) { append(" $nDismissedScreenshots") }
                         }
                         .append(" image".numericallyInflected(nDismissedScreenshots))

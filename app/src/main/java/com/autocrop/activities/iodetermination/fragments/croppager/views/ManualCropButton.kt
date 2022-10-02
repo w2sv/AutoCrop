@@ -8,7 +8,7 @@ import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Cro
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
 import com.autocrop.ui.elements.ExtendedAppCompatImageButton
-import com.autocrop.ui.elements.view.activityViewModel
+import com.autocrop.utils.android.extensions.activityViewModel
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.lyrebirdstudio.croppylib.CropRequest
 import com.lyrebirdstudio.croppylib.CroppyTheme

@@ -10,7 +10,7 @@ import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropE
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
-import com.autocrop.ui.elements.view.activityViewModelLazy
+import com.autocrop.utils.android.extensions.activityViewModelLazy
 
 class CropImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet),

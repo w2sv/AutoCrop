@@ -8,10 +8,9 @@ import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
-import com.autocrop.ui.elements.view.activityViewModelLazy
-import com.autocrop.ui.elements.view.ifNotInEditMode
-import com.autocrop.ui.elements.view.show
-import com.autocrop.ui.elements.view.viewModelLazy
+import com.autocrop.utils.android.extensions.activityViewModelLazy
+import com.autocrop.utils.android.extensions.ifNotInEditMode
+import com.autocrop.utils.android.extensions.show
 import kotlin.math.roundToInt
 
 class PageIndicationBar(context: Context, attr: AttributeSet) :

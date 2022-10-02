@@ -1,4 +1,4 @@
-package com.autocrop.ui.elements.recyclerview
+package com.autocrop.utils.android.extensions
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2

@@ -8,7 +8,7 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.fragments.flowfield.sketch.FlowFieldSketch
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
-import com.autocrop.ui.elements.view.ifNotInEditMode
+import com.autocrop.utils.android.extensions.ifNotInEditMode
 import com.autocrop.utils.android.extensions.resolution
 import processing.android.PFragment
 

@@ -9,7 +9,7 @@ import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.findViewTreeLifecycleOwner
-import com.autocrop.ui.elements.view.viewModelLazy
+import com.autocrop.utils.android.extensions.viewModelLazy
 import com.autocrop.utils.android.livedata.toggle
 
 class ComparisonImageView(context: Context, attributeSet: AttributeSet):

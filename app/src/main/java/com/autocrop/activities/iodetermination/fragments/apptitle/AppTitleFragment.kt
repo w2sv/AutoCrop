@@ -2,7 +2,7 @@ package com.autocrop.activities.iodetermination.fragments.apptitle
 
 import android.os.Bundle
 import com.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
-import com.autocrop.ui.elements.view.animate
+import com.autocrop.utils.android.extensions.animate
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.databinding.FragmentApptitleBinding
 

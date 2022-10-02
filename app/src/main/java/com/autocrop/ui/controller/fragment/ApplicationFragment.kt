@@ -8,7 +8,8 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
-import com.autocrop.retriever.activity.CustomActivityRetriever
+import com.autocrop.retriever.activity.FragmentHostingActivityRetriever
+import com.autocrop.retriever.activity.TypedActivityRetriever
 import com.autocrop.retriever.viewmodel.SharedViewModelRetriever
 import com.autocrop.ui.controller.activity.FragmentHostingActivity
 import kotlin.reflect.KClass
@@ -18,7 +19,8 @@ abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
     bindingClass: Class<VB>):
         ViewBoundFragment<VB>(bindingClass),
         SharedViewModelRetriever<VM>,
-        CustomActivityRetriever<A> {
+        TypedActivityRetriever<A>,
+        FragmentHostingActivityRetriever {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         postponeEnterTransition()

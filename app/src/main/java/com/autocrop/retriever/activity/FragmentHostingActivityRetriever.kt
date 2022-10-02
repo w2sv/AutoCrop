@@ -1,9 +1,7 @@
 package com.autocrop.retriever.activity
 
-import android.app.Activity
 import com.autocrop.ui.controller.activity.FragmentHostingActivity
 
-interface CustomActivityRetriever<A: Activity> {
+interface FragmentHostingActivityRetriever{
     val fragmentHostingActivity: FragmentHostingActivity<*>
-    val typedActivity: A
 }
