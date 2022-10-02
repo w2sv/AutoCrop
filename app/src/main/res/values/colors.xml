@@ -11,7 +11,6 @@
     <color name="magenta_saturated">#911945</color>
     <color name="magenta_dark">#7F1F3F</color>
     <color name="wine_red">#B00020</color>
-    <color name="holo_purple">#ffaa66cc</color>
 
     <color name="accentuated_tv">@color/magenta_bright</color>
     <color name="background_neutral">#000000</color>
