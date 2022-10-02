@@ -1,4 +1,4 @@
-package com.autocrop.activities.iodetermination.fragments.sreenshotdeletionquery
+package com.autocrop.activities.iodetermination.fragments.deletionconfirmationdialog
 
 import android.app.Activity
 import android.os.Build
@@ -15,14 +15,14 @@ import com.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragme
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentDeletionqueryBinding
 
-class ScreenshotDeletionQueryFragment :
+class DeletionConfirmationDialogFragment :
     IODeterminationActivityFragment<FragmentDeletionqueryBinding>(FragmentDeletionqueryBinding::class.java){
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        screenshotDeletionQueryContract.launch(
+        deletionConfirmationInquiryContract.launch(
             IntentSenderRequest.Builder(
                 MediaStore.createDeleteRequest(
                     requireContext().contentResolver,
@@ -34,7 +34,7 @@ class ScreenshotDeletionQueryFragment :
         )
     }
 
-    private val screenshotDeletionQueryContract = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()){
+    private val deletionConfirmationInquiryContract = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()){
         // increment sharedViewModel.nDeletedScreenshots if deletion request emitted
         if (it.resultCode == Activity.RESULT_OK)
             with(sharedViewModel){

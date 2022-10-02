@@ -9,7 +9,7 @@ import com.autocrop.activities.iodetermination.fragments.comparison.ComparisonFr
 import com.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
 import com.autocrop.activities.iodetermination.fragments.croppager.views.ManualCropButton.Companion.CROPPY_ACTIVITY_REQUEST_CODE
 import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
-import com.autocrop.activities.iodetermination.fragments.sreenshotdeletionquery.ScreenshotDeletionQueryFragment
+import com.autocrop.activities.iodetermination.fragments.deletionconfirmationdialog.DeletionConfirmationDialogFragment
 import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
@@ -67,18 +67,19 @@ class IODeterminationActivity :
     //$$$$$$$$$$$$$$$$
 
     /**
-     * Invoke [ScreenshotDeletionQueryFragment] in case of any screenshot uris whose deletion
-     * has to be confirmed, otherwise [AppTitleFragment]
+     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
+     * deletion has to be confirmed, otherwise [AppTitleFragment]
      */
     fun invokeSubsequentFragment(){
         replaceCurrentFragmentWith(
             if (sharedViewModel.screenshotDeletionInquiryUris.isNotEmpty())
-                ScreenshotDeletionQueryFragment()
+                DeletionConfirmationDialogFragment()
             else
                 AppTitleFragment(),
             false
         )
     }
+
     /**
      * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
      * otherwise return to MainActivity after confirmation

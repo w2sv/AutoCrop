@@ -10,7 +10,6 @@ import android.view.View
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.TransitionInflater
 import com.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
@@ -20,8 +19,8 @@ import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropE
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.InstructionsDialog
 import com.autocrop.activities.iodetermination.fragments.croppager.pager.CropPagerAdapter
 import com.autocrop.activities.iodetermination.fragments.croppager.pager.CropPagerProxy
-import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Scroller
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
+import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Scroller
 import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.autocrop.dataclasses.Crop
 import com.autocrop.preferences.BooleanPreferences
@@ -92,7 +91,7 @@ class CropPagerFragment :
             if (it.getBoolean(AbstractCropDialog.CONFIRMED_BUNDLE_ARG_KEY))
                 fragmentHostingActivity.replaceCurrentFragmentWith(SaveAllFragment(),true)
             else
-                typedActivity.returnToMainActivity()
+                typedActivity.invokeSubsequentFragment()
         }
     }
 
