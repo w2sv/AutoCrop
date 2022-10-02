@@ -40,9 +40,6 @@ abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
         {requireActivity().viewModelStore}
     )
 
-    //$$$$$$$$$$$$$$$$$$$$$$$$$$
-    // CustomActivityRetriever $
-    //$$$$$$$$$$$$$$$$$$$$$$$$$$
     @Suppress("UNCHECKED_CAST")
     override val typedActivity: A
         get() = requireActivity() as A

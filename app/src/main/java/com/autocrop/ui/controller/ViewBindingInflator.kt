@@ -7,16 +7,15 @@ interface ViewBindingInflator<VB: ViewBinding> {
     val binding: VB
     val bindingClass: Class<VB>
 
-    @Suppress("UNCHECKED_CAST")
     fun inflateViewBinding(vararg paramWithType: Pair<Any?, Class<*>>): VB{
         val (params, types) = paramWithType.unzip()
 
-        return inflateViewBindingMethod(*types.toTypedArray())
+        @Suppress("UNCHECKED_CAST")
+        return getInflateViewBinding(*types.toTypedArray())
             .invoke(null, *params.toTypedArray()) as VB
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun inflateViewBindingMethod(vararg parameterTypes: Class<*>): Method =
+    private fun getInflateViewBinding(vararg parameterTypes: Class<*>): Method =
         bindingClass
             .getMethod("inflate", *parameterTypes)
 }
