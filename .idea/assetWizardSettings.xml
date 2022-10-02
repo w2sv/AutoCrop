@@ -25,6 +25,7 @@
                                               <map>
                                                 <entry key="color" value="000000" />
                                                 <entry key="imagePath" value="/tmp/ic_android_black_24dp.xml" />
+                                                <entry key="opacityPercent" value="60" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -80,8 +81,8 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="$USER_HOME$/Downloads/logo_background_512x512.png" />
-                                                <entry key="scalingPercent" value="68" />
+                                                <entry key="imagePath" value="$USER_HOME$/Downloads/logo.png" />
+                                                <entry key="scalingPercent" value="60" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -93,6 +94,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
+                                                <entry key="fontFamily" value="KacstQurn" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -104,6 +106,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
+                                                <entry key="fontFamily" value="KacstQurn" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -114,9 +117,9 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="generatePlayStoreIcon" value="false" />
-                                      <entry key="outputName" value="logo" />
-                                      <entry key="previewDensity" value="XXXHIGH" />
+                                      <entry key="legacyIconShape" value="NONE" />
+                                      <entry key="outputName" value="logo_splash" />
+                                      <entry key="previewDensity" value="HIGH" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -146,7 +149,8 @@
                                               <map>
                                                 <entry key="color" value="000000" />
                                                 <entry key="imagePath" value="$USER_HOME$/Downloads/logo.png" />
-                                                <entry key="paddingPercent" value="5" />
+                                                <entry key="paddingPercent" value="15" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -179,8 +183,10 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
+                                      <entry key="cropped" value="true" />
                                       <entry key="iconShape" value="NONE" />
                                       <entry key="imageAsset" value="$USER_HOME$/Downloads/logo.png" />
+                                      <entry key="outputName" value="logo_splash" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -304,12 +310,17 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="previewDensity" value="XXXHIGH" />
+                                      <entry key="previewDensity" value="HIGH" />
                                     </map>
                                   </option>
                                 </PersistentState>
                               </value>
                             </entry>
+                          </map>
+                        </option>
+                        <option name="values">
+                          <map>
+                            <entry key="outputIconType" value="LAUNCHER_LEGACY" />
                           </map>
                         </option>
                       </PersistentState>
