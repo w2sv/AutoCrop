@@ -8,6 +8,7 @@ import com.autocrop.ui.elements.view.activityViewModel
 import com.autocrop.ui.elements.view.fadeIn
 import com.autocrop.ui.elements.view.ifNotInEditMode
 import com.autocrop.ui.elements.view.show
+import com.autocrop.ui.elements.view.viewModel
 import com.w2sv.autocrop.R
 
 class ButtonsLayout(context: Context, attributeSet: AttributeSet):

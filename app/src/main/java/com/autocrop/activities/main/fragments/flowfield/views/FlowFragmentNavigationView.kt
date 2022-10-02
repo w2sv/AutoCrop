@@ -17,8 +17,8 @@ import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
-import com.autocrop.ui.elements.view.activityViewModelLazy
 import com.autocrop.ui.elements.view.ifNotInEditMode
+import com.autocrop.ui.elements.view.activityViewModelLazy
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky

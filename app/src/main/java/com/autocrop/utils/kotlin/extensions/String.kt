@@ -1,6 +1,6 @@
 package com.autocrop.utils.kotlin.extensions
 
-import java.util.Locale
+import java.util.*
 
 fun String.numericallyInflected(quantity: Int): String =
     run{

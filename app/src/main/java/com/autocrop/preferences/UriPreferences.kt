@@ -2,8 +2,8 @@ package com.autocrop.preferences
 
 import android.content.SharedPreferences
 import android.net.Uri
-import com.autocrop.utils.android.buildDocumentUriFromTreeUri
 import com.autocrop.utils.kotlin.delegates.mapObserver
+import com.autocrop.utils.android.buildDocumentUriFromTreeUri
 import timber.log.Timber
 
 object UriPreferences: Preferences<Uri?>(

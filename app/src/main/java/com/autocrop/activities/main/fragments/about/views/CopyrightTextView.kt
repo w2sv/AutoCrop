@@ -3,7 +3,7 @@ package com.autocrop.activities.main.fragments.about.views
 import android.content.Context
 import android.util.AttributeSet
 import com.daimajia.androidanimations.library.Techniques
-import java.util.Calendar
+import java.util.*
 
 class CopyrightTextView(context: Context, attr: AttributeSet):
     AnimationHandlingTextView(

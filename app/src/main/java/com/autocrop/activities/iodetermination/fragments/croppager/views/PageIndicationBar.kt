@@ -11,6 +11,7 @@ import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Cro
 import com.autocrop.ui.elements.view.activityViewModelLazy
 import com.autocrop.ui.elements.view.ifNotInEditMode
 import com.autocrop.ui.elements.view.show
+import com.autocrop.ui.elements.view.viewModelLazy
 import kotlin.math.roundToInt
 
 class PageIndicationBar(context: Context, attr: AttributeSet) :
