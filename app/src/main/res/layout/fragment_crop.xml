@@ -27,7 +27,7 @@
         android:layout_marginStart="10dp"
 
         android:progress="0"
-        android:progressDrawable="@drawable/progress_bar_cropping_activity_progress"/>
+        android:progressDrawable="@drawable/gradient_progress_bar_cropping_progress"/>
 
     <com.autocrop.activities.cropping.fragments.cropping.views.CurrentImageNumberTextView
         android:id="@+id/cropping_current_image_number_text_view"

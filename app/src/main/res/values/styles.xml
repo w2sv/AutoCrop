@@ -37,6 +37,10 @@
         <item name="android:shadowRadius">2</item>
     </style>
 
+    <style name="ItalicText">
+        <item name="android:textStyle">italic</item>
+    </style>
+
     <!--    App Title TextView-->
 
     <style name="AutoCropTV" parent="Shadow">

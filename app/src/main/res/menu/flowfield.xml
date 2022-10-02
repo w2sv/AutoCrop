@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
 
     <item
         android:id="@+id/main_menu_item_share_crops"
         android:title="@string/share_crops"
-        android:enabled="false"
-        android:icon="@drawable/ic_baseline_share_24">
+        android:icon="@drawable/ic_baseline_share_24"
+        android:visible="false">
     </item>
 
     <!--  Examination  -->

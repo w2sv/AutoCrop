@@ -27,7 +27,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="140dp"
 
-        android:indeterminateDrawable="@drawable/progress_bar_circular_save_all_crops"
+        android:indeterminateDrawable="@drawable/shape_circular_progress_bar_save_all"
         android:indeterminateDuration="@android:integer/config_longAnimTime" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

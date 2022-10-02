@@ -335,7 +335,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:$USER_HOME$/Android/Sdk/icons/material/materialicons/arrow_back/baseline_arrow_back_24.xml" />
+                                      <entry key="url" value="file:$USER_HOME$/Android/Sdk/icons/material/materialicons/priority_high/baseline_priority_high_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -346,7 +346,7 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="baseline_arrow_back_24" />
+                            <entry key="outputName" value="baseline_priority_high_24" />
                             <entry key="sourceFile" value="$USER_HOME$/Downloads/iconmonstr-github-1.svg" />
                           </map>
                         </option>

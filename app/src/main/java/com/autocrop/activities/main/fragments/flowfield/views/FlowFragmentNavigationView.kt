@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.AttributeSet
+import android.widget.ImageView
 import android.widget.Switch
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.autocrop.activities.main.MainActivity
@@ -32,12 +34,18 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
         super.onAttachedToWindow()
 
         ifNotInEditMode {
-            with(menu.findItem(R.id.main_menu_item_share_crops)){
-                if (sharedViewModel.savedCropUris == null)
-                    icon?.alpha = 130
-                else
-                    isEnabled = true
-            }
+            if (sharedViewModel.savedCropUris != null)
+                with(menu.findItem(R.id.main_menu_item_share_crops)){
+                    isVisible = true
+                    actionView = ImageView(context).apply {
+                        setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                context,
+                                R.drawable.ic_baseline_priority_high_24
+                            )
+                        )
+                    }
+                }
 
             menu.findItem(R.id.main_menu_item_auto_scroll).actionView = Switch(context).apply {
                 isChecked = BooleanPreferences.autoScroll

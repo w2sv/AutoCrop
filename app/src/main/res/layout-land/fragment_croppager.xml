@@ -112,7 +112,7 @@
         android:layout_alignBottom="@id/discarding_statistics_tv"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="23dp"
-        android:background="@drawable/ic_baseline_crop_24"
+        android:background="@drawable/ic_crop_24_border"
         android:backgroundTint="@color/magenta_bright"
         android:contentDescription="@string/manually_adjust_the_crop"
         android:visibility="invisible"/>
@@ -124,7 +124,7 @@
         android:layout_alignEnd="@id/manual_crop_button"
         android:layout_alignBottom="@id/manual_crop_button"
         android:layout_marginEnd="48dp"
-        android:background="@drawable/ic_baseline_image_search_24"
+        android:background="@drawable/ic_image_search_24_border"
         android:backgroundTint="@color/magenta_bright"
         android:contentDescription="@string/compare_crop_and_original_screenshot"
         android:visibility="invisible"/>
