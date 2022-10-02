@@ -26,7 +26,7 @@
 
         <!-- set color accent -->
 
-        <item name="colorAccent">@color/accentuated_tv</item>
+        <item name="colorAccent">@android:color/holo_purple</item>
 
     </style>
 

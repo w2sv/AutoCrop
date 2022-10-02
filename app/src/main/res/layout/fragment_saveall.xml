@@ -41,7 +41,6 @@
         android:layout_marginBottom="-60dp"
 
         android:text="@string/fraction"
-        android:textSize="20sp"
-        android:textColor="@color/magenta_saturated"/>
+        android:textSize="20sp"/>
 
 </RelativeLayout>
