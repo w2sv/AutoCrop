@@ -28,15 +28,11 @@
         tools:replace="android:label"
 
         android:name="com.autocrop.AutoCrop"
-
         android:icon="@mipmap/logo"
         android:roundIcon="@mipmap/logo_round"
-
-        android:theme="@style/Theme.App.Main"
-
         android:requestLegacyExternalStorage="true"
-
         android:supportsRtl="true"
+        android:theme="@style/Theme.App.Main"
 
         android:appCategory="image"
         tools:targetApi="o">
