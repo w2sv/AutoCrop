@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
 import com.autocrop.retriever.activity.FragmentHostingActivityRetriever
 import com.autocrop.retriever.activity.TypedActivityRetriever
-import com.autocrop.retriever.viewmodel.SharedViewModelRetriever
 import com.autocrop.ui.controller.activity.FragmentHostingActivity
 import kotlin.reflect.KClass
 
@@ -18,7 +17,6 @@ abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
     viewModelKClass: KClass<VM>,
     bindingClass: Class<VB>):
         ViewBoundFragment<VB>(bindingClass),
-        SharedViewModelRetriever<VM>,
         TypedActivityRetriever<A>,
         FragmentHostingActivityRetriever {
 
@@ -35,7 +33,7 @@ abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
 
     open fun onViewCreatedCore(savedInstanceState: Bundle?){}
 
-    override val sharedViewModel: VM by createViewModelLazy(
+    protected val sharedViewModel: VM by createViewModelLazy(
         viewModelKClass,
         {requireActivity().viewModelStore}
     )

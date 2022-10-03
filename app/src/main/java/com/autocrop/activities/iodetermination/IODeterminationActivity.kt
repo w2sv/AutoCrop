@@ -102,7 +102,7 @@ class IODeterminationActivity :
      */
     fun invokeSubsequentFragment(){
         replaceCurrentFragmentWith(
-            if (sharedViewModel.screenshotDeletionInquiryUris.isNotEmpty())
+            if (viewModel.screenshotDeletionInquiryUris.isNotEmpty())
                 DeletionConfirmationDialogFragment()
             else
                 AppTitleFragment(),
@@ -177,16 +177,16 @@ class IODeterminationActivity :
             intent.putExtra(
                 IntentExtraIdentifier.IO_SYNOPSIS,
                 IOSynopsis(
-                    sharedViewModel.savedCropUris.size,
-                    sharedViewModel.nDeletedScreenshots,
-                    sharedViewModel.cropWriteDirIdentifier()
+                    viewModel.savedCropUris.size,
+                    viewModel.nDeletedScreenshots,
+                    viewModel.cropWriteDirIdentifier()
                 )
                     .toByteArray()
             )
-            if (sharedViewModel.savedCropUris.isNotEmpty())
+            if (viewModel.savedCropUris.isNotEmpty())
                 intent.putParcelableArrayListExtra(
                     IntentExtraIdentifier.CROP_SAVING_URIS,
-                    ArrayList(sharedViewModel.savedCropUris)
+                    ArrayList(viewModel.savedCropUris)
                 )
         }
     }

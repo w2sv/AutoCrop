@@ -62,7 +62,7 @@ class MainActivity :
                     .show()
             }
         else{
-            sharedViewModel.ioSynopsis?.run {
+            viewModel.ioSynopsis?.run {
                 val showAsSnackbarOnButtonsHalfFadedIn: BlankFun = { onButtonsHalfFadedIn { showAsSnackbar() } }
 
                 if (nSavedCrops != 0)
