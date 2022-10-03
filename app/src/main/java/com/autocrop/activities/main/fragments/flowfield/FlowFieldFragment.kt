@@ -26,6 +26,12 @@ import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 class FlowFieldFragment:
     MainActivityFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java) {
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        lifecycle.addObserver(permissionsHandler)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -53,65 +59,60 @@ class FlowFieldFragment:
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    val permissionsHandler by lazy {
         PermissionsHandler(
             requireActivity(),
             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
             "You'll have to permit media file access in order for the app to save generated crops",
             "Go to app settings and grant media file access in order for the app to save generated crops"
-        ).let {
-            sharedViewModel.permissionsHandler = it
-            lifecycle.addObserver(it)
-        }
+        )
+    }
 
-        sharedViewModel.selectImages = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-            activityResult.data?.let { intent ->
-                intent.clipData?.let { clipData ->
-                    startActivity(
-                        Intent(
-                            requireActivity(),
-                            CropActivity::class.java
-                        )
-                            .putParcelableArrayListExtra(
-                                IntentExtraIdentifier.SELECTED_IMAGE_URIS,
-                                ArrayList((0 until clipData.itemCount).map { clipData.getItemAt(it).uri })
-                            )
+    val imageSelectionIntentLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+        activityResult.data?.let { intent ->
+            intent.clipData?.let { clipData ->
+                startActivity(
+                    Intent(
+                        requireActivity(),
+                        CropActivity::class.java
                     )
-                }
+                        .putParcelableArrayListExtra(
+                            IntentExtraIdentifier.SELECTED_IMAGE_URIS,
+                            ArrayList((0 until clipData.itemCount).map { clipData.getItemAt(it).uri })
+                        )
+                )
             }
         }
+    }
 
-        sharedViewModel.pickSaveDestinationDir = registerForActivityResult(object: ActivityResultContracts.OpenDocumentTree(){
-            override fun createIntent(context: Context, input: Uri?): Intent =
-                super.createIntent(context, input)
-                    .apply {
-                        flags = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
-                                Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
-                                Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
-                    }
-        }) {
-            it?.let { treeUri ->
-                if (UriPreferences.treeUri != treeUri){
-                    UriPreferences.treeUri = treeUri
-
-                    requireContext().contentResolver.takePersistableUriPermission(
-                        treeUri,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                    )
-                    requireActivity().snacky(
-                        SpannableStringBuilder()
-                            .append("Crops will be saved to ")
-                            .color(requireContext().getThemedColor(R.color.notification_success)){
-                                append(
-                                    documentUriPathIdentifier(UriPreferences.documentUri!!)
-                                )
-                            }
-                    )
-                        .show()
+    val saveDestinationSelectionIntentLauncher = registerForActivityResult(object: ActivityResultContracts.OpenDocumentTree(){
+        override fun createIntent(context: Context, input: Uri?): Intent =
+            super.createIntent(context, input)
+                .apply {
+                    flags = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                            Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                            Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
                 }
+    }) {
+        it?.let { treeUri ->
+            if (UriPreferences.treeUri != treeUri){
+                UriPreferences.treeUri = treeUri
+
+                requireContext().contentResolver.takePersistableUriPermission(
+                    treeUri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+                requireActivity().snacky(
+                    SpannableStringBuilder()
+                        .append("Crops will be saved to ")
+                        .color(requireContext().getThemedColor(R.color.notification_success)){
+                            append(
+                                documentUriPathIdentifier(UriPreferences.documentUri!!)
+                            )
+                        }
+                )
+                    .show()
             }
         }
     }

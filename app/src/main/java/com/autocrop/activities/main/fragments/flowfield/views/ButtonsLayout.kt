@@ -17,14 +17,14 @@ class ButtonsLayout(context: Context, attributeSet: AttributeSet):
         super.onAttachedToWindow()
 
         ifNotInEditMode {
-            val viewModel = activityViewModel<MainActivityViewModel>()
-
-            if (viewModel.fadeInFlowFieldButtons){
-                fadeIn(resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong())
-                viewModel.fadeInFlowFieldButtons = false
+            with(activityViewModel<MainActivityViewModel>()){
+                if (fadeInFlowFieldButtons){
+                    fadeIn(resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong())
+                    fadeInFlowFieldButtons = false
+                }
+                else
+                    show()
             }
-            else
-                show()
         }
     }
 }

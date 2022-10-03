@@ -16,7 +16,9 @@ class FlowFieldContainer(context: Context, attr: AttributeSet) :
     FrameLayout(context, attr),
     ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context) {
 
-    init {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
         ifNotInEditMode {
             val display = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                 activity.display!!

@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatButton
-import com.autocrop.activities.main.MainActivityViewModel
-import com.autocrop.utils.android.extensions.activityViewModel
+import androidx.fragment.app.findFragment
+import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 
 class ImageSelectionButton(context: Context, attributeSet: AttributeSet):
@@ -15,9 +15,9 @@ class ImageSelectionButton(context: Context, attributeSet: AttributeSet):
         super.onAttachedToWindow()
 
         setOnClickListener {
-            with(activityViewModel<MainActivityViewModel>()){
+            with(findFragment<FlowFieldFragment>()){
                 permissionsHandler.requestPermissionsOrRun {
-                    selectImages.launch(
+                    imageSelectionIntentLauncher.launch(
                         Intent(Intent.ACTION_PICK).apply {
                             type = IMAGE_MIME_TYPE
                             putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
