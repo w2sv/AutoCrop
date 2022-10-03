@@ -37,8 +37,5 @@ class CropPagerAdapter(private val viewModel: CropPagerViewModel)
             holder.imageView.setImageBitmap(crop.bitmap)
             ViewCompat.setTransitionName(holder.imageView, identifier())
         }
-//        with(holder.cropImageView){
-//            layoutParams = RecyclerView.LayoutParams(200, 500)
-//        }
     }
 }
