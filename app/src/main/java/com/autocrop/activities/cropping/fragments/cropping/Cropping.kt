@@ -21,15 +21,14 @@ fun Bitmap.cropped(rect: Rect): Bitmap =
     )
 
 fun cropRect(screenshot: Bitmap): Rect?{
-    val borderPairCandidates: List<VerticalEdges> = cropEdgesCandidates(screenshot)
-        .filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(screenshot)
+    val borderPairCandidates: List<VerticalEdges> = screenshot.cropEdgesCandidates(5)
 
     if (borderPairCandidates.isEmpty())
         return null
 
-    val (topEdge: Int, bottomEdge: Int) = maxHeightCropEdges(borderPairCandidates)
-
-    return Rect(0, topEdge, screenshot.width, bottomEdge)
+    return maxHeightCropEdges(borderPairCandidates).run {
+        Rect(0, top, screenshot.width, bottom)
+    }
 }
 
 private fun maxHeightCropEdges(borderCandidates: List<VerticalEdges>): VerticalEdges{
@@ -42,48 +41,47 @@ private fun maxHeightCropEdges(borderCandidates: List<VerticalEdges>): VerticalE
     )
 }
 
-private fun cropEdgesCandidates(image: Bitmap): List<VerticalEdges> {
-    val nPixelComparisonsPerRow = 5
+private fun Bitmap.cropEdgesCandidates(pixelComparisonsPerRow: Int): List<VerticalEdges> {
+    return getTopEdge(0, width / pixelComparisonsPerRow, mutableListOf())
+        .toList()
+}
 
-    val lastRowIndex = image.height - 1
+private val Bitmap.lastRowIndex: Int
+    get() = height - 1
 
-    val sampleStep: Int = image.width / nPixelComparisonsPerRow
-    fun searchRange(startIndex: Int): IntRange =
-        (startIndex until lastRowIndex)
+private fun Bitmap.searchRange(startIndex: Int): IntRange =
+    (startIndex until lastRowIndex)
 
-    fun getTopEdge(queryStartInd: Int, candidates: MutableList<VerticalEdges>): MutableList<VerticalEdges> {
-        fun getBottomEdge(lowerBoundIndex: Int, candidates: MutableList<VerticalEdges>): MutableList<VerticalEdges> {
-            var precedingRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(lowerBoundIndex, sampleStep)
+private fun Bitmap.getTopEdge(queryStartInd: Int, sampleStep: Int, candidates: MutableList<VerticalEdges>): MutableList<VerticalEdges> {
+    var precedingRowHasFluctuation: Boolean = hasFluctuationThroughoutRow(queryStartInd, sampleStep)
 
-            for (i in searchRange(lowerBoundIndex + 1)){
-                val currentRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(i, sampleStep)
+    for (i in searchRange(queryStartInd + 1)){
+        val currentRowHasFluctuation: Boolean = hasFluctuationThroughoutRow(i + 1, sampleStep)
 
-                if (precedingRowHasFluctuation && !currentRowHasFluctuation){
-                    candidates.add(VerticalEdges(lowerBoundIndex, i))
-                    return getTopEdge(i + 1, candidates)
-                }
-                precedingRowHasFluctuation = currentRowHasFluctuation
-            }
-
-            candidates.add(VerticalEdges(lowerBoundIndex, lastRowIndex))
-            return candidates
-        }
-
-        var precedingRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(queryStartInd, sampleStep)
-
-        for (i in searchRange(queryStartInd + 1)){
-            val currentRowHasFluctuation: Boolean = image.hasFluctuationThroughoutRow(i + 1, sampleStep)
-
-            if (!precedingRowHasFluctuation && currentRowHasFluctuation)
-                return getBottomEdge(i + 1, candidates)
-            precedingRowHasFluctuation = currentRowHasFluctuation
-        }
-
-        return candidates
+        if (!precedingRowHasFluctuation && currentRowHasFluctuation)
+            return getBottomEdge(i + 1, sampleStep, candidates)
+        precedingRowHasFluctuation = currentRowHasFluctuation
     }
 
-    return getTopEdge(0, mutableListOf())
-        .toList()
+    return candidates
+}
+
+private fun Bitmap.getBottomEdge(lowerBoundIndex: Int, sampleStep: Int, candidates: MutableList<VerticalEdges>): MutableList<VerticalEdges> {
+    var precedingRowHasFluctuation: Boolean = hasFluctuationThroughoutRow(lowerBoundIndex, sampleStep)
+
+    for (i in searchRange(lowerBoundIndex + 1)){
+        val currentRowHasFluctuation: Boolean = hasFluctuationThroughoutRow(i, sampleStep)
+
+        if (precedingRowHasFluctuation && !currentRowHasFluctuation){
+            candidates.add(VerticalEdges(lowerBoundIndex, i))
+            return getTopEdge(i + 1, sampleStep, candidates)
+        }
+        precedingRowHasFluctuation = currentRowHasFluctuation
+    }
+
+    return candidates.apply {
+        add(VerticalEdges(lowerBoundIndex, lastRowIndex))
+    }
 }
 
 /**
@@ -95,23 +93,23 @@ private fun Bitmap.hasFluctuationThroughoutRow(y: Int, sampleStep: Int): Boolean
          getPixel(it, y) != getPixel(it - sampleStep, y)
     }
 
-private fun List<VerticalEdges>.filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(image: Bitmap): List<VerticalEdges> {
-    val widthQueryOffsetPercentage = 0.4f
-    val horizontalQueryOffset: Int = (image.width * widthQueryOffsetPercentage).toInt()
-
-    return filter{ verticalEdges ->
-        (horizontalQueryOffset..image.width-horizontalQueryOffset)
-            .all{
-                image.hasFluctuationThroughoutColumn(it, verticalEdges.top, verticalEdges.height())
-            }
-        }
-}
-
-private fun Bitmap.hasFluctuationThroughoutColumn(x: Int, y: Int, candidateHeight: Int): Boolean{
-    val nPixelComparisonsPerColumn = 4
-    val step: Int = (candidateHeight + y) / nPixelComparisonsPerColumn
-
-    return (y + step until candidateHeight + y step step).any {
-        getPixel(x, it) != getPixel(x, it - step)
-    }
-}
+//private fun List<VerticalEdges>.filterInCenterProximityExclusivelyVerticallyFluctuatingOnes(image: Bitmap): List<VerticalEdges> {
+//    val widthQueryOffsetPercentage = 0.4f
+//    val horizontalQueryOffset: Int = (image.width * widthQueryOffsetPercentage).toInt()
+//
+//    return filter{ verticalEdges ->
+//        (horizontalQueryOffset..image.width-horizontalQueryOffset)
+//            .all{
+//                image.hasFluctuationThroughoutColumn(it, verticalEdges.top, verticalEdges.height())
+//            }
+//        }
+//}
+//
+//private fun Bitmap.hasFluctuationThroughoutColumn(x: Int, y: Int, candidateHeight: Int): Boolean{
+//    val nPixelComparisonsPerColumn = 4
+//    val step: Int = (candidateHeight + y) / nPixelComparisonsPerColumn
+//
+//    return (y + step until candidateHeight + y step step).any {
+//        getPixel(x, it) != getPixel(x, it - step)
+//    }
+//}
