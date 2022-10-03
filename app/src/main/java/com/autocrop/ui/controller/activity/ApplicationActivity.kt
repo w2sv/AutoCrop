@@ -1,6 +1,5 @@
 package com.autocrop.ui.controller.activity
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
@@ -9,18 +8,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelLazy
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.preferences.PreferencesArray
-import com.autocrop.preferences.preferencesInstances
+import com.autocrop.preferences.TypedPreferences
 import com.autocrop.retriever.viewmodel.SharedViewModelRetriever
 import com.autocrop.utils.android.extensions.getApplicationWideSharedPreferences
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import kotlin.reflect.KClass
 
 abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
-    rootFragmentClass: Class<RF>,
+    rootFragmentClass: KClass<RF>,
     viewModelKClass: KClass<VM>,
-    private val accessedPreferenceInstances: PreferencesArray? = null) :
-        FragmentHostingActivity<RF>(rootFragmentClass),
+    vararg val preferences: TypedPreferences<*>) :
+        FragmentHostingActivity<RF>(rootFragmentClass.java),
         SharedViewModelRetriever<VM>{
 
     protected abstract val onBackPressedCallback: OnBackPressedCallback
@@ -28,16 +26,13 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        instantiateSharedViewModel()
+        // instantiate sharedViewModel
+        ::sharedViewModel.invoke()
 
         if (savedInstanceState == null)
             onSavedInstanceStateNull()
 
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-    }
-
-    private fun instantiateSharedViewModel(){
-        ::sharedViewModel.invoke()
     }
 
     //$$$$$$$$$$$$$$$$$$$$$$
@@ -68,29 +63,29 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
         defaultViewModelProviderFactory
 
     /**
-     * Write changed values of each [preferencesInstances] element to SharedPreferences
+     * Write changed values of each [preferences] element to SharedPreferences
      */
     override fun onStop() {
         super.onStop()
 
         val sharedPreferences = lazy { getApplicationWideSharedPreferences() }
 
-        accessedPreferenceInstances?.forEach {
+        preferences.forEach {
             it.writeChangedValuesToSharedPreferences(sharedPreferences)
         }
     }
-}
 
-fun Activity.startMainActivity(withReturnAnimation: Boolean = true, intentApplier: ((Intent) -> Unit)? = null){
-    startActivity(
-        Intent(
-            this,
-            MainActivity::class.java
+    fun startMainActivity(withReturnAnimation: Boolean = true, intentApplier: ((Intent) -> Unit)? = null){
+        startActivity(
+            Intent(
+                this,
+                MainActivity::class.java
+            )
+                .apply {
+                    intentApplier?.invoke(this)
+                }
         )
-            .apply {
-                intentApplier?.invoke(this)
-            }
-    )
-    if (withReturnAnimation)
-        Animatoo.animateSwipeRight(this)
+        if (withReturnAnimation)
+            Animatoo.animateSwipeRight(this)
+    }
 }

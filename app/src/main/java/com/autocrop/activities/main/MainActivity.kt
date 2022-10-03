@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.SpannableStringBuilder
-import android.view.Gravity
 import androidx.activity.OnBackPressedCallback
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.text.color
@@ -17,7 +16,7 @@ import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
-import com.autocrop.preferences.preferencesInstances
+import com.autocrop.preferences.UriPreferences
 import com.autocrop.ui.controller.activity.ApplicationActivity
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.show
@@ -30,9 +29,9 @@ import timber.log.Timber
 
 class MainActivity :
     ApplicationActivity<FlowFieldFragment, MainActivityViewModel>(
-        FlowFieldFragment::class.java,
+        FlowFieldFragment::class,
         MainActivityViewModel::class,
-        accessedPreferenceInstances = preferencesInstances) {
+        BooleanPreferences, UriPreferences) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()

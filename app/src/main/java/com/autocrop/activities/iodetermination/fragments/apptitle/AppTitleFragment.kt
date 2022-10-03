@@ -25,8 +25,8 @@ class AppTitleFragment
     private fun waitTilCroppingJobFinishedOrReturnToMainActivityDirectly(){
         sharedViewModel.singularCropSavingJob?.run{
             invokeOnCompletion {
-                typedActivity.returnToMainActivity()
+                typedActivity.startMainActivity()
             }
-        } ?: typedActivity.returnToMainActivity()
+        } ?: typedActivity.startMainActivity()
     }
 }

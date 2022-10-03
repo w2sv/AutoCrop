@@ -6,14 +6,9 @@ import com.autocrop.utils.kotlin.delegates.mapObserver
 import com.autocrop.utils.android.buildDocumentUriFromTreeUri
 import timber.log.Timber
 
-object UriPreferences: Preferences<Uri?>(
-    mutableMapOf(
-        "treeUri" to null
-    )
-) {
-
+object UriPreferences: TypedPreferences<Uri?>(mutableMapOf("treeUri" to null)) {
     /**
-     * Inherently build [documentUri] upon setting new [treeUri]
+     * Inherently builds [documentUri]
      */
     var treeUri: Uri? by mapObserver(map) { _, oldValue, newValue ->
         if (newValue != null && oldValue != newValue)
@@ -30,8 +25,10 @@ object UriPreferences: Preferences<Uri?>(
             .putString(
                 key,
                 value?.toString()
-            ).apply()
+            )
+            .apply()
     }
+
     override fun SharedPreferences.getValue(key: String, defaultValue: Uri?): Uri? =
         getString(
             key,

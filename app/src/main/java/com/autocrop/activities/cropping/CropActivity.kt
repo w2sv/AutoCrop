@@ -8,23 +8,22 @@ import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.fragments.cropping.CropFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.ui.controller.activity.ApplicationActivity
-import com.autocrop.ui.controller.activity.startMainActivity
 import com.autocrop.utils.android.BackPressHandler
 import com.autocrop.utils.android.extensions.snacky
 
 class CropActivity :
     ApplicationActivity<CropFragment, CropActivityViewModel>(
-        CropFragment::class.java,
+        CropFragment::class,
         CropActivityViewModel::class) {
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
-            CropActivityViewModelFactory(
-                uris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                    intent.getParcelableArrayListExtra(IntentExtraIdentifier.SELECTED_IMAGE_URIS, Uri::class.java)!!
-                else
-                    @Suppress("DEPRECATION")
-                    intent.getParcelableArrayListExtra(IntentExtraIdentifier.SELECTED_IMAGE_URIS)!!
-            )
+        CropActivityViewModelFactory(
+            uris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                intent.getParcelableArrayListExtra(IntentExtraIdentifier.SELECTED_IMAGE_URIS, Uri::class.java)!!
+            else
+                @Suppress("DEPRECATION")
+                intent.getParcelableArrayListExtra(IntentExtraIdentifier.SELECTED_IMAGE_URIS)!!
+        )
 
     /**
      * Directly [startMainActivity] if [CroppingFailedFragment] visible,

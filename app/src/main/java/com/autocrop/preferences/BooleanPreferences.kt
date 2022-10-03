@@ -3,11 +3,7 @@ package com.autocrop.preferences
 import android.content.SharedPreferences
 import com.autocrop.utils.kotlin.delegates.AutoSwitch
 
-/**
- * Singleton encapsulating entirety of parameters set by user
- * having a global impact
- */
-object BooleanPreferences : Preferences<Boolean>(
+object BooleanPreferences : TypedPreferences<Boolean>(
     mutableMapOf(
         "autoScroll" to true,
         "deleteScreenshots" to false,

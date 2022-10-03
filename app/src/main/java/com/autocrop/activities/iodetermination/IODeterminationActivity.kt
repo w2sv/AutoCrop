@@ -8,13 +8,12 @@ import com.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragme
 import com.autocrop.activities.iodetermination.fragments.comparison.ComparisonFragment
 import com.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
 import com.autocrop.activities.iodetermination.fragments.croppager.views.ManualCropButton.Companion.CROPPY_ACTIVITY_REQUEST_CODE
-import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.iodetermination.fragments.deletionconfirmationdialog.DeletionConfirmationDialogFragment
+import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.ui.controller.activity.ApplicationActivity
-import com.autocrop.ui.controller.activity.startMainActivity
 import com.autocrop.utils.android.BackPressHandler
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
@@ -25,9 +24,9 @@ import de.mateware.snacky.Snacky
 
 class IODeterminationActivity :
     ApplicationActivity<CropPagerFragment, IODeterminationActivityViewModel>(
-        CropPagerFragment::class.java,
+        CropPagerFragment::class,
         IODeterminationActivityViewModel::class,
-        accessedPreferenceInstances = arrayOf(BooleanPreferences)) {
+        BooleanPreferences) {
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -66,6 +65,37 @@ class IODeterminationActivity :
     // Post Creation $
     //$$$$$$$$$$$$$$$$
 
+            /**
+     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
+     * deletion has to be confirmed, otherwise [AppTitleFragment]
+     */
+
+            /**
+     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
+     * deletion has to be confirmed, otherwise [AppTitleFragment]
+     */
+
+            /**
+     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
+     * deletion has to be confirmed, otherwise [AppTitleFragment]
+     */
+
+    /**
+     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
+     * deletion has to be confirmed, otherwise [AppTitleFragment]
+     */
+            /**
+     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
+     * deletion has to be confirmed, otherwise [AppTitleFragment]
+     */
+    /**
+     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
+     * deletion has to be confirmed, otherwise [AppTitleFragment]
+     */
+    /**
+     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
+     * deletion has to be confirmed, otherwise [AppTitleFragment]
+     */
     /**
      * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
      * deletion has to be confirmed, otherwise [AppTitleFragment]
@@ -80,6 +110,37 @@ class IODeterminationActivity :
         )
     }
 
+            /**
+     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
+     * otherwise return to MainActivity after confirmation
+     */
+
+            /**
+     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
+     * otherwise return to MainActivity after confirmation
+     */
+
+            /**
+     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
+     * otherwise return to MainActivity after confirmation
+     */
+
+    /**
+     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
+     * otherwise return to MainActivity after confirmation
+     */
+            /**
+     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
+     * otherwise return to MainActivity after confirmation
+     */
+    /**
+     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
+     * otherwise return to MainActivity after confirmation
+     */
+    /**
+     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
+     * otherwise return to MainActivity after confirmation
+     */
     /**
      * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
      * otherwise return to MainActivity after confirmation
@@ -87,7 +148,7 @@ class IODeterminationActivity :
     private val handleBackPress by lazy {
         BackPressHandler(
             snacky("Tap again to return to main screen"),
-            ::returnToMainActivity
+            this::startMainActivity
         )
     }
 
@@ -111,7 +172,7 @@ class IODeterminationActivity :
         }
     }
 
-    fun returnToMainActivity() {
+    fun startMainActivity() {
         startMainActivity{ intent ->
             intent.putExtra(
                 IntentExtraIdentifier.IO_SYNOPSIS,

@@ -68,7 +68,7 @@
     </TextView>
 
     <Button
-        android:id="@+id/cropping_unsuccessful_got_it_button"
+        android:id="@+id/got_it_button"
 
         android:layout_width="150dp"
         android:layout_height="50dp"

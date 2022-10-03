@@ -7,7 +7,7 @@ import timber.log.Timber
 /**
  * Base for KEY to VALUE map delegator objects, the content of which is to be stored in [SharedPreferences]
  */
-abstract class Preferences<T>(protected val map: MutableMap<String, T>)
+sealed class TypedPreferences<T>(protected val map: MutableMap<String, T>)
     : MutableMap<String, T> by map{
 
     /**
