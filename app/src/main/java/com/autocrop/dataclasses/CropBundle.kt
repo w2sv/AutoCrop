@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.net.Uri
 import android.provider.MediaStore
-import com.autocrop.activities.cropping.fragments.cropping.cropped
+import com.autocrop.activities.cropping.fragments.cropping.cropping.cropped
 import com.autocrop.utils.android.ImageMimeType
 import com.autocrop.utils.android.extensions.queryMediaStoreColumns
 import com.lyrebirdstudio.croppylib.utils.extensions.rounded

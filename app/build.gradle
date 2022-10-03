@@ -26,7 +26,7 @@ android {
         }
     }
 
-    def MIN_SDK_VERSION = 23
+    def MIN_SDK_VERSION = 26
     def COMPILE_SDK_VERSION = 33
 
     def VERSION_CODE = 24

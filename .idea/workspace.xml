@@ -10,9 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/cropping/CropEdgesCandidates.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/cropping/VerticalEdges.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/Cropping.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/Cropping.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/CropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/CropFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/Cropping.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/cropping/Cropping.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/dataclasses/CropBundle.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/dataclasses/CropBundle.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,11 +160,11 @@
       <recent name="" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.autocrop.activities.cropping.fragments.cropping.cropping" />
       <recent name="com.autocrop.retriever.activity" />
       <recent name="com.autocrop.activities.iodetermination.fragments.saveall" />
       <recent name="com.autocrop.activities.examination.fragments.croppager.views" />
       <recent name="com.autocrop.activities.main.fragments" />
-      <recent name="com.autocrop.utils.android" />
     </key>
     <key name="android.template.942950756">
       <recent name="com.w2sv.autocrop" />

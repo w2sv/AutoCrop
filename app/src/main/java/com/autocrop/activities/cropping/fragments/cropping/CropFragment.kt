@@ -8,6 +8,7 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.fragments.CropActivityFragment
+import com.autocrop.activities.cropping.fragments.cropping.cropping.cropRect
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.activities.iodetermination.IODeterminationActivity
 import com.autocrop.activities.iodetermination.IODeterminationActivityViewModel
