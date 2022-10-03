@@ -1,10 +1,10 @@
 package com.autocrop.activities.main.fragments.flowfield.views
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
 import android.widget.FrameLayout
-import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.fragments.flowfield.sketch.FlowFieldSketch
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
@@ -14,7 +14,7 @@ import processing.android.PFragment
 
 class FlowFieldContainer(context: Context, attr: AttributeSet) :
     FrameLayout(context, attr),
-    ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context) {
+    ActivityRetriever<Activity> by ContextBasedActivityRetriever(context) {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
