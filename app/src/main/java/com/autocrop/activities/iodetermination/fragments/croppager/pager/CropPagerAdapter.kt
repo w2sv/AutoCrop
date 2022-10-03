@@ -31,11 +31,9 @@ class CropPagerAdapter(private val viewModel: CropPagerViewModel)
      * Defines crop setting wrt [position]
      */
     override fun onBindViewHolder(holder: CropViewHolder, position: Int){
-        holder.cropImageView.apply{
-            val cropBundle = viewModel.dataSet.atCorrespondingPosition(position)
-
-            setImageBitmap(cropBundle.crop.bitmap)
-            ViewCompat.setTransitionName(this, cropBundle.identifier())
+        with(viewModel.dataSet.atCorrespondingPosition(position)){
+            holder.cropImageView.setImageBitmap(crop.bitmap)
+            ViewCompat.setTransitionName(holder.cropImageView, identifier())
         }
     }
 }
