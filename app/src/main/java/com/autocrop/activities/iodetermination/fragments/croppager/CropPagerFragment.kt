@@ -1,5 +1,6 @@
 package com.autocrop.activities.iodetermination.fragments.croppager
 
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.SpannableStringBuilder
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
@@ -34,8 +36,10 @@ import com.autocrop.utils.android.livedata.asMutable
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.daimajia.androidanimations.library.Techniques
+import com.lyrebirdstudio.croppylib.activity.CroppyActivity
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
+import de.mateware.snacky.Snacky
 
 class CropPagerFragment :
     IODeterminationActivityFragment<FragmentCroppagerBinding>(FragmentCroppagerBinding::class.java) {
@@ -196,10 +200,24 @@ class CropPagerFragment :
         }
     }
 
+    val croppyActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            result.data?.let {
+                processAdjustedCropRect(CroppyActivity.getCropRect(it))
+                requireActivity().snacky(
+                    "Adjusted crop",
+                    duration = Snacky.LENGTH_SHORT
+                )
+                    .setIcon(R.drawable.ic_baseline_done_24)
+                    .show()
+            }
+        }
+    }
+
     /**
      * Set new [Crop] in [viewModel].dataSet.currentPosition and notify [CropPagerAdapter]
      */
-    fun processAdjustedCropRect(adjustedRect: Rect) {
+    private fun processAdjustedCropRect(adjustedRect: Rect) {
         with(viewModel.dataSet.currentValue) {
             crop = Crop.fromScreenshot(
                 screenshot.bitmap(requireContext().contentResolver),

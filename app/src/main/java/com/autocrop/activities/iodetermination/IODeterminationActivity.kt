@@ -7,7 +7,6 @@ import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.iodetermination.fragments.comparison.ComparisonFragment
 import com.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
-import com.autocrop.activities.iodetermination.fragments.croppager.views.ManualCropButton.Companion.CROPPY_ACTIVITY_REQUEST_CODE
 import com.autocrop.activities.iodetermination.fragments.deletionconfirmationdialog.DeletionConfirmationDialogFragment
 import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.autocrop.dataclasses.IOSynopsis
@@ -18,37 +17,13 @@ import com.autocrop.utils.android.BackPressHandler
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.autocrop.utils.android.extensions.uriPermissionGranted
-import com.lyrebirdstudio.croppylib.activity.CroppyActivity
 import com.w2sv.autocrop.R
-import de.mateware.snacky.Snacky
 
 class IODeterminationActivity :
     ApplicationActivity<CropPagerFragment, IODeterminationActivityViewModel>(
         CropPagerFragment::class,
         IODeterminationActivityViewModel::class,
         BooleanPreferences) {
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        @Suppress("DEPRECATION")
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == RESULT_OK && requestCode == CROPPY_ACTIVITY_REQUEST_CODE) {
-            data?.let { intent ->
-                intent.data?.let {  // it = screenshot URI
-                    castCurrentFragment<CropPagerFragment>().processAdjustedCropRect(
-                        CroppyActivity.getCropRect(intent)
-                    )
-                    snacky(
-                        "Adjusted crop",
-                        duration = Snacky.LENGTH_SHORT
-                    )
-                        .setIcon(R.drawable.ic_baseline_done_24)
-                        .show()
-                }
-            }
-        }
-    }
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
         IODeterminationActivityViewModelFactory(

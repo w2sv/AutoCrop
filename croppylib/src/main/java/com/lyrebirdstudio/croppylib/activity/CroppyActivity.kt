@@ -74,19 +74,17 @@ class CroppyActivity : AppCompatActivity() {
     }
 
     companion object {
-
         private const val KEY_CROP_REQUEST = "KEY_CROP_REQUEST"
         private const val KEY_CROP_RECT_STRING_EXTRA = "KEY_CROP_RECT_STRING_EXTRA"
 
-        fun newIntent(context: Context, cropRequest: CropRequest): Intent {
-            return Intent(context, CroppyActivity::class.java)
+        fun intent(context: Context, cropRequest: CropRequest): Intent =
+            Intent(context, CroppyActivity::class.java)
                 .putExtras(
                     Bundle()
                         .apply {
                             putParcelable(KEY_CROP_REQUEST, cropRequest)
                         }
                 )
-        }
 
         fun getCropRect(intent: Intent): Rect =
             Rect.unflattenFromString(intent.getStringExtra(KEY_CROP_RECT_STRING_EXTRA))!!
