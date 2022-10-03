@@ -11,7 +11,7 @@
 
         android:layout_centerHorizontal="true"
         android:layout_alignTop="@+id/cropping_progress_bar"
-        android:layout_marginTop="-60dp"
+        android:layout_marginTop="-80dp"
 
         android:text="@string/cropping_in_progress"
         android:textSize="22sp"
