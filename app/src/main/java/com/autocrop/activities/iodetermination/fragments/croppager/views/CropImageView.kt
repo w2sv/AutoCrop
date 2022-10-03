@@ -21,35 +21,30 @@ class CropImageView(context: Context, attributeSet: AttributeSet):
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        setCurrentCropDialog()
-        setAllCropsDialog()
+        setOnClickListener { onClickListener() }
+        setOnLongClickListener { onLongClickListener() }
     }
 
-    private val dialogInflationEnabled: Boolean
-        get() = !viewModel.autoScroll.value!!
-
-    private fun setCurrentCropDialog(){
-        setOnClickListener {
-            if (dialogInflationEnabled)
-                CropDialog().apply {
-                    arguments = bundleOf(
-                        CropDialog.DATA_SET_POSITION_BUNDLE_ARG_KEY to viewModel.dataSet.currentPosition.value!!
-                    )
-                }
-                    .show(fragmentActivity.supportFragmentManager)
-        }
-    }
-
-    private fun setAllCropsDialog(){
-        setOnLongClickListener {
-            if (!dialogInflationEnabled)
-                false
-            else if (viewModel.dataSet.size == 1)
-                performClick()
-            else{
-                CropEntiretyDialog().show(fragmentActivity.supportFragmentManager)
-                true
+    private fun onClickListener(){
+        if (dialogInflationEnabled())
+            CropDialog().apply {
+                arguments = bundleOf(
+                    CropDialog.DATA_SET_POSITION_BUNDLE_ARG_KEY to viewModel.dataSet.currentPosition.value!!
+                )
             }
-        }
+                .show(fragmentActivity.supportFragmentManager)
     }
+
+    private fun onLongClickListener(): Boolean =
+        if (!dialogInflationEnabled())
+            false
+        else if (viewModel.dataSet.size == 1)
+            performClick()
+        else{
+            CropEntiretyDialog().show(fragmentActivity.supportFragmentManager)
+            true
+        }
+
+    private fun dialogInflationEnabled(): Boolean =
+        viewModel.autoScroll.value == false
 }
