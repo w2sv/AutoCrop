@@ -1,21 +1,20 @@
 package com.autocrop.activities.iodetermination.fragments.croppager.pager
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.autocrop.ui.elements.recyclerview.BidirectionalRecyclerViewAdapter
-import com.w2sv.autocrop.R
+import com.w2sv.autocrop.databinding.ImageviewCropBinding
 
 class CropPagerAdapter(private val viewModel: CropPagerViewModel)
     : BidirectionalRecyclerViewAdapter<CropPagerAdapter.CropViewHolder>(viewModel.dataSet){
 
-    class CropViewHolder(view: View)
-        : RecyclerView.ViewHolder(view) {
-        val cropImageView: ImageView = view.findViewById(R.id.crop_iv)
+    class CropViewHolder(binding: ImageviewCropBinding)
+        : RecyclerView.ViewHolder(binding.cropIv){
+        val imageView: ImageView = itemView as ImageView
     }
 
     /**
@@ -23,8 +22,11 @@ class CropPagerAdapter(private val viewModel: CropPagerViewModel)
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CropViewHolder =
         CropViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.imageview_crop, parent, false)
+            ImageviewCropBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
 
     /**
@@ -32,8 +34,11 @@ class CropPagerAdapter(private val viewModel: CropPagerViewModel)
      */
     override fun onBindViewHolder(holder: CropViewHolder, position: Int){
         with(viewModel.dataSet.atCorrespondingPosition(position)){
-            holder.cropImageView.setImageBitmap(crop.bitmap)
-            ViewCompat.setTransitionName(holder.cropImageView, identifier())
+            holder.imageView.setImageBitmap(crop.bitmap)
+            ViewCompat.setTransitionName(holder.imageView, identifier())
         }
+//        with(holder.cropImageView){
+//            layoutParams = RecyclerView.LayoutParams(200, 500)
+//        }
     }
 }

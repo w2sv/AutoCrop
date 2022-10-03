@@ -22,7 +22,7 @@ class ComparisonButton(context: Context, attributeSet: AttributeSet):
         ) { fragmentTransaction ->
             val cropImageView =
                 fragmentHostingActivity.castCurrentFragment<CropPagerFragment>().binding.viewPager.run {
-                    (recyclerView.findViewHolderForAdapterPosition(currentItem) as CropPagerAdapter.CropViewHolder).cropImageView
+                    (recyclerView.findViewHolderForAdapterPosition(currentItem) as CropPagerAdapter.CropViewHolder).imageView
                 }
 
             fragmentTransaction.addSharedElement(

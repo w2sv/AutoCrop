@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.autocrop.activities.iodetermination.fragments.croppager.views.CropImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:viewBindingIgnore="true"
     android:id="@+id/crop_iv"
 
     android:layout_width="match_parent"
