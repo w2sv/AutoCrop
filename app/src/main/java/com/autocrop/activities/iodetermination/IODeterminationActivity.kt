@@ -65,37 +65,6 @@ class IODeterminationActivity :
     // Post Creation $
     //$$$$$$$$$$$$$$$$
 
-            /**
-     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
-     * deletion has to be confirmed, otherwise [AppTitleFragment]
-     */
-
-            /**
-     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
-     * deletion has to be confirmed, otherwise [AppTitleFragment]
-     */
-
-            /**
-     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
-     * deletion has to be confirmed, otherwise [AppTitleFragment]
-     */
-
-    /**
-     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
-     * deletion has to be confirmed, otherwise [AppTitleFragment]
-     */
-            /**
-     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
-     * deletion has to be confirmed, otherwise [AppTitleFragment]
-     */
-    /**
-     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
-     * deletion has to be confirmed, otherwise [AppTitleFragment]
-     */
-    /**
-     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
-     * deletion has to be confirmed, otherwise [AppTitleFragment]
-     */
     /**
      * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
      * deletion has to be confirmed, otherwise [AppTitleFragment]
@@ -110,37 +79,6 @@ class IODeterminationActivity :
         )
     }
 
-            /**
-     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
-     * otherwise return to MainActivity after confirmation
-     */
-
-            /**
-     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
-     * otherwise return to MainActivity after confirmation
-     */
-
-            /**
-     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
-     * otherwise return to MainActivity after confirmation
-     */
-
-    /**
-     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
-     * otherwise return to MainActivity after confirmation
-     */
-            /**
-     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
-     * otherwise return to MainActivity after confirmation
-     */
-    /**
-     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
-     * otherwise return to MainActivity after confirmation
-     */
-    /**
-     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
-     * otherwise return to MainActivity after confirmation
-     */
     /**
      * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
      * otherwise return to MainActivity after confirmation
