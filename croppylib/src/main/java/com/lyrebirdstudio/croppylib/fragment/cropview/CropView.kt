@@ -632,7 +632,7 @@ class CropView @JvmOverloads constructor(
      * drag cropRect
      */
     private fun calculateMaxRect() {
-        val borderRect = bitmapBorderRect.max(viewRect)
+        val borderRect = maxRectFFrom(bitmapBorderRect, viewRect)
 
         when (val state = draggingState) {
             is DraggingEdge -> {
@@ -698,11 +698,11 @@ class CropView @JvmOverloads constructor(
     }
 
     private fun updateExceedMaxBorders() {
-        cropRect.maxed(maxRect)
+        cropRect.set(maxRectFFrom(cropRect, maxRect))
     }
 
     private fun updateExceedMinBorders() {
-        cropRect.mind(minRect)
+        cropRect.set(minRectFFrom(cropRect, minRect))
     }
 
     /**

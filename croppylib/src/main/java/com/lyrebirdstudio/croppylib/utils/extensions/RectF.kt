@@ -5,38 +5,23 @@ import android.view.MotionEvent
 import com.lyrebirdstudio.croppylib.utils.model.Corner
 import com.lyrebirdstudio.croppylib.utils.model.Edge
 import java.lang.Float.min
-import kotlin.math.hypot
 import kotlin.math.max
 
-fun RectF.max(other: RectF): RectF =
+fun maxRectFFrom(a: RectF, b: RectF): RectF =
     RectF(
-        max(left, other.left),
-        max(top, other.top),
-        min(right, other.right),
-        min(bottom, other.bottom)
+        max(a.left, b.left),
+        max(a.top, b.top),
+        min(a.right, b.right),
+        min(a.bottom, b.bottom)
     )
 
-fun RectF.maxed(other: RectF){
-    left = max(left, other.left)
-    top = max(top, other.top)
-    right = min(right, other.right)
-    bottom = min(bottom, other.bottom)
-}
-
-fun RectF.min(other: RectF): RectF =
+fun minRectFFrom(a: RectF, b: RectF) =
     RectF(
-        min(left, other.left),
-        min(top, other.top),
-        max(right, other.right),
-        max(bottom, other.bottom)
+        min(a.left, b.left),
+        min(a.top, b.top),
+        max(a.right, b.right),
+        max(a.bottom, b.bottom)
     )
-
-fun RectF.mind(other: RectF){
-    left = min(left, other.left)
-    top = min(top, other.top)
-    right = max(right, other.right)
-    bottom = max(bottom, other.bottom)
-}
 
 fun RectF.getEdgeTouch(touchEvent: MotionEvent, touchThreshold: Float = 50f): Edge {
     val isLeft = touchEvent.x < left + touchThreshold &&
@@ -100,8 +85,4 @@ fun RectF.getCornerTouch(touchEvent: MotionEvent, touchThreshold: Float = 50f): 
 }
 
 fun MotionEvent.withinRectangle(rectF: RectF): Boolean =
-    x > rectF.left && x < rectF.right && y > rectF.top && y < rectF.bottom
-
-fun RectF.getHypotenus(): Float {
-    return hypot(height().toDouble(), width().toDouble()).toFloat()
-}
+    rectF.contains(x, y)
