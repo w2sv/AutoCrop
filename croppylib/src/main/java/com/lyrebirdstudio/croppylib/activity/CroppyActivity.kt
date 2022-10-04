@@ -35,7 +35,7 @@ class CroppyActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[CroppyActivityViewModel::class.java]
             .apply {
-                exitActivityAnimation = cropRequest.exitActivityAnimation
+                exitAnimation = cropRequest.exitActivityAnimation
             }
 
         if (savedInstanceState == null) {
@@ -73,7 +73,7 @@ class CroppyActivity : AppCompatActivity() {
     override fun finish() {
         super.finish()
 
-        viewModel.exitActivityAnimation?.invoke(this)
+        viewModel.exitAnimation?.invoke(this)
     }
 
     companion object {

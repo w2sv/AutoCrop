@@ -126,12 +126,12 @@ class CropView @JvmOverloads constructor(
     /**
      * Corner toggle line width
      */
-    private val cornerToggleWidthInPixel = resources.getDimension(R.dimen.corner_toggle_width)
+    private val cornerWidthInPixel = resources.getDimension(R.dimen.corner_toggle_width)
 
     /**
      * Corner toggle line length
      */
-    private val cornerToggleLengthInPixel = resources.getDimension(R.dimen.corner_toggle_length)
+    private val cornerEdgeLengthInPixel = resources.getDimension(R.dimen.corner_toggle_length)
 
     private val minRectLength = resources.getDimension(R.dimen.min_rect)
 
@@ -139,16 +139,6 @@ class CropView @JvmOverloads constructor(
      * Mask color
      */
     private val maskBackgroundColor = ContextCompat.getColor(context, R.color.colorCropAlpha)
-
-    /**
-     * Mask canvas
-     */
-    private var maskCanvas: Canvas? = null
-
-    /**
-     * Mask bitmap
-     */
-    private var maskBitmap: Bitmap? = null
 
     companion object {
         /**
@@ -189,20 +179,11 @@ class CropView @JvmOverloads constructor(
 
         viewRect.set(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
 
-        createMaskBitmap()
         initializeBitmapMatrix()
         initializeCropRect(viewModel.initialCropRect)
 
         requestLayout()
         invalidate()
-    }
-
-    /**
-     * Create mask bitmap
-     */
-    private fun createMaskBitmap() {
-        maskBitmap = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
-        maskCanvas = Canvas(maskBitmap!!)
     }
 
     fun reset(){
@@ -436,17 +417,17 @@ class CropView @JvmOverloads constructor(
          */
         drawLine(
             cropRect.left - gridLineWidthPixel,
-            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthPixel,
-            cropRect.left + cornerToggleLengthInPixel,
-            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthPixel,
+            cropRect.top + cornerWidthInPixel / 2f - gridLineWidthPixel,
+            cropRect.left + cornerEdgeLengthInPixel,
+            cropRect.top + cornerWidthInPixel / 2f - gridLineWidthPixel,
             cornerPaint
         )
 
         drawLine(
-            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthPixel,
+            cropRect.left + cornerWidthInPixel / 2f - gridLineWidthPixel,
             cropRect.top - gridLineWidthPixel,
-            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthPixel,
-            cropRect.top + cornerToggleLengthInPixel,
+            cropRect.left + cornerWidthInPixel / 2f - gridLineWidthPixel,
+            cropRect.top + cornerEdgeLengthInPixel,
             cornerPaint
         )
 
@@ -455,18 +436,18 @@ class CropView @JvmOverloads constructor(
          */
 
         drawLine(
-            cropRect.right - cornerToggleLengthInPixel,
-            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthPixel,
+            cropRect.right - cornerEdgeLengthInPixel,
+            cropRect.top + cornerWidthInPixel / 2f - gridLineWidthPixel,
             cropRect.right + gridLineWidthPixel,
-            cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthPixel,
+            cropRect.top + cornerWidthInPixel / 2f - gridLineWidthPixel,
             cornerPaint
         )
 
         drawLine(
-            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthPixel,
+            cropRect.right - cornerWidthInPixel / 2f + gridLineWidthPixel,
             cropRect.top - gridLineWidthPixel,
-            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthPixel,
-            cropRect.top + cornerToggleLengthInPixel,
+            cropRect.right - cornerWidthInPixel / 2f + gridLineWidthPixel,
+            cropRect.top + cornerEdgeLengthInPixel,
             cornerPaint
         )
 
@@ -476,17 +457,17 @@ class CropView @JvmOverloads constructor(
 
         drawLine(
             cropRect.left - gridLineWidthPixel,
-            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthPixel,
-            cropRect.left + cornerToggleLengthInPixel,
-            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthPixel,
+            cropRect.bottom - cornerWidthInPixel / 2f + gridLineWidthPixel,
+            cropRect.left + cornerEdgeLengthInPixel,
+            cropRect.bottom - cornerWidthInPixel / 2f + gridLineWidthPixel,
             cornerPaint
         )
 
         drawLine(
-            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthPixel,
+            cropRect.left + cornerWidthInPixel / 2f - gridLineWidthPixel,
             cropRect.bottom + gridLineWidthPixel,
-            cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthPixel,
-            cropRect.bottom - cornerToggleLengthInPixel,
+            cropRect.left + cornerWidthInPixel / 2f - gridLineWidthPixel,
+            cropRect.bottom - cornerEdgeLengthInPixel,
             cornerPaint
         )
 
@@ -494,18 +475,18 @@ class CropView @JvmOverloads constructor(
          * Bottom Right
          */
         drawLine(
-            cropRect.right - cornerToggleLengthInPixel,
-            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthPixel,
+            cropRect.right - cornerEdgeLengthInPixel,
+            cropRect.bottom - cornerWidthInPixel / 2f + gridLineWidthPixel,
             cropRect.right + gridLineWidthPixel,
-            cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthPixel,
+            cropRect.bottom - cornerWidthInPixel / 2f + gridLineWidthPixel,
             cornerPaint
         )
 
         drawLine(
-            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthPixel,
+            cropRect.right - cornerWidthInPixel / 2f + gridLineWidthPixel,
             cropRect.bottom + gridLineWidthPixel,
-            cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthPixel,
-            cropRect.bottom - cornerToggleLengthInPixel,
+            cropRect.right - cornerWidthInPixel / 2f + gridLineWidthPixel,
+            cropRect.bottom - cornerEdgeLengthInPixel,
             cornerPaint
         )
     }

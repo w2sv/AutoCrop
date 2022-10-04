@@ -4,5 +4,5 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 
 class CroppyActivityViewModel : ViewModel() {
-    var exitActivityAnimation: ((Context) -> Unit)? = null
+    var exitAnimation: ((Context) -> Unit)? = null
 }
