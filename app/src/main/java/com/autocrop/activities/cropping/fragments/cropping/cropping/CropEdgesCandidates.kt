@@ -1,62 +1,64 @@
 package com.autocrop.activities.cropping.fragments.cropping.cropping
 
 import android.graphics.Bitmap
-import android.graphics.Color
-import kotlin.math.abs
 
-fun Bitmap.cropEdgesCandidates(pixelComparisonsPerRow: Int): List<VerticalEdges> =
-    getTopEdge(0, width / pixelComparisonsPerRow, mutableListOf())
-        .toList()
+private const val INTRA_ROW_FLUCTUATION_THRESHOLD = 6F
+private const val INTER_ROW_MONOCHROME_THRESHOLD = .5F
 
-private fun Bitmap.getTopEdge(queryStartInd: Int, sampleStep: Int, candidates: MutableList<VerticalEdges>): MutableList<VerticalEdges> {
-    var precedingRowHasFluctuation: Boolean = hasFluctuationThroughoutRow(queryStartInd, sampleStep)
+fun Bitmap.cropEdgesCandidates(pixelComparisonsPerRow: Int): List<VerticalEdges>{
+    val sampleStep = width / pixelComparisonsPerRow
+    val candidates = mutableListOf<VerticalEdges>()
 
-    for (i in searchRange(queryStartInd + 1)){
-        val currentRowHasFluctuation: Boolean = hasFluctuationThroughoutRow(i + 1, sampleStep)
-
-        if (!precedingRowHasFluctuation && currentRowHasFluctuation)
-            return getBottomEdge(i + 1, sampleStep, candidates)
-        precedingRowHasFluctuation = currentRowHasFluctuation
+    var (yStartTopEdgeQuery, nonCropAreaMonochrome) = getBottomEdge(0, sampleStep, null).run {
+        first + 1 to second
     }
 
-    return candidates
-}
+    while (yStartTopEdgeQuery != height){
+        val topEdge = getTopEdge(yStartTopEdgeQuery, sampleStep, nonCropAreaMonochrome!!)
+        if (topEdge != null){
+            val bottomEdge = getBottomEdge(topEdge.first + 1, sampleStep, topEdge.second)
+            candidates.add(VerticalEdges(topEdge.first, bottomEdge.first))
 
-private fun Bitmap.getBottomEdge(lowerBoundIndex: Int, sampleStep: Int, candidates: MutableList<VerticalEdges>): MutableList<VerticalEdges> {
-    var precedingRowHasFluctuation: Boolean = hasFluctuationThroughoutRow(lowerBoundIndex, sampleStep)
-
-    for (i in searchRange(lowerBoundIndex + 1)){
-        val currentRowHasFluctuation: Boolean = hasFluctuationThroughoutRow(i, sampleStep)
-
-        if (precedingRowHasFluctuation && !currentRowHasFluctuation){
-            candidates.add(VerticalEdges(lowerBoundIndex, i))
-            return getTopEdge(i + 1, sampleStep, candidates)
+            yStartTopEdgeQuery = bottomEdge.first + 1
+            nonCropAreaMonochrome = bottomEdge.second
         }
-        precedingRowHasFluctuation = currentRowHasFluctuation
+        else
+            break
     }
 
-    return candidates.apply {
-        add(VerticalEdges(lowerBoundIndex, lastRowIndex))
-    }
+    return candidates.toList()
 }
 
-/**
- * x -> column index
- * y -> row index
- */
-private fun Bitmap.hasFluctuationThroughoutRow(y: Int, sampleStep: Int, threshold: Float = 0.015f): Boolean =
-    (sampleStep until width step sampleStep).any {
-        meanDifference(Color.valueOf(getPixel(it, y)), Color.valueOf(getPixel(it - sampleStep, y))) > threshold
+private fun Bitmap.getTopEdge(yStart: Int,
+                              sampleStep: Int,
+                              nonCropAreaMonochrome: ColorVector): Pair<Int, ColorVector?>? {
+    for (y in searchRange(yStart)){
+        val monochrome = rowMonochrome(y, sampleStep)
+        if (monochrome == null || absMeanDifference(monochrome, nonCropAreaMonochrome) > INTER_ROW_MONOCHROME_THRESHOLD)
+            return y to monochrome
     }
+    return null
+}
 
-private fun meanDifference(a: Color, b: Color): Float =
-    (abs(a.alpha() - b.alpha()) +
-    abs(a.red() - b.red()) +
-    abs(a.green() - b.green()) +
-    abs(a.blue() - b.blue())) / 4f
+private fun Bitmap.getBottomEdge(yStart: Int,
+                                 sampleStep: Int,
+                                 cropAreaMonochrome: ColorVector?): Pair<Int, ColorVector?> {
+    for (y in searchRange(yStart)){
+        val monochrome = rowMonochrome(y, sampleStep)
+        if (monochrome != null && (cropAreaMonochrome == null || absMeanDifference(monochrome, cropAreaMonochrome) > INTER_ROW_MONOCHROME_THRESHOLD))
+            return y to monochrome
+    }
+    return height - 1 to null
+}
 
-private val Bitmap.lastRowIndex: Int
-    get() = height - 1
+private fun Bitmap.rowMonochrome(y: Int, sampleStep: Int): ColorVector?{
+    val vectors = (0 until width step sampleStep).map { ColorVector(getPixel(it, y)) }
+    vectors.windowed(2).forEach {
+        if (absMeanDifference(it[0], it[1]) > INTRA_ROW_FLUCTUATION_THRESHOLD)
+            return null
+    }
+    return vectors.iterator().mean()
+}
 
-private fun Bitmap.searchRange(startIndex: Int): IntRange =
-    (startIndex until lastRowIndex)
+private fun Bitmap.searchRange(yStart: Int): IntRange =
+    (yStart until  height)
