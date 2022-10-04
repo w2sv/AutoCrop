@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.net.Uri
 import android.provider.MediaStore
+import com.autocrop.activities.cropping.fragments.cropping.cropping.VerticalEdges
 import com.autocrop.activities.cropping.fragments.cropping.cropping.cropped
 import com.autocrop.utils.android.ImageMimeType
 import com.autocrop.utils.android.extensions.queryMediaStoreColumns
@@ -36,10 +37,11 @@ data class Screenshot(
     val diskUsage: Long,
     val fileName: String,
     val parsedMimeType: ImageMimeType,
-    val mediaStoreId: Long){
+    val mediaStoreId: Long,
+    val cropEdgePairCandidates: List<VerticalEdges>){
 
     companion object{
-        fun fromContentResolver(contentResolver: ContentResolver, uri: Uri): Screenshot{
+        fun fromContentResolver(contentResolver: ContentResolver, uri: Uri, cropEdgePairCandidates: List<VerticalEdges>): Screenshot{
             val mediaColumns = contentResolver.queryMediaStoreColumns(
                 uri,
                 arrayOf(
@@ -55,7 +57,8 @@ data class Screenshot(
                 mediaColumns[0].toLong(),
                 mediaColumns[1],
                 ImageMimeType.parse(mediaColumns[2]),
-                mediaColumns[3].toLong()
+                mediaColumns[3].toLong(),
+                cropEdgePairCandidates
             )
                 .also { println("Parsed screenshot: $it") }
         }

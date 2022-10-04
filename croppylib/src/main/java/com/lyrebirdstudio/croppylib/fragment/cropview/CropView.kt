@@ -25,8 +25,8 @@ import kotlin.math.min
 class CropView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+    defStyleAttr: Int = 0)
+    : View(context, attrs, defStyleAttr) {
 
     /**
      * Touch threshold for corners and edges
@@ -117,13 +117,6 @@ class CropView @JvmOverloads constructor(
     private var draggingState: DraggingState = DraggingState.Idle
 
     /**
-     * Hold value for scaling bitmap with two finger.
-     * We initialize this point to avoid memory
-     * allocation every time user scale bitmap with fingers.
-     */
-    private val zoomFocusPoint = FloatArray(2)
-
-    /**
      * Crop rect grid line width
      */
     private val gridLineWidthInPixel = resources.getDimension(R.dimen.grid_line_width)
@@ -162,10 +155,16 @@ class CropView @JvmOverloads constructor(
     private lateinit var bitmap: Bitmap
     private lateinit var initialCropRect: RectF
     private lateinit var onCropRectSizeChanged: ((RectF) -> Unit)
+    private lateinit var cropEdgePairCandidates: List<Pair<Int, Int>>
 
-    fun initialize(bitmap: Bitmap, initialCropRect: RectF, theme: CroppyTheme, onCropRectSizeChanged: ((RectF) -> Unit)) {
+    fun initialize(bitmap: Bitmap,
+                   initialCropRect: RectF,
+                   cropEdgePairCandidates: List<Pair<Int, Int>>,
+                   theme: CroppyTheme,
+                   onCropRectSizeChanged: ((RectF) -> Unit)) {
         this.bitmap = bitmap
         this.initialCropRect = initialCropRect
+        this.cropEdgePairCandidates = cropEdgePairCandidates
         this.onCropRectSizeChanged = onCropRectSizeChanged
 
         bitmapRect.set(
@@ -212,95 +211,23 @@ class CropView @JvmOverloads constructor(
         notifyCropRectChanged(returnInitial = true)
     }
 
-    private val bitmapGestureListener = object : BitmapGestureHandler.BitmapGestureListener {
-        override fun onDoubleTap(motionEvent: MotionEvent) {
+    private val bitmapGestureHandler = BitmapGestureHandler(
+        context,
+        object : BitmapGestureHandler.BitmapGestureListener {
+            override fun onScroll(distanceX: Float, distanceY: Float) {
+                val topNew = cropRect.top - distanceY
+                val bottomNew = cropRect.bottom - distanceY
 
-//            if (isBitmapScaleExceedMaxLimit(DOUBLE_TAP_SCALE_FACTOR)) {
-//
-//                val resetMatrix = Matrix()
-//                val scale = max(
-//                    cropRect.width() / bitmapRect.width(),
-//                    cropRect.height() / bitmapRect.height()
-//                )
-//                resetMatrix.setScale(scale, scale)
-//
-//                val translateX = (viewWidth - bitmapRect.width() * scale) / 2f + marginInPixelSize
-//                val translateY = (viewHeight - bitmapRect.height() * scale) / 2f + marginInPixelSize
-//                resetMatrix.postTranslate(translateX, translateY)
-//
-//                bitmapMatrix.animateToMatrix(resetMatrix) {
-//                    notifyCropRectChanged()
-//                    invalidate()
-//                }
-//
-//                return
-//            }
-//
-//            bitmapMatrix.animateScaleToPoint(
-//                DOUBLE_TAP_SCALE_FACTOR,
-//                motionEvent.x,
-//                motionEvent.y
-//            ) {
-//                notifyCropRectChanged()
-//                invalidate()
-//            }
-        }
+                if (topNew > bitmapBorderRect.top && bottomNew < bitmapBorderRect.bottom){
+                    cropRect.top = topNew
+                    cropRect.bottom = bottomNew
 
-        /**
-         * This value holds inverted matrix when user scale
-         * bitmap image with two finger. This value initialized to
-         * avoid memory allocation every time user pinch zoom.
-         */
-        private val zoomInverseMatrix = Matrix()
-
-        override fun onScale(scaleFactor: Float, focusX: Float, focusY: Float) {
-//
-//            /**
-//             * Return if new calculated bitmap matrix will exceed scale
-//             * point then early return.
-//             * Otherwise continue and do calculation and apply to bitmap matrix.
-//             */
-//            if (isBitmapScaleExceedMaxLimit(scaleFactor))
-//                return
-//
-//            zoomInverseMatrix.reset()
-//            bitmapMatrix.invert(zoomInverseMatrix)
-//
-//            /**
-//             * Inverse focus points
-//             */
-//            zoomFocusPoint[0] = focusX
-//            zoomFocusPoint[1] = focusY
-//            zoomInverseMatrix.mapPoints(zoomFocusPoint)
-//
-//            /**
-//             * Scale bitmap matrix
-//             */
-//            bitmapMatrix.preScale(
-//                scaleFactor,
-//                scaleFactor,
-//                zoomFocusPoint[0],
-//                zoomFocusPoint[1]
-//            )
-//
-//            invalidate()
-        }
-
-        override fun onScroll(distanceX: Float, distanceY: Float) {
-            val topNew = cropRect.top - distanceY
-            val bottomNew = cropRect.bottom - distanceY
-
-            if (topNew > bitmapBorderRect.top && bottomNew < bitmapBorderRect.bottom){
-                cropRect.top = topNew
-                cropRect.bottom = bottomNew
-
-                notifyCropRectChanged()
-                invalidate()
+                    notifyCropRectChanged()
+                    invalidate()
+                }
             }
         }
-    }
-
-    private val bitmapGestureHandler = BitmapGestureHandler(context, bitmapGestureListener)
+    )
 
     /**
      * Initialize necessary rects, bitmaps, canvas here.
@@ -613,20 +540,6 @@ class CropView @JvmOverloads constructor(
     }
 
     /**
-     * Move cropRect on user drag cropRect from corners.
-     * Corner will be move to opposite side of the selected cropRect's
-     * corner. If aspect ratio selected (Not free), then aspect ration shouldn't
-     * be change on cropRect is changed.
-     */
-    private fun onCornerPositionChanged(corner: Corner, motionEvent: MotionEvent) {
-        when (corner) {
-            TOP_RIGHT, TOP_LEFT -> cropRect.top = motionEvent.y
-            BOTTOM_RIGHT, BOTTOM_LEFT -> cropRect.bottom = motionEvent.y
-            else -> return
-        }
-    }
-
-    /**
      * Move cropRect on user drag cropRect from edges.
      * Corner will be move to opposite side of the selected cropRect's
      * edge. If aspect ratio selected (Not free), then aspect ration shouldn't
@@ -848,28 +761,6 @@ class CropView @JvmOverloads constructor(
         }
     }
 
-    /**
-     * Pretend a bitmap matrix value if scale factor will be applied to
-     * bitmap matrix. , then returns
-     * true, false otherwise.
-     * @return true If pretended value is exceed max scale value, false otherwise
-     */
-    private fun isBitmapScaleExceedMaxLimit(scaleFactor: Float): Boolean {
-        val bitmapMatrixCopy = bitmapMatrix.clone()
-        bitmapMatrixCopy.preScale(scaleFactor, scaleFactor)
-
-        val invertedBitmapMatrix = Matrix()
-        bitmapMatrixCopy.invert(invertedBitmapMatrix)
-
-        val invertedBitmapCropRect = RectF()
-
-        invertedBitmapMatrix.mapRect(invertedBitmapCropRect, cropRect)
-        return min(
-            invertedBitmapCropRect.width(),
-            invertedBitmapCropRect.height()
-        ) <= bitmapMinRect.width()
-    }
-
     private fun notifyCropRectChanged(returnInitial: Boolean = false) {
         onCropRectSizeChanged(if (returnInitial) initialCropRect else getCropRect())
     }
@@ -880,11 +771,5 @@ class CropView @JvmOverloads constructor(
          * Maximum scale for given bitmap
          */
         private const val MAX_SCALE = 15f
-
-        /**
-         * Use this constant, when user double tap to scale
-         */
-        private const val DOUBLE_TAP_SCALE_FACTOR = 2f
-
     }
 }

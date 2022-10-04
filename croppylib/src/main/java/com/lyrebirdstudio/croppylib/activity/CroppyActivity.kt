@@ -42,15 +42,15 @@ class CroppyActivity : AppCompatActivity() {
             supportFragmentManager
                 .beginTransaction()
                 .add(
-                    R.id.containerCroppy,
-                    ImageCropFragment.newInstance(cropRequest)
+                    R.id.croppy_container,
+                    ImageCropFragment.instance(cropRequest)
                         .apply {
                             onApplyClicked = { cropRect ->
                                 setResult(
                                     Activity.RESULT_OK,
                                     Intent()
                                         .apply {
-                                            data = cropRequest.sourceUri
+                                            data = cropRequest.uri
                                             putExtra(KEY_CROP_RECT_STRING_EXTRA, cropRect.flattenToString())
                                         }
                                 )

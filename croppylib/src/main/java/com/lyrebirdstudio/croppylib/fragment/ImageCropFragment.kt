@@ -56,7 +56,7 @@ class ImageCropFragment : Fragment() {
         }
 
         ImageCropViewModelFactory(
-            resizedBitmap(cropRequest.sourceUri, requireContext()),
+            resizedBitmap(cropRequest.uri, requireContext()),
             cropRequest
         )
     }
@@ -72,6 +72,7 @@ class ImageCropFragment : Fragment() {
         binding.cropView.initialize(
             viewModel.bitmap,
             viewModel.cropRequest.initialCropRect,
+            viewModel.cropRequest.cropEdgePairCandidates,
             viewModel.cropRequest.croppyTheme
         ){ cropRectF ->
             viewModel.cropRectF.asMutable.postValue(cropRectF)
@@ -119,12 +120,11 @@ class ImageCropFragment : Fragment() {
         private const val KEY_BUNDLE_CROP_REQUEST = "KEY_BUNDLE_CROP_REQUEST"
 
         @JvmStatic
-        fun newInstance(cropRequest: CropRequest): ImageCropFragment {
-            return ImageCropFragment().apply {
+        fun instance(cropRequest: CropRequest): ImageCropFragment =
+            ImageCropFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(KEY_BUNDLE_CROP_REQUEST, cropRequest)
                 }
             }
-        }
     }
 }

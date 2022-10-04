@@ -12,14 +12,14 @@ fun Bitmap.cropped(rect: Rect): Bitmap =
         rect.height()
     )
 
-fun cropRect(screenshot: Bitmap): Rect?{
+fun cropRect(screenshot: Bitmap): Pair<Rect, List<VerticalEdges>>?{
     val borderPairCandidates: List<VerticalEdges> = screenshot.cropEdgesCandidates(5)
 
     if (borderPairCandidates.isEmpty())
         return null
 
     return maxHeightCropEdges(borderPairCandidates).run {
-        Rect(0, top, screenshot.width, bottom)
+        Rect(0, top, screenshot.width, bottom) to borderPairCandidates
     }
 }
 

@@ -6,7 +6,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CroppyTheme(
-    @ColorRes val accentColor: Int = R.color.blue,
-    @ColorRes val backgroundColor: Int = R.color.colorCropBackground
-)
-    : Parcelable
+    @ColorRes val accentColor: Int,
+    @ColorRes val backgroundColor: Int) : Parcelable

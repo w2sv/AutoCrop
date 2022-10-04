@@ -8,11 +8,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 open class CropRequest(
-    open val sourceUri: Uri,
-    open val requestCode: Int,
-    open val initialCropRect: RectF,
-    open val croppyTheme: CroppyTheme,
-    open val exitActivityAnimation: ((Context) -> Unit)?
-    ) : Parcelable
-
-
+    val uri: Uri,
+    val initialCropRect: RectF,
+    val cropEdgePairCandidates: List<Pair<Int, Int>>,
+    val croppyTheme: CroppyTheme,
+    val exitActivityAnimation: ((Context) -> Unit)?) : Parcelable

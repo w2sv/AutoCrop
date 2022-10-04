@@ -53,12 +53,13 @@ class CropFragment
             // attempt to crop image; upon success add CropBundle to sharedViewModel
             val screenshotBitmap = requireContext().contentResolver.openBitmap(uri)
 
-            cropRect(screenshotBitmap)?.let { cropRect ->
+            cropRect(screenshotBitmap)?.let { (cropRect, cropEdgePairCandidates) ->
                 sharedViewModel.cropBundles.add(
                     CropBundle.assemble(
                         Screenshot.fromContentResolver(
                             requireContext().contentResolver,
-                            uri
+                            uri,
+                            cropEdgePairCandidates
                         ),
                         screenshotBitmap,
                         cropRect
