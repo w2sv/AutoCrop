@@ -175,17 +175,7 @@ class CropView @JvmOverloads constructor(
             viewModel.bitmap.height.toFloat(),
         )
 
-        applyTheme()
-    }
-
-    private fun applyTheme(){
         setBackgroundColor(context.getColor(viewModel.croppyTheme.backgroundColor))
-
-        accentPaint = Paint().apply {
-            color = context.getColor(viewModel.croppyTheme.accentColor)
-            strokeWidth = 6F
-            style = Paint.Style.STROKE
-        }
     }
 
     private val bitmapBorderRect = RectF()
@@ -319,32 +309,32 @@ class CropView @JvmOverloads constructor(
 
         canvas?.apply {
             drawBitmap(viewModel.bitmap, bitmapMatrix, emptyPaint)
-            drawCropEdgePairCandidates()
             save()
             clipRect(cropRect)
             drawColor(maskBackgroundColor)
             restore()
 
-//            drawGrid(this)
-//            drawCornerToggles(this)
+            drawCropEdgePairCandidates()
+            drawGrid()
+            drawCorners()
         }
     }
 
     private fun Canvas.drawCropEdgePairCandidates(){
-        rescaledCropEdgePairCandidates.forEach {
+        rescaledCropEdgeRectFs.forEach {
             drawLine(
-                cropRect.left,
-                it.first,
-                cropRect.right,
-                it.first,
+                it.left,
+                it.top,
+                it.right,
+                it.top,
                 topEdgePaint
             )
 
             drawLine(
-                cropRect.left,
-                it.second,
-                cropRect.right,
-                it.second,
+                it.left,
+                it.bottom,
+                it.right,
+                it.bottom,
                 bottomEdgePaint
             )
         }
@@ -376,7 +366,7 @@ class CropView @JvmOverloads constructor(
             cropRect.bottom,
             cropRect.left,
             cropRect.top,
-            cropPaint
+            gridPaint
         )
 
         drawLine(
@@ -384,7 +374,7 @@ class CropView @JvmOverloads constructor(
             cropRect.bottom,
             cropRect.right,
             cropRect.top,
-            cropPaint
+            gridPaint
         )
 
         drawLine(
@@ -412,7 +402,7 @@ class CropView @JvmOverloads constructor(
             cropRect.top,
             cropRect.left + cropRect.width() / 3f,
             cropRect.bottom,
-            cropPaint
+            gridPaint
         )
 
         drawLine(
@@ -420,7 +410,7 @@ class CropView @JvmOverloads constructor(
             cropRect.top,
             cropRect.left + cropRect.width() * 2f / 3f,
             cropRect.bottom,
-            cropPaint
+            gridPaint
         )
 
         drawLine(
@@ -428,7 +418,7 @@ class CropView @JvmOverloads constructor(
             cropRect.top + cropRect.height() / 3f,
             cropRect.right,
             cropRect.top + cropRect.height() / 3f,
-            cropPaint
+            gridPaint
         )
 
         drawLine(
@@ -436,20 +426,20 @@ class CropView @JvmOverloads constructor(
             cropRect.top + cropRect.height() * 2f / 3f,
             cropRect.right,
             cropRect.top + cropRect.height() * 2f / 3f,
-            cropPaint
+            gridPaint
         )
     }
 
-    private fun Canvas.drawCornerToggles() {
+    private fun Canvas.drawCorners() {
         /**
-         * Top left toggle
+         * Top left
          */
         drawLine(
             cropRect.left - gridLineWidthPixel,
             cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthPixel,
             cropRect.left + cornerToggleLengthInPixel,
             cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthPixel,
-            accentPaint
+            cornerPaint
         )
 
         drawLine(
@@ -457,11 +447,11 @@ class CropView @JvmOverloads constructor(
             cropRect.top - gridLineWidthPixel,
             cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthPixel,
             cropRect.top + cornerToggleLengthInPixel,
-            accentPaint
+            cornerPaint
         )
 
         /**
-         * Top Right toggle
+         * Top Right
          */
 
         drawLine(
@@ -469,7 +459,7 @@ class CropView @JvmOverloads constructor(
             cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthPixel,
             cropRect.right + gridLineWidthPixel,
             cropRect.top + cornerToggleWidthInPixel / 2f - gridLineWidthPixel,
-            accentPaint
+            cornerPaint
         )
 
         drawLine(
@@ -477,11 +467,11 @@ class CropView @JvmOverloads constructor(
             cropRect.top - gridLineWidthPixel,
             cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthPixel,
             cropRect.top + cornerToggleLengthInPixel,
-            accentPaint
+            cornerPaint
         )
 
         /**
-         * Bottom Left toggle
+         * Bottom Left
          */
 
         drawLine(
@@ -489,7 +479,7 @@ class CropView @JvmOverloads constructor(
             cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthPixel,
             cropRect.left + cornerToggleLengthInPixel,
             cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthPixel,
-            accentPaint
+            cornerPaint
         )
 
         drawLine(
@@ -497,18 +487,18 @@ class CropView @JvmOverloads constructor(
             cropRect.bottom + gridLineWidthPixel,
             cropRect.left + cornerToggleWidthInPixel / 2f - gridLineWidthPixel,
             cropRect.bottom - cornerToggleLengthInPixel,
-            accentPaint
+            cornerPaint
         )
 
         /**
-         * Bottom Right toggle
+         * Bottom Right
          */
         drawLine(
             cropRect.right - cornerToggleLengthInPixel,
             cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthPixel,
             cropRect.right + gridLineWidthPixel,
             cropRect.bottom - cornerToggleWidthInPixel / 2f + gridLineWidthPixel,
-            accentPaint
+            cornerPaint
         )
 
         drawLine(
@@ -516,17 +506,31 @@ class CropView @JvmOverloads constructor(
             cropRect.bottom + gridLineWidthPixel,
             cropRect.right - cornerToggleWidthInPixel / 2f + gridLineWidthPixel,
             cropRect.bottom - cornerToggleLengthInPixel,
-            accentPaint
+            cornerPaint
         )
     }
 
-    private val cropPaint = Paint().apply {
+    private val gridPaint = Paint().apply {
         color = Color.WHITE
         strokeWidth = gridLineWidthPixel
         style = Paint.Style.STROKE
     }
 
-    private lateinit var accentPaint: Paint
+    private val accentPaint: Paint by lazy {
+        Paint().apply {
+            color = context.getColor(viewModel.croppyTheme.accentColor)
+            strokeWidth = 3F
+            style = Paint.Style.FILL
+        }
+    }
+
+    private val cornerPaint: Paint by lazy {
+        Paint().apply {
+            color = context.getColor(viewModel.croppyTheme.accentColor)
+            strokeWidth = 6F
+            style = Paint.Style.FILL
+        }
+    }
 
     private fun initializeBitmapMatrix() {
         val scale = min(viewWidth / bitmapRect.width(), viewHeight / bitmapRect.height())
@@ -544,13 +548,13 @@ class CropView @JvmOverloads constructor(
         bitmapMatrix.mapRect(bitmapBorderRect, bitmapRect)
     }
 
-    private lateinit var rescaledCropEdgePairCandidates: List<Pair<Float, Float>>
+    private lateinit var rescaledCropEdgeRectFs: List<RectF>
 
     private fun setRescaledCropEdgePairCandidates(){
-        rescaledCropEdgePairCandidates = viewModel.cropEdgePairCandidates.map {
-            val rect = RectF(0F, it.first.toFloat(), viewModel.bitmap.width.toFloat(), it.second.toFloat())
-            bitmapMatrix.mapRect(rect)
-            rect.top to rect.bottom
+        rescaledCropEdgeRectFs = viewModel.cropEdgePairCandidates.map {
+            it.asRectF(viewModel.bitmap.width).apply {
+                bitmapMatrix.mapRect(this)
+            }
         }
     }
 
@@ -773,6 +777,7 @@ class CropView @JvmOverloads constructor(
         newBitmapMatrix.postConcat(matrix)
 
         bitmapMatrix.animateToMatrix(newBitmapMatrix) {
+            setRescaledCropEdgePairCandidates()
             invalidate()
         }
     }

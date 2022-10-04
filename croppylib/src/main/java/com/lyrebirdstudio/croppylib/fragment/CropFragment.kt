@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.lyrebirdstudio.croppylib.CropRequest
 import com.lyrebirdstudio.croppylib.databinding.FragmentImageCropBinding
+import com.lyrebirdstudio.croppylib.fragment.cropview.CropEdges
 import com.lyrebirdstudio.croppylib.utils.bitmap.resizedBitmap
 import com.lyrebirdstudio.croppylib.utils.extensions.hideSystemBars
 import com.lyrebirdstudio.croppylib.utils.extensions.maintainedPercentage
@@ -58,7 +59,7 @@ class CropFragment : Fragment() {
         CropViewModelFactory(
             resizedBitmap(cropRequest.uri, requireContext()),
             cropRequest.initialCropRect,
-            cropRequest.cropEdgePairCandidates,
+            cropRequest.cropEdgePairCandidates.map { CropEdges(it) },
             cropRequest.croppyTheme
         )
     }
