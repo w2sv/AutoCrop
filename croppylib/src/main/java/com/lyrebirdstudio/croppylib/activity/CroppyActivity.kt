@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.lyrebirdstudio.croppylib.CropRequest
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.databinding.ActivityCroppyBinding
-import com.lyrebirdstudio.croppylib.fragment.ImageCropFragment
+import com.lyrebirdstudio.croppylib.fragment.CropFragment
 
 class CroppyActivity : AppCompatActivity() {
 
@@ -43,7 +43,7 @@ class CroppyActivity : AppCompatActivity() {
                 .beginTransaction()
                 .add(
                     R.id.croppy_container,
-                    ImageCropFragment.instance(cropRequest)
+                    CropFragment.instance(cropRequest)
                         .apply {
                             onApplyClicked = { cropRect ->
                                 setResult(
@@ -51,7 +51,10 @@ class CroppyActivity : AppCompatActivity() {
                                     Intent()
                                         .apply {
                                             data = cropRequest.uri
-                                            putExtra(KEY_CROP_RECT_STRING_EXTRA, cropRect.flattenToString())
+                                            putExtra(
+                                                KEY_CROP_RECT_STRING_EXTRA,
+                                                cropRect.flattenToString()
+                                            )
                                         }
                                 )
                                 finish()

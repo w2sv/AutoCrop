@@ -11,9 +11,12 @@
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/activity/CroppyActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/activity/CroppyActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/ImageCropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/CropFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/ImageCropViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/CropViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/ImageCropViewModelFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/CropViewModelFactory.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/cropview/CropView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/cropview/CropView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/extensions/RectF.kt" beforeDir="false" afterPath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/extensions/RectF.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/model/AnimatableRectF.kt" beforeDir="false" afterPath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/model/AnimatableRectF.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/extensions/Matrix.kt" beforeDir="false" afterPath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/extensions/Matrix.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
