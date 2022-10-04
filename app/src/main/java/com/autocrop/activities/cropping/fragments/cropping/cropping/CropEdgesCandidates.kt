@@ -55,13 +55,14 @@ private fun Bitmap.getBottomEdge(yStart: Int,
 }
 
 private fun Bitmap.rowMonochrome(y: Int, sampleStep: Int): ColorVector?{
-    val vectors = (0 until width step sampleStep)
-        .map { ColorVector(getPixel(it, y)) }
-    vectors.windowed(2).forEach {
-        if (absMeanDifference(it[0], it[1]) > INTRA_ROW_FLUCTUATION_THRESHOLD)
+    val colorVectors = mutableListOf(ColorVector(getPixel(0, y)))
+    (sampleStep until width step sampleStep).forEachIndexed { i, x ->
+        val vector = ColorVector(getPixel(x, y))
+        if (absMeanDifference(vector, colorVectors[i]) > INTRA_ROW_FLUCTUATION_THRESHOLD)
             return null
+        colorVectors.add(vector)
     }
-    return vectors.iterator().mean()
+    return colorVectors.iterator().mean()
 }
 
 private fun Bitmap.searchRange(yStart: Int): IntRange =

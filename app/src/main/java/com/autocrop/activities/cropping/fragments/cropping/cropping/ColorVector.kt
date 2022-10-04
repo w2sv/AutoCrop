@@ -35,10 +35,12 @@ class ColorVector(alpha: Float, red: Float, green: Float, blue: Float)
 }
 
 fun absMeanDifference(a: ColorVector, b: ColorVector): Float =
-    (abs(a.alpha() - b.alpha()) +
-    abs(a.red() - b.red()) +
-    abs(a.green() - b.green()) +
-    abs(a.blue() - b.blue())) / 4f
+    (
+        abs(a.alpha() - b.alpha()) +
+        abs(a.red() - b.red()) +
+        abs(a.green() - b.green()) +
+        abs(a.blue() - b.blue())
+    ) / 4f
 
 fun Iterator<ColorVector>.mean(): ColorVector {
     var mean = next()
