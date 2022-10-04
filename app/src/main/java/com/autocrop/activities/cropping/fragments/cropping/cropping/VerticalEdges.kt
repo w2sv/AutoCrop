@@ -6,4 +6,7 @@ data class VerticalEdges(val top: Int, val bottom: Int){
 
     fun height(): Int =
         bottom - top
+
+    fun toPair(): Pair<Int, Int> =
+        top to bottom
 }

@@ -25,13 +25,13 @@ class ManualCropButton(context: Context, attributeSet: AttributeSet):
                 context,
                 CropRequest(
                     cropBundle.screenshot.uri,
-                    requestCode = -1,
-                    initialCropRect = cropBundle.crop.rect.toRectF(),
-                    croppyTheme = CroppyTheme(
+                    cropBundle.crop.rect.toRectF(),
+                    cropBundle.screenshot.cropEdgePairCandidates.map { it.toPair() },
+                    CroppyTheme(
                         accentColor = R.color.magenta_bright,
                         backgroundColor = R.color.magenta_dark
                     ),
-                    exitActivityAnimation = Animatoo::animateInAndOut
+                    Animatoo::animateInAndOut
                 )
             )
         )

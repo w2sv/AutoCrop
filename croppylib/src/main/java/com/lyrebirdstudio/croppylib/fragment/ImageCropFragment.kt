@@ -85,10 +85,7 @@ class ImageCropFragment : Fragment() {
                 binding.heightTv.text = styledText("H", min(cropRectF.height().roundToInt(), viewModel.bitmap.height))
                 binding.y1Tv.text = styledText("Y1", max(cropRectF.top.roundToInt(), 0))
                 binding.y2Tv.text = styledText("Y2", min(cropRectF.bottom.roundToInt(), viewModel.bitmap.height))
-                binding.percentageTv.text = styledText(
-                    "%",
-                    (viewModel.bitmap.maintainedPercentage(cropRectF.height()) * 100).rounded(1)
-                )
+                binding.percentageTv.text = styledText("%", (viewModel.bitmap.maintainedPercentage(cropRectF.height()) * 100).rounded(1))
 
                 binding.resetButton.visibility = if (cropRectF != viewModel.cropRequest.initialCropRect)
                     View.VISIBLE
