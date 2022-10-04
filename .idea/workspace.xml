@@ -10,8 +10,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/cropping/ColorVector.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/cropping/ColorVector.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/cropping/CropEdgesCandidates.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/cropping/CropEdgesCandidates.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
