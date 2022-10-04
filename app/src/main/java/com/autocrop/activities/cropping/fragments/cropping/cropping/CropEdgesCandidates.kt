@@ -2,28 +2,31 @@ package com.autocrop.activities.cropping.fragments.cropping.cropping
 
 import android.graphics.Bitmap
 
-private const val INTRA_ROW_FLUCTUATION_THRESHOLD = 6F
-private const val INTER_ROW_MONOCHROME_THRESHOLD = .5F
+private const val INTRA_ROW_FLUCTUATION_THRESHOLD = 5F
+private const val INTER_ROW_MONOCHROME_THRESHOLD = 20F
+private const val COMPARISONS_PER_ROW = 10
 
-fun Bitmap.cropEdgesCandidates(pixelComparisonsPerRow: Int): List<VerticalEdges>{
-    val sampleStep = width / pixelComparisonsPerRow
+fun Bitmap.cropEdgesCandidates(): List<VerticalEdges>{
+    val sampleStep = width / COMPARISONS_PER_ROW
     val candidates = mutableListOf<VerticalEdges>()
 
     var (yStartTopEdgeQuery, nonCropAreaMonochrome) = getBottomEdge(0, sampleStep, null).run {
         first + 1 to second
     }
 
-    while (yStartTopEdgeQuery != height){
-        val topEdge = getTopEdge(yStartTopEdgeQuery, sampleStep, nonCropAreaMonochrome!!)
-        if (topEdge != null){
-            val bottomEdge = getBottomEdge(topEdge.first + 1, sampleStep, topEdge.second)
-            candidates.add(VerticalEdges(topEdge.first, bottomEdge.first))
+    if (nonCropAreaMonochrome != null){
+        while (yStartTopEdgeQuery != height){
+            val topEdge = getTopEdge(yStartTopEdgeQuery, sampleStep, nonCropAreaMonochrome!!)
+            if (topEdge != null){
+                val bottomEdge = getBottomEdge(topEdge.first + 1, sampleStep, topEdge.second)
+                candidates.add(VerticalEdges(topEdge.first, bottomEdge.first))
 
-            yStartTopEdgeQuery = bottomEdge.first + 1
-            nonCropAreaMonochrome = bottomEdge.second
+                yStartTopEdgeQuery = bottomEdge.first + 1
+                nonCropAreaMonochrome = bottomEdge.second
+            }
+            else
+                break
         }
-        else
-            break
     }
 
     return candidates.toList()
@@ -52,7 +55,8 @@ private fun Bitmap.getBottomEdge(yStart: Int,
 }
 
 private fun Bitmap.rowMonochrome(y: Int, sampleStep: Int): ColorVector?{
-    val vectors = (0 until width step sampleStep).map { ColorVector(getPixel(it, y)) }
+    val vectors = (0 until width step sampleStep)
+        .map { ColorVector(getPixel(it, y)) }
     vectors.windowed(2).forEach {
         if (absMeanDifference(it[0], it[1]) > INTRA_ROW_FLUCTUATION_THRESHOLD)
             return null

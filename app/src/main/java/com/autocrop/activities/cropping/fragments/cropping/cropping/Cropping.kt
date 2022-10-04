@@ -13,7 +13,7 @@ fun Bitmap.cropped(rect: Rect): Bitmap =
     )
 
 fun cropRect(screenshot: Bitmap): Pair<Rect, List<VerticalEdges>>?{
-    val borderPairCandidates: List<VerticalEdges> = screenshot.cropEdgesCandidates(5)
+    val borderPairCandidates: List<VerticalEdges> = screenshot.cropEdgesCandidates()
 
     if (borderPairCandidates.isEmpty())
         return null
