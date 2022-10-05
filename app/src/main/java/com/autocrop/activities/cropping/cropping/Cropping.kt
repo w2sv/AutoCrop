@@ -1,28 +1,28 @@
 package com.autocrop.activities.cropping.cropping
 
 import android.graphics.Bitmap
+import com.lyrebirdstudio.croppylib.fragment.cropview.CropEdges
 
 fun Bitmap.cropped(edges: CropEdges): Bitmap{
-    val padding = 1
     return Bitmap.createBitmap(
         this,
         0,
-        edges.top + padding,
+        edges.top,
         width,
-        edges.height - padding
+        edges.height
     )
 }
 
 fun Bitmap.cropEdgesCandidates(): List<CropEdges>? =
     rawCropEdgesCandidates()
-        .verticalFluctuationComprisingEdges(this)
+//        .verticalFluctuationComprisingEdges(this)
         .run {
             ifEmpty { null }
         }
 
 fun List<CropEdges>.maxHeightEdges(): CropEdges =
     maxByOrNull {it.height}!!.run {
-        val excludeMargin = 1
+        val excludeMargin = 1  // TODO: Uhm...
         CropEdges(top + excludeMargin to bottom - excludeMargin)
     }
 
@@ -34,8 +34,8 @@ private fun List<CropEdges>.verticalFluctuationComprisingEdges(image: Bitmap,
     }
 
     return filter{ edges ->
-        val columnTraversalStep = edges.height / pixelComparisonsBetweenCropEdges
-        (horizontalOffsetPixels..image.width - horizontalOffsetPixels)
+        val columnTraversalStep = edges.height / pixelComparisonsBetweenCropEdges  // TODO
+        columnTraversalStep < 1 || (horizontalOffsetPixels..image.width - horizontalOffsetPixels)
             .all{ x ->
                 image.cropEdgesDelimitedColumnNotMonochromatic(x, edges, columnTraversalStep)
             }

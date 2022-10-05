@@ -5,10 +5,10 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
-import com.autocrop.activities.cropping.cropping.CropEdges
 import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.utils.android.ImageMimeType
 import com.autocrop.utils.android.extensions.queryMediaStoreColumns
+import com.lyrebirdstudio.croppylib.fragment.cropview.CropEdges
 import com.lyrebirdstudio.croppylib.utils.extensions.rounded
 import kotlin.math.roundToInt
 
@@ -40,7 +40,9 @@ data class Screenshot(
     val cropEdgePairCandidates: List<CropEdges>){
 
     companion object{
-        fun fromContentResolver(contentResolver: ContentResolver, uri: Uri, cropEdgePairCandidates: List<CropEdges>): Screenshot{
+        fun fromContentResolver(contentResolver: ContentResolver,
+                                uri: Uri,
+                                cropEdgePairCandidates: List<CropEdges>): Screenshot{
             val mediaColumns = contentResolver.queryMediaStoreColumns(
                 uri,
                 arrayOf(

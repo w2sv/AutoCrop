@@ -2,27 +2,47 @@ package com.lyrebirdstudio.croppylib.fragment.cropview
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.MotionEvent.*
+import android.view.MotionEvent.ACTION_DOWN
+import android.view.MotionEvent.ACTION_MOVE
+import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.fragment.CropViewModel
-import com.lyrebirdstudio.croppylib.utils.extensions.*
+import com.lyrebirdstudio.croppylib.utils.extensions.animateToMatrix
+import com.lyrebirdstudio.croppylib.utils.extensions.asMutable
+import com.lyrebirdstudio.croppylib.utils.extensions.clone
+import com.lyrebirdstudio.croppylib.utils.extensions.getCornerTouch
+import com.lyrebirdstudio.croppylib.utils.extensions.getEdgeTouch
+import com.lyrebirdstudio.croppylib.utils.extensions.maxRectFFrom
+import com.lyrebirdstudio.croppylib.utils.extensions.minRectFFrom
+import com.lyrebirdstudio.croppylib.utils.extensions.withinRectangle
 import com.lyrebirdstudio.croppylib.utils.model.AnimatableRectF
 import com.lyrebirdstudio.croppylib.utils.model.Corner
-import com.lyrebirdstudio.croppylib.utils.model.Corner.*
+import com.lyrebirdstudio.croppylib.utils.model.Corner.BOTTOM_LEFT
+import com.lyrebirdstudio.croppylib.utils.model.Corner.BOTTOM_RIGHT
+import com.lyrebirdstudio.croppylib.utils.model.Corner.TOP_LEFT
+import com.lyrebirdstudio.croppylib.utils.model.Corner.TOP_RIGHT
 import com.lyrebirdstudio.croppylib.utils.model.DraggingState
 import com.lyrebirdstudio.croppylib.utils.model.DraggingState.DraggingCorner
 import com.lyrebirdstudio.croppylib.utils.model.DraggingState.DraggingEdge
 import com.lyrebirdstudio.croppylib.utils.model.Edge
-import com.lyrebirdstudio.croppylib.utils.model.Edge.*
+import com.lyrebirdstudio.croppylib.utils.model.Edge.BOTTOM
+import com.lyrebirdstudio.croppylib.utils.model.Edge.LEFT
+import com.lyrebirdstudio.croppylib.utils.model.Edge.RIGHT
+import com.lyrebirdstudio.croppylib.utils.model.Edge.TOP
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 class CropView @JvmOverloads constructor(
     context: Context,
@@ -545,9 +565,7 @@ class CropView @JvmOverloads constructor(
     private fun initializeCropRect() {
         bitmapMatrix.mapRect(
             cropRect,
-            viewModel.initialCropEdges.run {
-                RectF(0F, top, viewModel.bitmap.width.toFloat(), bottom)
-            }
+            viewModel.initialCropEdges.asRectF(viewModel.bitmap.width)
         )
     }
 
@@ -775,9 +793,9 @@ class CropView @JvmOverloads constructor(
     }
 
     private fun onCropRectChanged() {
-        viewModel.cropEdgesF.asMutable.postValue(
+        viewModel.cropEdges.asMutable.postValue(
             getCropRect().run {
-                CropEdges(top, bottom)
+                CropEdges(top.roundToInt(), bottom.roundToInt())
             }
         )
     }

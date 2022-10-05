@@ -22,7 +22,12 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     }
 
     private val cropMargins: Array<Int> by lazy {
-        arrayOf(0, viewModel.cropBundle.crop.rect.top, 0, viewModel.cropBundle.crop.bottomOffset)
+        arrayOf(
+            0,
+            viewModel.cropBundle.crop.edges.top,
+            0,
+            viewModel.cropBundle.crop.bottomOffset
+        )
     }
 
     private val insetCropDrawable by lazy {

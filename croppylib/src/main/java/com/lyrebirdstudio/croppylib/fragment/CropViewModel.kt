@@ -8,11 +8,11 @@ import com.lyrebirdstudio.croppylib.CroppyTheme
 import com.lyrebirdstudio.croppylib.fragment.cropview.CropEdges
 
 class CropViewModel(val bitmap: Bitmap,
-                    val initialCropEdges: CropEdges<Float>,
-                    val cropEdgePairCandidates: List<CropEdges<Int>>,
+                    val initialCropEdges: CropEdges,
+                    val cropEdgePairCandidates: List<CropEdges>,
                     val croppyTheme: CroppyTheme): ViewModel() {
 
-    val cropEdgesF: LiveData<CropEdges<Float>> by lazy {
+    val cropEdges: LiveData<CropEdges> by lazy {
         MutableLiveData(initialCropEdges)
     }
 }

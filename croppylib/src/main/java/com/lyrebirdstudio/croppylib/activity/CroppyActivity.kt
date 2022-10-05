@@ -3,15 +3,15 @@ package com.lyrebirdstudio.croppylib.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.lyrebirdstudio.croppylib.CropRequest
+import com.lyrebirdstudio.croppylib.CroppyRequest
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.databinding.ActivityCroppyBinding
 import com.lyrebirdstudio.croppylib.fragment.CropFragment
+import com.lyrebirdstudio.croppylib.fragment.cropview.CropEdges
 
 class CroppyActivity : AppCompatActivity() {
 
@@ -26,8 +26,8 @@ class CroppyActivity : AppCompatActivity() {
                 setContentView(root)
             }
 
-        val cropRequest: CropRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(KEY_CROP_REQUEST, CropRequest::class.java)!!
+        val cropRequest: CroppyRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(KEY_CROP_REQUEST, CroppyRequest::class.java)!!
         } else {
             @Suppress("DEPRECATION")
             intent.getParcelableExtra(KEY_CROP_REQUEST)!!
@@ -45,15 +45,15 @@ class CroppyActivity : AppCompatActivity() {
                     R.id.croppy_container,
                     CropFragment.instance(cropRequest)
                         .apply {
-                            onApplyClicked = { cropEdgesF ->
+                            onApplyClicked = { edges ->
                                 setResult(
                                     Activity.RESULT_OK,
                                     Intent()
                                         .apply {
                                             data = cropRequest.uri
                                             putExtra(
-                                                KEY_CROP_EDGES_STRING_EXTRA,
-                                                cropEdgesF.cropsEdgesI().flattenToString()
+                                                ADJUSTED_CROP_EDGES_EXTRA,
+                                                edges
                                             )
                                         }
                                 )
@@ -78,18 +78,19 @@ class CroppyActivity : AppCompatActivity() {
 
     companion object {
         private const val KEY_CROP_REQUEST = "KEY_CROP_REQUEST"
-        private const val KEY_CROP_EDGES_STRING_EXTRA = "KEY_CROP_RECT_STRING_EXTRA"
+        private const val ADJUSTED_CROP_EDGES_EXTRA = "KEY_CROP_RECT_STRING_EXTRA"
 
-        fun intent(context: Context, cropRequest: CropRequest): Intent =
+        fun intent(context: Context, croppyRequest: CroppyRequest): Intent =
             Intent(context, CroppyActivity::class.java)
                 .putExtras(
                     Bundle()
                         .apply {
-                            putParcelable(KEY_CROP_REQUEST, cropRequest)
+                            putParcelable(KEY_CROP_REQUEST, croppyRequest)
                         }
                 )
 
-        fun getCropRect(intent: Intent): Rect =
-            Rect.unflattenFromString(intent.getStringExtra(KEY_CROP_EDGES_STRING_EXTRA))!!
+        @Suppress("DEPRECATION")
+        fun getCropEdges(croppyResultIntent: Intent): CropEdges =
+            croppyResultIntent.getParcelableExtra(ADJUSTED_CROP_EDGES_EXTRA)!!
     }
 }

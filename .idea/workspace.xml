@@ -11,14 +11,14 @@
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/CropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/CropFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/cropping/ColorVector.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/ColorVector.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/cropping/CropEdgesCandidates.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/CropEdgesCandidates.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/cropping/Cropping.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/Cropping.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/cropping/VerticalEdges.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/CropEdges.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/CropEdges.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/CropEdgesCandidates.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/CropEdgesCandidates.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/Cropping.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/Cropping.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/ComparisonImageView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/ComparisonImageView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ManualCropButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ManualCropButton.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/dataclasses/CropBundle.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/dataclasses/CropBundle.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/CropRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/CropRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/CropRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/CroppyRequest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/activity/CroppyActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/activity/CroppyActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/CropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/CropFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/CropViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/CropViewModel.kt" afterDir="false" />
@@ -31,7 +31,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/home/w2sv/.android/avd/Pixel_5_API_31.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[192.168.1.234:5555]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
