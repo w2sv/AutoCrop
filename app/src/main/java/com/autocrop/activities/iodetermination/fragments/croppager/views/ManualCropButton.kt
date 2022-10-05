@@ -25,7 +25,7 @@ class ManualCropButton(context: Context, attributeSet: AttributeSet):
                 context,
                 CropRequest(
                     cropBundle.screenshot.uri,
-                    cropBundle.crop.rect.toRectF(),
+                    cropBundle.crop.edges.toPair(),
                     cropBundle.screenshot.cropEdgePairCandidates.map { it.toPair() },
                     CroppyTheme(
                         accentColor = R.color.magenta_bright,

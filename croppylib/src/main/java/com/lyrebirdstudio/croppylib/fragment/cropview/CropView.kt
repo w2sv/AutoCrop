@@ -180,7 +180,7 @@ class CropView @JvmOverloads constructor(
         viewRect.set(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
 
         initializeBitmapMatrix()
-        initializeCropRect(viewModel.initialCropRect)
+        initializeCropRect()
 
         requestLayout()
         invalidate()
@@ -542,10 +542,12 @@ class CropView @JvmOverloads constructor(
     /**
      * Initializes crop rect with bitmap.
      */
-    private fun initializeCropRect(initialCropRect: RectF) {
+    private fun initializeCropRect() {
         bitmapMatrix.mapRect(
             cropRect,
-            initialCropRect
+            viewModel.initialCropEdges.run {
+                RectF(0F, top, viewModel.bitmap.width.toFloat(), bottom)
+            }
         )
     }
 
@@ -773,7 +775,11 @@ class CropView @JvmOverloads constructor(
     }
 
     private fun onCropRectChanged() {
-        viewModel.cropRectF.asMutable.postValue(getCropRect())
+        viewModel.cropEdgesF.asMutable.postValue(
+            getCropRect().run {
+                CropEdges(top, bottom)
+            }
+        )
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.autocrop.activities.cropping.fragments.cropping.cropping
+package com.autocrop.activities.cropping.cropping
 
 import kotlin.math.abs
 

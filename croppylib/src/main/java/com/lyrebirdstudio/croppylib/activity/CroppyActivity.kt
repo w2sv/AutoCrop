@@ -45,15 +45,15 @@ class CroppyActivity : AppCompatActivity() {
                     R.id.croppy_container,
                     CropFragment.instance(cropRequest)
                         .apply {
-                            onApplyClicked = { cropRect ->
+                            onApplyClicked = { cropEdgesF ->
                                 setResult(
                                     Activity.RESULT_OK,
                                     Intent()
                                         .apply {
                                             data = cropRequest.uri
                                             putExtra(
-                                                KEY_CROP_RECT_STRING_EXTRA,
-                                                cropRect.flattenToString()
+                                                KEY_CROP_EDGES_STRING_EXTRA,
+                                                cropEdgesF.cropsEdgesI().flattenToString()
                                             )
                                         }
                                 )
@@ -78,7 +78,7 @@ class CroppyActivity : AppCompatActivity() {
 
     companion object {
         private const val KEY_CROP_REQUEST = "KEY_CROP_REQUEST"
-        private const val KEY_CROP_RECT_STRING_EXTRA = "KEY_CROP_RECT_STRING_EXTRA"
+        private const val KEY_CROP_EDGES_STRING_EXTRA = "KEY_CROP_RECT_STRING_EXTRA"
 
         fun intent(context: Context, cropRequest: CropRequest): Intent =
             Intent(context, CroppyActivity::class.java)
@@ -90,6 +90,6 @@ class CroppyActivity : AppCompatActivity() {
                 )
 
         fun getCropRect(intent: Intent): Rect =
-            Rect.unflattenFromString(intent.getStringExtra(KEY_CROP_RECT_STRING_EXTRA))!!
+            Rect.unflattenFromString(intent.getStringExtra(KEY_CROP_EDGES_STRING_EXTRA))!!
     }
 }

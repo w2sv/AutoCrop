@@ -1,4 +1,4 @@
-package com.autocrop.activities.cropping.fragments.cropping.cropping
+package com.autocrop.activities.cropping.cropping
 
 import android.graphics.Bitmap
 
@@ -6,9 +6,9 @@ private const val INTRA_ROW_FLUCTUATION_THRESHOLD = 5F
 private const val MONOCHROME_THRESHOLD = 20F
 private const val COMPARISONS_PER_ROW = 10
 
-fun Bitmap.cropEdgesCandidates(): List<VerticalEdges>{
+fun Bitmap.rawCropEdgesCandidates(): List<CropEdges>{
     val sampleStep = width / COMPARISONS_PER_ROW
-    val candidates = mutableListOf<VerticalEdges>()
+    val candidates = mutableListOf<CropEdges>()
 
     var (yStartTopEdgeQuery, nonCropAreaMonochrome) = getBottomEdge(0, sampleStep, null).run {
         first + 1 to second
@@ -19,7 +19,7 @@ fun Bitmap.cropEdgesCandidates(): List<VerticalEdges>{
             val topEdge = getTopEdge(yStartTopEdgeQuery, sampleStep, nonCropAreaMonochrome!!)
             if (topEdge != null){
                 val bottomEdge = getBottomEdge(topEdge.first + 1, sampleStep, topEdge.second)
-                candidates.add(VerticalEdges(topEdge.first, bottomEdge.first))
+                candidates.add(CropEdges(topEdge.first, bottomEdge.first))
 
                 yStartTopEdgeQuery = bottomEdge.first + 1
                 nonCropAreaMonochrome = bottomEdge.second
@@ -34,7 +34,8 @@ fun Bitmap.cropEdgesCandidates(): List<VerticalEdges>{
 
 private fun Bitmap.getTopEdge(yStart: Int,
                               sampleStep: Int,
-                              nonCropAreaMonochrome: ColorVector): Pair<Int, ColorVector?>? {
+                              nonCropAreaMonochrome: ColorVector
+): Pair<Int, ColorVector?>? {
     for (y in searchRange(yStart)){
         val monochrome = rowMonochrome(y, sampleStep)
         if (monochrome == null || absMeanDifference(monochrome, nonCropAreaMonochrome) > MONOCHROME_THRESHOLD)

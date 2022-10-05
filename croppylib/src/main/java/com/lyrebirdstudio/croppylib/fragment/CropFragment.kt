@@ -1,13 +1,11 @@
 package com.lyrebirdstudio.croppylib.fragment
 
-import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.toRect
 import androidx.core.os.bundleOf
 import androidx.core.text.color
 import androidx.fragment.app.Fragment
@@ -58,7 +56,7 @@ class CropFragment : Fragment() {
 
         CropViewModelFactory(
             resizedBitmap(cropRequest.uri, requireContext()),
-            cropRequest.initialCropRect,
+            cropRequest.initialCropEdges,
             cropRequest.cropEdgePairCandidates.map { CropEdges(it) },
             cropRequest.croppyTheme
         )
@@ -71,14 +69,14 @@ class CropFragment : Fragment() {
 
         binding.resetButton.setTextColor(requireContext().getColor(viewModel.croppyTheme.accentColor))
 
-        viewModel.cropRectF
-            .observe(viewLifecycleOwner){ cropRectF ->
-                binding.heightTv.text = styledText("H", min(cropRectF.height().roundToInt(), viewModel.bitmap.height))
-                binding.y1Tv.text = styledText("Y1", max(cropRectF.top.roundToInt(), 0))
-                binding.y2Tv.text = styledText("Y2", min(cropRectF.bottom.roundToInt(), viewModel.bitmap.height))
-                binding.percentageTv.text = styledText("%", (viewModel.bitmap.maintainedPercentage(cropRectF.height()) * 100).rounded(1))
+        viewModel.cropEdgesF
+            .observe(viewLifecycleOwner){ edges ->
+                binding.heightTv.text = styledText("H", min(edges.height, viewModel.bitmap.height))
+                binding.y1Tv.text = styledText("Y1", max(edges.top.roundToInt(), 0))
+                binding.y2Tv.text = styledText("Y2", min(edges.bottom.roundToInt(), viewModel.bitmap.height))
+                binding.percentageTv.text = styledText("%", (viewModel.bitmap.maintainedPercentage(edges.heightF) * 100).rounded(1))
 
-                binding.resetButton.visibility = if (cropRectF != viewModel.initialCropRect)
+                binding.resetButton.visibility = if (edges != viewModel.initialCropEdges)
                     View.VISIBLE
                 else
                     View.GONE
@@ -90,7 +88,7 @@ class CropFragment : Fragment() {
             .color(requireContext().getColor(viewModel.croppyTheme.accentColor)) {append(unit)}
             .append(" $value")
 
-    lateinit var onApplyClicked: ((Rect) -> Unit)
+    lateinit var onApplyClicked: ((CropEdges<Float>) -> Unit)
     lateinit var onCancelClicked: (() -> Unit)
 
     private fun FragmentImageCropBinding.setOnClickListeners(){
@@ -99,7 +97,7 @@ class CropFragment : Fragment() {
         }
 
         applyButton.setOnClickListener {
-            onApplyClicked(viewModel.cropRectF.value!!.toRect())
+            onApplyClicked(viewModel.cropEdgesF.value!!)
         }
 
         resetButton.setOnClickListener {

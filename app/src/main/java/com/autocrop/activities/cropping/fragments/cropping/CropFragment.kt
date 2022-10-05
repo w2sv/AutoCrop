@@ -7,8 +7,9 @@ import android.os.Looper
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.autocrop.activities.IntentExtraIdentifier
+import com.autocrop.activities.cropping.cropping.cropEdgesCandidates
+import com.autocrop.activities.cropping.cropping.maxHeightEdges
 import com.autocrop.activities.cropping.fragments.CropActivityFragment
-import com.autocrop.activities.cropping.fragments.cropping.cropping.cropRect
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.activities.iodetermination.IODeterminationActivity
 import com.autocrop.activities.iodetermination.IODeterminationActivityViewModel
@@ -53,16 +54,16 @@ class CropFragment
             // attempt to crop image; upon success add CropBundle to sharedViewModel
             val screenshotBitmap = requireContext().contentResolver.openBitmap(uri)
 
-            cropRect(screenshotBitmap)?.let { (cropRect, cropEdgePairCandidates) ->
+            screenshotBitmap.cropEdgesCandidates()?.let { candidates ->
                 sharedViewModel.cropBundles.add(
                     CropBundle.assemble(
                         Screenshot.fromContentResolver(
                             requireContext().contentResolver,
                             uri,
-                            cropEdgePairCandidates
+                            candidates
                         ),
                         screenshotBitmap,
-                        cropRect
+                        candidates.maxHeightEdges()
                     )
                 )
             }
