@@ -2,7 +2,6 @@ package com.autocrop.dataclasses
 
 import android.content.ContentResolver
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
 import com.autocrop.activities.cropping.cropping.cropped
@@ -12,9 +11,6 @@ import com.lyrebirdstudio.croppylib.fragment.cropview.CropEdges
 import com.lyrebirdstudio.croppylib.utils.extensions.rounded
 import kotlin.math.roundToInt
 
-/**
- * Encapsulation of data associated with crop
- */
 data class CropBundle(val screenshot: Screenshot, var crop: Crop) {
     companion object{
         fun assemble(screenshot: Screenshot, screenshotBitmap: Bitmap, edges: CropEdges): CropBundle =
@@ -22,7 +18,7 @@ data class CropBundle(val screenshot: Screenshot, var crop: Crop) {
                 screenshot,
                 Crop.fromScreenshot(
                     screenshotBitmap,
-                    screenshot.diskUsage,
+                    screenshot.mediaStoreColumns.diskUsage,
                     edges
                 )
             )
@@ -33,40 +29,35 @@ data class CropBundle(val screenshot: Screenshot, var crop: Crop) {
 
 data class Screenshot(
     val uri: Uri,
-    val diskUsage: Long,
-    val fileName: String,
-    val parsedMimeType: ImageMimeType,
-    val mediaStoreId: Long,
-    val cropEdgePairCandidates: List<CropEdges>){
+    val height: Int,
+    val cropEdgesCandidates: List<CropEdges>,
+    val mediaStoreColumns: MediaStoreColumns){
 
-    companion object{
-        fun fromContentResolver(contentResolver: ContentResolver,
-                                uri: Uri,
-                                cropEdgePairCandidates: List<CropEdges>): Screenshot{
-            val mediaColumns = contentResolver.queryMediaStoreColumns(
-                uri,
-                arrayOf(
-                    MediaStore.Images.Media.SIZE,
-                    MediaStore.Images.Media.DISPLAY_NAME,
-                    MediaStore.Images.Media.MIME_TYPE,
-                    MediaStore.Images.Media._ID
+    data class MediaStoreColumns(val diskUsage: Long,
+                                 val fileName: String,
+                                 val parsedMimeType: ImageMimeType,
+                                 val id: Long){
+        companion object{
+            fun query(contentResolver: ContentResolver, uri: Uri): MediaStoreColumns =
+                contentResolver.queryMediaStoreColumns(
+                    uri,
+                    arrayOf(
+                        MediaStore.Images.Media.SIZE,
+                        MediaStore.Images.Media.DISPLAY_NAME,
+                        MediaStore.Images.Media.MIME_TYPE,
+                        MediaStore.Images.Media._ID
+                    )
                 )
-            )
-
-            return Screenshot(
-                uri,
-                mediaColumns[0].toLong(),
-                mediaColumns[1],
-                ImageMimeType.parse(mediaColumns[2]),
-                mediaColumns[3].toLong(),
-                cropEdgePairCandidates
-            )
-                .also { println("Parsed screenshot: $it") }
+                    .run {
+                        MediaStoreColumns(
+                            get(0).toLong(),
+                            get(1),
+                            ImageMimeType.parse(get(2)),
+                            get(3).toLong()
+                        )
+                    }
         }
     }
-
-    fun bitmap(contentResolver: ContentResolver): Bitmap =
-        BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
 }
 
 // TODO: write tests
@@ -74,8 +65,7 @@ data class Crop(
     val bitmap: Bitmap,
     val edges: CropEdges,
     val discardedPercentage: Int,
-    val discardedKB: Long,
-    val bottomOffset: Int) {
+    val discardedKB: Long) {
 
     val discardedFileSizeFormatted: String by lazy {
         if (discardedKB >= 1000)
@@ -93,8 +83,7 @@ data class Crop(
                 cropBitmap,
                 edges,
                 (discardedPercentageF * 100).roundToInt(),
-                (discardedPercentageF * screenshotDiskUsage / 1000).roundToInt().toLong(),
-                screenshotBitmap.height - edges.bottom
+                (discardedPercentageF * screenshotDiskUsage / 1000).roundToInt().toLong()
             )
         }
     }

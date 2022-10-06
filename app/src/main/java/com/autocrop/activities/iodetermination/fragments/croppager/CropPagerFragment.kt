@@ -29,6 +29,7 @@ import com.autocrop.ui.elements.recyclerview.CubeOutPageTransformer
 import com.autocrop.utils.android.extensions.animate
 import com.autocrop.utils.android.extensions.crossFade
 import com.autocrop.utils.android.extensions.getThemedColor
+import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.autocrop.utils.android.livedata.asMutable
@@ -220,8 +221,8 @@ class CropPagerFragment :
     private fun processAdjustedCropEdges(adjustedEdges: CropEdges) {
         with(viewModel.dataSet.currentValue) {
             crop = Crop.fromScreenshot(
-                screenshot.bitmap(requireContext().contentResolver),
-                screenshot.diskUsage,
+                requireContext().contentResolver.openBitmap(screenshot.uri),
+                screenshot.mediaStoreColumns.diskUsage,
                 adjustedEdges
             )
         }

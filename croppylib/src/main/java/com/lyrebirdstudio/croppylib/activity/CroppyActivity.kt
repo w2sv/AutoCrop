@@ -89,8 +89,8 @@ class CroppyActivity : AppCompatActivity() {
                         }
                 )
 
-        @Suppress("DEPRECATION")
         fun getCropEdges(croppyResultIntent: Intent): CropEdges =
+            @Suppress("DEPRECATION")
             croppyResultIntent.getParcelableExtra(ADJUSTED_CROP_EDGES_EXTRA)!!
     }
 }

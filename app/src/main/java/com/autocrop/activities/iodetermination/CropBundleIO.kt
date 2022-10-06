@@ -40,12 +40,12 @@ fun Context.processCropBundle(
 
     val cropSavingResult = contentResolver.saveBitmap(
         cropBundle.crop.bitmap,
-        cropBundle.screenshot.parsedMimeType,
-        cropFileName(cropBundle.screenshot.fileName, cropBundle.screenshot.parsedMimeType),
+        cropBundle.screenshot.mediaStoreColumns.parsedMimeType,
+        cropFileName(cropBundle.screenshot.mediaStoreColumns.fileName, cropBundle.screenshot.mediaStoreColumns.parsedMimeType),
         validSaveDirDocumentUri
     )
     val successfullyDeleted = if (deleteScreenshot)
-        contentResolver.deleteImage(cropBundle.screenshot.mediaStoreId)
+        contentResolver.deleteImage(cropBundle.screenshot.mediaStoreColumns.id)
     else
         null
 

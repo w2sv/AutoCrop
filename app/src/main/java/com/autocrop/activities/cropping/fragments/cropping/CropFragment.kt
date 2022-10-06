@@ -50,19 +50,19 @@ class CropFragment
             sharedViewModel.liveImageNumber.value!!,
             sharedViewModel.uris.size
         ).forEach { uri ->
-
             // attempt to crop image; upon success add CropBundle to sharedViewModel
-            val screenshotBitmap = requireContext().contentResolver.openBitmap(uri)
+            val bitmap = requireContext().contentResolver.openBitmap(uri)
 
-            screenshotBitmap.cropEdgesCandidates()?.let { candidates ->
+            bitmap.cropEdgesCandidates()?.let { candidates ->
                 sharedViewModel.cropBundles.add(
                     CropBundle.assemble(
-                        Screenshot.fromContentResolver(
-                            requireContext().contentResolver,
+                        Screenshot(
                             uri,
-                            candidates
+                            bitmap.height,
+                            candidates,
+                            Screenshot.MediaStoreColumns.query(requireContext().contentResolver, uri)
                         ),
-                        screenshotBitmap,
+                        bitmap,
                         candidates.maxHeightEdges()
                     )
                 )

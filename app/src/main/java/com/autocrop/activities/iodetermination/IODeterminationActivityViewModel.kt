@@ -70,7 +70,7 @@ class IODeterminationActivityViewModel(private val validSaveDirDocumentUri: Uri?
     private fun addScreenshotDeletionInquiryUri(deleteScreenshot: Boolean,
                                                 screenshot: Screenshot): Boolean{
         if (deleteScreenshot)
-            imageDeletionInquiryUri(screenshot.mediaStoreId)?.let {
+            imageDeletionInquiryUri(screenshot.mediaStoreColumns.id)?.let {
                 screenshotDeletionInquiryUris.add(it)
                 return true
             }

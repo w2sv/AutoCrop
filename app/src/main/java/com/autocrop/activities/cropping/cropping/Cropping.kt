@@ -22,7 +22,7 @@ fun Bitmap.cropEdgesCandidates(): List<CropEdges>? =
 
 fun List<CropEdges>.maxHeightEdges(): CropEdges =
     maxByOrNull {it.height}!!.run {
-        val excludeMargin = 1  // TODO: Uhm...
+        val excludeMargin = 1  // TODO Uhm...
         CropEdges(top + excludeMargin to bottom - excludeMargin)
     }
 

@@ -9,6 +9,7 @@ import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.findViewTreeLifecycleOwner
+import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.viewModelLazy
 import com.autocrop.utils.android.livedata.toggle
 
@@ -18,16 +19,18 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     private val viewModel by viewModelLazy<ComparisonViewModel>()
 
     private val screenshot: Bitmap by lazy {
-        viewModel.cropBundle.screenshot.bitmap(context.contentResolver)
+        context.contentResolver.openBitmap(viewModel.cropBundle.screenshot.uri)
     }
 
     private val cropMargins: Array<Int> by lazy {
-        arrayOf(
-            0,
-            viewModel.cropBundle.crop.edges.top,
-            0,
-            viewModel.cropBundle.crop.bottomOffset
-        )
+        viewModel.cropBundle.run {
+            arrayOf(
+                0,
+                crop.edges.top,
+                0,
+                screenshot.height - crop.edges.bottom
+            )
+        }
     }
 
     private val insetCropDrawable by lazy {
