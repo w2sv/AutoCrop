@@ -12,9 +12,13 @@
         WRITE_EXTERNAL_STORAGE implies READ_EXTERNAL_STORAGE
             Reference: https://stackoverflow.com/questions/11942400/do-i-have-to-declare-both-write-external-storage-and-read-external-storage -->
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29"/>
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <!-- https://stackoverflow.com/a/65477206/12083276 -->
 

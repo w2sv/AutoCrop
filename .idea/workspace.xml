@@ -10,34 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20220728-162238744.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20220826-162550339.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20220908-192611095.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20220930-053707818.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20220930-053803445.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20220930-054702883.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20220930-055714735.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20220930-055723303.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20220930-233304941.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221001-004641375.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221002-053122401.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221003-220428354.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221003-220437926.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221003-220442543.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221004-062231179.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221004-062237943.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221004-062325166.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221004-094117652.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221004-132418023.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221004-230716108.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221004-230758085.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221004-230806963.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221004-230814337.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221004-231930304.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/androidTest/assets/valid/Screenshot_20221006-034942642.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/androidTest/java/com/autocrop/activities/cropping/CroppingTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/androidTest/java/com/autocrop/activities/cropping/CroppingTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/CropEdgesCandidates.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/CropEdgesCandidates.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/FlowFieldFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/FlowFieldFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFieldContainer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFieldContainer.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,6 +75,9 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.akexorcist/screenshot-detection/1.0.2/d983c501f83ee7976472b989dc56311e0e6b2428/screenshot-detection-1.0.2-sources.jar!/com/akexorcist/screenshotdetection/ScreenshotDetectionDelegate.kt" root0="SKIP_INSPECTION" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -153,12 +134,14 @@
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/menu/AbstractMenuInflationButton.kt_SELECTED": "AbstractMenuInflationButton",
     "android-custom-view/home/w2sv/Dev/android/AutoCrop/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/cropview/CropView.kt_SELECTED": "CropView",
     "cidr.known.project.marker": "true",
+    "com.google.services.firebase.aqiPopupShown": "true",
     "dart.analysis.tool.window.visible": "false",
     "last_directory_selection": "/home/w2sv/Dev/android/AutoCrop/app/src/main/res/mipmap-hdpi",
-    "last_opened_file_path": "/home/w2sv/Dev/android/AutoCrop/app/src/androidTest/assets",
+    "last_opened_file_path": "/home/w2sv/Dev/android/AutoCrop/app/src/androidTest/assets/invalid",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.17",
-    "project.structure.side.proportion": "0.2"
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "editor.reader.mode"
   },
   "keyToStringList": {
     "ExportApk.BuildVariants": [
@@ -168,11 +151,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/androidTest/assets/invalid" />
       <recent name="$PROJECT_DIR$/app/src/androidTest/assets" />
       <recent name="$PROJECT_DIR$/app/src/main/res/font" />
       <recent name="$PROJECT_DIR$/app/src/test" />
       <recent name="$PROJECT_DIR$/app/src/test/java/com/autocrop/activities" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/src/androidTest/assets/valid" />
@@ -197,7 +180,7 @@
       <recent name="com.autocrop.utils.android" />
     </key>
   </component>
-  <component name="RunManager" selected="Android Instrumented Tests.validScreenshotCropEdges()">
+  <component name="RunManager" selected="Android App.app">
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
       <module name="AutoCrop.app.main" />
       <option name="DEPLOY" value="true" />
@@ -501,8 +484,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Android Instrumented Tests.validScreenshotCropEdges()" />
         <item itemvalue="Android Instrumented Tests.CroppingTest" />
+        <item itemvalue="Android Instrumented Tests.validScreenshotCropEdges()" />
         <item itemvalue="Android Instrumented Tests.MainActivityTest" />
         <item itemvalue="Android Instrumented Tests.appExit()" />
         <item itemvalue="Gradle.ImageMimeTypeTest" />
