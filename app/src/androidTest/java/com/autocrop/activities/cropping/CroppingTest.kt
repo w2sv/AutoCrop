@@ -2,41 +2,50 @@ package com.autocrop.activities.cropping
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import com.autocrop.activities.cropping.cropping.cropEdgesCandidates
+import com.autocrop.activities.cropping.cropping.maxHeightEdges
+import com.lyrebirdstudio.croppylib.CropEdges
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
 import utils.streamAssetFile
 import java.io.File
+import java.util.stream.Stream
 
 /**
  * Actually running unit tests which however can't be implemented as such, due to
  * inherent infeasibility of loading images
+ * "Screenshot_2021-02-20-20-44-37-742_com.android.chrome.png, 898, 38",
+"Screenshot_2021-02-20-20-44-47-768_com.android.chrome.png, 898, 38",
+"Screenshot_2021-02-20-20-45-01-118_com.android.chrome.png, 898, 38",
+"Screenshot_2021-02-20-21-35-48-770_com.android.chrome.png, 898, 38",
+"Screenshot_2021-02-20-21-36-25-277_com.android.chrome.png, 814, 44",
+"Screenshot_2021-02-20-21-40-51-320_com.reddit.frontpage.png, 897, 38",
+"Screenshot_2021-02-20-23-54-23-480_com.android.chrome.png, 897, 38",
+"Screenshot_2021-02-20-23-54-37-101_com.android.chrome.png, 1104, 23",
+"Screenshot_2021-02-20-23-54-46-890_com.android.chrome.png, 931, 35",
+"Screenshot_2021-02-20-23-54-58-389_com.android.chrome.png, 992, 31"
  */
 class CroppingTest {
     @ParameterizedTest
-    @CsvSource(
-        "Screenshot_2021-02-20-20-44-37-742_com.android.chrome.png, 720, 898, 38",
-        "Screenshot_2021-02-20-20-44-47-768_com.android.chrome.png, 720, 898, 38",
-        "Screenshot_2021-02-20-20-45-01-118_com.android.chrome.png, 720, 898, 38",
-        "Screenshot_2021-02-20-21-35-48-770_com.android.chrome.png, 720, 898, 38",
-        "Screenshot_2021-02-20-21-36-25-277_com.android.chrome.png, 720, 814, 44",
-        "Screenshot_2021-02-20-21-40-51-320_com.reddit.frontpage.png, 720, 897, 38",
-        "Screenshot_2021-02-20-23-54-23-480_com.android.chrome.png, 720, 897, 38",
-        "Screenshot_2021-02-20-23-54-37-101_com.android.chrome.png, 720, 1104, 23",
-        "Screenshot_2021-02-20-23-54-46-890_com.android.chrome.png, 720, 931, 35",
-        "Screenshot_2021-02-20-23-54-58-389_com.android.chrome.png, 720, 992, 31"
-    )
-    fun validScreenshotCroppingResults(fileName: String, expectedWidth: Int, expectedHeight: Int, expectedRetentionPercentage: Int) {
-        val crop = cropRect(
-            loadTestScreenshot(
-                fileName,
-                "valid-screenshots"
-            )
-        )!!
+    @MethodSource
+    fun validScreenshotCropEdges(fileName: String, expectedCropEdges: CropEdges) {
+        Assertions.assertEquals(
+            expectedCropEdges,
+            loadTestScreenshot(fileName,"valid-screenshots").cropEdgesCandidates()!!.maxHeightEdges()
+        )
+    }
 
-        Assertions.assertEquals(expectedWidth, crop.width())
-        Assertions.assertEquals(expectedHeight, crop.height())
+    companion object{
+        @JvmStatic
+        fun validScreenshotCropEdges(): Stream<Arguments> =
+            Stream.of(
+                Arguments.arguments("Screenshot_2021-02-20-20-44-37-742_com.android.chrome.png", CropEdges(23, 699))
+            )
     }
 
     @ParameterizedTest
@@ -54,12 +63,11 @@ class CroppingTest {
     ])
     fun invalidScreenshotsReturnNull(fileName: String){
         Assertions.assertNull(
-            cropRect(
-                loadTestScreenshot(
-                    fileName,
-                    "invalid-screenshots"
-                )
+            loadTestScreenshot(
+                fileName,
+                "invalid-screenshots"
             )
+                .cropEdgesCandidates()
         )
     }
 

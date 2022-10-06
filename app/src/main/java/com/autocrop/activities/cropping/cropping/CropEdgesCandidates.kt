@@ -35,8 +35,7 @@ fun Bitmap.rawCropEdgesCandidates(): List<CropEdges>{
 
 private fun Bitmap.getTopEdge(yStart: Int,
                               sampleStep: Int,
-                              nonCropAreaMonochrome: ColorVector
-): Pair<Int, ColorVector?>? {
+                              nonCropAreaMonochrome: ColorVector): Pair<Int, ColorVector?>? {
     for (y in searchRange(yStart)){
         val monochrome = rowMonochrome(y, sampleStep)
         if (monochrome == null || absMeanDifference(monochrome, nonCropAreaMonochrome) > MONOCHROME_THRESHOLD)
