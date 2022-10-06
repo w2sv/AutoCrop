@@ -37,7 +37,7 @@ import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.daimajia.androidanimations.library.Techniques
 import com.lyrebirdstudio.croppylib.activity.CroppyActivity
-import com.lyrebirdstudio.croppylib.fragment.cropview.CropEdges
+import com.lyrebirdstudio.croppylib.CropEdges
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import de.mateware.snacky.Snacky

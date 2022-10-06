@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.lyrebirdstudio.croppylib.CroppyRequest
 import com.lyrebirdstudio.croppylib.databinding.FragmentImageCropBinding
-import com.lyrebirdstudio.croppylib.fragment.cropview.CropEdges
+import com.lyrebirdstudio.croppylib.CropEdges
 import com.lyrebirdstudio.croppylib.utils.bitmap.resizedBitmap
 import com.lyrebirdstudio.croppylib.utils.extensions.hideSystemBars
 import com.lyrebirdstudio.croppylib.utils.extensions.maintainedPercentage
@@ -20,7 +20,7 @@ import com.lyrebirdstudio.croppylib.utils.extensions.rounded
 import kotlin.math.max
 import kotlin.math.min
 
-class CropFragment : Fragment() {
+class CroppyFragment : Fragment() {
 
     private val binding: FragmentImageCropBinding get() = _binding!!
     private var _binding: FragmentImageCropBinding? = null
@@ -28,8 +28,7 @@ class CropFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+        savedInstanceState: Bundle?): View {
         _binding = FragmentImageCropBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -45,7 +44,7 @@ class CropFragment : Fragment() {
         requireActivity().hideSystemBars()
     }
 
-    private val viewModel by viewModels<CropViewModel>{
+    private val viewModel by viewModels<CroppyFragmentViewModel>{
         val cropRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arguments?.getParcelable(KEY_BUNDLE_CROP_REQUEST, CroppyRequest::class.java)!!
         } else {
@@ -53,7 +52,7 @@ class CropFragment : Fragment() {
             arguments?.getParcelable(KEY_BUNDLE_CROP_REQUEST)!!
         }
 
-        CropViewModelFactory(
+        CroppyFragmentViewModelFactory(
             resizedBitmap(cropRequest.uri, requireContext()),
             cropRequest.initialCropEdges,
             cropRequest.cropEdgePairCandidates,
@@ -108,8 +107,8 @@ class CropFragment : Fragment() {
         private const val KEY_BUNDLE_CROP_REQUEST = "KEY_BUNDLE_CROP_REQUEST"
 
         @JvmStatic
-        fun instance(cropRequest: CroppyRequest): CropFragment =
-            CropFragment().apply {
+        fun instance(cropRequest: CroppyRequest): CroppyFragment =
+            CroppyFragment().apply {
                 arguments = bundleOf(
                     KEY_BUNDLE_CROP_REQUEST to cropRequest
                 )

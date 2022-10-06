@@ -1,4 +1,4 @@
-package com.lyrebirdstudio.croppylib.fragment.cropview
+package com.lyrebirdstudio.croppylib
 
 import android.graphics.RectF
 import android.os.Parcelable

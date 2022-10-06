@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.lyrebirdstudio.croppylib.CroppyRequest
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.databinding.ActivityCroppyBinding
-import com.lyrebirdstudio.croppylib.fragment.CropFragment
-import com.lyrebirdstudio.croppylib.fragment.cropview.CropEdges
+import com.lyrebirdstudio.croppylib.fragment.CroppyFragment
+import com.lyrebirdstudio.croppylib.CropEdges
 
 class CroppyActivity : AppCompatActivity() {
 
@@ -43,7 +43,7 @@ class CroppyActivity : AppCompatActivity() {
                 .beginTransaction()
                 .add(
                     R.id.croppy_container,
-                    CropFragment.instance(cropRequest)
+                    CroppyFragment.instance(cropRequest)
                         .apply {
                             onApplyClicked = { edges ->
                                 setResult(

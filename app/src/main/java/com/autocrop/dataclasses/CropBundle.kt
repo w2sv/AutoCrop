@@ -7,7 +7,7 @@ import android.provider.MediaStore
 import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.utils.android.ImageMimeType
 import com.autocrop.utils.android.extensions.queryMediaStoreColumns
-import com.lyrebirdstudio.croppylib.fragment.cropview.CropEdges
+import com.lyrebirdstudio.croppylib.CropEdges
 import com.lyrebirdstudio.croppylib.utils.extensions.rounded
 import kotlin.math.roundToInt
 

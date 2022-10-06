@@ -78,7 +78,7 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <com.lyrebirdstudio.croppylib.fragment.cropview.CropView
+        <com.lyrebirdstudio.croppylib.fragment.view.CroppyView
             android:id="@+id/crop_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

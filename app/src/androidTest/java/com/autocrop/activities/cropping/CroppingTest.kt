@@ -2,7 +2,6 @@ package com.autocrop.activities.cropping
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.autocrop.activities.cropping.fragments.cropping.cropRect
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
@@ -11,7 +10,7 @@ import utils.streamAssetFile
 import java.io.File
 
 /**
- * Actually running unit tests which however can't be implemented as such due to
+ * Actually running unit tests which however can't be implemented as such, due to
  * inherent infeasibility of loading images
  */
 class CroppingTest {

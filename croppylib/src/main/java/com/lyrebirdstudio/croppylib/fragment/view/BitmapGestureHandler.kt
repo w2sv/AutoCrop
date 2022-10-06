@@ -1,4 +1,4 @@
-package com.lyrebirdstudio.croppylib.fragment.cropview
+package com.lyrebirdstudio.croppylib.fragment.view
 
 import android.content.Context
 import android.view.GestureDetector

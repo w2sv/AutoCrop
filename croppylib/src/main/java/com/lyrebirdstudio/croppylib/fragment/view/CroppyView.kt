@@ -1,4 +1,4 @@
-package com.lyrebirdstudio.croppylib.fragment.cropview
+package com.lyrebirdstudio.croppylib.fragment.view
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -16,8 +16,9 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
+import com.lyrebirdstudio.croppylib.CropEdges
 import com.lyrebirdstudio.croppylib.R
-import com.lyrebirdstudio.croppylib.fragment.CropViewModel
+import com.lyrebirdstudio.croppylib.fragment.CroppyFragmentViewModel
 import com.lyrebirdstudio.croppylib.utils.extensions.animateToMatrix
 import com.lyrebirdstudio.croppylib.utils.extensions.asMutable
 import com.lyrebirdstudio.croppylib.utils.extensions.clone
@@ -44,7 +45,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-class CropView @JvmOverloads constructor(
+class CroppyView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0)
@@ -171,8 +172,8 @@ class CropView @JvmOverloads constructor(
         setWillNotDraw(false)
     }
 
-    private val viewModel: CropViewModel by lazy {
-        ViewModelProvider(findViewTreeViewModelStoreOwner()!!)[CropViewModel::class.java]
+    private val viewModel: CroppyFragmentViewModel by lazy {
+        ViewModelProvider(findViewTreeViewModelStoreOwner()!!)[CroppyFragmentViewModel::class.java]
     }
 
     override fun onAttachedToWindow() {
