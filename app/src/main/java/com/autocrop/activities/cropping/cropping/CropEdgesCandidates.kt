@@ -3,7 +3,7 @@ package com.autocrop.activities.cropping.cropping
 import android.graphics.Bitmap
 import com.lyrebirdstudio.croppylib.CropEdges
 
-private const val INTRA_ROW_FLUCTUATION_THRESHOLD = 5F
+private const val INTRA_ROW_FLUCTUATION_THRESHOLD = 3.8F
 private const val MONOCHROME_THRESHOLD = 20F
 private const val COMPARISONS_PER_ROW = 10
 
