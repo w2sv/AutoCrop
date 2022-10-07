@@ -38,15 +38,13 @@ class ScreenCaptureListener(appContext: Context, workerParams: WorkerParameters)
             )
     }
 
-    private val contentObserver by lazy {
-        object : ContentObserver(Handler(Looper.getMainLooper())) {
-            var previousUri: Uri? = null
-            override fun onChange(selfChange: Boolean, uri: Uri?) {
-                uri?.let {
-                    if (it != previousUri){
-                        onNewImageUriFound(it)
-                        previousUri = it
-                    }
+    private val contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
+        var previousUri: Uri? = null
+        override fun onChange(selfChange: Boolean, uri: Uri?) {
+            uri?.let {
+                if (it != previousUri){
+                    onNewImageUriFound(it)
+                    previousUri = it
                 }
             }
         }
@@ -116,5 +114,7 @@ class ScreenCaptureListener(appContext: Context, workerParams: WorkerParameters)
         applicationContext.contentResolver?.unregisterContentObserver(
             contentObserver
         )
+
+        println("UIIIIIIIIIIII onStopped")
     }
 }

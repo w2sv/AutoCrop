@@ -6,22 +6,24 @@ import android.content.Intent
 import android.net.Uri
 import android.util.AttributeSet
 import android.widget.ImageView
-import android.widget.Switch
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
+import com.autocrop.screencapturelistening.ScreenCaptureListener
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.activityViewModelLazy
 import com.autocrop.utils.android.extensions.ifNotInEditMode
+import com.autocrop.utils.android.extensions.setItemSwitch
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.google.android.material.navigation.NavigationView
@@ -50,12 +52,23 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
                     }
                 }
 
-            menu.findItem(R.id.main_menu_item_auto_scroll).actionView = Switch(context).apply {
-                isChecked = BooleanPreferences.autoScroll
-                setOnCheckedChangeListener { _, isChecked ->
-                    BooleanPreferences.autoScroll = isChecked
-                }
+            setItemSwitch(
+                R.id.main_menu_item_listen_to_screen_capture,
+                "listenToScreenCapture"
+            ){ isChecked ->
+                if (isChecked)
+                    WorkManager
+                        .getInstance(context.applicationContext)
+                        .enqueue(
+                            OneTimeWorkRequestBuilder<ScreenCaptureListener>()
+                                .addTag(ScreenCaptureListener.TAG)
+                                .build()
+                        )
+                else
+                    WorkManager.getInstance(context.applicationContext)
+                        .cancelAllWorkByTag(ScreenCaptureListener.TAG)
             }
+            setItemSwitch(R.id.main_menu_item_auto_scroll, "autoScroll")
 
             setNavigationItemSelectedListener {
                 when (it.itemId){

@@ -10,6 +10,12 @@
         android:visible="false">
     </item>
 
+    <item
+        android:id="@+id/main_menu_item_listen_to_screen_capture"
+        android:title="@string/listen_to_screen_capturing"
+        android:icon="@drawable/ic_screenshot_24">
+    </item>
+
     <!--  Examination  -->
 
     <group>

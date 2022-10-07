@@ -11,15 +11,12 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.text.color
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.screencapturelistening.ScreenCaptureListener
 import com.autocrop.ui.controller.activity.ApplicationActivity
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.show
@@ -39,17 +36,6 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-
-        WorkManager
-            .getInstance(this)
-            .enqueue(
-                OneTimeWorkRequestBuilder<ScreenCaptureListener>()
-                    .addTag(ScreenCaptureListener.TAG)
-                    .build()
-            )
-
-        WorkManager.getInstance(this)
-            .cancelAllWorkByTag(ScreenCaptureListener.TAG)
     }
 
     override fun viewModelFactory(): ViewModelProvider.Factory =

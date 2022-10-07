@@ -15,9 +15,7 @@ import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.showNotification
 
 class CropService: Service() {
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         cancelNotification(NotificationId.detectedNewScreenshot)
@@ -42,6 +40,7 @@ class CropService: Service() {
                 NotificationId.noCropEdgesFound
             )
 
+        stopSelf()
         return super.onStartCommand(intent, flags, startId)
     }
 

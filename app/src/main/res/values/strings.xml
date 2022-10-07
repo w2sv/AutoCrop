@@ -41,5 +41,6 @@
     <string name="main_menu_toggle">Toggle main menu</string>
     <string name="compare_crop_and_original_screenshot">Compare crop and original screenshot</string>
     <string name="manually_adjust_the_crop">Manually adjust the crop</string>
+    <string name="listen_to_screen_capturing">Listen to screen capturing</string>
 
 </resources>
