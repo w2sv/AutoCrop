@@ -13,6 +13,9 @@ fun Bitmap.cropped(edges: CropEdges): Bitmap{
     )
 }
 
+fun Bitmap.cropEdges(): CropEdges? =
+    cropEdgesCandidates()?.maxHeightEdges()
+
 fun Bitmap.cropEdgesCandidates(): List<CropEdges>? =
     rawCropEdgesCandidates()
 //        .verticalFluctuationComprisingEdges(this)

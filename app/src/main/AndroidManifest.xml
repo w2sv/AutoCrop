@@ -41,6 +41,10 @@
         android:appCategory="image"
         tools:targetApi="o">
 
+        <service
+            android:name="com.autocrop.screencapturelistening.CropService"
+            android:exported="false"/>
+
         <!-- Activities -->
 
         <activity

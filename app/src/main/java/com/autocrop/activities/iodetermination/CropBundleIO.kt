@@ -53,7 +53,9 @@ fun Context.processCropBundle(
 }
 
 fun cropFileName(fileName: String, mimeType: ImageMimeType): String =
-    "${fileNameWOExtension(fileName)}-AutoCropped_${dateTimeNow()}.${mimeType.fileExtension}"
+    "${fileNameWOExtension(fileName)}-${CROP_FILE_ADDENDUM}_${dateTimeNow()}.${mimeType.fileExtension}"
+
+const val CROP_FILE_ADDENDUM = "AutoCropped"
 
 fun fileNameWOExtension(fileName: String): String =
     fileName.replaceAfterLast(".", "")
