@@ -26,11 +26,12 @@ class ScreenCaptureListener(appContext: Context, workerParams: WorkerParameters)
     }
 
     override fun doWork(): Result {
-        createContentObserverFlow()
+        registerContentObserver()
+        println("ScreenCaptureListener doWork")
         return Result.success()
     }
 
-    private fun createContentObserverFlow(){
+    private fun registerContentObserver(){
         applicationContext.contentResolver?.registerContentObserver(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 true,
@@ -108,13 +109,13 @@ class ScreenCaptureListener(appContext: Context, workerParams: WorkerParameters)
         )
     }
 
-    override fun onStopped() {
-        super.onStopped()
-
-        applicationContext.contentResolver?.unregisterContentObserver(
-            contentObserver
-        )
-
-        println("UIIIIIIIIIIII onStopped")
-    }
+//    override fun onStopped() {
+//        super.onStopped()
+//
+//        println("ScreenCaptureListener onStopped")
+//
+//        applicationContext.contentResolver?.unregisterContentObserver(
+//            contentObserver
+//        )
+//    }
 }

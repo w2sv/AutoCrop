@@ -10,6 +10,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.autocrop.activities.main.MainActivity
@@ -59,14 +60,18 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
                 if (isChecked)
                     WorkManager
                         .getInstance(context.applicationContext)
-                        .enqueue(
+                        .enqueueUniqueWork(
+                            "Unique work",
+                            ExistingWorkPolicy.REPLACE,
                             OneTimeWorkRequestBuilder<ScreenCaptureListener>()
                                 .addTag(ScreenCaptureListener.TAG)
                                 .build()
                         )
                 else
                     WorkManager.getInstance(context.applicationContext)
-                        .cancelAllWorkByTag(ScreenCaptureListener.TAG)
+                        .getWorkInfosForUniqueWork("Unique work").get().forEach {
+                            println("ScreenshotCaptureListener ${it.state.isFinished}")
+                        }
             }
             setItemSwitch(R.id.main_menu_item_auto_scroll, "autoScroll")
 
