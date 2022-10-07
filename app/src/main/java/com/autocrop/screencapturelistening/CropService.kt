@@ -21,7 +21,7 @@ class CropService: Service() {
         cancelNotification(NotificationId.detectedNewScreenshot)
 
         val successfullySaved = applicationContext.cropAndSave(
-            @Suppress("DEPRECATION") intent?.getParcelableExtra(ScreenCaptureListener.SCREENSHOT_URI_EXTRA_KEY)!!,
+            @Suppress("DEPRECATION") intent?.getParcelableExtra(ScreenCaptureListeningService.SCREENSHOT_URI_EXTRA_KEY)!!,
         )
         if (successfullySaved)
             showNotification(

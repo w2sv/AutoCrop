@@ -1,45 +1,40 @@
 package com.autocrop.screencapturelistening
 
 import android.app.PendingIntent
-import android.content.Context
+import android.app.Service
 import android.content.Intent
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.os.Handler
+import android.os.IBinder
 import android.os.Looper
 import android.provider.MediaStore
 import androidx.core.app.NotificationCompat
-import androidx.work.Worker
-import androidx.work.WorkerParameters
 import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
 import com.autocrop.utils.android.extensions.queryMediaStoreColumns
 import com.autocrop.utils.android.extensions.showNotification
+import timber.log.Timber
 
-class ScreenCaptureListener(appContext: Context, workerParams: WorkerParameters)
-    : Worker(appContext, workerParams) {
+class ScreenCaptureListeningService: Service() {
 
     companion object{
         const val SCREENSHOT_URI_EXTRA_KEY = "SCREENSHOT_URI_EXTRA_KEY"
-        const val TAG = "SCREENSHOT_CAPTURE_LISTENER"
     }
 
-    override fun doWork(): Result {
-        registerContentObserver()
-        println("ScreenCaptureListener doWork")
-        return Result.success()
+    override fun onBind(intent: Intent?): IBinder? = null
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        applicationContext.contentResolver.registerContentObserver(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            true,
+            imageContentObserver
+        )
+        return START_STICKY
     }
 
-    private fun registerContentObserver(){
-        applicationContext.contentResolver?.registerContentObserver(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                true,
-                contentObserver
-            )
-    }
-
-    private val contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
+    private val imageContentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
         var previousUri: Uri? = null
         override fun onChange(selfChange: Boolean, uri: Uri?) {
             uri?.let {
@@ -73,10 +68,10 @@ class ScreenCaptureListener(appContext: Context, workerParams: WorkerParameters)
      */
     private fun isScreenshot(absolutePath: String, name: String): Boolean {
         return !name.contains(CROP_FILE_ADDENDUM) &&
-                publicScreenshotDirectoryName()?.let {
+                (publicScreenshotDirectoryName()?.let {
                     absolutePath.contains(it)
                 } == true ||
-                name.lowercase().contains("screenshot")
+                name.lowercase().contains("screenshot"))
     }
 
     private fun publicScreenshotDirectoryName() =
@@ -109,13 +104,10 @@ class ScreenCaptureListener(appContext: Context, workerParams: WorkerParameters)
         )
     }
 
-//    override fun onStopped() {
-//        super.onStopped()
-//
-//        println("ScreenCaptureListener onStopped")
-//
-//        applicationContext.contentResolver?.unregisterContentObserver(
-//            contentObserver
-//        )
-//    }
+    override fun onDestroy() {
+        super.onDestroy()
+
+        applicationContext.contentResolver.unregisterContentObserver(imageContentObserver)
+        Timber.i("Unregistered imageContentObserver")
+    }
 }

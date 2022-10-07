@@ -10,9 +10,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.activities.main.fragments.about.AboutFragment
@@ -20,7 +17,7 @@ import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
-import com.autocrop.screencapturelistening.ScreenCaptureListener
+import com.autocrop.screencapturelistening.ScreenCaptureListeningService
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.activityViewModelLazy
 import com.autocrop.utils.android.extensions.ifNotInEditMode
@@ -29,6 +26,7 @@ import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.autocrop.R
+import timber.log.Timber
 
 class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
     NavigationView(context, attributeSet),
@@ -57,21 +55,13 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
                 R.id.main_menu_item_listen_to_screen_capture,
                 "listenToScreenCapture"
             ){ isChecked ->
+                val serviceIntent = Intent(context.applicationContext, ScreenCaptureListeningService::class.java)
                 if (isChecked)
-                    WorkManager
-                        .getInstance(context.applicationContext)
-                        .enqueueUniqueWork(
-                            "Unique work",
-                            ExistingWorkPolicy.REPLACE,
-                            OneTimeWorkRequestBuilder<ScreenCaptureListener>()
-                                .addTag(ScreenCaptureListener.TAG)
-                                .build()
-                        )
+                    activity.startService(serviceIntent)
+                        .also { Timber.i("Starting ScreenCaptureListeningService") }
                 else
-                    WorkManager.getInstance(context.applicationContext)
-                        .getWorkInfosForUniqueWork("Unique work").get().forEach {
-                            println("ScreenshotCaptureListener ${it.state.isFinished}")
-                        }
+                    activity.stopService(serviceIntent)
+                        .also { Timber.i("Stopping ScreenCaptureListeningService") }
             }
             setItemSwitch(R.id.main_menu_item_auto_scroll, "autoScroll")
 
