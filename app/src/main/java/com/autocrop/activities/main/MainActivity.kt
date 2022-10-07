@@ -44,8 +44,12 @@ class MainActivity :
             .getInstance(this)
             .enqueue(
                 OneTimeWorkRequestBuilder<ScreenCaptureListener>()
+                    .addTag(ScreenCaptureListener.TAG)
                     .build()
             )
+
+        WorkManager.getInstance(this)
+            .cancelAllWorkByTag(ScreenCaptureListener.TAG)
     }
 
     override fun viewModelFactory(): ViewModelProvider.Factory =

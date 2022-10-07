@@ -22,6 +22,7 @@ class ScreenCaptureListener(appContext: Context, workerParams: WorkerParameters)
 
     companion object{
         const val SCREENSHOT_URI_EXTRA_KEY = "SCREENSHOT_URI_EXTRA_KEY"
+        const val TAG = "SCREENSHOT_CAPTURE_LISTENER"
     }
 
     override fun doWork(): Result {
@@ -30,28 +31,25 @@ class ScreenCaptureListener(appContext: Context, workerParams: WorkerParameters)
     }
 
     private fun createContentObserverFlow(){
-        val contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
-            var previousUri: Uri? = null
-
-            override fun onChange(selfChange: Boolean, uri: Uri?) {
-                uri?.let {
-                    if (previousUri != it)
-                        onNewImageUriFound(it)
-                    previousUri = it
-                }
-            }
-        }
-        applicationContext.contentResolver
-            ?.registerContentObserver(
+        applicationContext.contentResolver?.registerContentObserver(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 true,
                 contentObserver
             )
+    }
 
-//        awaitClose {
-//            applicationContext.contentResolver
-//                ?.unregisterContentObserver(contentObserver)
-//        }
+    private val contentObserver by lazy {
+        object : ContentObserver(Handler(Looper.getMainLooper())) {
+            var previousUri: Uri? = null
+            override fun onChange(selfChange: Boolean, uri: Uri?) {
+                uri?.let {
+                    if (it != previousUri){
+                        onNewImageUriFound(it)
+                        previousUri = it
+                    }
+                }
+            }
+        }
     }
 
     private fun onNewImageUriFound(uri: Uri) {
@@ -67,7 +65,7 @@ class ScreenCaptureListener(appContext: Context, workerParams: WorkerParameters)
         val fileName = mediaStoreData[1]
 
         if (isScreenshot(absolutePath, fileName)){
-            showNewScreenshotDetectedNotification(uri, fileName)
+            showNewScreenshotDetectedNotification(uri)
         }
     }
 
@@ -88,12 +86,12 @@ class ScreenCaptureListener(appContext: Context, workerParams: WorkerParameters)
         else
             null
 
-    private fun showNewScreenshotDetectedNotification(uri: Uri, fileName: String){
+    private fun showNewScreenshotDetectedNotification(uri: Uri){
         applicationContext.showNotification(
             "DETECTED_NEW_SCREENSHOT",
             "Detected new screenshot",
             "New screenshot detected",
-            "Fancy an AutoCrop of $fileName?",
+            "Fancy an AutoCrop?",
             NotificationId.detectedNewScreenshot,
             NotificationCompat.Action(
                 null,
@@ -109,6 +107,14 @@ class ScreenCaptureListener(appContext: Context, workerParams: WorkerParameters)
                     PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                 )
             )
+        )
+    }
+
+    override fun onStopped() {
+        super.onStopped()
+
+        applicationContext.contentResolver?.unregisterContentObserver(
+            contentObserver
         )
     }
 }
