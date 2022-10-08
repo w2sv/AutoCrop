@@ -19,6 +19,7 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <!-- https://stackoverflow.com/a/65477206/12083276 -->
 
@@ -44,8 +45,7 @@
         <service
             android:name="com.autocrop.screencapturelistening.CropService"
             android:exported="false"/>
-        <service
-            android:name="com.autocrop.screencapturelistening.ScreenCaptureListeningService"/>
+        <service android:name="com.autocrop.screencapturelistening.ScreenCaptureListeningService" />
 
         <!-- Activities -->
 

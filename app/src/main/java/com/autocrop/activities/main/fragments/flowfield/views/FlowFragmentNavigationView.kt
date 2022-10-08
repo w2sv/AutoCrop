@@ -57,10 +57,10 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
             ){ isChecked ->
                 val serviceIntent = Intent(context.applicationContext, ScreenCaptureListeningService::class.java)
                 if (isChecked)
-                    activity.startService(serviceIntent)
+                    context.applicationContext.startForegroundService(serviceIntent)
                         .also { Timber.i("Starting ScreenCaptureListeningService") }
                 else
-                    activity.stopService(serviceIntent)
+                    context.applicationContext.stopService(serviceIntent)
                         .also { Timber.i("Stopping ScreenCaptureListeningService") }
             }
             setItemSwitch(R.id.main_menu_item_auto_scroll, "autoScroll")

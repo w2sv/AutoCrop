@@ -13,6 +13,7 @@ import android.os.Looper
 import android.provider.MediaStore
 import androidx.core.app.NotificationCompat
 import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
+import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.queryMediaStoreColumns
 import com.autocrop.utils.android.extensions.showNotification
 import timber.log.Timber
@@ -26,11 +27,25 @@ class ScreenCaptureListeningService: Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        startForeground(
+            NotificationId.STARTED_FOREGROUND_SERVICE.nonZeroOrdinal,
+            applicationContext.notificationBuilderWithSetChannel(
+                NotificationId.STARTED_FOREGROUND_SERVICE,
+                "Started listening to screen captures",
+                "Started listening to screen captures",
+                "hemdül"
+            )
+                .build()
+        )
+            .also { Timber.i("Started ScreenCaptureListeningService in foreground") }
+
         applicationContext.contentResolver.registerContentObserver(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             true,
             imageContentObserver
         )
+            .also { Timber.i("Registered imageContentObserver") }
+
         return START_STICKY
     }
 
@@ -82,18 +97,17 @@ class ScreenCaptureListeningService: Service() {
 
     private fun showNewScreenshotDetectedNotification(uri: Uri){
         applicationContext.showNotification(
-            "DETECTED_NEW_SCREENSHOT",
+            NotificationId.DETECTED_NEW_SCREENSHOT,
             "Detected new screenshot",
             "New screenshot detected",
             "Fancy an AutoCrop?",
-            NotificationId.detectedNewScreenshot,
             NotificationCompat.Action(
                 null,
                 "Do crop",
                 PendingIntent.getService(
-                    applicationContext,
+                    this,
                     -1,
-                    Intent(applicationContext, CropService::class.java)
+                    Intent(this, CropService::class.java)
                         .putExtra(
                             SCREENSHOT_URI_EXTRA_KEY,
                             uri
@@ -108,6 +122,6 @@ class ScreenCaptureListeningService: Service() {
         super.onDestroy()
 
         applicationContext.contentResolver.unregisterContentObserver(imageContentObserver)
-        Timber.i("Unregistered imageContentObserver")
+            .also { Timber.i("Unregistered imageContentObserver") }
     }
 }
