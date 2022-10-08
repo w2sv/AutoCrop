@@ -1,8 +1,10 @@
 package com.autocrop.utils.android.extensions
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.Service
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.SharedPreferences
@@ -46,6 +48,12 @@ fun Context.uriPermissionGranted(uri: Uri, permissionCode: Int): Boolean =
 tailrec fun Context.getActivity(): Activity? =
     this as? Activity ?: (this as? ContextWrapper)?.baseContext?.getActivity()
 
+@Suppress("DEPRECATION")
+inline fun <reified T: Service> Context.serviceRunning() =
+    (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
+        .getRunningServices(Integer.MAX_VALUE)
+        .any { it.service.className == T::class.java.name }
+
 fun Context.showNotification(id: NotificationId,
                              channelName: String,
                              title: String,
@@ -64,7 +72,7 @@ fun Context.showNotification(id: NotificationId,
 fun Context.notificationBuilderWithSetChannel(id: NotificationId,
                                               channelName: String,
                                               title: String,
-                                              text: String,
+                                              text: String? = null,
                                               action: NotificationCompat.Action? = null): NotificationCompat.Builder{
     notificationManager().createNotificationChannel(id, channelName)
     return notificationBuilder(id, title, text, action)
@@ -83,7 +91,7 @@ fun NotificationManager.createNotificationChannel(id: NotificationId,
 
 fun Context.notificationBuilder(id: NotificationId,
                                 title: String,
-                                text: String,
+                                text: String?,
                                 action: NotificationCompat.Action? = null): NotificationCompat.Builder =
     NotificationCompat.Builder(this, id.name)
         .setSmallIcon(R.drawable.ic_scissors_24)

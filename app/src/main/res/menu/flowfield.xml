@@ -11,7 +11,7 @@
     </item>
 
     <item
-        android:id="@+id/main_menu_item_listen_to_screen_capture"
+        android:id="@+id/main_menu_item_listen_to_screen_captures"
         android:title="@string/screenshot_listener"
         android:icon="@drawable/ic_screenshot_24">
     </item>

@@ -33,9 +33,10 @@ class ScreenCaptureListeningService: Service() {
             notificationBuilderWithSetChannel(
                 NotificationId.STARTED_FOREGROUND_SERVICE,
                 "Listening to screen captures",
-                "Listening to screen captures",
-                ""
+                "Listening to screen captures"
             )
+                .setStyle(NotificationCompat.BigTextStyle()
+                    .bigText("You will receive a notification when AutoCrop detects a new croppable screenshot"))
                 .build()
         )
             .also { Timber.i("Started ScreenCaptureListeningService in foreground") }

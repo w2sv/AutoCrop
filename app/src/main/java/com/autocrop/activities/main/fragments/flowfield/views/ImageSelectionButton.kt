@@ -16,14 +16,16 @@ class ImageSelectionButton(context: Context, attributeSet: AttributeSet):
 
         setOnClickListener {
             with(findFragment<FlowFieldFragment>()){
-                writeExternalStoragePermissionHandler.requestPermissionsOrRun {
-                    imageSelectionIntentLauncher.launch(
-                        Intent(Intent.ACTION_PICK).apply {
-                            type = IMAGE_MIME_TYPE
-                            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                        }
-                    )
-                }
+                writeExternalStoragePermissionHandler.requestPermission(
+                    {
+                        imageSelectionIntentLauncher.launch(
+                            Intent(Intent.ACTION_PICK).apply {
+                                type = IMAGE_MIME_TYPE
+                                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                            }
+                        )
+                    }
+                )
             }
         }
     }

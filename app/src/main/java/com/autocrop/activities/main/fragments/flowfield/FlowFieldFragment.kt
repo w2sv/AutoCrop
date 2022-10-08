@@ -15,7 +15,7 @@ import com.autocrop.activities.IntentExtraIdentifier
 import com.autocrop.activities.cropping.CropActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.utils.android.PermissionsHandler
+import com.autocrop.utils.android.PermissionHandler
 import com.autocrop.utils.android.documentUriPathIdentifier
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.show
@@ -30,6 +30,7 @@ class FlowFieldFragment:
         super.onCreate(savedInstanceState)
 
         lifecycle.addObserver(writeExternalStoragePermissionHandler)
+        lifecycle.addObserver(readExternalStoragePermissionHandler)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,11 +61,20 @@ class FlowFieldFragment:
     }
 
     val writeExternalStoragePermissionHandler by lazy {
-        PermissionsHandler(
+        PermissionHandler(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             requireActivity(),
-            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            "You'll have to permit media file access in order for the app to save generated crops",
-            "Go to app settings and grant media file access in order for the app to save generated crops"
+            "Media file writing required for saving crops",
+            "Go to app settings and grant media file writing in order for the app to work"
+        )
+    }
+
+    val readExternalStoragePermissionHandler by lazy {
+        PermissionHandler(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            requireActivity(),
+            "Media file access required for listening to screen captures",
+            "Go to app settings and grant media file access for screen capture listening to work"
         )
     }
 

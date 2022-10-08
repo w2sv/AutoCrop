@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.util.AttributeSet
 import android.widget.ImageView
+import android.widget.Switch
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -21,7 +22,8 @@ import com.autocrop.screencapturelistening.ScreenCaptureListeningService
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.activityViewModelLazy
 import com.autocrop.utils.android.extensions.ifNotInEditMode
-import com.autocrop.utils.android.extensions.setItemSwitch
+import com.autocrop.utils.android.extensions.serviceRunning
+import com.autocrop.utils.android.extensions.setBooleanPreferencesManagedSwitch
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.google.android.material.navigation.NavigationView
@@ -38,32 +40,9 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
         super.onAttachedToWindow()
 
         ifNotInEditMode {
-            if (viewModel.savedCropUris != null)
-                with(menu.findItem(R.id.main_menu_item_share_crops)){
-                    isVisible = true
-                    actionView = ImageView(context).apply {
-                        setImageDrawable(
-                            AppCompatResources.getDrawable(
-                                context,
-                                R.drawable.ic_baseline_priority_high_24
-                            )
-                        )
-                    }
-                }
-
-            setItemSwitch(
-                R.id.main_menu_item_listen_to_screen_capture,
-                "listenToScreenCapture"
-            ){ isChecked ->
-                val serviceIntent = Intent(context, ScreenCaptureListeningService::class.java)
-                if (isChecked)
-                    context.startForegroundService(serviceIntent)
-                        .also { Timber.i("Starting ScreenCaptureListeningService") }
-                else
-                    context.stopService(serviceIntent)
-                        .also { Timber.i("Stopping ScreenCaptureListeningService") }
-            }
-            setItemSwitch(R.id.main_menu_item_auto_scroll, "autoScroll")
+            setShareCropsItem()
+            setListenToScreenCapturesItem()
+            setAutoScrollItem()
 
             setNavigationItemSelectedListener {
                 when (it.itemId){
@@ -77,6 +56,54 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
                 return@setNavigationItemSelectedListener false
             }
         }
+    }
+
+    private fun setShareCropsItem(){
+        if (viewModel.savedCropUris != null)
+            with(menu.findItem(R.id.main_menu_item_share_crops)){
+                isVisible = true
+                actionView = ImageView(context).apply {
+                    setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            context,
+                            R.drawable.ic_baseline_priority_high_24
+                        )
+                    )
+                }
+            }
+    }
+
+    private fun setListenToScreenCapturesItem(){
+        menu.findItem(R.id.main_menu_item_listen_to_screen_captures).actionView = Switch(context)
+            .apply {
+                isChecked = context.serviceRunning<ScreenCaptureListeningService>()
+                setOnCheckedChangeListener{ _, newValue ->
+                    val serviceIntent = Intent(context, ScreenCaptureListeningService::class.java)
+
+                    if (newValue)
+                        findFragment<FlowFieldFragment>()
+                            .readExternalStoragePermissionHandler
+                            .requestPermission(
+                                onGranted = {
+                                    context.startForegroundService(serviceIntent)
+                                        .also { Timber.i("Starting ScreenCaptureListeningService") }
+                                },
+                                onDenied = {
+                                    isChecked = false
+                                }
+                            )
+                    else
+                        context.stopService(serviceIntent)
+                            .also { Timber.i("Stopping ScreenCaptureListeningService") }
+                }
+            }
+    }
+
+    private fun setAutoScrollItem(){
+        menu.findItem(R.id.main_menu_item_auto_scroll).setBooleanPreferencesManagedSwitch(
+            context,
+            "autoScroll"
+        )
     }
 
     private fun launchCropSharingIntent(){

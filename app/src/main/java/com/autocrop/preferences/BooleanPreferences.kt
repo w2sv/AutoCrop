@@ -7,7 +7,6 @@ object BooleanPreferences : TypedPreferences<Boolean>(
     mutableMapOf(
         "autoScroll" to true,
         "deleteScreenshots" to false,
-        "listenToScreenCapture" to true,
 
         "welcomeMessageShown" to false,
         "viewPagerInstructionsShown" to false,
@@ -20,7 +19,6 @@ object BooleanPreferences : TypedPreferences<Boolean>(
      */
     var autoScroll by map
     var deleteScreenshots by map
-    var listenToScreenCapture by map
 
     var welcomeMessageShown by AutoSwitch.Mapped(map, false)
     var viewPagerInstructionsShown by AutoSwitch.Mapped(map, false)
