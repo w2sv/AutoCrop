@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!-- package name not to be touched (due to app already having been uploaded to playstore) -->
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permissions
 
-        https://stackoverflow.com/questions/64221188/write-external-storage-when-targeting-android-10
+        'requestLegacyExternalStorage=true' effectuates opting out of
+         scoped storage for API 29 to enable external storage writing;
+         @see
+            https://developer.android.com/training/data-storage/use-cases#modify-delete-media
+            https://stackoverflow.com/a/65477206/12083276
 
         WRITE_EXTERNAL_STORAGE implies READ_EXTERNAL_STORAGE
-            Reference: https://stackoverflow.com/questions/11942400/do-i-have-to-declare-both-write-external-storage-and-read-external-storage -->
+        @see
+            https://stackoverflow.com/questions/64221188/write-external-storage-when-targeting-android-10 -->
 
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission
+        android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29"/>
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+        android:maxSdkVersion="32" /> <!-- Required by ScreenCaptureListeningService  -->
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE"/> <!-- System Permission -> granted automatically -->
 
-    <!-- https://stackoverflow.com/a/65477206/12083276 -->
+    <!-- Application -->
 
-    <!-- setting requestLegacyExternalStorage to true effectuates opting out of
-         scoped storage for API 29 = Android 10 to enable external storage writing
-         Reference: https://developer.android.com/training/data-storage/use-cases#modify-delete-media -->
-
-    <!--Reference: https://developer.android.com/guide/topics/manifest/application-element -->
     <application
         android:label="@string/app_title"
         tools:replace="android:label"
@@ -39,13 +39,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App.Main"
 
-        android:appCategory="image"
-        tools:targetApi="o">
+        android:appCategory="image">
+
+        <!-- Services -->
 
         <service
             android:name="com.autocrop.screencapturelistening.CropService"
             android:exported="false"/>
-        <service android:name="com.autocrop.screencapturelistening.ScreenCaptureListeningService" />
+        <service
+            android:name="com.autocrop.screencapturelistening.ScreenCaptureListeningService"
+            android:exported="false"/>
 
         <!-- Activities -->
 
@@ -63,9 +66,7 @@
 
         <activity
             android:name="com.autocrop.activities.cropping.CropActivity" />
-
         <activity
             android:name="com.autocrop.activities.iodetermination.IODeterminationActivity" />
     </application>
-
 </manifest>

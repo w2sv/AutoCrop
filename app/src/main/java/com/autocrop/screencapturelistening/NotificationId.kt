@@ -5,6 +5,4 @@ enum class NotificationId{
     DETECTED_NEW_SCREENSHOT,
     NO_CROP_EDGES_FOUND,
     SUCCESSFULLY_SAVED_CROP;
-
-    val nonZeroOrdinal: Int get() = ordinal + 1
 }

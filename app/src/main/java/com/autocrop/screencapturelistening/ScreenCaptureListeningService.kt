@@ -16,6 +16,7 @@ import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.queryMediaStoreColumns
 import com.autocrop.utils.android.extensions.showNotification
+import com.autocrop.utils.kotlin.extensions.nonZeroOrdinal
 import timber.log.Timber
 
 class ScreenCaptureListeningService: Service() {
@@ -29,17 +30,17 @@ class ScreenCaptureListeningService: Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground(
             NotificationId.STARTED_FOREGROUND_SERVICE.nonZeroOrdinal,
-            applicationContext.notificationBuilderWithSetChannel(
+            notificationBuilderWithSetChannel(
                 NotificationId.STARTED_FOREGROUND_SERVICE,
-                "Started listening to screen captures",
-                "Started listening to screen captures",
-                "hemdül"
+                "Listening to screen captures",
+                "Listening to screen captures",
+                ""
             )
                 .build()
         )
             .also { Timber.i("Started ScreenCaptureListeningService in foreground") }
 
-        applicationContext.contentResolver.registerContentObserver(
+        contentResolver.registerContentObserver(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             true,
             imageContentObserver
@@ -62,7 +63,7 @@ class ScreenCaptureListeningService: Service() {
     }
 
     private fun onNewImageUriFound(uri: Uri) {
-        val mediaStoreData = applicationContext.contentResolver.queryMediaStoreColumns(
+        val mediaStoreData = contentResolver.queryMediaStoreColumns(
             uri,
             arrayOf(
                 MediaStore.Images.Media.DISPLAY_NAME,
@@ -81,13 +82,12 @@ class ScreenCaptureListeningService: Service() {
     /**
      * /storage/emulated/0/Pictures/Screenshots/.pending-1665749333-Screenshot_20221007-140853687.png
      */
-    private fun isScreenshot(absolutePath: String, name: String): Boolean {
-        return !name.contains(CROP_FILE_ADDENDUM) &&
-                (publicScreenshotDirectoryName()?.let {
-                    absolutePath.contains(it)
-                } == true ||
-                name.lowercase().contains("screenshot"))
-    }
+    private fun isScreenshot(absolutePath: String, name: String): Boolean =
+        !name.contains(CROP_FILE_ADDENDUM) &&
+        (publicScreenshotDirectoryName()?.let {
+            absolutePath.contains(it)
+        } == true ||
+        name.lowercase().contains("screenshot"))
 
     private fun publicScreenshotDirectoryName() =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
@@ -96,7 +96,7 @@ class ScreenCaptureListeningService: Service() {
             null
 
     private fun showNewScreenshotDetectedNotification(uri: Uri){
-        applicationContext.showNotification(
+        showNotification(
             NotificationId.DETECTED_NEW_SCREENSHOT,
             "Detected new screenshot",
             "New screenshot detected",
@@ -121,7 +121,7 @@ class ScreenCaptureListeningService: Service() {
     override fun onDestroy() {
         super.onDestroy()
 
-        applicationContext.contentResolver.unregisterContentObserver(imageContentObserver)
+        contentResolver.unregisterContentObserver(imageContentObserver)
             .also { Timber.i("Unregistered imageContentObserver") }
     }
 }

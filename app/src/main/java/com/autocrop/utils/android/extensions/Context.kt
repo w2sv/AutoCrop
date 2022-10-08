@@ -16,6 +16,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.autocrop.screencapturelistening.NotificationId
+import com.autocrop.utils.kotlin.extensions.nonZeroOrdinal
 import com.w2sv.autocrop.R
 
 fun Context.getColoredIcon(@DrawableRes drawableId: Int, @ColorRes colorId: Int): Drawable =

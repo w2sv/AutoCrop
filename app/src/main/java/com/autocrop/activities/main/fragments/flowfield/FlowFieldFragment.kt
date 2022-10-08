@@ -29,7 +29,7 @@ class FlowFieldFragment:
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycle.addObserver(permissionsHandler)
+        lifecycle.addObserver(writeExternalStoragePermissionHandler)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,10 +59,10 @@ class FlowFieldFragment:
         }
     }
 
-    val permissionsHandler by lazy {
+    val writeExternalStoragePermissionHandler by lazy {
         PermissionsHandler(
             requireActivity(),
-            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE),
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
             "You'll have to permit media file access in order for the app to save generated crops",
             "Go to app settings and grant media file access in order for the app to save generated crops"
         )

@@ -20,8 +20,8 @@ import timber.log.Timber
 class PermissionsHandler(
     private val activity: Activity,
     private val requiredPermissions: Array<String>,
-    private val snackbarMessageOnPermissionDenial: String,
-    private val snackbarMessageOnRequestSuppression: String)
+    private val permissionDenialMessage: String,
+    private val requestSuppressionMessage: String)
         : DefaultLifecycleObserver{
 
     private lateinit var requestPermissions: ActivityResultLauncher<Array<String>>
@@ -107,11 +107,11 @@ class PermissionsHandler(
         get() = activity.shouldShowRequestPermissionRationale(pendingPermissions[0])
 
     private fun Activity.permissionDeniedSnacky(): Snacky.Builder =
-        snacky(snackbarMessageOnPermissionDenial)
+        snacky(permissionDenialMessage)
             .setIcon(R.drawable.ic_error_24)
 
     private fun Activity.permissionRequestingSuppressedSnacky(): Snacky.Builder =
-        snacky(snackbarMessageOnRequestSuppression)
+        snacky(requestSuppressionMessage)
             .setIcon(R.drawable.ic_error_24)
             .setActionText("Settings")
             .setActionClickListener {
