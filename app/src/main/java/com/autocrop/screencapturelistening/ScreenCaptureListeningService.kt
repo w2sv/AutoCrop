@@ -19,7 +19,6 @@ import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreData
-import com.autocrop.utils.android.extensions.queryMediaStoreDatum
 import com.autocrop.utils.android.extensions.showNotification
 import com.autocrop.utils.kotlin.extensions.nonZeroOrdinal
 import com.google.common.collect.EvictingQueue
@@ -59,66 +58,105 @@ class ScreenCaptureListeningService: Service() {
         return START_STICKY
     }
 
-    @Suppress("UnstableApiUsage")
+    @Suppress("UnstableApiUsage")  // EvictingQueue part of Beta-API
     private val imageContentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
-        private val lastForwardedUris = EvictingQueue.create<Uri>(3)
+        /**
+         * Uris which are not to be considered again.
+         *
+         * [EvictingQueue] maxSize determined with respect to the number of
+         * screenshots, that could possibly be taken in the relatively short time interval, within which
+         * a single Uri is processed.
+         */
+        private val recentBlacklist = EvictingQueue.create<Uri>(3)
 
+        /**
+         * Uris that have been asserted to correspond to a screenshot, but which were still pending
+         * during last check.
+         */
+        private val pendingScreenshotUris = mutableSetOf<Uri>()
+
+        /**
+         * According to observation called on each change to a matching Uri, including
+         * changes to their [MediaStore.MediaColumns].
+         */
         override fun onChange(selfChange: Boolean, uri: Uri?) {
             uri?.let {
-                if (!lastForwardedUris.contains(it)){
-                    try{
-                        if (contentResolver.queryMediaStoreDatum(it, MediaStore.Images.Media.IS_PENDING) == "0") {
-                            onNewNonPendingImageUri(it)
-                            lastForwardedUris.add(it)
-                            Timber.i("Forwarded Uri $it")
+                Timber.i("Called onChange for $it")
+                if (!recentBlacklist.contains(it)){
+                    if (pendingScreenshotUris.contains(it) || it.isScreenshot()){
+                        if (onNewScreenshotUri(it)) {
+                            recentBlacklist.add(it)
+                            pendingScreenshotUris.remove(it)
+                            Timber.i("Added $uri to blacklist and removed it from pendingScreenshotUris")
                         }
+                        else
+                            pendingScreenshotUris.add(it)
+                                .also {
+                                    Timber.i(
+                                        "Added $uri to pendingScreenshotUris"
+                                    )
+                                }
                     }
-                    catch (e: UnsupportedOperationException){
-                        onNewNonPendingImageUri(it)
-                        lastForwardedUris.add(it)
-                        Timber.i("Forwarded Uri $it")
-                    }
+                    else
+                        recentBlacklist.add(it)
+                            .also {
+                                Timber.i("Added $uri to blacklist")
+                            }
                 }
             }
         }
     }
 
-    private fun onNewNonPendingImageUri(uri: Uri): Boolean {
+    /**
+     * Checks if [this] not corresponding to AutoCrop-file and if its file path contains either the
+     * [publicScreenshotDirectoryName] or the word 'screenshot'.
+     */
+    private fun Uri.isScreenshot(): Boolean{
         val mediaStoreData = contentResolver.queryMediaStoreData(
-            uri,
+            this,
             arrayOf(
                 MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Images.Media.DATA
+                MediaStore.Images.Media.DATA  // e.g. /storage/emulated/0/Pictures/Screenshots/.pending-1665749333-Screenshot_20221007-140853687.png
             )
         )
 
         val absolutePath = mediaStoreData[0]
         val fileName = mediaStoreData[1]
 
-        if (isScreenshot(absolutePath, fileName)){
-            val bitmap = contentResolver.openBitmap(uri)
-            bitmap.cropEdges()?.let {
-                showNewCroppableScreenshotDetectedNotification(uri, bitmap, it)
-            }
-        }
-        return true
+        return !fileName.contains(CROP_FILE_ADDENDUM) &&
+                (publicScreenshotDirectoryName()?.let {
+                    absolutePath.contains(it)
+                } == true || fileName.lowercase().contains("screenshot"))
     }
 
     /**
-     * /storage/emulated/0/Pictures/Screenshots/.pending-1665749333-Screenshot_20221007-140853687.png
+     * @return e.g. 'Screenshots'
      */
-    private fun isScreenshot(absolutePath: String, name: String): Boolean =
-        !name.contains(CROP_FILE_ADDENDUM) &&
-        (publicScreenshotDirectoryName()?.let {
-            absolutePath.contains(it)
-        } == true ||
-        name.lowercase().contains("screenshot"))
-
-    private fun publicScreenshotDirectoryName() =
+    private fun publicScreenshotDirectoryName(): String? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_SCREENSHOTS).name
         else
             null
+
+    /**
+     * Catches [IllegalStateException] in case of [uri] not being accessible due to still pending
+     * (meaning that the device screenshot manager, := uri owner, is still accessing/processing the file,
+     * such that the uri is blocked for other processes).
+     *
+     * @return [Boolean] indicating whether [uri] was accessible, meaning that this function should not
+     * be called for the same [uri] again.
+     */
+    private fun onNewScreenshotUri(uri: Uri): Boolean =
+        try {
+            val bitmap = contentResolver.openBitmap(uri)
+            bitmap.cropEdges()?.let {
+                showNewCroppableScreenshotDetectedNotification(uri, bitmap, it)
+            }
+            true
+        }
+        catch (_: IllegalStateException){
+            false
+        }
 
     private fun showNewCroppableScreenshotDetectedNotification(uri: Uri, screenshotBitmap: Bitmap, cropEdges: CropEdges){
         val notificationId = NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT
