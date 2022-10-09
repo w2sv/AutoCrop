@@ -18,9 +18,11 @@ import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
-import com.autocrop.utils.android.extensions.queryMediaStoreColumns
+import com.autocrop.utils.android.extensions.queryMediaStoreData
+import com.autocrop.utils.android.extensions.queryMediaStoreDatum
 import com.autocrop.utils.android.extensions.showNotification
 import com.autocrop.utils.kotlin.extensions.nonZeroOrdinal
+import com.google.common.collect.EvictingQueue
 import com.lyrebirdstudio.croppylib.CropEdges
 import timber.log.Timber
 
@@ -57,20 +59,23 @@ class ScreenCaptureListeningService: Service() {
         return START_STICKY
     }
 
+    @Suppress("UnstableApiUsage")
     private val imageContentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
-        var previousUri: Uri? = null
+        private val lastForwardedUris = EvictingQueue.create<Uri>(3)
+
         override fun onChange(selfChange: Boolean, uri: Uri?) {
             uri?.let {
-                if (it != previousUri){
+                if (!lastForwardedUris.contains(it) && contentResolver.queryMediaStoreDatum(it, MediaStore.Images.Media.IS_PENDING) == "0"){
                     onNewImageUriFound(it)
-                    previousUri = it
+                    lastForwardedUris.add(it)
+                    Timber.i("Forwarded Uri $it")
                 }
             }
         }
     }
 
     private fun onNewImageUriFound(uri: Uri) {
-        val mediaStoreData = contentResolver.queryMediaStoreColumns(
+        val mediaStoreData = contentResolver.queryMediaStoreData(
             uri,
             arrayOf(
                 MediaStore.Images.Media.DISPLAY_NAME,
@@ -82,15 +87,10 @@ class ScreenCaptureListeningService: Service() {
         val fileName = mediaStoreData[1]
 
         if (isScreenshot(absolutePath, fileName)){
-            Handler(Looper.getMainLooper()).postDelayed(
-                {
-                    val bitmap = contentResolver.openBitmap(uri)
-                    bitmap.cropEdges()?.let {
-                        showNewCroppableScreenshotDetectedNotification(uri, bitmap, it)
-                    }
-                },
-                2000
-            )
+            val bitmap = contentResolver.openBitmap(uri)
+            bitmap.cropEdges()?.let {
+                showNewCroppableScreenshotDetectedNotification(uri, bitmap, it)
+            }
         }
     }
 

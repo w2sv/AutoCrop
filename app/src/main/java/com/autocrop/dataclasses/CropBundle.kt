@@ -6,7 +6,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.utils.android.ImageMimeType
-import com.autocrop.utils.android.extensions.queryMediaStoreColumns
+import com.autocrop.utils.android.extensions.queryMediaStoreData
 import com.lyrebirdstudio.croppylib.CropEdges
 import com.lyrebirdstudio.croppylib.utils.extensions.rounded
 import kotlin.math.roundToInt
@@ -39,7 +39,7 @@ data class Screenshot(
                                  val id: Long){
         companion object{
             fun query(contentResolver: ContentResolver, uri: Uri): MediaStoreColumns =
-                contentResolver.queryMediaStoreColumns(
+                contentResolver.queryMediaStoreData(
                     uri,
                     arrayOf(
                         MediaStore.Images.Media.SIZE,

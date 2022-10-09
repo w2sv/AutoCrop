@@ -43,18 +43,24 @@ fun ContentResolver.deleteImage(mediaStoreId: Long): Boolean{
  * @see
  *      https://stackoverflow.com/a/16511111/12083276
  */
-fun ContentResolver.queryMediaStoreColumns(uri: Uri,
-                                           mediaColumns: Array<String>,
-                                           selection: String? = null,
-                                           selectionArgs: Array<String>? = null): List<String> =
+fun ContentResolver.queryMediaStoreData(uri: Uri,
+                                        columns: Array<String>,
+                                        selection: String? = null,
+                                        selectionArgs: Array<String>? = null): List<String> =
     query(
         uri,
-        mediaColumns,
+        columns,
         selection,
         selectionArgs,
         null
     )!!.run {
         moveToFirst()
-        mediaColumns.map { getString(getColumnIndexOrThrow(it)) }
+        columns.map { getString(getColumnIndexOrThrow(it)) }
             .also { close() }
     }
+
+fun ContentResolver.queryMediaStoreDatum(uri: Uri,
+                                        column: String,
+                                        selection: String? = null,
+                                        selectionArgs: Array<String>? = null): String =
+    queryMediaStoreData(uri, arrayOf(column), selection, selectionArgs).first()
