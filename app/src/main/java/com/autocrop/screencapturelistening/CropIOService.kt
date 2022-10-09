@@ -1,6 +1,5 @@
 package com.autocrop.screencapturelistening
 
-import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.net.Uri
@@ -10,12 +9,8 @@ import com.autocrop.activities.iodetermination.processCropBundle
 import com.autocrop.dataclasses.CropBundle
 import com.autocrop.dataclasses.Screenshot
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.utils.android.IMAGE_MIME_TYPE
-import com.autocrop.utils.android.extensions.getParcelable
-import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.notificationManager
 import com.autocrop.utils.android.extensions.openBitmap
-import com.autocrop.utils.android.extensions.showNotification
 import com.lyrebirdstudio.croppylib.CropEdges
 
 class CropIOService: Service() {
@@ -28,12 +23,12 @@ class CropIOService: Service() {
     }
 
     private fun Intent.process(){
-        val notificationId = getIntExtra(ScreenCaptureListeningService.CLOSE_NOTIFICATION_ID_EXTRA_KEY, -1)
+        val notificationId = getIntExtra(NOTIFICATION_ID_EXTRA_KEY, -1)
         notificationManager().cancel(notificationId)
         startService(
-            Intent(this@CropIOService, OnPostNotificationCancellationService::class.java)
+            Intent(this@CropIOService, NotificationCancellationListenerService::class.java)
                 .putExtra(
-                    ScreenCaptureListeningService.CLOSE_NOTIFICATION_ID_EXTRA_KEY,
+                    NOTIFICATION_ID_EXTRA_KEY,
                     notificationId
                 )
         )

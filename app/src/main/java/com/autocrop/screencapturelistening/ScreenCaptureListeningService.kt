@@ -2,7 +2,6 @@ package com.autocrop.screencapturelistening
 
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.database.ContentObserver
 import android.graphics.Bitmap
@@ -18,14 +17,16 @@ import com.autocrop.activities.cropping.cropping.cropEdges
 import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
-import com.autocrop.utils.android.extensions.notificationManager
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreData
+import com.autocrop.utils.android.extensions.showGroupUpdatedNotification
 import com.autocrop.utils.android.extensions.showNotification
 import com.autocrop.utils.kotlin.extensions.nonZeroOrdinal
 import com.google.common.collect.EvictingQueue
 import com.lyrebirdstudio.croppylib.CropEdges
 import timber.log.Timber
+
+const val NOTIFICATION_ID_EXTRA_KEY = "CLOSE_NOTIFICATION_ID_EXTRA_KEY"
 
 class ScreenCaptureListeningService: Service() {
 
@@ -33,11 +34,8 @@ class ScreenCaptureListeningService: Service() {
         const val SCREENSHOT_URI_EXTRA_KEY = "SCREENSHOT_URI_EXTRA_KEY"
         const val CROP_EDGES_EXTRA_KEY = "CROP_EDGES_EXTRA_KEY"
 
-        const val CLOSE_NOTIFICATION_ID_EXTRA_KEY = "CLOSE_NOTIFICATION_ID_EXTRA_KEY"
-        val notificationId = NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT
-        val id2NotificationBuilder = mutableMapOf<Int, NotificationCompat.Builder>()
-
-        val ids = UsedNotificationIds(notificationId)
+        val groupNotificationId = NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT
+        val ids = DynamicNotificationIds(groupNotificationId)
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -166,8 +164,17 @@ class ScreenCaptureListeningService: Service() {
         }
 
     private fun showNewCroppableScreenshotDetectedNotification(uri: Uri, screenshotBitmap: Bitmap, cropEdges: CropEdges){
-        val id = ids.addId()
-        id2NotificationBuilder[id] = notificationBuilderWithSetChannel(
+        if (ids.size == 1){
+            val (id, builder) = ids.element()
+            showGroupUpdatedNotification(
+                id,
+                builder,
+                groupNotificationId.groupKey
+            )
+        }
+
+        val id = ids.newId()
+        val builder = notificationBuilderWithSetChannel(
             ids.channelId,
             "Detected new croppable screenshot",
             action = NotificationCompat.Action(
@@ -179,7 +186,7 @@ class ScreenCaptureListeningService: Service() {
                     Intent(this, CropIOService::class.java)
                         .putExtra(SCREENSHOT_URI_EXTRA_KEY, uri)
                         .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
-                        .putExtra(CLOSE_NOTIFICATION_ID_EXTRA_KEY, id),
+                        .putExtra(NOTIFICATION_ID_EXTRA_KEY, id),
                     PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                 )
             )
@@ -188,32 +195,31 @@ class ScreenCaptureListeningService: Service() {
                 NotificationCompat.BigPictureStyle()
                     .bigPicture(screenshotBitmap.cropped(cropEdges))
             )
-            .setGroup(notificationId.groupKey)
+            .setGroup(groupNotificationId.groupKey)
             .setOnlyAlertOnce(true)
             .setDeleteIntent(
                 PendingIntent.getService(
                     this,
-                    99,
+                    PendingIntentRequestCode.NOTIFICATION_CANCELLATION_LISTENER_SERVICE.ordinal,
                     Intent(
                         this,
-                        OnPostNotificationCancellationService::class.java
+                        NotificationCancellationListenerService::class.java
                     )
-                        .putExtra(CLOSE_NOTIFICATION_ID_EXTRA_KEY, id),
+                        .putExtra(NOTIFICATION_ID_EXTRA_KEY, id),
                     PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                 )
             )
 
+        ids.add(id to builder)
         showNotification(
             id,
-            id2NotificationBuilder.getValue(id)
+            builder
         )
 
+        // Show notification group summary
         if (ids.size >= 2){
-            if (ids.size == 2)
-                showGroupUpdatedNotification(ids.first(), id2NotificationBuilder.getValue(ids.first()), notificationId.groupKey)
-
             showNotification(
-                notificationId.nonZeroOrdinal,
+                groupNotificationId.nonZeroOrdinal,
                 notificationBuilderWithSetChannel(
                     ids.channelId,
                     "Detected ${ids.size} croppable screenshots"
@@ -221,7 +227,7 @@ class ScreenCaptureListeningService: Service() {
                     .setStyle(NotificationCompat.InboxStyle()
                         .setBigContentTitle("Detected ${ids.size} croppable screenshots")
                         .setSummaryText("Expand to save"))
-                    .setGroup(notificationId.groupKey)
+                    .setGroup(groupNotificationId.groupKey)
                     .setGroupSummary(true)
             )
         }
@@ -232,38 +238,5 @@ class ScreenCaptureListeningService: Service() {
 
         contentResolver.unregisterContentObserver(imageContentObserver)
             .also { Timber.i("Unregistered imageContentObserver") }
-    }
-}
-
-fun Context.showGroupUpdatedNotification(notificationId: Int, notificationBuilder: NotificationCompat.Builder, newGroup: String?){
-    showNotification(
-        notificationId,
-        notificationBuilder
-            .apply {
-                setGroup(newGroup)
-            }
-    )
-}
-
-class OnPostNotificationCancellationService: Service(){
-    override fun onBind(intent: Intent?): IBinder? = null
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        ScreenCaptureListeningService.ids.remove(
-            intent!!.getIntExtra(ScreenCaptureListeningService.CLOSE_NOTIFICATION_ID_EXTRA_KEY, -1)
-        )
-        if (ScreenCaptureListeningService.ids.size == 1) {
-            with(notificationManager()) {
-                val remainingNotificationId = ScreenCaptureListeningService.ids.first()
-                showGroupUpdatedNotification(
-                    remainingNotificationId,
-                    ScreenCaptureListeningService.id2NotificationBuilder.getValue(remainingNotificationId),
-                    null
-                )
-                cancel(ScreenCaptureListeningService.notificationId.nonZeroOrdinal)
-            }
-        }
-        stopSelf()
-        return START_REDELIVER_INTENT
     }
 }
