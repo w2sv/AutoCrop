@@ -17,8 +17,6 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import com.autocrop.screencapturelistening.NotificationId
-import com.autocrop.utils.kotlin.extensions.nonZeroOrdinal
 import com.w2sv.autocrop.R
 
 fun Context.getColoredIcon(@DrawableRes drawableId: Int, @ColorRes colorId: Int): Drawable =
@@ -49,58 +47,42 @@ tailrec fun Context.getActivity(): Activity? =
     this as? Activity ?: (this as? ContextWrapper)?.baseContext?.getActivity()
 
 @Suppress("DEPRECATION")
-inline fun <reified T: Service> Context.serviceRunning() =
+inline fun <reified T : Service> Context.serviceRunning() =
     (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
         .getRunningServices(Integer.MAX_VALUE)
         .any { it.service.className == T::class.java.name }
 
-fun Context.showNotification(id: NotificationId,
-                             title: String,
-                             text: String,
-                             action: NotificationCompat.Action? = null) {
-    notificationManager().apply {
-        createNotificationChannel(id, title)
-    }
-        .notify(
-            id.nonZeroOrdinal,
-            notificationBuilder(id, title, text, action)
-                .build()
-        )
-}
-
-fun Context.showNotification(id: NotificationId, builder: NotificationCompat.Builder){
+fun Context.showNotification(id: Int, builder: NotificationCompat.Builder) {
     notificationManager()
         .notify(
-            id.nonZeroOrdinal,
-            builder
-                .build()
+            id,
+            builder.build()
         )
 }
 
-fun Context.notificationBuilderWithSetChannel(id: NotificationId,
-                                              title: String,
-                                              text: String? = null,
-                                              action: NotificationCompat.Action? = null): NotificationCompat.Builder{
-    notificationManager().createNotificationChannel(id, title)
-    return notificationBuilder(id, title, text, action)
-}
-
-private fun NotificationManager.createNotificationChannel(id: NotificationId,
-                                                  channelName: String){
-    createNotificationChannel(
+fun Context.notificationBuilderWithSetChannel(
+    channelId: String,
+    title: String,
+    text: String? = null,
+    action: NotificationCompat.Action? = null
+): NotificationCompat.Builder {
+    notificationManager().createNotificationChannel(
         NotificationChannel(
-            id.name,
-            channelName,
+            channelId,
+            title,
             NotificationManager.IMPORTANCE_DEFAULT
         )
     )
+    return notificationBuilder(channelId, title, text, action)
 }
 
-private fun Context.notificationBuilder(id: NotificationId,
-                                title: String,
-                                text: String?,
-                                action: NotificationCompat.Action? = null): NotificationCompat.Builder =
-    NotificationCompat.Builder(this, id.name)
+private fun Context.notificationBuilder(
+    channelId: String,
+    title: String,
+    text: String?,
+    action: NotificationCompat.Action? = null
+): NotificationCompat.Builder =
+    NotificationCompat.Builder(this, channelId)
         .setSmallIcon(R.drawable.ic_scissors_24)
         .setContentTitle(title)
         .setContentText(text)
@@ -110,10 +92,6 @@ private fun Context.notificationBuilder(id: NotificationId,
                 addAction(it)
             }
         }
-
-fun Context.cancelNotification(id: NotificationId){
-    notificationManager().cancel(id.nonZeroOrdinal)
-}
 
 fun Context.notificationManager(): NotificationManager =
     (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)

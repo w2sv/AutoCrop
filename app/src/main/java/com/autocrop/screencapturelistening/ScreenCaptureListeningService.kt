@@ -2,6 +2,7 @@ package com.autocrop.screencapturelistening
 
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.database.ContentObserver
 import android.graphics.Bitmap
@@ -17,6 +18,7 @@ import com.autocrop.activities.cropping.cropping.cropEdges
 import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
+import com.autocrop.utils.android.extensions.notificationManager
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreData
 import com.autocrop.utils.android.extensions.showNotification
@@ -30,7 +32,12 @@ class ScreenCaptureListeningService: Service() {
     companion object{
         const val SCREENSHOT_URI_EXTRA_KEY = "SCREENSHOT_URI_EXTRA_KEY"
         const val CROP_EDGES_EXTRA_KEY = "CROP_EDGES_EXTRA_KEY"
+
         const val CLOSE_NOTIFICATION_ID_EXTRA_KEY = "CLOSE_NOTIFICATION_ID_EXTRA_KEY"
+        val notificationId = NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT
+        val id2NotificationBuilder = mutableMapOf<Int, NotificationCompat.Builder>()
+
+        val ids = UsedNotificationIds(notificationId)
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -39,7 +46,7 @@ class ScreenCaptureListeningService: Service() {
         startForeground(
             NotificationId.STARTED_FOREGROUND_SERVICE.nonZeroOrdinal,
             notificationBuilderWithSetChannel(
-                NotificationId.STARTED_FOREGROUND_SERVICE,
+                NotificationId.STARTED_FOREGROUND_SERVICE.name,
                 "Listening to screen captures"
             )
                 .setStyle(NotificationCompat.BigTextStyle()
@@ -159,31 +166,65 @@ class ScreenCaptureListeningService: Service() {
         }
 
     private fun showNewCroppableScreenshotDetectedNotification(uri: Uri, screenshotBitmap: Bitmap, cropEdges: CropEdges){
-        val notificationId = NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT
-        showNotification(
-            notificationId,
-            notificationBuilderWithSetChannel(
-                notificationId,
-                "Detected new croppable screenshot",
-                action = NotificationCompat.Action(
-                    null,
-                    "Save crop",
-                    PendingIntent.getService(
-                        this,
-                        PendingIntentRequestCode.CROP_IO_SERVICE.ordinal,
-                        Intent(this, CropIOService::class.java)
-                            .putExtra(SCREENSHOT_URI_EXTRA_KEY, uri)
-                            .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
-                            .putExtra(CLOSE_NOTIFICATION_ID_EXTRA_KEY, notificationId),
-                        PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
-                    )
+        val id = ids.addId()
+        id2NotificationBuilder[id] = notificationBuilderWithSetChannel(
+            ids.channelId,
+            "Detected new croppable screenshot",
+            action = NotificationCompat.Action(
+                null,
+                "Save crop",
+                PendingIntent.getService(
+                    this,
+                    PendingIntentRequestCode.CROP_IO_SERVICE.ordinal,
+                    Intent(this, CropIOService::class.java)
+                        .putExtra(SCREENSHOT_URI_EXTRA_KEY, uri)
+                        .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
+                        .putExtra(CLOSE_NOTIFICATION_ID_EXTRA_KEY, id),
+                    PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                 )
             )
-                .setStyle(
-                    NotificationCompat.BigPictureStyle()
-                        .bigPicture(screenshotBitmap.cropped(cropEdges))
-                )
         )
+            .setStyle(
+                NotificationCompat.BigPictureStyle()
+                    .bigPicture(screenshotBitmap.cropped(cropEdges))
+            )
+            .setGroup(notificationId.groupKey)
+            .setOnlyAlertOnce(true)
+            .setDeleteIntent(
+                PendingIntent.getService(
+                    this,
+                    99,
+                    Intent(
+                        this,
+                        OnPostNotificationCancellationService::class.java
+                    )
+                        .putExtra(CLOSE_NOTIFICATION_ID_EXTRA_KEY, id),
+                    PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+                )
+            )
+
+        showNotification(
+            id,
+            id2NotificationBuilder.getValue(id)
+        )
+
+        if (ids.size >= 2){
+            if (ids.size == 2)
+                showGroupUpdatedNotification(ids.first(), id2NotificationBuilder.getValue(ids.first()), notificationId.groupKey)
+
+            showNotification(
+                notificationId.nonZeroOrdinal,
+                notificationBuilderWithSetChannel(
+                    ids.channelId,
+                    "Detected ${ids.size} croppable screenshots"
+                )
+                    .setStyle(NotificationCompat.InboxStyle()
+                        .setBigContentTitle("Detected ${ids.size} croppable screenshots")
+                        .setSummaryText("Expand to save"))
+                    .setGroup(notificationId.groupKey)
+                    .setGroupSummary(true)
+            )
+        }
     }
 
     override fun onDestroy() {
@@ -191,5 +232,38 @@ class ScreenCaptureListeningService: Service() {
 
         contentResolver.unregisterContentObserver(imageContentObserver)
             .also { Timber.i("Unregistered imageContentObserver") }
+    }
+}
+
+fun Context.showGroupUpdatedNotification(notificationId: Int, notificationBuilder: NotificationCompat.Builder, newGroup: String?){
+    showNotification(
+        notificationId,
+        notificationBuilder
+            .apply {
+                setGroup(newGroup)
+            }
+    )
+}
+
+class OnPostNotificationCancellationService: Service(){
+    override fun onBind(intent: Intent?): IBinder? = null
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        ScreenCaptureListeningService.ids.remove(
+            intent!!.getIntExtra(ScreenCaptureListeningService.CLOSE_NOTIFICATION_ID_EXTRA_KEY, -1)
+        )
+        if (ScreenCaptureListeningService.ids.size == 1) {
+            with(notificationManager()) {
+                val remainingNotificationId = ScreenCaptureListeningService.ids.first()
+                showGroupUpdatedNotification(
+                    remainingNotificationId,
+                    ScreenCaptureListeningService.id2NotificationBuilder.getValue(remainingNotificationId),
+                    null
+                )
+                cancel(ScreenCaptureListeningService.notificationId.nonZeroOrdinal)
+            }
+        }
+        stopSelf()
+        return START_REDELIVER_INTENT
     }
 }
