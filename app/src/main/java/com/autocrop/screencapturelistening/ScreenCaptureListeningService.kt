@@ -65,16 +65,25 @@ class ScreenCaptureListeningService: Service() {
 
         override fun onChange(selfChange: Boolean, uri: Uri?) {
             uri?.let {
-                if (!lastForwardedUris.contains(it) && contentResolver.queryMediaStoreDatum(it, MediaStore.Images.Media.IS_PENDING) == "0"){
-                    onNewImageUriFound(it)
-                    lastForwardedUris.add(it)
-                    Timber.i("Forwarded Uri $it")
+                if (!lastForwardedUris.contains(it)){
+                    try{
+                        if (contentResolver.queryMediaStoreDatum(it, MediaStore.Images.Media.IS_PENDING) == "0") {
+                            onNewNonPendingImageUri(it)
+                            lastForwardedUris.add(it)
+                            Timber.i("Forwarded Uri $it")
+                        }
+                    }
+                    catch (e: UnsupportedOperationException){
+                        onNewNonPendingImageUri(it)
+                        lastForwardedUris.add(it)
+                        Timber.i("Forwarded Uri $it")
+                    }
                 }
             }
         }
     }
 
-    private fun onNewImageUriFound(uri: Uri) {
+    private fun onNewNonPendingImageUri(uri: Uri): Boolean {
         val mediaStoreData = contentResolver.queryMediaStoreData(
             uri,
             arrayOf(
@@ -92,6 +101,7 @@ class ScreenCaptureListeningService: Service() {
                 showNewCroppableScreenshotDetectedNotification(uri, bitmap, it)
             }
         }
+        return true
     }
 
     /**
