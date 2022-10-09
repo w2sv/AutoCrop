@@ -44,7 +44,7 @@
         <!-- Services -->
 
         <service
-            android:name="com.autocrop.screencapturelistening.CropService"
+            android:name="com.autocrop.screencapturelistening.CropIOService"
             android:exported="false"/>
         <service
             android:name="com.autocrop.screencapturelistening.ScreenCaptureListeningService"

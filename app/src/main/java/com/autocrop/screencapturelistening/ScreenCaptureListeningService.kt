@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.database.ContentObserver
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -12,17 +13,23 @@ import android.os.IBinder
 import android.os.Looper
 import android.provider.MediaStore
 import androidx.core.app.NotificationCompat
+import com.autocrop.activities.cropping.cropping.cropEdges
+import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
+import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreColumns
 import com.autocrop.utils.android.extensions.showNotification
 import com.autocrop.utils.kotlin.extensions.nonZeroOrdinal
+import com.lyrebirdstudio.croppylib.CropEdges
 import timber.log.Timber
 
 class ScreenCaptureListeningService: Service() {
 
     companion object{
         const val SCREENSHOT_URI_EXTRA_KEY = "SCREENSHOT_URI_EXTRA_KEY"
+        const val CROP_EDGES_EXTRA_KEY = "CROP_EDGES_EXTRA_KEY"
+        const val CLOSE_NOTIFICATION_ID_EXTRA_KEY = "CLOSE_NOTIFICATION_ID_EXTRA_KEY"
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -32,7 +39,6 @@ class ScreenCaptureListeningService: Service() {
             NotificationId.STARTED_FOREGROUND_SERVICE.nonZeroOrdinal,
             notificationBuilderWithSetChannel(
                 NotificationId.STARTED_FOREGROUND_SERVICE,
-                "Listening to screen captures",
                 "Listening to screen captures"
             )
                 .setStyle(NotificationCompat.BigTextStyle()
@@ -76,7 +82,15 @@ class ScreenCaptureListeningService: Service() {
         val fileName = mediaStoreData[1]
 
         if (isScreenshot(absolutePath, fileName)){
-            showNewScreenshotDetectedNotification(uri)
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+                    val bitmap = contentResolver.openBitmap(uri)
+                    bitmap.cropEdges()?.let {
+                        showNewCroppableScreenshotDetectedNotification(uri, bitmap, it)
+                    }
+                },
+                2000
+            )
         }
     }
 
@@ -96,26 +110,31 @@ class ScreenCaptureListeningService: Service() {
         else
             null
 
-    private fun showNewScreenshotDetectedNotification(uri: Uri){
+    private fun showNewCroppableScreenshotDetectedNotification(uri: Uri, screenshotBitmap: Bitmap, cropEdges: CropEdges){
+        val notificationId = NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT
         showNotification(
-            NotificationId.DETECTED_NEW_SCREENSHOT,
-            "Detected new screenshot",
-            "New screenshot detected",
-            "Fancy an AutoCrop?",
-            NotificationCompat.Action(
-                null,
-                "Do crop",
-                PendingIntent.getService(
-                    this,
-                    -1,
-                    Intent(this, CropService::class.java)
-                        .putExtra(
-                            SCREENSHOT_URI_EXTRA_KEY,
-                            uri
-                        ),
-                    PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+            notificationId,
+            notificationBuilderWithSetChannel(
+                notificationId,
+                "Detected new croppable screenshot",
+                action = NotificationCompat.Action(
+                    null,
+                    "Save crop",
+                    PendingIntent.getService(
+                        this,
+                        PendingIntentRequestCode.CROP_IO_SERVICE.ordinal,
+                        Intent(this, CropIOService::class.java)
+                            .putExtra(SCREENSHOT_URI_EXTRA_KEY, uri)
+                            .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
+                            .putExtra(CLOSE_NOTIFICATION_ID_EXTRA_KEY, notificationId),
+                        PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+                    )
                 )
             )
+                .setStyle(
+                    NotificationCompat.BigPictureStyle()
+                        .bigPicture(screenshotBitmap.cropped(cropEdges))
+                )
         )
     }
 

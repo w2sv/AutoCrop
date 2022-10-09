@@ -55,12 +55,11 @@ inline fun <reified T: Service> Context.serviceRunning() =
         .any { it.service.className == T::class.java.name }
 
 fun Context.showNotification(id: NotificationId,
-                             channelName: String,
                              title: String,
                              text: String,
                              action: NotificationCompat.Action? = null) {
     notificationManager().apply {
-        createNotificationChannel(id, channelName)
+        createNotificationChannel(id, title)
     }
         .notify(
             id.nonZeroOrdinal,
@@ -69,16 +68,24 @@ fun Context.showNotification(id: NotificationId,
         )
 }
 
+fun Context.showNotification(id: NotificationId, builder: NotificationCompat.Builder){
+    notificationManager()
+        .notify(
+            id.nonZeroOrdinal,
+            builder
+                .build()
+        )
+}
+
 fun Context.notificationBuilderWithSetChannel(id: NotificationId,
-                                              channelName: String,
                                               title: String,
                                               text: String? = null,
                                               action: NotificationCompat.Action? = null): NotificationCompat.Builder{
-    notificationManager().createNotificationChannel(id, channelName)
+    notificationManager().createNotificationChannel(id, title)
     return notificationBuilder(id, title, text, action)
 }
 
-fun NotificationManager.createNotificationChannel(id: NotificationId,
+private fun NotificationManager.createNotificationChannel(id: NotificationId,
                                                   channelName: String){
     createNotificationChannel(
         NotificationChannel(
@@ -89,7 +96,7 @@ fun NotificationManager.createNotificationChannel(id: NotificationId,
     )
 }
 
-fun Context.notificationBuilder(id: NotificationId,
+private fun Context.notificationBuilder(id: NotificationId,
                                 title: String,
                                 text: String?,
                                 action: NotificationCompat.Action? = null): NotificationCompat.Builder =
