@@ -96,10 +96,10 @@ private fun Context.notificationBuilder(
 fun Context.notificationManager(): NotificationManager =
     (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
 
-fun Context.showGroupUpdatedNotification(notificationId: Int, notificationBuilder: NotificationCompat.Builder, newGroup: String?){
+fun Context.showGroupUpdatedNotification(notificationIdWithBuilder: Pair<Int, NotificationCompat.Builder>, newGroup: String?){
     showNotification(
-        notificationId,
-        notificationBuilder
+        notificationIdWithBuilder.first,
+        notificationIdWithBuilder.second
             .setGroup(newGroup)
     )
 }

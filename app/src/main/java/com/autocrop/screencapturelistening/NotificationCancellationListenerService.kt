@@ -11,14 +11,15 @@ class NotificationCancellationListenerService: Service(){
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        ScreenCaptureListeningService.ids.remove(intent!!.getIntExtra(NOTIFICATION_ID_EXTRA_KEY, -1))
+        // Remove notification from [ScreenCaptureListeningService.notifications]
+        ScreenCaptureListeningService.notifications.remove(intent!!.getIntExtra(NOTIFICATION_ID_EXTRA_KEY, -1))
 
-        if (ScreenCaptureListeningService.ids.size == 1) {
+        // If subsequently only one notification left, disassociate it from group and
+        // cancel group summary
+        if (ScreenCaptureListeningService.notifications.size == 1) {
             with(notificationManager()) {
-                val (id, builder) = ScreenCaptureListeningService.ids.element()
                 showGroupUpdatedNotification(
-                    id,
-                    builder,
+                    ScreenCaptureListeningService.notifications.element(),
                     null
                 )
                 cancel(ScreenCaptureListeningService.groupNotificationId.nonZeroOrdinal)

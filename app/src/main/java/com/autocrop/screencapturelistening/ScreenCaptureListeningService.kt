@@ -35,7 +35,7 @@ class ScreenCaptureListeningService: Service() {
         const val CROP_EDGES_EXTRA_KEY = "CROP_EDGES_EXTRA_KEY"
 
         val groupNotificationId = NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT
-        val ids = DynamicNotificationIds(groupNotificationId)
+        val notifications = GroupedNotifications(groupNotificationId)
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -164,18 +164,19 @@ class ScreenCaptureListeningService: Service() {
         }
 
     private fun showNewCroppableScreenshotDetectedNotification(uri: Uri, screenshotBitmap: Bitmap, cropEdges: CropEdges){
-        if (ids.size == 1){
-            val (id, builder) = ids.element()
+        // If only one element in [notifications] show it with updated group,
+        // in case of it having been disassociated beforehand
+        if (notifications.size == 1){
             showGroupUpdatedNotification(
-                id,
-                builder,
+                notifications.element(),
                 groupNotificationId.groupKey
             )
         }
 
-        val id = ids.newId()
+        // Build, store and show new notification
+        val id = notifications.newId()
         val builder = notificationBuilderWithSetChannel(
-            ids.channelId,
+            notifications.channelId,
             "Detected new croppable screenshot",
             action = NotificationCompat.Action(
                 null,
@@ -210,22 +211,22 @@ class ScreenCaptureListeningService: Service() {
                 )
             )
 
-        ids.add(id to builder)
+        notifications.add(id to builder)
         showNotification(
             id,
             builder
         )
 
         // Show notification group summary
-        if (ids.size >= 2){
+        if (notifications.size >= 2){
             showNotification(
                 groupNotificationId.nonZeroOrdinal,
                 notificationBuilderWithSetChannel(
-                    ids.channelId,
-                    "Detected ${ids.size} croppable screenshots"
+                    notifications.channelId,
+                    "Detected ${notifications.size} croppable screenshots"
                 )
                     .setStyle(NotificationCompat.InboxStyle()
-                        .setBigContentTitle("Detected ${ids.size} croppable screenshots")
+                        .setBigContentTitle("Detected ${notifications.size} croppable screenshots")
                         .setSummaryText("Expand to save"))
                     .setGroup(groupNotificationId.groupKey)
                     .setGroupSummary(true)

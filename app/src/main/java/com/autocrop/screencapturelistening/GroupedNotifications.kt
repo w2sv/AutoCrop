@@ -4,7 +4,7 @@ import androidx.core.app.NotificationCompat
 import com.autocrop.utils.kotlin.extensions.nonZeroOrdinal
 import java.util.PriorityQueue
 
-class DynamicNotificationIds(groupId: NotificationId)
+class GroupedNotifications(groupId: NotificationId)
     : PriorityQueue<Pair<Int, NotificationCompat.Builder>>(compareBy { it.first }){
     val channelId: String = groupId.name
     private val idBase: Int = groupId.nonZeroOrdinal * 100
