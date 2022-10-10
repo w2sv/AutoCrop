@@ -49,7 +49,9 @@
         <service
             android:name="com.autocrop.screencapturelistening.ScreenCaptureListeningService"
             android:exported="false"/>
-        <receiver android:name="com.autocrop.screencapturelistening.NotificationCancellationBroadcastReceiver" />
+        <service
+            android:name="com.autocrop.screencapturelistening.NotificationCancellationService"
+            android:exported="false"/>
 
         <!-- Activities -->
 

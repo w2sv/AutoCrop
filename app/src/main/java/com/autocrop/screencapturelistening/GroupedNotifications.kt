@@ -10,7 +10,7 @@ class GroupedNotifications(groupId: NotificationId)
     private val idBase: Int = groupId.nonZeroOrdinal * 100
 
     fun newId(): Int =
-        (idBase + (lastOrNull()?.let { it.first + 1 } ?: 0))
+        lastOrNull()?.let { it.first + 1 } ?: idBase
 
     fun remove(id: Int): Boolean =
         removeIf { it.first == id }

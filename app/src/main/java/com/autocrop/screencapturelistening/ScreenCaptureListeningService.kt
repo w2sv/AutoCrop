@@ -6,6 +6,7 @@ import android.content.Intent
 import android.database.ContentObserver
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Binder
 import android.os.Build
 import android.os.Environment
 import android.os.Handler
@@ -26,19 +27,25 @@ import com.google.common.collect.EvictingQueue
 import com.lyrebirdstudio.croppylib.CropEdges
 import timber.log.Timber
 
-const val NOTIFICATION_ID_EXTRA_KEY = "CLOSE_NOTIFICATION_ID_EXTRA_KEY"
+const val NOTIFICATION_ID_EXTRA_KEY = "NOTIFICATION_ID_EXTRA_KEY"
+const val CANCEL_NOTIFICATION_EXTRA_KEY = "CANCEL_NOTIFICATION_EXTRA_KEY"
 
-class ScreenCaptureListeningService: Service() {
+class ScreenCaptureListeningService: BoundService() {
 
     companion object{
         const val SCREENSHOT_URI_EXTRA_KEY = "SCREENSHOT_URI_EXTRA_KEY"
         const val CROP_EDGES_EXTRA_KEY = "CROP_EDGES_EXTRA_KEY"
 
-        val groupNotificationId = NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT
-        val notifications = GroupedNotifications(groupNotificationId)
+        private val groupNotificationId = NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT
     }
 
-    override fun onBind(intent: Intent?): IBinder? = null
+    private val notifications = GroupedNotifications(groupNotificationId)
+
+    fun removeNotification(id: Int){
+        notifications.remove(id)
+        Timber.i("Removed notification id $id")
+        Timber.i("New size: ${notifications.size}")
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground(
@@ -187,7 +194,8 @@ class ScreenCaptureListeningService: Service() {
                     Intent(this, CropIOService::class.java)
                         .putExtra(SCREENSHOT_URI_EXTRA_KEY, uri)
                         .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
-                        .putExtra(NOTIFICATION_ID_EXTRA_KEY, dynamicId),
+                        .putExtra(NOTIFICATION_ID_EXTRA_KEY, dynamicId)
+                        .putExtra(CANCEL_NOTIFICATION_EXTRA_KEY, true),
                     PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                 )
             )
@@ -199,12 +207,12 @@ class ScreenCaptureListeningService: Service() {
             .setGroup(groupNotificationId.groupKey)
             .setOnlyAlertOnce(true)
             .setDeleteIntent(
-                PendingIntent.getBroadcast(
+                PendingIntent.getService(
                     this,
                     dynamicId,
                     Intent(
                         this,
-                        NotificationCancellationBroadcastReceiver::class.java
+                        NotificationCancellationService::class.java
                     )
                         .putExtra(NOTIFICATION_ID_EXTRA_KEY, dynamicId),
                     PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
@@ -236,7 +244,6 @@ class ScreenCaptureListeningService: Service() {
     override fun onDestroy() {
         super.onDestroy()
 
-        notifications.clear()
         contentResolver.unregisterContentObserver(imageContentObserver)
             .also { Timber.i("Unregistered imageContentObserver") }
     }

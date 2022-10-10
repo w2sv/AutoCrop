@@ -13,26 +13,14 @@ import com.autocrop.utils.android.extensions.notificationManager
 import com.autocrop.utils.android.extensions.openBitmap
 import com.lyrebirdstudio.croppylib.CropEdges
 
-class CropIOService: Service() {
-    override fun onBind(intent: Intent?): IBinder? = null
-
+class CropIOService: UnboundService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        intent!!.process()
+        startService(intent!!.setClass(this, NotificationCancellationService::class.java))
         stopSelf()
         return START_REDELIVER_INTENT
     }
 
     private fun Intent.process(){
-        val notificationId = getIntExtra(NOTIFICATION_ID_EXTRA_KEY, -1)
-        notificationManager().cancel(notificationId)
-        sendBroadcast(
-            Intent(this@CropIOService, NotificationCancellationBroadcastReceiver::class.java)
-                .putExtra(
-                    NOTIFICATION_ID_EXTRA_KEY,
-                    notificationId
-                )
-        )
-
 //        saveCrop(
 //            getParcelable(ScreenCaptureListeningService.SCREENSHOT_URI_EXTRA_KEY),
 //            getParcelable(ScreenCaptureListeningService.CROP_EDGES_EXTRA_KEY)
