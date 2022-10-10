@@ -25,8 +25,8 @@ class CropIOService: Service() {
     private fun Intent.process(){
         val notificationId = getIntExtra(NOTIFICATION_ID_EXTRA_KEY, -1)
         notificationManager().cancel(notificationId)
-        startService(
-            Intent(this@CropIOService, NotificationCancellationListenerService::class.java)
+        sendBroadcast(
+            Intent(this@CropIOService, NotificationCancellationBroadcastReceiver::class.java)
                 .putExtra(
                     NOTIFICATION_ID_EXTRA_KEY,
                     notificationId

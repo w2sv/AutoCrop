@@ -174,7 +174,7 @@ class ScreenCaptureListeningService: Service() {
         }
 
         // Build, store and show new notification
-        val id = notifications.newId()
+        val dynamicId = notifications.newId()
         val builder = notificationBuilderWithSetChannel(
             notifications.channelId,
             "Detected new croppable screenshot",
@@ -187,7 +187,7 @@ class ScreenCaptureListeningService: Service() {
                     Intent(this, CropIOService::class.java)
                         .putExtra(SCREENSHOT_URI_EXTRA_KEY, uri)
                         .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
-                        .putExtra(NOTIFICATION_ID_EXTRA_KEY, id),
+                        .putExtra(NOTIFICATION_ID_EXTRA_KEY, dynamicId),
                     PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                 )
             )
@@ -199,21 +199,21 @@ class ScreenCaptureListeningService: Service() {
             .setGroup(groupNotificationId.groupKey)
             .setOnlyAlertOnce(true)
             .setDeleteIntent(
-                PendingIntent.getService(
+                PendingIntent.getBroadcast(
                     this,
-                    PendingIntentRequestCode.NOTIFICATION_CANCELLATION_LISTENER_SERVICE.ordinal,
+                    dynamicId,
                     Intent(
                         this,
-                        NotificationCancellationListenerService::class.java
+                        NotificationCancellationBroadcastReceiver::class.java
                     )
-                        .putExtra(NOTIFICATION_ID_EXTRA_KEY, id),
-                    PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+                        .putExtra(NOTIFICATION_ID_EXTRA_KEY, dynamicId),
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
                 )
             )
 
-        notifications.add(id to builder)
+        notifications.add(dynamicId to builder)
         showNotification(
-            id,
+            dynamicId,
             builder
         )
 
@@ -226,7 +226,6 @@ class ScreenCaptureListeningService: Service() {
                     "Detected ${notifications.size} croppable screenshots"
                 )
                     .setStyle(NotificationCompat.InboxStyle()
-                        .setBigContentTitle("Detected ${notifications.size} croppable screenshots")
                         .setSummaryText("Expand to save"))
                     .setGroup(groupNotificationId.groupKey)
                     .setGroupSummary(true)
@@ -237,6 +236,7 @@ class ScreenCaptureListeningService: Service() {
     override fun onDestroy() {
         super.onDestroy()
 
+        notifications.clear()
         contentResolver.unregisterContentObserver(imageContentObserver)
             .also { Timber.i("Unregistered imageContentObserver") }
     }
