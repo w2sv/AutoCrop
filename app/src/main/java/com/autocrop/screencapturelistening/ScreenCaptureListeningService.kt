@@ -16,7 +16,7 @@ import com.autocrop.screencapturelistening.notification.ASSOCIATED_NOTIFICATION_
 import com.autocrop.screencapturelistening.notification.CANCEL_NOTIFICATION_ACTION
 import com.autocrop.screencapturelistening.notification.NotificationGroup
 import com.autocrop.screencapturelistening.notification.NotificationId
-import com.autocrop.screencapturelistening.serviceextensions.BoundService
+import com.autocrop.screencapturelistening.abstractservices.BoundService
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreData

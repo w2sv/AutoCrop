@@ -10,20 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/notification/ExtraKeys.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/notification/ScopeWideUniqueIds.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/CropBundleIO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/CropBundleIO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/IODeterminationActivityViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/IODeterminationActivityViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/BoundService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/serviceextensions/BoundService.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/abstractservices/LoggingService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/CropIOService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/CropIOService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/GroupedNotifications.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/notification/UniqueNotificationIdsWithBuilder.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/NotificationCancellationService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/NotificationCancellationService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/NotificationId.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/notification/NotificationId.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/PendingIntentRequestCode.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/PendingIntentRequestCode.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/ScreenCaptureListeningService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/ScreenCaptureListeningService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/UnboundService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/serviceextensions/UnboundService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/Environment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/Environment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/serviceextensions/BoundService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/abstractservices/BoundService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/serviceextensions/UnboundService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/abstractservices/UnboundService.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,8 +170,8 @@
       <recent name="" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
-      <recent name="com.autocrop.screencapturelistening" />
       <recent name="com.autocrop.screencapturelistening.notification" />
+      <recent name="com.autocrop.screencapturelistening" />
       <recent name="com.autocrop.screencapturelistening.serviceextensions" />
       <recent name="com.lyrebirdstudio.croppylib" />
       <recent name="com.autocrop.activities.cropping.fragments.cropping.cropping" />

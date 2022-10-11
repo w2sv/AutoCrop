@@ -7,15 +7,14 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import com.autocrop.screencapturelistening.notification.ASSOCIATED_NOTIFICATION_ID
 import com.autocrop.screencapturelistening.notification.CANCEL_NOTIFICATION_ACTION
-import com.autocrop.screencapturelistening.serviceextensions.BoundService
-import com.autocrop.screencapturelistening.serviceextensions.UnboundService
+import com.autocrop.screencapturelistening.abstractservices.BoundService
+import com.autocrop.screencapturelistening.abstractservices.UnboundService
 import com.autocrop.utils.android.extensions.notificationManager
 import com.autocrop.utils.kotlin.delegates.Consumable
 import timber.log.Timber
 
 class NotificationCancellationService: UnboundService(){
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Timber.i("NotificationCancellationService.onStartCommand; startId: $startId")
         PendingIntentRequestCode.notificationCancellationService.remove(startId)
 
         val notificationId = intent!!.getIntExtra(ASSOCIATED_NOTIFICATION_ID, -1)

@@ -10,7 +10,7 @@ import com.autocrop.dataclasses.Screenshot
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.screencapturelistening.notification.NotificationGroup
 import com.autocrop.screencapturelistening.notification.NotificationId
-import com.autocrop.screencapturelistening.serviceextensions.UnboundService
+import com.autocrop.screencapturelistening.abstractservices.UnboundService
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.getParcelable
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
@@ -21,7 +21,6 @@ import timber.log.Timber
 
 class CropIOService: UnboundService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Timber.i("CropIOService.onStartCommand; startId: $startId")
         PendingIntentRequestCode.cropIOService.remove(startId)
 
         with(intent!!){

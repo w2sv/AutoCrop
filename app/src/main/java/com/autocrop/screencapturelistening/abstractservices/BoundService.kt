@@ -1,11 +1,10 @@
-package com.autocrop.screencapturelistening.serviceextensions
+package com.autocrop.screencapturelistening.abstractservices
 
-import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 
-abstract class BoundService: Service(){
+abstract class BoundService: LoggingService(){
 
     inner class LocalBinder : Binder() {
         @Suppress("UNCHECKED_CAST")
