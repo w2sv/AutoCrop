@@ -28,7 +28,6 @@ import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.autocrop.R
-import timber.log.Timber
 
 class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
     NavigationView(context, attributeSet),
@@ -109,11 +108,12 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
     private fun launchCropSharingIntent(){
         context.startActivity(
             Intent.createChooser(
-                Intent().apply {
-                    action = Intent.ACTION_SEND_MULTIPLE
-                    putParcelableArrayListExtra(Intent.EXTRA_STREAM, viewModel.savedCropUris)
-                    type = IMAGE_MIME_TYPE
-                },
+                Intent(Intent.ACTION_SEND_MULTIPLE)
+                    .putExtra(
+                        Intent.EXTRA_STREAM,
+                        viewModel.savedCropUris
+                    )
+                    .setType(IMAGE_MIME_TYPE),
                 null
             )
         )

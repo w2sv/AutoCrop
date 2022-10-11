@@ -3,6 +3,7 @@ package com.autocrop.screencapturelistening
 import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
+import androidx.core.app.NotificationCompat
 import com.autocrop.activities.iodetermination.SavingResult
 import com.autocrop.activities.iodetermination.processCropBundle
 import com.autocrop.dataclasses.CropBundle
@@ -15,6 +16,7 @@ import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.getParcelable
 import com.autocrop.utils.android.extensions.openBitmap
 import com.lyrebirdstudio.croppylib.CropEdges
+import com.w2sv.autocrop.R
 
 class CropIOService : UnboundService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -41,22 +43,40 @@ class CropIOService : UnboundService() {
             if (successfullySaved){
                 notificationGroup.addAndShowChild(
                     notificationGroup.children.newId(), // TODO: remove afterwards,
-                    notificationGroup.childBuilder(
-                        "Saved crop",
-                        "Tap to view"
-                    )
-                        .setAutoCancel(true)
-                        .setContentIntent(
-                            PendingIntent.getActivity(
-                                this,
-                                PendingIntentRequestCodes.viewCrop.addNewId(), // TODO: remove afterwards
-                                Intent(Intent.ACTION_VIEW)
-                                    .setDataAndType(
-                                        writeUri,
-                                        IMAGE_MIME_TYPE
+                    notificationGroup.childBuilder("Saved crop")
+                        .addAction(
+                            NotificationCompat.Action(
+                                R.drawable.ic_search_24,
+                                "View",
+                                PendingIntent.getActivity(
+                                    this,
+                                    PendingIntentRequestCodes.viewCrop.addNewId(), // TODO: remove afterwards
+                                    Intent(Intent.ACTION_VIEW)
+                                        .setDataAndType(
+                                            writeUri,
+                                            IMAGE_MIME_TYPE
+                                        )
+                                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
+                                    PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+                                )
+                            )
+                        )
+                        .addAction(
+                            NotificationCompat.Action(
+                                R.drawable.ic_baseline_share_24,
+                                "Share",
+                                PendingIntent.getActivity(
+                                    this,
+                                    PendingIntentRequestCodes.shareCrop.addNewId(), // TODO: remove afterwards
+                                    Intent.createChooser(
+                                        Intent(Intent.ACTION_SEND)
+                                            .setType(IMAGE_MIME_TYPE)
+                                            .putExtra(Intent.EXTRA_STREAM, writeUri),
+                                        null
                                     )
-                                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
-                                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+                                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
+                                    PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+                                )
                             )
                         )
                 )
