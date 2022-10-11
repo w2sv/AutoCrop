@@ -8,41 +8,53 @@ import com.autocrop.activities.iodetermination.processCropBundle
 import com.autocrop.dataclasses.CropBundle
 import com.autocrop.dataclasses.Screenshot
 import com.autocrop.preferences.UriPreferences
+import com.autocrop.screencapturelistening.notification.NotificationGroup
+import com.autocrop.screencapturelistening.notification.NotificationId
+import com.autocrop.screencapturelistening.serviceextensions.UnboundService
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.getParcelable
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.showNotification
 import com.lyrebirdstudio.croppylib.CropEdges
+import timber.log.Timber
 
 class CropIOService: UnboundService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Timber.i("CropIOService.onStartCommand; startId: $startId")
+        PendingIntentRequestCode.cropIOService.remove(startId)
+
         with(intent!!){
             startService(setClass(this@CropIOService, NotificationCancellationService::class.java))
             carryOutIOAndShowNotification(
-                getParcelable(ScreenCaptureListeningService.SCREENSHOT_URI_EXTRA_KEY),
+                data!!,
                 getParcelable(ScreenCaptureListeningService.CROP_EDGES_EXTRA_KEY)
             )
         }
+
         stopSelf()
         return START_REDELIVER_INTENT
     }
+    private val notificationGroup = NotificationGroup(
+        this,
+        NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT
+    )
 
     private fun carryOutIOAndShowNotification(screenshotUri: Uri, cropEdges: CropEdges){
         saveCrop(screenshotUri, cropEdges).let { (successfullySaved, writeUri) ->
             if (successfullySaved)
                 showNotification(
-                    NotificationId.SUCCESSFULLY_SAVED_CROP.ordinal,
+                    notificationGroup.children.newId(),  // TODO
                     notificationBuilderWithSetChannel(
-                        NotificationId.SUCCESSFULLY_SAVED_CROP.name,
+                        notificationGroup.channelId,
                         "Saved crop",
                         "Tap to view"
                     )
                         .setAutoCancel(true)
                         .setContentIntent(
                             PendingIntent.getActivity(
-                                this@CropIOService,
-                                PendingIntentRequestCode.VIEW_CROP.ordinal,
+                                this,
+                                PendingIntentRequestCode.viewCrop.addNewId(), // TODO: remove afterwards
                                 Intent(Intent.ACTION_VIEW)
                                     .setDataAndType(
                                         writeUri,
@@ -53,13 +65,6 @@ class CropIOService: UnboundService() {
                             )
                         )
                 )
-//            else
-//                showNotification(
-//                    NotificationId.NO_CROP_EDGES_FOUND,
-//                    "No crop edges found",
-//                    "No crop edges found",
-//                    "Tap to crop manually"
-//                )
         }
     }
 

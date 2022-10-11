@@ -15,7 +15,7 @@ import com.autocrop.dataclasses.CropBundle
 import com.autocrop.utils.android.ImageMimeType
 import com.autocrop.utils.android.extensions.compressToStream
 import com.autocrop.utils.android.extensions.deleteImage
-import com.autocrop.utils.android.externalPicturesDir
+import com.autocrop.utils.android.systemPicturesDirectory
 import com.autocrop.utils.kotlin.dateTimeNow
 import com.autocrop.utils.kotlin.logBeforehand
 import timber.log.Timber
@@ -108,7 +108,7 @@ private object GetOutputStream{
     }
 
     private fun untilQ(fileName: String): Pair<OutputStream, Uri> = logBeforehand("GetOutputStream.untilQ") {
-        File(externalPicturesDir, fileName).run {
+        File(systemPicturesDirectory(), fileName).run {
             FileOutputStream(this) to Uri.fromFile(this)
         }
     }

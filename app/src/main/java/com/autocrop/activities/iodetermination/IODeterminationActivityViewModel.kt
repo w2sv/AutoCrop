@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.autocrop.dataclasses.CropBundle
 import com.autocrop.dataclasses.Screenshot
 import com.autocrop.utils.android.documentUriPathIdentifier
-import com.autocrop.utils.android.externalPicturesDir
+import com.autocrop.utils.android.systemPicturesDirectory
 import com.autocrop.utils.kotlin.BlankFun
 import com.autocrop.utils.kotlin.delegates.AutoSwitch
 import kotlinx.coroutines.Job
@@ -90,5 +90,5 @@ class IODeterminationActivityViewModel(private val validSaveDirDocumentUri: Uri?
     fun cropWriteDirIdentifier(): String =
         validSaveDirDocumentUri?.let {
             documentUriPathIdentifier(it)
-        } ?: externalPicturesDir.path
+        } ?: systemPicturesDirectory().path
 }

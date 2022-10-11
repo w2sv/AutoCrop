@@ -1,61 +1,50 @@
 package com.autocrop.screencapturelistening
 
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Intent
 import android.database.ContentObserver
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Binder
-import android.os.Build
-import android.os.Environment
 import android.os.Handler
-import android.os.IBinder
 import android.os.Looper
 import android.provider.MediaStore
 import androidx.core.app.NotificationCompat
 import com.autocrop.activities.cropping.cropping.cropEdges
 import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
+import com.autocrop.screencapturelistening.notification.ASSOCIATED_NOTIFICATION_ID
+import com.autocrop.screencapturelistening.notification.CANCEL_NOTIFICATION_ACTION
+import com.autocrop.screencapturelistening.notification.NotificationGroup
+import com.autocrop.screencapturelistening.notification.NotificationId
+import com.autocrop.screencapturelistening.serviceextensions.BoundService
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreData
-import com.autocrop.utils.android.extensions.showGroupUpdatedNotification
-import com.autocrop.utils.android.extensions.showNotification
-import com.autocrop.utils.kotlin.extensions.nonZeroOrdinal
+import com.autocrop.utils.android.systemScreenshotsDirectory
 import com.google.common.collect.EvictingQueue
 import com.lyrebirdstudio.croppylib.CropEdges
 import timber.log.Timber
 
-const val NOTIFICATION_ID_EXTRA_KEY = "NOTIFICATION_ID_EXTRA_KEY"
-const val CANCEL_NOTIFICATION_EXTRA_KEY = "CANCEL_NOTIFICATION_EXTRA_KEY"
+class ScreenCaptureListeningService : BoundService() {
 
-class ScreenCaptureListeningService: BoundService() {
-
-    companion object{
-        const val SCREENSHOT_URI_EXTRA_KEY = "SCREENSHOT_URI_EXTRA_KEY"
+    companion object {
         const val CROP_EDGES_EXTRA_KEY = "CROP_EDGES_EXTRA_KEY"
-
-        private val groupNotificationId = NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT
     }
 
-    private val notifications = GroupedNotifications(groupNotificationId)
-
-    fun removeNotification(id: Int){
-        notifications.remove(id)
-        Timber.i("Removed notification id $id")
-        Timber.i("New size: ${notifications.size}")
-    }
-
+    /**
+     * Starts foreground service with notification emission and registers [imageContentObserver]
+     */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground(
-            NotificationId.STARTED_FOREGROUND_SERVICE.nonZeroOrdinal,
+            NotificationId.STARTED_FOREGROUND_SERVICE.id,
             notificationBuilderWithSetChannel(
-                NotificationId.STARTED_FOREGROUND_SERVICE.name,
+                NotificationId.STARTED_FOREGROUND_SERVICE.channelId,
                 "Listening to screen captures"
             )
-                .setStyle(NotificationCompat.BigTextStyle()
-                    .bigText("You will receive a notification when AutoCrop detects a new croppable screenshot"))
+                .setStyle(
+                    NotificationCompat.BigTextStyle()
+                        .bigText("You will receive a notification when AutoCrop detects a new croppable screenshot")
+                )
                 .build()
         )
             .also { Timber.i("Started ScreenCaptureListeningService in foreground") }
@@ -94,22 +83,20 @@ class ScreenCaptureListeningService: BoundService() {
         override fun onChange(selfChange: Boolean, uri: Uri?) {
             uri?.let {
                 Timber.i("Called onChange for $it")
-                if (!recentBlacklist.contains(it)){
-                    if (pendingScreenshotUris.contains(it) || it.isScreenshot()){
+                if (!recentBlacklist.contains(it)) {
+                    if (pendingScreenshotUris.contains(it) || it.isScreenshot()) {
                         if (onNewScreenshotUri(it)) {
                             recentBlacklist.add(it)
                             pendingScreenshotUris.remove(it)
                             Timber.i("Added $uri to blacklist and removed it from pendingScreenshotUris")
-                        }
-                        else
+                        } else
                             pendingScreenshotUris.add(it)
                                 .also {
                                     Timber.i(
                                         "Added $uri to pendingScreenshotUris"
                                     )
                                 }
-                    }
-                    else
+                    } else
                         recentBlacklist.add(it)
                             .also {
                                 Timber.i("Added $uri to blacklist")
@@ -121,9 +108,9 @@ class ScreenCaptureListeningService: BoundService() {
 
     /**
      * Checks if [this] not corresponding to AutoCrop-file and if its file path contains either the
-     * [publicScreenshotDirectoryName] or the word 'screenshot'.
+     * [systemScreenshotsDirectory]name or the word 'screenshot'.
      */
-    private fun Uri.isScreenshot(): Boolean{
+    private fun Uri.isScreenshot(): Boolean {
         val mediaStoreData = contentResolver.queryMediaStoreData(
             this,
             arrayOf(
@@ -136,19 +123,10 @@ class ScreenCaptureListeningService: BoundService() {
         val fileName = mediaStoreData[1]
 
         return !fileName.contains(CROP_FILE_ADDENDUM) &&
-                (publicScreenshotDirectoryName()?.let {
-                    absolutePath.contains(it)
+                (systemScreenshotsDirectory()?.let {
+                    absolutePath.contains(it.name)
                 } == true || fileName.lowercase().contains("screenshot"))
     }
-
-    /**
-     * @return e.g. 'Screenshots'
-     */
-    private fun publicScreenshotDirectoryName(): String? =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_SCREENSHOTS).name
-        else
-            null
 
     /**
      * Catches [IllegalStateException] in case of [uri] not being accessible due to still pending
@@ -165,80 +143,49 @@ class ScreenCaptureListeningService: BoundService() {
                 showNewCroppableScreenshotDetectedNotification(uri, bitmap, it)
             }
             true
-        }
-        catch (_: IllegalStateException){
+        } catch (_: IllegalStateException) {
             false
         }
 
-    private fun showNewCroppableScreenshotDetectedNotification(uri: Uri, screenshotBitmap: Bitmap, cropEdges: CropEdges){
-        // If only one element in [notifications] show it with updated group,
-        // in case of it having been disassociated beforehand
-        if (notifications.size == 1){
-            showGroupUpdatedNotification(
-                notifications.element(),
-                groupNotificationId.groupKey
-            )
-        }
+    val notificationGroup = NotificationGroup(
+        this,
+        NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT
+    )
 
-        // Build, store and show new notification
-        val dynamicId = notifications.newId()
-        val builder = notificationBuilderWithSetChannel(
-            notifications.channelId,
-            "Detected new croppable screenshot",
-            action = NotificationCompat.Action(
-                null,
-                "Save crop",
-                PendingIntent.getService(
-                    this,
-                    PendingIntentRequestCode.CROP_IO_SERVICE.ordinal,
-                    Intent(this, CropIOService::class.java)
-                        .putExtra(SCREENSHOT_URI_EXTRA_KEY, uri)
-                        .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
-                        .putExtra(NOTIFICATION_ID_EXTRA_KEY, dynamicId)
-                        .putExtra(CANCEL_NOTIFICATION_EXTRA_KEY, true),
-                    PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
-                )
-            )
-        )
-            .setStyle(
-                NotificationCompat.BigPictureStyle()
-                    .bigPicture(screenshotBitmap.cropped(cropEdges))
-            )
-            .setGroup(groupNotificationId.groupKey)
-            .setOnlyAlertOnce(true)
-            .setDeleteIntent(
-                PendingIntent.getService(
-                    this,
-                    dynamicId,
-                    Intent(
+    private fun showNewCroppableScreenshotDetectedNotification(
+        uri: Uri,
+        screenshotBitmap: Bitmap,
+        cropEdges: CropEdges
+    ) {
+        val childId = notificationGroup.children.newId()
+        notificationGroup.addChild(
+            childId,
+            notificationBuilderWithSetChannel(
+                notificationGroup.channelId,
+                "Detected new croppable screenshot",
+                action = NotificationCompat.Action(
+                    null,
+                    "Save crop",
+                    PendingIntent.getService(
                         this,
-                        NotificationCancellationService::class.java
+                        PendingIntentRequestCode.cropIOService.addNewId(),
+                        Intent(this, CropIOService::class.java)
+                            .setData(uri)
+                            .setAction(CANCEL_NOTIFICATION_ACTION)
+                            .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
+                            .putExtra(ASSOCIATED_NOTIFICATION_ID, childId),
+                        PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                     )
-                        .putExtra(NOTIFICATION_ID_EXTRA_KEY, dynamicId),
-                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
                 )
             )
-
-        notifications.add(dynamicId to builder)
-        showNotification(
-            dynamicId,
-            builder
+                .setStyle(
+                    NotificationCompat.BigPictureStyle()
+                        .bigPicture(screenshotBitmap.cropped(cropEdges))
+                )
+                .setGroup(notificationGroup.groupKey)
+                .setOnlyAlertOnce(true)
+                .setDeleteIntent(notificationGroup.childNotificationDeleteIntent(childId))
         )
-
-        // Show notification group summary
-        if (notifications.size >= 2){
-            showNotification(
-                groupNotificationId.nonZeroOrdinal,
-                notificationBuilderWithSetChannel(
-                    notifications.channelId,
-                    "Detected ${notifications.size} croppable screenshots"
-                )
-                    .setStyle(NotificationCompat.InboxStyle()
-                        .setSummaryText("Expand to save"))
-                    .setGroup(groupNotificationId.groupKey)
-                    .setGroupSummary(true)
-            )
-        }
     }
 
     override fun onDestroy() {

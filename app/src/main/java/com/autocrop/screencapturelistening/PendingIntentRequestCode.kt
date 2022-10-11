@@ -1,7 +1,9 @@
 package com.autocrop.screencapturelistening
 
-enum class PendingIntentRequestCode {
-    CROP_IO_SERVICE,
-    NOTIFICATION_CANCELLATION_LISTENER_SERVICE,
-    VIEW_CROP
+import com.autocrop.screencapturelistening.notification.ScopeWideUniqueIds
+
+object PendingIntentRequestCode{
+    val cropIOService = ScopeWideUniqueIds()
+    val notificationCancellationService = ScopeWideUniqueIds()
+    val viewCrop = ScopeWideUniqueIds()
 }

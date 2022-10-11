@@ -5,17 +5,23 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import com.autocrop.screencapturelistening.notification.ASSOCIATED_NOTIFICATION_ID
+import com.autocrop.screencapturelistening.notification.CANCEL_NOTIFICATION_ACTION
+import com.autocrop.screencapturelistening.serviceextensions.BoundService
+import com.autocrop.screencapturelistening.serviceextensions.UnboundService
 import com.autocrop.utils.android.extensions.notificationManager
 import com.autocrop.utils.kotlin.delegates.Consumable
 import timber.log.Timber
 
 class NotificationCancellationService: UnboundService(){
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Timber.i("NotificationCancellationService.onStartCommand")
+        Timber.i("NotificationCancellationService.onStartCommand; startId: $startId")
+        PendingIntentRequestCode.notificationCancellationService.remove(startId)
 
-        val notificationId = intent!!.getIntExtra(NOTIFICATION_ID_EXTRA_KEY, -1)
-        if (intent.hasExtra(CANCEL_NOTIFICATION_EXTRA_KEY)){
-            notificationManager().cancel(notificationId)
+        val notificationId = intent!!.getIntExtra(ASSOCIATED_NOTIFICATION_ID, -1)
+        intent.action?.run {
+            if (equals(CANCEL_NOTIFICATION_ACTION))
+                notificationManager().cancel(notificationId)
         }
 
         if (screenCaptureListeningService == null)
@@ -27,7 +33,7 @@ class NotificationCancellationService: UnboundService(){
                 Context.BIND_AUTO_CREATE
             )
         else
-            screenCaptureListeningService!!.removeNotification(notificationId)
+            screenCaptureListeningService!!.notificationGroup.onChildNotificationCancelled(notificationId)
 
         return START_REDELIVER_INTENT
     }
@@ -43,7 +49,7 @@ class NotificationCancellationService: UnboundService(){
                 .getService<ScreenCaptureListeningService>()
                 .apply {
                     impendingRemoveId?.let {
-                        removeNotification(it)
+                        notificationGroup.onChildNotificationCancelled(it)
                     }
                 }
         }

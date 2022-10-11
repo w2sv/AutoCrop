@@ -1,12 +1,11 @@
-package com.autocrop.screencapturelistening
+package com.autocrop.screencapturelistening.notification
 
 import androidx.core.app.NotificationCompat
 import com.autocrop.utils.kotlin.extensions.nonZeroOrdinal
 import java.util.PriorityQueue
 
-class GroupedNotifications(groupId: NotificationId)
+class UniqueNotificationIdsWithBuilder(groupId: NotificationId)
     : PriorityQueue<Pair<Int, NotificationCompat.Builder>>(compareBy { it.first }){
-    val channelId: String = groupId.name
     private val idBase: Int = groupId.nonZeroOrdinal * 100
 
     fun newId(): Int =
