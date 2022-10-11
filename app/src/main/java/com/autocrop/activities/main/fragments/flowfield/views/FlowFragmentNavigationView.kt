@@ -78,23 +78,23 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
             .apply {
                 isChecked = context.serviceRunning<ScreenCaptureListeningService>()
                 setOnCheckedChangeListener{ _, newValue ->
-                    val serviceIntent = Intent(context, ScreenCaptureListeningService::class.java)
+//                    val serviceIntent = Intent(context, ScreenCaptureListeningService::class.java)
 
-                    if (newValue)
-                        findFragment<FlowFieldFragment>()
-                            .readExternalStoragePermissionHandler
-                            .requestPermission(
-                                onGranted = {
-                                    context.startForegroundService(serviceIntent)
-                                        .also { Timber.i("Starting ScreenCaptureListeningService") }
-                                },
-                                onDenied = {
-                                    isChecked = false
-                                }
-                            )
-                    else
-                        context.stopService(serviceIntent)
-                            .also { Timber.i("Stopping ScreenCaptureListeningService") }
+//                    if (newValue)
+//                        findFragment<FlowFieldFragment>()
+//                            .readExternalStoragePermissionHandler
+//                            .requestPermission(
+//                                onGranted = {
+//                                    context.startForegroundService(serviceIntent)
+//                                        .also { Timber.i("Starting ScreenCaptureListeningService") }
+//                                },
+//                                onDenied = {
+//                                    isChecked = false
+//                                }
+//                            )
+//                    else
+//                        context.stopService(serviceIntent)
+//                            .also { Timber.i("Stopping ScreenCaptureListeningService") }
                 }
             }
     }

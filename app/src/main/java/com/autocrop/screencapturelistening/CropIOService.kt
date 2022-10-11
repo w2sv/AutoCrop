@@ -32,12 +32,12 @@ class CropIOService: UnboundService() {
             )
         }
 
-        stopSelf()
+//        stopSelf()
         return START_REDELIVER_INTENT
     }
     private val notificationGroup = NotificationGroup(
         this,
-        NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT
+        NotificationId.SUCCESSFULLY_SAVED_CROP
     )
 
     private fun carryOutIOAndShowNotification(screenshotUri: Uri, cropEdges: CropEdges){

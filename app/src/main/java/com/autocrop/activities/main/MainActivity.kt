@@ -1,5 +1,6 @@
 package com.autocrop.activities.main
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -17,6 +18,7 @@ import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
+import com.autocrop.screencapturelistening.ScreenCaptureListeningService
 import com.autocrop.ui.controller.activity.ApplicationActivity
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.show
@@ -36,6 +38,8 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        startService(Intent(this, ScreenCaptureListeningService::class.java))  // TODO
     }
 
     override fun viewModelFactory(): ViewModelProvider.Factory =

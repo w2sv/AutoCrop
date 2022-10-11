@@ -19,6 +19,14 @@ class NotificationGroup(context: Context,
     val channelId = summaryId.channelId
     val groupKey = summaryId.groupKey
 
+    fun childBuilder(title: String): NotificationCompat.Builder =
+        notificationBuilderWithSetChannel(
+            channelId,
+            title
+        )
+            .setOnlyAlertOnce(true)
+            .setGroup(groupKey)
+
     fun childNotificationDeleteIntent(id: Int): PendingIntent =
         PendingIntent.getService(
             this,
@@ -33,6 +41,7 @@ class NotificationGroup(context: Context,
 
     fun addChild(id: Int, builder: NotificationCompat.Builder){
         children.add(id to builder)
+        Timber.i("Added ${summaryId.name} child $id")
         showNotification(id, builder)
         showSummaryNotificationIfApplicable()
     }

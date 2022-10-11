@@ -63,8 +63,7 @@ fun Context.showNotification(id: Int, builder: NotificationCompat.Builder) {
 fun Context.notificationBuilderWithSetChannel(
     channelId: String,
     title: String,
-    text: String? = null,
-    action: NotificationCompat.Action? = null
+    text: String? = null
 ): NotificationCompat.Builder {
     notificationManager().createNotificationChannel(
         NotificationChannel(
@@ -73,25 +72,19 @@ fun Context.notificationBuilderWithSetChannel(
             NotificationManager.IMPORTANCE_DEFAULT
         )
     )
-    return notificationBuilder(channelId, title, text, action)
+    return notificationBuilder(channelId, title, text)
 }
 
 private fun Context.notificationBuilder(
     channelId: String,
     title: String,
-    text: String?,
-    action: NotificationCompat.Action? = null
+    text: String?
 ): NotificationCompat.Builder =
     NotificationCompat.Builder(this, channelId)
         .setSmallIcon(R.drawable.ic_scissors_24)
         .setContentTitle(title)
         .setContentText(text)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        .apply {
-            action?.let {
-                addAction(it)
-            }
-        }
 
 fun Context.notificationManager(): NotificationManager =
     (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)

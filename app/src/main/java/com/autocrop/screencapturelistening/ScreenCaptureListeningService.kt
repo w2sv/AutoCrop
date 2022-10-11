@@ -160,30 +160,27 @@ class ScreenCaptureListeningService : BoundService() {
         val childId = notificationGroup.children.newId()
         notificationGroup.addChild(
             childId,
-            notificationBuilderWithSetChannel(
-                notificationGroup.channelId,
-                "Detected new croppable screenshot",
-                action = NotificationCompat.Action(
-                    null,
-                    "Save crop",
-                    PendingIntent.getService(
-                        this,
-                        PendingIntentRequestCode.cropIOService.addNewId(),
-                        Intent(this, CropIOService::class.java)
-                            .setData(uri)
-                            .setAction(CANCEL_NOTIFICATION_ACTION)
-                            .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
-                            .putExtra(ASSOCIATED_NOTIFICATION_ID, childId),
-                        PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+            notificationGroup.childBuilder("Detected new croppable screenshot")
+                .addAction(
+                    NotificationCompat.Action(
+                        null,
+                        "Save crop",
+                        PendingIntent.getService(
+                            this,
+                            PendingIntentRequestCode.cropIOService.addNewId(),
+                            Intent(this, CropIOService::class.java)
+                                .setData(uri)
+                                .setAction(CANCEL_NOTIFICATION_ACTION)
+                                .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
+                                .putExtra(ASSOCIATED_NOTIFICATION_ID, childId),
+                            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+                        )
                     )
                 )
-            )
                 .setStyle(
                     NotificationCompat.BigPictureStyle()
                         .bigPicture(screenshotBitmap.cropped(cropEdges))
                 )
-                .setGroup(notificationGroup.groupKey)
-                .setOnlyAlertOnce(true)
                 .setDeleteIntent(notificationGroup.childNotificationDeleteIntent(childId))
         )
     }

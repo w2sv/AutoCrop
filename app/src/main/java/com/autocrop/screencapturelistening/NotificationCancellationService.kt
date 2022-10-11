@@ -19,9 +19,11 @@ class NotificationCancellationService: UnboundService(){
         PendingIntentRequestCode.notificationCancellationService.remove(startId)
 
         val notificationId = intent!!.getIntExtra(ASSOCIATED_NOTIFICATION_ID, -1)
-        intent.action?.run {
-            if (equals(CANCEL_NOTIFICATION_ACTION))
+        intent.action?.let {
+            Timber.i("Found action $it")
+            if (it == CANCEL_NOTIFICATION_ACTION)
                 notificationManager().cancel(notificationId)
+                    .also {Timber.i("Cancelled notification $notificationId")}
         }
 
         if (screenCaptureListeningService == null)
