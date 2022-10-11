@@ -8,11 +8,6 @@ import com.autocrop.utils.android.extensions.notificationManager
 import timber.log.Timber
 
 class NotificationCancellationService : UnboundService() {
-    private val bindingAdministrator = BindingAdministrator(
-        this,
-        ScreenCaptureListeningService::class.java
-    )
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         PendingIntentRequestCode.notificationCancellationService.remove(startId)
 
@@ -24,6 +19,11 @@ class NotificationCancellationService : UnboundService() {
 
         return START_REDELIVER_INTENT
     }
+
+    private val bindingAdministrator = BindingAdministrator(
+        this,
+        ScreenCaptureListeningService::class.java
+    )
 
     private fun Intent.process(): Int{
         val notificationId = getIntExtra(ASSOCIATED_NOTIFICATION_ID, -1)

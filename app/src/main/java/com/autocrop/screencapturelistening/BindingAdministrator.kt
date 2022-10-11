@@ -12,7 +12,7 @@ import timber.log.Timber
 
 class BindingAdministrator<T : BoundService>(
     context: Context,
-    private val boundServiceClass: Class<T>) : ContextWrapper(context) {
+    private val clazz: Class<T>) : ContextWrapper(context) {
     private var boundService: T? = null
     private var onServiceConnected by Consumable<(T) -> Unit>(null)
 
@@ -32,7 +32,7 @@ class BindingAdministrator<T : BoundService>(
         if (boundService == null) {
             onServiceConnected = function
             bindService(
-                Intent(this, boundServiceClass),
+                Intent(this, clazz),
                 serviceConnection,
                 BIND_AUTO_CREATE
             )

@@ -8,16 +8,15 @@ import com.autocrop.activities.iodetermination.processCropBundle
 import com.autocrop.dataclasses.CropBundle
 import com.autocrop.dataclasses.Screenshot
 import com.autocrop.preferences.UriPreferences
+import com.autocrop.screencapturelistening.abstractservices.UnboundService
 import com.autocrop.screencapturelistening.notification.NotificationGroup
 import com.autocrop.screencapturelistening.notification.NotificationId
-import com.autocrop.screencapturelistening.abstractservices.UnboundService
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.getParcelable
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.showNotification
 import com.lyrebirdstudio.croppylib.CropEdges
-import timber.log.Timber
 
 class CropIOService: UnboundService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -46,7 +45,7 @@ class CropIOService: UnboundService() {
                     notificationGroup.children.newId(),  // TODO
                     notificationBuilderWithSetChannel(
                         notificationGroup.channelId,
-                        "Saved crop",
+                        "Saved crop ${screenshotUri.path}",
                         "Tap to view"
                     )
                         .setAutoCancel(true)
