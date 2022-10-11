@@ -13,16 +13,19 @@ import com.autocrop.utils.android.extensions.showNotification
 import timber.log.Timber
 
 class NotificationGroup(context: Context,
-                        private val summaryId: NotificationId
+                        private val summaryId: NotificationId,
+                        private val makeSummaryTitle: (Int) -> String,
+                        private val applyToSummaryBuilder: ((NotificationCompat.Builder) -> NotificationCompat.Builder)? = null
 ) : ContextWrapper(context) {
     val children = UniqueNotificationIdsWithBuilder(summaryId)
-    val channelId = summaryId.channelId
-    val groupKey = summaryId.groupKey
+    private val channelId: String get() = summaryId.channelId
+    private val groupKey = "GROUP_${summaryId.name}"
 
-    fun childBuilder(title: String): NotificationCompat.Builder =
+    fun childBuilder(title: String, text: String? = null): NotificationCompat.Builder =
         notificationBuilderWithSetChannel(
             channelId,
-            title
+            title,
+            text
         )
             .setOnlyAlertOnce(true)
             .setGroup(groupKey)
@@ -39,7 +42,7 @@ class NotificationGroup(context: Context,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
         )
 
-    fun addChild(id: Int, builder: NotificationCompat.Builder){
+    fun addAndShowChild(id: Int, builder: NotificationCompat.Builder){
         children.add(id to builder)
         Timber.i("Added ${summaryId.name} child $id")
         showNotification(id, builder)
@@ -58,12 +61,11 @@ class NotificationGroup(context: Context,
                 summaryId.id,
                 notificationBuilderWithSetChannel(
                     channelId,
-                    "Detected ${children.size} croppable screenshots"
+                    makeSummaryTitle(children.size)
                 )
-                    .setStyle(
-                        NotificationCompat.InboxStyle()
-                            .setSummaryText("Expand to save")
-                    )
+                    .apply {
+                        applyToSummaryBuilder?.invoke(this)
+                    }
                     .setGroup(groupKey)
                     .setGroupSummary(true)
             )

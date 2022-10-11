@@ -149,7 +149,14 @@ class ScreenCaptureListeningService : BoundService() {
 
     val notificationGroup = NotificationGroup(
         this,
-        NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT
+        NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT,
+        makeSummaryTitle = { "Detected $it croppable screenshots" },
+        applyToSummaryBuilder = {
+            it.setStyle(
+                NotificationCompat.InboxStyle()
+                    .setSummaryText("Expand to save")
+            )
+        }
     )
 
     private fun showNewCroppableScreenshotDetectedNotification(
@@ -158,7 +165,7 @@ class ScreenCaptureListeningService : BoundService() {
         cropEdges: CropEdges
     ) {
         val childId = notificationGroup.children.newId()
-        notificationGroup.addChild(
+        notificationGroup.addAndShowChild(
             childId,
             notificationGroup.childBuilder("Detected new croppable screenshot")
                 .addAction(

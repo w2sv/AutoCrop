@@ -9,5 +9,4 @@ enum class NotificationId{
 
     val id: Int get() = nonZeroOrdinal
     val channelId: String get() = name
-    val groupKey: String get() = "${name}_GROUP"
 }

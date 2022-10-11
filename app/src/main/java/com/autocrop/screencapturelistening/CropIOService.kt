@@ -13,16 +13,14 @@ import com.autocrop.screencapturelistening.notification.NotificationGroup
 import com.autocrop.screencapturelistening.notification.NotificationId
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.getParcelable
-import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
-import com.autocrop.utils.android.extensions.showNotification
 import com.lyrebirdstudio.croppylib.CropEdges
 
-class CropIOService: UnboundService() {
+class CropIOService : UnboundService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         PendingIntentRequestCode.cropIOService.remove(startId)
 
-        with(intent!!){
+        with(intent!!) {
             startService(setClass(this@CropIOService, NotificationCancellationService::class.java))
             carryOutIOAndShowNotification(
                 data!!,
@@ -33,19 +31,20 @@ class CropIOService: UnboundService() {
 //        stopSelf()
         return START_REDELIVER_INTENT
     }
+
     private val notificationGroup = NotificationGroup(
         this,
-        NotificationId.SUCCESSFULLY_SAVED_CROP
+        NotificationId.SUCCESSFULLY_SAVED_CROP,
+        { "Saved $it crops" }
     )
 
-    private fun carryOutIOAndShowNotification(screenshotUri: Uri, cropEdges: CropEdges){
+    private fun carryOutIOAndShowNotification(screenshotUri: Uri, cropEdges: CropEdges) {
         saveCrop(screenshotUri, cropEdges).let { (successfullySaved, writeUri) ->
-            if (successfullySaved)
-                showNotification(
-                    notificationGroup.children.newId(),  // TODO
-                    notificationBuilderWithSetChannel(
-                        notificationGroup.channelId,
-                        "Saved crop ${screenshotUri.path}",
+            if (successfullySaved){
+                notificationGroup.addAndShowChild(
+                    notificationGroup.children.newId(), // TODO: remove afterwards,
+                    notificationGroup.childBuilder(
+                        "Saved crop",
                         "Tap to view"
                     )
                         .setAutoCancel(true)
@@ -63,6 +62,7 @@ class CropIOService: UnboundService() {
                             )
                         )
                 )
+            }
         }
     }
 
