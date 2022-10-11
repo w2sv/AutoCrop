@@ -18,7 +18,7 @@ import com.lyrebirdstudio.croppylib.CropEdges
 
 class CropIOService : UnboundService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        PendingIntentRequestCode.cropIOService.remove(startId)
+        PendingIntentRequestCodes.cropIOService.remove(startId)
 
         with(intent!!) {
             startService(setClass(this@CropIOService, NotificationCancellationService::class.java))
@@ -27,8 +27,6 @@ class CropIOService : UnboundService() {
                 getParcelable(ScreenCaptureListeningService.CROP_EDGES_EXTRA_KEY)
             )
         }
-
-//        stopSelf()
         return START_REDELIVER_INTENT
     }
 
@@ -51,7 +49,7 @@ class CropIOService : UnboundService() {
                         .setContentIntent(
                             PendingIntent.getActivity(
                                 this,
-                                PendingIntentRequestCode.viewCrop.addNewId(), // TODO: remove afterwards
+                                PendingIntentRequestCodes.viewCrop.addNewId(), // TODO: remove afterwards
                                 Intent(Intent.ACTION_VIEW)
                                     .setDataAndType(
                                         writeUri,

@@ -9,7 +9,7 @@ import timber.log.Timber
 
 class NotificationCancellationService : UnboundService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        PendingIntentRequestCode.notificationCancellationService.remove(startId)
+        PendingIntentRequestCodes.notificationCancellationService.remove(startId)
 
         val notificationId = intent!!.process()
 

@@ -174,7 +174,7 @@ class ScreenCaptureListeningService : BoundService() {
                         "Save crop",
                         PendingIntent.getService(
                             this,
-                            PendingIntentRequestCode.cropIOService.addNewId(),
+                            PendingIntentRequestCodes.cropIOService.addNewId(),
                             Intent(this, CropIOService::class.java)
                                 .setData(uri)
                                 .setAction(CANCEL_NOTIFICATION_ACTION)
@@ -197,5 +197,10 @@ class ScreenCaptureListeningService : BoundService() {
 
         contentResolver.unregisterContentObserver(imageContentObserver)
             .also { Timber.i("Unregistered imageContentObserver") }
+
+        PendingIntentRequestCodes.clear()
+
+        stopService(Intent(this, CropIOService::class.java))
+        stopService(Intent(this, NotificationCancellationService::class.java))
     }
 }

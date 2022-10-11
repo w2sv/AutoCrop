@@ -6,7 +6,7 @@ import android.content.ContextWrapper
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.autocrop.screencapturelistening.NotificationCancellationService
-import com.autocrop.screencapturelistening.PendingIntentRequestCode
+import com.autocrop.screencapturelistening.PendingIntentRequestCodes
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.notificationManager
 import com.autocrop.utils.android.extensions.showNotification
@@ -33,7 +33,7 @@ class NotificationGroup(context: Context,
     fun childNotificationDeleteIntent(id: Int): PendingIntent =
         PendingIntent.getService(
             this,
-            PendingIntentRequestCode.notificationCancellationService.addNewId(),
+            PendingIntentRequestCodes.notificationCancellationService.addNewId(),
             Intent(
                 this,
                 NotificationCancellationService::class.java
