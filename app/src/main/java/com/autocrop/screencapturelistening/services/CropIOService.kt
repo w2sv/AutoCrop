@@ -60,7 +60,7 @@ class CropIOService :
                 val notificationId = notificationGroup.children.newId()
                 val associatedRequestCodes = requestCodes.makeAndAddMultiple(3)
 
-                notificationGroup.addAndShowChild(
+                notificationGroup.addChild(
                     notificationId,
                     notificationGroup.childBuilder("Saved crop to ${File(writeUri.path!!).name}")
                         .addAction(

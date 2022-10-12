@@ -26,46 +26,58 @@ class NotificationGroup(context: Context,
             .setOnlyAlertOnce(true)
             .setGroup(groupKey)
 
-    fun addAndShowChild(id: Int, builder: NotificationCompat.Builder){
-        showSummaryNotificationIfApplicable()
-
-        children.run {
+    fun addChild(id: Int, builder: NotificationCompat.Builder){
+        with(children){
+            if (size >= 1)
+                showSummaryNotification()
             if (size == 1)
                 with(element()){
-                    showNotification(first, second.setSilent(true))
+                    showNotification(
+                        first,
+                        second
+                            .setSilent(true)
+                            .setGroup(groupKey)
+                    )
                 }
+
+            add(id to builder)
+                .also { Timber.i("Added ${summaryId.name} notification $id") }
         }
-        children.add(id to builder)
-        Timber.i("Added ${summaryId.name} notification $id")
 
         showNotification(id, builder)
     }
 
     fun onChildNotificationCancelled(id: Int) {
-        children.remove(id)
-        Timber.i("Removed notification id $id; Child notifications size: ${children.size}")
-        cancelSummaryNotificationIfApplicable()
-    }
+        with(children){
+            remove(id)
+                .also { Timber.i("Removed notification id $id; n notifications: $size") }
 
-    private fun showSummaryNotificationIfApplicable() {
-        if (children.size >= 1) {
-            showNotification(
-                summaryId.id,
-                notificationBuilderWithSetChannel(
-                    channelId,
-                    makeSummaryTitle(children.size)
-                )
-                    .apply {
-                        applyToSummaryBuilder?.invoke(this)
-                    }
-                    .setGroup(groupKey)
-                    .setGroupSummary(true)
-            )
+            if (size == 1)
+                with(element()){
+                    showNotification(
+                        first,
+                        second
+                            .setSilent(true)
+                            .setGroup(null)
+                    )
+                }
+            if (size <= 1)
+                notificationManager().cancel(summaryId.id)
         }
     }
 
-    private fun cancelSummaryNotificationIfApplicable() {
-        if (children.isEmpty())
-            notificationManager().cancel(summaryId.id)
+    private fun showSummaryNotification() {
+        showNotification(
+            summaryId.id,
+            notificationBuilderWithSetChannel(
+                channelId,
+                makeSummaryTitle(children.size)
+            )
+                .apply {
+                    applyToSummaryBuilder?.invoke(this)
+                }
+                .setGroup(groupKey)
+                .setGroupSummary(true)
+        )
     }
 }

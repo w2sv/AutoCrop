@@ -179,7 +179,7 @@ class ScreenCaptureListeningService :
         val notificationId = notificationGroup.children.newId()
         val associatedRequestCodes = requestCodes.makeAndAddMultiple(2)
 
-        notificationGroup.addAndShowChild(
+        notificationGroup.addChild(
             notificationId,
             notificationGroup.childBuilder("Detected new croppable screenshot")
                 .addAction(
