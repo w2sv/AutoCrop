@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.ValueSource
 internal class PendingIntentRequestCodesTest {
 
     companion object{
-        private val ids = PendingIntentRequestCodes()
+        private val ids = PendingIntentRequestCodes(0)
     }
 
     @ParameterizedTest

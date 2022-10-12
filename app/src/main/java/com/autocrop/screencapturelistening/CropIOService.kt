@@ -10,8 +10,6 @@ import com.autocrop.dataclasses.CropBundle
 import com.autocrop.dataclasses.Screenshot
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.screencapturelistening.abstractservices.BoundService
-import com.autocrop.screencapturelistening.notification.ASSOCIATED_NOTIFICATION_ID
-import com.autocrop.screencapturelistening.notification.ASSOCIATED_PENDING_REQUEST_CODES
 import com.autocrop.screencapturelistening.notification.CANCEL_NOTIFICATION
 import com.autocrop.screencapturelistening.notification.NotificationGroup
 import com.autocrop.screencapturelistening.notification.NotificationId
@@ -69,7 +67,7 @@ class CropIOService :
                                 R.drawable.ic_search_24,
                                 "View",
                                 actionPendingIntent(
-                                    associatedRequestCodes[0],
+                                    0,
                                     associatedRequestCodes,
                                     notificationId,
                                     Intent(Intent.ACTION_VIEW)
@@ -85,7 +83,7 @@ class CropIOService :
                                 R.drawable.ic_baseline_share_24,
                                 "Share",
                                 actionPendingIntent(
-                                    associatedRequestCodes[1],
+                                    1,
                                     associatedRequestCodes,
                                     notificationId,
                                     Intent.createChooser(
@@ -101,7 +99,8 @@ class CropIOService :
                             PendingIntent.getService(
                                 this,
                                 associatedRequestCodes[2],
-                                intent(associatedRequestCodes, notificationId),
+                                Intent(this, OnPendingRequestService::class.java)
+                                    .putClientExtras(notificationId, associatedRequestCodes),
                                 PendingIntent.FLAG_UPDATE_CURRENT
                             )
                         )
@@ -131,11 +130,12 @@ class CropIOService :
         return savingResult
     }
 
-    private fun actionPendingIntent(requestCode: Int, associatedRequestCodes: ArrayList<Int>, notificationId: Int, wrappedIntent: Intent): PendingIntent =
+    private fun actionPendingIntent(requestCodeIndex: Int, associatedRequestCodes: ArrayList<Int>, notificationId: Int, wrappedIntent: Intent): PendingIntent =
         PendingIntent.getService(
             this,
-            requestCode,
-            intent(associatedRequestCodes, notificationId)
+            associatedRequestCodes[requestCodeIndex],
+            Intent(this, OnPendingRequestService::class.java)
+                .putClientExtras(notificationId, associatedRequestCodes)
                 .putExtra(
                     WRAPPED_INTENT,
                     wrappedIntent
@@ -144,10 +144,4 @@ class CropIOService :
                 .putExtra(CANCEL_NOTIFICATION, true),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-
-    private fun intent(associatedRequestCodes: ArrayList<Int>, notificationId: Int): Intent =
-        Intent(this, OnPendingRequestService::class.java)
-            .putExtra(OnPendingRequestService.ClientInterface.CLIENT, clientName)
-            .putExtra(ASSOCIATED_NOTIFICATION_ID, notificationId)
-            .putIntegerArrayListExtra(ASSOCIATED_PENDING_REQUEST_CODES, associatedRequestCodes)
 }

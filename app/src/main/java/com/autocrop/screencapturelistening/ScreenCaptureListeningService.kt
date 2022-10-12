@@ -170,12 +170,6 @@ class ScreenCaptureListeningService :
         val notificationId = notificationGroup.children.newId()
         val associatedRequestCodes = requestCodes.makeAndAddMultiple(2)
 
-        fun Intent.putExtras(): Intent =
-            this
-                .putExtra(OnPendingRequestService.ClientInterface.CLIENT, clientName)
-                .putExtra(ASSOCIATED_NOTIFICATION_ID, notificationId)
-                .putIntegerArrayListExtra(ASSOCIATED_PENDING_REQUEST_CODES, associatedRequestCodes)
-
         notificationGroup.addAndShowChild(
             notificationId,
             notificationGroup.childBuilder("Detected new croppable screenshot")
@@ -190,7 +184,7 @@ class ScreenCaptureListeningService :
                                 .setData(uri)
                                 .putExtra(CANCEL_NOTIFICATION, true)
                                 .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
-                                .putExtras(),
+                                .putClientExtras(notificationId, associatedRequestCodes),
                             PendingIntent.FLAG_UPDATE_CURRENT
                         )
                     )
@@ -207,7 +201,7 @@ class ScreenCaptureListeningService :
                             this,
                             OnPendingRequestService::class.java
                         )
-                            .putExtras(),
+                            .putClientExtras(notificationId, associatedRequestCodes),
                         PendingIntent.FLAG_UPDATE_CURRENT
                     )
                 )

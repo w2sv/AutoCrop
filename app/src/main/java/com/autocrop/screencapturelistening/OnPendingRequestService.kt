@@ -21,9 +21,15 @@ class OnPendingRequestService : UnboundService() {
         val notificationGroup: NotificationGroup?
         val requestCodes: PendingIntentRequestCodes
         fun onCancellation(intent: Intent) {}
+
+        fun Intent.putClientExtras(notificationId: Int, associatedRequestCodes: ArrayList<Int>): Intent =
+            this
+                .putExtra(CLIENT, clientName)
+                .putExtra(ASSOCIATED_NOTIFICATION_ID, notificationId)
+                .putIntegerArrayListExtra(ASSOCIATED_PENDING_REQUEST_CODES, associatedRequestCodes)
     }
 
-    class Client(uniqueClientNumber: Int, 
+    class Client(uniqueClientNumber: Int,
                  override val notificationGroup: NotificationGroup? = null) : ClientInterface {
         override val clientName: String = this::class.java.name
         override val requestCodes: PendingIntentRequestCodes = PendingIntentRequestCodes(uniqueClientNumber * 100)
