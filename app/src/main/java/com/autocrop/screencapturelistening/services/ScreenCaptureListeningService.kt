@@ -20,9 +20,13 @@ import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreData
 import com.autocrop.utils.android.systemScreenshotsDirectory
+import com.autocrop.utils.kotlin.dateFromUnixTimestamp
+import com.autocrop.utils.kotlin.timeDelta
 import com.google.common.collect.EvictingQueue
 import com.lyrebirdstudio.croppylib.CropEdges
 import timber.log.Timber
+import java.util.Date
+import java.util.concurrent.TimeUnit
 
 class ScreenCaptureListeningService :
     BoundService(),
@@ -116,17 +120,24 @@ class ScreenCaptureListeningService :
             this,
             arrayOf(
                 MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Images.Media.DATA  // e.g. /storage/emulated/0/Pictures/Screenshots/.pending-1665749333-Screenshot_20221007-140853687.png
+                MediaStore.Images.Media.DATA,  // e.g. /storage/emulated/0/Pictures/Screenshots/.pending-1665749333-Screenshot_20221007-140853687.png
+                MediaStore.Images.Media.DATE_ADDED
             )
         )
 
         val absolutePath = mediaStoreData[0]
         val fileName = mediaStoreData[1]
+        val dateAdded = mediaStoreData[2]
 
         return !fileName.contains(CROP_FILE_ADDENDUM) &&
                 (systemScreenshotsDirectory()?.let {
                     absolutePath.contains(it.name)
-                } == true || fileName.lowercase().contains("screenshot"))
+                } == true || fileName.lowercase().contains("screenshot")) &&
+                timeDelta(
+                    dateFromUnixTimestamp(dateAdded),
+                    Date(System.currentTimeMillis()),
+                    TimeUnit.SECONDS
+                ) < 20
     }
 
     /**

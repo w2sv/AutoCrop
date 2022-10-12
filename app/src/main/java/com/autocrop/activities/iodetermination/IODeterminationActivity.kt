@@ -3,7 +3,7 @@ package com.autocrop.activities.iodetermination
 import android.content.Intent
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.activities.IntentExtraIdentifier
+import com.autocrop.activities.IntentExtraKeys
 import com.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.iodetermination.fragments.comparison.ComparisonFragment
 import com.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
@@ -33,7 +33,7 @@ class IODeterminationActivity :
                 else
                     null
             },
-            nDismissedScreenshots = getIntentExtra(IntentExtraIdentifier.N_DISMISSED_IMAGES)!!
+            nDismissedScreenshots = getIntentExtra(IntentExtraKeys.N_DISMISSED_IMAGES)!!
         )
 
     //$$$$$$$$$$$$$$$$
@@ -88,7 +88,7 @@ class IODeterminationActivity :
     fun startMainActivity() {
         startMainActivity{ intent ->
             intent.putExtra(
-                IntentExtraIdentifier.IO_SYNOPSIS,
+                IntentExtraKeys.IO_SYNOPSIS,
                 IOSynopsis(
                     viewModel.savedCropUris.size,
                     viewModel.nDeletedScreenshots,
@@ -98,7 +98,7 @@ class IODeterminationActivity :
             )
             if (viewModel.savedCropUris.isNotEmpty())
                 intent.putParcelableArrayListExtra(
-                    IntentExtraIdentifier.CROP_SAVING_URIS,
+                    IntentExtraKeys.CROP_SAVING_URIS,
                     ArrayList(viewModel.savedCropUris)
                 )
         }

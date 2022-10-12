@@ -4,7 +4,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.activities.IntentExtraIdentifier
+import com.autocrop.activities.IntentExtraKeys
 import com.autocrop.activities.cropping.fragments.cropping.CropFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.ui.controller.activity.ApplicationActivity
@@ -19,10 +19,10 @@ class CropActivity :
     override fun viewModelFactory(): ViewModelProvider.Factory =
         CropActivityViewModelFactory(
             uris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                intent.getParcelableArrayListExtra(IntentExtraIdentifier.SELECTED_IMAGE_URIS, Uri::class.java)!!
+                intent.getParcelableArrayListExtra(IntentExtraKeys.SELECTED_IMAGE_URIS, Uri::class.java)!!
             else
                 @Suppress("DEPRECATION")
-                intent.getParcelableArrayListExtra(IntentExtraIdentifier.SELECTED_IMAGE_URIS)!!
+                intent.getParcelableArrayListExtra(IntentExtraKeys.SELECTED_IMAGE_URIS)!!
         )
 
     /**

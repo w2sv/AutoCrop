@@ -12,7 +12,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.text.color
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.activities.IntentExtraIdentifier
+import com.autocrop.activities.IntentExtraKeys
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.dataclasses.IOSynopsis
@@ -44,14 +44,14 @@ class MainActivity :
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
         MainActivityViewModelFactory(
-            ioSynopsis = getIntentExtra<ByteArray>(IntentExtraIdentifier.IO_SYNOPSIS)?.let {
+            ioSynopsis = getIntentExtra<ByteArray>(IntentExtraKeys.IO_SYNOPSIS)?.let {
                 IOSynopsis.fromByteArray(it)
             },
             savedCropUris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                intent.extras?.getParcelableArrayList(IntentExtraIdentifier.CROP_SAVING_URIS, Uri::class.java)
+                intent.extras?.getParcelableArrayList(IntentExtraKeys.CROP_SAVING_URIS, Uri::class.java)
             else
                 @Suppress("DEPRECATION")
-                intent.extras?.getParcelableArrayList(IntentExtraIdentifier.CROP_SAVING_URIS)
+                intent.extras?.getParcelableArrayList(IntentExtraKeys.CROP_SAVING_URIS)
         )
 
     override fun onSavedInstanceStateNull() {
