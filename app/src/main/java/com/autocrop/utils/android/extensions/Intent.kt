@@ -18,3 +18,6 @@ inline fun <reified T: Serializable> Intent.getSerializable(name: String): T =
     else
         @Suppress("DEPRECATION")
         getSerializableExtra(name) as T?)!!
+
+fun Intent.getInt(name: String): Int =
+    getIntExtra(name, -1)

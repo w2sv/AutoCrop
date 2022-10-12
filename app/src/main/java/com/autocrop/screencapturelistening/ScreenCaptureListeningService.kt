@@ -17,6 +17,8 @@ import com.autocrop.screencapturelistening.notification.CANCEL_NOTIFICATION_ACTI
 import com.autocrop.screencapturelistening.notification.NotificationGroup
 import com.autocrop.screencapturelistening.notification.NotificationId
 import com.autocrop.screencapturelistening.abstractservices.BoundService
+import com.autocrop.screencapturelistening.notification.ASSOCIATED_PENDING_REQUEST_CODES
+import com.autocrop.screencapturelistening.notification.ScopeWideUniqueIds
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreData
@@ -158,15 +160,21 @@ class ScreenCaptureListeningService : BoundService() {
             )
         }
     )
+    val cancellationRequestCodes = ScopeWideUniqueIds()
 
     private fun showNewCroppableScreenshotDetectedNotification(
         uri: Uri,
         screenshotBitmap: Bitmap,
         cropEdges: CropEdges
     ) {
-        val childId = notificationGroup.children.newId()
+        val dynamicChildId = notificationGroup.children.newId()
+        val pendingRequestCodes = intArrayOf(
+            cancellationRequestCodes.addNewId(),
+            cancellationRequestCodes.addNewId()
+        )
+
         notificationGroup.addAndShowChild(
-            childId,
+            dynamicChildId,
             notificationGroup.childBuilder("Detected new croppable screenshot")
                 .addAction(
                     NotificationCompat.Action(
@@ -174,12 +182,13 @@ class ScreenCaptureListeningService : BoundService() {
                         "Save crop",
                         PendingIntent.getService(
                             this,
-                            PendingIntentRequestCodes.cropIOService.addNewId(),
+                            pendingRequestCodes[0],
                             Intent(this, CropIOService::class.java)
                                 .setData(uri)
                                 .setAction(CANCEL_NOTIFICATION_ACTION)
                                 .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
-                                .putExtra(ASSOCIATED_NOTIFICATION_ID, childId),
+                                .putExtra(ASSOCIATED_NOTIFICATION_ID, dynamicChildId)
+                                .putExtra(ASSOCIATED_PENDING_REQUEST_CODES, pendingRequestCodes),
                             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                         )
                     )
@@ -188,7 +197,19 @@ class ScreenCaptureListeningService : BoundService() {
                     NotificationCompat.BigPictureStyle()
                         .bigPicture(screenshotBitmap.cropped(cropEdges))
                 )
-                .setDeleteIntent(notificationGroup.childNotificationDeleteIntent(childId))
+                .setDeleteIntent(
+                    PendingIntent.getService(
+                        this,
+                        pendingRequestCodes[1],
+                        Intent(
+                            this,
+                            NotificationCancellationService::class.java
+                        )
+                            .putExtra(ASSOCIATED_NOTIFICATION_ID, dynamicChildId)
+                            .putExtra(ASSOCIATED_PENDING_REQUEST_CODES, pendingRequestCodes),
+                        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
+                    )
+                )
         )
     }
 
@@ -197,8 +218,6 @@ class ScreenCaptureListeningService : BoundService() {
 
         contentResolver.unregisterContentObserver(imageContentObserver)
             .also { Timber.i("Unregistered imageContentObserver") }
-
-        PendingIntentRequestCodes.clear()
 
         stopService(Intent(this, CropIOService::class.java))
         stopService(Intent(this, NotificationCancellationService::class.java))

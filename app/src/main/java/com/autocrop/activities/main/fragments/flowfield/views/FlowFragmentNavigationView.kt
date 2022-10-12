@@ -28,6 +28,7 @@ import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.autocrop.R
+import timber.log.Timber
 
 class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
     NavigationView(context, attributeSet),
@@ -77,23 +78,23 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
             .apply {
                 isChecked = context.serviceRunning<ScreenCaptureListeningService>()
                 setOnCheckedChangeListener{ _, newValue ->
-//                    val serviceIntent = Intent(context, ScreenCaptureListeningService::class.java)
+                    val serviceIntent = Intent(context, ScreenCaptureListeningService::class.java)
 
-//                    if (newValue)
-//                        findFragment<FlowFieldFragment>()
-//                            .readExternalStoragePermissionHandler
-//                            .requestPermission(
-//                                onGranted = {
-//                                    context.startForegroundService(serviceIntent)
-//                                        .also { Timber.i("Starting ScreenCaptureListeningService") }
-//                                },
-//                                onDenied = {
-//                                    isChecked = false
-//                                }
-//                            )
-//                    else
-//                        context.stopService(serviceIntent)
-//                            .also { Timber.i("Stopping ScreenCaptureListeningService") }
+                    if (newValue)
+                        findFragment<FlowFieldFragment>()
+                            .readExternalStoragePermissionHandler
+                            .requestPermission(
+                                onGranted = {
+                                    context.startForegroundService(serviceIntent)
+                                        .also { Timber.i("Starting ScreenCaptureListeningService") }
+                                },
+                                onDenied = {
+                                    isChecked = false
+                                }
+                            )
+                    else
+                        context.stopService(serviceIntent)
+                            .also { Timber.i("Stopping ScreenCaptureListeningService") }
                 }
             }
     }

@@ -16,7 +16,7 @@ class BindingAdministrator<T : BoundService>(
     private var boundService: T? = null
     private var onServiceConnected by Consumable<(T) -> Unit>(null)
 
-    val serviceConnection = object : ServiceConnection {
+    private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             Timber.i("$name connected")
             boundService = (service as BoundService.LocalBinder).getService()
@@ -38,5 +38,9 @@ class BindingAdministrator<T : BoundService>(
             )
         } else
             function(boundService!!)
+    }
+
+    fun unbindService(){
+        unbindService(serviceConnection)
     }
 }

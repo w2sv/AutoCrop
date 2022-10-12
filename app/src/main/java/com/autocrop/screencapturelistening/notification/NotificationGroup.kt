@@ -1,12 +1,8 @@
 package com.autocrop.screencapturelistening.notification
 
-import android.app.PendingIntent
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.Intent
 import androidx.core.app.NotificationCompat
-import com.autocrop.screencapturelistening.NotificationCancellationService
-import com.autocrop.screencapturelistening.PendingIntentRequestCodes
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.notificationManager
 import com.autocrop.utils.android.extensions.showNotification
@@ -29,18 +25,6 @@ class NotificationGroup(context: Context,
         )
             .setOnlyAlertOnce(true)
             .setGroup(groupKey)
-
-    fun childNotificationDeleteIntent(id: Int): PendingIntent =
-        PendingIntent.getService(
-            this,
-            PendingIntentRequestCodes.notificationCancellationService.addNewId(),
-            Intent(
-                this,
-                NotificationCancellationService::class.java
-            )
-                .putExtra(ASSOCIATED_NOTIFICATION_ID, id),
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
-        )
 
     fun addAndShowChild(id: Int, builder: NotificationCompat.Builder){
         children.add(id to builder)

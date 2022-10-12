@@ -52,6 +52,7 @@
         <service
             android:name="com.autocrop.screencapturelistening.NotificationCancellationService"
             android:exported="false"/>
+        <service android:name="com.autocrop.screencapturelistening.CropIOServiceActionIntentInterceptor" />
 
         <!-- Activities -->
 
