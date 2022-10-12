@@ -10,14 +10,15 @@ import com.autocrop.dataclasses.CropBundle
 import com.autocrop.dataclasses.Screenshot
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.screencapturelistening.CANCEL_NOTIFICATION
-import com.autocrop.screencapturelistening.services.abstractservices.BoundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.screencapturelistening.notifications.NotificationId
+import com.autocrop.screencapturelistening.services.abstractservices.BoundService
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.getParcelable
 import com.autocrop.utils.android.extensions.openBitmap
 import com.lyrebirdstudio.croppylib.CropEdges
 import com.w2sv.autocrop.R
+import java.io.File
 
 class CropIOService :
     BoundService(),
@@ -49,7 +50,7 @@ class CropIOService :
 
     override val notificationGroup = NotificationGroup(
         this,
-        NotificationId.SUCCESSFULLY_SAVED_CROP,
+        NotificationId.SAVED_CROP,
         { "Saved $it crops" }
     )
 
@@ -61,7 +62,7 @@ class CropIOService :
 
                 notificationGroup.addAndShowChild(
                     notificationId,
-                    notificationGroup.childBuilder("Saved crop to $writeUri")
+                    notificationGroup.childBuilder("Saved crop to ${File(writeUri.path!!).name}")
                         .addAction(
                             NotificationCompat.Action(
                                 R.drawable.ic_search_24,

@@ -27,20 +27,28 @@ class NotificationGroup(context: Context,
             .setGroup(groupKey)
 
     fun addAndShowChild(id: Int, builder: NotificationCompat.Builder){
-        children.add(id to builder)
-        Timber.i("Added ${summaryId.name} child $id")
-        showNotification(id, builder)
         showSummaryNotificationIfApplicable()
+
+        children.run {
+            if (size == 1)
+                with(element()){
+                    showNotification(first, second.setSilent(true))
+                }
+        }
+        children.add(id to builder)
+        Timber.i("Added ${summaryId.name} notification $id")
+
+        showNotification(id, builder)
     }
 
     fun onChildNotificationCancelled(id: Int) {
         children.remove(id)
-        Timber.i("Removed child notification id $id; New number of child notifications: ${children.size}")
+        Timber.i("Removed notification id $id; Child notifications size: ${children.size}")
         cancelSummaryNotificationIfApplicable()
     }
 
     private fun showSummaryNotificationIfApplicable() {
-        if (children.size >= 2) {
+        if (children.size >= 1) {
             showNotification(
                 summaryId.id,
                 notificationBuilderWithSetChannel(

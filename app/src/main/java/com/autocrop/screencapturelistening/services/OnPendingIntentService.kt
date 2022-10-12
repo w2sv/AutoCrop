@@ -15,25 +15,24 @@ import timber.log.Timber
 class OnPendingIntentService : UnboundService() {
     interface ClientInterface {
         companion object {
-            const val CLIENT = "ON_PENDING_INTENT_SERVICE_CANCELLATION_CLIENT"
+            const val CLIENT_INDEX = "CLIENT_INDEX"
         }
 
-        val clientName: String
+        val clientIndex: Int
         val notificationGroup: NotificationGroup?
         val requestCodes: PendingIntentRequestCodes
         fun onCancellation(intent: Intent) {}
 
         fun Intent.putClientExtras(notificationId: Int, associatedRequestCodes: ArrayList<Int>): Intent =
             this
-                .putExtra(CLIENT, clientName)
+                .putExtra(CLIENT_INDEX, clientIndex)
                 .putExtra(ASSOCIATED_NOTIFICATION_ID, notificationId)
                 .putIntegerArrayListExtra(ASSOCIATED_PENDING_REQUEST_CODES, associatedRequestCodes)
     }
 
-    class Client(uniqueClientNumber: Int,
+    class Client(override val clientIndex: Int,
                  override val notificationGroup: NotificationGroup? = null) : ClientInterface {
-        override val clientName: String = this::class.java.name
-        override val requestCodes: PendingIntentRequestCodes = PendingIntentRequestCodes(uniqueClientNumber * 100)
+        override val requestCodes: PendingIntentRequestCodes = PendingIntentRequestCodes(clientIndex * 100)
     }
     
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -44,9 +43,7 @@ class OnPendingIntentService : UnboundService() {
                     .cancel(notificationId)
                     .also { Timber.i("Cancelled notification $notificationId") }
 
-            bindingAdministrators.first {
-                it.serviceClass.name == getStringExtra(ClientInterface.CLIENT)!!
-            }
+            bindingAdministrators[getInt(ClientInterface.CLIENT_INDEX)]
                 .callOnBoundService {boundService ->
                     (boundService as ClientInterface).let {
                         it.notificationGroup!!.onChildNotificationCancelled(notificationId)
