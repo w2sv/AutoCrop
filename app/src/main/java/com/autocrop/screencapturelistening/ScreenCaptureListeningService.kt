@@ -12,13 +12,12 @@ import androidx.core.app.NotificationCompat
 import com.autocrop.activities.cropping.cropping.cropEdges
 import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
+import com.autocrop.screencapturelistening.abstractservices.BoundService
 import com.autocrop.screencapturelistening.notification.ASSOCIATED_NOTIFICATION_ID
-import com.autocrop.screencapturelistening.notification.CANCEL_NOTIFICATION_ACTION
+import com.autocrop.screencapturelistening.notification.ASSOCIATED_PENDING_REQUEST_CODES
+import com.autocrop.screencapturelistening.notification.CANCEL_NOTIFICATION
 import com.autocrop.screencapturelistening.notification.NotificationGroup
 import com.autocrop.screencapturelistening.notification.NotificationId
-import com.autocrop.screencapturelistening.abstractservices.BoundService
-import com.autocrop.screencapturelistening.notification.ASSOCIATED_PENDING_REQUEST_CODES
-import com.autocrop.screencapturelistening.notification.ScopeWideUniqueIds
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreData
@@ -27,7 +26,7 @@ import com.google.common.collect.EvictingQueue
 import com.lyrebirdstudio.croppylib.CropEdges
 import timber.log.Timber
 
-class ScreenCaptureListeningService : BoundService() {
+class ScreenCaptureListeningService : BoundService(0) {
 
     companion object {
         const val CROP_EDGES_EXTRA_KEY = "CROP_EDGES_EXTRA_KEY"
@@ -149,7 +148,7 @@ class ScreenCaptureListeningService : BoundService() {
             false
         }
 
-    val notificationGroup = NotificationGroup(
+    override val notificationGroup = NotificationGroup(
         this,
         NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT,
         makeSummaryTitle = { "Detected $it croppable screenshots" },
@@ -160,7 +159,6 @@ class ScreenCaptureListeningService : BoundService() {
             )
         }
     )
-    val cancellationRequestCodes = ScopeWideUniqueIds()
 
     private fun showNewCroppableScreenshotDetectedNotification(
         uri: Uri,
@@ -168,10 +166,16 @@ class ScreenCaptureListeningService : BoundService() {
         cropEdges: CropEdges
     ) {
         val dynamicChildId = notificationGroup.children.newId()
-        val pendingRequestCodes = intArrayOf(
+        val pendingRequestCodes = arrayListOf(
             cancellationRequestCodes.addNewId(),
             cancellationRequestCodes.addNewId()
         )
+
+        fun Intent.putExtras(): Intent =
+            this
+                .putExtra(CANCELLATION_CLIENT, cancellationClientName)
+                .putExtra(ASSOCIATED_NOTIFICATION_ID, dynamicChildId)
+                .putIntegerArrayListExtra(ASSOCIATED_PENDING_REQUEST_CODES, pendingRequestCodes)
 
         notificationGroup.addAndShowChild(
             dynamicChildId,
@@ -185,10 +189,9 @@ class ScreenCaptureListeningService : BoundService() {
                             pendingRequestCodes[0],
                             Intent(this, CropIOService::class.java)
                                 .setData(uri)
-                                .setAction(CANCEL_NOTIFICATION_ACTION)
+                                .putExtra(CANCEL_NOTIFICATION, true)
                                 .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
-                                .putExtra(ASSOCIATED_NOTIFICATION_ID, dynamicChildId)
-                                .putExtra(ASSOCIATED_PENDING_REQUEST_CODES, pendingRequestCodes),
+                                .putExtras(),
                             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                         )
                     )
@@ -205,8 +208,7 @@ class ScreenCaptureListeningService : BoundService() {
                             this,
                             NotificationCancellationService::class.java
                         )
-                            .putExtra(ASSOCIATED_NOTIFICATION_ID, dynamicChildId)
-                            .putExtra(ASSOCIATED_PENDING_REQUEST_CODES, pendingRequestCodes),
+                            .putExtras(),
                         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
                     )
                 )

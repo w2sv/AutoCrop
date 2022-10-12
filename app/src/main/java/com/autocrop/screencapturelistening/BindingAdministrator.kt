@@ -15,6 +15,7 @@ class BindingAdministrator<T : BoundService>(
     private val clazz: Class<T>) : ContextWrapper(context) {
     private var boundService: T? = null
     private var onServiceConnected by Consumable<(T) -> Unit>(null)
+    val cancellationClientIdentifier: String = clazz.name
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {

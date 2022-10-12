@@ -10,20 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/render.experimental.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/CropIOServiceActionIntentInterceptor.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/test/java/com/autocrop/screencapturelistening/notification/ScopeWideUniqueIdsTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/BindingAdministrator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/BindingAdministrator.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/CropIOService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/CropIOService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/CropIOServiceActionIntentInterceptor.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/NotificationCancellationService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/NotificationCancellationService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/PendingIntentRequestCodes.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/ScreenCaptureListeningService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/ScreenCaptureListeningService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/abstractservices/BoundService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/abstractservices/BoundService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/notification/ExtraKeys.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/notification/ExtraKeys.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/notification/NotificationGroup.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/notification/NotificationGroup.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/notification/ScopeWideUniqueIds.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/notification/ScopeWideUniqueIds.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/extensions/Intent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/extensions/Intent.kt" afterDir="false" />
     </list>
