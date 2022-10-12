@@ -1,4 +1,4 @@
-package com.autocrop.screencapturelistening
+package com.autocrop.screencapturelistening.services
 
 import android.app.PendingIntent
 import android.content.Intent
@@ -12,12 +12,10 @@ import androidx.core.app.NotificationCompat
 import com.autocrop.activities.cropping.cropping.cropEdges
 import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
-import com.autocrop.screencapturelistening.abstractservices.BoundService
-import com.autocrop.screencapturelistening.notification.ASSOCIATED_NOTIFICATION_ID
-import com.autocrop.screencapturelistening.notification.ASSOCIATED_PENDING_REQUEST_CODES
-import com.autocrop.screencapturelistening.notification.CANCEL_NOTIFICATION
-import com.autocrop.screencapturelistening.notification.NotificationGroup
-import com.autocrop.screencapturelistening.notification.NotificationId
+import com.autocrop.screencapturelistening.CANCEL_NOTIFICATION
+import com.autocrop.screencapturelistening.services.abstractservices.BoundService
+import com.autocrop.screencapturelistening.notifications.NotificationGroup
+import com.autocrop.screencapturelistening.notifications.NotificationId
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreData
@@ -28,7 +26,7 @@ import timber.log.Timber
 
 class ScreenCaptureListeningService :
     BoundService(),
-    OnPendingRequestService.ClientInterface by OnPendingRequestService.Client(0) {
+    OnPendingIntentService.ClientInterface by OnPendingIntentService.Client(0) {
 
     companion object {
         const val CROP_EDGES_EXTRA_KEY = "CROP_EDGES_EXTRA_KEY"
@@ -199,7 +197,7 @@ class ScreenCaptureListeningService :
                         associatedRequestCodes[1],
                         Intent(
                             this,
-                            OnPendingRequestService::class.java
+                            OnPendingIntentService::class.java
                         )
                             .putClientExtras(notificationId, associatedRequestCodes),
                         PendingIntent.FLAG_UPDATE_CURRENT
@@ -215,6 +213,6 @@ class ScreenCaptureListeningService :
             .also { Timber.i("Unregistered imageContentObserver") }
 
         stopService(Intent(this, CropIOService::class.java))
-        stopService(Intent(this, OnPendingRequestService::class.java))
+        stopService(Intent(this, OnPendingIntentService::class.java))
     }
 }

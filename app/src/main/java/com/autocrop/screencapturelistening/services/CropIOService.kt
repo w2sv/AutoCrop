@@ -1,4 +1,4 @@
-package com.autocrop.screencapturelistening
+package com.autocrop.screencapturelistening.services
 
 import android.app.PendingIntent
 import android.content.Intent
@@ -9,10 +9,10 @@ import com.autocrop.activities.iodetermination.processCropBundle
 import com.autocrop.dataclasses.CropBundle
 import com.autocrop.dataclasses.Screenshot
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.screencapturelistening.abstractservices.BoundService
-import com.autocrop.screencapturelistening.notification.CANCEL_NOTIFICATION
-import com.autocrop.screencapturelistening.notification.NotificationGroup
-import com.autocrop.screencapturelistening.notification.NotificationId
+import com.autocrop.screencapturelistening.CANCEL_NOTIFICATION
+import com.autocrop.screencapturelistening.services.abstractservices.BoundService
+import com.autocrop.screencapturelistening.notifications.NotificationGroup
+import com.autocrop.screencapturelistening.notifications.NotificationId
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.getParcelable
 import com.autocrop.utils.android.extensions.openBitmap
@@ -21,7 +21,7 @@ import com.w2sv.autocrop.R
 
 class CropIOService :
     BoundService(),
-    OnPendingRequestService.ClientInterface by OnPendingRequestService.Client(1) {
+    OnPendingIntentService.ClientInterface by OnPendingIntentService.Client(1) {
     
     companion object{
         private const val WRAPPED_INTENT = "WRAPPED_INTENT_KEY"
@@ -29,7 +29,7 @@ class CropIOService :
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         with(intent!!) {
-            startService(setClass(this@CropIOService, OnPendingRequestService::class.java))
+            startService(setClass(this@CropIOService, OnPendingIntentService::class.java))
             carryOutIOAndShowNotification(
                 screenshotUri = data!!,
                 cropEdges = getParcelable(ScreenCaptureListeningService.CROP_EDGES_EXTRA_KEY)!!
@@ -99,7 +99,7 @@ class CropIOService :
                             PendingIntent.getService(
                                 this,
                                 associatedRequestCodes[2],
-                                Intent(this, OnPendingRequestService::class.java)
+                                Intent(this, OnPendingIntentService::class.java)
                                     .putClientExtras(notificationId, associatedRequestCodes),
                                 PendingIntent.FLAG_UPDATE_CURRENT
                             )
@@ -134,7 +134,7 @@ class CropIOService :
         PendingIntent.getService(
             this,
             associatedRequestCodes[requestCodeIndex],
-            Intent(this, OnPendingRequestService::class.java)
+            Intent(this, OnPendingIntentService::class.java)
                 .putClientExtras(notificationId, associatedRequestCodes)
                 .putExtra(
                     WRAPPED_INTENT,

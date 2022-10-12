@@ -1,4 +1,4 @@
-package com.autocrop.screencapturelistening.notification
+package com.autocrop.screencapturelistening.notifications
 
 import com.autocrop.utils.kotlin.extensions.nonZeroOrdinal
 

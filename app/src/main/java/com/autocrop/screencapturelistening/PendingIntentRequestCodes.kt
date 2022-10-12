@@ -1,4 +1,4 @@
-package com.autocrop.screencapturelistening.notification
+package com.autocrop.screencapturelistening
 
 import timber.log.Timber
 import java.util.PriorityQueue

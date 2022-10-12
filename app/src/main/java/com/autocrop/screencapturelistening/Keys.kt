@@ -1,5 +1,5 @@
-package com.autocrop.screencapturelistening.notification
+package com.autocrop.screencapturelistening
 
 const val ASSOCIATED_NOTIFICATION_ID = "ASSOCIATED_NOTIFICATION_ID"
-const val CANCEL_NOTIFICATION = "com.w2sv.autocrop.CANCEL_NOTIFICATION_ACTION"
+const val CANCEL_NOTIFICATION = "CANCEL_NOTIFICATION"
 const val ASSOCIATED_PENDING_REQUEST_CODES = "ASSOCIATED_PENDING_REQUEST_CODES"

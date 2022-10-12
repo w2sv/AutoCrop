@@ -1,20 +1,21 @@
-package com.autocrop.screencapturelistening
+package com.autocrop.screencapturelistening.services
 
 import android.content.Intent
-import com.autocrop.screencapturelistening.abstractservices.UnboundService
-import com.autocrop.screencapturelistening.notification.ASSOCIATED_NOTIFICATION_ID
-import com.autocrop.screencapturelistening.notification.ASSOCIATED_PENDING_REQUEST_CODES
-import com.autocrop.screencapturelistening.notification.CANCEL_NOTIFICATION
-import com.autocrop.screencapturelistening.notification.NotificationGroup
-import com.autocrop.screencapturelistening.notification.PendingIntentRequestCodes
+import com.autocrop.screencapturelistening.ASSOCIATED_NOTIFICATION_ID
+import com.autocrop.screencapturelistening.ASSOCIATED_PENDING_REQUEST_CODES
+import com.autocrop.screencapturelistening.BindingAdministrator
+import com.autocrop.screencapturelistening.CANCEL_NOTIFICATION
+import com.autocrop.screencapturelistening.PendingIntentRequestCodes
+import com.autocrop.screencapturelistening.services.abstractservices.UnboundService
+import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.utils.android.extensions.getInt
 import com.autocrop.utils.android.extensions.notificationManager
 import timber.log.Timber
 
-class OnPendingRequestService : UnboundService() {
+class OnPendingIntentService : UnboundService() {
     interface ClientInterface {
         companion object {
-            const val CLIENT = "CANCELLATION_CLIENT"
+            const val CLIENT = "ON_PENDING_INTENT_SERVICE_CANCELLATION_CLIENT"
         }
 
         val clientName: String

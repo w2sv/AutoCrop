@@ -44,13 +44,13 @@
         <!-- Services -->
 
         <service
-            android:name="com.autocrop.screencapturelistening.CropIOService"
+            android:name="com.autocrop.screencapturelistening.services.CropIOService"
             android:exported="false"/>
         <service
-            android:name="com.autocrop.screencapturelistening.ScreenCaptureListeningService"
+            android:name="com.autocrop.screencapturelistening.services.ScreenCaptureListeningService"
             android:exported="false"/>
         <service
-            android:name="com.autocrop.screencapturelistening.OnPendingRequestService"
+            android:name="com.autocrop.screencapturelistening.services.OnPendingIntentService"
             android:exported="false"/>
 
         <!-- Activities -->

@@ -1,5 +1,6 @@
-package com.autocrop.screencapturelistening.notification
+package com.autocrop.screencapturelistening.notifications
 
+import com.autocrop.screencapturelistening.PendingIntentRequestCodes
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
