@@ -21,14 +21,17 @@ import com.autocrop.utils.android.extensions.openBitmap
 import com.lyrebirdstudio.croppylib.CropEdges
 import com.w2sv.autocrop.R
 
-class CropIOService : BoundService(1) {
+class CropIOService :
+    BoundService(),
+    OnPendingRequestService.ClientInterface by OnPendingRequestService.Client(1) {
+    
     companion object{
         private const val WRAPPED_INTENT = "WRAPPED_INTENT_KEY"
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         with(intent!!) {
-            startService(setClass(this@CropIOService, NotificationCancellationService::class.java))
+            startService(setClass(this@CropIOService, OnPendingRequestService::class.java))
             carryOutIOAndShowNotification(
                 screenshotUri = data!!,
                 cropEdges = getParcelable(ScreenCaptureListeningService.CROP_EDGES_EXTRA_KEY)!!
@@ -55,24 +58,20 @@ class CropIOService : BoundService(1) {
     private fun carryOutIOAndShowNotification(screenshotUri: Uri, cropEdges: CropEdges) {
         saveCrop(screenshotUri, cropEdges).let { (successfullySaved, writeUri) ->
             if (successfullySaved){
-                val dynamicChildId = notificationGroup.children.newId()
-                val requestCodes = arrayListOf(
-                    cancellationRequestCodes.addNewId(),
-                    cancellationRequestCodes.addNewId(),
-                    cancellationRequestCodes.addNewId()
-                )
+                val notificationId = notificationGroup.children.newId()
+                val associatedRequestCodes = requestCodes.makeAndAddMultiple(3)
 
                 notificationGroup.addAndShowChild(
-                    dynamicChildId,
+                    notificationId,
                     notificationGroup.childBuilder("Saved crop to $writeUri")
                         .addAction(
                             NotificationCompat.Action(
                                 R.drawable.ic_search_24,
                                 "View",
                                 actionPendingIntent(
-                                    requestCodes[0],
-                                    requestCodes,
-                                    dynamicChildId,
+                                    associatedRequestCodes[0],
+                                    associatedRequestCodes,
+                                    notificationId,
                                     Intent(Intent.ACTION_VIEW)
                                         .setDataAndType(
                                             writeUri,
@@ -86,9 +85,9 @@ class CropIOService : BoundService(1) {
                                 R.drawable.ic_baseline_share_24,
                                 "Share",
                                 actionPendingIntent(
-                                    requestCodes[1],
-                                    requestCodes,
-                                    dynamicChildId,
+                                    associatedRequestCodes[1],
+                                    associatedRequestCodes,
+                                    notificationId,
                                     Intent.createChooser(
                                         Intent(Intent.ACTION_SEND)
                                             .setType(IMAGE_MIME_TYPE)
@@ -101,8 +100,8 @@ class CropIOService : BoundService(1) {
                         .setDeleteIntent(
                             PendingIntent.getService(
                                 this,
-                                requestCodes[2],
-                                intent(requestCodes, dynamicChildId),
+                                associatedRequestCodes[2],
+                                intent(associatedRequestCodes, notificationId),
                                 PendingIntent.FLAG_UPDATE_CURRENT
                             )
                         )
@@ -147,8 +146,8 @@ class CropIOService : BoundService(1) {
         )
 
     private fun intent(associatedRequestCodes: ArrayList<Int>, notificationId: Int): Intent =
-        Intent(this, NotificationCancellationService::class.java)
-            .putExtra(CANCELLATION_CLIENT, cancellationClientName)
+        Intent(this, OnPendingRequestService::class.java)
+            .putExtra(OnPendingRequestService.ClientInterface.CLIENT, clientName)
             .putExtra(ASSOCIATED_NOTIFICATION_ID, notificationId)
             .putIntegerArrayListExtra(ASSOCIATED_PENDING_REQUEST_CODES, associatedRequestCodes)
 }

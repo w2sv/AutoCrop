@@ -26,7 +26,9 @@ import com.google.common.collect.EvictingQueue
 import com.lyrebirdstudio.croppylib.CropEdges
 import timber.log.Timber
 
-class ScreenCaptureListeningService : BoundService(0) {
+class ScreenCaptureListeningService :
+    BoundService(),
+    OnPendingRequestService.ClientInterface by OnPendingRequestService.Client(0) {
 
     companion object {
         const val CROP_EDGES_EXTRA_KEY = "CROP_EDGES_EXTRA_KEY"
@@ -165,20 +167,17 @@ class ScreenCaptureListeningService : BoundService(0) {
         screenshotBitmap: Bitmap,
         cropEdges: CropEdges
     ) {
-        val dynamicChildId = notificationGroup.children.newId()
-        val pendingRequestCodes = arrayListOf(
-            cancellationRequestCodes.addNewId(),
-            cancellationRequestCodes.addNewId()
-        )
+        val notificationId = notificationGroup.children.newId()
+        val associatedRequestCodes = requestCodes.makeAndAddMultiple(2)
 
         fun Intent.putExtras(): Intent =
             this
-                .putExtra(CANCELLATION_CLIENT, cancellationClientName)
-                .putExtra(ASSOCIATED_NOTIFICATION_ID, dynamicChildId)
-                .putIntegerArrayListExtra(ASSOCIATED_PENDING_REQUEST_CODES, pendingRequestCodes)
+                .putExtra(OnPendingRequestService.ClientInterface.CLIENT, clientName)
+                .putExtra(ASSOCIATED_NOTIFICATION_ID, notificationId)
+                .putIntegerArrayListExtra(ASSOCIATED_PENDING_REQUEST_CODES, associatedRequestCodes)
 
         notificationGroup.addAndShowChild(
-            dynamicChildId,
+            notificationId,
             notificationGroup.childBuilder("Detected new croppable screenshot")
                 .addAction(
                     NotificationCompat.Action(
@@ -186,13 +185,13 @@ class ScreenCaptureListeningService : BoundService(0) {
                         "Save crop",
                         PendingIntent.getService(
                             this,
-                            pendingRequestCodes[0],
+                            associatedRequestCodes[0],
                             Intent(this, CropIOService::class.java)
                                 .setData(uri)
                                 .putExtra(CANCEL_NOTIFICATION, true)
                                 .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
                                 .putExtras(),
-                            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+                            PendingIntent.FLAG_UPDATE_CURRENT
                         )
                     )
                 )
@@ -203,13 +202,13 @@ class ScreenCaptureListeningService : BoundService(0) {
                 .setDeleteIntent(
                     PendingIntent.getService(
                         this,
-                        pendingRequestCodes[1],
+                        associatedRequestCodes[1],
                         Intent(
                             this,
-                            NotificationCancellationService::class.java
+                            OnPendingRequestService::class.java
                         )
                             .putExtras(),
-                        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
+                        PendingIntent.FLAG_UPDATE_CURRENT
                     )
                 )
         )
@@ -222,6 +221,6 @@ class ScreenCaptureListeningService : BoundService(0) {
             .also { Timber.i("Unregistered imageContentObserver") }
 
         stopService(Intent(this, CropIOService::class.java))
-        stopService(Intent(this, NotificationCancellationService::class.java))
+        stopService(Intent(this, OnPendingRequestService::class.java))
     }
 }

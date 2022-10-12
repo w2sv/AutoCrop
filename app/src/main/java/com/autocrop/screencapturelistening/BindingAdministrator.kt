@@ -12,10 +12,10 @@ import timber.log.Timber
 
 class BindingAdministrator<T : BoundService>(
     context: Context,
-    private val clazz: Class<T>) : ContextWrapper(context) {
+    val serviceClass: Class<T>
+) : ContextWrapper(context) {
     private var boundService: T? = null
     private var onServiceConnected by Consumable<(T) -> Unit>(null)
-    val cancellationClientIdentifier: String = clazz.name
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -33,15 +33,16 @@ class BindingAdministrator<T : BoundService>(
         if (boundService == null) {
             onServiceConnected = function
             bindService(
-                Intent(this, clazz),
+                Intent(this, serviceClass),
                 serviceConnection,
                 BIND_AUTO_CREATE
             )
-        } else
+        }
+        else
             function(boundService!!)
     }
 
-    fun unbindService(){
+    fun unbindService() {
         unbindService(serviceConnection)
     }
 }

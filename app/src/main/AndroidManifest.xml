@@ -50,7 +50,7 @@
             android:name="com.autocrop.screencapturelistening.ScreenCaptureListeningService"
             android:exported="false"/>
         <service
-            android:name="com.autocrop.screencapturelistening.NotificationCancellationService"
+            android:name="com.autocrop.screencapturelistening.OnPendingRequestService"
             android:exported="false"/>
 
         <!-- Activities -->
