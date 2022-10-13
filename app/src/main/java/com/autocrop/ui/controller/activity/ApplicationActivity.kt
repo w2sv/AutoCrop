@@ -39,16 +39,6 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
 
     protected abstract val onBackPressedCallback: OnBackPressedCallback
 
-    protected fun <T> getIntentExtra(key: String, blacklistValue: T? = null): T? =
-        @Suppress("DEPRECATION")
-        intent.extras?.get(key).let {
-            if (blacklistValue == null || it != blacklistValue)
-                @Suppress("UNCHECKED_CAST")
-                it as T
-            else
-                null
-        }
-
     /**
      * Write changed values of each [preferences] element to SharedPreferences
      */

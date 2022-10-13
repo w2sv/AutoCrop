@@ -5,6 +5,7 @@ import android.content.Intent
 import android.database.ContentObserver
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
@@ -12,10 +13,14 @@ import androidx.core.app.NotificationCompat
 import com.autocrop.activities.cropping.cropping.cropEdges
 import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
+import com.autocrop.activities.iodetermination.deleteRequestUri
+import com.autocrop.dataclasses.Screenshot
 import com.autocrop.screencapturelistening.CANCEL_NOTIFICATION
-import com.autocrop.screencapturelistening.services.abstractservices.BoundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.screencapturelistening.notifications.NotificationId
+import com.autocrop.screencapturelistening.abstractservices.BoundService
+import com.autocrop.screencapturelistening.services.cropio.CropIOService
+import com.autocrop.screencapturelistening.services.cropio.DeleteRequestActivity
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreData
@@ -33,7 +38,9 @@ class ScreenCaptureListeningService :
     OnPendingIntentService.ClientInterface by OnPendingIntentService.Client(0) {
 
     companion object {
-        const val CROP_EDGES_EXTRA_KEY = "CROP_EDGES_EXTRA_KEY"
+        const val ATTEMPT_SCREENSHOT_DELETION_KEY = "DELETE_SCREENSHOT"
+        const val DELETE_REQUEST_URI_KEY = "DELETE_REQUEST_URI"
+        const val SCREENSHOT_MEDIASTORE_DATA_KEY = "SCREENSHOT_MEDIASTORE_DATA"
     }
 
     /**
@@ -177,7 +184,12 @@ class ScreenCaptureListeningService :
         cropEdges: CropEdges
     ) {
         val notificationId = notificationGroup.children.newId()
-        val associatedRequestCodes = requestCodes.makeAndAddMultiple(2)
+        val associatedRequestCodes = requestCodes.makeAndAddMultiple(3)
+
+        val screenshotMediaStoreData = Screenshot.MediaStoreData.query(contentResolver, uri)
+        val deleteRequestUri = deleteRequestUri(screenshotMediaStoreData.id)
+        val crop = screenshotBitmap.cropped(cropEdges)
+            .also { CropIOService.cropBitmap = it }
 
         notificationGroup.addChild(
             notificationId,
@@ -191,21 +203,51 @@ class ScreenCaptureListeningService :
                             associatedRequestCodes[0],
                             Intent(this, CropIOService::class.java)
                                 .setData(uri)
+                                .putExtra(SCREENSHOT_MEDIASTORE_DATA_KEY, screenshotMediaStoreData)
                                 .putExtra(CANCEL_NOTIFICATION, true)
-                                .putExtra(CROP_EDGES_EXTRA_KEY, cropEdges)
                                 .putClientExtras(notificationId, associatedRequestCodes),
                             PendingIntent.FLAG_UPDATE_CURRENT
                         )
                     )
                 )
+                .addAction(
+                    NotificationCompat.Action(
+                        null,
+                        "Save crop & delete screenshot",
+                        if (deleteRequestUri is Uri && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                            PendingIntent.getActivity(
+                                this,
+                                associatedRequestCodes[1],
+                                Intent(this, DeleteRequestActivity::class.java)
+                                    .setData(uri)
+                                    .putExtra(SCREENSHOT_MEDIASTORE_DATA_KEY, screenshotMediaStoreData)
+                                    .putExtra(DELETE_REQUEST_URI_KEY, deleteRequestUri)
+                                    .putExtra(CANCEL_NOTIFICATION, true)
+                                    .putClientExtras(notificationId, associatedRequestCodes),
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                            )
+                        else
+                            PendingIntent.getService(
+                                this,
+                                associatedRequestCodes[1],
+                                Intent(this, CropIOService::class.java)
+                                    .setData(uri)
+                                    .putExtra(SCREENSHOT_MEDIASTORE_DATA_KEY, screenshotMediaStoreData)
+                                    .putExtra(CANCEL_NOTIFICATION, true)
+                                    .putExtra(ATTEMPT_SCREENSHOT_DELETION_KEY, true)
+                                    .putClientExtras(notificationId, associatedRequestCodes),
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                            )
+                    )
+                )
                 .setStyle(
                     NotificationCompat.BigPictureStyle()
-                        .bigPicture(screenshotBitmap.cropped(cropEdges))
+                        .bigPicture(crop)
                 )
                 .setDeleteIntent(
                     PendingIntent.getService(
                         this,
-                        associatedRequestCodes[1],
+                        associatedRequestCodes[2],
                         Intent(
                             this,
                             OnPendingIntentService::class.java

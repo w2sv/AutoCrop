@@ -60,7 +60,7 @@ class CropFragment
                             uri,
                             bitmap.height,
                             candidates,
-                            Screenshot.MediaStoreColumns.query(requireContext().contentResolver, uri)
+                            Screenshot.MediaStoreData.query(requireContext().contentResolver, uri)
                         ),
                         bitmap,
                         candidates.maxHeightEdges()

@@ -44,7 +44,7 @@
         <!-- Services -->
 
         <service
-            android:name="com.autocrop.screencapturelistening.services.CropIOService"
+            android:name="com.autocrop.screencapturelistening.services.cropio.CropIOService"
             android:exported="false"/>
         <service
             android:name="com.autocrop.screencapturelistening.services.ScreenCaptureListeningService"
@@ -71,5 +71,8 @@
             android:name="com.autocrop.activities.cropping.CropActivity" />
         <activity
             android:name="com.autocrop.activities.iodetermination.IODeterminationActivity" />
+        <activity
+            android:name="com.autocrop.screencapturelistening.services.cropio.DeleteRequestActivity"
+            android:excludeFromRecents="true"/>
     </application>
 </manifest>

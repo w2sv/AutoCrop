@@ -14,6 +14,7 @@ import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.ui.controller.activity.ApplicationActivity
 import com.autocrop.utils.android.BackPressHandler
+import com.autocrop.utils.android.extensions.getInt
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.autocrop.utils.android.extensions.uriPermissionGranted
@@ -33,7 +34,7 @@ class IODeterminationActivity :
                 else
                     null
             },
-            nDismissedScreenshots = getIntentExtra(IntentExtraKeys.N_DISMISSED_IMAGES)!!
+            nDismissedScreenshots = intent.getInt(IntentExtraKeys.N_DISMISSED_IMAGES)
         )
 
     //$$$$$$$$$$$$$$$$

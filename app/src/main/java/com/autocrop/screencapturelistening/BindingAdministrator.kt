@@ -6,7 +6,7 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import com.autocrop.screencapturelistening.services.abstractservices.BoundService
+import com.autocrop.screencapturelistening.abstractservices.BoundService
 import com.autocrop.utils.kotlin.delegates.Consumable
 import timber.log.Timber
 

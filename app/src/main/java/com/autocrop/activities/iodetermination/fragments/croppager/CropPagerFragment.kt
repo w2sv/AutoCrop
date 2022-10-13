@@ -222,7 +222,7 @@ class CropPagerFragment :
         with(viewModel.dataSet.currentValue) {
             crop = Crop.fromScreenshot(
                 requireContext().contentResolver.openBitmap(screenshot.uri),
-                screenshot.mediaStoreColumns.diskUsage,
+                screenshot.mediaStoreData.diskUsage,
                 adjustedEdges
             )
         }

@@ -1,10 +1,7 @@
 package com.autocrop.activities.iodetermination
 
-import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
 import androidx.lifecycle.ViewModel
 import com.autocrop.dataclasses.CropBundle
 import com.autocrop.dataclasses.Screenshot
@@ -12,8 +9,8 @@ import com.autocrop.utils.android.documentUriPathIdentifier
 import com.autocrop.utils.android.systemPicturesDirectory
 import com.autocrop.utils.kotlin.BlankFun
 import com.autocrop.utils.kotlin.delegates.AutoSwitch
+import com.autocrop.utils.kotlin.extensions.toInt
 import kotlinx.coroutines.Job
-import timber.log.Timber
 
 class IODeterminationActivityViewModel(private val validSaveDirDocumentUri: Uri?, val nDismissedScreenshots: Int)
     : ViewModel() {
@@ -45,47 +42,34 @@ class IODeterminationActivityViewModel(private val validSaveDirDocumentUri: Uri?
                                 context: Context): BlankFun {
         val cropBundle = cropBundles[cropBundlesPosition]
 
-        val addedScreenshotDeletionInquiryUri = addScreenshotDeletionInquiryUri(
+        val addedScreenshotDeletionInquiryUri = addScreenshotDeleteRequestUri(
             deleteScreenshot,
             cropBundle.screenshot
         )
 
         return {
-            val (savingResult, successfullyDeleted) = context.processCropBundle(
-                cropBundle,
+            val ioResult = context.contentResolver.carryOutCropIO(
+                cropBundle.crop.bitmap,
+                cropBundle.screenshot.mediaStoreData,
                 validSaveDirDocumentUri,
                 deleteScreenshot && !addedScreenshotDeletionInquiryUri
             )
 
-            savingResult.let{ (successful, uri) ->
-                if (successful)
-                    savedCropUris.add(uri)
-            }
-
-            if (successfullyDeleted == true)
-                nDeletedScreenshots++
+            if (ioResult.successfullySavedCrop)
+                savedCropUris.add(ioResult.writeUri!!)
+            nDeletedScreenshots += (ioResult.deletedScreenshot == true).toInt()
         }
     }
 
-    private fun addScreenshotDeletionInquiryUri(deleteScreenshot: Boolean,
-                                                screenshot: Screenshot): Boolean{
+    private fun addScreenshotDeleteRequestUri(deleteScreenshot: Boolean,
+                                              screenshot: Screenshot): Boolean{
         if (deleteScreenshot)
-            imageDeletionInquiryUri(screenshot.mediaStoreColumns.id)?.let {
+            deleteRequestUri(screenshot.mediaStoreData.id)?.let {
                 screenshotDeletionInquiryUris.add(it)
                 return true
             }
         return false
     }
-
-    private fun imageDeletionInquiryUri(mediaStoreId: Long): Uri? =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-            ContentUris.withAppendedId(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                mediaStoreId
-            )
-                .also { Timber.i("Built contentUriWithMediaStoreImagesId: $it") }
-        else
-            null
 
     fun cropWriteDirIdentifier(): String =
         validSaveDirDocumentUri?.let {

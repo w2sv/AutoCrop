@@ -1,4 +1,4 @@
-package com.autocrop.screencapturelistening.services.abstractservices
+package com.autocrop.screencapturelistening.abstractservices
 
 import android.content.Intent
 import android.os.IBinder

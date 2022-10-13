@@ -3,12 +3,14 @@ package com.autocrop.dataclasses
 import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Parcelable
 import android.provider.MediaStore
 import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.utils.android.ImageMimeType
 import com.autocrop.utils.android.extensions.queryMediaStoreData
 import com.lyrebirdstudio.croppylib.CropEdges
 import com.lyrebirdstudio.croppylib.utils.extensions.rounded
+import kotlinx.parcelize.Parcelize
 import kotlin.math.roundToInt
 
 data class CropBundle(val screenshot: Screenshot, var crop: Crop) {
@@ -18,7 +20,7 @@ data class CropBundle(val screenshot: Screenshot, var crop: Crop) {
                 screenshot,
                 Crop.fromScreenshot(
                     screenshotBitmap,
-                    screenshot.mediaStoreColumns.diskUsage,
+                    screenshot.mediaStoreData.diskUsage,
                     edges
                 )
             )
@@ -31,14 +33,15 @@ data class Screenshot(
     val uri: Uri,
     val height: Int,
     val cropEdgesCandidates: List<CropEdges>,
-    val mediaStoreColumns: MediaStoreColumns){
+    val mediaStoreData: MediaStoreData){
 
-    data class MediaStoreColumns(val diskUsage: Long,
-                                 val fileName: String,
-                                 val parsedMimeType: ImageMimeType,
-                                 val id: Long){
+    @Parcelize
+    data class MediaStoreData(val diskUsage: Long,
+                              val fileName: String,
+                              val parsedMimeType: ImageMimeType,
+                              val id: Long): Parcelable{
         companion object{
-            fun query(contentResolver: ContentResolver, uri: Uri): MediaStoreColumns =
+            fun query(contentResolver: ContentResolver, uri: Uri): MediaStoreData =
                 contentResolver.queryMediaStoreData(
                     uri,
                     arrayOf(
@@ -49,7 +52,7 @@ data class Screenshot(
                     )
                 )
                     .run {
-                        MediaStoreColumns(
+                        MediaStoreData(
                             get(0).toLong(),
                             get(1),
                             ImageMimeType.parse(get(2)),

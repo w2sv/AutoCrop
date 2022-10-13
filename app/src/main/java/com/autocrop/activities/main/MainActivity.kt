@@ -44,7 +44,7 @@ class MainActivity :
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
         MainActivityViewModelFactory(
-            ioSynopsis = getIntentExtra<ByteArray>(IntentExtraKeys.IO_SYNOPSIS)?.let {
+            ioSynopsis = intent.getByteArrayExtra(IntentExtraKeys.IO_SYNOPSIS)?.let {
                 IOSynopsis.fromByteArray(it)
             },
             savedCropUris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
