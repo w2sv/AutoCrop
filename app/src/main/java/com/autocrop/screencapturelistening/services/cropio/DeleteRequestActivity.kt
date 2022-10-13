@@ -1,5 +1,6 @@
 package com.autocrop.screencapturelistening.services.cropio
 
+import android.app.Activity
 import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.result.IntentSenderRequest
@@ -11,6 +12,10 @@ import com.autocrop.utils.android.extensions.getParcelable
 
 @RequiresApi(Build.VERSION_CODES.R)
 class DeleteRequestActivity: ViewBoundActivity(){
+    companion object{
+        const val CONFIRMED_DELETION_KEY = "CONFIRMED_DELETION"
+    }
+
     override fun onStart() {
         super.onStart()
 
@@ -27,7 +32,11 @@ class DeleteRequestActivity: ViewBoundActivity(){
     }
 
     private val deletionConfirmationInquiryContract = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()){
-        startService(intent.setClass(applicationContext, CropIOService::class.java))
+        startService(
+            intent
+                .setClass(applicationContext, CropIOService::class.java)
+                .putExtra(CONFIRMED_DELETION_KEY, it.resultCode == Activity.RESULT_OK)
+        )
         finishAffinity()
     }
 }

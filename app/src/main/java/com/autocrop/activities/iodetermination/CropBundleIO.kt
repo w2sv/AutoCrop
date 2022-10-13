@@ -34,7 +34,10 @@ fun deleteRequestUri(mediaStoreId: Long): Uri? =
     else
         null
 
-data class IOResult(val writeUri: Uri?, val fileName: String, val deletedScreenshot: Boolean?){
+fun pathTail(path: String): String =
+    "/${path.split("/").takeLast(2).joinToString("/")}"
+
+data class IOResult(val writeUri: Uri?, val fileName: String, var deletedScreenshot: Boolean?){
     val successfullySavedCrop: Boolean = writeUri != null
 }
 

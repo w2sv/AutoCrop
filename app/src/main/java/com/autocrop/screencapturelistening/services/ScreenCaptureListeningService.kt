@@ -168,6 +168,7 @@ class ScreenCaptureListeningService :
 
     override val notificationGroup = NotificationGroup(
         this,
+        "Detected croppable screenshots",
         NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT,
         makeSummaryTitle = { "Detected $it croppable screenshots" },
         applyToSummaryBuilder = {
@@ -184,7 +185,7 @@ class ScreenCaptureListeningService :
         cropEdges: CropEdges
     ) {
         val notificationId = notificationGroup.children.newId()
-        val associatedRequestCodes = requestCodes.makeAndAddMultiple(3)
+        val associatedRequestCodes = requestCodes.makeAndAddMultiple(4)
 
         val screenshotMediaStoreData = Screenshot.MediaStoreData.query(contentResolver, uri)
         val deleteRequestUri = deleteRequestUri(screenshotMediaStoreData.id)
@@ -193,11 +194,11 @@ class ScreenCaptureListeningService :
 
         notificationGroup.addChild(
             notificationId,
-            notificationGroup.childBuilder("Detected new croppable screenshot")
+            notificationGroup.childBuilder("Fancy a crop?")
                 .addAction(
                     NotificationCompat.Action(
                         null,
-                        "Save crop",
+                        "Save",
                         PendingIntent.getService(
                             this,
                             associatedRequestCodes[0],
@@ -213,7 +214,7 @@ class ScreenCaptureListeningService :
                 .addAction(
                     NotificationCompat.Action(
                         null,
-                        "Save crop & delete screenshot",
+                        "...& delete screenshot",
                         if (deleteRequestUri is Uri && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                             PendingIntent.getActivity(
                                 this,
@@ -240,6 +241,20 @@ class ScreenCaptureListeningService :
                             )
                     )
                 )
+                .addAction(
+                    NotificationCompat.Action(
+                        null,
+                        "Dismiss",
+                        PendingIntent.getService(
+                            this,
+                            associatedRequestCodes[2],
+                            Intent(this, OnPendingIntentService::class.java)
+                                .putExtra(CANCEL_NOTIFICATION, true)
+                                .putClientExtras(notificationId, associatedRequestCodes),
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                        )
+                    )
+                )
                 .setStyle(
                     NotificationCompat.BigPictureStyle()
                         .bigPicture(crop)
@@ -247,7 +262,7 @@ class ScreenCaptureListeningService :
                 .setDeleteIntent(
                     PendingIntent.getService(
                         this,
-                        associatedRequestCodes[2],
+                        associatedRequestCodes[3],
                         Intent(
                             this,
                             OnPendingIntentService::class.java
@@ -257,6 +272,10 @@ class ScreenCaptureListeningService :
                     )
                 )
         )
+    }
+
+    override fun onCancellation(intent: Intent) {
+        CropIOService.cropBitmap = null
     }
 
     override fun onDestroy() {

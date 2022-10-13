@@ -9,6 +9,7 @@ import com.autocrop.utils.android.extensions.showNotification
 import timber.log.Timber
 
 class NotificationGroup(context: Context,
+                        private val channelName: String,
                         private val summaryId: NotificationId,
                         private val makeSummaryTitle: (Int) -> String,
                         private val applyToSummaryBuilder: ((NotificationCompat.Builder) -> NotificationCompat.Builder)? = null
@@ -17,11 +18,11 @@ class NotificationGroup(context: Context,
     private val channelId: String get() = summaryId.channelId
     private val groupKey = "GROUP_${summaryId.name}"
 
-    fun childBuilder(title: String, text: String? = null): NotificationCompat.Builder =
+    fun childBuilder(title: String): NotificationCompat.Builder =
         notificationBuilderWithSetChannel(
             channelId,
             title,
-            text
+            channelName
         )
             .setOnlyAlertOnce(true)
             .setGroup(groupKey)
@@ -71,7 +72,8 @@ class NotificationGroup(context: Context,
             summaryId.id,
             notificationBuilderWithSetChannel(
                 channelId,
-                makeSummaryTitle(children.size)
+                makeSummaryTitle(children.size),
+                channelName
             )
                 .apply {
                     applyToSummaryBuilder?.invoke(this)

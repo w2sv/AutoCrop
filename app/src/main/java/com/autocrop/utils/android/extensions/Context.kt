@@ -63,36 +63,26 @@ fun Context.showNotification(id: Int, builder: NotificationCompat.Builder) {
 fun Context.notificationBuilderWithSetChannel(
     channelId: String,
     title: String,
-    text: String? = null
+    channelName: String? = null
 ): NotificationCompat.Builder {
     notificationManager().createNotificationChannel(
         NotificationChannel(
             channelId,
-            title,
+            channelName ?: title,
             NotificationManager.IMPORTANCE_DEFAULT
         )
     )
-    return notificationBuilder(channelId, title, text)
+    return notificationBuilder(channelId, title)
 }
 
 private fun Context.notificationBuilder(
     channelId: String,
     title: String,
-    text: String?
 ): NotificationCompat.Builder =
     NotificationCompat.Builder(this, channelId)
         .setSmallIcon(R.drawable.ic_scissors_24)
         .setContentTitle(title)
-        .setContentText(text)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
 fun Context.notificationManager(): NotificationManager =
     (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
-
-fun Context.showGroupUpdatedNotification(notificationIdWithBuilder: Pair<Int, NotificationCompat.Builder>, newGroup: String?){
-    showNotification(
-        notificationIdWithBuilder.first,
-        notificationIdWithBuilder.second
-            .setGroup(newGroup)
-    )
-}
