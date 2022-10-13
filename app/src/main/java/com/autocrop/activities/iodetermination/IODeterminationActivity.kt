@@ -1,6 +1,5 @@
 package com.autocrop.activities.iodetermination
 
-import android.content.Intent
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.IntentExtraKeys
@@ -17,7 +16,6 @@ import com.autocrop.utils.android.BackPressHandler
 import com.autocrop.utils.android.extensions.getInt
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
-import com.autocrop.utils.android.extensions.uriPermissionGranted
 import com.w2sv.autocrop.R
 
 class IODeterminationActivity :
@@ -28,12 +26,7 @@ class IODeterminationActivity :
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
         IODeterminationActivityViewModelFactory(
-            validSaveDirDocumentUri = UriPreferences.documentUri?.let{
-                if (uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
-                    it
-                else
-                    null
-            },
+            validSaveDirDocumentUri = UriPreferences.validDocumentUri(this),
             nDismissedScreenshots = intent.getInt(IntentExtraKeys.N_DISMISSED_IMAGES)
         )
 

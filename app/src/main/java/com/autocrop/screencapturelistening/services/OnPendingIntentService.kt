@@ -9,6 +9,7 @@ import com.autocrop.screencapturelistening.PendingIntentRequestCodes
 import com.autocrop.screencapturelistening.abstractservices.UnboundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.screencapturelistening.services.cropio.CropIOService
+import com.autocrop.screencapturelistening.services.main.ScreenCaptureListeningService
 import com.autocrop.utils.android.extensions.getInt
 import com.autocrop.utils.android.extensions.notificationManager
 import timber.log.Timber

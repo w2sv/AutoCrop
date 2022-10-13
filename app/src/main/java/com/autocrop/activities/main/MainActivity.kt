@@ -18,7 +18,7 @@ import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.screencapturelistening.services.ScreenCaptureListeningService
+import com.autocrop.screencapturelistening.services.main.ScreenCaptureListeningService
 import com.autocrop.ui.controller.activity.ApplicationActivity
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.show

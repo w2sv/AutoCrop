@@ -4,17 +4,20 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Bitmap
 import android.provider.MediaStore
+import android.text.SpannableStringBuilder
 import androidx.core.app.NotificationCompat
+import androidx.core.text.bold
 import com.autocrop.activities.iodetermination.IOResult
 import com.autocrop.activities.iodetermination.carryOutCropIO
 import com.autocrop.activities.iodetermination.pathTail
 import com.autocrop.dataclasses.Screenshot
+import com.autocrop.preferences.UriPreferences
 import com.autocrop.screencapturelistening.CANCEL_NOTIFICATION
 import com.autocrop.screencapturelistening.abstractservices.BoundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.screencapturelistening.notifications.NotificationId
 import com.autocrop.screencapturelistening.services.OnPendingIntentService
-import com.autocrop.screencapturelistening.services.ScreenCaptureListeningService
+import com.autocrop.screencapturelistening.services.main.ScreenCaptureListeningService
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.getParcelable
 import com.autocrop.utils.android.extensions.queryMediaStoreDatum
@@ -53,7 +56,7 @@ class CropIOService :
         contentResolver.carryOutCropIO(
             cropBitmap!!,
             screenshotMediaStoreData,
-            null,
+            UriPreferences.validDocumentUri(this),
             deleteScreenshot
         )
 
@@ -72,9 +75,9 @@ class CropIOService :
                     }
                 )
                     .setContentText(
-                        buildString {
-                            append("Path: ")
-                            append(
+                        SpannableStringBuilder()
+                            .bold { append("Path: ") }
+                            .append(
                                 pathTail(
                                     contentResolver.queryMediaStoreDatum(
                                         ioResult.writeUri!!,
@@ -82,7 +85,6 @@ class CropIOService :
                                     )
                                 )
                             )
-                        }
                     )
                     .addAction(
                         NotificationCompat.Action(

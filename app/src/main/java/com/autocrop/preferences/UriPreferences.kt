@@ -1,9 +1,12 @@
 package com.autocrop.preferences
 
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import com.autocrop.utils.kotlin.delegates.mapObserver
 import com.autocrop.utils.android.buildDocumentUriFromTreeUri
+import com.autocrop.utils.android.extensions.uriPermissionGranted
 import timber.log.Timber
 
 object UriPreferences: TypedPreferences<Uri?>(mutableMapOf("treeUri" to null)) {
@@ -19,6 +22,14 @@ object UriPreferences: TypedPreferences<Uri?>(mutableMapOf("treeUri" to null)) {
     val documentUri: Uri?
         get() = _documentUri
     private var _documentUri: Uri? = null
+
+    fun validDocumentUri(context: Context): Uri? =
+        documentUri?.let {
+            if (context.uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
+                documentUri
+            else
+                null
+        }
 
     override fun SharedPreferences.writeValue(key: String, value: Uri?){
         edit()

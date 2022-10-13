@@ -6,7 +6,7 @@ import android.provider.MediaStore
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import com.autocrop.screencapturelistening.services.ScreenCaptureListeningService
+import com.autocrop.screencapturelistening.services.main.ScreenCaptureListeningService
 import com.autocrop.ui.controller.activity.ViewBoundActivity
 import com.autocrop.utils.android.extensions.getParcelable
 

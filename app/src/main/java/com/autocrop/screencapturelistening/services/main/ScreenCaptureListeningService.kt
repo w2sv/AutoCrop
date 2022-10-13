@@ -1,8 +1,6 @@
-package com.autocrop.screencapturelistening.services
+package com.autocrop.screencapturelistening.services.main
 
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.database.ContentObserver
 import android.graphics.Bitmap
@@ -21,6 +19,7 @@ import com.autocrop.screencapturelistening.CANCEL_NOTIFICATION
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.screencapturelistening.notifications.NotificationId
 import com.autocrop.screencapturelistening.abstractservices.BoundService
+import com.autocrop.screencapturelistening.services.OnPendingIntentService
 import com.autocrop.screencapturelistening.services.cropio.CropIOService
 import com.autocrop.screencapturelistening.services.cropio.DeleteRequestActivity
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
@@ -35,14 +34,6 @@ import com.w2sv.autocrop.R
 import timber.log.Timber
 import java.util.Date
 import java.util.concurrent.TimeUnit
-
-class StopScreenCaptureListeningServiceBroadcast: BroadcastReceiver(){
-    override fun onReceive(context: Context?, intent: Intent?) {
-        context!!.stopService(
-            Intent(context, ScreenCaptureListeningService::class.java)
-        )
-    }
-}
 
 class ScreenCaptureListeningService :
     BoundService(),
@@ -94,7 +85,7 @@ class ScreenCaptureListeningService :
                     PendingIntent.getBroadcast(
                         this,
                         69,
-                        Intent(this, StopScreenCaptureListeningServiceBroadcast::class.java),
+                        Intent(this, StopScreenCaptureListeningServiceBroadcastReceiver::class.java),
                         PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                     )
                 )

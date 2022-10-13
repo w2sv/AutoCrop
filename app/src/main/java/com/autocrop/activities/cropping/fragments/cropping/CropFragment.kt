@@ -41,7 +41,7 @@ class CropFragment
         croppingJob = lifecycleScope.executeAsyncTaskWithProgressUpdateReceiver(
             ::cropImages,
             { sharedViewModel.liveImageNumber.increment() },
-            { startExaminationActivityOrInvokeCroppingFailureFragment() }
+            { startIODeterminationActivityOrInvokeCroppingFailureFragment() }
         )
     }
 
@@ -78,10 +78,10 @@ class CropFragment
      * Starts either Examination- or MainActivity depending on whether or not any
      * of the selected images has been successfully cropRect
      */
-    private fun startExaminationActivityOrInvokeCroppingFailureFragment() =
+    private fun startIODeterminationActivityOrInvokeCroppingFailureFragment() =
         logBeforehand("Async Cropping task finished") {
             if (sharedViewModel.cropBundles.isNotEmpty())
-                startExaminationActivity()
+                startIODeterminationActivity()
             else
             // delay briefly to assure progress bar having reached 100% before UI change
                 Handler(Looper.getMainLooper()).postDelayed(
@@ -93,7 +93,7 @@ class CropFragment
     /**
      * Inherently sets [IODeterminationActivityViewModel.cropBundles]
      */
-    private fun startExaminationActivity() {
+    private fun startIODeterminationActivity() {
         IODeterminationActivityViewModel.cropBundles = sharedViewModel.cropBundles
 
         requireActivity().let { activity ->
