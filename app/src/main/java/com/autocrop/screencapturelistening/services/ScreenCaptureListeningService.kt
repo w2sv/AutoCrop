@@ -1,6 +1,8 @@
-package com.autocrop.screencapturelistening.services.main
+package com.autocrop.screencapturelistening.services
 
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.database.ContentObserver
 import android.graphics.Bitmap
@@ -15,11 +17,9 @@ import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
 import com.autocrop.activities.iodetermination.deleteRequestUri
 import com.autocrop.dataclasses.Screenshot
-import com.autocrop.screencapturelistening.CANCEL_NOTIFICATION
+import com.autocrop.screencapturelistening.abstractservices.BoundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.screencapturelistening.notifications.NotificationId
-import com.autocrop.screencapturelistening.abstractservices.BoundService
-import com.autocrop.screencapturelistening.services.OnPendingIntentService
 import com.autocrop.screencapturelistening.services.cropio.CropIOService
 import com.autocrop.screencapturelistening.services.cropio.DeleteRequestActivity
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
@@ -40,9 +40,9 @@ class ScreenCaptureListeningService :
     OnPendingIntentService.ClientInterface by OnPendingIntentService.Client(0) {
 
     companion object {
-        const val ATTEMPT_SCREENSHOT_DELETION_KEY = "DELETE_SCREENSHOT"
-        const val DELETE_REQUEST_URI_KEY = "DELETE_REQUEST_URI"
-        const val SCREENSHOT_MEDIASTORE_DATA_KEY = "SCREENSHOT_MEDIASTORE_DATA"
+        const val EXTRA_ATTEMPT_SCREENSHOT_DELETION = "com.autocrop.DELETE_SCREENSHOT"
+        const val EXTRA_DELETE_REQUEST_URI = "com.autocrop.DELETE_REQUEST_URI"
+        const val EXTRA_SCREENSHOT_MEDIASTORE_DATA = "com.autocrop.SCREENSHOT_MEDIASTORE_DATA"
 
         private val FOREGROUND_SERVICE_NOTIFICATION_ID = NotificationId.STARTED_FOREGROUND_SERVICE
     }
@@ -85,11 +85,19 @@ class ScreenCaptureListeningService :
                     PendingIntent.getBroadcast(
                         this,
                         69,
-                        Intent(this, StopScreenCaptureListeningServiceBroadcastReceiver::class.java),
+                        Intent(this, StoppingBroadcastReceiver::class.java),
                         PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                     )
                 )
             )
+
+    class StoppingBroadcastReceiver: BroadcastReceiver(){
+        override fun onReceive(context: Context?, intent: Intent?) {
+            context!!.stopService(
+                Intent(context, ScreenCaptureListeningService::class.java)
+            )
+        }
+    }
 
     @Suppress("UnstableApiUsage")  // EvictingQueue part of Beta-API
     private val imageContentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
@@ -224,8 +232,8 @@ class ScreenCaptureListeningService :
                             associatedRequestCodes[0],
                             Intent(this, CropIOService::class.java)
                                 .setData(uri)
-                                .putExtra(SCREENSHOT_MEDIASTORE_DATA_KEY, screenshotMediaStoreData)
-                                .putExtra(CANCEL_NOTIFICATION, true)
+                                .putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
+                                .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true)
                                 .putClientExtras(notificationId, associatedRequestCodes),
                             PendingIntent.FLAG_UPDATE_CURRENT
                         )
@@ -241,9 +249,9 @@ class ScreenCaptureListeningService :
                                 associatedRequestCodes[1],
                                 Intent(this, DeleteRequestActivity::class.java)
                                     .setData(uri)
-                                    .putExtra(SCREENSHOT_MEDIASTORE_DATA_KEY, screenshotMediaStoreData)
-                                    .putExtra(DELETE_REQUEST_URI_KEY, deleteRequestUri)
-                                    .putExtra(CANCEL_NOTIFICATION, true)
+                                    .putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
+                                    .putExtra(EXTRA_DELETE_REQUEST_URI, deleteRequestUri)
+                                    .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true)
                                     .putClientExtras(notificationId, associatedRequestCodes),
                                 PendingIntent.FLAG_UPDATE_CURRENT
                             )
@@ -253,9 +261,9 @@ class ScreenCaptureListeningService :
                                 associatedRequestCodes[1],
                                 Intent(this, CropIOService::class.java)
                                     .setData(uri)
-                                    .putExtra(SCREENSHOT_MEDIASTORE_DATA_KEY, screenshotMediaStoreData)
-                                    .putExtra(CANCEL_NOTIFICATION, true)
-                                    .putExtra(ATTEMPT_SCREENSHOT_DELETION_KEY, true)
+                                    .putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
+                                    .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true)
+                                    .putExtra(EXTRA_ATTEMPT_SCREENSHOT_DELETION, true)
                                     .putClientExtras(notificationId, associatedRequestCodes),
                                 PendingIntent.FLAG_UPDATE_CURRENT
                             )
@@ -269,7 +277,7 @@ class ScreenCaptureListeningService :
                             this,
                             associatedRequestCodes[2],
                             Intent(this, OnPendingIntentService::class.java)
-                                .putExtra(CANCEL_NOTIFICATION, true)
+                                .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true)
                                 .putClientExtras(notificationId, associatedRequestCodes),
                             PendingIntent.FLAG_UPDATE_CURRENT
                         )
@@ -291,7 +299,7 @@ class ScreenCaptureListeningService :
         )
     }
 
-    override fun onCancellation(intent: Intent) {
+    override fun onPendingIntentService(intent: Intent) {
         CropIOService.cropBitmap = null
     }
 

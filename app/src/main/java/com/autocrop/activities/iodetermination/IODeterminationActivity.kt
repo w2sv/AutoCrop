@@ -2,12 +2,12 @@ package com.autocrop.activities.iodetermination
 
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.activities.IntentExtraKeys
 import com.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.iodetermination.fragments.comparison.ComparisonFragment
 import com.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
 import com.autocrop.activities.iodetermination.fragments.deletionconfirmationdialog.DeletionConfirmationDialogFragment
 import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
+import com.autocrop.activities.main.MainActivity
 import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
@@ -24,10 +24,15 @@ class IODeterminationActivity :
         IODeterminationActivityViewModel::class,
         BooleanPreferences) {
 
+    companion object{
+        const val EXTRA_IO_SYNOPSIS = "com.autocrop.IO_SYNOPSIS"
+        const val EXTRA_CROP_SAVING_URIS = "com.autocrop.CROP_SAVING_URIS"
+    }
+
     override fun viewModelFactory(): ViewModelProvider.Factory =
         IODeterminationActivityViewModelFactory(
             validSaveDirDocumentUri = UriPreferences.validDocumentUri(this),
-            nDismissedScreenshots = intent.getInt(IntentExtraKeys.N_DISMISSED_IMAGES)
+            nDismissedScreenshots = intent.getInt(MainActivity.EXTRA_N_DISMISSED_IMAGES)
         )
 
     //$$$$$$$$$$$$$$$$
@@ -55,7 +60,7 @@ class IODeterminationActivity :
     private val handleBackPress by lazy {
         BackPressHandler(
             snacky("Tap again to return to main screen"),
-            this::startMainActivity
+            ::startMainActivity
         )
     }
 
@@ -82,7 +87,7 @@ class IODeterminationActivity :
     fun startMainActivity() {
         startMainActivity{ intent ->
             intent.putExtra(
-                IntentExtraKeys.IO_SYNOPSIS,
+                EXTRA_IO_SYNOPSIS,
                 IOSynopsis(
                     viewModel.savedCropUris.size,
                     viewModel.nDeletedScreenshots,
@@ -92,7 +97,7 @@ class IODeterminationActivity :
             )
             if (viewModel.savedCropUris.isNotEmpty())
                 intent.putParcelableArrayListExtra(
-                    IntentExtraKeys.CROP_SAVING_URIS,
+                    EXTRA_CROP_SAVING_URIS,
                     ArrayList(viewModel.savedCropUris)
                 )
         }

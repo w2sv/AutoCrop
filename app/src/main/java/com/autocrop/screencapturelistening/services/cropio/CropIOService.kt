@@ -12,12 +12,11 @@ import com.autocrop.activities.iodetermination.carryOutCropIO
 import com.autocrop.activities.iodetermination.pathTail
 import com.autocrop.dataclasses.Screenshot
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.screencapturelistening.CANCEL_NOTIFICATION
 import com.autocrop.screencapturelistening.abstractservices.BoundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.screencapturelistening.notifications.NotificationId
 import com.autocrop.screencapturelistening.services.OnPendingIntentService
-import com.autocrop.screencapturelistening.services.main.ScreenCaptureListeningService
+import com.autocrop.screencapturelistening.services.ScreenCaptureListeningService
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.getParcelable
 import com.autocrop.utils.android.extensions.queryMediaStoreDatum
@@ -29,7 +28,7 @@ class CropIOService :
     OnPendingIntentService.ClientInterface by OnPendingIntentService.Client(1) {
 
     companion object {
-        private const val WRAPPED_INTENT = "WRAPPED_INTENT_KEY"
+        private const val EXTRA_WRAPPED_INTENT = "com.autocrop.WRAPPED_INTENT"
 
         var cropBitmap: Bitmap? by Consumable(null)
     }
@@ -41,10 +40,10 @@ class CropIOService :
             )
 
             val ioResult = carryOutCropIO(
-                screenshotMediaStoreData = getParcelable(ScreenCaptureListeningService.SCREENSHOT_MEDIASTORE_DATA_KEY)!!,
-                deleteScreenshot = getBooleanExtra(ScreenCaptureListeningService.ATTEMPT_SCREENSHOT_DELETION_KEY, false)
+                screenshotMediaStoreData = getParcelable(ScreenCaptureListeningService.EXTRA_SCREENSHOT_MEDIASTORE_DATA)!!,
+                deleteScreenshot = getBooleanExtra(ScreenCaptureListeningService.EXTRA_ATTEMPT_SCREENSHOT_DELETION, false)
             )
-            if (getBooleanExtra(DeleteRequestActivity.CONFIRMED_DELETION_KEY, false))
+            if (getBooleanExtra(DeleteRequestActivity.EXTRA_CONFIRMED_DELETION, false))
                 ioResult.deletedScreenshot = true
 
             showNotification(ioResult)
@@ -151,16 +150,16 @@ class CropIOService :
             Intent(this, OnPendingIntentService::class.java)
                 .putClientExtras(notificationId, associatedRequestCodes)
                 .putExtra(
-                    WRAPPED_INTENT,
+                    EXTRA_WRAPPED_INTENT,
                     wrappedIntent
                         .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 )
-                .putExtra(CANCEL_NOTIFICATION, true),
+                .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-    override fun onCancellation(intent: Intent) {
-        intent.getParcelable<Intent>(WRAPPED_INTENT)?.let {
+    override fun onPendingIntentService(intent: Intent) {
+        intent.getParcelable<Intent>(EXTRA_WRAPPED_INTENT)?.let {
             startActivity(
                 it
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

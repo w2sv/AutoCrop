@@ -6,13 +6,13 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.lifecycle.lifecycleScope
-import com.autocrop.activities.IntentExtraKeys
 import com.autocrop.activities.cropping.cropping.cropEdgesCandidates
 import com.autocrop.activities.cropping.cropping.maxHeightEdges
 import com.autocrop.activities.cropping.fragments.CropActivityFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.activities.iodetermination.IODeterminationActivity
 import com.autocrop.activities.iodetermination.IODeterminationActivityViewModel
+import com.autocrop.activities.main.MainActivity
 import com.autocrop.dataclasses.CropBundle
 import com.autocrop.dataclasses.Screenshot
 import com.autocrop.utils.android.extensions.openBitmap
@@ -99,7 +99,7 @@ class CropFragment
         requireActivity().let { activity ->
             startActivity(
                 Intent(activity, IODeterminationActivity::class.java).putExtra(
-                    IntentExtraKeys.N_DISMISSED_IMAGES,
+                    MainActivity.EXTRA_N_DISMISSED_IMAGES,
                     sharedViewModel.nDismissedImages
                 )
             )

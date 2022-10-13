@@ -6,14 +6,14 @@ import android.provider.MediaStore
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import com.autocrop.screencapturelistening.services.main.ScreenCaptureListeningService
+import com.autocrop.screencapturelistening.services.ScreenCaptureListeningService
 import com.autocrop.ui.controller.activity.ViewBoundActivity
 import com.autocrop.utils.android.extensions.getParcelable
 
 @RequiresApi(Build.VERSION_CODES.R)
 class DeleteRequestActivity: ViewBoundActivity(){
     companion object{
-        const val CONFIRMED_DELETION_KEY = "CONFIRMED_DELETION"
+        const val EXTRA_CONFIRMED_DELETION = "com.autocrop.CONFIRMED_DELETION"
     }
 
     override fun onStart() {
@@ -23,7 +23,7 @@ class DeleteRequestActivity: ViewBoundActivity(){
             IntentSenderRequest.Builder(
                 MediaStore.createDeleteRequest(
                     contentResolver,
-                    listOf(intent.getParcelable(ScreenCaptureListeningService.DELETE_REQUEST_URI_KEY))
+                    listOf(intent.getParcelable(ScreenCaptureListeningService.EXTRA_DELETE_REQUEST_URI))
                 )
                     .intentSender
             )
@@ -35,7 +35,7 @@ class DeleteRequestActivity: ViewBoundActivity(){
         startService(
             intent
                 .setClass(applicationContext, CropIOService::class.java)
-                .putExtra(CONFIRMED_DELETION_KEY, it.resultCode == Activity.RESULT_OK)
+                .putExtra(EXTRA_CONFIRMED_DELETION, it.resultCode == Activity.RESULT_OK)
         )
         finishAffinity()
     }

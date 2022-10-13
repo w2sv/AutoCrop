@@ -37,7 +37,7 @@ fun deleteRequestUri(mediaStoreId: Long): Uri? =
 fun pathTail(path: String): String =
     "/${path.split("/").takeLast(2).joinToString("/")}"
 
-data class IOResult(val writeUri: Uri?, val fileName: String, var deletedScreenshot: Boolean?){
+data class IOResult(val writeUri: Uri?, var deletedScreenshot: Boolean?){
     val successfullySavedCrop: Boolean = writeUri != null
 }
 
@@ -55,7 +55,6 @@ fun ContentResolver.carryOutCropIO(
         val cropFileName = cropFileName(fileName, parsedMimeType)
         IOResult(
             saveBitmap(cropBitmap, parsedMimeType, cropFileName, validSaveDirDocumentUri),
-            cropFileName,
             deleteScreenshotIfApplicable(id, deleteScreenshot)
         )
     }

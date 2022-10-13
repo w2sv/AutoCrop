@@ -18,7 +18,7 @@ import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.retriever.activity.ActivityRetriever
 import com.autocrop.retriever.activity.ContextBasedActivityRetriever
-import com.autocrop.screencapturelistening.services.main.ScreenCaptureListeningService
+import com.autocrop.screencapturelistening.services.ScreenCaptureListeningService
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.activityViewModelLazy
 import com.autocrop.utils.android.extensions.ifNotInEditMode

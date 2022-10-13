@@ -1,20 +1,22 @@
 package com.autocrop.screencapturelistening.services
 
 import android.content.Intent
-import com.autocrop.screencapturelistening.ASSOCIATED_NOTIFICATION_ID
-import com.autocrop.screencapturelistening.ASSOCIATED_PENDING_REQUEST_CODES
 import com.autocrop.screencapturelistening.BindingAdministrator
-import com.autocrop.screencapturelistening.CANCEL_NOTIFICATION
 import com.autocrop.screencapturelistening.PendingIntentRequestCodes
 import com.autocrop.screencapturelistening.abstractservices.UnboundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.screencapturelistening.services.cropio.CropIOService
-import com.autocrop.screencapturelistening.services.main.ScreenCaptureListeningService
 import com.autocrop.utils.android.extensions.getInt
 import com.autocrop.utils.android.extensions.notificationManager
 import timber.log.Timber
 
 class OnPendingIntentService : UnboundService() {
+    companion object{
+        const val EXTRA_ASSOCIATED_NOTIFICATION_ID = "com.autocrop.ASSOCIATED_NOTIFICATION_ID"
+        const val EXTRA_CANCEL_NOTIFICATION = "com.autocrop.CANCEL_NOTIFICATION"
+        const val EXTRA_ASSOCIATED_PENDING_REQUEST_CODES = "com.autocrop.ASSOCIATED_PENDING_REQUEST_CODES"
+    }
+
     interface ClientInterface {
         companion object {
             const val CLIENT_INDEX = "CLIENT_INDEX"
@@ -23,13 +25,13 @@ class OnPendingIntentService : UnboundService() {
         val clientIndex: Int
         val notificationGroup: NotificationGroup?
         val requestCodes: PendingIntentRequestCodes
-        fun onCancellation(intent: Intent) {}
+        fun onPendingIntentService(intent: Intent) {}
 
         fun Intent.putClientExtras(notificationId: Int, associatedRequestCodes: ArrayList<Int>): Intent =
             this
                 .putExtra(CLIENT_INDEX, clientIndex)
-                .putExtra(ASSOCIATED_NOTIFICATION_ID, notificationId)
-                .putIntegerArrayListExtra(ASSOCIATED_PENDING_REQUEST_CODES, associatedRequestCodes)
+                .putExtra(EXTRA_ASSOCIATED_NOTIFICATION_ID, notificationId)
+                .putIntegerArrayListExtra(EXTRA_ASSOCIATED_PENDING_REQUEST_CODES, associatedRequestCodes)
     }
 
     class Client(override val clientIndex: Int,
@@ -39,8 +41,8 @@ class OnPendingIntentService : UnboundService() {
     
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         with(intent!!){
-            val notificationId = getInt(ASSOCIATED_NOTIFICATION_ID)
-            if (getBooleanExtra(CANCEL_NOTIFICATION, false))
+            val notificationId = getInt(EXTRA_ASSOCIATED_NOTIFICATION_ID)
+            if (getBooleanExtra(EXTRA_CANCEL_NOTIFICATION, false))
                 notificationManager()
                     .cancel(notificationId)
                     .also { Timber.i("Cancelled notification $notificationId") }
@@ -50,10 +52,10 @@ class OnPendingIntentService : UnboundService() {
                     (boundService as ClientInterface).let {
                         it.notificationGroup!!.onChildNotificationCancelled(notificationId)
                         it.requestCodes.removeAll(
-                            getIntegerArrayListExtra(ASSOCIATED_PENDING_REQUEST_CODES)!!
+                            getIntegerArrayListExtra(EXTRA_ASSOCIATED_PENDING_REQUEST_CODES)!!
                                 .toSet()
                         )
-                        it.onCancellation(this)
+                        it.onPendingIntentService(this)
                     }
                 }
             }

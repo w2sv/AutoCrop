@@ -11,8 +11,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.color
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
-import com.autocrop.activities.IntentExtraKeys
 import com.autocrop.activities.cropping.CropActivity
+import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.utils.android.PermissionHandler
@@ -87,7 +87,7 @@ class FlowFieldFragment:
                         CropActivity::class.java
                     )
                         .putParcelableArrayListExtra(
-                            IntentExtraKeys.SELECTED_IMAGE_URIS,
+                            MainActivity.EXTRA_SELECTED_IMAGE_URIS,
                             ArrayList((0 until clipData.itemCount).map { clipData.getItemAt(it).uri })
                         )
                 )
