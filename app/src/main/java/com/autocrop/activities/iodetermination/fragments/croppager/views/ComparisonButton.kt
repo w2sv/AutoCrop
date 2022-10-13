@@ -21,7 +21,7 @@ class ComparisonButton(context: Context, attributeSet: AttributeSet):
             .apply{
                 val cropImageView =
                     fragmentHostingActivity
-                        .getCurrentFragment<CropPagerFragment>()!!
+                        .getCastCurrentFragment<CropPagerFragment>()!!
                         .binding
                         .viewPager
                         .run {

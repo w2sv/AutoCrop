@@ -32,9 +32,12 @@ abstract class FragmentHostingActivity<RF : Fragment>(private val rootFragmentCl
     fun getRootFragment(): RF? =
         supportFragmentManager.findFragmentByTag(ROOT_FRAGMENT_TAG) as RF?
 
+    fun getCurrentFragment(): Fragment? =
+        supportFragmentManager.findFragmentById(layoutId)
+
     @Suppress("UNCHECKED_CAST")
-    fun <F : Fragment> getCurrentFragment(): F? =
-        supportFragmentManager.findFragmentById(layoutId) as F?
+    fun <F: Fragment> getCastCurrentFragment(): F? =
+        getCurrentFragment() as F?
 
     fun fragmentReplacementTransaction(fragment: Fragment, flipRight: Boolean? = null): FragmentTransaction =
         supportFragmentManager

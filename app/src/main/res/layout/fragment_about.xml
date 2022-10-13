@@ -37,6 +37,7 @@
         android:layout_alignBottom="@id/logo_iv"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="-120dp"
+        android:paddingHorizontal="2dp"
 
         android:text="@string/version"
         style="@style/Shadow"

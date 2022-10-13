@@ -20,8 +20,6 @@ import com.autocrop.dataclasses.Screenshot
 import com.autocrop.screencapturelistening.abstractservices.BoundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.screencapturelistening.notifications.NotificationId
-import com.autocrop.screencapturelistening.services.crop_io.CropIOService
-import com.autocrop.screencapturelistening.services.crop_io.DeleteRequestActivity
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreData

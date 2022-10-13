@@ -1,4 +1,4 @@
-package com.autocrop.screencapturelistening.services.crop_io
+package com.autocrop.screencapturelistening.services
 
 import android.app.PendingIntent
 import android.content.Intent
@@ -15,8 +15,6 @@ import com.autocrop.preferences.UriPreferences
 import com.autocrop.screencapturelistening.abstractservices.BoundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.screencapturelistening.notifications.NotificationId
-import com.autocrop.screencapturelistening.services.OnPendingIntentService
-import com.autocrop.screencapturelistening.services.ScreenCaptureListeningService
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.getParcelable
 import com.autocrop.utils.android.extensions.queryMediaStoreDatum

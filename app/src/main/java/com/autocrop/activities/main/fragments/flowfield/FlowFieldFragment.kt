@@ -128,10 +128,12 @@ class FlowFieldFragment:
             if (UriPreferences.treeUri != treeUri){
                 UriPreferences.treeUri = treeUri
 
-                requireContext().contentResolver.takePersistableUriPermission(
-                    treeUri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                )
+                requireContext()
+                    .contentResolver
+                    .takePersistableUriPermission(
+                        treeUri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
                 requireActivity().snacky(
                     SpannableStringBuilder()
                         .append("Crops will be saved to ")
