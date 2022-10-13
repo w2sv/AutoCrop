@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.core.text.color
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
@@ -31,8 +30,13 @@ class FlowFieldFragment:
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycle.addObserver(writeExternalStoragePermissionHandler)
-        lifecycle.addObserver(readExternalStoragePermissionHandler)
+        with(lifecycle){
+            addObserver(writeExternalStoragePermissionHandler)
+            addObserver(readExternalStoragePermissionHandler)
+            notificationPostingPermissionHandler?.let {
+                addObserver(it)
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,10 +58,12 @@ class FlowFieldFragment:
 
         binding.navigationDrawerButtonArrow.setOnClickListener {
             with(binding.drawerLayout){
+                val gravity = GravityCompat.START
+
                 if (isOpen)
-                    closeDrawer(GravityCompat.START)
+                    closeDrawer(gravity)
                 else
-                    openDrawer(GravityCompat.START)
+                    openDrawer(gravity)
             }
         }
     }
@@ -70,7 +76,6 @@ class FlowFieldFragment:
             "Go to app settings and grant media file writing in order for the app to work"
         )
     }
-
     val readExternalStoragePermissionHandler by lazy {
         PermissionHandler(
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -101,7 +106,8 @@ class FlowFieldFragment:
                     )
                         .putParcelableArrayListExtra(
                             MainActivity.EXTRA_SELECTED_IMAGE_URIS,
-                            ArrayList((0 until clipData.itemCount).map { clipData.getItemAt(it).uri })
+                            ArrayList((0 until clipData.itemCount)
+                                .map { clipData.getItemAt(it).uri })
                         )
                 )
             }
@@ -111,12 +117,12 @@ class FlowFieldFragment:
     val saveDestinationSelectionIntentLauncher = registerForActivityResult(object: ActivityResultContracts.OpenDocumentTree(){
         override fun createIntent(context: Context, input: Uri?): Intent =
             super.createIntent(context, input)
-                .apply {
-                    flags = Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
-                            Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                            Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
-                            Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
-                }
+                .setFlags(
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                    Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                    Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+                )
     }) {
         it?.let { treeUri ->
             if (UriPreferences.treeUri != treeUri){

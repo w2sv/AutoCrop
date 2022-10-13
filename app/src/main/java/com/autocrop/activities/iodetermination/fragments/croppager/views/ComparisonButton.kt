@@ -20,8 +20,13 @@ class ComparisonButton(context: Context, attributeSet: AttributeSet):
             .addToBackStack(null)
             .apply{
                 val cropImageView =
-                    fragmentHostingActivity.getCurrentFragment<CropPagerFragment>()!!.binding.viewPager.run {
-                        (recyclerView.findViewHolderForAdapterPosition(currentItem) as CropPagerAdapter.CropViewHolder).imageView
+                    fragmentHostingActivity
+                        .getCurrentFragment<CropPagerFragment>()!!
+                        .binding
+                        .viewPager
+                        .run {
+                            (recyclerView.findViewHolderForAdapterPosition(currentItem) as CropPagerAdapter.CropViewHolder)
+                                .imageView
                     }
 
                 addSharedElement(

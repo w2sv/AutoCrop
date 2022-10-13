@@ -14,7 +14,7 @@ class CropPagerAdapter(private val viewModel: CropPagerViewModel)
 
     class CropViewHolder(binding: ImageviewCropBinding)
         : RecyclerView.ViewHolder(binding.cropIv){
-        val imageView: ImageView = itemView as ImageView
+        val imageView: ImageView get() = itemView as ImageView
     }
 
     /**
@@ -33,9 +33,11 @@ class CropPagerAdapter(private val viewModel: CropPagerViewModel)
      * Defines crop setting wrt [position]
      */
     override fun onBindViewHolder(holder: CropViewHolder, position: Int){
-        with(viewModel.dataSet.atCorrespondingPosition(position)){
-            holder.imageView.setImageBitmap(crop.bitmap)
-            ViewCompat.setTransitionName(holder.imageView, identifier())
+        viewModel.dataSet.atCorrespondingPosition(position).let {
+            with(holder.imageView){
+                setImageBitmap(it.crop.bitmap)
+                ViewCompat.setTransitionName(this, it.identifier())
+            }
         }
     }
 }
