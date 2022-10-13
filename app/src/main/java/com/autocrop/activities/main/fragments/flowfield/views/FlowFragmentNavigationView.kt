@@ -26,6 +26,7 @@ import com.autocrop.utils.android.extensions.serviceRunning
 import com.autocrop.utils.android.extensions.setBooleanPreferencesManagedSwitch
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
+import com.autocrop.utils.kotlin.BlankFun
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.autocrop.R
 import timber.log.Timber
@@ -80,18 +81,30 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
                 setOnCheckedChangeListener{ _, newValue ->
                     val serviceIntent = Intent(context, ScreenCaptureListeningService::class.java)
 
-                    if (newValue)
-                        findFragment<FlowFieldFragment>()
-                            .readExternalStoragePermissionHandler
-                            .requestPermission(
-                                onGranted = {
-                                    context.startForegroundService(serviceIntent)
-                                        .also { Timber.i("Starting ScreenCaptureListeningService") }
-                                },
-                                onDenied = {
-                                    isChecked = false
-                                }
+                    if (newValue) {
+                        findFragment<FlowFieldFragment>().let{
+                            val onPermissionsGranted: BlankFun = {
+                                context.startForegroundService(serviceIntent)
+                                    .also { Timber.i("Started ScreenCaptureListeningService") }
+                            }
+                            val onPermissionDenied = {
+                                isChecked = false
+                            }
+
+                            it.readExternalStoragePermissionHandler
+                                .requestPermission(
+                                    onGranted = {
+                                        it
+                                            .notificationPostingPermissionHandler
+                                            ?.requestPermission(
+                                                onGranted = onPermissionsGranted,
+                                                onDenied = onPermissionDenied
+                                            ) ?: onPermissionsGranted()
+                                    },
+                                    onDenied = onPermissionDenied
                             )
+                        }
+                    }
                     else
                         context.stopService(serviceIntent)
                             .also { Timber.i("Stopping ScreenCaptureListeningService") }

@@ -86,6 +86,11 @@ class IODeterminationActivity :
 
     fun startMainActivity() {
         startMainActivity{ intent ->
+            if (viewModel.savedCropUris.isNotEmpty())
+                intent.putParcelableArrayListExtra(
+                    EXTRA_CROP_SAVING_URIS,
+                    ArrayList(viewModel.savedCropUris)
+                )
             intent.putExtra(
                 EXTRA_IO_SYNOPSIS,
                 IOSynopsis(
@@ -95,11 +100,6 @@ class IODeterminationActivity :
                 )
                     .toByteArray()
             )
-            if (viewModel.savedCropUris.isNotEmpty())
-                intent.putParcelableArrayListExtra(
-                    EXTRA_CROP_SAVING_URIS,
-                    ArrayList(viewModel.savedCropUris)
-                )
         }
     }
 }

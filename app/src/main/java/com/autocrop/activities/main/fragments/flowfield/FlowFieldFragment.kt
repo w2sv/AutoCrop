@@ -4,10 +4,12 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.text.color
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
@@ -76,6 +78,17 @@ class FlowFieldFragment:
             "Media file access required for listening to screen captures",
             "Go to app settings and grant media file access for screen capture listening to work"
         )
+    }
+    val notificationPostingPermissionHandler: PermissionHandler? by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            PermissionHandler(
+                Manifest.permission.POST_NOTIFICATIONS,
+                requireActivity(),
+                "If you don't allow for the posting of notifications AutoCrop can't inform you about croppable screenshots",
+                "Go to app settings and enable notification posting for screen capture listening to work"
+            )
+        else
+            null
     }
 
     val imageSelectionIntentLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->

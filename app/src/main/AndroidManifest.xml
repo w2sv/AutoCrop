@@ -66,10 +66,10 @@
         <receiver android:name="com.autocrop.screencapturelistening.services.ScreenCaptureListeningService$StoppingBroadcastReceiver" />
 
         <service
-            android:name="com.autocrop.screencapturelistening.services.cropio.CropIOService"
+            android:name="com.autocrop.screencapturelistening.services.crop_io.CropIOService"
             android:exported="false"/>
         <activity
-            android:name="com.autocrop.screencapturelistening.services.cropio.DeleteRequestActivity"
+            android:name="com.autocrop.screencapturelistening.services.crop_io.DeleteRequestActivity"
             android:excludeFromRecents="true"
             android:noHistory="true"/>
 
