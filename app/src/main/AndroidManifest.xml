@@ -41,38 +41,39 @@
 
         android:appCategory="image">
 
-        <!-- Services -->
-
-        <service
-            android:name="com.autocrop.screencapturelistening.services.cropio.CropIOService"
-            android:exported="false"/>
-        <service
-            android:name="com.autocrop.screencapturelistening.services.ScreenCaptureListeningService"
-            android:exported="false"/>
-        <service
-            android:name="com.autocrop.screencapturelistening.services.OnPendingIntentService"
-            android:exported="false"/>
-
         <!-- Activities -->
 
         <activity
             android:name="com.autocrop.activities.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Splash">
-
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
-
         </activity>
 
         <activity
             android:name="com.autocrop.activities.cropping.CropActivity" />
         <activity
             android:name="com.autocrop.activities.iodetermination.IODeterminationActivity" />
+
+        <!-- Services -->
+
+        <service
+            android:name="com.autocrop.screencapturelistening.services.ScreenCaptureListeningService"
+            android:exported="false"/>
+
+        <service
+            android:name="com.autocrop.screencapturelistening.services.cropio.CropIOService"
+            android:exported="false"/>
         <activity
             android:name="com.autocrop.screencapturelistening.services.cropio.DeleteRequestActivity"
-            android:excludeFromRecents="true"/>
+            android:excludeFromRecents="true"
+            android:noHistory="true"/>
+
+        <service
+            android:name="com.autocrop.screencapturelistening.services.OnPendingIntentService"
+            android:exported="false"/>
     </application>
 </manifest>
