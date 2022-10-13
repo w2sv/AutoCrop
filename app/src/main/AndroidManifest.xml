@@ -75,5 +75,6 @@
         <service
             android:name="com.autocrop.screencapturelistening.services.OnPendingIntentService"
             android:exported="false"/>
+        <receiver android:name="com.autocrop.screencapturelistening.services.StopScreenCaptureListeningServiceBroadcast" />
     </application>
 </manifest>

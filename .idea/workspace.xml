@@ -10,14 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/test/java/com/autocrop/activities/iodetermination/CropBundleIOKtTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/CropBundleIO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/CropBundleIO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/notifications/NotificationGroup.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/notifications/NotificationGroup.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/ScreenCaptureListeningService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/ScreenCaptureListeningService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/cropio/CropIOService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/cropio/CropIOService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/cropio/DeleteRequestActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/cropio/DeleteRequestActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/extensions/Context.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/extensions/Context.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

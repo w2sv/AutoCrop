@@ -1,6 +1,8 @@
 package com.autocrop.screencapturelistening.services
 
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.database.ContentObserver
 import android.graphics.Bitmap
@@ -29,9 +31,18 @@ import com.autocrop.utils.kotlin.dateFromUnixTimestamp
 import com.autocrop.utils.kotlin.timeDelta
 import com.google.common.collect.EvictingQueue
 import com.lyrebirdstudio.croppylib.CropEdges
+import com.w2sv.autocrop.R
 import timber.log.Timber
 import java.util.Date
 import java.util.concurrent.TimeUnit
+
+class StopScreenCaptureListeningServiceBroadcast: BroadcastReceiver(){
+    override fun onReceive(context: Context?, intent: Intent?) {
+        context!!.stopService(
+            Intent(context, ScreenCaptureListeningService::class.java)
+        )
+    }
+}
 
 class ScreenCaptureListeningService :
     BoundService(),
@@ -41,6 +52,8 @@ class ScreenCaptureListeningService :
         const val ATTEMPT_SCREENSHOT_DELETION_KEY = "DELETE_SCREENSHOT"
         const val DELETE_REQUEST_URI_KEY = "DELETE_REQUEST_URI"
         const val SCREENSHOT_MEDIASTORE_DATA_KEY = "SCREENSHOT_MEDIASTORE_DATA"
+
+        private val FOREGROUND_SERVICE_NOTIFICATION_ID = NotificationId.STARTED_FOREGROUND_SERVICE
     }
 
     /**
@@ -48,15 +61,8 @@ class ScreenCaptureListeningService :
      */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground(
-            NotificationId.STARTED_FOREGROUND_SERVICE.id,
-            notificationBuilderWithSetChannel(
-                NotificationId.STARTED_FOREGROUND_SERVICE.channelId,
-                "Listening to screen captures"
-            )
-                .setStyle(
-                    NotificationCompat.BigTextStyle()
-                        .bigText("You will receive a notification when AutoCrop detects a new croppable screenshot")
-                )
+            FOREGROUND_SERVICE_NOTIFICATION_ID.id,
+            foregroundServiceNotificationBuilder()
                 .build()
         )
             .also { Timber.i("Started ScreenCaptureListeningService in foreground") }
@@ -70,6 +76,29 @@ class ScreenCaptureListeningService :
 
         return START_STICKY
     }
+
+    private fun foregroundServiceNotificationBuilder(): NotificationCompat.Builder =
+        notificationBuilderWithSetChannel(
+            FOREGROUND_SERVICE_NOTIFICATION_ID.channelId,
+            "Listening to screen captures"
+        )
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText("You will receive a notification when AutoCrop detects a new croppable screenshot")
+            )
+            .setSilent(true)
+            .addAction(
+                NotificationCompat.Action(
+                    R.drawable.ic_cancel_24,
+                    "Stop",
+                    PendingIntent.getBroadcast(
+                        this,
+                        69,
+                        Intent(this, StopScreenCaptureListeningServiceBroadcast::class.java),
+                        PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+                    )
+                )
+            )
 
     @Suppress("UnstableApiUsage")  // EvictingQueue part of Beta-API
     private val imageContentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
@@ -263,10 +292,7 @@ class ScreenCaptureListeningService :
                     PendingIntent.getService(
                         this,
                         associatedRequestCodes[3],
-                        Intent(
-                            this,
-                            OnPendingIntentService::class.java
-                        )
+                        Intent(this, OnPendingIntentService::class.java)
                             .putClientExtras(notificationId, associatedRequestCodes),
                         PendingIntent.FLAG_UPDATE_CURRENT
                     )
