@@ -1,2 +1,3 @@
 include ':app', ':croppylib'
 rootProject.name='AutoCrop'
+include ':viewboundcontroller'

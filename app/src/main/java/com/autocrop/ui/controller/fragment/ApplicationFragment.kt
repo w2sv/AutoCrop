@@ -11,14 +11,15 @@ import androidx.viewbinding.ViewBinding
 import com.autocrop.retriever.activity.FragmentHostingActivityRetriever
 import com.autocrop.retriever.activity.TypedActivityRetriever
 import com.autocrop.ui.controller.activity.FragmentHostingActivity
+import com.w2sv.viewboundcontroller.ViewBoundFragment
 import kotlin.reflect.KClass
 
 abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
     viewModelKClass: KClass<VM>,
     bindingClass: Class<VB>):
-        ViewBoundFragment<VB>(bindingClass),
-        TypedActivityRetriever<A>,
-        FragmentHostingActivityRetriever {
+    ViewBoundFragment<VB>(bindingClass),
+    TypedActivityRetriever<A>,
+    FragmentHostingActivityRetriever {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         postponeEnterTransition()

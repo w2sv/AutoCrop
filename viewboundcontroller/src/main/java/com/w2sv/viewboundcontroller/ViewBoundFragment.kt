@@ -1,4 +1,4 @@
-package com.autocrop.ui.controller.fragment
+package com.w2sv.viewboundcontroller
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.autocrop.ui.controller.ViewBindingInflator
 
 abstract class ViewBoundFragment<VB: ViewBinding>(override val bindingClass: Class<VB>) :
     Fragment(),

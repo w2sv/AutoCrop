@@ -118,6 +118,7 @@ dependencies {
 
     // Manual Cropping
     implementation project(path: ':croppylib')
+    implementation project(path: ':viewboundcontroller')
 
     // -----------------
     // Unit Tests

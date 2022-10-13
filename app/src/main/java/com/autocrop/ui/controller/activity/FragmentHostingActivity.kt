@@ -3,6 +3,7 @@ package com.autocrop.ui.controller.activity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.w2sv.autocrop.R
+import com.w2sv.viewboundcontroller.ViewBoundActivity
 
 abstract class FragmentHostingActivity<RF : Fragment>(private val rootFragmentClass: Class<RF>) : ViewBoundActivity() {
 

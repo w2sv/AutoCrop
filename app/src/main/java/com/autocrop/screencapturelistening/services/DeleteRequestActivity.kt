@@ -6,8 +6,8 @@ import android.provider.MediaStore
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import com.autocrop.ui.controller.activity.ViewBoundActivity
 import com.autocrop.utils.android.extensions.getParcelable
+import com.w2sv.viewboundcontroller.ViewBoundActivity
 
 @RequiresApi(Build.VERSION_CODES.R)
 class DeleteRequestActivity: ViewBoundActivity(){

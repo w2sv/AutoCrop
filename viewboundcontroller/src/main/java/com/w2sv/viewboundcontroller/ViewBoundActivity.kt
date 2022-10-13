@@ -1,10 +1,9 @@
-package com.autocrop.ui.controller.activity
+package com.w2sv.viewboundcontroller
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import com.autocrop.ui.controller.ViewBindingInflator
-import com.w2sv.autocrop.databinding.ActivityBinding
+import com.w2sv.viewboundcontroller.databinding.ActivityBinding
 
 abstract class ViewBoundActivity :
     AppCompatActivity(),

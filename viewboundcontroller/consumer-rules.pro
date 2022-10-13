@@ -1,0 +1,3 @@
+-keepclasseswithmembers class * {
+    * inflate(...);
+}
