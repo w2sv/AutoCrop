@@ -164,10 +164,11 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
     }
 
     private fun invokeAboutFragment(){
-        fragmentHostingActivity.replaceCurrentFragmentWith(
+        fragmentHostingActivity.fragmentReplacementTransaction(
             AboutFragment(),
             flipRight = false,
-            addToBackStack = true
         )
+            .addToBackStack(null)
+            .commit()
     }
 }

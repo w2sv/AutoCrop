@@ -16,19 +16,19 @@ class ComparisonButton(context: Context, attributeSet: AttributeSet):
     ActivityRetriever<IODeterminationActivity> by ContextBasedActivityRetriever(context){
 
     override fun onClickListener() {
-        fragmentHostingActivity.replaceCurrentFragmentWith(
-            ComparisonFragment(),
-            addToBackStack = true
-        ) { fragmentTransaction ->
-            val cropImageView =
-                fragmentHostingActivity.castCurrentFragment<CropPagerFragment>().binding.viewPager.run {
-                    (recyclerView.findViewHolderForAdapterPosition(currentItem) as CropPagerAdapter.CropViewHolder).imageView
-                }
+        fragmentHostingActivity.fragmentReplacementTransaction(ComparisonFragment())
+            .addToBackStack(null)
+            .apply{
+                val cropImageView =
+                    fragmentHostingActivity.getCurrentFragment<CropPagerFragment>()!!.binding.viewPager.run {
+                        (recyclerView.findViewHolderForAdapterPosition(currentItem) as CropPagerAdapter.CropViewHolder).imageView
+                    }
 
-            fragmentTransaction.addSharedElement(
-                cropImageView,
-                cropImageView.transitionName
-            )
-        }
+                addSharedElement(
+                    cropImageView,
+                    cropImageView.transitionName
+                )
+            }
+            .commit()
     }
 }

@@ -44,13 +44,14 @@ class IODeterminationActivity :
      * deletion has to be confirmed, otherwise [AppTitleFragment]
      */
     fun invokeSubsequentFragment(){
-        replaceCurrentFragmentWith(
+        fragmentReplacementTransaction(
             if (viewModel.screenshotDeletionInquiryUris.isNotEmpty())
                 DeletionConfirmationDialogFragment()
             else
                 AppTitleFragment(),
             false
         )
+            .commit()
     }
 
     /**
@@ -66,7 +67,7 @@ class IODeterminationActivity :
 
     override val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            currentFragment().let {
+            getCurrentFragment().let {
                 when (it) {
                     is ComparisonFragment -> {
                         it.prepareExitTransition()

@@ -10,13 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/FlowFieldFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/FlowFieldFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/OnPendingIntentService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/OnPendingIntentService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/ScreenCaptureListeningService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/ScreenCaptureListeningService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/cropio/CropIOService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/crop_io/CropIOService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/cropio/DeleteRequestActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/crop_io/DeleteRequestActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/CropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/CropFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/IODeterminationActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/IODeterminationActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ComparisonButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ComparisonButton.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/deletionconfirmationdialog/DeletionConfirmationDialogFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/deletionconfirmationdialog/DeletionConfirmationDialogFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/activity/FragmentHostingActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/activity/FragmentHostingActivity.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

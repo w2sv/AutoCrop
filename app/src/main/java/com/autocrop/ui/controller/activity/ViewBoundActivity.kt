@@ -9,6 +9,7 @@ import com.w2sv.autocrop.databinding.ActivityBinding
 abstract class ViewBoundActivity :
     AppCompatActivity(),
     ViewBindingInflator<ActivityBinding> {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -105,7 +105,7 @@ class MainActivity :
      */
     override val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            currentFragment().let {
+            getCurrentFragment().let {
                 if (it is AboutFragment)
                     return supportFragmentManager.popBackStack()
                 (it as? FlowFieldFragment)?.binding?.drawerLayout?.run {

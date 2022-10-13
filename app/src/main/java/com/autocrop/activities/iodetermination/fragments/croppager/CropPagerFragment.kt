@@ -93,7 +93,9 @@ class CropPagerFragment :
     private fun setCropEntiretyDialogResultListener(){
         setFragmentResultListener(CropEntiretyDialog.RESULT_REQUEST_KEY){
             if (it.getBoolean(AbstractCropDialog.CONFIRMED_BUNDLE_ARG_KEY))
-                fragmentHostingActivity.replaceCurrentFragmentWith(SaveAllFragment(),true)
+                fragmentHostingActivity
+                    .fragmentReplacementTransaction(SaveAllFragment(),true)
+                    .commit()
             else
                 typedActivity.invokeSubsequentFragment()
         }

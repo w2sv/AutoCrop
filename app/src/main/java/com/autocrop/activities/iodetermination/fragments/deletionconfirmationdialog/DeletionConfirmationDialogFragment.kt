@@ -42,8 +42,10 @@ class DeletionConfirmationDialogFragment :
             }
 
         // launch appTitleFragment after small delay for UX smoothness
-        Handler(Looper.getMainLooper()).postDelayed(
-            { fragmentHostingActivity.replaceCurrentFragmentWith(AppTitleFragment()) },
+        Handler(Looper.getMainLooper()).postDelayed({
+                fragmentHostingActivity.fragmentReplacementTransaction(AppTitleFragment())
+                    .commit()
+            },
             resources.getInteger(R.integer.delay_minimal).toLong()
         )
     }

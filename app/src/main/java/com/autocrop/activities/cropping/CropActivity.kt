@@ -26,7 +26,7 @@ class CropActivity :
      */
     override val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            when (currentFragment()){
+            when (getCurrentFragment()){
                 is CroppingFailedFragment -> startMainActivity()
                 is CropFragment -> handleBackPress()
                 else -> Unit
