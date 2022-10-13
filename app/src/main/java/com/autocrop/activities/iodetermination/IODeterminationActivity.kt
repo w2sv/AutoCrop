@@ -8,7 +8,6 @@ import com.autocrop.activities.iodetermination.fragments.croppager.CropPagerFrag
 import com.autocrop.activities.iodetermination.fragments.deletionconfirmationdialog.DeletionConfirmationDialogFragment
 import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.dataclasses.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.ui.controller.activity.ApplicationActivity

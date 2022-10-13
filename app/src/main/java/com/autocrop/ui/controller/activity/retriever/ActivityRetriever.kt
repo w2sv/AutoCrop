@@ -1,10 +1,11 @@
-package com.autocrop.retriever.activity
+package com.autocrop.ui.controller.activity.retriever
 
 import android.app.Activity
 import androidx.fragment.app.FragmentActivity
 
 interface ActivityRetriever<A: Activity>
-    : TypedActivityRetriever<A>, FragmentHostingActivityRetriever {
+    : TypedActivityRetriever<A>,
+      FragmentHostingActivityRetriever {
     val activity: Activity
     val fragmentActivity: FragmentActivity
 }

@@ -5,8 +5,8 @@ import android.util.AttributeSet
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.retriever.activity.ActivityRetriever
-import com.autocrop.retriever.activity.ContextBasedActivityRetriever
+import com.autocrop.ui.controller.activity.retriever.ActivityRetriever
+import com.autocrop.ui.controller.activity.retriever.ContextBasedActivityRetriever
 import com.autocrop.ui.elements.ExtendedAppCompatTextView
 import com.autocrop.utils.android.extensions.animate
 import com.autocrop.utils.android.extensions.goToWebpage

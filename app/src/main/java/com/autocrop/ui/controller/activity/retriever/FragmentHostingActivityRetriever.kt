@@ -1,4 +1,4 @@
-package com.autocrop.retriever.activity
+package com.autocrop.ui.controller.activity.retriever
 
 import com.autocrop.ui.controller.activity.FragmentHostingActivity
 

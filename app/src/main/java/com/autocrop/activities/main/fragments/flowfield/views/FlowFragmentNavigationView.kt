@@ -16,8 +16,8 @@ import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.retriever.activity.ActivityRetriever
-import com.autocrop.retriever.activity.ContextBasedActivityRetriever
+import com.autocrop.ui.controller.activity.retriever.ActivityRetriever
+import com.autocrop.ui.controller.activity.retriever.ContextBasedActivityRetriever
 import com.autocrop.screencapturelistening.services.ScreenCaptureListeningService
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.activityViewModelLazy
@@ -33,7 +33,7 @@ import timber.log.Timber
 
 class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
     NavigationView(context, attributeSet),
-    ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context){
+    ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context) {
 
     private val viewModel by activityViewModelLazy<MainActivityViewModel>()
 

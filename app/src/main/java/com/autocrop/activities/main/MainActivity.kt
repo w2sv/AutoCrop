@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.iodetermination.IODeterminationActivity
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.autocrop.dataclasses.IOSynopsis
+import com.autocrop.activities.iodetermination.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.ui.controller.activity.ApplicationActivity

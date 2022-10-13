@@ -3,7 +3,7 @@ package com.autocrop.activities.main
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.dataclasses.IOSynopsis
+import com.autocrop.activities.iodetermination.IOSynopsis
 
 class MainActivityViewModelFactory(private val ioSynopsis: IOSynopsis?,
                                    private val savedCropUris: ArrayList<Uri>?)

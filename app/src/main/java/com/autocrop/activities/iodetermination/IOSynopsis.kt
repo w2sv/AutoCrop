@@ -1,4 +1,7 @@
-package com.autocrop.dataclasses
+package com.autocrop.activities.iodetermination
+
+import com.autocrop.utils.kotlin.extensions.readInt
+import com.autocrop.utils.kotlin.extensions.writeInt
 
 /**
  * Enables transfer of respective data via Intent through encoding to & decoding
@@ -27,16 +30,3 @@ data class IOSynopsis(
             writeInt(4, nDeletedScreenshots)
         } + cropWriteDirIdentifier.toByteArray(Charsets.UTF_8)
 }
-
-private fun ByteArray.writeInt(offset: Int, data: Int){
-    this[offset + 0] = (data shr 0).toByte()
-    this[offset + 1] = (data shr 8).toByte()
-    this[offset + 2] = (data shr 16).toByte()
-    this[offset + 3] = (data shr 24).toByte()
-}
-
-private fun ByteArray.readInt(offset: Int): Int =
-    (this[offset + 3].toInt() shl 24) or
-    (this[offset + 2].toInt() and 0xff shl 16) or
-    (this[offset + 1].toInt() and 0xff shl 8) or
-    (this[offset + 0].toInt() and 0xff)

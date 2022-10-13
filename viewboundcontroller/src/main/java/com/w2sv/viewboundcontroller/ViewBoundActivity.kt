@@ -3,11 +3,11 @@ package com.w2sv.viewboundcontroller
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import com.w2sv.viewboundcontroller.databinding.ActivityBinding
+import androidx.viewbinding.ViewBinding
 
-abstract class ViewBoundActivity :
+abstract class ViewBoundActivity<VB: ViewBinding>(override val bindingClass: Class<VB>) :
     AppCompatActivity(),
-    ViewBindingInflator<ActivityBinding> {
+    ViewBindingInflator<VB> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,9 +15,7 @@ abstract class ViewBoundActivity :
         setContentView(binding.root)
     }
 
-    override val binding: ActivityBinding by lazy {
+    override val binding: VB by lazy {
         super.inflateViewBinding(layoutInflater to LayoutInflater::class.java)
     }
-
-    override val bindingClass = ActivityBinding::class.java
 }

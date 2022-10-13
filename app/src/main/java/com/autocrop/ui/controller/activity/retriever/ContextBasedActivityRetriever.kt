@@ -1,4 +1,4 @@
-package com.autocrop.retriever.activity
+package com.autocrop.ui.controller.activity.retriever
 
 import android.app.Activity
 import android.content.Context

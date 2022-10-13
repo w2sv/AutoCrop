@@ -10,31 +10,40 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/viewboundcontroller/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/viewboundcontroller/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/viewboundcontroller/consumer-rules.pro" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/viewboundcontroller/proguard-rules.pro" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/viewboundcontroller/src/main/AndroidManifest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/viewboundcontroller/src/main/java/com/w2sv/viewboundcontroller/ViewBindingInflator.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/viewboundcontroller/src/test/java/com/w2sv/viewboundcontroller/ExampleUnitTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/activity/BlankViewBoundActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/kotlin/extensions/ByteArray.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/proguard-rules.pro" beforeDir="false" afterPath="$PROJECT_DIR$/app/proguard-rules.pro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/IODeterminationActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/IODeterminationActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ComparisonButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ComparisonButton.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/CropImageView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/CropImageView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivityViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivityViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivityViewModelFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivityViewModelFactory.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/about/views/AnimationHandlingTextView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/about/views/AnimationHandlingTextView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFieldContainer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFieldContainer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/dataclasses/CropBundle.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/CropBundle.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/dataclasses/IOSynopsis.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/IOSynopsis.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/retriever/activity/ActivityRetriever.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/activity/retriever/ActivityRetriever.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/retriever/activity/ContextBasedActivityRetriever.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/activity/retriever/ContextBasedActivityRetriever.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/retriever/activity/FragmentHostingActivityRetriever.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/activity/retriever/FragmentHostingActivityRetriever.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/retriever/activity/TypedActivityRetriever.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/activity/retriever/TypedActivityRetriever.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/DeleteRequestActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/DeleteRequestActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/ViewBindingInflator.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/activity/FragmentHostingActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/activity/FragmentHostingActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/activity/ViewBoundActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/viewboundcontroller/src/main/java/com/w2sv/viewboundcontroller/ViewBoundActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/fragment/ApplicationFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/fragment/ApplicationFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/controller/fragment/ViewBoundFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/viewboundcontroller/src/main/java/com/w2sv/viewboundcontroller/ViewBoundFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/viewboundcontroller/src/main/res/layout/activity.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/autocrop/dataclasses/IOSynopsisTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/autocrop/dataclasses/IOSynopsisTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/viewboundcontroller/proguard-rules.pro" beforeDir="false" afterPath="$PROJECT_DIR$/viewboundcontroller/proguard-rules.pro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/viewboundcontroller/src/main/java/com/w2sv/viewboundcontroller/ViewBoundActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/viewboundcontroller/src/main/java/com/w2sv/viewboundcontroller/ViewBoundActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/viewboundcontroller/src/main/res/layout/activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_blank.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[192.168.1.234:5555]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/home/w2sv/.android/avd/Pixel_5_API_31.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -66,8 +75,9 @@
         <option value="layoutResourceFile" />
         <option value="resourceFile" />
         <option value="Kotlin Enum" />
-        <option value="Kotlin Class" />
         <option value="JUnit5 Test Class" />
+        <option value="Kotlin Class" />
+        <option value="Kotlin File" />
       </list>
     </option>
   </component>
@@ -156,7 +166,7 @@
     "dart.analysis.tool.window.visible": "false",
     "full.screen.before.presentation.mode": "false",
     "last_directory_selection": "/home/w2sv/Dev/android/AutoCrop/app/src/test/java/com/autocrop/activities/iodetermination",
-    "last_opened_file_path": "/home/w2sv/Dev/android/AutoCrop/viewboundcontroller/src/main/java/com/w2sv/viewboundcontroller",
+    "last_opened_file_path": "/home/w2sv/Dev/android/AutoCrop/app/src/main/res/layout",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.17",
     "project.structure.side.proportion": "0.2",
@@ -177,8 +187,8 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/viewboundcontroller/src/main/java/com/w2sv/viewboundcontroller" />
       <recent name="$PROJECT_DIR$/app/src/main/res/layout" />
+      <recent name="$PROJECT_DIR$/viewboundcontroller/src/main/java/com/w2sv/viewboundcontroller" />
       <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
       <recent name="$PROJECT_DIR$/app/src/androidTest/assets/invalid" />
       <recent name="$PROJECT_DIR$/app/src/androidTest/assets" />
@@ -194,11 +204,11 @@
       <recent name="" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.autocrop.activities.iodetermination" />
       <recent name="com.w2sv.viewboundcontroller" />
       <recent name="com.autocrop.screencapturelistening.services" />
       <recent name="com.autocrop.screencapturelistening.services.main" />
       <recent name="com.autocrop.screencapturelistening.services.cropio" />
-      <recent name="com.autocrop.screencapturelistening" />
     </key>
     <key name="android.template.942950756">
       <recent name="com.w2sv.autocrop" />
