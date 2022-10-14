@@ -5,9 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.autocrop.activities.iodetermination.IODeterminationActivityViewModel
 import com.autocrop.preferences.BooleanPreferences
-import com.autocrop.ui.elements.recyclerview.BidirectionalRecyclerViewAdapter
 import com.autocrop.utils.kotlin.BlankFun
 import com.autocrop.utils.kotlin.delegates.Consumable
+import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
+import com.w2sv.bidirectionalviewpager.recyclerview.BidirectionalRecyclerViewAdapter
 
 class CropPagerViewModel : ViewModel(){
     val dataSet = BidirectionalViewPagerDataSet(IODeterminationActivityViewModel.cropBundles)

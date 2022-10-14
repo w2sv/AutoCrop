@@ -1,7 +1,7 @@
-package com.autocrop.utils.android.livedata
+package com.w2sv.bidirectionalviewpager.livedata
 
 import androidx.lifecycle.LiveData
-import com.autocrop.utils.kotlin.delegates.AutoSwitch
+import com.w2sv.bidirectionalviewpager.utils.AutoSwitch
 
 class UpdateBlockableLiveData<T>(value: T, private val convertUpdateValue: (T) -> T)
     : LiveData<T>(value){

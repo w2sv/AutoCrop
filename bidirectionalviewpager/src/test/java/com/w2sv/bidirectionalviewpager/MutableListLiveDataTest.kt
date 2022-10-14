@@ -1,10 +1,10 @@
-package com.autocrop.utilsandroid.livedata
+package com.w2sv.bidirectionalviewpager
 
-import com.autocrop.utils.android.livedata.MutableListLiveData
+import com.w2sv.bidirectionalviewpager.livedata.MutableListLiveData
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import utils.InstantExecutorExtension
+import com.w2sv.utils.InstantExecutorExtension
 
 @ExtendWith(InstantExecutorExtension::class)
 internal class MutableListLiveDataTest {

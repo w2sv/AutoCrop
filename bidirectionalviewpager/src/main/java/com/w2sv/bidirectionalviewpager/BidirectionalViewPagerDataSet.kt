@@ -1,11 +1,11 @@
-package com.autocrop.activities.iodetermination.fragments.croppager.viewmodel
+package com.w2sv.bidirectionalviewpager
 
 import androidx.annotation.VisibleForTesting
-import com.autocrop.utils.kotlin.extensions.rotatedIndex
-import com.autocrop.utils.kotlin.extensions.toInt
-import com.autocrop.utils.kotlin.extensions.toNonZeroInt
-import com.autocrop.utils.android.livedata.MutableListLiveData
-import com.autocrop.utils.android.livedata.UpdateBlockableLiveData
+import com.w2sv.bidirectionalviewpager.livedata.MutableListLiveData
+import com.w2sv.bidirectionalviewpager.livedata.UpdateBlockableLiveData
+import com.w2sv.bidirectionalviewpager.utils.extensions.rotatedIndex
+import com.w2sv.bidirectionalviewpager.utils.extensions.toInt
+import com.w2sv.bidirectionalviewpager.utils.extensions.toNonZeroInt
 import java.util.*
 
 open class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :

@@ -10,15 +10,40 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/bidirectionalviewpager/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bidirectionalviewpager/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bidirectionalviewpager/consumer-rules.pro" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bidirectionalviewpager/proguard-rules.pro" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/androidTest/java/com/w2sv/bidirectionalviewpager/ExampleInstrumentedTest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/AndroidManifest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/utils/AutoSwitch.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/utils/extensions/Boolean.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/test/java/com/w2sv/utils/InstantExecutorExtension.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/livedata/LiveData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/extensions/LiveData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/pager/CropPagerAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/pager/CropPagerAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/pager/CropPagerProxy.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/pager/CropPagerProxy.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/viewmodel/BidirectionalViewPagerDataSet.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/BidirectionalViewPagerDataSet.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/viewmodel/CropPagerViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/viewmodel/CropPagerViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/elements/recyclerview/BidirectionalRecyclerViewAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/recyclerview/BidirectionalRecyclerViewAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/ui/elements/recyclerview/ExtendedRecyclerViewAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/recyclerview/ExtendedRecyclerViewAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/livedata/MutableListLiveData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/livedata/MutableListLiveData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/android/livedata/UpdateBlockableLiveData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/livedata/UpdateBlockableLiveData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/kotlin/extensions/Collection.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/utils/extensions/Collection.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_blank.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_blank.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/autocrop/activities/iodetermination/fragments/croppager/BidirectionalViewPagerDataSetTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/test/java/com/w2sv/bidirectionalviewpager/BidirectionalViewPagerDataSetTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/autocrop/utils/CollectionTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/test/java/com/w2sv/bidirectionalviewpager/CollectionTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/autocrop/utilsandroid/livedata/MutableListLiveDataTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/test/java/com/w2sv/bidirectionalviewpager/MutableListLiveDataTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/autocrop/utilsandroid/livedata/UpdateBlockableLiveDataTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/test/java/com/w2sv/bidirectionalviewpager/UpdateBlockableLiveDataTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/home/w2sv/.android/avd/Pixel_5_API_31.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[192.168.1.234:5555]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -89,91 +114,94 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;BundleExportedModule&quot;: &quot;AutoCrop.app&quot;,
-    &quot;ExportApk.ApkPath&quot;: &quot;/home/w2sv/Dev/android/AutoCrop/app&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;android-custom-view/home/w2sv/.gradle/caches/modules-2/files-2.1/androidx.appcompat/appcompat/1.5.1/ffb6d2b7e47daaa4a24b434db111ab9e411c33a0/appcompat-1.5.1-sources.jar!/androidx/appcompat/widget/AppCompatImageButton.java_SELECTED&quot;: &quot;AppCompatImageButton&quot;,
-    &quot;android-custom-view/home/w2sv/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_SELECTED&quot;: &quot;RecyclerView&quot;,
-    &quot;android-custom-view/home/w2sv/.gradle/caches/modules-2/files-2.1/com.google.android.material/material/1.6.1/d4d703885d24c61bc0ec39a9a705969e41d773ef/material-1.6.1-sources.jar!/com/google/android/material/navigation/NavigationView.java_SELECTED&quot;: &quot;NavigationView&quot;,
-    &quot;android-custom-view/home/w2sv/Android/Sdk/sources/android-33/android/widget/ImageButton.java_SELECTED&quot;: &quot;ImageButton&quot;,
-    &quot;android-custom-view/home/w2sv/Android/Sdk/sources/android-33/android/widget/ImageView.java_SELECTED&quot;: &quot;ImageView&quot;,
-    &quot;android-custom-view/home/w2sv/Android/Sdk/sources/android-33/android/widget/Switch.java_SELECTED&quot;: &quot;Switch&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/CroppingProgressBar.kt_SELECTED&quot;: &quot;CroppingProgressBar&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/CurrentImageNumberTextView.kt_SELECTED&quot;: &quot;CurrentImageNumberTextView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/ProgressTextView.kt_SELECTED&quot;: &quot;ProgressTextView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/comparison/ComparisonImageView.kt_SELECTED&quot;: &quot;ComparisonImageView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/CropImageView.kt_SELECTED&quot;: &quot;CropImageView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/MenuInflationButton.kt_SELECTED&quot;: &quot;ComparisonButton&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/PageIndicationBar.kt_SELECTED&quot;: &quot;PageIndicationBar&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/PageIndicationTextView.kt_SELECTED&quot;: &quot;PageIndicationTextView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/ComparisonImageView.kt_SELECTED&quot;: &quot;ComparisonImageView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/CancelAutoScrollButton.kt_SELECTED&quot;: &quot;CancelAutoScrollButton&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ComparisonButton.kt_SELECTED&quot;: &quot;ComparisonButton&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/CropImageView.kt_SELECTED&quot;: &quot;CropImageView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/DiscardingStatisticsTextView.kt_SELECTED&quot;: &quot;DiscardingStatisticsTextView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ManualCropButton.kt_SELECTED&quot;: &quot;ManualCropButton&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PageDependentTextView.kt_SELECTED&quot;: &quot;PageDependentTextView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PageIndicationBar.kt_SELECTED&quot;: &quot;PageIndicationBar&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PageIndicationTextView.kt_SELECTED&quot;: &quot;PageIndicationTextView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PositionTextView.kt_SELECTED&quot;: &quot;PositionTextView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/saveall/ProgressTV.kt_SELECTED&quot;: &quot;SaveAllProgressTextView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/saveall/SaveAllProgressTextView.kt_SELECTED&quot;: &quot;SaveAllProgressTextView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/VersionTextView.kt_SELECTED&quot;: &quot;VersionTextView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/about/views/W2SVTextView.kt_SELECTED&quot;: &quot;W2SVTextView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/ButtonsLayout.kt_SELECTED&quot;: &quot;ButtonsLayout&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFieldContainer.kt_SELECTED&quot;: &quot;FlowFieldContainer&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt_SELECTED&quot;: &quot;FlowFragmentNavigationView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/ImageSelectionButton.kt_SELECTED&quot;: &quot;ImageSelectionButton&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/ExtendedAppCompatImageButton.kt_SELECTED&quot;: &quot;ExtendedAppCompatImageButton&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/ExtendedAppCompatTextView.kt_SELECTED&quot;: &quot;ExtendedAppCompatTextView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/FractionTextView.kt_SELECTED&quot;: &quot;FractionTextView&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/menu/AbstractMenuInflationButton.kt_SELECTED&quot;: &quot;AbstractMenuInflationButton&quot;,
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/cropview/CropView.kt_SELECTED&quot;: &quot;CropView&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
-    &quot;last_directory_selection&quot;: &quot;/home/w2sv/Dev/android/AutoCrop/app/src/test/java/com/autocrop/activities/iodetermination&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/w2sv/Dev/android/AutoCrop/app/src/main/res/layout&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "BundleExportedModule": "AutoCrop.app",
+    "ExportApk.ApkPath": "/home/w2sv/Dev/android/AutoCrop/app",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "android-custom-view/home/w2sv/.gradle/caches/modules-2/files-2.1/androidx.appcompat/appcompat/1.5.1/ffb6d2b7e47daaa4a24b434db111ab9e411c33a0/appcompat-1.5.1-sources.jar!/androidx/appcompat/widget/AppCompatImageButton.java_SELECTED": "AppCompatImageButton",
+    "android-custom-view/home/w2sv/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_SELECTED": "RecyclerView",
+    "android-custom-view/home/w2sv/.gradle/caches/modules-2/files-2.1/com.google.android.material/material/1.6.1/d4d703885d24c61bc0ec39a9a705969e41d773ef/material-1.6.1-sources.jar!/com/google/android/material/navigation/NavigationView.java_SELECTED": "NavigationView",
+    "android-custom-view/home/w2sv/Android/Sdk/sources/android-33/android/widget/ImageButton.java_SELECTED": "ImageButton",
+    "android-custom-view/home/w2sv/Android/Sdk/sources/android-33/android/widget/ImageView.java_SELECTED": "ImageView",
+    "android-custom-view/home/w2sv/Android/Sdk/sources/android-33/android/widget/Switch.java_SELECTED": "Switch",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/CroppingProgressBar.kt_SELECTED": "CroppingProgressBar",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/CurrentImageNumberTextView.kt_SELECTED": "CurrentImageNumberTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/cropping/fragments/cropping/views/ProgressTextView.kt_SELECTED": "ProgressTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/comparison/ComparisonImageView.kt_SELECTED": "ComparisonImageView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/CropImageView.kt_SELECTED": "CropImageView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/MenuInflationButton.kt_SELECTED": "ComparisonButton",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/PageIndicationBar.kt_SELECTED": "PageIndicationBar",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/examination/fragments/croppager/views/PageIndicationTextView.kt_SELECTED": "PageIndicationTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/ComparisonImageView.kt_SELECTED": "ComparisonImageView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/CancelAutoScrollButton.kt_SELECTED": "CancelAutoScrollButton",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ComparisonButton.kt_SELECTED": "ComparisonButton",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/CropImageView.kt_SELECTED": "CropImageView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/DiscardingStatisticsTextView.kt_SELECTED": "DiscardingStatisticsTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ManualCropButton.kt_SELECTED": "ManualCropButton",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PageDependentTextView.kt_SELECTED": "PageDependentTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PageIndicationBar.kt_SELECTED": "PageIndicationBar",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PageIndicationTextView.kt_SELECTED": "PageIndicationTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/PositionTextView.kt_SELECTED": "PositionTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/saveall/ProgressTV.kt_SELECTED": "SaveAllProgressTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/saveall/SaveAllProgressTextView.kt_SELECTED": "SaveAllProgressTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/VersionTextView.kt_SELECTED": "VersionTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/about/views/W2SVTextView.kt_SELECTED": "W2SVTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/ButtonsLayout.kt_SELECTED": "ButtonsLayout",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFieldContainer.kt_SELECTED": "FlowFieldContainer",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt_SELECTED": "FlowFragmentNavigationView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/ImageSelectionButton.kt_SELECTED": "ImageSelectionButton",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/ExtendedAppCompatImageButton.kt_SELECTED": "ExtendedAppCompatImageButton",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/ExtendedAppCompatTextView.kt_SELECTED": "ExtendedAppCompatTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/FractionTextView.kt_SELECTED": "FractionTextView",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/ui/elements/menu/AbstractMenuInflationButton.kt_SELECTED": "AbstractMenuInflationButton",
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/cropview/CropView.kt_SELECTED": "CropView",
+    "cidr.known.project.marker": "true",
+    "com.google.services.firebase.aqiPopupShown": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "dart.analysis.tool.window.visible": "false",
+    "full.screen.before.presentation.mode": "false",
+    "last_directory_selection": "/home/w2sv/Dev/android/AutoCrop/app/src/test/java/com/autocrop/activities/iodetermination",
+    "last_opened_file_path": "/home/w2sv/Dev/android/AutoCrop/bidirectionalviewpager/src/test/java/com",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.17",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.keymap"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;ExportApk.BuildVariants&quot;: [
-      &quot;release&quot;
+  "keyToStringList": {
+    "ExportApk.BuildVariants": [
+      "release"
     ],
-    &quot;android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt_FlowFragmentNavigationView_DIMENSIONS&quot;: [
-      &quot;1080&quot;,
-      &quot;1920&quot;
+    "android-custom-view/home/w2sv/Dev/android/AutoCrop/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFragmentNavigationView.kt_FlowFragmentNavigationView_DIMENSIONS": [
+      "1080",
+      "1920"
     ],
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;kotlin&quot;
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "kotlin"
     ]
   }
-}</component>
+}]]></component>
+  <component name="PsdUISettings">
+    <option name="LAST_EDITED_BUILD_TYPE" value="release" />
+  </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/bidirectionalviewpager/src/test/java/com" />
+      <recent name="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/extensions" />
+      <recent name="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager" />
       <recent name="$PROJECT_DIR$/app/src/main/res/layout" />
       <recent name="$PROJECT_DIR$/viewboundcontroller/src/main/java/com/w2sv/viewboundcontroller" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
-      <recent name="$PROJECT_DIR$/app/src/androidTest/assets/invalid" />
-      <recent name="$PROJECT_DIR$/app/src/androidTest/assets" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/bidirectionalviewpager/src/test/java/com/w2sv/bidirectionalviewpager" />
+      <recent name="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/utils" />
       <recent name="$PROJECT_DIR$/viewboundcontroller/src/main/res/layout" />
       <recent name="$PROJECT_DIR$/viewboundcontroller/src/main/res/layouts" />
       <recent name="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening" />
-      <recent name="$PROJECT_DIR$/app/src/androidTest/assets/valid" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
     </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
@@ -192,6 +220,9 @@
       <recent name="com.autocrop.activities.iodetermination" />
       <recent name="com.autocrop.screencapturelistening.notification" />
       <recent name="com.autocrop.utils.android" />
+    </key>
+    <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="com.w2sv.bidirectionalviewpager" />
     </key>
   </component>
   <component name="RunManager" selected="Android App.app">
@@ -364,112 +395,6 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MainActivityTest" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests" temporary="true" nameIsGenerated="true">
-      <module name="AutoCrop.app.androidTest" />
-      <option name="TESTING_TYPE" value="2" />
-      <option name="METHOD_NAME" value="" />
-      <option name="CLASS_NAME" value="com.autocrop.activities.main.MainActivityTest" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_NAME_REGEX" value="" />
-      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
-      <option name="EXTRA_OPTIONS" value="" />
-      <option name="RETENTION_ENABLED" value="No" />
-      <option name="RETENTION_MAX_SNAPSHOTS" value="2" />
-      <option name="RETENTION_COMPRESS_SNAPSHOTS" value="false" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
-      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
-      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
-      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
-      <option name="DEBUGGER_TYPE" value="Auto" />
-      <Auto>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-      </Auto>
-      <Hybrid>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-      </Hybrid>
-      <Java />
-      <Native>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-      </Native>
-      <Profilers>
-        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
-        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
-        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
-      </Profilers>
-      <method v="2">
-        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="validScreenshotCropEdges()" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests" temporary="true" nameIsGenerated="true">
-      <module name="AutoCrop.app.androidTest" />
-      <option name="TESTING_TYPE" value="3" />
-      <option name="METHOD_NAME" value="validScreenshotCropEdges" />
-      <option name="CLASS_NAME" value="com.autocrop.activities.cropping.CroppingTest" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_NAME_REGEX" value="" />
-      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
-      <option name="EXTRA_OPTIONS" value="" />
-      <option name="RETENTION_ENABLED" value="No" />
-      <option name="RETENTION_MAX_SNAPSHOTS" value="2" />
-      <option name="RETENTION_COMPRESS_SNAPSHOTS" value="false" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
-      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
-      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
-      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
-      <option name="DEBUGGER_TYPE" value="Auto" />
-      <Auto>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-      </Auto>
-      <Hybrid>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-      </Hybrid>
-      <Java />
-      <Native>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-      </Native>
-      <Profilers>
-        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
-        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
-        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
-      </Profilers>
-      <method v="2">
-        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="CropBundleIOKtTest.pathTail" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -516,22 +441,66 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
+    <configuration name="Tests in 'AutoCrop.bidirectionalviewpager'" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":bidirectionalviewpager:testReleaseUnitTest" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="Tests in 'com'" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":bidirectionalviewpager:testReleaseUnitTest" />
+            <option value="--tests" />
+            <option value="&quot;com.*&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Android App.viewboundcontroller" />
       <item itemvalue="Android App.app" />
       <item itemvalue="Android Instrumented Tests.CroppingTest" />
-      <item itemvalue="Android Instrumented Tests.validScreenshotCropEdges()" />
-      <item itemvalue="Android Instrumented Tests.MainActivityTest" />
+      <item itemvalue="Gradle.Tests in 'AutoCrop.bidirectionalviewpager'" />
+      <item itemvalue="Gradle.Tests in 'com'" />
       <item itemvalue="Gradle.CropBundleIOKtTest.pathTail" />
       <item itemvalue="Gradle.ScopeWideUniqueIdsTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.Tests in 'com'" />
+        <item itemvalue="Gradle.Tests in 'AutoCrop.bidirectionalviewpager'" />
         <item itemvalue="Gradle.CropBundleIOKtTest.pathTail" />
         <item itemvalue="Gradle.ScopeWideUniqueIdsTest" />
         <item itemvalue="Android Instrumented Tests.CroppingTest" />
-        <item itemvalue="Android Instrumented Tests.validScreenshotCropEdges()" />
-        <item itemvalue="Android Instrumented Tests.MainActivityTest" />
       </list>
     </recent_temporary>
   </component>

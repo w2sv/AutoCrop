@@ -2,7 +2,7 @@ package com.autocrop.activities.iodetermination.fragments.croppager.pager
 
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
-import com.autocrop.ui.elements.recyclerview.ExtendedRecyclerViewAdapter
+import com.w2sv.bidirectionalviewpager.recyclerview.ExtendedRecyclerViewAdapter
 
 /**
  * Proxy (=wrapper) for unextendable [viewPager2], providing additional functionality

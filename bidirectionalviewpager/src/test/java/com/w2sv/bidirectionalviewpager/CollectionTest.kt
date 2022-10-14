@@ -1,6 +1,6 @@
-package com.autocrop.utils
+package com.w2sv.bidirectionalviewpager
 
-import com.autocrop.utils.kotlin.extensions.rotatedIndex
+import com.w2sv.bidirectionalviewpager.utils.extensions.rotatedIndex
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource

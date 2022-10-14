@@ -6,8 +6,8 @@ import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
-import com.autocrop.ui.elements.recyclerview.BidirectionalRecyclerViewAdapter
 import com.w2sv.autocrop.databinding.ImageviewCropBinding
+import com.w2sv.bidirectionalviewpager.recyclerview.BidirectionalRecyclerViewAdapter
 
 class CropPagerAdapter(private val viewModel: CropPagerViewModel)
     : BidirectionalRecyclerViewAdapter<CropPagerAdapter.CropViewHolder>(viewModel.dataSet){

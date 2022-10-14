@@ -1,4 +1,4 @@
-package com.autocrop.utils.android.livedata
+package com.w2sv.bidirectionalviewpager.livedata
 
 import androidx.lifecycle.LiveData
 

@@ -1,13 +1,12 @@
-package com.autocrop.activities.iodetermination.fragments.croppager
+package com.w2sv.bidirectionalviewpager
 
-import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.BidirectionalViewPagerDataSet
-import com.autocrop.utils.kotlin.extensions.rotatedIndex
+import com.w2sv.bidirectionalviewpager.utils.extensions.rotatedIndex
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import utils.InstantExecutorExtension
+import com.w2sv.utils.InstantExecutorExtension
 
 @ExtendWith(InstantExecutorExtension::class)
 internal class BidirectionalViewPagerDataSetTest {

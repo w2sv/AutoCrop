@@ -1,3 +1,5 @@
-include ':app', ':croppylib'
 rootProject.name='AutoCrop'
+include ':app'
+include ':croppylib'
 include ':viewboundcontroller'
+include ':bidirectionalviewpager'
