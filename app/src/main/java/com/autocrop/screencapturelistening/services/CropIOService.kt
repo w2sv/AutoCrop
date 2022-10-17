@@ -6,11 +6,11 @@ import android.graphics.Bitmap
 import android.provider.MediaStore
 import android.text.SpannableStringBuilder
 import androidx.core.app.NotificationCompat
-import androidx.core.text.bold
+import androidx.core.text.italic
+import com.autocrop.Screenshot
 import com.autocrop.activities.iodetermination.IOResult
 import com.autocrop.activities.iodetermination.carryOutCropIO
 import com.autocrop.activities.iodetermination.pathTail
-import com.autocrop.Screenshot
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.screencapturelistening.abstractservices.BoundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
@@ -71,16 +71,21 @@ class CropIOService :
                             append(" & deleted screenshot")
                     }
                 )
-                    .setContentText(
-                        SpannableStringBuilder()
-                            .bold { append("Path: ") }
-                            .append(
-                                pathTail(
-                                    contentResolver.queryMediaStoreDatum(
-                                        ioResult.writeUri!!,
-                                        MediaStore.Images.Media.DATA
-                                    )
-                                )
+                    .setStyle(
+                        NotificationCompat.BigTextStyle()
+                            .bigText(
+                                SpannableStringBuilder()
+                                    .append("Saved to ")
+                                    .italic {
+                                        append(
+                                            pathTail(
+                                                contentResolver.queryMediaStoreDatum(
+                                                    ioResult.writeUri!!,
+                                                    MediaStore.Images.Media.DATA
+                                                )
+                                            )
+                                        )
+                                    }
                             )
                     )
                     .addAction(

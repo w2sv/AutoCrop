@@ -240,7 +240,7 @@ class ScreenCaptureListeningService :
                 .addAction(
                     NotificationCompat.Action(
                         null,
-                        "...& delete screenshot",
+                        "Save & delete",
                         if (deleteRequestUri is Uri && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                             PendingIntent.getActivity(
                                 this,
