@@ -2,7 +2,7 @@ package com.autocrop.activities.iodetermination.fragments.comparison
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.dataclasses.CropBundle
+import com.autocrop.CropBundle
 
 class ComparisonViewModelFactory(private val cropBundle: CropBundle)
     : ViewModelProvider.Factory {

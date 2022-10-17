@@ -11,8 +11,8 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import com.autocrop.dataclasses.CropBundle
-import com.autocrop.dataclasses.Screenshot
+import com.autocrop.CropBundle
+import com.autocrop.Screenshot
 import com.autocrop.utils.android.ImageMimeType
 import com.autocrop.utils.android.extensions.compressToStream
 import com.autocrop.utils.android.extensions.deleteImage

@@ -23,7 +23,7 @@ import com.autocrop.activities.iodetermination.fragments.croppager.pager.CropPag
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Scroller
 import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
-import com.autocrop.dataclasses.Crop
+import com.autocrop.Crop
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.ui.elements.recyclerview.CubeOutPageTransformer
 import com.autocrop.utils.android.extensions.animate

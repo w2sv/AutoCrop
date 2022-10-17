@@ -16,7 +16,7 @@ import com.autocrop.activities.cropping.cropping.cropEdges
 import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
 import com.autocrop.activities.iodetermination.deleteRequestUri
-import com.autocrop.dataclasses.Screenshot
+import com.autocrop.Screenshot
 import com.autocrop.screencapturelistening.abstractservices.BoundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.screencapturelistening.notifications.NotificationId

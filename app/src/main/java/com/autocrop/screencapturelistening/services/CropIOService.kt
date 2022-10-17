@@ -10,7 +10,7 @@ import androidx.core.text.bold
 import com.autocrop.activities.iodetermination.IOResult
 import com.autocrop.activities.iodetermination.carryOutCropIO
 import com.autocrop.activities.iodetermination.pathTail
-import com.autocrop.dataclasses.Screenshot
+import com.autocrop.Screenshot
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.screencapturelistening.abstractservices.BoundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup

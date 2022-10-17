@@ -3,7 +3,7 @@ package com.autocrop.activities.iodetermination.fragments.comparison
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.autocrop.dataclasses.CropBundle
+import com.autocrop.CropBundle
 
 /**
  * Owned by [ComparisonFragment]

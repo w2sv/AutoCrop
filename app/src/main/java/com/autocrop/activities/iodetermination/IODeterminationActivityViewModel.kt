@@ -3,8 +3,8 @@ package com.autocrop.activities.iodetermination
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
-import com.autocrop.dataclasses.CropBundle
-import com.autocrop.dataclasses.Screenshot
+import com.autocrop.CropBundle
+import com.autocrop.Screenshot
 import com.autocrop.utils.android.documentUriPathIdentifier
 import com.autocrop.utils.android.systemPicturesDirectory
 import com.autocrop.utils.kotlin.BlankFun
@@ -62,7 +62,8 @@ class IODeterminationActivityViewModel(private val validSaveDirDocumentUri: Uri?
     }
 
     private fun addScreenshotDeleteRequestUri(deleteScreenshot: Boolean,
-                                              screenshot: Screenshot): Boolean{
+                                              screenshot: Screenshot
+    ): Boolean{
         if (deleteScreenshot)
             deleteRequestUri(screenshot.mediaStoreData.id)?.let {
                 screenshotDeletionInquiryUris.add(it)

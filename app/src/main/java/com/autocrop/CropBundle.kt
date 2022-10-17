@@ -1,4 +1,4 @@
-package com.autocrop.dataclasses
+package com.autocrop
 
 import android.content.ContentResolver
 import android.graphics.Bitmap
@@ -33,7 +33,8 @@ data class Screenshot(
     val uri: Uri,
     val height: Int,
     val cropEdgesCandidates: List<CropEdges>,
-    val mediaStoreData: MediaStoreData){
+    val mediaStoreData: MediaStoreData
+){
 
     @Parcelize
     data class MediaStoreData(val diskUsage: Long,
@@ -78,7 +79,7 @@ data class Crop(
     }
 
     companion object{
-        fun fromScreenshot(screenshotBitmap: Bitmap, screenshotDiskUsage: Long, edges: CropEdges): Crop{
+        fun fromScreenshot(screenshotBitmap: Bitmap, screenshotDiskUsage: Long, edges: CropEdges): Crop {
             val cropBitmap = screenshotBitmap.cropped(edges)
             val discardedPercentageF = ((screenshotBitmap.height - cropBitmap.height).toFloat() / screenshotBitmap.height.toFloat())
 
