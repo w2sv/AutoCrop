@@ -84,8 +84,9 @@ dependencies {
 
     // Modules
     implementation project(path: ':croppylib')
-    implementation project(path: ':viewboundcontroller')
     implementation project(path: ':bidirectionalviewpager')
+
+    implementation 'com.github.w2sv:viewboundcontroller:master-SNAPSHOT'
 
     implementation 'com.google.guava:guava:31.1-android'  // EvictingQueue
 

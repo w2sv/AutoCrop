@@ -14,7 +14,6 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/bidirectionalviewpager" />
             <option value="$PROJECT_DIR$/croppylib" />
-            <option value="$PROJECT_DIR$/viewboundcontroller" />
           </set>
         </option>
       </GradleProjectSettings>
