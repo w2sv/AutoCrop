@@ -61,9 +61,9 @@
         <!-- Services -->
 
         <service
-            android:name="com.autocrop.screencapturelistening.services.ScreenCaptureListeningService"
+            android:name="com.autocrop.screencapturelistening.services.ScreenshotListener"
             android:exported="false"/>
-        <receiver android:name="com.autocrop.screencapturelistening.services.ScreenCaptureListeningService$StoppingBroadcastReceiver" />
+        <receiver android:name="com.autocrop.screencapturelistening.services.ScreenshotListener$StoppingBroadcastReceiver" />
 
         <service
             android:name="com.autocrop.screencapturelistening.services.CropIOService"

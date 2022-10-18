@@ -38,8 +38,8 @@ class CropIOService :
             )
 
             val ioResult = carryOutCropIO(
-                screenshotMediaStoreData = getParcelable(ScreenCaptureListeningService.EXTRA_SCREENSHOT_MEDIASTORE_DATA)!!,
-                deleteScreenshot = getBooleanExtra(ScreenCaptureListeningService.EXTRA_ATTEMPT_SCREENSHOT_DELETION, false)
+                screenshotMediaStoreData = getParcelable(ScreenshotListener.EXTRA_SCREENSHOT_MEDIASTORE_DATA)!!,
+                deleteScreenshot = getBooleanExtra(ScreenshotListener.EXTRA_ATTEMPT_SCREENSHOT_DELETION, false)
             )
             if (getBooleanExtra(DeleteRequestActivity.EXTRA_CONFIRMED_DELETION, false))
                 ioResult.deletedScreenshot = true

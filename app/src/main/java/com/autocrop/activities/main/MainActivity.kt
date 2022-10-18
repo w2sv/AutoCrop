@@ -18,7 +18,7 @@ import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.activities.iodetermination.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.screencapturelistening.services.ScreenCaptureListeningService
+import com.autocrop.screencapturelistening.services.ScreenshotListener
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.android.PermissionHandler
 import com.autocrop.utils.android.extensions.getParcelableArrayList
@@ -91,7 +91,7 @@ class MainActivity :
                             .iterator()
                             .requestPermissions(
                                 onGranted = {
-                                    startService(Intent(this, ScreenCaptureListeningService::class.java))
+                                    startService(Intent(this, ScreenshotListener::class.java))
                                 }
                             )
                 }

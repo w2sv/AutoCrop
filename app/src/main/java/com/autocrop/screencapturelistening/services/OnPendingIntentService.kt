@@ -62,7 +62,7 @@ class OnPendingIntentService : UnboundService() {
     }
 
     private val bindingAdministrators = arrayOf(
-        BindingAdministrator(this, ScreenCaptureListeningService::class.java),
+        BindingAdministrator(this, ScreenshotListener::class.java),
         BindingAdministrator(this, CropIOService::class.java)
     )
 

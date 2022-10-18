@@ -22,7 +22,7 @@ class DeleteRequestActivity: BlankViewBoundActivity() {
             IntentSenderRequest.Builder(
                 MediaStore.createDeleteRequest(
                     contentResolver,
-                    listOf(intent.getParcelable(ScreenCaptureListeningService.EXTRA_DELETE_REQUEST_URI))
+                    listOf(intent.getParcelable(ScreenshotListener.EXTRA_DELETE_REQUEST_URI))
                 )
                     .intentSender
             )

@@ -17,7 +17,7 @@ import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.screencapturelistening.services.ScreenCaptureListeningService
+import com.autocrop.screencapturelistening.services.ScreenshotListener
 import com.autocrop.uicontroller.activity.retriever.ActivityRetriever
 import com.autocrop.uicontroller.activity.retriever.ContextBasedActivityRetriever
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
@@ -42,7 +42,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
         super.onDraw(canvas)
 
         (menu.findItem(R.id.main_menu_item_listen_to_screen_captures).actionView as Switch)
-            .isChecked = context.serviceRunning<ScreenCaptureListeningService>()
+            .isChecked = context.serviceRunning<ScreenshotListener>()
     }
 
     override fun onAttachedToWindow() {
@@ -86,7 +86,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
         menu.findItem(R.id.main_menu_item_listen_to_screen_captures).actionView = Switch(context)
             .apply {
                 setOnCheckedChangeListener{ _, newValue ->
-                    val serviceIntent = Intent(context, ScreenCaptureListeningService::class.java)
+                    val serviceIntent = Intent(context, ScreenshotListener::class.java)
 
                     if (newValue) {
                         typedActivity

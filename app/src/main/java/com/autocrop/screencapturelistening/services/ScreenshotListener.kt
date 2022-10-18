@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.database.ContentObserver
+import android.database.CursorIndexOutOfBoundsException
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
@@ -33,7 +34,7 @@ import timber.log.Timber
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
-class ScreenCaptureListeningService :
+class ScreenshotListener :
     BoundService(),
     OnPendingIntentService.ClientInterface by OnPendingIntentService.Client(0) {
 
@@ -92,7 +93,7 @@ class ScreenCaptureListeningService :
     class StoppingBroadcastReceiver: BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
             context!!.stopService(
-                Intent(context, ScreenCaptureListeningService::class.java)
+                Intent(context, ScreenshotListener::class.java)
             )
         }
     }
@@ -122,7 +123,7 @@ class ScreenCaptureListeningService :
             uri?.let {
                 Timber.i("Called onChange for $it")
                 if (!recentBlacklist.contains(it)) {
-                    if (pendingScreenshotUris.contains(it) || it.isScreenshot()) {
+                    if (pendingScreenshotUris.contains(it) || it.isScreenshot() == true) {
                         if (onNewScreenshotUri(it)) {
                             recentBlacklist.add(it)
                             pendingScreenshotUris.remove(it)
@@ -148,29 +149,34 @@ class ScreenCaptureListeningService :
      * Checks if [this] not corresponding to AutoCrop-file and if its file path contains either the
      * [systemScreenshotsDirectory]name or the word 'screenshot'.
      */
-    private fun Uri.isScreenshot(): Boolean {
-        val mediaStoreData = contentResolver.queryMediaStoreData(
-            this,
-            arrayOf(
-                MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Images.Media.DATA,  // e.g. /storage/emulated/0/Pictures/Screenshots/.pending-1665749333-Screenshot_20221007-140853687.png
-                MediaStore.Images.Media.DATE_ADDED
+    private fun Uri.isScreenshot(): Boolean? {
+        try {
+            val mediaStoreData = contentResolver.queryMediaStoreData(
+                this,
+                arrayOf(
+                    MediaStore.Images.Media.DISPLAY_NAME,
+                    MediaStore.Images.Media.DATA,  // e.g. /storage/emulated/0/Pictures/Screenshots/.pending-1665749333-Screenshot_20221007-140853687.png
+                    MediaStore.Images.Media.DATE_ADDED
+                )
             )
-        )
 
-        val absolutePath = mediaStoreData[0]
-        val fileName = mediaStoreData[1]
-        val dateAdded = mediaStoreData[2]
+            val absolutePath = mediaStoreData[0]
+            val fileName = mediaStoreData[1]
+            val dateAdded = mediaStoreData[2]
 
-        return !fileName.contains(CROP_FILE_ADDENDUM) &&
-                (systemScreenshotsDirectory()?.let {
-                    absolutePath.contains(it.name)
-                } == true || fileName.lowercase().contains("screenshot")) &&
-                timeDelta(
-                    dateFromUnixTimestamp(dateAdded),
-                    Date(System.currentTimeMillis()),
-                    TimeUnit.SECONDS
-                ) < 20
+            return !fileName.contains(CROP_FILE_ADDENDUM) &&
+                    (systemScreenshotsDirectory()?.let {
+                        absolutePath.contains(it.name)
+                    } == true || fileName.lowercase().contains("screenshot")) &&
+                    timeDelta(
+                        dateFromUnixTimestamp(dateAdded),
+                        Date(System.currentTimeMillis()),
+                        TimeUnit.SECONDS
+                    ) < 20
+        }
+        catch (e: CursorIndexOutOfBoundsException){
+            return null
+        }
     }
 
     /**
