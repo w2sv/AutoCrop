@@ -10,21 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/androidTest/java/com/autocrop/activities/main/MainActivityTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/androidTest/java/com/autocrop/activities/main/MainActivityTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/IODeterminationActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/IODeterminationActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/IODeterminationActivityViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/IODeterminationActivityViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/IOSynopsis.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/deletionconfirmationdialog/DeletionConfirmationDialogFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/deletionconfirmationdialog/DeletionConfirmationDialogFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/saveall/SaveAllFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/saveall/SaveAllFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivityViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivityViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivityViewModelFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivityViewModelFactory.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/WelcomeDialogs.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/WelcomeDialogs.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFieldNavigationView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFieldNavigationView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/kotlin/extensions/ByteArray.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/autocrop/dataclasses/IOSynopsisTest.kt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -4,7 +4,9 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import androidx.core.os.bundleOf
+import androidx.core.text.italic
 import androidx.fragment.app.setFragmentResult
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.views.UncancelableDialogFragment
@@ -16,8 +18,12 @@ class CropExplanation: UncancelableDialogFragment(){
             .setTitle("Welcome to AutoCrop \uD83C\uDF89")
             .setIcon(R.drawable.logo_wo_background)
             .setMessage(
-                "You have just unlocked the capability to automatically crop multiple screenshots from your gallery & save them all in one go.\n\n" +
-                "All you need to do now is press the 'Select Images' button and get croppin'!"
+                SpannableStringBuilder()
+                    .append("You have just unlocked the capability to automatically crop multiple screenshots from your gallery & save them all in one go." +
+                            "\n\n" +
+                            "All you need to do now is press the ")
+                    .italic { append("Select Images ") }
+                    .append("button and get croppin'!")
             )
             .setPositiveButton("Alright!"){_, _ -> }
             .create()
@@ -45,7 +51,7 @@ class ScreenshotListenerExplanation: UncancelableDialogFragment(){
             .setMessage(
                 buildString {
                     append(
-                        "With screenshot listening, you will get a notification whenever you take a croppable screenshot. " +
+                        "The screenshot listener will send you a notification whenever you take a croppable screenshot. " +
                         "Through that, you can save the crop and delete the original screenshot, without having to open the app." +
                         "\n\n" +
                         "For this to work, the media file reading "
@@ -59,7 +65,9 @@ class ScreenshotListenerExplanation: UncancelableDialogFragment(){
                         else
                             append(" is ")
                     }
-                    append("required.\n\nYou can en-/disable the screenshot listener anytime through the drawer menu.")
+                    append("required." +
+                            "\n\n" +
+                            "You can en-/disable the screenshot listener anytime through the drawer menu.")
                 }
             )
             .setNegativeButton("Maybe later"){_, _ -> setFragmentResult(false) }
