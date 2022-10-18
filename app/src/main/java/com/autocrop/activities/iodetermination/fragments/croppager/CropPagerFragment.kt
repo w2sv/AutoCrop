@@ -78,7 +78,7 @@ class CropPagerFragment :
                     sharedViewModel.makeCropBundleProcessor(
                         dataSetPosition,
                         BooleanPreferences.deleteScreenshots,
-                        requireContext()
+                        requireContext().contentResolver
                     )
                 )
 
@@ -191,7 +191,7 @@ class CropPagerFragment :
 
     private fun displayDismissedScreenshotsSnackbarIfApplicable(){
         with(sharedViewModel) {
-            if (!displayedDismissedScreenshotsSnackbar && nDismissedScreenshots != 0){
+            if (!showedDismissedScreenshotsSnackbar && nDismissedScreenshots != 0){
                 requireActivity().snacky(
                     SpannableStringBuilder()
                         .append("Couldn't find cropping bounds for")

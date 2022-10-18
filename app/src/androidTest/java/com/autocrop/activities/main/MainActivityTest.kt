@@ -192,7 +192,7 @@ internal class MainActivityTest {
                 val scenarioExtension = ActivityScenarioExtension.launch<MainActivity>(
                     Intent(ApplicationProvider.getApplicationContext(), MainActivity::class.java)
                         .putParcelableArrayListExtra(
-                            IODeterminationActivity.EXTRA_CROP_SAVING_URIS,
+                            IODeterminationActivity.EXTRA_CROP_URIS,
                             cropSavingUris
                         )
                 )

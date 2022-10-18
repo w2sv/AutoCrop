@@ -15,13 +15,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.iodetermination.IODeterminationActivity
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.autocrop.activities.iodetermination.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.screencapturelistening.services.ScreenshotListener
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.android.PermissionHandler
-import com.autocrop.utils.android.extensions.getParcelableArrayList
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
@@ -71,10 +69,7 @@ class MainActivity :
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
         MainActivityViewModelFactory(
-            ioSynopsis = intent.getByteArrayExtra(IODeterminationActivity.EXTRA_IO_SYNOPSIS)?.let {
-                IOSynopsis.fromByteArray(it)
-            },
-            savedCropUris = intent.getParcelableArrayList(IODeterminationActivity.EXTRA_CROP_SAVING_URIS)
+            ioResults = IODeterminationActivity.Results.attemptRestoration(intent)
         )
 
     override fun onSavedInstanceStateNull() {
@@ -98,20 +93,20 @@ class MainActivity :
                 CropExplanation().show(supportFragmentManager)
             }
             else
-                viewModel.ioSynopsis?.let {
+                viewModel.ioResults?.let {
                     showIOSynopsisSnackbar(it)
                 }
         }
     }
 
-    private fun showIOSynopsisSnackbar(ioSynopsis: IOSynopsis){
-        with(ioSynopsis){
+    private fun showIOSynopsisSnackbar(ioResults: IODeterminationActivity.Results){
+        with(ioResults){
             val (text, icon) = if (nSavedCrops == 0)
                 "Discarded all crops" to R.drawable.ic_outline_sentiment_dissatisfied_24
             else
                 SpannableStringBuilder().apply {
                     append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                    color(getThemedColor(R.color.notification_success)) {append(cropWriteDirIdentifier)}
+                    color(getThemedColor(R.color.notification_success)) {append(saveDirName)}
                     if (nDeletedScreenshots != 0)
                         append(
                             " and deleted ${

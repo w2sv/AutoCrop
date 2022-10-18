@@ -16,8 +16,8 @@ class CropExplanation: UncancelableDialogFragment(){
             .setTitle("Welcome to AutoCrop \uD83C\uDF89")
             .setIcon(R.drawable.logo_wo_background)
             .setMessage(
-                "You have just unlocked the superpower of automatically cropping multiple screenshots from your gallery & saving them all in one go.\n\n" +
-                "Just press the 'Select Images' button and get croppin'!"
+                "You have just unlocked the capability to automatically crop multiple screenshots from your gallery & save them all in one go.\n\n" +
+                "All you need to do now is press the 'Select Images' button and get croppin'!"
             )
             .setPositiveButton("Alright!"){_, _ -> }
             .create()
@@ -62,7 +62,7 @@ class ScreenshotListenerExplanation: UncancelableDialogFragment(){
                     append("required.\n\nYou can en-/disable the screenshot listener anytime through the drawer menu.")
                 }
             )
-            .setNegativeButton("Don't enable"){_, _ -> setFragmentResult(false) }
+            .setNegativeButton("Maybe later"){_, _ -> setFragmentResult(false) }
             .setPositiveButton("Enable"){_, _ -> setFragmentResult(true) }
             .create()
 

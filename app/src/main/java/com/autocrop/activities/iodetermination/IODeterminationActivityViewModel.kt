@@ -1,12 +1,12 @@
 package com.autocrop.activities.iodetermination
 
-import android.content.Context
+import android.content.ContentResolver
 import android.net.Uri
+import android.provider.MediaStore
 import androidx.lifecycle.ViewModel
 import com.autocrop.CropBundle
 import com.autocrop.Screenshot
-import com.autocrop.utils.android.documentUriPathIdentifier
-import com.autocrop.utils.android.systemPicturesDirectory
+import com.autocrop.utils.android.extensions.queryMediaStoreDatum
 import com.autocrop.utils.kotlin.BlankFun
 import com.autocrop.utils.kotlin.delegates.AutoSwitch
 import com.autocrop.utils.kotlin.extensions.toInt
@@ -28,19 +28,18 @@ class IODeterminationActivityViewModel(private val validSaveDirDocumentUri: Uri?
         cropBundles.clear()
     }
 
-    var displayedDismissedScreenshotsSnackbar by AutoSwitch(false, switchOn = false)
+    var showedDismissedScreenshotsSnackbar by AutoSwitch(false, switchOn = false)
 
     var singularCropSavingJob: Job? = null
 
     var nDeletedScreenshots = 0
+    val writeUris = arrayListOf<Uri>()
+    val deletionInquiryUris = arrayListOf<Uri>()
 
-    val savedCropUris = mutableListOf<Uri>()
-    val screenshotDeletionInquiryUris = mutableListOf<Uri>()
-
-    fun makeCropBundleProcessor(cropBundlesPosition: Int,
+    fun makeCropBundleProcessor(cropBundlePosition: Int,
                                 deleteScreenshot: Boolean,
-                                context: Context): BlankFun {
-        val cropBundle = cropBundles[cropBundlesPosition]
+                                contentResolver: ContentResolver): BlankFun {
+        val cropBundle = cropBundles[cropBundlePosition]
 
         val addedScreenshotDeletionInquiryUri = addScreenshotDeleteRequestUri(
             deleteScreenshot,
@@ -48,7 +47,7 @@ class IODeterminationActivityViewModel(private val validSaveDirDocumentUri: Uri?
         )
 
         return {
-            val ioResult = context.contentResolver.carryOutCropIO(
+            val ioResult = contentResolver.carryOutCropIO(
                 cropBundle.crop.bitmap,
                 cropBundle.screenshot.mediaStoreData,
                 validSaveDirDocumentUri,
@@ -56,24 +55,31 @@ class IODeterminationActivityViewModel(private val validSaveDirDocumentUri: Uri?
             )
 
             if (ioResult.successfullySavedCrop)
-                savedCropUris.add(ioResult.writeUri!!)
+                writeUris.add(ioResult.writeUri!!)
             nDeletedScreenshots += (ioResult.deletedScreenshot == true).toInt()
         }
     }
 
     private fun addScreenshotDeleteRequestUri(deleteScreenshot: Boolean,
-                                              screenshot: Screenshot
-    ): Boolean{
+                                              screenshot: Screenshot): Boolean{
         if (deleteScreenshot)
             deleteRequestUri(screenshot.mediaStoreData.id)?.let {
-                screenshotDeletionInquiryUris.add(it)
+                deletionInquiryUris.add(it)
                 return true
             }
         return false
     }
 
-    fun cropWriteDirIdentifier(): String =
-        validSaveDirDocumentUri?.let {
-            documentUriPathIdentifier(it)
-        } ?: systemPicturesDirectory().path
+    fun cropWriteDirIdentifier(contentResolver: ContentResolver): String? =
+        if (writeUris.isEmpty())
+            null
+        else
+            contentResolver.queryMediaStoreDatum(
+                writeUris.first(),
+                MediaStore.Images.Media.DATA
+            )
+                .split("/")
+                .run {
+                    "/${get(lastIndex - 1)}"
+                }
 }

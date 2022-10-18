@@ -35,7 +35,7 @@ class SaveAllFragment :
             sharedViewModel.makeCropBundleProcessor(
                 it,
                 deleteCorrespondingScreenshots,
-                requireContext()
+                requireContext().contentResolver
             )
                 .invoke()
 

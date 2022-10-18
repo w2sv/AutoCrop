@@ -1,5 +1,7 @@
 package com.autocrop.activities.iodetermination
 
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragment
@@ -13,6 +15,7 @@ import com.autocrop.preferences.UriPreferences
 import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.android.BackPressHandler
 import com.autocrop.utils.android.extensions.getInt
+import com.autocrop.utils.android.extensions.getParcelableArrayList
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.w2sv.autocrop.R
@@ -23,9 +26,10 @@ class IODeterminationActivity :
         IODeterminationActivityViewModel::class,
         BooleanPreferences) {
 
-    companion object{
-        const val EXTRA_IO_SYNOPSIS = "com.autocrop.IO_SYNOPSIS"
-        const val EXTRA_CROP_SAVING_URIS = "com.autocrop.CROP_SAVING_URIS"
+    private companion object{
+        const val EXTRA_CROP_URIS = "com.autocrop.CROP_URIS"
+        const val EXTRA_N_DELETED_SCREENSHOTS = "com.autocrop.N_DELETED_SCREENSHOTS"
+        const val EXTRA_SAVE_DIR_NAME = "com.autocrop.SAVE_DIR_NAME"
     }
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
@@ -44,7 +48,7 @@ class IODeterminationActivity :
      */
     fun invokeSubsequentFragment(){
         fragmentReplacementTransaction(
-            if (viewModel.screenshotDeletionInquiryUris.isNotEmpty())
+            if (viewModel.deletionInquiryUris.isNotEmpty())
                 DeletionConfirmationDialogFragment()
             else
                 AppTitleFragment(),
@@ -86,20 +90,29 @@ class IODeterminationActivity :
 
     fun startMainActivity() {
         startMainActivity{ intent ->
-            if (viewModel.savedCropUris.isNotEmpty())
-                intent.putParcelableArrayListExtra(
-                    EXTRA_CROP_SAVING_URIS,
-                    ArrayList(viewModel.savedCropUris)
-                )
-            intent.putExtra(
-                EXTRA_IO_SYNOPSIS,
-                IOSynopsis(
-                    viewModel.savedCropUris.size,
-                    viewModel.nDeletedScreenshots,
-                    viewModel.cropWriteDirIdentifier()
-                )
-                    .toByteArray()
-            )
+            with(intent){
+                putParcelableArrayListExtra(EXTRA_CROP_URIS, viewModel.writeUris)
+                putExtra(EXTRA_N_DELETED_SCREENSHOTS, viewModel.nDeletedScreenshots)
+                putExtra(EXTRA_SAVE_DIR_NAME, viewModel.cropWriteDirIdentifier(contentResolver))
+            }
         }
+    }
+
+    data class Results(val cropUris: ArrayList<Uri>, val nDeletedScreenshots: Int, val saveDirName: String?){
+        companion object{
+            fun attemptRestoration(intent: Intent): Results? =
+                intent.run {
+                    if (hasExtra(EXTRA_CROP_URIS))
+                        Results(
+                            getParcelableArrayList(EXTRA_CROP_URIS)!!,
+                            getInt(EXTRA_N_DELETED_SCREENSHOTS),
+                            getStringExtra(EXTRA_SAVE_DIR_NAME)
+                        )
+                    else
+                        null
+                }
+        }
+
+        val nSavedCrops: Int get() = cropUris.size
     }
 }

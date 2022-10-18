@@ -16,6 +16,7 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
+import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.screencapturelistening.services.ScreenshotListener
 import com.autocrop.uicontroller.activity.retriever.ActivityRetriever
@@ -24,7 +25,6 @@ import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.activityViewModelLazy
 import com.autocrop.utils.android.extensions.ifNotInEditMode
 import com.autocrop.utils.android.extensions.serviceRunning
-import com.autocrop.utils.android.extensions.setBooleanPreferencesManagedSwitch
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.autocrop.utils.android.requestPermissions
@@ -68,18 +68,20 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
     }
 
     private fun setShareCropsItem(){
-        if (viewModel.savedCropUris != null)
-            with(menu.findItem(R.id.main_menu_item_share_crops)){
-                isVisible = true
-                actionView = ImageView(context).apply {
-                    setImageDrawable(
-                        AppCompatResources.getDrawable(
-                            context,
-                            R.drawable.ic_baseline_priority_high_24
+        viewModel.ioResults?.let {
+            if (it.nSavedCrops != 0)
+                with(menu.findItem(R.id.main_menu_item_share_crops)){
+                    isVisible = true
+                    actionView = ImageView(context).apply {
+                        setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                context,
+                                R.drawable.ic_baseline_priority_high_24
+                            )
                         )
-                    )
+                    }
                 }
-            }
+        }
     }
 
     private fun setListenToScreenCapturesItem(){
@@ -110,10 +112,8 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
     }
 
     private fun setAutoScrollItem(){
-        menu.findItem(R.id.main_menu_item_auto_scroll).setBooleanPreferencesManagedSwitch(
-            context,
-            "autoScroll"
-        )
+        menu.findItem(R.id.main_menu_item_auto_scroll)
+            .actionView = BooleanPreferences.createSwitch(context, "autoScroll")
     }
 
     private fun launchCropSharingIntent(){
@@ -122,7 +122,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
                 Intent(Intent.ACTION_SEND_MULTIPLE)
                     .putExtra(
                         Intent.EXTRA_STREAM,
-                        viewModel.savedCropUris
+                        viewModel.ioResults!!.cropUris
                     )
                     .setType(IMAGE_MIME_TYPE),
                 null

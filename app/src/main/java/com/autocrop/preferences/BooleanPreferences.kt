@@ -1,6 +1,8 @@
 package com.autocrop.preferences
 
+import android.content.Context
 import android.content.SharedPreferences
+import android.widget.Switch
 import com.autocrop.utils.kotlin.delegates.AutoSwitch
 
 object BooleanPreferences : TypedPreferences<Boolean>(
@@ -30,4 +32,12 @@ object BooleanPreferences : TypedPreferences<Boolean>(
     }
     override fun SharedPreferences.getValue(key: String, defaultValue: Boolean): Boolean =
         getBoolean(key, defaultValue)
+
+    fun createSwitch(context: Context, key: String): Switch =
+        Switch(context).apply {
+            isChecked = getValue(key)
+            setOnCheckedChangeListener { _, isChecked ->
+                this@BooleanPreferences[key] = isChecked
+            }
+        }
 }

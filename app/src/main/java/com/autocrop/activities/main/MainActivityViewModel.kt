@@ -1,11 +1,9 @@
 package com.autocrop.activities.main
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
-import com.autocrop.activities.iodetermination.IOSynopsis
+import com.autocrop.activities.iodetermination.IODeterminationActivity
 
-class MainActivityViewModel(val ioSynopsis: IOSynopsis?,
-                            val savedCropUris: ArrayList<Uri>?)
+class MainActivityViewModel(val ioResults: IODeterminationActivity.Results?)
     : ViewModel() {
     var fadeInFlowFieldButtons = true
 }

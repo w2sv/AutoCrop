@@ -1,14 +1,12 @@
 package com.autocrop.activities.main
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.autocrop.activities.iodetermination.IOSynopsis
+import com.autocrop.activities.iodetermination.IODeterminationActivity
 
-class MainActivityViewModelFactory(private val ioSynopsis: IOSynopsis?,
-                                   private val savedCropUris: ArrayList<Uri>?)
+class MainActivityViewModelFactory(private val ioResults: IODeterminationActivity.Results?)
     : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        MainActivityViewModel(ioSynopsis, savedCropUris) as T
+        MainActivityViewModel(ioResults) as T
 }
