@@ -5,7 +5,7 @@ import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import androidx.core.text.bold
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
-import com.autocrop.ui.elements.ExtendedAppCompatTextView
+import com.autocrop.views.ExtendedAppCompatTextView
 import com.autocrop.utils.android.extensions.activityViewModelLazy
 
 class DiscardingStatisticsTextView(context: Context, attr: AttributeSet):

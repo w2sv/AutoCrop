@@ -1,4 +1,4 @@
-package com.autocrop.ui.controller.activity
+package com.autocrop.uicontroller.activity
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction

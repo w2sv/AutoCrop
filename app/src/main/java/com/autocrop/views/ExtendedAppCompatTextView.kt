@@ -1,9 +1,8 @@
-package com.autocrop.ui.elements
+package com.autocrop.views
 
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
-import com.w2sv.autocrop.BuildConfig
 
 abstract class ExtendedAppCompatTextView(context: Context, attr: AttributeSet)
     : AppCompatTextView(context, attr) {

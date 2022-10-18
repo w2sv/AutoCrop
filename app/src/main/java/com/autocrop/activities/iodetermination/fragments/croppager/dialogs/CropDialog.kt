@@ -37,7 +37,7 @@ class CropDialog :
                 RESULT_REQUEST_KEY,
                 bundleOf(
                     DATA_SET_POSITION_BUNDLE_ARG_KEY to dataSetPosition,
-                    CONFIRMED_BUNDLE_ARG_KEY to confirmed
+                    EXTRA_DIALOG_CONFIRMED to confirmed
                 )
             )
     }

@@ -1,4 +1,4 @@
-package com.autocrop.ui.controller.activity
+package com.autocrop.uicontroller.activity
 
 import android.content.Intent
 import android.os.Bundle

@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import androidx.fragment.app.findFragment
 import com.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
-import com.autocrop.ui.elements.ExtendedAppCompatImageButton
+import com.autocrop.views.ExtendedAppCompatImageButton
 import com.autocrop.utils.android.extensions.activityViewModel
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.lyrebirdstudio.croppylib.CroppyRequest

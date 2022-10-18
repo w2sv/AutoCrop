@@ -1,5 +1,8 @@
 package com.autocrop.activities.main
 
+import android.Manifest
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,11 +18,14 @@ import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.activities.iodetermination.IOSynopsis
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.ui.controller.activity.ApplicationActivity
+import com.autocrop.screencapturelistening.services.ScreenCaptureListeningService
+import com.autocrop.uicontroller.activity.ApplicationActivity
+import com.autocrop.utils.android.PermissionHandler
 import com.autocrop.utils.android.extensions.getParcelableArrayList
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
+import com.autocrop.utils.android.requestPermissions
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.w2sv.autocrop.R
 
@@ -37,7 +43,31 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        screenshotListeningPermissions.forEach {
+            it?.let {
+                lifecycle.addObserver(it)
+            }
+        }
     }
+
+    val screenshotListeningPermissions = listOf(
+        PermissionHandler(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            this,
+            "Media file access required for listening to screen captures",
+            "Go to app settings and grant media file access for screen capture listening to work"
+        ),
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            PermissionHandler(
+                Manifest.permission.POST_NOTIFICATIONS,
+                this,
+                "If you don't allow for the posting of notifications AutoCrop can't inform you about croppable screenshots",
+                "Go to app settings and enable notification posting for screen capture listening to work"
+            )
+        else
+            null
+    )
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
         MainActivityViewModelFactory(
@@ -50,18 +80,28 @@ class MainActivity :
     override fun onSavedInstanceStateNull() {
         super.onSavedInstanceStateNull()
 
-        if (!BooleanPreferences.welcomeMessageShown)
-            onButtonsHalfFadedIn{
-                snacky(
-                    "Good to have you on board! \uD83D\uDD25 Now go ahead select some screenshots and save your first AutoCrops! \uD83D\uDE80",
-                    duration = resources.getInteger(R.integer.duration_snackbar_extra_long)
-                )
-                    .show()
+        onButtonsHalfFadedIn {
+            if (!BooleanPreferences.welcomeDialogShown){
+                supportFragmentManager.setFragmentResultListener(
+                    ScreenshotListenerExplanation.REQUEST_KEY,
+                    this
+                ){_, bundle ->
+                    if (ScreenshotListenerExplanation.dialogConfirmed(bundle))
+                        screenshotListeningPermissions
+                            .iterator()
+                            .requestPermissions(
+                                onGranted = {
+                                    startService(Intent(this, ScreenCaptureListeningService::class.java))
+                                }
+                            )
+                }
+                CropExplanation().show(supportFragmentManager)
             }
-        else
-            viewModel.ioSynopsis?.let {
-                onButtonsHalfFadedIn { showIOSynopsisSnackbar(it) }
-            }
+            else
+                viewModel.ioSynopsis?.let {
+                    showIOSynopsisSnackbar(it)
+                }
+        }
     }
 
     private fun showIOSynopsisSnackbar(ioSynopsis: IOSynopsis){

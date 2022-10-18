@@ -13,6 +13,7 @@ import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.TransitionInflater
+import com.autocrop.Crop
 import com.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.AbstractCropDialog
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropDialog
@@ -23,9 +24,7 @@ import com.autocrop.activities.iodetermination.fragments.croppager.pager.CropPag
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Scroller
 import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
-import com.autocrop.Crop
 import com.autocrop.preferences.BooleanPreferences
-import com.autocrop.ui.elements.recyclerview.CubeOutPageTransformer
 import com.autocrop.utils.android.extensions.animate
 import com.autocrop.utils.android.extensions.crossFade
 import com.autocrop.utils.android.extensions.getThemedColor
@@ -36,8 +35,8 @@ import com.autocrop.utils.android.livedata.asMutable
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.daimajia.androidanimations.library.Techniques
-import com.lyrebirdstudio.croppylib.activity.CroppyActivity
 import com.lyrebirdstudio.croppylib.CropEdges
+import com.lyrebirdstudio.croppylib.activity.CroppyActivity
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import de.mateware.snacky.Snacky
@@ -72,7 +71,7 @@ class CropPagerFragment :
     private fun setCropDialogResultListener(){
         setFragmentResultListener(CropDialog.RESULT_REQUEST_KEY){ bundle ->
             val dataSetPosition = bundle.getInt(CropDialog.DATA_SET_POSITION_BUNDLE_ARG_KEY)
-            val saveCrop = bundle.getBoolean(AbstractCropDialog.CONFIRMED_BUNDLE_ARG_KEY)
+            val saveCrop = bundle.getBoolean(AbstractCropDialog.EXTRA_DIALOG_CONFIRMED)
 
             if (saveCrop)
                 sharedViewModel.singularCropSavingJob = lifecycleScope.executeAsyncTask(
@@ -92,7 +91,7 @@ class CropPagerFragment :
 
     private fun setCropEntiretyDialogResultListener(){
         setFragmentResultListener(CropEntiretyDialog.RESULT_REQUEST_KEY){
-            if (it.getBoolean(AbstractCropDialog.CONFIRMED_BUNDLE_ARG_KEY))
+            if (it.getBoolean(AbstractCropDialog.EXTRA_DIALOG_CONFIRMED))
                 fragmentHostingActivity
                     .fragmentReplacementTransaction(SaveAllFragment(),true)
                     .commit()
@@ -144,7 +143,13 @@ class CropPagerFragment :
                     }
                 }
             } else {
-                binding.viewPager.setPageTransformer(CubeOutPageTransformer())
+                binding.viewPager.setPageTransformer { page, position ->
+                    with(page) {
+                        pivotX = (if (position < 0) width else 0).toFloat()
+                        pivotY = height * 0.5f
+                        rotationY = 90f * position
+                    }
+                }
 
                 val manualScrollingStateViews = arrayOf(
                     binding.discardingStatisticsTv,
@@ -160,7 +165,7 @@ class CropPagerFragment :
                     )
                 } ?: manualScrollingStateViews.forEach { it.show() }
 
-                if (!BooleanPreferences.viewPagerInstructionsShown)
+                if (!BooleanPreferences.cropPagerInstructionsShown)
                     Handler(Looper.getMainLooper()).postDelayed(
                         {
                             InstructionsDialog()

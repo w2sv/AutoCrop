@@ -18,7 +18,7 @@ class OnPendingIntentService : UnboundService() {
 
     interface ClientInterface {
         companion object {
-            const val CLIENT_INDEX = "CLIENT_INDEX"
+            const val EXTRA_CLIENT_INDEX = "com.autocrop.CLIENT_INDEX"
         }
 
         val clientIndex: Int
@@ -28,7 +28,7 @@ class OnPendingIntentService : UnboundService() {
 
         fun Intent.putClientExtras(notificationId: Int, associatedRequestCodes: ArrayList<Int>): Intent =
             this
-                .putExtra(CLIENT_INDEX, clientIndex)
+                .putExtra(EXTRA_CLIENT_INDEX, clientIndex)
                 .putExtra(EXTRA_ASSOCIATED_NOTIFICATION_ID, notificationId)
                 .putIntegerArrayListExtra(EXTRA_ASSOCIATED_PENDING_REQUEST_CODES, associatedRequestCodes)
     }
@@ -46,7 +46,7 @@ class OnPendingIntentService : UnboundService() {
                     .cancel(notificationId)
                     .also { Timber.i("Cancelled notification $notificationId") }
 
-            bindingAdministrators[getInt(ClientInterface.CLIENT_INDEX)]
+            bindingAdministrators[getInt(ClientInterface.EXTRA_CLIENT_INDEX)]
                 .callOnBoundService {boundService ->
                     (boundService as ClientInterface).let {
                         it.notificationGroup!!.onChildNotificationCancelled(notificationId)

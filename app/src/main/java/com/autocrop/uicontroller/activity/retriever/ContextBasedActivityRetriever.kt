@@ -1,9 +1,9 @@
-package com.autocrop.ui.controller.activity.retriever
+package com.autocrop.uicontroller.activity.retriever
 
 import android.app.Activity
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
-import com.autocrop.ui.controller.activity.FragmentHostingActivity
+import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.utils.android.extensions.getActivity
 
 class ContextBasedActivityRetriever<A: Activity>(private val context: Context)

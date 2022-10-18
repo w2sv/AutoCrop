@@ -19,6 +19,17 @@ import com.w2sv.autocrop.R
 import de.mateware.snacky.Snacky
 import timber.log.Timber
 
+fun Iterator<PermissionHandler?>.requestPermissions(onGranted: BlankFun, onDenied: BlankFun? = null){
+    if (!hasNext())
+        onGranted()
+    else{
+        next()?.requestPermission(
+            onGranted = {requestPermissions(onGranted, onDenied)},
+            onDenied = onDenied
+        ) ?: requestPermissions(onGranted, onDenied)
+    }
+}
+
 class PermissionHandler(
     private val permission: String,
     private val activity: Activity,
@@ -72,7 +83,7 @@ class PermissionHandler(
 
     /**
      * Function wrapper either directly running [onGranted] if permission granted,
-     * otherwise sets [onGranted] and launches [requestPermission]
+     * otherwise sets [onGranted] and launches [requestPermissions]
      */
     fun requestPermission(onGranted: BlankFun, onDenied: BlankFun? = null): Unit =
         if (!grantRequired)
@@ -125,13 +136,13 @@ class PermissionHandler(
             .setActionClickListener {
                 activity.startActivity(
                     Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        .apply {
-                            data = Uri.fromParts(
+                        .setData(
+                            Uri.fromParts(
                                 "package",
                                 activity.packageName,
                                 null
                             )
-                        }
+                        )
                 )
             }
 }

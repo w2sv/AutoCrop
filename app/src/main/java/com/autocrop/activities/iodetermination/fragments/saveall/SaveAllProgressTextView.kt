@@ -2,7 +2,7 @@ package com.autocrop.activities.iodetermination.fragments.saveall
 
 import android.content.Context
 import android.util.AttributeSet
-import com.autocrop.ui.elements.FractionTextView
+import com.autocrop.views.FractionTextView
 import com.autocrop.utils.android.extensions.viewModelLazy
 
 class SaveAllProgressTextView(context: Context, attr: AttributeSet):

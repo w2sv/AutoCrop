@@ -1,4 +1,4 @@
-package com.autocrop.ui.controller.activity.retriever
+package com.autocrop.uicontroller.activity.retriever
 
 import android.app.Activity
 import androidx.fragment.app.FragmentActivity

@@ -32,7 +32,7 @@ class CropEntiretyDialog: AbstractCropDialog(){
             .supportFragmentManager
             .setFragmentResult(
                 RESULT_REQUEST_KEY,
-                bundleOf(CONFIRMED_BUNDLE_ARG_KEY to confirmed)
+                bundleOf(EXTRA_DIALOG_CONFIRMED to confirmed)
             )
     }
 }

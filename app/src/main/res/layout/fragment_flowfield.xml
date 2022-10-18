@@ -12,7 +12,7 @@
 
     </com.autocrop.activities.main.fragments.flowfield.views.FlowFieldContainer>
 
-    <androidx.drawerlayout.widget.DrawerLayout
+    <com.autocrop.activities.main.fragments.flowfield.views.FlowFieldDrawerLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
@@ -65,7 +65,7 @@
 
         </com.autocrop.activities.main.fragments.flowfield.views.ButtonsLayout>
 
-        <com.autocrop.activities.main.fragments.flowfield.views.FlowFragmentNavigationView
+        <com.autocrop.activities.main.fragments.flowfield.views.FlowFieldNavigationView
             android:layout_alignTop="@+id/navigation_drawer_button_burger"
             android:layout_marginTop="50dp"
 
@@ -81,6 +81,6 @@
             app:headerLayout="@layout/navigation_drawer_header"
             app:itemIconTint="@color/magenta_bright"/>
 
-    </androidx.drawerlayout.widget.DrawerLayout>
+    </com.autocrop.activities.main.fragments.flowfield.views.FlowFieldDrawerLayout>
 
 </RelativeLayout>

@@ -3,6 +3,7 @@ package com.autocrop.activities.main.fragments.flowfield.views
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.graphics.Canvas
 import android.net.Uri
 import android.util.AttributeSet
 import android.widget.ImageView
@@ -16,9 +17,9 @@ import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.ui.controller.activity.retriever.ActivityRetriever
-import com.autocrop.ui.controller.activity.retriever.ContextBasedActivityRetriever
 import com.autocrop.screencapturelistening.services.ScreenCaptureListeningService
+import com.autocrop.uicontroller.activity.retriever.ActivityRetriever
+import com.autocrop.uicontroller.activity.retriever.ContextBasedActivityRetriever
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.activityViewModelLazy
 import com.autocrop.utils.android.extensions.ifNotInEditMode
@@ -26,16 +27,23 @@ import com.autocrop.utils.android.extensions.serviceRunning
 import com.autocrop.utils.android.extensions.setBooleanPreferencesManagedSwitch
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
-import com.autocrop.utils.kotlin.BlankFun
+import com.autocrop.utils.android.requestPermissions
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.autocrop.R
 import timber.log.Timber
 
-class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
+class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
     NavigationView(context, attributeSet),
     ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context) {
 
     private val viewModel by activityViewModelLazy<MainActivityViewModel>()
+
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+
+        (menu.findItem(R.id.main_menu_item_listen_to_screen_captures).actionView as Switch)
+            .isChecked = context.serviceRunning<ScreenCaptureListeningService>()
+    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -77,33 +85,22 @@ class FlowFragmentNavigationView(context: Context, attributeSet: AttributeSet):
     private fun setListenToScreenCapturesItem(){
         menu.findItem(R.id.main_menu_item_listen_to_screen_captures).actionView = Switch(context)
             .apply {
-                isChecked = context.serviceRunning<ScreenCaptureListeningService>()
                 setOnCheckedChangeListener{ _, newValue ->
                     val serviceIntent = Intent(context, ScreenCaptureListeningService::class.java)
 
                     if (newValue) {
-                        findFragment<FlowFieldFragment>().let{
-                            val onPermissionsGranted: BlankFun = {
-                                context.startForegroundService(serviceIntent)
-                                    .also { Timber.i("Started ScreenCaptureListeningService") }
-                            }
-                            val onPermissionDenied = {
-                                isChecked = false
-                            }
-
-                            it.readExternalStoragePermissionHandler
-                                .requestPermission(
-                                    onGranted = {
-                                        it
-                                            .notificationPostingPermissionHandler
-                                            ?.requestPermission(
-                                                onGranted = onPermissionsGranted,
-                                                onDenied = onPermissionDenied
-                                            ) ?: onPermissionsGranted()
-                                    },
-                                    onDenied = onPermissionDenied
+                        typedActivity
+                            .screenshotListeningPermissions
+                            .iterator()
+                            .requestPermissions(
+                                onGranted = {
+                                    context.startForegroundService(serviceIntent)
+                                        .also { Timber.i("Started ScreenCaptureListeningService") }
+                                },
+                                onDenied = {
+                                    isChecked = false
+                                }
                             )
-                        }
                     }
                     else
                         context.stopService(serviceIntent)

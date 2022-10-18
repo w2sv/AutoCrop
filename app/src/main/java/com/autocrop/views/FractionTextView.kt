@@ -1,4 +1,4 @@
-package com.autocrop.ui.elements
+package com.autocrop.views
 
 import android.content.Context
 import android.util.AttributeSet

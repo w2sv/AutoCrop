@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.cropping.fragments.cropping.CropFragment
 import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.ui.controller.activity.ApplicationActivity
+import com.autocrop.uicontroller.activity.ApplicationActivity
 import com.autocrop.utils.android.BackPressHandler
 import com.autocrop.utils.android.extensions.getParcelableArrayList
 import com.autocrop.utils.android.extensions.snacky
