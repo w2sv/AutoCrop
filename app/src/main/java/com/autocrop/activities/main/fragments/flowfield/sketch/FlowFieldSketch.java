@@ -35,18 +35,18 @@ public class FlowFieldSketch extends PApplet {
         for (int i = 0; i < 800; i++)
             particles.add(new Particle(width, height));
 
-        Particle.pickNewColor();
+        Particle.initializeColorAdministrator();
     }
 
     public void draw(){
-        Particle.changeColorIfApplicable(second());
+        Particle.colorAdministrator.changeColorIfApplicable(second());
 
         flowfield.update();
 
         for (Particle p : particles) {
             flowfield.affect(p);
             p.update();
-            p.show(g, 35);
+            p.draw(g, 35);
         }
     }
 }

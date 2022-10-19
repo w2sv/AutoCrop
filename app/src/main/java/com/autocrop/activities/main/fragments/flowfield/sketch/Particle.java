@@ -1,5 +1,7 @@
 package com.autocrop.activities.main.fragments.flowfield.sketch;
 
+import androidx.annotation.NonNull;
+
 import com.autocrop.utils.kotlin.Random;
 import com.google.common.collect.Sets;
 
@@ -11,30 +13,40 @@ import processing.core.PGraphics;
 import processing.core.PVector;
 
 class Particle extends PApplet {
-    private static final Set<Integer> COLORS = Set.of(
-            -3727295,  // magenta
-            -3732903,  // light magenta
-            -6746332,  // dark red
-            -15070521  // blue
-    );
+    static ColorAdministrator colorAdministrator;
+    static void initializeColorAdministrator(){
+        colorAdministrator = new ColorAdministrator();
+    }
 
-    static public void changeColorIfApplicable(int second){
-        if (second != lastColorChangeSecond && second % COLOR_CHANGE_FREQUENCY == 0){
-            pickNewColor();
-            lastColorChangeSecond = second;
+    static class ColorAdministrator{
+        private final Set<Integer> COLORS = Set.of(
+                -3727295,  // magenta
+                -3732903,  // light magenta
+                -6746332,  // dark red
+                -15070521  // blue
+        );
+
+        private int lastColorChangeSecond = -1;
+        public int color;
+
+        ColorAdministrator(){
+            color = Random.randomElement(new ArrayList<>(COLORS));
+        }
+
+        public void changeColorIfApplicable(int second){
+            int COLOR_CHANGE_FREQUENCY = 5;
+
+            if (second != lastColorChangeSecond && second % COLOR_CHANGE_FREQUENCY == 0){
+                pickNewColor();
+                lastColorChangeSecond = second;
+            }
+        }
+
+        private void pickNewColor(){
+            Set<Integer> unusedColors = Sets.difference(COLORS, Set.of(color));
+            color = Random.randomElement(new ArrayList<>(unusedColors));
         }
     }
-
-    private static int lastColorChangeSecond;
-
-    private static int color = -1;
-
-    static public void pickNewColor(){
-        Set<Integer> unusedColors = Sets.difference(COLORS, Set.of(color));
-        color = Random.randomElement(new ArrayList<>(unusedColors));
-    }
-
-    private static final int COLOR_CHANGE_FREQUENCY = 5;
 
     PVector pos;
     PVector acc;
@@ -93,11 +105,10 @@ class Particle extends PApplet {
             updatePreviousPos();
     }
 
-    public void show(PGraphics canvas, int alpha) {
-        canvas.stroke(color, alpha);
+    public void draw(@NonNull PGraphics canvas, int alpha) {
+        canvas.stroke(colorAdministrator.color, alpha);
         canvas.strokeWeight(2);
         canvas.line(pos.x, pos.y, previousPos.x, previousPos.y);
-        canvas.point(pos.x, pos.y);  // ?
         updatePreviousPos();
     }
 
