@@ -1,38 +1,40 @@
 package com.autocrop.activities.main.fragments.flowfield.sketch;
 
 import com.autocrop.utils.kotlin.Random;
+import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
 class Particle extends PApplet {
-    private static int[] COLORS;
+    private static final Set<Integer> COLORS = Set.of(
+            -3727295,  // magenta
+            -3732903,  // light magenta
+            -6746332,  // dark red
+            -15070521  // blue
+    );
 
-    public static void initializeColors(PApplet applet){
-        final int MAGENTA = applet.color(199, 32, 65);
-        final int LIGHT_MAGENTA = applet.color(199, 10, 89);
-        final int DARK_RED = applet.color(153, 15, 36);
-        final int BLUE = applet.color(26, 10, 199);
-
-        COLORS = new int[]{MAGENTA, LIGHT_MAGENTA, DARK_RED, BLUE};
-    }
-
-    private static int colorIndex;
-
-    static public void setRandomNewColor(){
-        ArrayList<Integer> unusedColorIndices = new ArrayList<>();
-        for (int i = 0; i < COLORS.length; i++){
-            if (i != colorIndex)
-                unusedColorIndices.add(i);
+    static public void changeColorIfApplicable(int second){
+        if (second != lastColorChangeSecond && second % COLOR_CHANGE_FREQUENCY == 0){
+            pickNewColor();
+            lastColorChangeSecond = second;
         }
-
-        colorIndex = Random.randomElement(unusedColorIndices);
     }
 
-    public static final int COLOR_CHANGE_FREQUENCY = 5;
+    private static int lastColorChangeSecond;
+
+    private static int color = -1;
+
+    static public void pickNewColor(){
+        Set<Integer> unusedColors = Sets.difference(COLORS, Set.of(color));
+        color = Random.randomElement(new ArrayList<>(unusedColors));
+    }
+
+    private static final int COLOR_CHANGE_FREQUENCY = 5;
 
     PVector pos;
     PVector acc;
@@ -47,7 +49,7 @@ class Particle extends PApplet {
         this.width = width;
         this.height = height;
 
-        vel = new PVector(startVelocity(), startVelocity());
+        vel = new PVector(randomStartVelocity(), randomStartVelocity());
         acc = new PVector(0, 0);
         maxSpeed = random(6, 8);
 
@@ -55,7 +57,7 @@ class Particle extends PApplet {
         previousPos = pos.copy();
     }
 
-    private float startVelocity() {
+    private float randomStartVelocity() {
         return random(1, 3);
     }
 
@@ -92,7 +94,7 @@ class Particle extends PApplet {
     }
 
     public void show(PGraphics canvas, int alpha) {
-        canvas.stroke(COLORS[colorIndex], alpha);
+        canvas.stroke(color, alpha);
         canvas.strokeWeight(2);
         canvas.line(pos.x, pos.y, previousPos.x, previousPos.y);
         canvas.point(pos.x, pos.y);  // ?

@@ -32,16 +32,14 @@ public class FlowFieldSketch extends PApplet {
         // initialize particles
         particles = new ArrayList<>();
 
-        int N_PARTICLES = 800;
-        for (int i = 0; i < N_PARTICLES; i++)
+        for (int i = 0; i < 800; i++)
             particles.add(new Particle(width, height));
 
-        Particle.initializeColors(this);
-        Particle.setRandomNewColor();
+        Particle.pickNewColor();
     }
 
     public void draw(){
-        changeColorIfApplicable();
+        Particle.changeColorIfApplicable(second());
 
         flowfield.update();
 
@@ -49,17 +47,6 @@ public class FlowFieldSketch extends PApplet {
             flowfield.affect(p);
             p.update();
             p.show(g, 35);
-        }
-    }
-
-    private int lastColorChangeSecond;
-
-    private void changeColorIfApplicable(){
-        int second = second();
-
-        if (second != lastColorChangeSecond && second % Particle.COLOR_CHANGE_FREQUENCY == 0){
-            Particle.setRandomNewColor();
-            lastColorChangeSecond = second;
         }
     }
 }
