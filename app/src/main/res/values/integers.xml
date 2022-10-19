@@ -9,4 +9,5 @@
 
     <integer name="delay_minimal">200</integer>
     <integer name="delay_medium">500</integer>
+    <integer name="delay_large">1000</integer>
 </resources>

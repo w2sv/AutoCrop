@@ -46,28 +46,33 @@ class ScreenshotListenerExplanation: UncancelableDialogFragment(){
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         builder()
-            .setTitle("Screenshot listener")
+            .setTitle("Screenshot listening")
             .setIcon(R.drawable.ic_screenshot_24)
             .setMessage(
-                buildString {
+                SpannableStringBuilder().apply {
                     append(
-                        "The screenshot listener will send you a notification whenever you take a croppable screenshot. " +
+                        "With screenshot listening enabled, you will get a notification whenever you take a croppable screenshot. " +
                         "Through that, you can save the crop and delete the original screenshot, without having to open the app." +
                         "\n\n" +
-                        "For this to work, the media file reading "
+                        "For this, the "
                     )
+                    italic { append("media file reading ") }
                     (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU).let {notificationPermissionRequired ->
-                        if (notificationPermissionRequired)
-                            append("& notification posting ")
+                        if (notificationPermissionRequired) {
+                            append("& ")
+                            italic { append("notification posting ") }
+                        }
                         append("permission")
-                        if (notificationPermissionRequired)
-                            append("s are ")
-                        else
-                            append(" is ")
+                        append(
+                            if (notificationPermissionRequired)
+                                "s are "
+                            else
+                                " is "
+                        )
                     }
                     append("required." +
                             "\n\n" +
-                            "You can en-/disable the screenshot listener anytime through the drawer menu.")
+                            "You can en-/disable screenshot listening anytime via the drawer menu.")
                 }
             )
             .setNegativeButton("Maybe later"){_, _ -> setFragmentResult(false) }

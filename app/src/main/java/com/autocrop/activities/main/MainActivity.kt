@@ -75,28 +75,35 @@ class MainActivity :
     override fun onSavedInstanceStateNull() {
         super.onSavedInstanceStateNull()
 
-        onButtonsHalfFadedIn {
-            if (!BooleanPreferences.welcomeDialogShown){
-                supportFragmentManager.setFragmentResultListener(
-                    ScreenshotListenerExplanation.REQUEST_KEY,
-                    this
-                ){_, bundle ->
-                    if (ScreenshotListenerExplanation.dialogConfirmed(bundle))
-                        screenshotListeningPermissions
-                            .iterator()
-                            .requestPermissions(
-                                onGranted = {
-                                    startService(Intent(this, ScreenshotListener::class.java))
-                                }
-                            )
-                }
-                CropExplanation().show(supportFragmentManager)
+        if (!BooleanPreferences.welcomeDialogShown){
+            supportFragmentManager.setFragmentResultListener(
+                ScreenshotListenerExplanation.REQUEST_KEY,
+                this
+            ){_, bundle ->
+                if (ScreenshotListenerExplanation.dialogConfirmed(bundle))
+                    screenshotListeningPermissions
+                        .iterator()
+                        .requestPermissions(
+                            onGranted = {
+                                startService(Intent(this, ScreenshotListener::class.java))
+                            }
+                        )
             }
-            else
-                viewModel.ioResults?.let {
-                    showIOSynopsisSnackbar(it)
-                }
+
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+                    CropExplanation().show(supportFragmentManager)
+                },
+                resources.getInteger(R.integer.delay_large).toLong()
+            )
         }
+        else if (viewModel.ioResults != null)
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+                    showIOSynopsisSnackbar(viewModel.ioResults!!)
+                },
+                resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong() / 2
+            )
     }
 
     private fun showIOSynopsisSnackbar(ioResults: IODeterminationActivity.Results){
@@ -122,13 +129,6 @@ class MainActivity :
                 .setIcon(icon)
                 .show()
         }
-    }
-
-    private fun onButtonsHalfFadedIn(runnable: Runnable){
-        Handler(Looper.getMainLooper()).postDelayed(
-            runnable,
-            resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong() / 2
-        )
     }
 
     /**
