@@ -11,7 +11,7 @@ import com.autocrop.utils.kotlin.BlankFun
 import com.autocrop.views.UncancelableDialogFragment
 import com.w2sv.autocrop.R
 
-class InstructionsDialog: UncancelableDialogFragment(){
+class CropPagerInstructionsDialog: UncancelableDialogFragment(){
     var positiveButtonOnClickListener: BlankFun? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =

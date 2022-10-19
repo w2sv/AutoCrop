@@ -13,16 +13,14 @@ private const val DEFAULT_VIEW_ANIMATION_DURATION = 1000L
 
 fun View.animate(technique: Techniques,
                  duration: Long = DEFAULT_VIEW_ANIMATION_DURATION,
-                 delay: Long? = null,
+                 delay: Long = 0L,
                  onEnd: BlankFun? = null): YoYo.YoYoString =
     YoYo.with(technique)
+        .delay(delay)
         .duration(duration)
         .apply {
             onEnd?.let {
                 onEnd {it()}
-            }
-            delay?.let {
-                delay(delay)
             }
         }
         .playOn(this)

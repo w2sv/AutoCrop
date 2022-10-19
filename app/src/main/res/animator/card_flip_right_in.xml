@@ -8,6 +8,7 @@
 
     <!-- Rotate. -->
     <objectAnimator
+        android:startOffset="@integer/card_flip_start_offset"
         android:valueFrom="180"
         android:valueTo="0"
         android:propertyName="rotationY"

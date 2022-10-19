@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="card_flip_time_full">500</integer>
-    <integer name="card_flip_time_half">250</integer>
+    <integer name="card_flip_start_offset">150</integer>
+    <integer name="card_flip_time_full">650</integer>
+    <integer name="card_flip_time_half">400</integer>
 
     <integer name="duration_fade_in_flowfield_fragment_buttons">3500</integer>
     <integer name="duration_snackbar_long">4000</integer>

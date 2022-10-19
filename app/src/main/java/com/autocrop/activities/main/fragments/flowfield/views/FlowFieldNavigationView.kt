@@ -163,7 +163,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
     private fun invokeAboutFragment(){
         fragmentHostingActivity.fragmentReplacementTransaction(
             AboutFragment(),
-            flipRight = false,
+            flipRight = true,
         )
             .addToBackStack(null)
             .commit()

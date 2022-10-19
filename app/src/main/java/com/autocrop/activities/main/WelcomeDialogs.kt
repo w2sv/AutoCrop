@@ -8,6 +8,7 @@ import android.text.SpannableStringBuilder
 import androidx.core.os.bundleOf
 import androidx.core.text.italic
 import androidx.fragment.app.setFragmentResult
+import com.autocrop.utils.android.extensions.getColoredIcon
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.views.UncancelableDialogFragment
 import com.w2sv.autocrop.R
@@ -47,7 +48,7 @@ class ScreenshotListenerExplanation: UncancelableDialogFragment(){
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         builder()
             .setTitle("Screenshot listening")
-            .setIcon(R.drawable.ic_screenshot_24)
+            .setIcon(requireContext().getColoredIcon(R.drawable.ic_screenshot_24, R.color.highlighted_text_view))
             .setMessage(
                 SpannableStringBuilder().apply {
                     append(

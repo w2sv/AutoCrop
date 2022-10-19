@@ -18,7 +18,7 @@ import com.autocrop.activities.iodetermination.fragments.IODeterminationActivity
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.AbstractCropDialog
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropDialog
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropEntiretyDialog
-import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.InstructionsDialog
+import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropPagerInstructionsDialog
 import com.autocrop.activities.iodetermination.fragments.croppager.pager.CropPagerAdapter
 import com.autocrop.activities.iodetermination.fragments.croppager.pager.CropPagerProxy
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
@@ -168,7 +168,7 @@ class CropPagerFragment :
                 if (!BooleanPreferences.cropPagerInstructionsShown)
                     Handler(Looper.getMainLooper()).postDelayed(
                         {
-                            InstructionsDialog()
+                            CropPagerInstructionsDialog()
                                 .apply {
                                     positiveButtonOnClickListener = ::displayDismissedScreenshotsSnackbarIfApplicable
                                 }
