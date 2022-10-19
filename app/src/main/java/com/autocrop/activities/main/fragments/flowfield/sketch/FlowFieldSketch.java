@@ -64,10 +64,9 @@ public class FlowFieldSketch extends PApplet {
         Particle.colorAdministrator.changeColorIfApplicable(second());
         dropAlphaIfAppropriate();
 
-        flowfield.update();
+        flowfield.update(particles);
 
         for (Particle p : particles) {
-            flowfield.affect(p);
             p.update();
             p.draw(g, 23);
         }
