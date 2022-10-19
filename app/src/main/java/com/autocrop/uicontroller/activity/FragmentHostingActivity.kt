@@ -48,9 +48,9 @@ abstract class FragmentHostingActivity<RF : Fragment>(private val rootFragmentCl
                 flipRight?.let {
                     with(
                         if (it)
-                            R.animator.card_flip_left_in to R.animator.card_flip_left_out
-                        else
                             R.animator.card_flip_right_in to R.animator.card_flip_right_out
+                        else
+                            R.animator.card_flip_left_in to R.animator.card_flip_left_out
                     ) {
                         setCustomAnimations(first, second, first, second)
                     }
