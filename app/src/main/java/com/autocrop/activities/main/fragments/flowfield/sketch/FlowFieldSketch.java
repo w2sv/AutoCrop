@@ -24,6 +24,7 @@ public class FlowFieldSketch extends PApplet {
 
     public void setup() {
         background(0);
+        strokeWeight(2);
 
         // initialize flowfield
         flowfield = new FlowField(width, height);
@@ -37,27 +38,25 @@ public class FlowFieldSketch extends PApplet {
     }
 
     private void alphaDrop(){
-        final int REDUCE_BY = 4;
+        final float REDUCTION_COEFF = 0.997f;
 
         g.loadPixels();
         for (int i = 0; i < g.pixels.length; i++) {
             int pixel = g.pixels[i];
             g.pixels[i] = color(
-                max(red(pixel) - REDUCE_BY, 0),
-                max(green(pixel) - REDUCE_BY, 0),
-                max(blue(pixel) - REDUCE_BY, 0),
-                255
+                red(pixel) * REDUCTION_COEFF,
+                green(pixel) * REDUCTION_COEFF,
+                blue(pixel) * REDUCTION_COEFF
             );
         }
         g.updatePixels();
     }
 
-    int lastAlphaDrop = 0;
+    int nDrops = 0;
     void dropAlphaIfAppropriate(){
-        int second = second();
-        if (second != lastAlphaDrop && second % 2 == 0) {
+        if (millis() / 200 > nDrops) {
             alphaDrop();
-            lastAlphaDrop = second;
+            nDrops += 1;
         }
     }
 
@@ -70,7 +69,7 @@ public class FlowFieldSketch extends PApplet {
         for (Particle p : particles) {
             flowfield.affect(p);
             p.update();
-            p.draw(g, 35);
+            p.draw(g, 47);
         }
     }
 }

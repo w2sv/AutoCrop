@@ -36,7 +36,7 @@ class Particle extends PApplet {
                 -15070521  // blue
         );
 
-        private int lastColorChangeSecond = -1;
+        private int lastColorChange = 0;
         public int color;
 
         ColorAdministrator(){
@@ -44,11 +44,9 @@ class Particle extends PApplet {
         }
 
         public void changeColorIfApplicable(int second){
-            int COLOR_CHANGE_FREQUENCY = 5;
-
-            if (second != lastColorChangeSecond && second % COLOR_CHANGE_FREQUENCY == 0){
+            if (second != lastColorChange && second % 5 == 0){
                 pickNewColor();
-                lastColorChangeSecond = second;
+                lastColorChange = second;
             }
         }
 
@@ -83,7 +81,8 @@ class Particle extends PApplet {
         stayWithinBounds();
 
         vel.add(acc);
-        acc.mult(0);
+        acc.x = 0;
+        acc.y = 0;
     }
 
     private void stayWithinBounds() {
@@ -111,7 +110,6 @@ class Particle extends PApplet {
 
     public void draw(@NonNull PGraphics canvas, int alpha) {
         canvas.stroke(colorAdministrator.color, alpha);
-        canvas.strokeWeight(2);
         canvas.line(pos.x, pos.y, previousPos.x, previousPos.y);
         updatePreviousPos();
     }
