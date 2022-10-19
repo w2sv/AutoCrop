@@ -38,7 +38,7 @@ public class FlowFieldSketch extends PApplet {
     }
 
     private void alphaDrop(){
-        final float REDUCTION_COEFF = 0.997f;
+        final float REDUCTION_COEFF = 0.90f;
 
         g.loadPixels();
         for (int i = 0; i < g.pixels.length; i++) {
@@ -52,11 +52,12 @@ public class FlowFieldSketch extends PApplet {
         g.updatePixels();
     }
 
-    int nDrops = 0;
+    int lastDrop = 0;
     void dropAlphaIfAppropriate(){
-        if (millis() / 200 > nDrops) {
+        int second = second();
+        if (second != lastDrop && second % 3 == 0) {
             alphaDrop();
-            nDrops += 1;
+            lastDrop = second;
         }
     }
 
@@ -69,7 +70,7 @@ public class FlowFieldSketch extends PApplet {
         for (Particle p : particles) {
             flowfield.affect(p);
             p.update();
-            p.draw(g, 47);
+            p.draw(g, 23);
         }
     }
 }
