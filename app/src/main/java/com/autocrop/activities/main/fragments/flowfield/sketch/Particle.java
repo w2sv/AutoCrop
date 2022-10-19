@@ -14,9 +14,19 @@ import processing.core.PVector;
 
 class Particle extends PApplet {
     static ColorAdministrator colorAdministrator;
-    static void initializeColorAdministrator(){
+    private static void initializeColorAdministrator(){
         colorAdministrator = new ColorAdministrator();
     }
+
+    public static void staticInitialization(int width, int height){
+        Particle.width = width;
+        Particle.height = height;
+
+        initializeColorAdministrator();
+    }
+
+    private static int width;
+    private static int height;
 
     static class ColorAdministrator{
         private final Set<Integer> COLORS = Set.of(
@@ -49,18 +59,13 @@ class Particle extends PApplet {
     }
 
     PVector pos;
+    private final PVector previousPos;
     PVector acc;
     private final PVector vel;
-    private final PVector previousPos;
     private final float maxSpeed;
 
-    private final int width;
-    private final int height;
 
-    public Particle(int width, int height) {
-        this.width = width;
-        this.height = height;
-
+    public Particle() {
         vel = new PVector(randomStartVelocity(), randomStartVelocity());
         acc = new PVector(0, 0);
         maxSpeed = random(6, 8);

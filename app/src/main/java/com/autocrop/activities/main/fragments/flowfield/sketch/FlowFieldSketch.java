@@ -32,10 +32,10 @@ public class FlowFieldSketch extends PApplet {
         // initialize particles
         particles = new ArrayList<>();
 
-        for (int i = 0; i < 800; i++)
-            particles.add(new Particle(width, height));
+        Particle.staticInitialization(width, height);
 
-        Particle.initializeColorAdministrator();
+        for (int i = 0; i < 800; i++)
+            particles.add(new Particle());
     }
 
     public void draw(){
