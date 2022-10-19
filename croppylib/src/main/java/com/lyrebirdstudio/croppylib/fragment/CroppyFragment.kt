@@ -10,9 +10,9 @@ import androidx.core.os.bundleOf
 import androidx.core.text.color
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.lyrebirdstudio.croppylib.CropEdges
 import com.lyrebirdstudio.croppylib.CroppyRequest
 import com.lyrebirdstudio.croppylib.databinding.FragmentImageCropBinding
-import com.lyrebirdstudio.croppylib.CropEdges
 import com.lyrebirdstudio.croppylib.utils.bitmap.resizedBitmap
 import com.lyrebirdstudio.croppylib.utils.extensions.hideSystemBars
 import com.lyrebirdstudio.croppylib.utils.extensions.maintainedPercentage

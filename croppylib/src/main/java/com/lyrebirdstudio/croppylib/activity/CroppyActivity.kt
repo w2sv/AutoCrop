@@ -7,11 +7,11 @@ import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.lyrebirdstudio.croppylib.CropEdges
 import com.lyrebirdstudio.croppylib.CroppyRequest
 import com.lyrebirdstudio.croppylib.R
 import com.lyrebirdstudio.croppylib.databinding.ActivityCroppyBinding
 import com.lyrebirdstudio.croppylib.fragment.CroppyFragment
-import com.lyrebirdstudio.croppylib.CropEdges
 
 class CroppyActivity : AppCompatActivity() {
 

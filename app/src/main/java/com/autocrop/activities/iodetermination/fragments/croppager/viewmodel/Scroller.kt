@@ -4,7 +4,8 @@ import android.os.Handler
 import android.os.Looper
 import androidx.viewpager2.widget.ViewPager2
 import com.autocrop.utils.kotlin.BlankFun
-import java.util.*
+import java.util.Timer
+import java.util.TimerTask
 
 /**
  * Class accounting for automatic scrolling

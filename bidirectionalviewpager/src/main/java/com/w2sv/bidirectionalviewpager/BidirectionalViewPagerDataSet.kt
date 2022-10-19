@@ -6,7 +6,7 @@ import com.w2sv.bidirectionalviewpager.livedata.UpdateBlockableLiveData
 import com.w2sv.bidirectionalviewpager.utils.extensions.rotatedIndex
 import com.w2sv.bidirectionalviewpager.utils.extensions.toInt
 import com.w2sv.bidirectionalviewpager.utils.extensions.toNonZeroInt
-import java.util.*
+import java.util.Collections
 
 open class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
     MutableListLiveData<T>(dataSet) {

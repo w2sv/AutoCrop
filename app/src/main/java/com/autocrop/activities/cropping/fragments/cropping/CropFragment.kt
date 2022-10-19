@@ -6,6 +6,8 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.lifecycle.lifecycleScope
+import com.autocrop.CropBundle
+import com.autocrop.Screenshot
 import com.autocrop.activities.cropping.cropping.cropEdgesCandidates
 import com.autocrop.activities.cropping.cropping.maxHeightEdges
 import com.autocrop.activities.cropping.fragments.CropActivityFragment
@@ -13,8 +15,6 @@ import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedF
 import com.autocrop.activities.iodetermination.IODeterminationActivity
 import com.autocrop.activities.iodetermination.IODeterminationActivityViewModel
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.CropBundle
-import com.autocrop.Screenshot
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.kotlin.extensions.executeAsyncTaskWithProgressUpdateReceiver
 import com.autocrop.utils.kotlin.logBeforehand

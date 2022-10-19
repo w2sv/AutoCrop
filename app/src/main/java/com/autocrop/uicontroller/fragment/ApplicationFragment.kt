@@ -8,9 +8,9 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
+import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.autocrop.uicontroller.activity.retriever.FragmentHostingActivityRetriever
 import com.autocrop.uicontroller.activity.retriever.TypedActivityRetriever
-import com.autocrop.uicontroller.activity.FragmentHostingActivity
 import com.w2sv.viewboundcontroller.ViewBoundFragment
 import kotlin.reflect.KClass
 

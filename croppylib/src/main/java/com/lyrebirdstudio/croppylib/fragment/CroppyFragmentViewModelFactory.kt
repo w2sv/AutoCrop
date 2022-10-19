@@ -3,8 +3,8 @@ package com.lyrebirdstudio.croppylib.fragment
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.lyrebirdstudio.croppylib.CroppyTheme
 import com.lyrebirdstudio.croppylib.CropEdges
+import com.lyrebirdstudio.croppylib.CroppyTheme
 
 class CroppyFragmentViewModelFactory(private val bitmap: Bitmap,
                                      private val initialCropEdges: CropEdges,

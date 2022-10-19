@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import com.autocrop.utils.kotlin.delegates.mapObserver
 import com.autocrop.utils.android.buildDocumentUriFromTreeUri
 import com.autocrop.utils.android.extensions.uriPermissionGranted
+import com.autocrop.utils.kotlin.delegates.mapObserver
 import timber.log.Timber
 
 object UriPreferences: TypedPreferences<Uri?>(mutableMapOf("treeUri" to null)) {
