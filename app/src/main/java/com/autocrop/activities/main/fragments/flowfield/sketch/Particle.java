@@ -79,8 +79,7 @@ class Particle extends PApplet {
         vel.limit(maxSpeed);
         pos.add(vel);
 
-        boolean invertedEdge = invertEdgeIfNecessary(pos);
-        if (invertedEdge){
+        if (invertEdgeIfNecessary(pos)){
             updatePreviousPos();
             skipDraw = true;
         }
