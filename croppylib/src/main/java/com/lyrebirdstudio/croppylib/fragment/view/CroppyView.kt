@@ -316,43 +316,43 @@ class CroppyView @JvmOverloads constructor(
             drawColor(maskBackgroundColor)
             restore()
 
-            drawCropEdgePairCandidates()
+//            drawCropEdgePairCandidates()
             drawGrid()
             drawCorners()
         }
     }
 
-    private fun Canvas.drawCropEdgePairCandidates(){
-        rescaledCropEdgeRectFs.forEach {
-            drawLine(
-                it.left,
-                it.top,
-                it.right,
-                it.top,
-                topEdgePaint
-            )
+//    private fun Canvas.drawCropEdgePairCandidates(){
+//        rescaledCropEdgeRectFs.forEach {
+//            drawLine(
+//                it.left,
+//                it.top,
+//                it.right,
+//                it.top,
+//                topEdgePaint
+//            )
+//
+//            drawLine(
+//                it.left,
+//                it.bottom,
+//                it.right,
+//                it.bottom,
+//                bottomEdgePaint
+//            )
+//        }
+//    }
 
-            drawLine(
-                it.left,
-                it.bottom,
-                it.right,
-                it.bottom,
-                bottomEdgePaint
-            )
-        }
-    }
-
-    private val topEdgePaint = Paint().apply {
-        color = Color.GREEN
-        strokeWidth = gridLineWidthPixel
-        style = Paint.Style.STROKE
-    }
-
-    private val bottomEdgePaint = Paint().apply {
-        color = Color.MAGENTA
-        strokeWidth = gridLineWidthPixel
-        style = Paint.Style.STROKE
-    }
+//    private val topEdgePaint = Paint().apply {
+//        color = Color.GREEN
+//        strokeWidth = gridLineWidthPixel
+//        style = Paint.Style.STROKE
+//    }
+//
+//    private val bottomEdgePaint = Paint().apply {
+//        color = Color.MAGENTA
+//        strokeWidth = gridLineWidthPixel
+//        style = Paint.Style.STROKE
+//    }
 
     /**
      * Draw crop rect as a grid.
@@ -543,22 +543,22 @@ class CroppyView @JvmOverloads constructor(
         bitmapMatrix.postTranslate(translateX, translateY)
 
         setBitmapBorderRect()
-        setRescaledCropEdgePairCandidates()
+//        setRescaledCropEdgePairCandidates()
     }
 
     private fun setBitmapBorderRect(){
         bitmapMatrix.mapRect(bitmapBorderRect, bitmapRect)
     }
 
-    private lateinit var rescaledCropEdgeRectFs: List<RectF>
+//    private lateinit var rescaledCropEdgeRectFs: List<RectF>
 
-    private fun setRescaledCropEdgePairCandidates(){
-        rescaledCropEdgeRectFs = viewModel.cropEdgePairCandidates.map {
-            it.asRectF(viewModel.bitmap.width).apply {
-                bitmapMatrix.mapRect(this)
-            }
-        }
-    }
+//    private fun setRescaledCropEdgePairCandidates(){
+//        rescaledCropEdgeRectFs = viewModel.cropEdgePairCandidates.map {
+//            it.asRectF(viewModel.bitmap.width).apply {
+//                bitmapMatrix.mapRect(this)
+//            }
+//        }
+//    }
 
     /**
      * Initializes crop rect with bitmap.
@@ -779,7 +779,7 @@ class CroppyView @JvmOverloads constructor(
         newBitmapMatrix.postConcat(matrix)
 
         bitmapMatrix.animateToMatrix(newBitmapMatrix) {
-            setRescaledCropEdgePairCandidates()
+//            setRescaledCropEdgePairCandidates()
             invalidate()
         }
     }
