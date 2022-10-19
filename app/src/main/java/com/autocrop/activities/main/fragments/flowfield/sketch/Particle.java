@@ -64,7 +64,6 @@ class Particle extends PApplet {
     private final PVector vel;
     private final float maxSpeed;
 
-
     public Particle() {
         vel = new PVector(randomStartVelocity(), randomStartVelocity());
         acc = new PVector(0, 0);
