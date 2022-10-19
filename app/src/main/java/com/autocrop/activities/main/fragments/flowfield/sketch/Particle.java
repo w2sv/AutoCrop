@@ -78,40 +78,50 @@ class Particle extends PApplet {
     public void update() {
         vel.limit(maxSpeed);
         pos.add(vel);
-        stayWithinBounds();
+
+        boolean invertedEdge = invertEdgeIfNecessary(pos);
+        if (invertedEdge){
+            updatePreviousPos();
+            skipDraw = true;
+        }
 
         vel.add(acc);
         acc.x = 0;
         acc.y = 0;
     }
 
-    private void stayWithinBounds() {
-        boolean changedCoordinate = false;
+    private boolean invertEdgeIfNecessary(PVector pos) {
+        boolean invertedEdge = false;
 
         if (pos.x > width) {
             pos.x = 0;
-            changedCoordinate = true;
+            invertedEdge = true;
         } else if (pos.x < 0) {
             pos.x = width;
-            changedCoordinate = true;
+            invertedEdge = true;
         }
 
         if (pos.y > height) {
             pos.y = 0;
-            changedCoordinate = true;
+            invertedEdge = true;
         } else if (pos.y < 0) {
             pos.y = height;
-            changedCoordinate = true;
+            invertedEdge = true;
         }
 
-        if (changedCoordinate)
-            updatePreviousPos();
+        return invertedEdge;
     }
 
+    private boolean skipDraw = false;
+
     public void draw(@NonNull PGraphics canvas, int alpha) {
-        canvas.stroke(colorAdministrator.color, alpha);
-        canvas.line(pos.x, pos.y, previousPos.x, previousPos.y);
-        updatePreviousPos();
+        if (skipDraw)
+            skipDraw = false;
+        else{
+            canvas.stroke(colorAdministrator.color, alpha);
+            canvas.line(pos.x, pos.y, previousPos.x, previousPos.y);
+            updatePreviousPos();
+        }
     }
 
     private void updatePreviousPos() {

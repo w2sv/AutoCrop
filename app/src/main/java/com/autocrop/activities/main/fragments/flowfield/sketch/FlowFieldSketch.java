@@ -28,7 +28,6 @@ public class FlowFieldSketch extends PApplet {
 
         // initialize flowfield
         flowfield = new FlowField(width, height);
-        flowfield.update();
 
         // initialize particles
         Particle.staticInitialization(width, height);
@@ -38,7 +37,7 @@ public class FlowFieldSketch extends PApplet {
     }
 
     private void alphaDrop(){
-        final float REDUCTION_COEFF = 0.90f;
+        final float REDUCTION_COEFF = 0.85f;
 
         g.loadPixels();
         for (int i = 0; i < g.pixels.length; i++) {
