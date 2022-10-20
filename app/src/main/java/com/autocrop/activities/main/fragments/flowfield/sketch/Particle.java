@@ -58,7 +58,7 @@ class Particle extends PApplet {
 
     PVector pos;
     private final PVector previousPos;
-    PVector acc;
+    private PVector acc;
     private final PVector vel;
     private final float maxSpeed;
 
@@ -73,6 +73,10 @@ class Particle extends PApplet {
 
     private float randomStartVelocity() {
         return random(1, 3);
+    }
+
+    void applyFlowFieldVector(PVector v){
+        acc.add(v);
     }
 
     public void update() {

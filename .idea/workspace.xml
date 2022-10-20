@@ -12,7 +12,6 @@
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/sketch/FlowField.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/sketch/FlowField.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/sketch/Particle.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/sketch/Particle.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

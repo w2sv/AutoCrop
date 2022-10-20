@@ -27,7 +27,7 @@ public class FlowFieldSketch extends PApplet {
         strokeWeight(2);
 
         // initialize flowfield
-        flowfield = new FlowField(width, height);
+        flowfield = new FlowField();
 
         // initialize particles
         Particle.staticInitialization(width, height);
