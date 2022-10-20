@@ -85,8 +85,7 @@ class Particle extends PApplet {
         }
 
         vel.add(acc);
-        acc.x = 0;
-        acc.y = 0;
+        acc.set(0, 0);
     }
 
     private boolean invertEdgeIfNecessary(PVector pos) {
