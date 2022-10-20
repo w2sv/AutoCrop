@@ -37,7 +37,7 @@ dependencies {
     // -----------------
     // Unit Tests
 
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
     testImplementation 'androidx.test.ext:junit:1.1.3'
     testImplementation 'androidx.arch.core:core-runtime:2.1.0'
 }
