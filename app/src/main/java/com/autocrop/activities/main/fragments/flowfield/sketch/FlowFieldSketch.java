@@ -64,9 +64,9 @@ public class FlowFieldSketch extends PApplet {
         for (int i = 0; i < g.pixels.length; i++) {
             int pixel = g.pixels[i];
             g.pixels[i] = color(
-                    red(pixel) * REDUCTION_COEFF,
-                    green(pixel) * REDUCTION_COEFF,
-                    blue(pixel) * REDUCTION_COEFF
+                red(pixel) * REDUCTION_COEFF,
+                green(pixel) * REDUCTION_COEFF,
+                blue(pixel) * REDUCTION_COEFF
             );
         }
         g.updatePixels();

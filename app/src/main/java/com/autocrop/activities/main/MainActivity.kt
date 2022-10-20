@@ -51,7 +51,10 @@ class MainActivity :
 
     val screenshotListeningPermissions = listOf(
         PermissionHandler(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                Manifest.permission.READ_MEDIA_IMAGES
+            else
+                Manifest.permission.READ_EXTERNAL_STORAGE,
             this,
             "Media file access required for listening to screen captures",
             "Go to app settings and grant media file access for screen capture listening to work"
@@ -102,7 +105,7 @@ class MainActivity :
                 {
                     showIOSynopsisSnackbar(viewModel.ioResults!!)
                 },
-                resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong() / 2
+                resources.getInteger(R.integer.duration_flowfield_buttons_fade_in_halve).toLong()
             )
     }
 

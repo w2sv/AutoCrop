@@ -19,7 +19,7 @@ class ButtonsLayout(context: Context, attributeSet: AttributeSet):
         ifNotInEditMode {
             with(activityViewModel<MainActivityViewModel>()){
                 if (fadeInFlowFieldButtons){
-                    fadeIn(resources.getInteger(R.integer.duration_fade_in_flowfield_fragment_buttons).toLong())
+                    fadeIn(resources.getInteger(R.integer.duration_flowfield_buttons_fade_in).toLong())
                     fadeInFlowFieldButtons = false
                 }
                 else

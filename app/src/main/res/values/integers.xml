@@ -4,7 +4,9 @@
     <integer name="card_flip_time_full">650</integer>
     <integer name="card_flip_time_half">400</integer>
 
-    <integer name="duration_fade_in_flowfield_fragment_buttons">3500</integer>
+    <integer name="duration_flowfield_buttons_fade_in">3500</integer>
+    <integer name="duration_flowfield_buttons_fade_in_halve">1750</integer>
+
     <integer name="duration_snackbar_long">4000</integer>
     <integer name="duration_snackbar_extra_long">5000</integer>
 
