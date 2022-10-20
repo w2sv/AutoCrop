@@ -36,30 +36,6 @@ public class FlowFieldSketch extends PApplet {
             particles.add(new Particle());
     }
 
-    private void alphaDrop(){
-        final float REDUCTION_COEFF = 0.85f;
-
-        g.loadPixels();
-        for (int i = 0; i < g.pixels.length; i++) {
-            int pixel = g.pixels[i];
-            g.pixels[i] = color(
-                red(pixel) * REDUCTION_COEFF,
-                green(pixel) * REDUCTION_COEFF,
-                blue(pixel) * REDUCTION_COEFF
-            );
-        }
-        g.updatePixels();
-    }
-
-    int lastDrop = 0;
-    void dropAlphaIfAppropriate(){
-        int second = second();
-        if (second != lastDrop && second % 3 == 0) {
-            alphaDrop();
-            lastDrop = second;
-        }
-    }
-
     public void draw(){
         Particle.colorAdministrator.changeColorIfApplicable(second());
         dropAlphaIfAppropriate();
@@ -70,5 +46,29 @@ public class FlowFieldSketch extends PApplet {
             p.update();
             p.draw(g, 23);
         }
+    }
+
+    private void dropAlphaIfAppropriate(){
+        int second = second();
+        if (second != lastAlphaDrop && second % 3 == 0) {
+            alphaDrop();
+            lastAlphaDrop = second;
+        }
+    }
+    private int lastAlphaDrop = 0;
+
+    private void alphaDrop(){
+        final float REDUCTION_COEFF = 0.85f;
+
+        g.loadPixels();
+        for (int i = 0; i < g.pixels.length; i++) {
+            int pixel = g.pixels[i];
+            g.pixels[i] = color(
+                    red(pixel) * REDUCTION_COEFF,
+                    green(pixel) * REDUCTION_COEFF,
+                    blue(pixel) * REDUCTION_COEFF
+            );
+        }
+        g.updatePixels();
     }
 }

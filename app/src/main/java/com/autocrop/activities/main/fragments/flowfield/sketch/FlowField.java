@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -36,6 +37,12 @@ class FlowField extends PApplet {
     }
 
     private float xOff(@NonNull Pair<Integer, Integer> pos){
-        return pos.first * pos.second * 0.1f;
+        if (xOffCache.containsKey(pos))
+            return xOffCache.get(pos);
+        float xOff = pos.first * pos.second * 0.1f;
+        xOffCache.put(pos, xOff);
+        return xOff;
     }
+
+    private static final Map<Pair<Integer, Integer>, Float> xOffCache = new HashMap<>();
 }

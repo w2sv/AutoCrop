@@ -58,7 +58,7 @@ class Particle extends PApplet {
 
     PVector pos;
     private final PVector previousPos;
-    private PVector acc;
+    private final PVector acc;
     private final PVector vel;
     private final float maxSpeed;
 
