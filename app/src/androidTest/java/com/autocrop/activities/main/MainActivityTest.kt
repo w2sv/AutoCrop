@@ -24,7 +24,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.filters.FlakyTest
 import androidx.test.runner.permission.PermissionRequester
-import com.autocrop.activities.iodetermination.IODeterminationActivity
 import com.autocrop.activities.main.fragments.about.AboutFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.preferences.BooleanPreferences
@@ -192,7 +191,7 @@ internal class MainActivityTest {
                 val scenarioExtension = ActivityScenarioExtension.launch<MainActivity>(
                     Intent(ApplicationProvider.getApplicationContext(), MainActivity::class.java)
                         .putParcelableArrayListExtra(
-                            IODeterminationActivity.EXTRA_CROP_URIS,
+                            "com.autocrop.CROP_URIS",
                             cropSavingUris
                         )
                 )

@@ -98,7 +98,7 @@ class ScreenshotListener :
         }
     }
 
-    @Suppress("UnstableApiUsage")  // EvictingQueue part of Beta-API
+    @Suppress("UnstableApiUsage")
     private val imageContentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
         /**
          * Uris which are not to be considered again.
