@@ -101,10 +101,10 @@ dependencies {
 
     // Logging
     implementation 'com.jakewharton.timber:timber:5.0.1'
-//    implementation 'com.github.PaulWoitaschek:Slimber:master-SNAPSHOT'
+//    implementation 'com.github.w2sv:Slimber:master-SNAPSHOT'
 
     // Snackbar
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.7.0'
     implementation 'com.github.matecode:Snacky:1.1.5'
 
     // Animations

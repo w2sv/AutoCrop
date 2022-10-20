@@ -26,7 +26,7 @@ class OnPendingIntentService : UnboundService() {
         val requestCodes: PendingIntentRequestCodes
         fun onPendingIntentService(intent: Intent) {}
 
-        fun Intent.putClientExtras(notificationId: Int, associatedRequestCodes: ArrayList<Int>): Intent =
+        fun Intent.putOnPendingIntentServiceClientExtras(notificationId: Int, associatedRequestCodes: ArrayList<Int>): Intent =
             this
                 .putExtra(EXTRA_CLIENT_INDEX, clientIndex)
                 .putExtra(EXTRA_ASSOCIATED_NOTIFICATION_ID, notificationId)

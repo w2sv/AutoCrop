@@ -25,6 +25,7 @@ import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreData
 import com.autocrop.utils.android.systemScreenshotsDirectory
+import com.autocrop.utils.kotlin.PendingIntentRenderer
 import com.autocrop.utils.kotlin.dateFromUnixTimestamp
 import com.autocrop.utils.kotlin.timeDelta
 import com.google.common.collect.EvictingQueue
@@ -224,6 +225,15 @@ class ScreenshotListener :
         val crop = screenshotBitmap.cropped(cropEdges)
             .also { CropIOService.cropBitmap = it }
 
+        fun pendingIntent(makePendingIntent: PendingIntentRenderer, intent: Intent, requestCodeIndex: Int): PendingIntent =
+            makePendingIntent(
+                this,
+                associatedRequestCodes[requestCodeIndex],
+                intent
+                    .putOnPendingIntentServiceClientExtras(notificationId, associatedRequestCodes),
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+
         notificationGroup.addChild(
             notificationId,
             notificationGroup.childBuilder("Fancy a crop?")
@@ -231,15 +241,13 @@ class ScreenshotListener :
                     NotificationCompat.Action(
                         null,
                         "Save",
-                        PendingIntent.getService(
-                            this,
-                            associatedRequestCodes[0],
+                        pendingIntent(
+                            PendingIntent::getService,
                             Intent(this, CropIOService::class.java)
                                 .setData(uri)
                                 .putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
-                                .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true)
-                                .putClientExtras(notificationId, associatedRequestCodes),
-                            PendingIntent.FLAG_UPDATE_CURRENT
+                                .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true),
+                            0
                         )
                     )
                 )
@@ -248,28 +256,24 @@ class ScreenshotListener :
                         null,
                         "Save & delete",
                         if (deleteRequestUri is Uri && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                            PendingIntent.getActivity(
-                                this,
-                                associatedRequestCodes[1],
+                            pendingIntent(
+                                PendingIntent::getActivity,
                                 Intent(this, DeleteRequestActivity::class.java)
                                     .setData(uri)
                                     .putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
                                     .putExtra(EXTRA_DELETE_REQUEST_URI, deleteRequestUri)
-                                    .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true)
-                                    .putClientExtras(notificationId, associatedRequestCodes),
-                                PendingIntent.FLAG_UPDATE_CURRENT
+                                    .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true),
+                                1
                             )
                         else
-                            PendingIntent.getService(
-                                this,
-                                associatedRequestCodes[1],
+                            pendingIntent(
+                                PendingIntent::getService,
                                 Intent(this, CropIOService::class.java)
                                     .setData(uri)
                                     .putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
                                     .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true)
-                                    .putExtra(EXTRA_ATTEMPT_SCREENSHOT_DELETION, true)
-                                    .putClientExtras(notificationId, associatedRequestCodes),
-                                PendingIntent.FLAG_UPDATE_CURRENT
+                                    .putExtra(EXTRA_ATTEMPT_SCREENSHOT_DELETION, true),
+                                1
                             )
                     )
                 )
@@ -277,13 +281,11 @@ class ScreenshotListener :
                     NotificationCompat.Action(
                         null,
                         "Dismiss",
-                        PendingIntent.getService(
-                            this,
-                            associatedRequestCodes[2],
+                        pendingIntent(
+                            PendingIntent::getService,
                             Intent(this, OnPendingIntentService::class.java)
-                                .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true)
-                                .putClientExtras(notificationId, associatedRequestCodes),
-                            PendingIntent.FLAG_UPDATE_CURRENT
+                                .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true),
+                            2
                         )
                     )
                 )
@@ -292,12 +294,10 @@ class ScreenshotListener :
                         .bigPicture(crop)
                 )
                 .setDeleteIntent(
-                    PendingIntent.getService(
-                        this,
-                        associatedRequestCodes[3],
-                        Intent(this, OnPendingIntentService::class.java)
-                            .putClientExtras(notificationId, associatedRequestCodes),
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                    pendingIntent(
+                        PendingIntent::getService,
+                        Intent(this, OnPendingIntentService::class.java),
+                        3
                     )
                 )
         )

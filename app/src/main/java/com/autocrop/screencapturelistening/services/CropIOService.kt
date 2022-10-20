@@ -126,8 +126,8 @@ class CropIOService :
                             this,
                             associatedRequestCodes[2],
                             Intent(this, OnPendingIntentService::class.java)
-                                .putClientExtras(notificationId, associatedRequestCodes),
-                            PendingIntent.FLAG_UPDATE_CURRENT
+                                .putOnPendingIntentServiceClientExtras(notificationId, associatedRequestCodes),
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                         )
                     )
             )
@@ -151,14 +151,14 @@ class CropIOService :
             this,
             associatedRequestCodes[requestCodeIndex],
             Intent(this, OnPendingIntentService::class.java)
-                .putClientExtras(notificationId, associatedRequestCodes)
+                .putOnPendingIntentServiceClientExtras(notificationId, associatedRequestCodes)
                 .putExtra(
                     EXTRA_WRAPPED_INTENT,
                     wrappedIntent
                         .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 )
                 .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true),
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
         )
 
     override fun onPendingIntentService(intent: Intent) {

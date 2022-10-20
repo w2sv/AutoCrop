@@ -53,7 +53,7 @@ class ScreenshotListenerExplanation: UncancelableDialogFragment(){
                 SpannableStringBuilder().apply {
                     append(
                         "With screenshot listening enabled, you will get a notification whenever you take a croppable screenshot. " +
-                        "Through that, you can save the crop and delete the original screenshot, without having to open the app." +
+                        "Through that, you can save the crop and delete the original screenshot without having to open the app." +
                         "\n\n" +
                         "For this, the "
                     )
