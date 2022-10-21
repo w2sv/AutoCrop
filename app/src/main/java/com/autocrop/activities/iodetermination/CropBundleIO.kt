@@ -18,7 +18,6 @@ import com.autocrop.utils.android.extensions.compressToStream
 import com.autocrop.utils.android.extensions.deleteImage
 import com.autocrop.utils.android.systemPicturesDirectory
 import com.autocrop.utils.kotlin.dateTimeNow
-import com.autocrop.utils.kotlin.logBeforehand
 import de.paul_woitaschek.slimber.i
 import java.io.File
 import java.io.FileOutputStream
