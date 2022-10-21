@@ -75,18 +75,15 @@ android {
         viewBinding true
     }
 }
-
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Processing
-    implementation files('libs/processing-core-4.3.0.jar')
-    implementation files('libs/viewboundcontroller-0.0.2.aar')
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
     // Modules
     implementation project(path: ':croppylib')
     implementation project(path: ':bidirectionalviewpager')
-//    implementation 'com.github.w2sv:viewboundcontroller:0.0.2'
 
     // Androidx
     implementation 'androidx.appcompat:appcompat:1.5.1'
@@ -102,7 +99,6 @@ dependencies {
 
     // Logging
     implementation 'com.jakewharton.timber:timber:5.0.1'
-//    implementation 'com.github.w2sv:Slimber:master'
 
     // Snackbar
     implementation 'com.google.android.material:material:1.7.0'
@@ -139,3 +135,4 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
 }
+
