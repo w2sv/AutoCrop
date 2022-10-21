@@ -81,11 +81,12 @@ dependencies {
 
     // Processing
     implementation files('libs/processing-core-4.3.0.jar')
+    implementation files('libs/viewboundcontroller-0.0.2.aar')
 
     // Modules
     implementation project(path: ':croppylib')
     implementation project(path: ':bidirectionalviewpager')
-    implementation 'com.github.w2sv:viewboundcontroller:master-SNAPSHOT'
+//    implementation 'com.github.w2sv:viewboundcontroller:0.0.2'
 
     // Androidx
     implementation 'androidx.appcompat:appcompat:1.5.1'
@@ -101,7 +102,7 @@ dependencies {
 
     // Logging
     implementation 'com.jakewharton.timber:timber:5.0.1'
-//    implementation 'com.github.w2sv:Slimber:master-SNAPSHOT'
+//    implementation 'com.github.w2sv:Slimber:master'
 
     // Snackbar
     implementation 'com.google.android.material:material:1.7.0'

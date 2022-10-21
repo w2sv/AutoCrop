@@ -35,7 +35,6 @@ data class Screenshot(
     val cropEdgesCandidates: List<CropEdges>,
     val mediaStoreData: MediaStoreData
 ){
-
     @Parcelize
     data class MediaStoreData(val diskUsage: Long,
                               val fileName: String,

@@ -26,11 +26,17 @@ class OnPendingIntentService : UnboundService() {
         val requestCodes: PendingIntentRequestCodes
         fun onPendingIntentService(intent: Intent) {}
 
-        fun Intent.putOnPendingIntentServiceClientExtras(notificationId: Int, associatedRequestCodes: ArrayList<Int>): Intent =
+        fun Intent.putOnPendingIntentServiceClientExtras(notificationId: Int,
+                                                         associatedRequestCodes: ArrayList<Int>,
+                                                         putCancelNotificationExtra: Boolean = false): Intent =
             this
                 .putExtra(EXTRA_CLIENT_INDEX, clientIndex)
                 .putExtra(EXTRA_ASSOCIATED_NOTIFICATION_ID, notificationId)
                 .putIntegerArrayListExtra(EXTRA_ASSOCIATED_PENDING_REQUEST_CODES, associatedRequestCodes)
+                .apply {
+                    if (putCancelNotificationExtra)
+                        putExtra(EXTRA_CANCEL_NOTIFICATION, true)
+                }
     }
 
     class Client(override val clientIndex: Int,

@@ -3,6 +3,7 @@ package com.autocrop.screencapturelistening.services
 import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.provider.MediaStore
 import android.text.SpannableStringBuilder
 import androidx.core.app.NotificationCompat
@@ -18,7 +19,6 @@ import com.autocrop.screencapturelistening.notifications.NotificationId
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.getParcelable
 import com.autocrop.utils.android.extensions.queryMediaStoreDatum
-import com.autocrop.utils.kotlin.delegates.Consumable
 import com.w2sv.autocrop.R
 
 class CropIOService :
@@ -27,8 +27,6 @@ class CropIOService :
 
     companion object {
         private const val EXTRA_WRAPPED_INTENT = "com.autocrop.WRAPPED_INTENT"
-
-        var cropBitmap: Bitmap? by Consumable(null)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -38,6 +36,7 @@ class CropIOService :
             )
 
             val ioResult = carryOutCropIO(
+                crop = BitmapFactory.decodeFile(getStringExtra(ScreenshotListener.EXTRA_CROP_FILE_PATH)),
                 screenshotMediaStoreData = getParcelable(ScreenshotListener.EXTRA_SCREENSHOT_MEDIASTORE_DATA)!!,
                 deleteScreenshot = getBooleanExtra(ScreenshotListener.EXTRA_ATTEMPT_SCREENSHOT_DELETION, false)
             )
@@ -49,9 +48,9 @@ class CropIOService :
         return START_REDELIVER_INTENT
     }
 
-    private fun carryOutCropIO(screenshotMediaStoreData: Screenshot.MediaStoreData, deleteScreenshot: Boolean): IOResult =
+    private fun carryOutCropIO(crop: Bitmap, screenshotMediaStoreData: Screenshot.MediaStoreData, deleteScreenshot: Boolean): IOResult =
         contentResolver.carryOutCropIO(
-            cropBitmap!!,
+            crop,
             screenshotMediaStoreData,
             UriPreferences.validDocumentUri(this),
             deleteScreenshot
@@ -61,6 +60,20 @@ class CropIOService :
         if (ioResult.successfullySavedCrop) {
             val notificationId = notificationGroup.children.newId()
             val associatedRequestCodes = requestCodes.makeAndAddMultiple(3)
+
+            fun actionPendingIntent(requestCodeIndex: Int, wrappedIntent: Intent): PendingIntent =
+                PendingIntent.getService(
+                    this,
+                    associatedRequestCodes[requestCodeIndex],
+                    Intent(this, OnPendingIntentService::class.java)
+                        .putOnPendingIntentServiceClientExtras(notificationId, associatedRequestCodes, true)
+                        .putExtra(
+                            EXTRA_WRAPPED_INTENT,
+                            wrappedIntent
+                                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        ),
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+                )
 
             notificationGroup.addChild(
                 notificationId,
@@ -94,8 +107,6 @@ class CropIOService :
                             "View",
                             actionPendingIntent(
                                 0,
-                                associatedRequestCodes,
-                                notificationId,
                                 Intent(Intent.ACTION_VIEW)
                                     .setDataAndType(
                                         ioResult.writeUri,
@@ -110,8 +121,6 @@ class CropIOService :
                             "Share",
                             actionPendingIntent(
                                 1,
-                                associatedRequestCodes,
-                                notificationId,
                                 Intent.createChooser(
                                     Intent(Intent.ACTION_SEND)
                                         .setType(IMAGE_MIME_TYPE)
@@ -127,7 +136,7 @@ class CropIOService :
                             associatedRequestCodes[2],
                             Intent(this, OnPendingIntentService::class.java)
                                 .putOnPendingIntentServiceClientExtras(notificationId, associatedRequestCodes),
-                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
                         )
                     )
             )
@@ -141,26 +150,6 @@ class CropIOService :
         { "Saved $it crops" }
     )
 
-    private fun actionPendingIntent(
-        requestCodeIndex: Int,
-        associatedRequestCodes: ArrayList<Int>,
-        notificationId: Int,
-        wrappedIntent: Intent
-    ): PendingIntent =
-        PendingIntent.getService(
-            this,
-            associatedRequestCodes[requestCodeIndex],
-            Intent(this, OnPendingIntentService::class.java)
-                .putOnPendingIntentServiceClientExtras(notificationId, associatedRequestCodes)
-                .putExtra(
-                    EXTRA_WRAPPED_INTENT,
-                    wrappedIntent
-                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                )
-                .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true),
-            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
-        )
-
     override fun onPendingIntentService(intent: Intent) {
         intent.getParcelable<Intent>(EXTRA_WRAPPED_INTENT)?.let {
             startActivity(
@@ -168,11 +157,5 @@ class CropIOService :
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             )
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        cropBitmap = null
     }
 }

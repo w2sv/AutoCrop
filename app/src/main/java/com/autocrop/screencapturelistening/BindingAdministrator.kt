@@ -44,5 +44,6 @@ class BindingAdministrator<T : BoundService>(
 
     fun unbindService() {
         unbindService(serviceConnection)
+        Timber.i("Unbound $serviceClass")
     }
 }

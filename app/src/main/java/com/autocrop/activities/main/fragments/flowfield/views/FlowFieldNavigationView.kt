@@ -30,7 +30,6 @@ import com.autocrop.utils.android.extensions.snacky
 import com.autocrop.utils.android.requestPermissions
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.autocrop.R
-import timber.log.Timber
 
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
     NavigationView(context, attributeSet),
@@ -88,16 +87,13 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
         menu.findItem(R.id.main_menu_item_listen_to_screen_captures).actionView = Switch(context)
             .apply {
                 setOnCheckedChangeListener{ _, newValue ->
-                    val serviceIntent = Intent(context, ScreenshotListener::class.java)
-
                     if (newValue) {
                         typedActivity
                             .screenshotListeningPermissions
                             .iterator()
                             .requestPermissions(
                                 onGranted = {
-                                    context.startForegroundService(serviceIntent)
-                                        .also { Timber.i("Started ScreenCaptureListeningService") }
+                                    ScreenshotListener.startService(context)
                                 },
                                 onDenied = {
                                     isChecked = false
@@ -105,8 +101,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
                             )
                     }
                     else
-                        context.stopService(serviceIntent)
-                            .also { Timber.i("Stopping ScreenCaptureListeningService") }
+                        ScreenshotListener.stopService(context)
                 }
             }
     }

@@ -21,6 +21,7 @@ import com.autocrop.activities.iodetermination.deleteRequestUri
 import com.autocrop.screencapturelistening.abstractservices.BoundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.screencapturelistening.notifications.NotificationId
+import com.autocrop.utils.android.extensions.compressToStream
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreData
@@ -32,6 +33,8 @@ import com.google.common.collect.EvictingQueue
 import com.lyrebirdstudio.croppylib.CropEdges
 import com.w2sv.autocrop.R
 import timber.log.Timber
+import java.io.File
+import java.io.FileOutputStream
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -43,6 +46,28 @@ class ScreenshotListener :
         const val EXTRA_ATTEMPT_SCREENSHOT_DELETION = "com.autocrop.DELETE_SCREENSHOT"
         const val EXTRA_DELETE_REQUEST_URI = "com.autocrop.DELETE_REQUEST_URI"
         const val EXTRA_SCREENSHOT_MEDIASTORE_DATA = "com.autocrop.SCREENSHOT_MEDIASTORE_DATA"
+        const val EXTRA_CROP_FILE_PATH = "com.autocrop.CROP_FILE_PATH"
+
+        fun startService(context: Context){
+            with(context) {
+                startService(
+                    Intent(this, ScreenshotListener::class.java)
+                )
+            }
+            Timber.i("Started ScreenCaptureListeningService")
+        }
+
+        fun stopService(context: Context){
+            with(context){
+                startService(
+                    Intent(this, ScreenshotListener::class.java)
+                        .setAction(ACTION_STOP_SERVICE)
+                )
+            }
+            Timber.i("Stopping ScreenCaptureListeningService")
+        }
+
+        private const val ACTION_STOP_SERVICE = "com.autocrop.STOP_SERVICE"
 
         private val FOREGROUND_SERVICE_NOTIFICATION_ID = NotificationId.STARTED_FOREGROUND_SERVICE
     }
@@ -51,12 +76,20 @@ class ScreenshotListener :
      * Starts foreground service with notification emission and registers [imageContentObserver]
      */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent!!.action == ACTION_STOP_SERVICE) {
+            stopService(Intent(this, OnPendingIntentService::class.java))
+
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            stopSelf()
+            return super.onStartCommand(intent, flags, startId)
+        }
+
         startForeground(
             FOREGROUND_SERVICE_NOTIFICATION_ID.id,
             foregroundServiceNotificationBuilder()
                 .build()
         )
-            .also { Timber.i("Started ScreenCaptureListeningService in foreground") }
+            .also { Timber.i("Started foreground service") }
 
         contentResolver.registerContentObserver(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -84,18 +117,16 @@ class ScreenshotListener :
                     "Stop",
                     PendingIntent.getBroadcast(
                         this,
-                        69,
-                        Intent(this, StoppingBroadcastReceiver::class.java),
+                        999,
+                        Intent(this, StopBroadcastReceiver::class.java),
                         PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                     )
                 )
             )
 
-    class StoppingBroadcastReceiver: BroadcastReceiver(){
+    class StopBroadcastReceiver: BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
-            context!!.stopService(
-                Intent(context, ScreenshotListener::class.java)
-            )
+            stopService(context!!)
         }
     }
 
@@ -212,6 +243,10 @@ class ScreenshotListener :
         }
     )
 
+    override fun onPendingIntentService(intent: Intent) {
+        File(intent.getStringExtra(EXTRA_CROP_FILE_PATH)!!).delete()
+    }
+
     private fun showNewCroppableScreenshotDetectedNotification(
         uri: Uri,
         screenshotBitmap: Bitmap,
@@ -223,16 +258,25 @@ class ScreenshotListener :
         val screenshotMediaStoreData = Screenshot.MediaStoreData.query(contentResolver, uri)
         val deleteRequestUri = deleteRequestUri(screenshotMediaStoreData.id)
         val crop = screenshotBitmap.cropped(cropEdges)
-            .also { CropIOService.cropBitmap = it }
+        val cropPath = saveCropToTempFile(crop, screenshotMediaStoreData.id)
 
-        fun pendingIntent(makePendingIntent: PendingIntentRenderer, intent: Intent, requestCodeIndex: Int): PendingIntent =
+        fun pendingIntent(makePendingIntent: PendingIntentRenderer,
+                          intent: Intent,
+                          requestCodeIndex: Int,
+                          putCancelNotificationExtra: Boolean = true): PendingIntent =
             makePendingIntent(
                 this,
                 associatedRequestCodes[requestCodeIndex],
                 intent
-                    .putOnPendingIntentServiceClientExtras(notificationId, associatedRequestCodes),
-                PendingIntent.FLAG_UPDATE_CURRENT
+                    .putExtra(EXTRA_CROP_FILE_PATH, cropPath)
+                    .putOnPendingIntentServiceClientExtras(notificationId, associatedRequestCodes, putCancelNotificationExtra),
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
             )
+
+        fun Intent.putSaveIntentDataAndExtras() =
+            this
+                .setData(uri)
+                .putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
 
         notificationGroup.addChild(
             notificationId,
@@ -244,9 +288,7 @@ class ScreenshotListener :
                         pendingIntent(
                             PendingIntent::getService,
                             Intent(this, CropIOService::class.java)
-                                .setData(uri)
-                                .putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
-                                .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true),
+                                .putSaveIntentDataAndExtras(),
                             0
                         )
                     )
@@ -259,19 +301,15 @@ class ScreenshotListener :
                             pendingIntent(
                                 PendingIntent::getActivity,
                                 Intent(this, DeleteRequestActivity::class.java)
-                                    .setData(uri)
-                                    .putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
-                                    .putExtra(EXTRA_DELETE_REQUEST_URI, deleteRequestUri)
-                                    .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true),
+                                    .putSaveIntentDataAndExtras()
+                                    .putExtra(EXTRA_DELETE_REQUEST_URI, deleteRequestUri),
                                 1
                             )
                         else
                             pendingIntent(
                                 PendingIntent::getService,
                                 Intent(this, CropIOService::class.java)
-                                    .setData(uri)
-                                    .putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
-                                    .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true)
+                                    .putSaveIntentDataAndExtras()
                                     .putExtra(EXTRA_ATTEMPT_SCREENSHOT_DELETION, true),
                                 1
                             )
@@ -283,8 +321,7 @@ class ScreenshotListener :
                         "Dismiss",
                         pendingIntent(
                             PendingIntent::getService,
-                            Intent(this, OnPendingIntentService::class.java)
-                                .putExtra(OnPendingIntentService.EXTRA_CANCEL_NOTIFICATION, true),
+                            Intent(this, OnPendingIntentService::class.java),
                             2
                         )
                     )
@@ -297,23 +334,31 @@ class ScreenshotListener :
                     pendingIntent(
                         PendingIntent::getService,
                         Intent(this, OnPendingIntentService::class.java),
-                        3
+                        3,
+                        false
                     )
                 )
         )
     }
 
-    override fun onPendingIntentService(intent: Intent) {
-        CropIOService.cropBitmap = null
+    private fun saveCropToTempFile(crop: Bitmap, screenshotMediaStoreId: Long): String{
+        val file = File.createTempFile(
+            screenshotMediaStoreId.toString(),
+            null
+        )
+        crop.compressToStream(
+            FileOutputStream(file),
+            Bitmap.CompressFormat.PNG
+        )
+        return file.path
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
+        stopService(Intent(this, CropIOService::class.java))
+
         contentResolver.unregisterContentObserver(imageContentObserver)
             .also { Timber.i("Unregistered imageContentObserver") }
-
-        stopService(Intent(this, CropIOService::class.java))
-        stopService(Intent(this, OnPendingIntentService::class.java))
     }
 }

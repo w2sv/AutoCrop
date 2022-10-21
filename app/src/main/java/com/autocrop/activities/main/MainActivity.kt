@@ -1,7 +1,6 @@
 package com.autocrop.activities.main
 
 import android.Manifest
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -88,7 +87,7 @@ class MainActivity :
                         .iterator()
                         .requestPermissions(
                             onGranted = {
-                                startService(Intent(this, ScreenshotListener::class.java))
+                                ScreenshotListener.startService(this)
                             }
                         )
             }
