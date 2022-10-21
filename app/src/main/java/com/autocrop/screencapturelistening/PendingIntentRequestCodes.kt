@@ -1,13 +1,13 @@
 package com.autocrop.screencapturelistening
 
-import timber.log.Timber
+import de.paul_woitaschek.slimber.i
 import java.util.PriorityQueue
 
 class PendingIntentRequestCodes(private val base: Int): PriorityQueue<Int>(){
     fun makeAndAdd(): Int{
         val newRequestCode = lastOrNull()?.let { it + 1 } ?: base
         add(newRequestCode)
-        Timber.i("Added pendingRequestCode $newRequestCode")
+        i { "Added pendingRequestCode $newRequestCode" }
         return newRequestCode
     }
 

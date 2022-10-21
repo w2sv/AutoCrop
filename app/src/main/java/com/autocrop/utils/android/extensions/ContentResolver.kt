@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
-import timber.log.Timber
+import de.paul_woitaschek.slimber.i
 
 fun ContentResolver.openBitmap(uri: Uri): Bitmap =
     BitmapFactory.decodeStream(openInputStream(uri))
@@ -25,16 +25,16 @@ fun ContentResolver.deleteImage(mediaStoreId: Long): Boolean{
             "${MediaStore.Images.Media._ID}=?",
             arrayOf(mediaStoreId.toString())
         ) != 0
-        Timber.i(
+        i {
             if (rowsDeleted)
                 "Successfully deleted image"
             else
                 "Could not delete image"
-        )
+        }
         rowsDeleted
     }
     catch (e: NullPointerException){
-        Timber.i(e)
+        i(e)
         false
     }
 }

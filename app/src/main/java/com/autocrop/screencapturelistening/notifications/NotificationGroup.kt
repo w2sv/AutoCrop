@@ -6,7 +6,7 @@ import androidx.core.app.NotificationCompat
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.notificationManager
 import com.autocrop.utils.android.extensions.showNotification
-import timber.log.Timber
+import de.paul_woitaschek.slimber.i
 
 class NotificationGroup(context: Context,
                         private val channelName: String,
@@ -42,7 +42,7 @@ class NotificationGroup(context: Context,
                 }
 
             add(id to builder)
-                .also { Timber.i("Added ${summaryId.name} notification $id") }
+                .also { i{"Added ${summaryId.name} notification $id"} }
         }
 
         showNotification(id, builder)
@@ -51,7 +51,7 @@ class NotificationGroup(context: Context,
     fun onChildNotificationCancelled(id: Int) {
         with(children){
             remove(id)
-                .also { Timber.i("Removed notification id $id; n notifications: $size") }
+                .also { i{"Removed notification id $id; n notifications: $size"} }
 
             if (size == 1)
                 with(element()){

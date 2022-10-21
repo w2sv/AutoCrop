@@ -1,8 +1,7 @@
 package com.autocrop.preferences
 
 import android.content.SharedPreferences
-import com.autocrop.utils.kotlin.logBeforehand
-import timber.log.Timber
+import de.paul_woitaschek.slimber.i
 
 /**
  * Base for KEY to VALUE map delegator objects, the content of which is to be stored in [SharedPreferences]
@@ -16,10 +15,12 @@ sealed class TypedPreferences<T>(protected val map: MutableMap<String, T>)
      * Initializes values with the ones contained in [sharedPreferences] instance
      * and copies them to [lastDiscSyncState]
      */
-    fun initializeFromSharedPreferences(sharedPreferences: SharedPreferences) = logBeforehand("Initializing ${javaClass.name} from SharedPreferences") {
+    fun initializeFromSharedPreferences(sharedPreferences: SharedPreferences){
+        i{"Initializing ${javaClass.name} from SharedPreferences"}
+
         forEach{ (key, defaultValue) ->
             put(key, sharedPreferences.getValue(key, defaultValue))
-            Timber.i("Set ${javaClass.name}.$key to $defaultValue from SharedPreferences")
+            i{"Set ${javaClass.name}.$key to $defaultValue from SharedPreferences"}
         }
         lastDiscSyncState = toMutableMap()
     }
@@ -29,7 +30,7 @@ sealed class TypedPreferences<T>(protected val map: MutableMap<String, T>)
             .filter { lastDiscSyncState.getValue(it.key) != it.value }
             .forEach {
                 sharedPreferences.value.writeValue(it.key, it.value)
-                Timber.i("Wrote ${it.key}=${it.value} to shared preferences")
+                i{"Wrote ${it.key}=${it.value} to shared preferences"}
 
                 lastDiscSyncState[it.key] = it.value
             }

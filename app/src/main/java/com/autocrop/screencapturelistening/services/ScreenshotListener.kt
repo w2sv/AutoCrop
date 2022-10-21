@@ -32,7 +32,7 @@ import com.autocrop.utils.kotlin.timeDelta
 import com.google.common.collect.EvictingQueue
 import com.lyrebirdstudio.croppylib.CropEdges
 import com.w2sv.autocrop.R
-import timber.log.Timber
+import de.paul_woitaschek.slimber.i
 import java.io.File
 import java.io.FileOutputStream
 import java.util.Date
@@ -54,7 +54,7 @@ class ScreenshotListener :
                     Intent(this, ScreenshotListener::class.java)
                 )
             }
-            Timber.i("Started ScreenCaptureListeningService")
+            i{"Started ScreenCaptureListeningService"}
         }
 
         fun stopService(context: Context){
@@ -64,7 +64,7 @@ class ScreenshotListener :
                         .setAction(ACTION_STOP_SERVICE)
                 )
             }
-            Timber.i("Stopping ScreenCaptureListeningService")
+            i{"Stopping ScreenCaptureListeningService"}
         }
 
         private const val ACTION_STOP_SERVICE = "com.autocrop.STOP_SERVICE"
@@ -89,14 +89,14 @@ class ScreenshotListener :
             foregroundServiceNotificationBuilder()
                 .build()
         )
-            .also { Timber.i("Started foreground service") }
+            .also { i{"Started foreground service"} }
 
         contentResolver.registerContentObserver(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             true,
             imageContentObserver
         )
-            .also { Timber.i("Registered imageContentObserver") }
+            .also { i{"Registered imageContentObserver"} }
 
         return START_STICKY
     }
@@ -152,25 +152,19 @@ class ScreenshotListener :
          */
         override fun onChange(selfChange: Boolean, uri: Uri?) {
             uri?.let {
-                Timber.i("Called onChange for $it")
+                i{"Called onChange for $it"}
                 if (!recentBlacklist.contains(it)) {
                     if (pendingScreenshotUris.contains(it) || it.isScreenshot() == true) {
                         if (onNewScreenshotUri(it)) {
                             recentBlacklist.add(it)
                             pendingScreenshotUris.remove(it)
-                            Timber.i("Added $uri to blacklist and removed it from pendingScreenshotUris")
+                            i{"Added $uri to blacklist and removed it from pendingScreenshotUris"}
                         } else
                             pendingScreenshotUris.add(it)
-                                .also {
-                                    Timber.i(
-                                        "Added $uri to pendingScreenshotUris"
-                                    )
-                                }
+                                .also {i {"Added $uri to pendingScreenshotUris"}}
                     } else
                         recentBlacklist.add(it)
-                            .also {
-                                Timber.i("Added $uri to blacklist")
-                            }
+                            .also { i{"Added $uri to blacklist"}}
                 }
             }
         }
@@ -358,6 +352,6 @@ class ScreenshotListener :
         stopService(Intent(this, CropIOService::class.java))
 
         contentResolver.unregisterContentObserver(imageContentObserver)
-            .also { Timber.i("Unregistered imageContentObserver") }
+            .also { i{"Unregistered imageContentObserver"} }
     }
 }

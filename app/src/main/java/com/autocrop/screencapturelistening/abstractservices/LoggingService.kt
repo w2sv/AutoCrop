@@ -2,11 +2,11 @@ package com.autocrop.screencapturelistening.abstractservices
 
 import android.app.Service
 import android.content.Intent
-import timber.log.Timber
+import de.paul_woitaschek.slimber.i
 
 abstract class LoggingService: Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Timber.i("${this::class.java.simpleName}.onStartCommand; startId $startId")
+        i{"${this::class.java.simpleName}.onStartCommand; startId $startId"}
         return super.onStartCommand(intent, flags, startId)
     }
 }

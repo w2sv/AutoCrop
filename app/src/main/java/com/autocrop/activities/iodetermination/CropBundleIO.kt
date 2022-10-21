@@ -19,7 +19,7 @@ import com.autocrop.utils.android.extensions.deleteImage
 import com.autocrop.utils.android.systemPicturesDirectory
 import com.autocrop.utils.kotlin.dateTimeNow
 import com.autocrop.utils.kotlin.logBeforehand
-import timber.log.Timber
+import de.paul_woitaschek.slimber.i
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -30,14 +30,14 @@ fun deleteRequestUri(mediaStoreId: Long): Uri? =
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             mediaStoreId
         )
-            .also { Timber.i("Built contentUriWithMediaStoreImagesId: $it") }
+            .also { i { "Built contentUriWithMediaStoreImagesId: $it" } }
     else
         null
 
 fun pathTail(path: String): String =
     "/${path.split("/").takeLast(2).joinToString("/")}"
 
-data class IOResult(val writeUri: Uri?, var deletedScreenshot: Boolean?){
+data class IOResult(val writeUri: Uri?, var deletedScreenshot: Boolean?) {
     val successfullySavedCrop: Boolean = writeUri != null
 }
 
@@ -51,7 +51,7 @@ fun ContentResolver.carryOutCropIO(
     validSaveDirDocumentUri: Uri?,
     deleteScreenshot: Boolean
 ): IOResult =
-    screenshotMediaStoreData.run{
+    screenshotMediaStoreData.run {
         val cropFileName = cropFileName(fileName, parsedMimeType)
         IOResult(
             saveBitmap(cropBitmap, parsedMimeType, cropFileName, validSaveDirDocumentUri),
@@ -92,10 +92,8 @@ fun ContentResolver.saveBitmap(
     val (outputStream, writeUri) = GetOutputStream(this, fileName, parentDocumentUri, mimeType)
 
     val successfullySaved = bitmap.compressToStream(outputStream, mimeType.compressFormat)
-        .also {
-            Timber.i(if (it) "Successfully wrote $fileName" else "Couldn't write $fileName")
-        }
-    return if(successfullySaved) writeUri else null
+        .also { i { if (it) "Successfully wrote $fileName" else "Couldn't write $fileName" } }
+    return if (successfullySaved) writeUri else null
 }
 
 @SuppressLint("Recycle")  // Suppress 'OutputStream should be closed' warning
@@ -120,22 +118,18 @@ private object GetOutputStream {
         parentDocumentUri: Uri,
         mimeType: ImageMimeType
     ): Pair<OutputStream, Uri> =
-        logBeforehand("GetOutputStream.fromParentDocument") {
-            DocumentsContract.createDocument(
-                contentResolver,
-                parentDocumentUri,
-                mimeType.string,
-                fileName
-            )!!.run {
-                contentResolver.openOutputStream(this)!! to this
-            }
+        DocumentsContract.createDocument(
+            contentResolver,
+            parentDocumentUri,
+            mimeType.string,
+            fileName
+        )!!.run {
+            contentResolver.openOutputStream(this)!! to this
         }
 
     private fun untilQ(fileName: String): Pair<OutputStream, Uri> =
-        logBeforehand("GetOutputStream.untilQ") {
-            File(systemPicturesDirectory(), fileName).run {
-                FileOutputStream(this) to Uri.fromFile(this)
-            }
+        File(systemPicturesDirectory(), fileName).run {
+            FileOutputStream(this) to Uri.fromFile(this)
         }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -144,16 +138,14 @@ private object GetOutputStream {
         contentResolver: ContentResolver,
         mimeType: ImageMimeType
     ): Pair<OutputStream, Uri> =
-        logBeforehand("GetOutputStream.postQ") {
-            contentResolver.insert(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                ContentValues().apply {
-                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-                    put(MediaStore.MediaColumns.MIME_TYPE, mimeType.string)
-                }
-            )!!.let { newUri ->
-                contentResolver.openOutputStream(newUri)!! to newUri
+        contentResolver.insert(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+                put(MediaStore.MediaColumns.MIME_TYPE, mimeType.string)
             }
+        )!!.let { newUri ->
+            contentResolver.openOutputStream(newUri)!! to newUri
         }
 }

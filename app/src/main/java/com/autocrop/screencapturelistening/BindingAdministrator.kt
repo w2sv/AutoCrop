@@ -8,7 +8,7 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import com.autocrop.screencapturelistening.abstractservices.BoundService
 import com.autocrop.utils.kotlin.delegates.Consumable
-import timber.log.Timber
+import de.paul_woitaschek.slimber.i
 
 class BindingAdministrator<T : BoundService>(
     context: Context,
@@ -19,7 +19,7 @@ class BindingAdministrator<T : BoundService>(
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            Timber.i("$name connected")
+            i{"$name connected"}
             boundService = (service as BoundService.LocalBinder).getService()
             onServiceConnected?.invoke(boundService!!)
         }
@@ -44,6 +44,6 @@ class BindingAdministrator<T : BoundService>(
 
     fun unbindService() {
         unbindService(serviceConnection)
-        Timber.i("Unbound $serviceClass")
+        i{"Unbound $serviceClass"}
     }
 }

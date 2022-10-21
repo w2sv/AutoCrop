@@ -17,10 +17,10 @@ import com.autocrop.activities.iodetermination.IODeterminationActivityViewModel
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.utils.android.extensions.openBitmap
 import com.autocrop.utils.kotlin.extensions.executeAsyncTaskWithProgressUpdateReceiver
-import com.autocrop.utils.kotlin.logBeforehand
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentCropBinding
+import de.paul_woitaschek.slimber.i
 import kotlinx.coroutines.Job
 
 class CropFragment
@@ -78,19 +78,20 @@ class CropFragment
      * Starts either Examination- or MainActivity depending on whether or not any
      * of the selected images has been successfully cropRect
      */
-    private fun startIODeterminationActivityOrInvokeCroppingFailureFragment() =
-        logBeforehand("Async Cropping task finished") {
-            if (sharedViewModel.cropBundles.isNotEmpty())
-                startIODeterminationActivity()
-            else
-            // delay briefly to assure progress bar having reached 100% before UI change
-                Handler(Looper.getMainLooper()).postDelayed(
-                    { fragmentHostingActivity
-                        .fragmentReplacementTransaction(CroppingFailedFragment())
-                        .commit() },
-                    resources.getInteger(R.integer.delay_minimal).toLong()
-                )
-        }
+    private fun startIODeterminationActivityOrInvokeCroppingFailureFragment(){
+        i{"Async Cropping task finished"}
+
+        if (sharedViewModel.cropBundles.isNotEmpty())
+            startIODeterminationActivity()
+        else
+        // delay briefly to assure progress bar having reached 100% before UI change
+            Handler(Looper.getMainLooper()).postDelayed(
+                { fragmentHostingActivity
+                    .fragmentReplacementTransaction(CroppingFailedFragment())
+                    .commit() },
+                resources.getInteger(R.integer.delay_minimal).toLong()
+            )
+    }
 
     /**
      * Inherently sets [IODeterminationActivityViewModel.cropBundles]

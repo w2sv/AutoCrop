@@ -17,7 +17,7 @@ import com.autocrop.utils.android.extensions.snacky
 import com.autocrop.utils.kotlin.BlankFun
 import com.w2sv.autocrop.R
 import de.mateware.snacky.Snacky
-import timber.log.Timber
+import de.paul_woitaschek.slimber.i
 
 fun Iterator<PermissionHandler?>.requestPermissions(onGranted: BlankFun, onDenied: BlankFun? = null){
     if (!hasNext())
@@ -116,7 +116,7 @@ class PermissionHandler(
                 .show()
 
             onPermissionDenied?.invoke()
-            Timber.i("Denied $permission")
+            i{"Denied $permission"}
         }
         else
             onPermissionGranted?.invoke()

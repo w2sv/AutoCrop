@@ -7,7 +7,7 @@ import com.autocrop.screencapturelistening.abstractservices.UnboundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.utils.android.extensions.getInt
 import com.autocrop.utils.android.extensions.notificationManager
-import timber.log.Timber
+import de.paul_woitaschek.slimber.i
 
 class OnPendingIntentService : UnboundService() {
     companion object{
@@ -50,7 +50,7 @@ class OnPendingIntentService : UnboundService() {
             if (getBooleanExtra(EXTRA_CANCEL_NOTIFICATION, false))
                 notificationManager()
                     .cancel(notificationId)
-                    .also { Timber.i("Cancelled notification $notificationId") }
+                    .also { i{"Cancelled notification $notificationId"} }
 
             bindingAdministrators[getInt(ClientInterface.EXTRA_CLIENT_INDEX)]
                 .callOnBoundService {boundService ->

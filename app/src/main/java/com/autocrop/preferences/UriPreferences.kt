@@ -7,7 +7,7 @@ import android.net.Uri
 import com.autocrop.utils.android.buildDocumentUriFromTreeUri
 import com.autocrop.utils.android.extensions.uriPermissionGranted
 import com.autocrop.utils.kotlin.delegates.mapObserver
-import timber.log.Timber
+import de.paul_woitaschek.slimber.i
 
 object UriPreferences: TypedPreferences<Uri?>(mutableMapOf("treeUri" to null)) {
     /**
@@ -16,7 +16,7 @@ object UriPreferences: TypedPreferences<Uri?>(mutableMapOf("treeUri" to null)) {
     var treeUri: Uri? by mapObserver(map) { _, oldValue, newValue ->
         if (newValue != null && oldValue != newValue)
             _documentUri = buildDocumentUriFromTreeUri(newValue)
-                .also { Timber.i("Set new documentUri: $it") }
+                .also { i{"Set new documentUri: $it"} }
     }
 
     val documentUri: Uri?
