@@ -12,13 +12,13 @@ import com.autocrop.activities.cropping.CropActivity
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.utils.android.PermissionHandler
 import com.autocrop.utils.android.documentUriPathIdentifier
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
+import com.w2sv.permissionhandler.PermissionHandler
 
 class FlowFieldFragment:
     MainActivityFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java) {

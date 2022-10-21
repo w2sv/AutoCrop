@@ -3,9 +3,9 @@ package com.autocrop
 import android.app.Application
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.utils.android.PermissionHandler
 import com.autocrop.utils.android.extensions.getApplicationWideSharedPreferences
 import com.w2sv.autocrop.BuildConfig
+import com.w2sv.permissionhandler.PermissionHandler
 import timber.log.Timber
 
 class AutoCrop: Application() {

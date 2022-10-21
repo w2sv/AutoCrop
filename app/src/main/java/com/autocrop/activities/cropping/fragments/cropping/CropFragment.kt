@@ -78,17 +78,19 @@ class CropFragment
      * Starts either Examination- or MainActivity depending on whether or not any
      * of the selected images has been successfully cropRect
      */
-    private fun startIODeterminationActivityOrInvokeCroppingFailureFragment(){
-        i{"Async Cropping task finished"}
+    private fun startIODeterminationActivityOrInvokeCroppingFailureFragment() {
+        i { "Async Cropping task finished" }
 
         if (sharedViewModel.cropBundles.isNotEmpty())
             startIODeterminationActivity()
         else
         // delay briefly to assure progress bar having reached 100% before UI change
             Handler(Looper.getMainLooper()).postDelayed(
-                { fragmentHostingActivity
-                    .fragmentReplacementTransaction(CroppingFailedFragment())
-                    .commit() },
+                {
+                    fragmentHostingActivity
+                        .fragmentReplacementTransaction(CroppingFailedFragment())
+                        .commit()
+                },
                 resources.getInteger(R.integer.delay_minimal).toLong()
             )
     }

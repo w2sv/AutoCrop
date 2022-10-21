@@ -27,9 +27,9 @@ import com.autocrop.utils.android.extensions.ifNotInEditMode
 import com.autocrop.utils.android.extensions.serviceRunning
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
-import com.autocrop.utils.android.requestPermissions
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.autocrop.R
+import com.w2sv.permissionhandler.requestPermissions
 
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
     NavigationView(context, attributeSet),

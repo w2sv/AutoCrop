@@ -18,13 +18,13 @@ import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.screencapturelistening.services.ScreenshotListener
 import com.autocrop.uicontroller.activity.ApplicationActivity
-import com.autocrop.utils.android.PermissionHandler
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
-import com.autocrop.utils.android.requestPermissions
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.w2sv.autocrop.R
+import com.w2sv.permissionhandler.PermissionHandler
+import com.w2sv.permissionhandler.requestPermissions
 
 class MainActivity :
     ApplicationActivity<FlowFieldFragment, MainActivityViewModel>(

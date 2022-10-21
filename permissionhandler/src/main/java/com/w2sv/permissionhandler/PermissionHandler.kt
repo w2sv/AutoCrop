@@ -1,4 +1,6 @@
-package com.autocrop.utils.android
+@file:Suppress("unused")
+
+package com.w2sv.permissionhandler
 
 import android.app.Activity
 import android.content.Context
@@ -12,21 +14,19 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.autocrop.utils.android.extensions.show
-import com.autocrop.utils.android.extensions.snacky
-import com.autocrop.utils.kotlin.BlankFun
-import com.w2sv.autocrop.R
+import com.w2sv.permissionhandler.utils.BlankFun
+import com.w2sv.permissionhandler.utils.snacky
 import de.mateware.snacky.Snacky
-import de.paul_woitaschek.slimber.i
 
-fun Iterator<PermissionHandler?>.requestPermissions(onGranted: BlankFun, onDenied: BlankFun? = null){
+fun Iterator<PermissionHandler?>.requestPermissions(onGranted: BlankFun, onDenied: BlankFun? = null) {
     if (!hasNext())
         onGranted()
-    else{
+    else {
         next()?.requestPermission(
-            onGranted = {requestPermissions(onGranted, onDenied)},
+            onGranted = { requestPermissions(onGranted, onDenied) },
             onDenied = onDenied
-        ) ?: requestPermissions(onGranted, onDenied)
+        )
+            ?: requestPermissions(onGranted, onDenied)
     }
 }
 
@@ -34,8 +34,8 @@ class PermissionHandler(
     private val permission: String,
     private val activity: Activity,
     private val permissionDenialMessage: String,
-    private val permissionRequestingSuppressedMessage: String)
-        : DefaultLifecycleObserver{
+    private val permissionRequestingSuppressedMessage: String
+) : DefaultLifecycleObserver {
 
     private lateinit var requestPermission: ActivityResultLauncher<String>
 
@@ -60,22 +60,25 @@ class PermissionHandler(
     private fun Activity.permissionGranted(permission: String): Boolean =
         checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
 
-    companion object{
+    companion object {
         /**
          * Permissions declared within package Manifest actually required by the api,
          * that is whose maxSdkVersion (also manually declared in Manifest) <= Build version
          */
         private lateinit var requiredPermissions: Set<String>
 
-        fun setRequiredPermissions(context: Context){
+        fun setRequiredPermissions(context: Context) {
             requiredPermissions = context.run {
                 (
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                        packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(PackageManager.GET_PERMISSIONS.toLong()))
-                    else
-                        @Suppress("DEPRECATION")
-                        packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
-                )
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                            packageManager.getPackageInfo(
+                                packageName,
+                                PackageManager.PackageInfoFlags.of(PackageManager.GET_PERMISSIONS.toLong())
+                            )
+                        else
+                            @Suppress("DEPRECATION")
+                            packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS)
+                        )
                     .requestedPermissions.toSet()
             }
         }
@@ -88,7 +91,7 @@ class PermissionHandler(
     fun requestPermission(onGranted: BlankFun, onDenied: BlankFun? = null): Unit =
         if (!grantRequired)
             onGranted()
-        else{
+        else {
             onPermissionGranted = onGranted
             onPermissionDenied = onDenied
 
@@ -105,18 +108,18 @@ class PermissionHandler(
      * Display snacky if some permission hasn't been granted,
      * otherwise run previously set [onPermissionGranted]
      */
-    private fun onRequestPermissionResult(permissionGranted: Boolean){
-        if (!permissionGranted){
+    private fun onRequestPermissionResult(permissionGranted: Boolean) {
+        if (!permissionGranted) {
             activity.run {
                 if (shouldShowRequestPermissionRationale(permission))
                     permissionDeniedSnacky()
                 else
                     permissionRequestingSuppressedSnacky()
             }
+                .build()
                 .show()
 
             onPermissionDenied?.invoke()
-            i{"Denied $permission"}
         }
         else
             onPermissionGranted?.invoke()
