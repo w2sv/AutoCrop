@@ -110,7 +110,6 @@ class ScreenshotListener :
                 NotificationCompat.BigTextStyle()
                     .bigText("You will receive a notification when AutoCrop detects a new croppable screenshot")
             )
-            .setSilent(true)
             .addAction(
                 NotificationCompat.Action(
                     R.drawable.ic_cancel_24,
