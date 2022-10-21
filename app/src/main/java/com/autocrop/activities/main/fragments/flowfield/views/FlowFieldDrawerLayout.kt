@@ -7,15 +7,18 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
+import com.autocrop.utils.android.extensions.ifNotInEditMode
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 
 class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet): DrawerLayout(context, attributeSet){
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        findFragment<FlowFieldFragment>()
-            .binding
-            .setAssociatedButtons()
+        ifNotInEditMode {
+            findFragment<FlowFieldFragment>()
+                .binding
+                .setAssociatedButtons()
+        }
     }
 
     private fun FragmentFlowfieldBinding.setAssociatedButtons(){
