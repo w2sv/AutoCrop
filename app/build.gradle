@@ -2,6 +2,7 @@ plugins{
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-parcelize'
+
     id 'de.mannodermaus.android-junit5'
 }
 
@@ -80,9 +81,9 @@ dependencies {
 
     // Processing
     implementation files('libs/processing-core-4.3.0.jar')
-    implementation files('libs/slimber-1.0.7-release.aar')
 
     implementation 'com.github.w2sv:viewboundcontroller:master-SNAPSHOT'
+    implementation 'com.github.w2sv:slimber:master-SNAPSHOT'
 
     // Modules
     implementation project(path: ':croppylib')
