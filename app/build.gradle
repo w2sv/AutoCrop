@@ -6,13 +6,11 @@ plugins{
     id 'de.mannodermaus.android-junit5'
 }
 
-// import @loadedProperties from ./utils.gradle
 apply from: "$rootDir/utils.gradle"
 
 android {
     def MIN_SDK_VERSION = 26
     def COMPILE_SDK_VERSION = 33
-
     def PACKAGE_NAME = 'com.w2sv.autocrop'
 
     compileSdkVersion COMPILE_SDK_VERSION
@@ -56,7 +54,7 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            debuggable false  // set to true to get logs whilst in release mode
+            debuggable false  // set to true to get logs while in release mode
         }
     }
     compileOptions {

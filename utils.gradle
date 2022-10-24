@@ -1,5 +1,5 @@
 /**
- * @param file: encapsulating '.properties' file
+ * @param file: .properties file
  * @return comprised properties as mapping
  */
 static def loadedProperties(File file){
