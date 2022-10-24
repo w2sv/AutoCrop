@@ -2,7 +2,7 @@
  * @param file: .properties file
  * @return comprised properties as mapping
  */
-static def loadedProperties(File file){
+static def loadProperties(File file){
     def properties = new Properties()
     properties.load(new FileInputStream(file))
     return properties
@@ -15,5 +15,5 @@ static def loadedProperties(File file){
  *  https://stackoverflow.com/a/23290820/12083276
  */
 ext {
-    loadedProperties = this.&loadedProperties
+    loadProperties = this.&loadProperties
 }

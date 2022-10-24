@@ -6,8 +6,6 @@ plugins{
     id 'de.mannodermaus.android-junit5'
 }
 
-apply from: "$rootDir/utils.gradle"
-
 android {
     def MIN_SDK_VERSION = 26
     def COMPILE_SDK_VERSION = 33
@@ -26,23 +24,24 @@ android {
         versionCode 26
         versionName '3.2.1'
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'
     }
     signingConfigs {
         // create release signingConfig from keystore.properties file, if present
         release {
-            rootProject.file("keystore.properties").with{propertyFile ->
-                if (propertyFile.exists()){
-                    storeFile rootProject.file("keys.jks")
+            rootProject.file("keystore.properties").with{file ->
+                if (file.exists()){
+                    apply from: "$rootDir/utils.gradle"
+                    def keystoreProperties = loadProperties(file)
 
-                    def keystoreProperties = loadedProperties(propertyFile)
+                    storeFile rootProject.file("keys.jks")
                     storePassword keystoreProperties["storePassword"]
                     keyAlias keystoreProperties["keyAlias"]
                     keyPassword keystoreProperties["keyPassword"]
                 }
                 else
-                    println("WARNING: Failed to create release signing configuration; $propertyFile.path not present")
+                    println("WARNING: Failed to create release signing configuration; $file.path not present")
             }
         }
     }

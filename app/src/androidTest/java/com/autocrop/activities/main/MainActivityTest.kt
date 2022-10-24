@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
@@ -37,7 +36,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+//import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.RegisterExtension
 import utils.espresso.SLOW_TIMEOUT
 import utils.espresso.check
@@ -45,21 +44,23 @@ import utils.espresso.intentTester
 import utils.espresso.isDisplayed
 import utils.espresso.retryFlakyAction
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class MainActivityTest {
     @JvmField
     @RegisterExtension
     val scenarioExtension = ActivityScenarioExtension.launch<MainActivity>()
 
-    @BeforeAll
-    fun grantPermissionsIfRequired(){
-        if (Build.VERSION.SDK_INT <= 29)
-            PermissionRequester().apply {
-                addPermissions(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-            }
-                .requestPermissions()
+    companion object{
+        @JvmStatic
+        @BeforeAll
+        fun grantPermissionsIfRequired(){
+            if (Build.VERSION.SDK_INT <= 29)
+                PermissionRequester().apply {
+                    addPermissions(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                }
+                    .requestPermissions()
+        }
     }
 
     @Test
@@ -122,7 +123,7 @@ internal class MainActivityTest {
                         toggleButton.perform(ViewActions.click())
                     }
             }
-            
+
             @Test
             fun itemsVisibleAndClickable() {
                 listOf(
@@ -227,8 +228,8 @@ internal class MainActivityTest {
                 }
 
                 @Test
-                fun fragmentShown(scenario: ActivityScenario<MainActivity>){
-                    scenario.onActivity {
+                fun fragmentShown(){
+                    scenarioExtension.scenario.onActivity {
                         Handler(Looper.getMainLooper()).postDelayed(
                             {
                                 Assertions.assertTrue(it.supportFragmentManager.findFragmentById(R.id.layout) is AboutFragment)
@@ -239,8 +240,9 @@ internal class MainActivityTest {
                 }
 
                 @Test
-                fun returnToFlowFieldFragmentByBackPress(scenario: ActivityScenario<MainActivity>){
-                    scenario.onActivity {
+                fun returnToFlowFieldFragmentByBackPress(){
+                    scenarioExtension.scenario.onActivity {
+                        @Suppress("DEPRECATION")
                         it.onBackPressed()
                         Handler(Looper.getMainLooper()).postDelayed(
                             {
@@ -255,8 +257,9 @@ internal class MainActivityTest {
     }
 
     @Test
-    fun appExit(scenario: ActivityScenario<MainActivity>){
-        scenario.onActivity {
+    fun appExit(){
+        scenarioExtension.scenario.onActivity {
+            @Suppress("DEPRECATION")
             it.onBackPressed()
             Assertions.assertTrue(it.isFinishing)
         }
