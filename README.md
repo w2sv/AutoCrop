@@ -7,7 +7,7 @@
 [![Build](https://github.com/w2sv/AutoCrop/actions/workflows/workflow.yaml/badge.svg)](https://github.com/w2sv/AutoCrop/actions/workflows/workflow.yaml)
 ![GitHub](https://img.shields.io/github/license/w2sv/AutoCrop)
 
-  __Android application for automatic batch cropping of phone screenshots__
+  __Android application for fully automatical batch cropping of phone screenshots__
 
 ## Download
 
