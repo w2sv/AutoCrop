@@ -28,10 +28,10 @@ import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.utils.android.extensions.animate
 import com.autocrop.utils.android.extensions.crossFade
 import com.autocrop.utils.android.extensions.getThemedColor
-import com.autocrop.utils.android.extensions.openBitmap
+import com.autocrop.utils.android.extensions.loadBitmap
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
-import com.autocrop.utils.android.livedata.asMutable
+import com.autocrop.utils.android.extensions.asMutable
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.daimajia.androidanimations.library.Techniques
@@ -225,7 +225,7 @@ class CropPagerFragment :
     private fun processAdjustedCropEdges(adjustedEdges: CropEdges) {
         with(viewModel.dataSet.currentValue) {
             crop = Crop.fromScreenshot(
-                requireContext().contentResolver.openBitmap(screenshot.uri),
+                requireContext().contentResolver.loadBitmap(screenshot.uri),
                 screenshot.mediaStoreData.diskUsage,
                 adjustedEdges
             )

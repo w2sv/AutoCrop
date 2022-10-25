@@ -15,7 +15,7 @@ import com.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedF
 import com.autocrop.activities.iodetermination.IODeterminationActivity
 import com.autocrop.activities.iodetermination.IODeterminationActivityViewModel
 import com.autocrop.activities.main.MainActivity
-import com.autocrop.utils.android.extensions.openBitmap
+import com.autocrop.utils.android.extensions.loadBitmap
 import com.autocrop.utils.kotlin.extensions.executeAsyncTaskWithProgressUpdateReceiver
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.autocrop.R
@@ -51,7 +51,7 @@ class CropFragment
             sharedViewModel.uris.size
         ).forEach { uri ->
             // attempt to crop image; upon success add CropBundle to sharedViewModel
-            val bitmap = requireContext().contentResolver.openBitmap(uri)
+            val bitmap = requireContext().contentResolver.loadBitmap(uri)
 
             bitmap.cropEdgesCandidates()?.let { candidates ->
                 sharedViewModel.cropBundles.add(

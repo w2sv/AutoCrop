@@ -12,7 +12,7 @@ import com.autocrop.CropBundle
 import com.autocrop.CropEdges
 import com.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
 import com.autocrop.activities.iodetermination.fragments.manualcrop.utils.extensions.maintainedPercentage
-import com.autocrop.utils.android.extensions.openBitmap
+import com.autocrop.utils.android.extensions.loadBitmap
 import com.autocrop.utils.kotlin.extensions.rounded
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentManualCropBinding
@@ -47,7 +47,7 @@ class ManualCropFragment
         with(requireArguments().getParcelable<CropBundle>(CropBundle.EXTRA)!!) {
             viewModel = viewModels<ManualCropViewModel> {
                 ManualCropViewModelFactory(
-                    requireContext().contentResolver.openBitmap(screenshot.uri),
+                    requireContext().contentResolver.loadBitmap(screenshot.uri),
                     crop.edges,
                     screenshot.cropEdgesCandidates
                 )

@@ -24,7 +24,7 @@ import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.screencapturelistening.notifications.NotificationId
 import com.autocrop.utils.android.extensions.compressToStream
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
-import com.autocrop.utils.android.extensions.openBitmap
+import com.autocrop.utils.android.extensions.loadBitmap
 import com.autocrop.utils.android.extensions.queryMediaStoreData
 import com.autocrop.utils.android.systemScreenshotsDirectory
 import com.autocrop.utils.kotlin.PendingIntentRenderer
@@ -214,7 +214,7 @@ class ScreenshotListener :
      */
     private fun onNewScreenshotUri(uri: Uri): Boolean =
         try {
-            val bitmap = contentResolver.openBitmap(uri)
+            val bitmap = contentResolver.loadBitmap(uri)
             bitmap.cropEdges()?.let {
                 showNewCroppableScreenshotDetectedNotification(uri, bitmap, it)
             }

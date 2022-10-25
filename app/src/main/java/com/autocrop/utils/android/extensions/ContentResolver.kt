@@ -7,7 +7,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import de.paul_woitaschek.slimber.i
 
-fun ContentResolver.openBitmap(uri: Uri): Bitmap =
+fun ContentResolver.loadBitmap(uri: Uri): Bitmap =
     BitmapFactory.decodeStream(openInputStream(uri))
 
 /**
