@@ -10,13 +10,13 @@ import com.autocrop.utils.kotlin.delegates.Consumable
 import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
 import com.w2sv.bidirectionalviewpager.recyclerview.BidirectionalRecyclerViewAdapter
 
-class CropPagerViewModel : ViewModel(){
+class CropPagerViewModel : ViewModel() {
     val dataSet = BidirectionalViewPagerDataSet(IODeterminationActivityViewModel.cropBundles)
 
     fun initialViewPosition(): Int =
-            (BidirectionalRecyclerViewAdapter.N_VIEWS / 2).let { halvedMaxViews ->
-                halvedMaxViews - dataSet.correspondingPosition(halvedMaxViews) + dataSet.currentPosition.value!!
-            }
+        (BidirectionalRecyclerViewAdapter.N_VIEWS / 2).let { halvedMaxViews ->
+            halvedMaxViews - dataSet.correspondingPosition(halvedMaxViews) + dataSet.currentPosition.value!!
+        }
 
     var onScrollStateIdleListenerConsumable by Consumable<BlankFun>()
 
@@ -28,7 +28,7 @@ class CropPagerViewModel : ViewModel(){
 
     val autoScroll: LiveData<Boolean> by lazy {
         MutableLiveData(
-                BooleanPreferences.autoScroll && dataSet.size > 1
+            BooleanPreferences.autoScroll && dataSet.size > 1
         )
     }
 

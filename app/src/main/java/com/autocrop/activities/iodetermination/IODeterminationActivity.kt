@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.iodetermination.fragments.comparison.ComparisonFragment
 import com.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
-import com.autocrop.activities.iodetermination.fragments.deletionconfirmationdialog.DeletionConfirmationDialogFragment
+import com.autocrop.activities.iodetermination.fragments.deletionconfirmation.DeletionConfirmationDialogFragment
 import com.autocrop.activities.iodetermination.fragments.manualcrop.ManualCropFragment
 import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.main.MainActivity

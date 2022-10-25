@@ -8,7 +8,7 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.core.text.bold
 import androidx.core.text.color
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.TransitionInflater
 import com.autocrop.Crop
@@ -42,7 +42,7 @@ import de.mateware.snacky.Snacky
 class CropPagerFragment :
     IODeterminationActivityFragment<FragmentCroppagerBinding>(FragmentCroppagerBinding::class.java) {
 
-    private val viewModel by viewModels<CropPagerViewModel>()
+    private val viewModel by activityViewModels<CropPagerViewModel>()
     private lateinit var viewPagerProxy: CropPagerProxy
 
     override fun onAttach(context: Context) {

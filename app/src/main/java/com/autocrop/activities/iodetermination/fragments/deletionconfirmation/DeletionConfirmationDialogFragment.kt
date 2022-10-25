@@ -1,4 +1,4 @@
-package com.autocrop.activities.iodetermination.fragments.deletionconfirmationdialog
+package com.autocrop.activities.iodetermination.fragments.deletionconfirmation
 
 import android.app.Activity
 import android.os.Build
