@@ -26,7 +26,6 @@ class ManualCropFragment
         private const val EXTRA_ADJUSTED_CROP_EDGES = "com.w2sv.autocrop.ADJUSTED_CROP_EDGES"
         const val KEY_RESULT = "com.w2sv.autocrop.CroppyFragment_RESULT"
 
-        @JvmStatic
         fun instance(cropBundle: CropBundle): ManualCropFragment =
             ManualCropFragment().apply {
                 arguments = bundleOf(
