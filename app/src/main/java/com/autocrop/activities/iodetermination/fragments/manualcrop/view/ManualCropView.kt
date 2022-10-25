@@ -14,8 +14,6 @@ import android.view.MotionEvent.ACTION_MOVE
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.autocrop.CropEdges
 import com.autocrop.activities.iodetermination.fragments.manualcrop.ManualCropViewModel
 import com.autocrop.activities.iodetermination.fragments.manualcrop.utils.extensions.animateToMatrix
@@ -39,6 +37,8 @@ import com.autocrop.activities.iodetermination.fragments.manualcrop.utils.model.
 import com.autocrop.activities.iodetermination.fragments.manualcrop.utils.model.Edge.LEFT
 import com.autocrop.activities.iodetermination.fragments.manualcrop.utils.model.Edge.RIGHT
 import com.autocrop.activities.iodetermination.fragments.manualcrop.utils.model.Edge.TOP
+import com.autocrop.utils.android.extensions.ifNotInEditMode
+import com.autocrop.utils.android.extensions.viewModelLazy
 import com.autocrop.utils.android.livedata.asMutable
 import com.lyrebirdstudio.croppylib.fragment.view.BitmapGestureHandler
 import com.w2sv.autocrop.R
@@ -160,7 +160,7 @@ class ManualCropView @JvmOverloads constructor(
     /**
      * Mask color
      */
-    private val maskBackgroundColor = ContextCompat.getColor(context, R.color.colorCropAlpha)
+    private val maskBackgroundColor = ContextCompat.getColor(context, R.color.crop_mask)
 
     companion object {
         /**
@@ -173,21 +173,19 @@ class ManualCropView @JvmOverloads constructor(
         setWillNotDraw(false)
     }
 
-    private val viewModel: ManualCropViewModel by lazy {
-        ViewModelProvider(findViewTreeViewModelStoreOwner()!!)[ManualCropViewModel::class.java]
-    }
+    private val viewModel by viewModelLazy<ManualCropViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        bitmapRect.set(
-            0f,
-            0f,
-            viewModel.bitmap.width.toFloat(),
-            viewModel.bitmap.height.toFloat(),
-        )
-
-        setBackgroundColor(context.getColor(R.color.light_gray))
+        ifNotInEditMode {
+            bitmapRect.set(
+                0f,
+                0f,
+                viewModel.bitmap.width.toFloat(),
+                viewModel.bitmap.height.toFloat(),
+            )
+        }
     }
 
     private val bitmapBorderRect = RectF()

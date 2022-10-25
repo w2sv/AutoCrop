@@ -8,6 +8,7 @@ import com.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragme
 import com.autocrop.activities.iodetermination.fragments.comparison.ComparisonFragment
 import com.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
 import com.autocrop.activities.iodetermination.fragments.deletionconfirmationdialog.DeletionConfirmationDialogFragment
+import com.autocrop.activities.iodetermination.fragments.manualcrop.ManualCropFragment
 import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.preferences.BooleanPreferences
@@ -27,9 +28,9 @@ class IODeterminationActivity :
         BooleanPreferences) {
 
     private companion object{
-        const val EXTRA_CROP_URIS = "com.autocrop.CROP_URIS"
-        const val EXTRA_N_DELETED_SCREENSHOTS = "com.autocrop.N_DELETED_SCREENSHOTS"
-        const val EXTRA_SAVE_DIR_NAME = "com.autocrop.SAVE_DIR_NAME"
+        const val EXTRA_CROP_URIS = "com.w2sv.autocrop.CROP_URIS"
+        const val EXTRA_N_DELETED_SCREENSHOTS = "com.w2sv.autocrop.N_DELETED_SCREENSHOTS"
+        const val EXTRA_SAVE_DIR_NAME = "com.w2sv.autocrop.SAVE_DIR_NAME"
     }
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
@@ -73,9 +74,10 @@ class IODeterminationActivity :
             getCurrentFragment().let {
                 when (it) {
                     is ComparisonFragment -> {
-                        it.prepareExitTransition()
+                        it.binding.comparisonIv.prepareSharedElementExitTransition()
                         supportFragmentManager.popBackStack()
                     }
+                    is ManualCropFragment -> supportFragmentManager.popBackStack()
                     is SaveAllFragment -> {
                         snacky("Wait until crops have been saved")
                             .setIcon(R.drawable.ic_front_hand_24)

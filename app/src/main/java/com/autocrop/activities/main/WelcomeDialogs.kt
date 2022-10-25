@@ -48,7 +48,7 @@ class ScreenshotListenerExplanation: UncancelableDialogFragment(){
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         builder()
             .setTitle("Screenshot listening")
-            .setIcon(requireContext().getColoredIcon(R.drawable.ic_screenshot_24, R.color.highlighted_text_view))
+            .setIcon(requireContext().getColoredIcon(R.drawable.ic_screenshot_24, R.color.magenta_bright))
             .setMessage(
                 SpannableStringBuilder().apply {
                     append(

@@ -4,13 +4,13 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.widget.RelativeLayout
-import androidx.fragment.app.activityViewModels
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
+import com.autocrop.CropBundle
 import com.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
-import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
@@ -21,16 +21,25 @@ import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 class ComparisonFragment
     : IODeterminationActivityFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java){
 
+    companion object{
+        fun instance(cropBundle: CropBundle): ComparisonFragment =
+            ComparisonFragment()
+                .apply {
+                    arguments = bundleOf(
+                        CropBundle.EXTRA to cropBundle
+                    )
+                }
+    }
+
     private lateinit var viewModel: ComparisonViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
         viewModel = viewModels<ComparisonViewModel>{
-            val viewPagerViewModel by activityViewModels<CropPagerViewModel>()
-
+            @Suppress("DEPRECATION")
             ComparisonViewModelFactory(
-                viewPagerViewModel.dataSet.currentValue
+                requireArguments().getParcelable(CropBundle.EXTRA)!!
             )
         }.value
 
@@ -58,9 +67,5 @@ class ComparisonFragment
                     }
                 }
             })
-    }
-
-    fun prepareExitTransition(){
-        binding.comparisonIv.prepareSharedElementExitTransition()
     }
 }

@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:background="@color/background_neutral"/>
+        android:background="@color/black"/>
 
     <!--    Page Indication Layout-->
 
@@ -84,9 +84,9 @@
         android:paddingHorizontal="3dp"
 
         android:text="@string/cancel_autoscroll"
-        android:textColor="@color/highlighted_text_view"
+        android:textColor="@color/magenta_bright"
         android:textSize="14sp"
-        android:background="@drawable/shape_oval_border">
+        android:background="@drawable/shape_oval_w_border">
 
     </com.autocrop.activities.iodetermination.fragments.croppager.views.CancelAutoScrollButton>
 

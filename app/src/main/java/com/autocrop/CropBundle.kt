@@ -9,11 +9,15 @@ import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.utils.android.ImageMimeType
 import com.autocrop.utils.android.extensions.queryMediaStoreData
 import com.autocrop.utils.kotlin.extensions.rounded
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import kotlin.math.roundToInt
 
-data class CropBundle(val screenshot: Screenshot, var crop: Crop) {
+@Parcelize
+data class CropBundle(val screenshot: Screenshot, var crop: Crop): Parcelable {
     companion object{
+        const val EXTRA = "com.w2sv.autocrop.CROP_BUNDLE"
+
         fun assemble(screenshot: Screenshot, screenshotBitmap: Bitmap, edges: CropEdges): CropBundle =
             CropBundle(
                 screenshot,
@@ -28,12 +32,13 @@ data class CropBundle(val screenshot: Screenshot, var crop: Crop) {
     fun identifier(): String = hashCode().toString()
 }
 
+@Parcelize
 data class Screenshot(
     val uri: Uri,
     val height: Int,
     val cropEdgesCandidates: List<CropEdges>,
     val mediaStoreData: MediaStoreData
-){
+): Parcelable{
     @Parcelize
     data class MediaStoreData(val diskUsage: Long,
                               val fileName: String,
@@ -63,12 +68,14 @@ data class Screenshot(
 }
 
 // TODO: write tests
+@Parcelize
 data class Crop(
     val bitmap: Bitmap,
     val edges: CropEdges,
     val discardedPercentage: Int,
-    val discardedKB: Long) {
+    val discardedKB: Long): Parcelable {
 
+    @IgnoredOnParcel
     val discardedFileSizeFormatted: String by lazy {
         if (discardedKB >= 1000)
             "${(discardedKB.toFloat() / 1000).rounded(1)}mb"
