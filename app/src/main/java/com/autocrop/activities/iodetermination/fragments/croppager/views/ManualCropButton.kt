@@ -10,6 +10,7 @@ import com.autocrop.uicontroller.activity.retriever.ContextBasedActivityRetrieve
 import com.autocrop.utils.android.extensions.viewModel
 import com.autocrop.views.ExtendedAppCompatImageButton
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
+import com.w2sv.autocrop.R
 
 class ManualCropButton(context: Context, attributeSet: AttributeSet) :
     ExtendedAppCompatImageButton(context, attributeSet),
@@ -18,13 +19,14 @@ class ManualCropButton(context: Context, attributeSet: AttributeSet) :
     override fun onClickListener() {
         fragmentHostingActivity.fragmentReplacementTransaction(
             ManualCropFragment.instance(
-                viewModel<CropPagerViewModel>().dataSet.currentPosition.value!!
+                cropBundleIndex = viewModel<CropPagerViewModel>().dataSet.currentPosition.value!!
             ),
-            flipRight = true,
+            R.animator.in_out_enter,
+            R.animator.in_out_exit
         )
             .addToBackStack(null)
             .commit()
 
-//        Animatoo.animateInAndOut(context)
+        Animatoo.animateInAndOut(context)
     }
 }

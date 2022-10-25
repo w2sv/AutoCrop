@@ -59,4 +59,12 @@ abstract class FragmentHostingActivity<RF : Fragment>(private val rootFragmentCl
                 }
             }
             .replace(layoutId, fragment)
+
+    @SuppressLint("CommitTransaction")
+    fun fragmentReplacementTransaction(fragment: Fragment, enterAnimation: Int, exitAnimation: Int): FragmentTransaction =
+        supportFragmentManager
+            .beginTransaction()
+            .setReorderingAllowed(true)
+            .setCustomAnimations(enterAnimation, exitAnimation, enterAnimation, exitAnimation)
+            .replace(layoutId, fragment)
 }

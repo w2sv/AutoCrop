@@ -10,81 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/kotlin/extensions/Float.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_check_green_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/animator/in_out_enter.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/animator/in_out_exit.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/androidTest/java/com/autocrop/activities/cropping/CroppingTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/androidTest/java/com/autocrop/activities/cropping/CroppingTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/CropBundle.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/CropBundle.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/CropEdgesCandidates.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/CropEdgesCandidates.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/Cropping.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/cropping/cropping/Cropping.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/IODeterminationActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/IODeterminationActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ManualCropButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/croppager/views/ManualCropButton.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/deletionconfirmationdialog/DeletionConfirmationDialogFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/deletionconfirmationdialog/DeletionConfirmationDialogFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/FlowFieldFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/FlowFieldFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFieldNavigationView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/main/fragments/flowfield/views/FlowFieldNavigationView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/CropIOService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/CropIOService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/ScreenshotListener.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/screencapturelistening/services/ScreenshotListener.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/autocrop/uicontroller/activity/FragmentHostingActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/uicontroller/activity/FragmentHostingActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_arrow_back_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_done_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_check_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_front_hand_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_front_hand_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_location_on_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_location_on_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_menu_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_menu_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_priority_high_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_priority_high_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_redo_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_redo_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_share_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_share_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout-land/fragment_croppager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout-land/fragment_croppager.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_deletionquery.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_deletion_query.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_flowfield.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_flowfield.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/menu/flowfield.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/menu/flowfield.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/autocrop/utils/FloatKtTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/autocrop/utils/FloatKtTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/consumer-rules.pro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/proguard-rules.pro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/AndroidManifest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/CropEdges.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/CropEdges.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/CroppyRequest.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/CroppyTheme.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/activity/CroppyActivity.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/activity/CroppyActivityViewModel.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/CroppyFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/manualcrop/ManualCropFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/CroppyFragmentViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/manualcrop/ManualCropViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/CroppyFragmentViewModelFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/manualcrop/ManualCropViewModelFactory.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/view/BitmapGestureHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/manualcrop/view/BitmapGestureHandler.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/fragment/view/CroppyView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/manualcrop/view/ManualCropView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/bitmap/BitmapUtils.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/extensions/Activity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/manualcrop/utils/extensions/Activity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/extensions/Bitmap.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/manualcrop/utils/extensions/Bitmap.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/extensions/Float.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/extensions/LiveData.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/extensions/Matrix.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/manualcrop/utils/extensions/Matrix.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/extensions/RectF.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/manualcrop/utils/extensions/RectF.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/extensions/ViewExtension.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/model/AnimatableRectF.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/manualcrop/utils/model/AnimatableRectF.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/model/Corner.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/manualcrop/utils/model/Corner.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/model/DraggingState.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/manualcrop/utils/model/DraggingState.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/java/com/lyrebirdstudio/croppylib/utils/model/Edge.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/manualcrop/utils/model/Edge.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/res/drawable/background_bottom_buttons.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/background_bottom_buttons.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/res/drawable/background_reset_button.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/background_reset_button.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/res/drawable/background_rounded_text.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/background_rounded_text.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/res/drawable/ic_cancel.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/res/drawable/ic_check.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/res/layout/activity_croppy.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/res/layout/fragment_image_crop.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_manual_crop.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/res/values/colors.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/res/values/dimens.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/res/values/strings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/croppylib/src/main/res/values/styles.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,12 +51,12 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="layoutResourceFile" />
-        <option value="resourceFile" />
         <option value="Kotlin Enum" />
         <option value="Kotlin File" />
         <option value="Class" />
         <option value="Kotlin Class" />
         <option value="JUnit5 Test Class" />
+        <option value="resourceFile" />
       </list>
     </option>
   </component>
