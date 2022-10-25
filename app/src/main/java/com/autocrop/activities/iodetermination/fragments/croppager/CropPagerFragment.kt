@@ -1,19 +1,18 @@
 package com.autocrop.activities.iodetermination.fragments.croppager
 
-import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.SpannableStringBuilder
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.TransitionInflater
 import com.autocrop.Crop
+import com.autocrop.CropEdges
 import com.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.AbstractCropDialog
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropDialog
@@ -23,6 +22,7 @@ import com.autocrop.activities.iodetermination.fragments.croppager.pager.CropPag
 import com.autocrop.activities.iodetermination.fragments.croppager.pager.CropPagerProxy
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Scroller
+import com.autocrop.activities.iodetermination.fragments.manualcrop.ManualCropFragment
 import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.utils.android.extensions.animate
@@ -35,8 +35,6 @@ import com.autocrop.utils.android.livedata.asMutable
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.daimajia.androidanimations.library.Techniques
-import com.lyrebirdstudio.croppylib.CropEdges
-import com.lyrebirdstudio.croppylib.activity.CroppyActivity
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import de.mateware.snacky.Snacky
@@ -59,6 +57,19 @@ class CropPagerFragment :
 
         setCropDialogResultListener()
         setCropEntiretyDialogResultListener()
+        setManualCropResultListener()
+    }
+
+    private fun setManualCropResultListener(){
+        setFragmentResultListener(ManualCropFragment.KEY_RESULT){
+            processAdjustedCropEdges(ManualCropFragment.getAdjustedCropEdges(it))
+            requireActivity().snacky(
+                "Adjusted crop",
+                duration = Snacky.LENGTH_SHORT
+            )
+                .setIcon(R.drawable.ic_check_green_24)
+                .show()
+        }
     }
 
     /**
@@ -203,20 +214,6 @@ class CropPagerFragment :
                         .append(" image".numericallyInflected(nDismissedScreenshots))
                 )
                     .setIcon(R.drawable.ic_error_24)
-                    .show()
-            }
-        }
-    }
-
-    val croppyActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == RESULT_OK) {
-            result.data?.let {
-                processAdjustedCropEdges(CroppyActivity.getCropEdges(it))
-                requireActivity().snacky(
-                    "Adjusted crop",
-                    duration = Snacky.LENGTH_SHORT
-                )
-                    .setIcon(R.drawable.ic_baseline_done_24)
                     .show()
             }
         }

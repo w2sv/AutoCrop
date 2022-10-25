@@ -2,38 +2,29 @@ package com.autocrop.activities.iodetermination.fragments.croppager.views
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.fragment.app.findFragment
-import com.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
+import com.autocrop.activities.iodetermination.IODeterminationActivity
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
-import com.autocrop.utils.android.extensions.activityViewModel
+import com.autocrop.activities.iodetermination.fragments.manualcrop.ManualCropFragment
+import com.autocrop.uicontroller.activity.retriever.ActivityRetriever
+import com.autocrop.uicontroller.activity.retriever.ContextBasedActivityRetriever
+import com.autocrop.utils.android.extensions.viewModel
 import com.autocrop.views.ExtendedAppCompatImageButton
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
-import com.lyrebirdstudio.croppylib.CroppyRequest
-import com.lyrebirdstudio.croppylib.CroppyTheme
-import com.lyrebirdstudio.croppylib.activity.CroppyActivity
-import com.w2sv.autocrop.R
 
-class ManualCropButton(context: Context, attributeSet: AttributeSet):
-    ExtendedAppCompatImageButton(context, attributeSet) {
+class ManualCropButton(context: Context, attributeSet: AttributeSet) :
+    ExtendedAppCompatImageButton(context, attributeSet),
+    ActivityRetriever<IODeterminationActivity> by ContextBasedActivityRetriever(context) {
 
     override fun onClickListener() {
-        val cropBundle = activityViewModel<CropPagerViewModel>().dataSet.currentValue
-
-        findFragment<CropPagerFragment>().croppyActivityLauncher.launch(
-            CroppyActivity.intent(
-                context,
-                CroppyRequest(
-                    cropBundle.screenshot.uri,
-                    cropBundle.crop.edges,
-                    cropBundle.screenshot.cropEdgesCandidates,
-                    CroppyTheme(
-                        accentColor = R.color.magenta_bright,
-                        backgroundColor = R.color.magenta_dark
-                    ),
-                    Animatoo::animateInAndOut
-                )
-            )
+        fragmentHostingActivity.fragmentReplacementTransaction(
+            ManualCropFragment.instance(
+                viewModel<CropPagerViewModel>().dataSet.currentPosition.value!!
+            ),
+            flipRight = true,
         )
-        Animatoo.animateInAndOut(context)
+            .addToBackStack(null)
+            .commit()
+
+//        Animatoo.animateInAndOut(context)
     }
 }

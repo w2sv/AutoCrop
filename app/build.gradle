@@ -83,7 +83,6 @@ dependencies {
     implementation 'com.github.w2sv:slimber:master-SNAPSHOT'
 
     // Modules
-    implementation project(path: ':croppylib')
     implementation project(path: ':bidirectionalviewpager')
     implementation project(path: ':permissionhandler')
 

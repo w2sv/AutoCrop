@@ -1,11 +1,11 @@
 package com.autocrop.uicontroller.activity
 
+import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.w2sv.autocrop.R
 
-abstract class FragmentHostingActivity<RF : Fragment>(private val rootFragmentClass: Class<RF>)
-    : BlankViewBoundActivity() {
+abstract class FragmentHostingActivity<RF : Fragment>(private val rootFragmentClass: Class<RF>) : BlankViewBoundActivity() {
 
     companion object {
         private const val ROOT_FRAGMENT_TAG = "ROOT_FRAGMENT"
@@ -17,6 +17,7 @@ abstract class FragmentHostingActivity<RF : Fragment>(private val rootFragmentCl
         launchRootFragment()
     }
 
+    @SuppressLint("CommitTransaction")
     private fun launchRootFragment() {
         supportFragmentManager
             .beginTransaction()
@@ -37,9 +38,10 @@ abstract class FragmentHostingActivity<RF : Fragment>(private val rootFragmentCl
         supportFragmentManager.findFragmentById(layoutId)
 
     @Suppress("UNCHECKED_CAST")
-    fun <F: Fragment> getCastCurrentFragment(): F? =
+    fun <F : Fragment> getCastCurrentFragment(): F? =
         getCurrentFragment() as F?
 
+    @SuppressLint("CommitTransaction")
     fun fragmentReplacementTransaction(fragment: Fragment, flipRight: Boolean? = null): FragmentTransaction =
         supportFragmentManager
             .beginTransaction()

@@ -6,7 +6,7 @@
     <item
         android:id="@+id/main_menu_item_share_crops"
         android:title="@string/share_crops"
-        android:icon="@drawable/ic_baseline_share_24"
+        android:icon="@drawable/ic_share_24"
         android:visible="false">
     </item>
 
@@ -25,7 +25,7 @@
             <menu>
                 <item
                     android:id="@+id/main_menu_item_auto_scroll"
-                    android:icon="@drawable/ic_baseline_redo_24"
+                    android:icon="@drawable/ic_redo_24"
                     android:title="@string/menu_item_auto_scroll"/>
             </menu>
         </item>

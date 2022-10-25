@@ -78,7 +78,7 @@ class IODeterminationActivity :
                     }
                     is SaveAllFragment -> {
                         snacky("Wait until crops have been saved")
-                            .setIcon(R.drawable.ic_baseline_front_hand_24)
+                            .setIcon(R.drawable.ic_front_hand_24)
                             .show()
                     }
                     is CropPagerFragment -> handleBackPress()

@@ -8,8 +8,7 @@ import android.provider.MediaStore
 import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.utils.android.ImageMimeType
 import com.autocrop.utils.android.extensions.queryMediaStoreData
-import com.lyrebirdstudio.croppylib.CropEdges
-import com.lyrebirdstudio.croppylib.utils.extensions.rounded
+import com.autocrop.utils.kotlin.extensions.rounded
 import kotlinx.parcelize.Parcelize
 import kotlin.math.roundToInt
 

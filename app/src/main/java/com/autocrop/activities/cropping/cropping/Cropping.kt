@@ -1,7 +1,7 @@
 package com.autocrop.activities.cropping.cropping
 
 import android.graphics.Bitmap
-import com.lyrebirdstudio.croppylib.CropEdges
+import com.autocrop.CropEdges
 
 fun Bitmap.cropped(edges: CropEdges): Bitmap{
     return Bitmap.createBitmap(

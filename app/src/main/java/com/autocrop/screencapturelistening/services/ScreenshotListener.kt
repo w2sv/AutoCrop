@@ -13,6 +13,7 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import androidx.core.app.NotificationCompat
+import com.autocrop.CropEdges
 import com.autocrop.Screenshot
 import com.autocrop.activities.cropping.cropping.cropEdges
 import com.autocrop.activities.cropping.cropping.cropped
@@ -30,7 +31,6 @@ import com.autocrop.utils.kotlin.PendingIntentRenderer
 import com.autocrop.utils.kotlin.dateFromUnixTimestamp
 import com.autocrop.utils.kotlin.timeDelta
 import com.google.common.collect.EvictingQueue
-import com.lyrebirdstudio.croppylib.CropEdges
 import com.w2sv.autocrop.R
 import de.paul_woitaschek.slimber.i
 import java.io.File

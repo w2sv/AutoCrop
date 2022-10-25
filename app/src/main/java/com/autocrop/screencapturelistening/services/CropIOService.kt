@@ -117,7 +117,7 @@ class CropIOService :
                     )
                     .addAction(
                         NotificationCompat.Action(
-                            R.drawable.ic_baseline_share_24,
+                            R.drawable.ic_share_24,
                             "Share",
                             actionPendingIntent(
                                 1,

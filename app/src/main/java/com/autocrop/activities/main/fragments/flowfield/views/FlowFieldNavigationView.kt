@@ -75,7 +75,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
                         setImageDrawable(
                             AppCompatResources.getDrawable(
                                 context,
-                                R.drawable.ic_baseline_priority_high_24
+                                R.drawable.ic_priority_high_24
                             )
                         )
                     }

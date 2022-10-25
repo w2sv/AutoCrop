@@ -42,5 +42,6 @@
     <string name="compare_crop_and_original_screenshot">Compare crop and original screenshot</string>
     <string name="manually_adjust_the_crop">Manually adjust the crop</string>
     <string name="screenshot_listener">Screenshot Listener</string>
-
+    <string name="height">Height</string>
+    <string name="reset">Reset</string>
 </resources>

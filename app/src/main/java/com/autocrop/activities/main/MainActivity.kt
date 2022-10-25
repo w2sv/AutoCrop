@@ -18,6 +18,7 @@ import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.screencapturelistening.services.ScreenshotListener
 import com.autocrop.uicontroller.activity.ApplicationActivity
+import com.autocrop.utils.android.extensions.getColoredIcon
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
@@ -115,7 +116,7 @@ class MainActivity :
             else
                 SpannableStringBuilder().apply {
                     append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                    color(getThemedColor(R.color.notification_success)) {append(saveDirName)}
+                    color(getThemedColor(R.color.success)) {append(saveDirName)}
                     if (nDeletedScreenshots != 0)
                         append(
                             " and deleted ${
@@ -125,7 +126,7 @@ class MainActivity :
                                     nDeletedScreenshots
                             } ${"screenshot".numericallyInflected(nDeletedScreenshots)}"
                         )
-                } to R.drawable.ic_baseline_done_24
+                } to R.drawable.ic_check_green_24
 
             snacky(text)
                 .setIcon(icon)

@@ -1,6 +1,6 @@
 package com.autocrop.utils
 
-import com.lyrebirdstudio.croppylib.utils.extensions.rounded
+import com.autocrop.activities.iodetermination.fragments.manualcrop.utils.extensions.rounded
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource

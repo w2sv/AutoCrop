@@ -13,10 +13,10 @@ import androidx.annotation.RequiresApi
 import com.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
 import com.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.FragmentDeletionqueryBinding
+import com.w2sv.autocrop.databinding.FragmentDeletionQueryBinding
 
 class DeletionConfirmationDialogFragment :
-    IODeterminationActivityFragment<FragmentDeletionqueryBinding>(FragmentDeletionqueryBinding::class.java){
+    IODeterminationActivityFragment<FragmentDeletionQueryBinding>(FragmentDeletionQueryBinding::class.java){
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
