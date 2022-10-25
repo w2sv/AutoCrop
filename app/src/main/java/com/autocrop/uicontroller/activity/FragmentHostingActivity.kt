@@ -42,21 +42,13 @@ abstract class FragmentHostingActivity<RF : Fragment>(private val rootFragmentCl
         getCurrentFragment() as F?
 
     @SuppressLint("CommitTransaction")
-    fun fragmentReplacementTransaction(fragment: Fragment, flipRight: Boolean? = null): FragmentTransaction =
+    fun fragmentReplacementTransaction(fragment: Fragment, animated: Boolean = false): FragmentTransaction =
         supportFragmentManager
             .beginTransaction()
             .setReorderingAllowed(true)
             .apply {
-                flipRight?.let {
-                    with(
-                        if (it)
-                            R.animator.card_flip_right_in to R.animator.card_flip_right_out
-                        else
-                            R.animator.card_flip_left_in to R.animator.card_flip_left_out
-                    ) {
-                        setCustomAnimations(first, second, first, second)
-                    }
-                }
+                if (animated)
+                    setCustomAnimations(R.anim.animate_in_out_enter, R.anim.animate_in_out_exit, R.anim.animate_in_out_enter, R.anim.animate_in_out_exit)
             }
             .replace(layoutId, fragment)
 

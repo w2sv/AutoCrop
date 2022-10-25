@@ -158,7 +158,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
     private fun invokeAboutFragment(){
         fragmentHostingActivity.fragmentReplacementTransaction(
             AboutFragment(),
-            flipRight = true,
+            animated = true,
         )
             .addToBackStack(null)
             .commit()

@@ -9,7 +9,6 @@ import com.autocrop.uicontroller.activity.retriever.ActivityRetriever
 import com.autocrop.uicontroller.activity.retriever.ContextBasedActivityRetriever
 import com.autocrop.utils.android.extensions.viewModel
 import com.autocrop.views.ExtendedAppCompatImageButton
-import com.w2sv.autocrop.R
 
 class ManualCropButton(context: Context, attributeSet: AttributeSet) :
     ExtendedAppCompatImageButton(context, attributeSet),
@@ -20,8 +19,7 @@ class ManualCropButton(context: Context, attributeSet: AttributeSet) :
             ManualCropFragment.instance(
                 viewModel<CropPagerViewModel>().dataSet.currentValue
             ),
-            R.anim.animate_in_out_enter,
-            R.anim.animate_in_out_exit
+            true
         )
             .addToBackStack(null)
             .commit()
