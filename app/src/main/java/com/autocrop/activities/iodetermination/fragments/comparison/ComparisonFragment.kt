@@ -28,7 +28,6 @@ class ComparisonFragment
     : IODeterminationActivityFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java) {
 
     companion object {
-        @JvmStatic
         fun instance(cropBundle: CropBundle): ComparisonFragment =
             ComparisonFragment()
                 .apply {
@@ -66,7 +65,7 @@ class ComparisonFragment
                                     viewModel.displayScreenshot.postValue(true)
                                     binding.backButton.show()
                                 },
-                                requireContext().resources.getLong(R.integer.delay_minimal)
+                                requireContext().resources.getLong(R.integer.delay_small)
                             )
 
                             if (!BooleanPreferences.comparisonInstructionsShown)

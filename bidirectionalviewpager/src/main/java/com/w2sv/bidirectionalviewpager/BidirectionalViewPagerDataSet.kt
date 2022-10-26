@@ -12,7 +12,7 @@ open class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
     MutableListLiveData<T>(dataSet) {
 
     val currentPosition = UpdateBlockableLiveData(0, convertUpdateValue = ::correspondingPosition)
-    val currentValue: T get() = get(currentPosition.value!!)
+    val currentElement: T get() = get(currentPosition.value!!)
 
     /**
      * For keeping track of actual order

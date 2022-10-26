@@ -47,7 +47,7 @@ class DeletionConfirmationDialogFragment :
                 fragmentHostingActivity.fragmentReplacementTransaction(AppTitleFragment())
                     .commit()
             },
-            resources.getLong(R.integer.delay_minimal)
+            resources.getLong(R.integer.delay_small)
         )
     }
 }

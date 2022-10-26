@@ -10,7 +10,7 @@
     <integer name="duration_snackbar_long">4000</integer>
     <integer name="duration_snackbar_extra_long">5000</integer>
 
-    <integer name="delay_minimal">200</integer>
+    <integer name="delay_small">200</integer>
     <integer name="delay_medium">500</integer>
     <integer name="delay_large">1000</integer>
 </resources>

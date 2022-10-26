@@ -53,7 +53,7 @@ class IODeterminationActivity :
                 DeletionConfirmationDialogFragment()
             else
                 AppTitleFragment(),
-            false
+            true
         )
             .commit()
     }

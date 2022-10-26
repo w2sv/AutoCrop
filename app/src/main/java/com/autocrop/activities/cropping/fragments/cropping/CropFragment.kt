@@ -92,7 +92,7 @@ class CropFragment
                         .fragmentReplacementTransaction(CroppingFailedFragment())
                         .commit()
                 },
-                resources.getLong(R.integer.delay_minimal)
+                resources.getLong(R.integer.delay_small)
             )
     }
 

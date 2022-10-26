@@ -9,6 +9,7 @@ import android.view.View
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.TransitionInflater
 import com.autocrop.Crop
@@ -43,7 +44,7 @@ import de.mateware.snacky.Snacky
 class CropPagerFragment :
     IODeterminationActivityFragment<FragmentCroppagerBinding>(FragmentCroppagerBinding::class.java) {
 
-    private val viewModel by activityViewModels<CropPagerViewModel>()
+    private val viewModel by viewModels<CropPagerViewModel>()
     private lateinit var viewPagerProxy: CropPagerProxy
 
     override fun onAttach(context: Context) {
@@ -186,7 +187,7 @@ class CropPagerFragment :
                                 }
                                 .show(parentFragmentManager)
                         },
-                        resources.getLong(R.integer.delay_minimal)
+                        resources.getLong(R.integer.delay_small)
                     )
                 else
                     displayDismissedScreenshotsSnackbarIfApplicable()
@@ -224,7 +225,7 @@ class CropPagerFragment :
      * Set new [Crop] in [viewModel].dataSet.currentPosition and notify [CropPagerAdapter]
      */
     private fun processAdjustedCropEdges(adjustedEdges: CropEdges) {
-        with(viewModel.dataSet.currentValue) {
+        with(viewModel.dataSet.currentElement) {
             crop = Crop.fromScreenshot(
                 requireContext().contentResolver.loadBitmap(screenshot.uri),
                 screenshot.mediaStoreData.diskUsage,

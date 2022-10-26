@@ -10,19 +10,21 @@ import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Cro
 import com.autocrop.uicontroller.activity.retriever.ActivityRetriever
 import com.autocrop.uicontroller.activity.retriever.ContextBasedActivityRetriever
 import com.autocrop.utils.android.extensions.recyclerView
-import com.autocrop.utils.android.extensions.viewModel
+import com.autocrop.utils.android.extensions.viewModelLazy
 import com.autocrop.views.ExtendedAppCompatImageButton
 
-class ComparisonButton(context: Context, attributeSet: AttributeSet):
+class ComparisonButton(context: Context, attributeSet: AttributeSet) :
     ExtendedAppCompatImageButton(context, attributeSet),
     ActivityRetriever<IODeterminationActivity> by ContextBasedActivityRetriever(context) {
 
+    private val viewModel by viewModelLazy<CropPagerViewModel>()
+
     override fun onClickListener() {
         fragmentHostingActivity.fragmentReplacementTransaction(
-            ComparisonFragment.instance(viewModel<CropPagerViewModel>().dataSet.currentValue)
+            ComparisonFragment.instance(viewModel.dataSet.currentElement)
         )
             .addToBackStack(null)
-            .apply{
+            .apply {
                 val cropImageView =
                     fragmentHostingActivity
                         .getCastCurrentFragment<CropPagerFragment>()!!
@@ -31,7 +33,7 @@ class ComparisonButton(context: Context, attributeSet: AttributeSet):
                         .run {
                             (recyclerView.findViewHolderForAdapterPosition(currentItem) as CropPagerAdapter.CropViewHolder)
                                 .imageView
-                    }
+                        }
 
                 addSharedElement(
                     cropImageView,
