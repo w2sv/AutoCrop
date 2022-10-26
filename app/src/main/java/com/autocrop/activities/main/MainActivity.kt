@@ -71,7 +71,7 @@ class MainActivity :
     )
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
-        MainActivityViewModelFactory(
+        MainActivityViewModel.Factory(
             ioResults = IODeterminationActivity.Results.attemptRestoration(intent)
         )
 

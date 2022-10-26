@@ -34,7 +34,7 @@ class IODeterminationActivity :
     }
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
-        IODeterminationActivityViewModelFactory(
+        IODeterminationActivityViewModel.Factory(
             validSaveDirDocumentUri = UriPreferences.validDocumentUri(this),
             nDismissedScreenshots = intent.getInt(MainActivity.EXTRA_N_DISMISSED_IMAGES)
         )

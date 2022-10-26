@@ -16,7 +16,7 @@ class CropActivity :
         CropActivityViewModel::class) {
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
-        CropActivityViewModelFactory(
+        CropActivityViewModel.Factory(
             uris = intent.getParcelableArrayList(MainActivity.EXTRA_SELECTED_IMAGE_URIS)!!
         )
 

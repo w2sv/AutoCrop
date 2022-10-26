@@ -2,10 +2,20 @@ package com.autocrop.activities.cropping
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.autocrop.CropBundle
 import com.autocrop.utils.android.livedata.IncrementableIntLiveData
 
-class CropActivityViewModel(val uris: ArrayList<Uri>): ViewModel(){
+class CropActivityViewModel(val uris: ArrayList<Uri>) : ViewModel() {
+    class Factory(private val uris: ArrayList<Uri>) : ViewModelProvider.NewInstanceFactory() {
+
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T =
+            CropActivityViewModel(
+                uris
+            ) as T
+    }
+
     val nSelectedImages: Int = uris.size
 
     val nDismissedImages: Int get() = nSelectedImages - cropBundles.size

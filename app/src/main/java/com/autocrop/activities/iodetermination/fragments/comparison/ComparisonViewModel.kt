@@ -6,9 +6,25 @@ import android.graphics.drawable.InsetDrawable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.autocrop.CropBundle
 
-class ComparisonViewModel(val cropBundle: CropBundle, val screenshotBitmap: Bitmap, cropBitmapDrawable: BitmapDrawable): ViewModel(){
+class ComparisonViewModel(
+    val cropBundle: CropBundle,
+    val screenshotBitmap: Bitmap,
+    cropBitmapDrawable: BitmapDrawable
+) : ViewModel() {
+    class Factory(
+        private val cropBundle: CropBundle,
+        private val screenshotBitmap: Bitmap,
+        private val cropBitmapDrawable: BitmapDrawable
+    ) : ViewModelProvider.Factory {
+
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T =
+            ComparisonViewModel(cropBundle, screenshotBitmap, cropBitmapDrawable) as T
+    }
+
     val displayScreenshot: LiveData<Boolean> by lazy {
         MutableLiveData(false)
     }
@@ -18,7 +34,7 @@ class ComparisonViewModel(val cropBundle: CropBundle, val screenshotBitmap: Bitm
 
     var enterTransitionCompleted = false
 
-    val cropInsets: Array<Int> =
+    val cropFittedInsets: Array<Int> =
         cropBundle.run {
             arrayOf(
                 0,
@@ -29,7 +45,7 @@ class ComparisonViewModel(val cropBundle: CropBundle, val screenshotBitmap: Bitm
         }
 
     val cropInsetDrawable: InsetDrawable =
-        cropInsets.run{
+        cropFittedInsets.run {
             InsetDrawable(
                 cropBitmapDrawable,
                 get(0), get(1), get(2), get(3)

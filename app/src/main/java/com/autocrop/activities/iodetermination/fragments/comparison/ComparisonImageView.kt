@@ -24,7 +24,7 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
         if (!isInEditMode){
             ViewCompat.setTransitionName(this, viewModel.cropBundle.identifier())
 
-            insetLayoutParams = viewModel.cropInsets.run {
+            insetLayoutParams = viewModel.cropFittedInsets.run {
                 (layoutParams as RelativeLayout.LayoutParams).apply {
                     setMargins(get(0), get(1), get(2), get(3))
                 }

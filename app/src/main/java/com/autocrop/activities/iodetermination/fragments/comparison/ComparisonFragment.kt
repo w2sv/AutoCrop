@@ -40,7 +40,7 @@ class ComparisonFragment
     val viewModel by viewModels<ComparisonViewModel> {
         @Suppress("DEPRECATION")
         requireArguments().getParcelable<CropBundle>(CropBundle.EXTRA)!!.run {
-            ComparisonViewModelFactory(
+            ComparisonViewModel.Factory(
                 this,
                 requireContext().contentResolver.loadBitmap(screenshot.uri),
                 BitmapDrawable(resources, crop.bitmap)
@@ -109,7 +109,7 @@ class ComparisonFragment
             binding.backButton.show()
     }
 
-    fun onPreRemove(){
+    fun onPreRemove() {
         viewModel.useInsetLayoutParams.postValue(true)
         viewModel.displayScreenshot.postValue(false)
     }

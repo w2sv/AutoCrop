@@ -46,7 +46,7 @@ class ManualCropFragment
         @Suppress("DEPRECATION")
         with(requireArguments().getParcelable<CropBundle>(CropBundle.EXTRA)!!) {
             viewModel = viewModels<ManualCropViewModel> {
-                ManualCropViewModelFactory(
+                ManualCropViewModel.Factory(
                     requireContext().contentResolver.loadBitmap(screenshot.uri),
                     crop.edges,
                     screenshot.cropEdgesCandidates
@@ -68,11 +68,11 @@ class ManualCropFragment
     }
 
     private fun FragmentManualCropBinding.onCropEdgesChanged(cropEdges: CropEdges) {
-        heightTv.text = styledUnit("H", min(cropEdges.height, viewModel.bitmap.height))
-        y1Tv.text = styledUnit("Y1", max(cropEdges.top, 0))
-        y2Tv.text = styledUnit("Y2", min(cropEdges.bottom, viewModel.bitmap.height))
+        heightTv.text = styledUnitStringBuilder("H", min(cropEdges.height, viewModel.bitmap.height))
+        y1Tv.text = styledUnitStringBuilder("Y1", max(cropEdges.top, 0))
+        y2Tv.text = styledUnitStringBuilder("Y2", min(cropEdges.bottom, viewModel.bitmap.height))
         percentageTv.text =
-            styledUnit("%", (viewModel.bitmap.maintainedPercentage(cropEdges.height.toFloat()) * 100).rounded(1))
+            styledUnitStringBuilder("%", (viewModel.bitmap.maintainedPercentage(cropEdges.height.toFloat()) * 100).rounded(1))
 
         resetButton.visibility = if (cropEdges != viewModel.initialCropEdges)
             View.VISIBLE
@@ -80,7 +80,7 @@ class ManualCropFragment
             View.GONE
     }
 
-    private fun styledUnit(unit: String, value: Any): SpannableStringBuilder =
+    private fun styledUnitStringBuilder(unit: String, value: Any): SpannableStringBuilder =
         SpannableStringBuilder()
             .color(requireContext().getColor(R.color.magenta_saturated)) {
                 append(unit)
