@@ -6,6 +6,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.text.color
 import androidx.core.text.italic
+import androidx.core.text.subscript
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import com.autocrop.CropBundle
@@ -68,11 +69,20 @@ class ManualCropFragment
     }
 
     private fun FragmentManualCropBinding.onCropEdgesChanged(cropEdges: CropEdges) {
-        heightTv.text = styledUnitStringBuilder("H", min(cropEdges.height, viewModel.bitmap.height))
-        y1Tv.text = styledUnitStringBuilder("Y1", max(cropEdges.top, 0))
-        y2Tv.text = styledUnitStringBuilder("Y2", min(cropEdges.bottom, viewModel.bitmap.height))
+        heightTv.text = styledUnitSpannableString("H", min(cropEdges.height, viewModel.bitmap.height))
         percentageTv.text =
-            styledUnitStringBuilder("%", (viewModel.bitmap.maintainedPercentage(cropEdges.height.toFloat()) * 100).rounded(1))
+            styledUnitSpannableString("%", (viewModel.bitmap.maintainedPercentage(cropEdges.height.toFloat()) * 100).rounded(1))
+
+        y1Tv.text = styledUnitSpannableString(
+            "Y",
+            max(cropEdges.top, 0),
+            1
+        )
+        y2Tv.text = styledUnitSpannableString(
+            "Y",
+            min(cropEdges.bottom, viewModel.bitmap.height),
+            2
+        )
 
         resetButton.visibility = if (cropEdges != viewModel.initialCropEdges)
             View.VISIBLE
@@ -80,10 +90,13 @@ class ManualCropFragment
             View.GONE
     }
 
-    private fun styledUnitStringBuilder(unit: String, value: Any): SpannableStringBuilder =
+    private fun styledUnitSpannableString(unit: CharSequence, value: Any, unitSubscript: Any? = null): SpannableStringBuilder =
         SpannableStringBuilder()
-            .color(requireContext().getColor(R.color.magenta_saturated)) {
+            .color(requireContext().getColor(R.color.magenta_bright)) {
                 append(unit)
+                unitSubscript?.let {
+                    subscript { it.toString() }
+                }
             }
             .italic {
                 append(" $value")

@@ -9,7 +9,7 @@
     <dimen name="padding_image_button_w_background">11dp</dimen>
 
     <!-- Manual Crop Fragment -->
-    <dimen name="margin_top_button">8dp</dimen>
+    <dimen name="margin_top_button">4dp</dimen>
 
     <!-- Crop overlay view-->
     <dimen name="margin_max_crop_rect">24dp</dimen>
