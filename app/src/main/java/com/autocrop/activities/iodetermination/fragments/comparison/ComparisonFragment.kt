@@ -1,6 +1,7 @@
 package com.autocrop.activities.iodetermination.fragments.comparison
 
 import android.content.Context
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -41,7 +42,8 @@ class ComparisonFragment
         requireArguments().getParcelable<CropBundle>(CropBundle.EXTRA)!!.run {
             ComparisonViewModelFactory(
                 this,
-                requireContext().contentResolver.loadBitmap(screenshot.uri)
+                requireContext().contentResolver.loadBitmap(screenshot.uri),
+                BitmapDrawable(resources, crop.bitmap)
             )
         }
     }
@@ -56,13 +58,12 @@ class ComparisonFragment
                     override fun onTransitionEnd(transition: Transition) {
                         super.onTransitionEnd(transition)
 
-                        if (!viewModel.conductedOnEnterTransitionCompleted) {
+                        if (!viewModel.enterTransitionCompleted) {
                             Handler(Looper.getMainLooper()).postDelayed(
                                 {
-                                    binding.comparisonIv.resetLayoutParams()
+                                    viewModel.useInsetLayoutParams.postValue(false)
                                     viewModel.displayScreenshot.postValue(true)
-
-                                    viewModel.conductedOnEnterTransitionCompleted = true
+                                    binding.backButton.show()
                                 },
                                 requireContext().resources.getLong(R.integer.delay_minimal)
                             )
@@ -72,6 +73,8 @@ class ComparisonFragment
                                     .snacky("Tap screen to toggle between the original screenshot and the crop")
                                     .setIcon(R.drawable.ic_outline_info_24)
                                     .show()
+
+                            viewModel.enterTransitionCompleted = true
                         }
                     }
                 }
@@ -80,10 +83,6 @@ class ComparisonFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.displayScreenshot.observe(viewLifecycleOwner) {
-            binding.comparisonIv.setImage(displayScreenshot = it)
-        }
 
         binding.backButton.setOnClickListener {
             onPreRemove()
@@ -103,7 +102,15 @@ class ComparisonFragment
         requireActivity().showSystemBars()
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        if (viewModel.enterTransitionCompleted)
+            binding.backButton.show()
+    }
+
     fun onPreRemove(){
-        binding.comparisonIv.setCrop(marginalized = true)
+        viewModel.useInsetLayoutParams.postValue(true)
+        viewModel.displayScreenshot.postValue(false)
     }
 }

@@ -16,13 +16,16 @@
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/back_button"
 
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_width="@dimen/size_image_button"
         android:layout_height="@dimen/size_image_button"
-        android:layout_marginTop="@dimen/margin_top_left_image_button"
-        android:layout_marginStart="@dimen/margin_top_left_image_button"
+        android:layout_marginBottom="@dimen/margin_top_left_image_button"
+        android:layout_marginEnd="@dimen/margin_top_left_image_button"
 
         android:background="@drawable/shape_oval_btn"
         app:srcCompat="@drawable/ic_arrow_back_24"
 
-        android:contentDescription="@string/go_back_to_crop_pager"  />
+        android:contentDescription="@string/go_back_to_crop_pager"
+        android:visibility="gone"/>
 </RelativeLayout>
