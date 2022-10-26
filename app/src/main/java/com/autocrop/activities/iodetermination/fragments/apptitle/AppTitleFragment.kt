@@ -18,16 +18,16 @@ class AppTitleFragment
                 Techniques.Tada
             )
                 .random(),
-            delay = 500,
             onEnd = ::returnToMainActivity
         )
     }
 
-    private fun returnToMainActivity(){
-        sharedViewModel.singularCropSavingJob?.run{
+    private fun returnToMainActivity() {
+        sharedViewModel.singularCropSavingJob?.run {
             invokeOnCompletion {
                 typedActivity.startMainActivity()
             }
-        } ?: typedActivity.startMainActivity()
+        }
+            ?: typedActivity.startMainActivity()
     }
 }

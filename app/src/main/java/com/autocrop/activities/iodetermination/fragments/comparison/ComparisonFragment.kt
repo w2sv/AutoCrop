@@ -28,6 +28,7 @@ class ComparisonFragment
     : IODeterminationActivityFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java) {
 
     companion object {
+        @JvmStatic
         fun instance(cropBundle: CropBundle): ComparisonFragment =
             ComparisonFragment()
                 .apply {
