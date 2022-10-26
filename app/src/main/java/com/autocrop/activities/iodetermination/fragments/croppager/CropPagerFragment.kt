@@ -8,7 +8,6 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.core.text.bold
 import androidx.core.text.color
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.TransitionInflater

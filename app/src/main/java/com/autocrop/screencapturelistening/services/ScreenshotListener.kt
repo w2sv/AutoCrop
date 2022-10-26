@@ -23,8 +23,8 @@ import com.autocrop.screencapturelistening.abstractservices.BoundService
 import com.autocrop.screencapturelistening.notifications.NotificationGroup
 import com.autocrop.screencapturelistening.notifications.NotificationId
 import com.autocrop.utils.android.extensions.compressToStream
-import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.loadBitmap
+import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.autocrop.utils.android.extensions.queryMediaStoreData
 import com.autocrop.utils.android.systemScreenshotsDirectory
 import com.autocrop.utils.kotlin.PendingIntentRenderer
