@@ -38,8 +38,8 @@ import com.autocrop.activities.iodetermination.fragments.manualcrop.utils.model.
 import com.autocrop.activities.iodetermination.fragments.manualcrop.utils.model.Edge.RIGHT
 import com.autocrop.activities.iodetermination.fragments.manualcrop.utils.model.Edge.TOP
 import com.autocrop.utils.android.extensions.ifNotInEditMode
+import com.autocrop.utils.android.extensions.postValue
 import com.autocrop.utils.android.extensions.viewModelLazy
-import com.autocrop.utils.android.extensions.asMutable
 import com.lyrebirdstudio.croppylib.fragment.view.BitmapGestureHandler
 import com.w2sv.autocrop.R
 import kotlin.math.max
@@ -793,7 +793,7 @@ class ManualCropView @JvmOverloads constructor(
     }
 
     private fun onCropRectChanged() {
-        viewModel.cropEdges.asMutable.postValue(
+        viewModel.cropEdges.postValue(
             getCropRect().run {
                 CropEdges(top.roundToInt(), bottom.roundToInt())
             }

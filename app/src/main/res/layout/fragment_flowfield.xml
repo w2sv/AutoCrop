@@ -30,20 +30,24 @@
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/navigation_drawer_button_burger"
-                android:layout_height="28dp"
-                android:layout_width="28dp"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="35dp"
+
+                android:layout_height="@dimen/margin_top_left_image_button"
+                android:layout_width="@dimen/margin_top_left_image_button"
+                android:layout_marginStart="@dimen/size_image_button"
+                android:layout_marginTop="@dimen/size_image_button"
+
                 android:contentDescription="@string/main_menu_toggle"
 
                 android:background="@drawable/ic_menu_24"/>
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/navigation_drawer_button_arrow"
-                android:layout_height="28dp"
-                android:layout_width="28dp"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="35dp"
+
+                android:layout_height="@dimen/margin_top_left_image_button"
+                android:layout_width="@dimen/margin_top_left_image_button"
+                android:layout_marginStart="@dimen/size_image_button"
+                android:layout_marginTop="@dimen/size_image_button"
+
                 android:contentDescription="@string/main_menu_toggle"
 
                 android:background="@drawable/ic_arrow_back_24"

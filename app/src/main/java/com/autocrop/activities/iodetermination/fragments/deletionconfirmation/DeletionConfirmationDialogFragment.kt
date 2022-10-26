@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import com.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
 import com.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragment
+import com.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentDeletionQueryBinding
 
@@ -46,7 +47,7 @@ class DeletionConfirmationDialogFragment :
                 fragmentHostingActivity.fragmentReplacementTransaction(AppTitleFragment())
                     .commit()
             },
-            resources.getInteger(R.integer.delay_minimal).toLong()
+            resources.getLong(R.integer.delay_minimal)
         )
     }
 }

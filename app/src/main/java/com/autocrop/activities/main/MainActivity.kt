@@ -18,7 +18,7 @@ import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.screencapturelistening.services.ScreenshotListener
 import com.autocrop.uicontroller.activity.ApplicationActivity
-import com.autocrop.utils.android.extensions.getColoredIcon
+import com.autocrop.utils.android.extensions.getLong
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
@@ -97,7 +97,7 @@ class MainActivity :
                 {
                     CropExplanation().show(supportFragmentManager)
                 },
-                resources.getInteger(R.integer.delay_large).toLong()
+                resources.getLong(R.integer.delay_large)
             )
         }
         else if (viewModel.ioResults != null)
@@ -105,7 +105,7 @@ class MainActivity :
                 {
                     showIOSynopsisSnackbar(viewModel.ioResults!!)
                 },
-                resources.getInteger(R.integer.duration_flowfield_buttons_fade_in_halve).toLong()
+                resources.getLong(R.integer.duration_flowfield_buttons_fade_in_halve)
             )
     }
 

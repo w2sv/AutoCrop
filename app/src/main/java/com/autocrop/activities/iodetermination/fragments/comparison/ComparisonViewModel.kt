@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.autocrop.CropBundle
 
 class ComparisonViewModel(val cropBundle: CropBundle, val screenshotBitmap: Bitmap): ViewModel(){
-    var enterTransitionCompleted = false
+    var conductedOnEnterTransitionCompleted = false
 
     val displayScreenshot: LiveData<Boolean> by lazy {
         MutableLiveData(false)

@@ -44,4 +44,5 @@
     <string name="screenshot_listener">Screenshot Listener</string>
     <string name="height">Height</string>
     <string name="reset">Reset</string>
+    <string name="go_back_to_crop_pager">Go back to crop pager</string>
 </resources>

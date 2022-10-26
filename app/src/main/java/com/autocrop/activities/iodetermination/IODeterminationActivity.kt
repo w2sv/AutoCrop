@@ -74,7 +74,7 @@ class IODeterminationActivity :
             getCurrentFragment().let {
                 when (it) {
                     is ComparisonFragment -> {
-                        it.binding.comparisonIv.prepareSharedElementExitTransition()
+                        it.onPreRemove()
                         supportFragmentManager.popBackStack()
                     }
                     is ManualCropFragment -> supportFragmentManager.popBackStack()

@@ -6,6 +6,7 @@ import android.os.Looper
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.utils.android.extensions.animate
+import com.autocrop.utils.android.extensions.getLong
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
 import com.daimajia.androidanimations.library.Techniques
@@ -29,7 +30,7 @@ class AboutFragment:
                         .setIcon(R.drawable.ic_outline_info_24)
                         .show()
                 },
-                resources.getInteger(R.integer.delay_medium).toLong()
+                resources.getLong(R.integer.delay_medium)
             )
     }
 

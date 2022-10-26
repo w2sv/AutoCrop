@@ -27,11 +27,12 @@ import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.utils.android.extensions.animate
 import com.autocrop.utils.android.extensions.crossFade
+import com.autocrop.utils.android.extensions.getLong
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.loadBitmap
+import com.autocrop.utils.android.extensions.postValue
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snacky
-import com.autocrop.utils.android.extensions.asMutable
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.daimajia.androidanimations.library.Techniques
@@ -150,7 +151,7 @@ class CropPagerFragment :
                 binding.cancelAutoScrollButton.show()
                 scroller = Scroller().apply {
                     run(binding.viewPager, maxAutoScrolls){
-                        this@setLiveDataObservers.autoScroll.asMutable.postValue(false)
+                        this@setLiveDataObservers.autoScroll.postValue(false)
                     }
                 }
             } else {
@@ -185,7 +186,7 @@ class CropPagerFragment :
                                 }
                                 .show(parentFragmentManager)
                         },
-                        resources.getInteger(R.integer.delay_minimal).toLong()
+                        resources.getLong(R.integer.delay_minimal)
                     )
                 else
                     displayDismissedScreenshotsSnackbarIfApplicable()

@@ -8,14 +8,15 @@ import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.ViewCompat
-import androidx.lifecycle.findViewTreeLifecycleOwner
-import com.autocrop.utils.android.extensions.viewModelLazy
+import androidx.fragment.app.findFragment
 import com.autocrop.utils.android.extensions.toggle
 
 class ComparisonImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet){
 
-    private val viewModel by viewModelLazy<ComparisonViewModel>()
+    private val viewModel by lazy {
+        findFragment<ComparisonFragment>().viewModel
+    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -23,26 +24,20 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
         if (!isInEditMode){
             ViewCompat.setTransitionName(this, viewModel.cropBundle.identifier())
 
-            with(viewModel.displayScreenshot){
-                setOnClickListener{
-                    toggle()
-                }
-
-                observe(findViewTreeLifecycleOwner()!!){
-                    setImage(displayScreenshot = it)
-                }
+            setOnClickListener{
+                viewModel.displayScreenshot.toggle()
             }
         }
     }
 
-    private fun setImage(displayScreenshot: Boolean){
+    fun setImage(displayScreenshot: Boolean){
         if (displayScreenshot)
             setImageBitmap(viewModel.screenshotBitmap)
         else
-            setCrop(marginalized = !viewModel.enterTransitionCompleted)
+            setCrop(marginalized = !viewModel.conductedOnEnterTransitionCompleted)
     }
 
-    private fun setCrop(marginalized: Boolean = false){
+    fun setCrop(marginalized: Boolean = false){
         if (marginalized){
             layoutParams = marginalizedCropLayoutParams
             setImageBitmap(viewModel.cropBundle.crop.bitmap)
@@ -77,9 +72,5 @@ class ComparisonImageView(context: Context, attributeSet: AttributeSet):
 
     fun resetLayoutParams(){
         layoutParams = (parent as View).layoutParams as RelativeLayout.LayoutParams
-    }
-
-    fun prepareSharedElementExitTransition(){
-        setCrop(marginalized = true)
     }
 }
