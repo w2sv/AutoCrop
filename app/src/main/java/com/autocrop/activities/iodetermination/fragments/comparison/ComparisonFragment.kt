@@ -20,7 +20,7 @@ import com.autocrop.utils.android.extensions.loadBitmap
 import com.autocrop.utils.android.extensions.postValue
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.showSystemBars
-import com.autocrop.utils.android.extensions.snacky
+import com.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 
@@ -70,7 +70,7 @@ class ComparisonFragment
 
                             if (!BooleanPreferences.comparisonInstructionsShown)
                                 requireActivity()
-                                    .snacky("Tap screen to toggle between the original screenshot and the crop")
+                                    .snackyBuilder("Tap screen to toggle between the original screenshot and the crop")
                                     .setIcon(R.drawable.ic_outline_info_24)
                                     .show()
 

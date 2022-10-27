@@ -1,4 +1,4 @@
-package com.autocrop.uicontroller.activity
+package com.autocrop.controller.activity
 
 import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment

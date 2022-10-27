@@ -15,7 +15,7 @@ import com.autocrop.preferences.UriPreferences
 import com.autocrop.utils.android.documentUriPathIdentifier
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.show
-import com.autocrop.utils.android.extensions.snacky
+import com.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 import com.w2sv.permissionhandler.PermissionHandler
@@ -76,7 +76,7 @@ class FlowFieldFragment:
                         treeUri,
                         Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                     )
-                requireActivity().snacky(
+                requireActivity().snackyBuilder(
                     SpannableStringBuilder()
                         .append("Crops will be saved to ")
                         .color(requireContext().getThemedColor(R.color.success)){

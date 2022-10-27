@@ -6,7 +6,7 @@ import android.provider.MediaStore
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import com.autocrop.uicontroller.activity.BlankViewBoundActivity
+import com.autocrop.controller.activity.BlankViewBoundActivity
 import com.autocrop.utils.android.extensions.getParcelable
 
 @RequiresApi(Build.VERSION_CODES.R)

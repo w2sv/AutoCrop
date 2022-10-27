@@ -8,7 +8,7 @@ import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.utils.android.extensions.animate
 import com.autocrop.utils.android.extensions.getLong
 import com.autocrop.utils.android.extensions.show
-import com.autocrop.utils.android.extensions.snacky
+import com.autocrop.utils.android.extensions.snackyBuilder
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentAboutBinding
@@ -23,7 +23,7 @@ class AboutFragment:
             Handler(Looper.getMainLooper()).postDelayed(
                 {
                     requireActivity()
-                        .snacky(
+                        .snackyBuilder(
                             "Pro tip: check out what happens if you click on the various view elements",
                             duration = resources.getInteger(R.integer.duration_snackbar_long)
                         )

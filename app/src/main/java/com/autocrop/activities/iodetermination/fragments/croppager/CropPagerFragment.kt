@@ -14,6 +14,7 @@ import androidx.transition.TransitionInflater
 import com.autocrop.Crop
 import com.autocrop.CropEdges
 import com.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
+import com.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragment
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.AbstractCropDialog
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropDialog
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropEntiretyDialog
@@ -25,6 +26,7 @@ import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Scr
 import com.autocrop.activities.iodetermination.fragments.manualcrop.ManualCropFragment
 import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.autocrop.preferences.BooleanPreferences
+import com.autocrop.utils.android.BackPressHandler
 import com.autocrop.utils.android.extensions.animate
 import com.autocrop.utils.android.extensions.crossFade
 import com.autocrop.utils.android.extensions.getLong
@@ -32,7 +34,7 @@ import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.loadBitmap
 import com.autocrop.utils.android.extensions.postValue
 import com.autocrop.utils.android.extensions.show
-import com.autocrop.utils.android.extensions.snacky
+import com.autocrop.utils.android.extensions.snackyBuilder
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.daimajia.androidanimations.library.Techniques
@@ -64,7 +66,7 @@ class CropPagerFragment :
     private fun setManualCropResultListener(){
         setFragmentResultListener(ManualCropFragment.KEY_RESULT){
             processAdjustedCropEdges(ManualCropFragment.getAdjustedCropEdges(it))
-            requireActivity().snacky(
+            requireActivity().snackyBuilder(
                 "Adjusted crop",
                 duration = Snacky.LENGTH_SHORT
             )
@@ -204,7 +206,7 @@ class CropPagerFragment :
     private fun displayDismissedScreenshotsSnackbarIfApplicable(){
         with(sharedViewModel) {
             if (!showedDismissedScreenshotsSnackbar && nDismissedScreenshots != 0){
-                requireActivity().snacky(
+                requireActivity().snackyBuilder(
                     SpannableStringBuilder()
                         .append("Couldn't find cropping bounds for")
                         .bold {
@@ -218,6 +220,17 @@ class CropPagerFragment :
                     .show()
             }
         }
+    }
+
+    /**
+     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
+     * otherwise return to MainActivity after confirmation
+     */
+    val handleBackPress by lazy {
+        BackPressHandler(
+            requireActivity().snackyBuilder("Tap again to return to main screen", view = binding.nestedCoordinatorLayout),
+            typedActivity::startMainActivity
+        )   
     }
 
     /**

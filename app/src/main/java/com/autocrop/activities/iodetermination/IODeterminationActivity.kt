@@ -11,14 +11,13 @@ import com.autocrop.activities.iodetermination.fragments.deletionconfirmation.De
 import com.autocrop.activities.iodetermination.fragments.manualcrop.ManualCropFragment
 import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.autocrop.activities.main.MainActivity
+import com.autocrop.controller.activity.ApplicationActivity
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.uicontroller.activity.ApplicationActivity
-import com.autocrop.utils.android.BackPressHandler
 import com.autocrop.utils.android.extensions.getInt
 import com.autocrop.utils.android.extensions.getParcelableArrayList
 import com.autocrop.utils.android.extensions.show
-import com.autocrop.utils.android.extensions.snacky
+import com.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.autocrop.R
 
 class IODeterminationActivity :
@@ -58,17 +57,6 @@ class IODeterminationActivity :
             .commit()
     }
 
-    /**
-     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
-     * otherwise return to MainActivity after confirmation
-     */
-    private val handleBackPress by lazy {
-        BackPressHandler(
-            snacky("Tap again to return to main screen"),
-            ::startMainActivity
-        )
-    }
-
     override val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             getCurrentFragment().let {
@@ -79,11 +67,11 @@ class IODeterminationActivity :
                     }
                     is ManualCropFragment -> supportFragmentManager.popBackStack()
                     is SaveAllFragment -> {
-                        snacky("Wait until crops have been saved")
+                        snackyBuilder("Wait until crops have been saved")
                             .setIcon(R.drawable.ic_front_hand_24)
                             .show()
                     }
-                    is CropPagerFragment -> handleBackPress()
+                    is CropPagerFragment -> it.handleBackPress()
                     else -> Unit
                 }
             }
@@ -91,12 +79,11 @@ class IODeterminationActivity :
     }
 
     fun startMainActivity() {
-        startMainActivity{ intent ->
-            with(intent){
-                putParcelableArrayListExtra(EXTRA_CROP_URIS, viewModel.writeUris)
-                putExtra(EXTRA_N_DELETED_SCREENSHOTS, viewModel.nDeletedScreenshots)
-                putExtra(EXTRA_SAVE_DIR_NAME, viewModel.cropWriteDirIdentifier(contentResolver))
-            }
+        startMainActivity{
+            it
+                .putParcelableArrayListExtra(EXTRA_CROP_URIS, viewModel.writeUris)
+                .putExtra(EXTRA_N_DELETED_SCREENSHOTS, viewModel.nDeletedScreenshots)
+                .putExtra(EXTRA_SAVE_DIR_NAME, viewModel.cropWriteDirIdentifier(contentResolver))
         }
     }
 

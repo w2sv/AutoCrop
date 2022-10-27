@@ -8,7 +8,7 @@ import androidx.core.text.color
 import com.autocrop.utils.android.extensions.getColoredIcon
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.kotlin.BlankFun
-import com.autocrop.views.UncancelableDialogFragment
+import com.autocrop.ui.views.UncancelableDialogFragment
 import com.w2sv.autocrop.R
 
 class CropPagerInstructionsDialog: UncancelableDialogFragment(){

@@ -3,6 +3,7 @@ package com.autocrop.utils.android.extensions
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.view.View
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -17,12 +18,13 @@ fun Activity.goToWebpage(url: String){
     )
 }
 
-fun Activity.snacky(text: CharSequence, duration: Int = Snacky.LENGTH_LONG): Snacky.Builder =
+fun Activity.snackyBuilder(text: CharSequence, duration: Int = Snacky.LENGTH_LONG, view: View? = null): Snacky.Builder =
     Snacky.builder()
         .setText(text)
         .centerText()
         .setDuration(duration)
         .setActivity(this)
+        .setView(view)
 
 fun Activity.hideSystemBars() {
     WindowCompat.getInsetsController(window, window.decorView).apply {

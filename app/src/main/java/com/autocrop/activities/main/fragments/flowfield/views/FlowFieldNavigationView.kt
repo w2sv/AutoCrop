@@ -19,14 +19,14 @@ import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.screencapturelistening.services.ScreenshotListener
-import com.autocrop.uicontroller.activity.retriever.ActivityRetriever
-import com.autocrop.uicontroller.activity.retriever.ContextBasedActivityRetriever
+import com.autocrop.controller.activity.retriever.ActivityRetriever
+import com.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.activityViewModelLazy
 import com.autocrop.utils.android.extensions.ifNotInEditMode
 import com.autocrop.utils.android.extensions.serviceRunning
 import com.autocrop.utils.android.extensions.show
-import com.autocrop.utils.android.extensions.snacky
+import com.autocrop.utils.android.extensions.snackyBuilder
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.autocrop.R
 import com.w2sv.permissionhandler.requestPermissions
@@ -142,7 +142,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
             )
         } catch (e: ActivityNotFoundException){
             activity
-                .snacky("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
+                .snackyBuilder("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
                 .show()
         }
     }

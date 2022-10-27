@@ -10,7 +10,7 @@ import androidx.core.text.italic
 import androidx.fragment.app.setFragmentResult
 import com.autocrop.utils.android.extensions.getColoredIcon
 import com.autocrop.utils.android.extensions.show
-import com.autocrop.views.UncancelableDialogFragment
+import com.autocrop.ui.views.UncancelableDialogFragment
 import com.w2sv.autocrop.R
 
 class CropExplanation: UncancelableDialogFragment(){

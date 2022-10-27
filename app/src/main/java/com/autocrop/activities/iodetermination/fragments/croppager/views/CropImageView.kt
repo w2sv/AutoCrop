@@ -8,8 +8,8 @@ import com.autocrop.activities.iodetermination.IODeterminationActivity
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropDialog
 import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropEntiretyDialog
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
-import com.autocrop.uicontroller.activity.retriever.ActivityRetriever
-import com.autocrop.uicontroller.activity.retriever.ContextBasedActivityRetriever
+import com.autocrop.controller.activity.retriever.ActivityRetriever
+import com.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
 import com.autocrop.utils.android.extensions.activityViewModelLazy
 import com.autocrop.utils.android.extensions.show
 

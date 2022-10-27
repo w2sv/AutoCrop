@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
 
@@ -23,10 +23,8 @@
 
         android:layout_width="153dp"
         android:layout_height="wrap_content"
-
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-
         android:layout_marginTop="23dp"
         android:layout_marginEnd="18dp">
 
@@ -38,16 +36,12 @@
 
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-
-            android:splitTrack="false"
-
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
 
+            android:splitTrack="false"
             android:thumb="@drawable/ic_location_on_24"
-
             android:outlineProvider="paddedBounds"
-
             android:max="100">
         </com.autocrop.activities.iodetermination.fragments.croppager.views.PageIndicationBar>
 
@@ -88,45 +82,59 @@
         android:textSize="14sp"
         android:background="@drawable/shape_oval_w_border"/>
 
-    <com.autocrop.activities.iodetermination.fragments.croppager.views.DiscardingStatisticsTextView
-        android:id="@+id/discarding_statistics_tv"
-        android:visibility="invisible"
-
-        android:layout_width="wrap_content"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/nested_coordinator_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
 
-        android:layout_alignParentBottom="true"
+        <com.autocrop.activities.iodetermination.fragments.croppager.views.DiscardingStatisticsTextView
+            android:id="@+id/discarding_statistics_tv"
+            android:visibility="invisible"
 
-        android:layout_marginBottom="70dp"
-        android:layout_marginHorizontal="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-        android:text="@string/remove"
-        android:textSize="13sp"
-        android:textColor="@color/light_gray"/>
+            android:layout_marginStart="30dp"
 
-    <com.autocrop.activities.iodetermination.fragments.croppager.views.ManualCropButton
-        android:id="@+id/manual_crop_button"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@id/discarding_statistics_tv"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="23dp"
-        android:background="@drawable/ic_crop_24_border"
-        android:backgroundTint="@color/magenta_bright"
-        android:contentDescription="@string/manually_adjust_the_crop"
-        android:visibility="invisible"/>
+            android:text="@string/remove"
+            android:textSize="13sp"
+            android:textColor="@color/light_gray"/>
 
-    <com.autocrop.activities.iodetermination.fragments.croppager.views.ComparisonButton
-        android:id="@+id/comparison_button"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_alignEnd="@id/manual_crop_button"
-        android:layout_alignBottom="@id/manual_crop_button"
-        android:layout_marginEnd="48dp"
-        android:background="@drawable/ic_image_search_24_border"
-        android:backgroundTint="@color/magenta_bright"
-        android:contentDescription="@string/compare_crop_and_original_screenshot"
-        android:visibility="invisible"/>
+        <com.autocrop.ui.RisingLinearLayout
+            android:id="@+id/rising_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="70dp"
+            android:paddingTop="50dp"
+            android:layout_marginEnd="@dimen/margin_top_left_image_button"
+            android:gravity="end">
 
-</RelativeLayout>
+            <com.autocrop.activities.iodetermination.fragments.croppager.views.ManualCropButton
+                android:id="@+id/manual_crop_button"
+                android:layout_width="@dimen/size_image_button"
+                android:layout_height="@dimen/size_image_button"
+
+                android:layout_marginHorizontal="8dp"
+
+                android:background="@drawable/ic_crop_24_border"
+                android:backgroundTint="@color/magenta_bright"
+
+                android:contentDescription="@string/manually_adjust_the_crop"/>
+
+            <com.autocrop.activities.iodetermination.fragments.croppager.views.ComparisonButton
+                android:id="@+id/comparison_button"
+                android:layout_width="@dimen/size_image_button"
+                android:layout_height="@dimen/size_image_button"
+
+                android:layout_marginHorizontal="8dp"
+
+                android:background="@drawable/ic_image_search_24_border"
+                android:backgroundTint="@color/magenta_bright"
+
+                android:contentDescription="@string/compare_crop_and_original_screenshot"/>
+        </com.autocrop.ui.RisingLinearLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

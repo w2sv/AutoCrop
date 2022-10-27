@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import com.autocrop.activities.cropping.CropActivityViewModel
 import com.autocrop.utils.android.extensions.activityViewModelLazy
-import com.autocrop.views.FractionTextView
+import com.autocrop.ui.views.FractionTextView
 
 class ProgressTextView(context: Context, attr: AttributeSet):
     FractionTextView(context, attr) {
