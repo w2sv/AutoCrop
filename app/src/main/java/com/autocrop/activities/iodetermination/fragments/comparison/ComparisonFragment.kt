@@ -72,6 +72,7 @@ class ComparisonFragment
                                 requireActivity()
                                     .snackyBuilder("Tap screen to toggle between the original screenshot and the crop")
                                     .setIcon(R.drawable.ic_outline_info_24)
+                                    .setView(binding.snackbarRepelledHostingLayout)
                                     .show()
 
                             viewModel.enterTransitionCompleted = true

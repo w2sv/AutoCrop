@@ -63,13 +63,14 @@ class CropPagerFragment :
         setManualCropResultListener()
     }
 
-    private fun setManualCropResultListener(){
-        setFragmentResultListener(ManualCropFragment.KEY_RESULT){
+    private fun setManualCropResultListener() {
+        setFragmentResultListener(ManualCropFragment.KEY_RESULT) {
             processAdjustedCropEdges(ManualCropFragment.getAdjustedCropEdges(it))
             requireActivity().snackyBuilder(
                 "Adjusted crop",
                 duration = Snacky.LENGTH_SHORT
             )
+                .setView()
                 .setIcon(R.drawable.ic_check_green_24)
                 .show()
         }
@@ -82,8 +83,8 @@ class CropPagerFragment :
      * hide pageIndicationSeekBar AND/OR
      * removes view, procedure action has been selected for, from pager
      */
-    private fun setCropDialogResultListener(){
-        setFragmentResultListener(CropDialog.RESULT_REQUEST_KEY){ bundle ->
+    private fun setCropDialogResultListener() {
+        setFragmentResultListener(CropDialog.RESULT_REQUEST_KEY) { bundle ->
             val dataSetPosition = bundle.getInt(CropDialog.DATA_SET_POSITION_BUNDLE_ARG_KEY)
             val saveCrop = bundle.getBoolean(AbstractCropDialog.EXTRA_DIALOG_CONFIRMED)
 
@@ -103,19 +104,19 @@ class CropPagerFragment :
         }
     }
 
-    private fun setCropEntiretyDialogResultListener(){
-        setFragmentResultListener(CropEntiretyDialog.RESULT_REQUEST_KEY){
+    private fun setCropEntiretyDialogResultListener() {
+        setFragmentResultListener(CropEntiretyDialog.RESULT_REQUEST_KEY) {
             if (it.getBoolean(AbstractCropDialog.EXTRA_DIALOG_CONFIRMED))
                 fragmentHostingActivity
-                    .fragmentReplacementTransaction(SaveAllFragment(),true)
+                    .fragmentReplacementTransaction(SaveAllFragment(), true)
                     .commit()
             else
                 typedActivity.invokeSubsequentFragment()
         }
     }
 
-    private fun setFragmentResultListener(requestKey: String, listener: (Bundle) -> Unit){
-        parentFragmentManager.setFragmentResultListener(requestKey, requireActivity()){ _, bundle ->
+    private fun setFragmentResultListener(requestKey: String, listener: (Bundle) -> Unit) {
+        parentFragmentManager.setFragmentResultListener(requestKey, requireActivity()) { _, bundle ->
             listener(bundle)
         }
     }
@@ -152,11 +153,12 @@ class CropPagerFragment :
             if (autoScroll) {
                 binding.cancelAutoScrollButton.show()
                 scroller = Scroller().apply {
-                    run(binding.viewPager, maxAutoScrolls){
+                    run(binding.viewPager, maxAutoScrolls) {
                         this@setLiveDataObservers.autoScroll.postValue(false)
                     }
                 }
-            } else {
+            }
+            else {
                 binding.viewPager.setPageTransformer { page, position ->
                     with(page) {
                         pivotX = (if (position < 0) width else 0).toFloat()
@@ -177,7 +179,8 @@ class CropPagerFragment :
                         arrayOf(binding.cancelAutoScrollButton),
                         manualScrollingStateViews
                     )
-                } ?: manualScrollingStateViews.forEach { it.show() }
+                }
+                    ?: manualScrollingStateViews.forEach { it.show() }
 
                 if (!BooleanPreferences.cropPagerInstructionsShown)
                     Handler(Looper.getMainLooper()).postDelayed(
@@ -203,9 +206,9 @@ class CropPagerFragment :
         }
     }
 
-    private fun displayDismissedScreenshotsSnackbarIfApplicable(){
+    private fun displayDismissedScreenshotsSnackbarIfApplicable() {
         with(sharedViewModel) {
-            if (!showedDismissedScreenshotsSnackbar && nDismissedScreenshots != 0){
+            if (!showedDismissedScreenshotsSnackbar && nDismissedScreenshots != 0) {
                 requireActivity().snackyBuilder(
                     SpannableStringBuilder()
                         .append("Couldn't find cropping bounds for")
@@ -216,6 +219,7 @@ class CropPagerFragment :
                         }
                         .append(" image".numericallyInflected(nDismissedScreenshots))
                 )
+                    .setView()
                     .setIcon(R.drawable.ic_error_24)
                     .show()
             }
@@ -228,10 +232,16 @@ class CropPagerFragment :
      */
     val handleBackPress by lazy {
         BackPressHandler(
-            requireActivity().snackyBuilder("Tap again to return to main screen", view = binding.nestedCoordinatorLayout),
+            requireActivity().snackyBuilder(
+                "Tap again to return to main screen"
+            )
+                .setView(),
             typedActivity::startMainActivity
-        )   
+        )
     }
+
+    private fun Snacky.Builder.setView(): Snacky.Builder =
+        setView(binding.snackbarRepelledHostingLayout)
 
     /**
      * Set new [Crop] in [viewModel].dataSet.currentPosition and notify [CropPagerAdapter]
