@@ -1,4 +1,4 @@
-package com.autocrop.screencapturelistening.services
+package com.autocrop.screenshotlistening.services
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -19,9 +19,9 @@ import com.autocrop.activities.cropping.cropping.cropEdges
 import com.autocrop.activities.cropping.cropping.cropped
 import com.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
 import com.autocrop.activities.iodetermination.deleteRequestUri
-import com.autocrop.screencapturelistening.abstractservices.BoundService
-import com.autocrop.screencapturelistening.notifications.NotificationGroup
-import com.autocrop.screencapturelistening.notifications.NotificationId
+import com.autocrop.screenshotlistening.services.abstrct.BoundService
+import com.autocrop.screenshotlistening.notifications.NotificationGroup
+import com.autocrop.screenshotlistening.notifications.NotificationId
 import com.autocrop.utils.android.extensions.compressToStream
 import com.autocrop.utils.android.extensions.loadBitmap
 import com.autocrop.utils.android.extensions.notificationBuilderWithSetChannel

@@ -1,4 +1,4 @@
-package com.autocrop.screencapturelistening
+package com.autocrop.screenshotlistening
 
 import de.paul_woitaschek.slimber.i
 import java.util.PriorityQueue

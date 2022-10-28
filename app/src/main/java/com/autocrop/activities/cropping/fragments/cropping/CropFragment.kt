@@ -2,8 +2,6 @@ package com.autocrop.activities.cropping.fragments.cropping
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.autocrop.CropBundle
@@ -17,6 +15,7 @@ import com.autocrop.activities.iodetermination.IODeterminationActivityViewModel
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.utils.android.extensions.getLong
 import com.autocrop.utils.android.extensions.loadBitmap
+import com.autocrop.utils.android.postDelayed
 import com.autocrop.utils.kotlin.extensions.executeAsyncTaskWithProgressUpdateReceiver
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.autocrop.R
@@ -86,14 +85,11 @@ class CropFragment
             startIODeterminationActivity()
         else
         // delay briefly to assure progress bar having reached 100% before UI change
-            Handler(Looper.getMainLooper()).postDelayed(
-                {
-                    fragmentHostingActivity
-                        .fragmentReplacementTransaction(CroppingFailedFragment())
-                        .commit()
-                },
-                resources.getLong(R.integer.delay_small)
-            )
+            postDelayed(resources.getLong(R.integer.delay_small)){
+                fragmentHostingActivity
+                    .fragmentReplacementTransaction(CroppingFailedFragment())
+                    .commit()
+            }
     }
 
     /**

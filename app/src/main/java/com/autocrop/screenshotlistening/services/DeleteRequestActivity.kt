@@ -1,4 +1,4 @@
-package com.autocrop.screencapturelistening.services
+package com.autocrop.screenshotlistening.services
 
 import android.app.Activity
 import android.os.Build

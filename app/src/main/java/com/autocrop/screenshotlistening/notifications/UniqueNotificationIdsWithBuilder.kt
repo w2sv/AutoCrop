@@ -1,4 +1,4 @@
-package com.autocrop.screencapturelistening.notifications
+package com.autocrop.screenshotlistening.notifications
 
 import androidx.core.app.NotificationCompat
 import com.autocrop.utils.kotlin.extensions.nonZeroOrdinal

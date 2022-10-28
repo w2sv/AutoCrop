@@ -17,7 +17,7 @@ import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.controller.activity.ApplicationActivity
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.screencapturelistening.services.ScreenshotListener
+import com.autocrop.screenshotlistening.services.ScreenshotListener
 import com.autocrop.utils.android.extensions.buildAndShow
 import com.autocrop.utils.android.extensions.getLong
 import com.autocrop.utils.android.extensions.getThemedColor

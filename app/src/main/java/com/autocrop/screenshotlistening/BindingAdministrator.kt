@@ -1,4 +1,4 @@
-package com.autocrop.screencapturelistening
+package com.autocrop.screenshotlistening
 
 import android.content.ComponentName
 import android.content.Context
@@ -6,7 +6,7 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import com.autocrop.screencapturelistening.abstractservices.BoundService
+import com.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.autocrop.utils.kotlin.delegates.Consumable
 import de.paul_woitaschek.slimber.i
 

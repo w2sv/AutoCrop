@@ -1,10 +1,10 @@
-package com.autocrop.screencapturelistening.services
+package com.autocrop.screenshotlistening.services
 
 import android.content.Intent
-import com.autocrop.screencapturelistening.BindingAdministrator
-import com.autocrop.screencapturelistening.PendingIntentRequestCodes
-import com.autocrop.screencapturelistening.abstractservices.UnboundService
-import com.autocrop.screencapturelistening.notifications.NotificationGroup
+import com.autocrop.screenshotlistening.BindingAdministrator
+import com.autocrop.screenshotlistening.PendingIntentRequestCodes
+import com.autocrop.screenshotlistening.services.abstrct.UnboundService
+import com.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.autocrop.utils.android.extensions.getInt
 import com.autocrop.utils.android.extensions.notificationManager
 import de.paul_woitaschek.slimber.i

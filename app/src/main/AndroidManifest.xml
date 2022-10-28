@@ -62,20 +62,20 @@
         <!-- Services -->
 
         <service
-            android:name="com.autocrop.screencapturelistening.services.ScreenshotListener"
+            android:name="com.autocrop.screenshotlistening.services.ScreenshotListener"
             android:exported="false" />
-        <receiver android:name="com.autocrop.screencapturelistening.services.ScreenshotListener$StopBroadcastReceiver" />
+        <receiver android:name="com.autocrop.screenshotlistening.services.ScreenshotListener$StopBroadcastReceiver" />
 
         <service
-            android:name="com.autocrop.screencapturelistening.services.CropIOService"
+            android:name="com.autocrop.screenshotlistening.services.CropIOService"
             android:exported="false" />
         <activity
-            android:name="com.autocrop.screencapturelistening.services.DeleteRequestActivity"
+            android:name="com.autocrop.screenshotlistening.services.DeleteRequestActivity"
             android:excludeFromRecents="true"
             android:noHistory="true" />
 
         <service
-            android:name="com.autocrop.screencapturelistening.services.OnPendingIntentService"
+            android:name="com.autocrop.screenshotlistening.services.OnPendingIntentService"
             android:exported="false" />
     </application>
 </manifest>

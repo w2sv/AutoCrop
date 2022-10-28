@@ -1,4 +1,4 @@
-package com.autocrop.screencapturelistening.notifications
+package com.autocrop.screenshotlistening.notifications
 
 import android.content.Context
 import android.content.ContextWrapper

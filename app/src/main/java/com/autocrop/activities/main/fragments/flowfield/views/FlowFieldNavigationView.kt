@@ -20,7 +20,7 @@ import com.autocrop.controller.activity.retriever.ActivityRetriever
 import com.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
-import com.autocrop.screencapturelistening.services.ScreenshotListener
+import com.autocrop.screenshotlistening.services.ScreenshotListener
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.activityViewModelLazy
 import com.autocrop.utils.android.extensions.buildAndShow
