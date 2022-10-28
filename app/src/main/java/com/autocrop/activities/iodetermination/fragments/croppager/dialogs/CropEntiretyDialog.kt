@@ -5,7 +5,9 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.core.os.bundleOf
-import androidx.core.text.italic
+import androidx.core.text.color
+import com.autocrop.utils.android.extensions.getThemedColor
+import com.w2sv.autocrop.R
 
 class CropEntiretyDialog: AbstractCropDialog(){
     companion object{
@@ -18,7 +20,7 @@ class CropEntiretyDialog: AbstractCropDialog(){
                 setTitle(
                     SpannableStringBuilder()
                         .append("Save ")
-                        .italic { append("all ") }
+                        .color(context.getThemedColor(R.color.magenta_bright)) { append("all ") }
                         .append("crops?")
                 )
                 setDeleteCorrespondingScreenshotsOption("Delete corresponding screenshots")

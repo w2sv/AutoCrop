@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.snackbar.Snackbar.SnackbarLayout
+import de.paul_woitaschek.slimber.i
 import kotlin.math.min
 
 class SnackbarRepelledLayout(context: Context, private val attributeSet: AttributeSet) :
@@ -14,6 +15,10 @@ class SnackbarRepelledLayout(context: Context, private val attributeSet: Attribu
         attributeSet
     ),
     CoordinatorLayout.AttachedBehavior {
+
+    init {
+        i{"SnackbarRepelledLayout.init"}
+    }
 
     class Behavior(context: Context?, attrs: AttributeSet?) : CoordinatorLayout.Behavior<View?>(context, attrs) {
         override fun layoutDependsOn(parent: CoordinatorLayout, child: View, dependency: View): Boolean =
@@ -27,6 +32,8 @@ class SnackbarRepelledLayout(context: Context, private val attributeSet: Attribu
                     val translation = min(0f, (dependency.translationY - dependency.height) * 0.75f)
                     translationY = translation
                     setPadding(0, -translation.toInt(), 0, 0)
+
+//                    i{"onDependentViewChanged $translation"}
                 }
             return true
         }
@@ -39,4 +46,5 @@ class SnackbarRepelledLayout(context: Context, private val attributeSet: Attribu
 
     override fun getBehavior(): CoordinatorLayout.Behavior<*> =
         Behavior(context, attributeSet)
+            .also { i{"SnackbarRepelledLayout.getBehavior"} }
 }

@@ -133,6 +133,14 @@ class CropPagerFragment :
                 setInitialView()
             }
         viewModel.setLiveDataObservers()
+
+        handleBackPress = BackPressHandler(
+            requireActivity().snackyBuilder(
+                "Tap again to return to main screen"
+            )
+                .setView(),
+            typedActivity::startMainActivity
+        )
     }
 
     private fun CropPagerViewModel.setLiveDataObservers() {
@@ -223,15 +231,7 @@ class CropPagerFragment :
      * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
      * otherwise return to MainActivity after confirmation
      */
-    val handleBackPress by lazy {
-        BackPressHandler(
-            requireActivity().snackyBuilder(
-                "Tap again to return to main screen"
-            )
-                .setView(),
-            typedActivity::startMainActivity
-        )
-    }
+    lateinit var handleBackPress: BackPressHandler
 
     private fun Snacky.Builder.setView(): Snacky.Builder =
         setView(binding.snackbarRepelledHostingLayout)
