@@ -10,14 +10,14 @@ import com.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropE
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.autocrop.controller.activity.retriever.ActivityRetriever
 import com.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
-import com.autocrop.utils.android.extensions.activityViewModelLazy
 import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.viewModelLazy
 
 class CropImageView(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet),
     ActivityRetriever<IODeterminationActivity> by ContextBasedActivityRetriever(context) {
 
-    private val viewModel by activityViewModelLazy<CropPagerViewModel>()
+    private val viewModel by viewModelLazy<CropPagerViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

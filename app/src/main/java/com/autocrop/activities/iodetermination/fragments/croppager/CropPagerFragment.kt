@@ -139,13 +139,8 @@ class CropPagerFragment :
             binding.discardingStatisticsTv.update(position)
 
             dataSet.pageIndex(position).let { pageIndex ->
-                val page = pageIndex + 1
-
-                binding.pageIndicationTv.update(page)
-                binding.pageIndicationBar.update(
-                    pageIndex,
-                    bouncingAnimationBlocked = autoScroll.value == true && page == dataSet.size
-                )
+                binding.pageIndicationTv.update(pageIndex + 1)
+                binding.pageIndicationBar.update(pageIndex)
             }
         }
 

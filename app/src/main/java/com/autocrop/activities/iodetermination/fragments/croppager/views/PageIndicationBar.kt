@@ -8,43 +8,44 @@ import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
-import com.autocrop.utils.android.extensions.activityViewModelLazy
+import com.autocrop.utils.android.extensions.getLong
 import com.autocrop.utils.android.extensions.ifNotInEditMode
 import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.viewModelLazy
+import com.w2sv.autocrop.R
 import kotlin.math.roundToInt
 
 class PageIndicationBar(context: Context, attr: AttributeSet) :
     AppCompatSeekBar(context, attr) {
 
-    private val viewModel by activityViewModelLazy<CropPagerViewModel>()
+    private val viewModel by viewModelLazy<CropPagerViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
         ifNotInEditMode {
-            isEnabled = false  // disable manual dragging
+            isEnabled = false  // disables manual dragging
 
             if (viewModel.dataSet.size != 1)
                 show()
         }
     }
 
-    fun update(dataSetPosition: Int, bouncingAnimationBlocked: Boolean) {
-        val animationDuration = mapOf(
-            BounceInterpolator::class.java to 400L,
-            DecelerateInterpolator::class.java to 100L
-        )
+    fun update(dataSetPosition: Int) {
+        progressAnimation?.cancel()
 
         progress(dataSetPosition)?.let { newProgress ->
-            with(ObjectAnimator.ofInt(this, "progress", newProgress)) {
-                getInterpolator(newProgress, bouncingAnimationBlocked).let{ interpolator ->
-                    this.interpolator = interpolator
-                    duration = animationDuration.getValue(interpolator.javaClass)
+            progressAnimation = ObjectAnimator.ofInt(this, "progress", newProgress).apply {
+                with(animationInterpolatorWithDuration(newProgress)){
+                    interpolator = first
+                    duration = second
                 }
                 start()
             }
         }
     }
+
+    private var progressAnimation: ObjectAnimator? = null
 
     private fun progress(pageIndex: Int): Int? =
         if (viewModel.dataSet.size == 1)
@@ -52,9 +53,9 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
         else
             (max.toFloat() / (viewModel.dataSet.lastIndex).toFloat() * pageIndex).roundToInt()
 
-    private fun getInterpolator(newProgress: Int, bouncingAnimationBlocked: Boolean): BaseInterpolator =
-        if (!bouncingAnimationBlocked && setOf(0, 100) == setOf(progress, newProgress))
-            BounceInterpolator()
+    private fun animationInterpolatorWithDuration(newProgress: Int): Pair<BaseInterpolator, Long> =
+        if (setOf(0, 100) == setOf(progress, newProgress))
+            BounceInterpolator() to resources.getLong(R.integer.delay_medium)
         else
-            DecelerateInterpolator()
+            DecelerateInterpolator() to resources.getLong(R.integer.delay_small)
 }
