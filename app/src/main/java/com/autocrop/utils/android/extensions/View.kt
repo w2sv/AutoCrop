@@ -38,19 +38,19 @@ fun crossFade(fadeOutViews: Array<View>, fadeInViews: Array<View>, duration: Lon
     }
 }
 
-fun View.fadeIn(duration: Long = DEFAULT_VIEW_ANIMATION_DURATION){
-    show()
-    animate(Techniques.FadeIn, duration)
-}
-
-fun View.fadeOut(duration: Long = DEFAULT_VIEW_ANIMATION_DURATION){
-    animate(Techniques.FadeOut, duration){
-        remove()
+fun View.fadeIn(duration: Long = DEFAULT_VIEW_ANIMATION_DURATION): YoYo.YoYoString =
+    apply {
+        show()
     }
-}
+        .animate(Techniques.FadeIn, duration)
+
+fun View.fadeOut(duration: Long = DEFAULT_VIEW_ANIMATION_DURATION, delay: Long = 0): YoYo.YoYoString =
+    animate(Techniques.FadeOut, duration, delay = delay){
+        hide()
+    }
 
 fun View.show() { visibility = View.VISIBLE }
-fun View.remove() { visibility = View.GONE }
+fun View.hide() { visibility = View.GONE }
 
 inline fun View.ifNotInEditMode(f: BlankFun){
     if (!isInEditMode)

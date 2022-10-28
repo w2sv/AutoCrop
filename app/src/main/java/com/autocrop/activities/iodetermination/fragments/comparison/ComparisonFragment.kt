@@ -15,6 +15,7 @@ import com.autocrop.CropBundle
 import com.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.utils.android.extensions.getLong
+import com.autocrop.utils.android.extensions.hide
 import com.autocrop.utils.android.extensions.hideSystemBars
 import com.autocrop.utils.android.extensions.loadBitmap
 import com.autocrop.utils.android.extensions.postValue
@@ -63,7 +64,13 @@ class ComparisonFragment
                                 {
                                     viewModel.useInsetLayoutParams.postValue(false)
                                     viewModel.displayScreenshot.postValue(true)
-                                    binding.backButton.show()
+
+                                    Handler(Looper.getMainLooper()).postDelayed(
+                                        {
+                                            binding.snackbarRepelledLayout.show()
+                                        },
+                                        resources.getLong(R.integer.delay_small)
+                                    )
                                 },
                                 requireContext().resources.getLong(R.integer.delay_small)
                             )
@@ -107,10 +114,12 @@ class ComparisonFragment
         super.onViewStateRestored(savedInstanceState)
 
         if (viewModel.enterTransitionCompleted)
-            binding.backButton.show()
+            binding.snackbarRepelledLayout.show()
     }
 
     fun onPreRemove() {
+        binding.snackbarRepelledLayout.hide()
+
         viewModel.useInsetLayoutParams.postValue(true)
         viewModel.displayScreenshot.postValue(false)
     }

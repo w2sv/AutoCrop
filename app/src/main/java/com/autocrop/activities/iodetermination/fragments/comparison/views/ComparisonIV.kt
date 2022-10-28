@@ -1,4 +1,4 @@
-package com.autocrop.activities.iodetermination.fragments.comparison
+package com.autocrop.activities.iodetermination.fragments.comparison.views
 
 import android.content.Context
 import android.util.AttributeSet
@@ -9,9 +9,11 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
+import com.autocrop.activities.iodetermination.fragments.comparison.ComparisonFragment
+import com.autocrop.activities.iodetermination.fragments.comparison.ComparisonViewModel
 import com.autocrop.utils.android.extensions.toggle
 
-class ComparisonImageView(context: Context, attributeSet: AttributeSet):
+class ComparisonIV(context: Context, attributeSet: AttributeSet):
     AppCompatImageView(context, attributeSet){
 
     private val viewModel by lazy {
