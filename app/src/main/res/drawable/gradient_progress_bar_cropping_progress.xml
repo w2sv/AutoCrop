@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <clip>
             <shape>
                 <corners android:radius="50dip" />
 
                 <gradient
-                    android:startColor="@color/ocean_blue"
-                    android:endColor="@color/magenta_dark"/>
+                    android:endColor="@color/magenta_dark"
+                    android:startColor="@color/ocean_blue" />
             </shape>
         </clip>
     </item>

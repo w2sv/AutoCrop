@@ -28,7 +28,7 @@ internal class CropBundleProcessingKtTest {
         "screenshot234.png, screenshot234",
         "234.something.png, 234.something",
     )
-    fun fileNameWOExtension(fileName: String, expected: String){
+    fun fileNameWOExtension(fileName: String, expected: String) {
         Assertions.assertEquals(expected, fileNameWOExtension(fileName))
     }
 }

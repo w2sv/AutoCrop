@@ -8,14 +8,14 @@ import androidx.fragment.app.findFragment
 import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.utils.android.IMAGE_MIME_TYPE
 
-class ImageSelectionButton(context: Context, attributeSet: AttributeSet):
+class ImageSelectionButton(context: Context, attributeSet: AttributeSet) :
     AppCompatButton(context, attributeSet) {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
         setOnClickListener {
-            with(findFragment<FlowFieldFragment>()){
+            with(findFragment<FlowFieldFragment>()) {
                 writeExternalStoragePermissionHandler.requestPermission(
                     {
                         imageSelectionIntentLauncher.launch(

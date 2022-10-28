@@ -7,9 +7,9 @@ import com.w2sv.bidirectionalviewpager.recyclerview.ExtendedRecyclerViewAdapter
 /**
  * Proxy (=wrapper) for unextendable [viewPager2], providing additional functionality
  */
-class CropPagerProxy(private val viewPager2: ViewPager2, private val viewModel: CropPagerViewModel){
+class CropPagerProxy(private val viewPager2: ViewPager2, private val viewModel: CropPagerViewModel) {
     init {
-        with(viewPager2){
+        with(viewPager2) {
             adapter = CropPagerAdapter(viewModel)
             registerOnPageChangeCallback(
                 PageChangeHandler(
@@ -19,7 +19,7 @@ class CropPagerProxy(private val viewPager2: ViewPager2, private val viewModel: 
         }
     }
 
-    fun setInitialView(){
+    fun setInitialView() {
         viewPager2.setCurrentItem(
             viewModel.initialViewPosition(),
             false

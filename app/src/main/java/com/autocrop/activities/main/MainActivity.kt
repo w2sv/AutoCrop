@@ -32,9 +32,10 @@ class MainActivity :
     ApplicationActivity<FlowFieldFragment, MainActivityViewModel>(
         FlowFieldFragment::class,
         MainActivityViewModel::class,
-        BooleanPreferences, UriPreferences) {
+        BooleanPreferences, UriPreferences
+    ) {
 
-    companion object{
+    companion object {
         const val EXTRA_SELECTED_IMAGE_URIS = "com.autocrop.extra.SELECTED_IMAGE_URIS"
         const val EXTRA_N_DISMISSED_IMAGES = "com.autocrop.extra.N_DISMISSED_IMAGES"
     }
@@ -79,11 +80,11 @@ class MainActivity :
     override fun onSavedInstanceStateNull() {
         super.onSavedInstanceStateNull()
 
-        if (!BooleanPreferences.welcomeDialogShown){
+        if (!BooleanPreferences.welcomeDialogShown) {
             supportFragmentManager.setFragmentResultListener(
                 ScreenshotListenerExplanation.REQUEST_KEY,
                 this
-            ){_, bundle ->
+            ) { _, bundle ->
                 if (ScreenshotListenerExplanation.dialogConfirmed(bundle))
                     screenshotListeningPermissions
                         .iterator()
@@ -110,14 +111,14 @@ class MainActivity :
             )
     }
 
-    private fun showIOSynopsisSnackbar(ioResults: IODeterminationActivity.Results){
-        with(ioResults){
+    private fun showIOSynopsisSnackbar(ioResults: IODeterminationActivity.Results) {
+        with(ioResults) {
             val (text, icon) = if (nSavedCrops == 0)
                 "Discarded all crops" to R.drawable.ic_outline_sentiment_dissatisfied_24
             else
                 SpannableStringBuilder().apply {
                     append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                    color(getThemedColor(R.color.success)) {append(saveDirName)}
+                    color(getThemedColor(R.color.success)) { append(saveDirName) }
                     if (nDeletedScreenshots != 0)
                         append(
                             " and deleted ${

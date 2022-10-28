@@ -13,8 +13,8 @@ import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentAboutBinding
 
-class AboutFragment:
-    MainActivityFragment<FragmentAboutBinding>(FragmentAboutBinding::class.java){
+class AboutFragment :
+    MainActivityFragment<FragmentAboutBinding>(FragmentAboutBinding::class.java) {
 
     override fun onResume() {
         super.onResume()
@@ -40,7 +40,7 @@ class AboutFragment:
         viewLifecycleOwner.lifecycle.addObserver(binding.copyrightTv)
     }
 
-    private fun FragmentAboutBinding.setOnClickListeners(){
+    private fun FragmentAboutBinding.setOnClickListeners() {
         appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
         logoIv.setOnClickListener { it.animate(Techniques.Tada) }
         versionTv.setOnClickListener { it.animate(Techniques.RubberBand) }

@@ -14,14 +14,15 @@ import com.autocrop.controller.activity.retriever.TypedActivityRetriever
 import com.w2sv.viewboundcontroller.ViewBoundFragment
 import kotlin.reflect.KClass
 
-abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
+abstract class ApplicationFragment<A : Activity, VB : ViewBinding, VM : ViewModel>(
     viewModelKClass: KClass<VM>,
-    bindingClass: Class<VB>):
+    bindingClass: Class<VB>
+) :
     ViewBoundFragment<VB>(bindingClass),
     TypedActivityRetriever<A>,
     FragmentHostingActivityRetriever {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?){
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
 
         super.onViewCreated(view, savedInstanceState)
@@ -32,11 +33,11 @@ abstract class ApplicationFragment<A: Activity, VB: ViewBinding, VM: ViewModel>(
         }
     }
 
-    open fun onViewCreatedCore(savedInstanceState: Bundle?){}
+    open fun onViewCreatedCore(savedInstanceState: Bundle?) {}
 
     protected val sharedViewModel: VM by createViewModelLazy(
         viewModelKClass,
-        {requireActivity().viewModelStore}
+        { requireActivity().viewModelStore }
     )
 
     @Suppress("UNCHECKED_CAST")

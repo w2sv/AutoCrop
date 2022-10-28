@@ -27,9 +27,10 @@ object BooleanPreferences : TypedPreferences<Boolean>(
     var comparisonInstructionsShown by AutoSwitch.Mapped(map, false)
     var aboutFragmentInstructionsShown by AutoSwitch.Mapped(map, false)
 
-    override fun SharedPreferences.writeValue(key: String, value: Boolean){
+    override fun SharedPreferences.writeValue(key: String, value: Boolean) {
         edit().putBoolean(key, value).apply()
     }
+
     override fun SharedPreferences.getValue(key: String, defaultValue: Boolean): Boolean =
         getBoolean(key, defaultValue)
 

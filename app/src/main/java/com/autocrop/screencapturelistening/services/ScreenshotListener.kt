@@ -48,23 +48,23 @@ class ScreenshotListener :
         const val EXTRA_SCREENSHOT_MEDIASTORE_DATA = "com.autocrop.SCREENSHOT_MEDIASTORE_DATA"
         const val EXTRA_CROP_FILE_PATH = "com.autocrop.CROP_FILE_PATH"
 
-        fun startService(context: Context){
+        fun startService(context: Context) {
             with(context) {
                 startService(
                     Intent(this, ScreenshotListener::class.java)
                 )
             }
-            i{"Started ScreenCaptureListeningService"}
+            i { "Started ScreenCaptureListeningService" }
         }
 
-        fun stopService(context: Context){
-            with(context){
+        fun stopService(context: Context) {
+            with(context) {
                 startService(
                     Intent(this, ScreenshotListener::class.java)
                         .setAction(ACTION_STOP_SERVICE)
                 )
             }
-            i{"Stopping ScreenCaptureListeningService"}
+            i { "Stopping ScreenCaptureListeningService" }
         }
 
         private const val ACTION_STOP_SERVICE = "com.autocrop.STOP_SERVICE"
@@ -89,14 +89,14 @@ class ScreenshotListener :
             foregroundServiceNotificationBuilder()
                 .build()
         )
-            .also { i{"Started foreground service"} }
+            .also { i { "Started foreground service" } }
 
         contentResolver.registerContentObserver(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             true,
             imageContentObserver
         )
-            .also { i{"Registered imageContentObserver"} }
+            .also { i { "Registered imageContentObserver" } }
 
         return START_STICKY
     }
@@ -123,7 +123,7 @@ class ScreenshotListener :
                 )
             )
 
-    class StopBroadcastReceiver: BroadcastReceiver(){
+    class StopBroadcastReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             stopService(context!!)
         }
@@ -152,19 +152,21 @@ class ScreenshotListener :
          */
         override fun onChange(selfChange: Boolean, uri: Uri?) {
             uri?.let {
-                i{"Called onChange for $it"}
+                i { "Called onChange for $it" }
                 if (!recentBlacklist.contains(it)) {
                     if (pendingScreenshotUris.contains(it) || it.isScreenshot() == true) {
                         if (onNewScreenshotUri(it)) {
                             recentBlacklist.add(it)
                             pendingScreenshotUris.remove(it)
-                            i{"Added $uri to blacklist and removed it from pendingScreenshotUris"}
-                        } else
+                            i { "Added $uri to blacklist and removed it from pendingScreenshotUris" }
+                        }
+                        else
                             pendingScreenshotUris.add(it)
-                                .also {i {"Added $uri to pendingScreenshotUris"}}
-                    } else
+                                .also { i { "Added $uri to pendingScreenshotUris" } }
+                    }
+                    else
                         recentBlacklist.add(it)
-                            .also { i{"Added $uri to blacklist"}}
+                            .also { i { "Added $uri to blacklist" } }
                 }
             }
         }
@@ -199,7 +201,7 @@ class ScreenshotListener :
                         TimeUnit.SECONDS
                     ) < 20
         }
-        catch (e: CursorIndexOutOfBoundsException){
+        catch (e: CursorIndexOutOfBoundsException) {
             return null
         }
     }
@@ -219,7 +221,8 @@ class ScreenshotListener :
                 showNewCroppableScreenshotDetectedNotification(uri, bitmap, it)
             }
             true
-        } catch (_: IllegalStateException) {
+        }
+        catch (_: IllegalStateException) {
             false
         }
 
@@ -253,16 +256,22 @@ class ScreenshotListener :
         val crop = screenshotBitmap.cropped(cropEdges)
         val cropPath = saveCropToTempFile(crop, screenshotMediaStoreData.id)
 
-        fun pendingIntent(makePendingIntent: PendingIntentRenderer,
-                          intent: Intent,
-                          requestCodeIndex: Int,
-                          putCancelNotificationExtra: Boolean = true): PendingIntent =
+        fun pendingIntent(
+            makePendingIntent: PendingIntentRenderer,
+            intent: Intent,
+            requestCodeIndex: Int,
+            putCancelNotificationExtra: Boolean = true
+        ): PendingIntent =
             makePendingIntent(
                 this,
                 associatedRequestCodes[requestCodeIndex],
                 intent
                     .putExtra(EXTRA_CROP_FILE_PATH, cropPath)
-                    .putOnPendingIntentServiceClientExtras(notificationId, associatedRequestCodes, putCancelNotificationExtra),
+                    .putOnPendingIntentServiceClientExtras(
+                        notificationId,
+                        associatedRequestCodes,
+                        putCancelNotificationExtra
+                    ),
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
             )
 
@@ -334,7 +343,7 @@ class ScreenshotListener :
         )
     }
 
-    private fun saveCropToTempFile(crop: Bitmap, screenshotMediaStoreId: Long): String{
+    private fun saveCropToTempFile(crop: Bitmap, screenshotMediaStoreId: Long): String {
         val file = File.createTempFile(
             screenshotMediaStoreId.toString(),
             null
@@ -352,6 +361,6 @@ class ScreenshotListener :
         stopService(Intent(this, CropIOService::class.java))
 
         contentResolver.unregisterContentObserver(imageContentObserver)
-            .also { i{"Unregistered imageContentObserver"} }
+            .also { i { "Unregistered imageContentObserver" } }
     }
 }

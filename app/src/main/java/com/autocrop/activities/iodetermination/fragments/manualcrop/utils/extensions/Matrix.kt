@@ -7,7 +7,8 @@ import android.view.animation.AccelerateDecelerateInterpolator
 
 fun Matrix.animateToMatrix(
     targetMatrix: Matrix,
-    onUpdate: () -> Unit = {}) {
+    onUpdate: () -> Unit = {}
+) {
     val scaleAnimator = ValueAnimator.ofFloat(this.getScaleX(), targetMatrix.getScaleX())
     val translateXAnimator =
         ValueAnimator.ofFloat(this.getTranslateX(), targetMatrix.getTranslateX())

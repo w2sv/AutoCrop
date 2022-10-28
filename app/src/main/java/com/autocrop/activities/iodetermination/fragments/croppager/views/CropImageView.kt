@@ -13,7 +13,7 @@ import com.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.viewModelLazy
 
-class CropImageView(context: Context, attributeSet: AttributeSet):
+class CropImageView(context: Context, attributeSet: AttributeSet) :
     AppCompatImageView(context, attributeSet),
     ActivityRetriever<IODeterminationActivity> by ContextBasedActivityRetriever(context) {
 
@@ -26,7 +26,7 @@ class CropImageView(context: Context, attributeSet: AttributeSet):
         setOnLongClickListener { onLongClickListener() }
     }
 
-    private fun onClickListener(){
+    private fun onClickListener() {
         if (dialogInflationEnabled())
             CropDialog().apply {
                 arguments = bundleOf(
@@ -41,7 +41,7 @@ class CropImageView(context: Context, attributeSet: AttributeSet):
             false
         else if (viewModel.dataSet.size == 1)
             performClick()
-        else{
+        else {
             CropEntiretyDialog().show(fragmentActivity.supportFragmentManager)
             true
         }

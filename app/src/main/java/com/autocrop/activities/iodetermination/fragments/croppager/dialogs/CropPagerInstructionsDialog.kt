@@ -11,7 +11,7 @@ import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.kotlin.BlankFun
 import com.w2sv.autocrop.R
 
-class CropPagerInstructionsDialog: UncancelableDialogFragment(){
+class CropPagerInstructionsDialog : UncancelableDialogFragment() {
     var positiveButtonOnClickListener: BlankFun? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
@@ -27,9 +27,13 @@ class CropPagerInstructionsDialog: UncancelableDialogFragment(){
             .setPositiveButton("Got it!") { _, _ -> positiveButtonOnClickListener?.invoke() }
             .create()
 
-    private fun SpannableStringBuilder.addFormattedInstruction(start: String, bold: String, end: String): SpannableStringBuilder =
+    private fun SpannableStringBuilder.addFormattedInstruction(
+        start: String,
+        bold: String,
+        end: String
+    ): SpannableStringBuilder =
         apply {
-            color(requireContext().getThemedColor(R.color.magenta_bright)){append("•")}
+            color(requireContext().getThemedColor(R.color.magenta_bright)) { append("•") }
             append(" $start")
             bold { append(" $bold") }
             append(" $end")

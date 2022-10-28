@@ -9,11 +9,11 @@ import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Cro
 import com.w2sv.autocrop.databinding.ImageviewCropBinding
 import com.w2sv.bidirectionalviewpager.recyclerview.BidirectionalRecyclerViewAdapter
 
-class CropPagerAdapter(private val viewModel: CropPagerViewModel)
-    : BidirectionalRecyclerViewAdapter<CropPagerAdapter.CropViewHolder>(viewModel.dataSet){
+class CropPagerAdapter(private val viewModel: CropPagerViewModel) : BidirectionalRecyclerViewAdapter<CropPagerAdapter.CropViewHolder>(
+    viewModel.dataSet
+) {
 
-    class CropViewHolder(binding: ImageviewCropBinding)
-        : RecyclerView.ViewHolder(binding.cropIv){
+    class CropViewHolder(binding: ImageviewCropBinding) : RecyclerView.ViewHolder(binding.cropIv) {
         val imageView: ImageView get() = itemView as ImageView
     }
 
@@ -32,9 +32,9 @@ class CropPagerAdapter(private val viewModel: CropPagerViewModel)
     /**
      * Defines crop setting wrt [position]
      */
-    override fun onBindViewHolder(holder: CropViewHolder, position: Int){
+    override fun onBindViewHolder(holder: CropViewHolder, position: Int) {
         viewModel.dataSet.atCorrespondingPosition(position).let {
-            with(holder.imageView){
+            with(holder.imageView) {
                 setImageBitmap(it.crop.bitmap)
                 ViewCompat.setTransitionName(this, it.identifier())
             }

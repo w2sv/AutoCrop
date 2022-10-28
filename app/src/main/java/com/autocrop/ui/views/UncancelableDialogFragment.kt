@@ -3,8 +3,10 @@ package com.autocrop.ui.views
 import android.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 
-abstract class UncancelableDialogFragment: DialogFragment(){
-    init { isCancelable = false }
+abstract class UncancelableDialogFragment : DialogFragment() {
+    init {
+        isCancelable = false
+    }
 
     protected fun builder(): AlertDialog.Builder =
         AlertDialog.Builder(requireContext())

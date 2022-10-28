@@ -32,10 +32,12 @@ class AnimatableRectF : RectF() {
     fun setTop(top: Float) {
         this.top = top
     }
+
     @Keep
     fun setBottom(bottom: Float) {
         this.bottom = bottom
     }
+
     @Keep
     fun setRight(right: Float) {
         this.right = right

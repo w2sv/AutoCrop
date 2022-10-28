@@ -10,8 +10,8 @@ import androidx.core.text.italic
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.w2sv.autocrop.R
 
-class CropEntiretyDialog: AbstractCropDialog(){
-    companion object{
+class CropEntiretyDialog : AbstractCropDialog() {
+    companion object {
         const val KEY_RESULT = "CROP_ENTIRETY_DIALOG_RESULT_REQUEST_KEY"
     }
 
@@ -29,12 +29,12 @@ class CropEntiretyDialog: AbstractCropDialog(){
                         .append("crops?")
                 )
                 setDeleteCorrespondingScreenshotsOption("Delete corresponding screenshots")
-                setNegativeButton("No, discard all") { _, _ -> setFragmentResult(false)}
-                setPositiveButton("Yes") { _, _ -> setFragmentResult(true)}
+                setNegativeButton("No, discard all") { _, _ -> setFragmentResult(false) }
+                setPositiveButton("Yes") { _, _ -> setFragmentResult(true) }
             }
             .create()
 
-    override fun setFragmentResult(confirmed: Boolean){
+    override fun setFragmentResult(confirmed: Boolean) {
         requireActivity()
             .supportFragmentManager
             .setFragmentResult(

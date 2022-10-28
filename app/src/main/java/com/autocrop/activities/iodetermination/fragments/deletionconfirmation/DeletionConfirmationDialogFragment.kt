@@ -17,7 +17,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentDeletionQueryBinding
 
 class DeletionConfirmationDialogFragment :
-    IODeterminationActivityFragment<FragmentDeletionQueryBinding>(FragmentDeletionQueryBinding::class.java){
+    IODeterminationActivityFragment<FragmentDeletionQueryBinding>(FragmentDeletionQueryBinding::class.java) {
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,19 +35,21 @@ class DeletionConfirmationDialogFragment :
         )
     }
 
-    private val deletionConfirmationInquiryContract = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()){
-        // increment sharedViewModel.nDeletedScreenshots if deletion request emitted
-        if (it.resultCode == Activity.RESULT_OK)
-            with(sharedViewModel){
-                nDeletedScreenshots += deletionInquiryUris.size
-            }
+    private val deletionConfirmationInquiryContract =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+            // increment sharedViewModel.nDeletedScreenshots if deletion request emitted
+            if (it.resultCode == Activity.RESULT_OK)
+                with(sharedViewModel) {
+                    nDeletedScreenshots += deletionInquiryUris.size
+                }
 
-        // launch appTitleFragment after small delay for UX smoothness
-        Handler(Looper.getMainLooper()).postDelayed({
-                fragmentHostingActivity.fragmentReplacementTransaction(AppTitleFragment())
-                    .commit()
-            },
-            resources.getLong(R.integer.delay_small)
-        )
-    }
+            // launch appTitleFragment after small delay for UX smoothness
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+                    fragmentHostingActivity.fragmentReplacementTransaction(AppTitleFragment())
+                        .commit()
+                },
+                resources.getLong(R.integer.delay_small)
+            )
+        }
 }

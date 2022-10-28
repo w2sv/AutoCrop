@@ -8,9 +8,10 @@ import kotlinx.coroutines.withContext
 fun <R> CoroutineScope.executeAsyncTask(
     doInBackground: () -> R,
     onPostExecute: ((R) -> Unit)? = null
-) = launch {
+) =
+    launch {
         val result = withContext(Dispatchers.IO) {
-            doInBackground ()
+            doInBackground()
         }
         onPostExecute?.run { invoke(result) }
     }
@@ -19,7 +20,8 @@ fun <P, R> CoroutineScope.executeAsyncTaskWithProgressUpdateReceiver(
     doInBackground: suspend (suspend (P) -> Unit) -> R,
     onProgressUpdate: (P) -> Unit,
     onPostExecute: (R) -> Unit
-) = launch {
+) =
+    launch {
         onPostExecute(
             withContext(Dispatchers.IO) {
                 doInBackground {
@@ -27,4 +29,4 @@ fun <P, R> CoroutineScope.executeAsyncTaskWithProgressUpdateReceiver(
                 }
             }
         )
-}
+    }

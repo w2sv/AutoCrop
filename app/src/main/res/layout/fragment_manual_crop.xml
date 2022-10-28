@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
@@ -11,54 +10,54 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/pseudo_black"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/height_tv"
+                android:layout_width="@dimen/width_button"
+                android:layout_height="@dimen/height_button"
+                android:layout_marginHorizontal="@dimen/margin_top_button"
+                android:background="@drawable/shape_rounded_rectangle"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:background="@color/pseudo_black">
+                android:textColor="@color/text_default"
+                android:textStyle="bold" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/height_tv"
-                    android:layout_width="@dimen/width_button"
-                    android:layout_height="@dimen/height_button"
-                    android:layout_marginHorizontal="@dimen/margin_top_button"
-                    android:background="@drawable/shape_rounded_rectangle"
-                    android:gravity="center"
-                    android:textColor="@color/text_default"
-                    android:textStyle="bold"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/percentage_tv"
+                android:layout_width="@dimen/width_button"
+                android:layout_height="@dimen/height_button"
+                android:layout_marginHorizontal="@dimen/margin_top_button"
+                android:background="@drawable/shape_rounded_rectangle"
+                android:gravity="center"
+                android:textColor="@color/text_default"
+                android:textStyle="bold" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/percentage_tv"
-                    android:layout_width="@dimen/width_button"
-                    android:layout_height="@dimen/height_button"
-                    android:layout_marginHorizontal="@dimen/margin_top_button"
-                    android:background="@drawable/shape_rounded_rectangle"
-                    android:gravity="center"
-                    android:textColor="@color/text_default"
-                    android:textStyle="bold" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/y1_tv"
+                android:layout_width="@dimen/width_button"
+                android:layout_height="@dimen/height_button"
+                android:layout_marginHorizontal="@dimen/margin_top_button"
+                android:background="@drawable/shape_rounded_rectangle"
+                android:gravity="center"
+                android:textColor="@color/text_default"
+                android:textStyle="bold" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/y1_tv"
-                    android:layout_width="@dimen/width_button"
-                    android:layout_height="@dimen/height_button"
-                    android:layout_marginHorizontal="@dimen/margin_top_button"
-                    android:background="@drawable/shape_rounded_rectangle"
-                    android:gravity="center"
-                    android:textColor="@color/text_default"
-                    android:textStyle="bold" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/y2_tv"
+                android:layout_width="@dimen/width_button"
+                android:layout_height="@dimen/height_button"
+                android:layout_marginHorizontal="@dimen/margin_top_button"
+                android:background="@drawable/shape_rounded_rectangle"
+                android:gravity="center"
+                android:textColor="@color/text_default"
+                android:textStyle="bold" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/y2_tv"
-                    android:layout_width="@dimen/width_button"
-                    android:layout_height="@dimen/height_button"
-                    android:layout_marginHorizontal="@dimen/margin_top_button"
-                    android:background="@drawable/shape_rounded_rectangle"
-                    android:gravity="center"
-                    android:textColor="@color/text_default"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+        </LinearLayout>
 
         <com.autocrop.activities.iodetermination.fragments.manualcrop.view.ManualCropView
             android:id="@+id/crop_view"
@@ -67,36 +66,36 @@
             android:layout_marginTop="?attr/actionBarSize"
 
             android:background="@color/dark_gray"
-            android:layerType="hardware"/>
+            android:layerType="hardware" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/reset_button"
 
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_height="wrap_content"
             android:layout_alignTop="@id/bottom_button_row"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="-30dp"
             android:layout_marginEnd="10dp"
 
             android:background="@drawable/shape_manual_crop_reset_btn"
             android:text="@string/reset"
-            android:textStyle="italic"
-            android:textSize="15sp"
             android:textColor="@color/magenta_bright"
+            android:textSize="15sp"
+            android:textStyle="italic"
             tools:ignore="RelativeOverlap" />
 
         <LinearLayout
             android:id="@+id/bottom_button_row"
 
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
 
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="?actionBarSize"
 
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/cancel_button"

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permissions
@@ -17,36 +16,33 @@
 
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="29"/>
+        android:maxSdkVersion="29" />
 
     <!-- ScreenCaptureListening -->
 
-    <uses-permission
-        android:name="android.permission.FOREGROUND_SERVICE"/> <!-- System Permission -> granted automatically -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- System Permission -> granted automatically -->
 
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
-    <uses-permission
-        android:name="android.permission.READ_MEDIA_IMAGES"/> <!-- SDK >= 33 -->
-    <uses-permission
-        android:name="android.permission.POST_NOTIFICATIONS"/> <!-- SDK >= 33 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!-- SDK >= 33 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- SDK >= 33 -->
 
     <!-- Application -->
 
     <application
-        android:label="@string/app_title"
-        tools:replace="android:label"
-
         android:name="com.autocrop.AutoCrop"
+        android:appCategory="image"
+
         android:icon="@mipmap/logo"
-        android:roundIcon="@mipmap/logo_round"
+        android:label="@string/app_title"
         android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.App.Main"
 
-        android:appCategory="image">
+        tools:replace="android:label">
 
         <!-- Activities -->
 
@@ -60,28 +56,26 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="com.autocrop.activities.cropping.CropActivity" />
-        <activity
-            android:name="com.autocrop.activities.iodetermination.IODeterminationActivity" />
+        <activity android:name="com.autocrop.activities.cropping.CropActivity" />
+        <activity android:name="com.autocrop.activities.iodetermination.IODeterminationActivity" />
 
         <!-- Services -->
 
         <service
             android:name="com.autocrop.screencapturelistening.services.ScreenshotListener"
-            android:exported="false"/>
+            android:exported="false" />
         <receiver android:name="com.autocrop.screencapturelistening.services.ScreenshotListener$StopBroadcastReceiver" />
 
         <service
             android:name="com.autocrop.screencapturelistening.services.CropIOService"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name="com.autocrop.screencapturelistening.services.DeleteRequestActivity"
             android:excludeFromRecents="true"
-            android:noHistory="true"/>
+            android:noHistory="true" />
 
         <service
             android:name="com.autocrop.screencapturelistening.services.OnPendingIntentService"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 </manifest>

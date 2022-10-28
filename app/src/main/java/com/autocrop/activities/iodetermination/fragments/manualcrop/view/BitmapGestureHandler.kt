@@ -6,7 +6,8 @@ import android.view.MotionEvent
 
 class BitmapGestureHandler(
     context: Context,
-    private val bitmapGestureListener: BitmapGestureListener) {
+    private val bitmapGestureListener: BitmapGestureListener
+) {
 
     interface BitmapGestureListener {
         fun onScroll(distanceX: Float, distanceY: Float)

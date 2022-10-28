@@ -6,8 +6,7 @@ import de.paul_woitaschek.slimber.i
 /**
  * Base for KEY to VALUE map delegator objects, the content of which is to be stored in [SharedPreferences]
  */
-sealed class TypedPreferences<T>(protected val map: MutableMap<String, T>)
-    : MutableMap<String, T> by map{
+sealed class TypedPreferences<T>(protected val map: MutableMap<String, T>) : MutableMap<String, T> by map {
 
     /**
      * init{} substitute, hence to be called before whatever sort of object usage
@@ -15,12 +14,12 @@ sealed class TypedPreferences<T>(protected val map: MutableMap<String, T>)
      * Initializes values with the ones contained in [sharedPreferences] instance
      * and copies them to [lastDiscSyncState]
      */
-    fun initializeFromSharedPreferences(sharedPreferences: SharedPreferences){
-        i{"Initializing ${javaClass.name} from SharedPreferences"}
+    fun initializeFromSharedPreferences(sharedPreferences: SharedPreferences) {
+        i { "Initializing ${javaClass.name} from SharedPreferences" }
 
-        forEach{ (key, defaultValue) ->
+        forEach { (key, defaultValue) ->
             put(key, sharedPreferences.getValue(key, defaultValue))
-            i{"Set ${javaClass.name}.$key to $defaultValue from SharedPreferences"}
+            i { "Set ${javaClass.name}.$key to $defaultValue from SharedPreferences" }
         }
         lastDiscSyncState = toMutableMap()
     }
@@ -30,7 +29,7 @@ sealed class TypedPreferences<T>(protected val map: MutableMap<String, T>)
             .filter { lastDiscSyncState.getValue(it.key) != it.value }
             .forEach {
                 sharedPreferences.value.writeValue(it.key, it.value)
-                i{"Wrote ${it.key}=${it.value} to shared preferences"}
+                i { "Wrote ${it.key}=${it.value} to shared preferences" }
 
                 lastDiscSyncState[it.key] = it.value
             }

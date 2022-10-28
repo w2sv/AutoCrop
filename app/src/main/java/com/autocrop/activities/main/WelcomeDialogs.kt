@@ -13,20 +13,22 @@ import com.autocrop.utils.android.extensions.getColoredIcon
 import com.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.R
 
-class CropExplanation: UncancelableDialogFragment(){
+class CropExplanation : UncancelableDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         builder()
             .setTitle("Welcome to AutoCrop \uD83C\uDF89")
             .setIcon(R.drawable.logo_wo_background)
             .setMessage(
                 SpannableStringBuilder()
-                    .append("You have just unlocked the capability to automatically crop multiple screenshots from your gallery & save them all in one go." +
-                            "\n\n" +
-                            "All you need to do now is press the ")
+                    .append(
+                        "You have just unlocked the capability to automatically crop multiple screenshots from your gallery & save them all in one go." +
+                                "\n\n" +
+                                "All you need to do now is press the "
+                    )
                     .italic { append("Select Images ") }
                     .append("button and get croppin'!")
             )
-            .setPositiveButton("Alright!"){_, _ -> }
+            .setPositiveButton("Alright!") { _, _ -> }
             .create()
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -35,8 +37,8 @@ class CropExplanation: UncancelableDialogFragment(){
     }
 }
 
-class ScreenshotListenerExplanation: UncancelableDialogFragment(){
-    companion object{
+class ScreenshotListenerExplanation : UncancelableDialogFragment() {
+    companion object {
         const val REQUEST_KEY = "ScreenshotListenerExplanation.REQUEST_KEY"
 
         fun dialogConfirmed(bundle: Bundle): Boolean =
@@ -53,12 +55,12 @@ class ScreenshotListenerExplanation: UncancelableDialogFragment(){
                 SpannableStringBuilder().apply {
                     append(
                         "With screenshot listening enabled, you will get a notification whenever you take a croppable screenshot. " +
-                        "Through that, you can save the crop and delete the original screenshot without having to open the app." +
-                        "\n\n" +
-                        "For this, the "
+                                "Through that, you can save the crop and delete the original screenshot without having to open the app." +
+                                "\n\n" +
+                                "For this, the "
                     )
                     italic { append("media file reading ") }
-                    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU).let {notificationPermissionRequired ->
+                    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU).let { notificationPermissionRequired ->
                         if (notificationPermissionRequired) {
                             append("& ")
                             italic { append("notification posting ") }
@@ -71,16 +73,18 @@ class ScreenshotListenerExplanation: UncancelableDialogFragment(){
                                 " is "
                         )
                     }
-                    append("required." +
-                            "\n\n" +
-                            "You can en-/disable screenshot listening anytime via the drawer menu.")
+                    append(
+                        "required." +
+                                "\n\n" +
+                                "You can en-/disable screenshot listening anytime via the drawer menu."
+                    )
                 }
             )
-            .setNegativeButton("Maybe later"){_, _ -> setFragmentResult(false) }
-            .setPositiveButton("Enable"){_, _ -> setFragmentResult(true) }
+            .setNegativeButton("Maybe later") { _, _ -> setFragmentResult(false) }
+            .setPositiveButton("Enable") { _, _ -> setFragmentResult(true) }
             .create()
 
-    private fun setFragmentResult(confirmed: Boolean){
+    private fun setFragmentResult(confirmed: Boolean) {
         setFragmentResult(
             REQUEST_KEY,
             bundleOf(

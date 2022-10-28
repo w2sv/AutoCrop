@@ -12,7 +12,8 @@ import de.mateware.snacky.Snacky
 class BackPressHandler(
     private val onFirstPressNotificationSnackyBuilder: Snacky.Builder,
     private val onSecondPress: () -> Unit,
-    private val confirmationWindowDuration: Long = 2500) {
+    private val confirmationWindowDuration: Long = 2500
+) {
 
     var pressedOnce: Boolean = false
 

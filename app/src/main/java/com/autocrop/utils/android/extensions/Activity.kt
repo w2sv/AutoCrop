@@ -8,7 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import de.mateware.snacky.Snacky
 
-fun Activity.goToWebpage(url: String){
+fun Activity.goToWebpage(url: String) {
     startActivity(
         Intent(
             "android.intent.action.VIEW",

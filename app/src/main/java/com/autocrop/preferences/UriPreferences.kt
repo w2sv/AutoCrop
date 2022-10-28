@@ -9,14 +9,14 @@ import com.autocrop.utils.android.extensions.uriPermissionGranted
 import com.autocrop.utils.kotlin.delegates.mapObserver
 import de.paul_woitaschek.slimber.i
 
-object UriPreferences: TypedPreferences<Uri?>(mutableMapOf("treeUri" to null)) {
+object UriPreferences : TypedPreferences<Uri?>(mutableMapOf("treeUri" to null)) {
     /**
      * Inherently builds [documentUri]
      */
     var treeUri: Uri? by mapObserver(map) { _, oldValue, newValue ->
         if (newValue != null && oldValue != newValue)
             _documentUri = buildDocumentUriFromTreeUri(newValue)
-                .also { i{"Set new documentUri: $it"} }
+                .also { i { "Set new documentUri: $it" } }
     }
 
     val documentUri: Uri?
@@ -31,7 +31,7 @@ object UriPreferences: TypedPreferences<Uri?>(mutableMapOf("treeUri" to null)) {
                 null
         }
 
-    override fun SharedPreferences.writeValue(key: String, value: Uri?){
+    override fun SharedPreferences.writeValue(key: String, value: Uri?) {
         edit()
             .putString(
                 key,

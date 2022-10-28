@@ -5,7 +5,7 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.activities.main.MainActivityViewModel
 import com.autocrop.controller.fragment.ApplicationFragment
 
-abstract class MainActivityFragment<VB: ViewBinding>(bindingClass: Class<VB>):
+abstract class MainActivityFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
     ApplicationFragment<MainActivity, VB, MainActivityViewModel>(
         MainActivityViewModel::class,
         bindingClass

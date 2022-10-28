@@ -14,7 +14,8 @@ inline fun retryFlakyAction(timeout: Long = MEDIUM_TIMEOUT, flakyAction: () -> U
     while (SystemClock.elapsedRealtime() - startTime < timeout) {
         try {
             return flakyAction()
-        } catch (e: PerformException) {
+        }
+        catch (e: PerformException) {
             nTries += 1
         }
     }

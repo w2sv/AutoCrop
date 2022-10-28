@@ -10,7 +10,7 @@ import com.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.autocrop.utils.android.extensions.ifNotInEditMode
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 
-class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet): DrawerLayout(context, attributeSet){
+class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : DrawerLayout(context, attributeSet) {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
@@ -21,8 +21,8 @@ class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet): Drawe
         }
     }
 
-    private fun FragmentFlowfieldBinding.setAssociatedButtons(){
-        addDrawerListener(object: DrawerListener {
+    private fun FragmentFlowfieldBinding.setAssociatedButtons() {
+        addDrawerListener(object : DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 val fadeOutOnDrawerOpenAlpha = 1 - slideOffset
 
@@ -31,6 +31,7 @@ class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet): Drawe
 
                 imageSelectionButton.alpha = fadeOutOnDrawerOpenAlpha
             }
+
             override fun onDrawerOpened(drawerView: View) {}
             override fun onDrawerClosed(drawerView: View) {}
             override fun onDrawerStateChanged(newState: Int) {}

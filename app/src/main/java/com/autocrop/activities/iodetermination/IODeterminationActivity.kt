@@ -24,9 +24,10 @@ class IODeterminationActivity :
     ApplicationActivity<CropPagerFragment, IODeterminationActivityViewModel>(
         CropPagerFragment::class,
         IODeterminationActivityViewModel::class,
-        BooleanPreferences) {
+        BooleanPreferences
+    ) {
 
-    private companion object{
+    private companion object {
         const val EXTRA_CROP_URIS = "com.w2sv.autocrop.CROP_URIS"
         const val EXTRA_N_DELETED_SCREENSHOTS = "com.w2sv.autocrop.N_DELETED_SCREENSHOTS"
         const val EXTRA_SAVE_DIR_NAME = "com.w2sv.autocrop.SAVE_DIR_NAME"
@@ -46,7 +47,7 @@ class IODeterminationActivity :
      * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
      * deletion has to be confirmed, otherwise [AppTitleFragment]
      */
-    fun invokeSubsequentFragment(){
+    fun invokeSubsequentFragment() {
         fragmentReplacementTransaction(
             if (viewModel.deletionInquiryUris.isNotEmpty())
                 DeletionConfirmationDialogFragment()
@@ -65,12 +66,14 @@ class IODeterminationActivity :
                         it.onPreRemove()
                         supportFragmentManager.popBackStack()
                     }
+
                     is ManualCropFragment -> supportFragmentManager.popBackStack()
                     is SaveAllFragment -> {
                         snackyBuilder("Wait until crops have been saved")
                             .setIcon(R.drawable.ic_front_hand_24)
                             .buildAndShow()
                     }
+
                     is CropPagerFragment -> it.handleBackPress()
                     else -> Unit
                 }
@@ -79,7 +82,7 @@ class IODeterminationActivity :
     }
 
     fun startMainActivity() {
-        startMainActivity{
+        startMainActivity {
             it
                 .putParcelableArrayListExtra(EXTRA_CROP_URIS, viewModel.writeUris)
                 .putExtra(EXTRA_N_DELETED_SCREENSHOTS, viewModel.nDeletedScreenshots)
@@ -87,8 +90,8 @@ class IODeterminationActivity :
         }
     }
 
-    data class Results(val cropUris: ArrayList<Uri>, val nDeletedScreenshots: Int, val saveDirName: String?){
-        companion object{
+    data class Results(val cropUris: ArrayList<Uri>, val nDeletedScreenshots: Int, val saveDirName: String?) {
+        companion object {
             fun attemptRestoration(intent: Intent): Results? =
                 intent.run {
                     if (hasExtra(EXTRA_CROP_URIS))

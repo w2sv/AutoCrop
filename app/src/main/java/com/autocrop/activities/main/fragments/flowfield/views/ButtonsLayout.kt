@@ -11,15 +11,15 @@ import com.autocrop.utils.android.extensions.ifNotInEditMode
 import com.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.R
 
-class ButtonsLayout(context: Context, attributeSet: AttributeSet):
+class ButtonsLayout(context: Context, attributeSet: AttributeSet) :
     RelativeLayout(context, attributeSet) {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
         ifNotInEditMode {
-            with(activityViewModel<MainActivityViewModel>()){
-                if (fadeInFlowFieldButtons){
+            with(activityViewModel<MainActivityViewModel>()) {
+                if (fadeInFlowFieldButtons) {
                     fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
                     fadeInFlowFieldButtons = false
                 }

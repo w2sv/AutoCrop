@@ -8,7 +8,7 @@ import com.w2sv.autocrop.BuildConfig
 import com.w2sv.permissionhandler.PermissionHandler
 import timber.log.Timber
 
-class AutoCrop: Application() {
+class AutoCrop : Application() {
 
     /**
      * Plants [Timber] tree if applicable
@@ -20,7 +20,7 @@ class AutoCrop: Application() {
         if (BuildConfig.DEBUG)
             Timber.plant(Timber.DebugTree())
 
-        with(getApplicationWideSharedPreferences()){
+        with(getApplicationWideSharedPreferences()) {
             listOf(BooleanPreferences, UriPreferences).forEach {
                 it.initializeFromSharedPreferences(this)
             }

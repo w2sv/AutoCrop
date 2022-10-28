@@ -10,7 +10,7 @@ import java.util.TimerTask
 /**
  * Class accounting for automatic scrolling
  */
-class Scroller: Timer() {
+class Scroller : Timer() {
     fun run(viewPager2: ViewPager2, maxScrolls: Int, onFinishedListener: BlankFun) {
         schedule(
             object : TimerTask() {
@@ -23,7 +23,7 @@ class Scroller: Timer() {
                         }
 
                         conductedScrolls++
-                        if (conductedScrolls == maxScrolls){
+                        if (conductedScrolls == maxScrolls) {
                             onFinishedListener()
                             this@Scroller.cancel()
 

@@ -24,7 +24,7 @@ class FlowFieldContainer(context: Context, attr: AttributeSet) :
                 @Suppress("DEPRECATION")
                 activity.windowManager.defaultDisplay
 
-            display.resolution().let{
+            display.resolution().let {
                 PFragment(FlowFieldSketch(it.x, it.y))
                     .setView(this, fragmentActivity)
             }

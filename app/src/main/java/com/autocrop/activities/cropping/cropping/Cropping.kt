@@ -3,7 +3,7 @@ package com.autocrop.activities.cropping.cropping
 import android.graphics.Bitmap
 import com.autocrop.CropEdges
 
-fun Bitmap.cropped(edges: CropEdges): Bitmap{
+fun Bitmap.cropped(edges: CropEdges): Bitmap {
     return Bitmap.createBitmap(
         this,
         0,
@@ -18,35 +18,37 @@ fun Bitmap.cropEdges(): CropEdges? =
 
 fun Bitmap.cropEdgesCandidates(): List<CropEdges>? =
     rawCropEdgesCandidates()
-//        .verticalFluctuationComprisingEdges(this)
+        //        .verticalFluctuationComprisingEdges(this)
         .run {
             ifEmpty { null }
         }
 
 fun List<CropEdges>.maxHeightEdges(): CropEdges =
-    maxByOrNull {it.height}!!.run {
+    maxByOrNull { it.height }!!.run {
         val excludeMargin = 1  // TODO Uhm...
         CropEdges(top + excludeMargin to bottom - excludeMargin)
     }
 
-private fun List<CropEdges>.verticalFluctuationComprisingEdges(image: Bitmap,
-                                                               bilateralWidthOffsetPercentage: Float = 0.4f,
-                                                               pixelComparisonsBetweenCropEdges: Int = 4): List<CropEdges> {
+private fun List<CropEdges>.verticalFluctuationComprisingEdges(
+    image: Bitmap,
+    bilateralWidthOffsetPercentage: Float = 0.4f,
+    pixelComparisonsBetweenCropEdges: Int = 4
+): List<CropEdges> {
     val horizontalOffsetPixels: Int by lazy {
         (image.width * bilateralWidthOffsetPercentage).toInt()
     }
 
-    return filter{ edges ->
+    return filter { edges ->
         val columnTraversalStep = edges.height / pixelComparisonsBetweenCropEdges  // TODO
         columnTraversalStep < 1 || (horizontalOffsetPixels..image.width - horizontalOffsetPixels)
-            .all{ x ->
+            .all { x ->
                 image.cropEdgesDelimitedColumnNotMonochromatic(x, edges, columnTraversalStep)
             }
-        }
+    }
 }
 
 private fun Bitmap.cropEdgesDelimitedColumnNotMonochromatic(x: Int, edges: CropEdges, step: Int): Boolean =
     (edges.top + step..edges.bottom step step)
-        .any {y ->
+        .any { y ->
             getPixel(x, y - step) != getPixel(x, y)
         }

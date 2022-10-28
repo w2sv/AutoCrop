@@ -17,7 +17,7 @@ internal class FloatKtTest {
         "1.49999, 0, 1",
         "1.5, 0, 2"
     )
-    fun rounded(float: Float, nDecimals: Int, expected: String){
+    fun rounded(float: Float, nDecimals: Int, expected: String) {
         Assertions.assertEquals(expected, float.rounded(nDecimals))
     }
 }

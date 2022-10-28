@@ -47,7 +47,12 @@ abstract class FragmentHostingActivity<RF : Fragment>(private val rootFragmentCl
             .beginTransaction()
             .apply {
                 if (animated)
-                    setCustomAnimations(R.anim.animate_in_out_enter, R.anim.animate_in_out_exit, R.anim.animate_in_out_enter, R.anim.animate_in_out_exit)
+                    setCustomAnimations(
+                        R.anim.animate_in_out_enter,
+                        R.anim.animate_in_out_exit,
+                        R.anim.animate_in_out_enter,
+                        R.anim.animate_in_out_exit
+                    )
             }
             .setReorderingAllowed(true)
             .replace(layoutId, fragment)

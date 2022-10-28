@@ -10,15 +10,21 @@ import org.junit.jupiter.api.extension.ExtensionContext
  * @see
  *      https://jeroenmols.com/blog/2019/01/17/livedatajunit5/
  */
-class InstantExecutorExtension : BeforeEachCallback, AfterEachCallback {
+class InstantExecutorExtension : BeforeEachCallback,
+                                 AfterEachCallback {
 
     override fun beforeEach(context: ExtensionContext?) {
         ArchTaskExecutor.getInstance()
-                .setDelegate(object : TaskExecutor() {
-                    override fun executeOnDiskIO(runnable: Runnable) = runnable.run()
-                    override fun postToMainThread(runnable: Runnable) = runnable.run()
-                    override fun isMainThread(): Boolean = true
-                })
+            .setDelegate(object : TaskExecutor() {
+                override fun executeOnDiskIO(runnable: Runnable) =
+                    runnable.run()
+
+                override fun postToMainThread(runnable: Runnable) =
+                    runnable.run()
+
+                override fun isMainThread(): Boolean =
+                    true
+            })
     }
 
     override fun afterEach(context: ExtensionContext?) {

@@ -11,16 +11,18 @@ import com.daimajia.androidanimations.library.YoYo
 
 private const val DEFAULT_VIEW_ANIMATION_DURATION = 1000L
 
-fun View.animate(technique: Techniques,
-                 duration: Long = DEFAULT_VIEW_ANIMATION_DURATION,
-                 delay: Long = 0L,
-                 onEnd: BlankFun? = null): YoYo.YoYoString =
+fun View.animate(
+    technique: Techniques,
+    duration: Long = DEFAULT_VIEW_ANIMATION_DURATION,
+    delay: Long = 0L,
+    onEnd: BlankFun? = null
+): YoYo.YoYoString =
     YoYo.with(technique)
         .delay(delay)
         .duration(duration)
         .apply {
             onEnd?.let {
-                onEnd {it()}
+                onEnd { it() }
             }
         }
         .playOn(this)
@@ -29,7 +31,7 @@ fun View.animate(technique: Techniques,
 // Visibility Changing $
 //$$$$$$$$$$$$$$$$$$$$$$
 
-fun crossFade(fadeOutViews: Array<View>, fadeInViews: Array<View>, duration: Long = DEFAULT_VIEW_ANIMATION_DURATION){
+fun crossFade(fadeOutViews: Array<View>, fadeInViews: Array<View>, duration: Long = DEFAULT_VIEW_ANIMATION_DURATION) {
     fadeInViews.forEach {
         it.fadeIn(duration)
     }
@@ -45,26 +47,31 @@ fun View.fadeIn(duration: Long = DEFAULT_VIEW_ANIMATION_DURATION): YoYo.YoYoStri
         .animate(Techniques.FadeIn, duration)
 
 fun View.fadeOut(duration: Long = DEFAULT_VIEW_ANIMATION_DURATION, delay: Long = 0): YoYo.YoYoString =
-    animate(Techniques.FadeOut, duration, delay = delay){
+    animate(Techniques.FadeOut, duration, delay = delay) {
         hide()
     }
 
-fun View.show() { visibility = View.VISIBLE }
-fun View.hide() { visibility = View.GONE }
+fun View.show() {
+    visibility = View.VISIBLE
+}
 
-inline fun View.ifNotInEditMode(f: BlankFun){
+fun View.hide() {
+    visibility = View.GONE
+}
+
+inline fun View.ifNotInEditMode(f: BlankFun) {
     if (!isInEditMode)
         f()
 }
 
-inline fun <reified VM: ViewModel>View.viewModelLazy(): Lazy<VM> =
+inline fun <reified VM : ViewModel> View.viewModelLazy(): Lazy<VM> =
     lazy { ViewModelProvider(findViewTreeViewModelStoreOwner()!!)[VM::class.java] }
 
-inline fun <reified VM: ViewModel>View.viewModel(): VM =
+inline fun <reified VM : ViewModel> View.viewModel(): VM =
     viewModelLazy<VM>().value
 
-inline fun <reified VM: ViewModel>View.activityViewModelLazy(): Lazy<VM> =
+inline fun <reified VM : ViewModel> View.activityViewModelLazy(): Lazy<VM> =
     lazy { ViewModelProvider(context as ViewModelStoreOwner)[VM::class.java] }
 
-inline fun <reified VM: ViewModel>View.activityViewModel(): VM =
+inline fun <reified VM : ViewModel> View.activityViewModel(): VM =
     activityViewModelLazy<VM>().value

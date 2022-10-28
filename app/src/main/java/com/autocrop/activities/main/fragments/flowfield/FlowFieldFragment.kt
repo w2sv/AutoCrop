@@ -20,7 +20,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 import com.w2sv.permissionhandler.PermissionHandler
 
-class FlowFieldFragment:
+class FlowFieldFragment :
     MainActivityFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,55 +38,57 @@ class FlowFieldFragment:
         )
     }
 
-    val imageSelectionIntentLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-        activityResult.data?.let { intent ->
-            intent.clipData?.let { clipData ->
-                startActivity(
-                    Intent(
-                        requireActivity(),
-                        CropActivity::class.java
-                    )
-                        .putParcelableArrayListExtra(
-                            MainActivity.EXTRA_SELECTED_IMAGE_URIS,
-                            ArrayList((0 until clipData.itemCount)
-                                .map { clipData.getItemAt(it).uri })
+    val imageSelectionIntentLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            activityResult.data?.let { intent ->
+                intent.clipData?.let { clipData ->
+                    startActivity(
+                        Intent(
+                            requireActivity(),
+                            CropActivity::class.java
                         )
-                )
-            }
-        }
-    }
-
-    val saveDestinationSelectionIntentLauncher = registerForActivityResult(object: ActivityResultContracts.OpenDocumentTree(){
-        override fun createIntent(context: Context, input: Uri?): Intent =
-            super.createIntent(context, input)
-                .setFlags(
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                    Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
-                    Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
-                )
-    }) {
-        it?.let { treeUri ->
-            if (UriPreferences.treeUri != treeUri){
-                UriPreferences.treeUri = treeUri
-
-                requireContext()
-                    .contentResolver
-                    .takePersistableUriPermission(
-                        treeUri,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                    )
-                requireActivity().snackyBuilder(
-                    SpannableStringBuilder()
-                        .append("Crops will be saved to ")
-                        .color(requireContext().getThemedColor(R.color.success)){
-                            append(
-                                documentUriPathIdentifier(UriPreferences.documentUri!!)
+                            .putParcelableArrayListExtra(
+                                MainActivity.EXTRA_SELECTED_IMAGE_URIS,
+                                ArrayList((0 until clipData.itemCount)
+                                    .map { clipData.getItemAt(it).uri })
                             )
-                        }
-                )
-                    .buildAndShow()
+                    )
+                }
             }
         }
-    }
+
+    val saveDestinationSelectionIntentLauncher =
+        registerForActivityResult(object : ActivityResultContracts.OpenDocumentTree() {
+            override fun createIntent(context: Context, input: Uri?): Intent =
+                super.createIntent(context, input)
+                    .setFlags(
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                                Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                                Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+                    )
+        }) {
+            it?.let { treeUri ->
+                if (UriPreferences.treeUri != treeUri) {
+                    UriPreferences.treeUri = treeUri
+
+                    requireContext()
+                        .contentResolver
+                        .takePersistableUriPermission(
+                            treeUri,
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                        )
+                    requireActivity().snackyBuilder(
+                        SpannableStringBuilder()
+                            .append("Crops will be saved to ")
+                            .color(requireContext().getThemedColor(R.color.success)) {
+                                append(
+                                    documentUriPathIdentifier(UriPreferences.documentUri!!)
+                                )
+                            }
+                    )
+                        .buildAndShow()
+                }
+            }
+        }
 }

@@ -19,7 +19,7 @@ class BindingAdministrator<T : BoundService>(
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            i{"$name connected"}
+            i { "$name connected" }
             boundService = (service as BoundService.LocalBinder).getService()
             onServiceConnected?.invoke(boundService!!)
         }
@@ -44,6 +44,6 @@ class BindingAdministrator<T : BoundService>(
 
     fun unbindService() {
         unbindService(serviceConnection)
-        i{"Unbound $serviceClass"}
+        i { "Unbound $serviceClass" }
     }
 }

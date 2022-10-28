@@ -63,7 +63,7 @@ class ComparisonFragment
                         super.onTransitionEnd(transition)
 
                         if (!enterTransitionCompleted) {
-                            postDelayed(resources.getLong(R.integer.delay_small)){
+                            postDelayed(resources.getLong(R.integer.delay_small)) {
                                 viewModel.useInsetLayoutParams.postValue(false)
                                 viewModel.displayScreenshot.postValue(true)
 
@@ -74,7 +74,7 @@ class ComparisonFragment
                                         .snackyBuilder("Tap screen to toggle between the original screenshot and the crop")
                                         .setIcon(R.drawable.ic_outline_info_24)
                                         .build()
-                                        .addCallback(object: Snackbar.Callback(){
+                                        .addCallback(object : Snackbar.Callback() {
                                             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                                                 super.onDismissed(transientBottomBar, event)
 
@@ -96,7 +96,7 @@ class ComparisonFragment
             onPreRemove()
             parentFragmentManager.popBackStack()
         }
-        viewModel.showButtons.observe(viewLifecycleOwner){
+        viewModel.showButtons.observe(viewLifecycleOwner) {
             if (it)
                 binding.buttonLayout.show()
             else

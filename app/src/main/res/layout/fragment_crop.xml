@@ -8,14 +8,13 @@
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_alignTop="@+id/cropping_progress_bar"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_crop_progress_bar"
 
         android:text="@string/cropping_in_progress"
-        android:textSize="22sp"
-        android:textColor="@color/magenta_bright">
-    </TextView>
+        android:textColor="@color/magenta_bright"
+        android:textSize="22sp"></TextView>
 
     <com.autocrop.activities.cropping.fragments.cropping.views.CroppingProgressBar
         android:id="@+id/cropping_progress_bar"
@@ -27,18 +26,18 @@
         android:layout_marginHorizontal="20dp"
 
         android:progress="0"
-        android:progressDrawable="@drawable/gradient_progress_bar_cropping_progress"/>
+        android:progressDrawable="@drawable/gradient_progress_bar_cropping_progress" />
 
     <com.autocrop.activities.cropping.fragments.cropping.views.ProgressTextView
         android:id="@+id/progress_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_centerHorizontal="true"
         android:layout_alignBottom="@+id/cropping_progress_bar"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/margin_crop_progress_bar"
 
         android:text="@string/fraction"
-        android:textSize="17sp"/>
+        android:textSize="17sp" />
 
 </RelativeLayout>

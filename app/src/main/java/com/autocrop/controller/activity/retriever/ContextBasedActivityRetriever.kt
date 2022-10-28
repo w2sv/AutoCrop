@@ -6,8 +6,7 @@ import androidx.fragment.app.FragmentActivity
 import com.autocrop.controller.activity.FragmentHostingActivity
 import com.autocrop.utils.android.extensions.getActivity
 
-class ContextBasedActivityRetriever<A: Activity>(private val context: Context)
-    : ActivityRetriever<A> {
+class ContextBasedActivityRetriever<A : Activity>(private val context: Context) : ActivityRetriever<A> {
 
     override val activity: Activity by lazy {
         context.getActivity()!!

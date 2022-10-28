@@ -48,7 +48,11 @@ class CropIOService :
         return START_REDELIVER_INTENT
     }
 
-    private fun carryOutCropIO(crop: Bitmap, screenshotMediaStoreData: Screenshot.MediaStoreData, deleteScreenshot: Boolean): IOResult =
+    private fun carryOutCropIO(
+        crop: Bitmap,
+        screenshotMediaStoreData: Screenshot.MediaStoreData,
+        deleteScreenshot: Boolean
+    ): IOResult =
         contentResolver.carryOutCropIO(
             crop,
             screenshotMediaStoreData,

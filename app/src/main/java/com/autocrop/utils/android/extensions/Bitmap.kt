@@ -5,4 +5,4 @@ import java.io.OutputStream
 
 fun Bitmap.compressToStream(stream: OutputStream, compressFormat: Bitmap.CompressFormat): Boolean =
     compress(compressFormat, 100, stream)
-        .also {stream.close()}
+        .also { stream.close() }

@@ -5,8 +5,8 @@ import android.util.AttributeSet
 import com.autocrop.ui.views.ExtendedAppCompatTextView
 import com.w2sv.autocrop.BuildConfig
 
-class VersionTextView(context: Context, attr: AttributeSet):
-    ExtendedAppCompatTextView(context, attr){
+class VersionTextView(context: Context, attr: AttributeSet) :
+    ExtendedAppCompatTextView(context, attr) {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

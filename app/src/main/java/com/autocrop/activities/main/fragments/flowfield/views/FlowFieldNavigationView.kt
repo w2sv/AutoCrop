@@ -31,7 +31,7 @@ import com.google.android.material.navigation.NavigationView
 import com.w2sv.autocrop.R
 import com.w2sv.permissionhandler.requestPermissions
 
-class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
+class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     NavigationView(context, attributeSet),
     ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context) {
 
@@ -53,7 +53,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
             setAutoScrollItem()
 
             setNavigationItemSelectedListener {
-                when (it.itemId){
+                when (it.itemId) {
                     R.id.main_menu_item_share_crops -> launchCropSharingIntent()
                     R.id.main_menu_item_change_crop_saving_dir -> pickSaveDestinationDir()
                     R.id.main_menu_item_about -> invokeAboutFragment()
@@ -66,10 +66,10 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
         }
     }
 
-    private fun setShareCropsItem(){
+    private fun setShareCropsItem() {
         viewModel.ioResults?.let {
             if (it.nSavedCrops != 0)
-                with(menu.findItem(R.id.main_menu_item_share_crops)){
+                with(menu.findItem(R.id.main_menu_item_share_crops)) {
                     isVisible = true
                     actionView = ImageView(context).apply {
                         setImageDrawable(
@@ -83,10 +83,10 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
         }
     }
 
-    private fun setListenToScreenCapturesItem(){
+    private fun setListenToScreenCapturesItem() {
         menu.findItem(R.id.main_menu_item_listen_to_screen_captures).actionView = Switch(context)
             .apply {
-                setOnCheckedChangeListener{ _, newValue ->
+                setOnCheckedChangeListener { _, newValue ->
                     if (newValue) {
                         typedActivity
                             .screenshotListeningPermissions
@@ -106,12 +106,12 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
             }
     }
 
-    private fun setAutoScrollItem(){
+    private fun setAutoScrollItem() {
         menu.findItem(R.id.main_menu_item_auto_scroll)
             .actionView = BooleanPreferences.createSwitch(context, "autoScroll")
     }
 
-    private fun launchCropSharingIntent(){
+    private fun launchCropSharingIntent() {
         context.startActivity(
             Intent.createChooser(
                 Intent(Intent.ACTION_SEND_MULTIPLE)
@@ -125,14 +125,14 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
         )
     }
 
-    private fun pickSaveDestinationDir(){
+    private fun pickSaveDestinationDir() {
         findFragment<FlowFieldFragment>()
             .saveDestinationSelectionIntentLauncher
             .launch(UriPreferences.treeUri)
     }
 
-    private fun goToPlayStoreListing(){
-        try{
+    private fun goToPlayStoreListing() {
+        try {
             context.startActivity(
                 Intent(Intent.ACTION_VIEW).apply {
                     data =
@@ -140,14 +140,15 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
                     setPackage("com.android.vending")
                 }
             )
-        } catch (e: ActivityNotFoundException){
+        }
+        catch (e: ActivityNotFoundException) {
             activity
                 .snackyBuilder("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
                 .buildAndShow()
         }
     }
 
-    private fun goToGithub(){
+    private fun goToGithub() {
         context.startActivity(
             Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse("https://github.com/w2sv/autocrop")
@@ -155,7 +156,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
         )
     }
 
-    private fun invokeAboutFragment(){
+    private fun invokeAboutFragment() {
         fragmentHostingActivity.fragmentReplacementTransaction(
             AboutFragment(),
             animated = true,

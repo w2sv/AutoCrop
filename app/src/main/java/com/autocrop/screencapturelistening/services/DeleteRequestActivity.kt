@@ -10,8 +10,8 @@ import com.autocrop.controller.activity.BlankViewBoundActivity
 import com.autocrop.utils.android.extensions.getParcelable
 
 @RequiresApi(Build.VERSION_CODES.R)
-class DeleteRequestActivity: BlankViewBoundActivity() {
-    companion object{
+class DeleteRequestActivity : BlankViewBoundActivity() {
+    companion object {
         const val EXTRA_CONFIRMED_DELETION = "com.autocrop.CONFIRMED_DELETION"
     }
 
@@ -30,12 +30,13 @@ class DeleteRequestActivity: BlankViewBoundActivity() {
         )
     }
 
-    private val deletionConfirmationInquiryContract = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()){
-        startService(
-            intent
-                .setClass(applicationContext, CropIOService::class.java)
-                .putExtra(EXTRA_CONFIRMED_DELETION, it.resultCode == Activity.RESULT_OK)
-        )
-        finishAffinity()
-    }
+    private val deletionConfirmationInquiryContract =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+            startService(
+                intent
+                    .setClass(applicationContext, CropIOService::class.java)
+                    .putExtra(EXTRA_CONFIRMED_DELETION, it.resultCode == Activity.RESULT_OK)
+            )
+            finishAffinity()
+        }
 }

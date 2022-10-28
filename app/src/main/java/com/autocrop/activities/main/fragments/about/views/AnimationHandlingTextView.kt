@@ -18,7 +18,7 @@ abstract class AnimationHandlingTextView(
     attr: AttributeSet,
     techniques: Techniques,
     url: String
-):
+) :
     ExtendedAppCompatTextView(context, attr),
     DefaultLifecycleObserver,
     ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context) {
@@ -27,8 +27,8 @@ abstract class AnimationHandlingTextView(
 
     init {
         @Suppress("LeakingThis")
-        setOnClickListener{
-            animation = it.animate(techniques){
+        setOnClickListener {
+            animation = it.animate(techniques) {
                 activity.goToWebpage(url)
             }
         }

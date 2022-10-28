@@ -10,7 +10,7 @@ import com.autocrop.utils.android.extensions.notificationManager
 import de.paul_woitaschek.slimber.i
 
 class OnPendingIntentService : UnboundService() {
-    companion object{
+    companion object {
         const val EXTRA_ASSOCIATED_NOTIFICATION_ID = "com.autocrop.ASSOCIATED_NOTIFICATION_ID"
         const val EXTRA_CANCEL_NOTIFICATION = "com.autocrop.CANCEL_NOTIFICATION"
         const val EXTRA_ASSOCIATED_PENDING_REQUEST_CODES = "com.autocrop.ASSOCIATED_PENDING_REQUEST_CODES"
@@ -26,9 +26,11 @@ class OnPendingIntentService : UnboundService() {
         val requestCodes: PendingIntentRequestCodes
         fun onPendingIntentService(intent: Intent) {}
 
-        fun Intent.putOnPendingIntentServiceClientExtras(notificationId: Int,
-                                                         associatedRequestCodes: ArrayList<Int>,
-                                                         putCancelNotificationExtra: Boolean = false): Intent =
+        fun Intent.putOnPendingIntentServiceClientExtras(
+            notificationId: Int,
+            associatedRequestCodes: ArrayList<Int>,
+            putCancelNotificationExtra: Boolean = false
+        ): Intent =
             this
                 .putExtra(EXTRA_CLIENT_INDEX, clientIndex)
                 .putExtra(EXTRA_ASSOCIATED_NOTIFICATION_ID, notificationId)
@@ -39,21 +41,23 @@ class OnPendingIntentService : UnboundService() {
                 }
     }
 
-    class Client(override val clientIndex: Int,
-                 override val notificationGroup: NotificationGroup? = null) : ClientInterface {
+    class Client(
+        override val clientIndex: Int,
+        override val notificationGroup: NotificationGroup? = null
+    ) : ClientInterface {
         override val requestCodes: PendingIntentRequestCodes = PendingIntentRequestCodes(clientIndex * 100)
     }
-    
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        with(intent!!){
+        with(intent!!) {
             val notificationId = getInt(EXTRA_ASSOCIATED_NOTIFICATION_ID)
             if (getBooleanExtra(EXTRA_CANCEL_NOTIFICATION, false))
                 notificationManager()
                     .cancel(notificationId)
-                    .also { i{"Cancelled notification $notificationId"} }
+                    .also { i { "Cancelled notification $notificationId" } }
 
             bindingAdministrators[getInt(ClientInterface.EXTRA_CLIENT_INDEX)]
-                .callOnBoundService {boundService ->
+                .callOnBoundService { boundService ->
                     (boundService as ClientInterface).let {
                         it.notificationGroup!!.onChildNotificationCancelled(notificationId)
                         it.requestCodes.removeAll(
@@ -63,7 +67,7 @@ class OnPendingIntentService : UnboundService() {
                         it.onPendingIntentService(this)
                     }
                 }
-            }
+        }
         return START_REDELIVER_INTENT
     }
 

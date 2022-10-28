@@ -10,9 +10,9 @@ import androidx.core.os.bundleOf
  * defining respective procedure effects
  */
 class CropDialog :
-    AbstractCropDialog(){
+    AbstractCropDialog() {
 
-    companion object{
+    companion object {
         const val RESULT_REQUEST_KEY = "CropDialog_RESULT_REQUEST_KEY"
         const val DATA_SET_POSITION_BUNDLE_ARG_KEY = "DATA_SET_POSITION_BUNDLE_ARG"
     }
@@ -26,7 +26,7 @@ class CropDialog :
             setTitle("Save crop?")
             setDeleteCorrespondingScreenshotsOption("Delete corresponding screenshot")
             setNegativeButton("No, discard") { _, _ -> setFragmentResult(false) }
-            setPositiveButton("Yes") { _, _ -> setFragmentResult(true)}
+            setPositiveButton("Yes") { _, _ -> setFragmentResult(true) }
             create()
         }
 

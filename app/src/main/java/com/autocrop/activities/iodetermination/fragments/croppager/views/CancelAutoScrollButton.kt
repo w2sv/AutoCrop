@@ -7,8 +7,8 @@ import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Cro
 import com.autocrop.utils.android.extensions.postValue
 import com.autocrop.utils.android.extensions.viewModel
 
-class CancelAutoScrollButton(context: Context, attributeSet: AttributeSet):
-    AppCompatButton(context, attributeSet){
+class CancelAutoScrollButton(context: Context, attributeSet: AttributeSet) :
+    AppCompatButton(context, attributeSet) {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

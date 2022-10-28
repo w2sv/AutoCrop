@@ -18,8 +18,8 @@ fun ContentResolver.loadBitmap(uri: Uri): Bitmap =
  *
  * @return flag indicating whether image was successfully deleted
  */
-fun ContentResolver.deleteImage(mediaStoreId: Long): Boolean{
-    return try{
+fun ContentResolver.deleteImage(mediaStoreId: Long): Boolean {
+    return try {
         val rowsDeleted = delete(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             "${MediaStore.Images.Media._ID}=?",
@@ -33,7 +33,7 @@ fun ContentResolver.deleteImage(mediaStoreId: Long): Boolean{
         }
         rowsDeleted
     }
-    catch (e: NullPointerException){
+    catch (e: NullPointerException) {
         i(e)
         false
     }
@@ -43,10 +43,12 @@ fun ContentResolver.deleteImage(mediaStoreId: Long): Boolean{
  * @see
  *      https://stackoverflow.com/a/16511111/12083276
  */
-fun ContentResolver.queryMediaStoreData(uri: Uri,
-                                        columns: Array<String>,
-                                        selection: String? = null,
-                                        selectionArgs: Array<String>? = null): List<String> =
+fun ContentResolver.queryMediaStoreData(
+    uri: Uri,
+    columns: Array<String>,
+    selection: String? = null,
+    selectionArgs: Array<String>? = null
+): List<String> =
     query(
         uri,
         columns,
@@ -59,8 +61,10 @@ fun ContentResolver.queryMediaStoreData(uri: Uri,
             .also { close() }
     }
 
-fun ContentResolver.queryMediaStoreDatum(uri: Uri,
-                                        column: String,
-                                        selection: String? = null,
-                                        selectionArgs: Array<String>? = null): String =
+fun ContentResolver.queryMediaStoreDatum(
+    uri: Uri,
+    column: String,
+    selection: String? = null,
+    selectionArgs: Array<String>? = null
+): String =
     queryMediaStoreData(uri, arrayOf(column), selection, selectionArgs).first()

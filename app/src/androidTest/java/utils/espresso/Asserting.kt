@@ -20,6 +20,7 @@ fun ViewInteraction.isDisplayed(): Boolean =
     try {
         check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         true
-    } catch (e: NoMatchingViewException) {
+    }
+    catch (e: NoMatchingViewException) {
         false
     }

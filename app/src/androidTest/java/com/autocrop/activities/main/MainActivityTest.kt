@@ -49,10 +49,10 @@ internal class MainActivityTest {
     @RegisterExtension
     val scenarioExtension = ActivityScenarioExtension.launch<MainActivity>()
 
-    companion object{
+    companion object {
         @JvmStatic
         @BeforeAll
-        fun grantPermissionsIfRequired(){
+        fun grantPermissionsIfRequired() {
             if (Build.VERSION.SDK_INT <= 29)
                 PermissionRequester().apply {
                     addPermissions(
@@ -70,10 +70,10 @@ internal class MainActivityTest {
     }
 
     @Nested
-    inner class ImageSelectionButton{
+    inner class ImageSelectionButton {
         @Test
-        fun visibleAndClickable(){
-            with(onView(withText(R.string.select_images))){
+        fun visibleAndClickable() {
+            with(onView(withText(R.string.select_images))) {
                 check(isClickable())
                 check(isCompletelyDisplayed())
             }
@@ -85,20 +85,21 @@ internal class MainActivityTest {
          */
         @Test
         @FlakyTest
-        fun triggersMultipleImageSelectionIntent() = intentTester {
-            retryFlakyAction(SLOW_TIMEOUT) {
-                onView(withText(R.string.select_images))
-                    .perform(ViewActions.click())
-            }
+        fun triggersMultipleImageSelectionIntent() =
+            intentTester {
+                retryFlakyAction(SLOW_TIMEOUT) {
+                    onView(withText(R.string.select_images))
+                        .perform(ViewActions.click())
+                }
 
-            intended(
-                allOf(
-                    hasType(IMAGE_MIME_TYPE),
-                    hasAction(Intent.ACTION_PICK),
-                    hasExtraWithKey(Intent.EXTRA_ALLOW_MULTIPLE)
+                intended(
+                    allOf(
+                        hasType(IMAGE_MIME_TYPE),
+                        hasAction(Intent.ACTION_PICK),
+                        hasExtraWithKey(Intent.EXTRA_ALLOW_MULTIPLE)
+                    )
                 )
-            )
-        }
+            }
     }
 
     @Nested
@@ -107,17 +108,17 @@ internal class MainActivityTest {
 
         @Test
         fun inflationButtonDisplayedAndClickable() {
-            with(toggleButton){
+            with(toggleButton) {
                 check(isDisplayed())
                 check(isClickable())
             }
         }
 
         @Nested
-        inner class ItemsTest{
+        inner class ItemsTest {
 
             @BeforeEach
-            fun openDrawer(){
+            fun openDrawer() {
                 if (!onView(withId(R.menu.flowfield)).isDisplayed())
                     retryFlakyAction {
                         toggleButton.perform(ViewActions.click())
@@ -134,18 +135,18 @@ internal class MainActivityTest {
                     R.string.code
                 )
                     .forEach {
-                        with(onView(withId(it))){
+                        with(onView(withId(it))) {
                             check(isDisplayed())
                             // check(isClickable())  // fails for some reason
                         }
                     }
-                }
+            }
 
             @Test
             fun autoScroll() {
                 val userPreferencesValueBeforeClick = BooleanPreferences.autoScroll
 
-                with(onView(withText(R.string.menu_item_auto_scroll))){
+                with(onView(withText(R.string.menu_item_auto_scroll))) {
                     perform(ViewActions.click())
                     check(isDisplayed())  // check menu is being persisted on click
                 }
@@ -154,32 +155,34 @@ internal class MainActivityTest {
             }
 
             @Test
-            fun rateTheApp() = intentTester{
-                onView(withId(R.id.main_menu_item_rate_the_app))
-                    .perform(ViewActions.click())
+            fun rateTheApp() =
+                intentTester {
+                    onView(withId(R.id.main_menu_item_rate_the_app))
+                        .perform(ViewActions.click())
 
-                intended(
-                    allOf(
-                        hasAction(Intent.ACTION_VIEW),
-                        hasData(Uri.parse("https://play.google.com/store/apps/details?id=com.w2sv.autocrop")),
-                        hasPackage("com.android.vending")
+                    intended(
+                        allOf(
+                            hasAction(Intent.ACTION_VIEW),
+                            hasData(Uri.parse("https://play.google.com/store/apps/details?id=com.w2sv.autocrop")),
+                            hasPackage("com.android.vending")
+                        )
                     )
-                )
-            }
+                }
 
             @Test
             @FlakyTest
-            fun changeCropSavingDirectory() = intentTester{
-                onView(withId(R.id.main_menu_item_change_crop_saving_dir))
-                    .perform(ViewActions.click())
+            fun changeCropSavingDirectory() =
+                intentTester {
+                    onView(withId(R.id.main_menu_item_change_crop_saving_dir))
+                        .perform(ViewActions.click())
 
-                intended(
-                    hasAction(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                )
-            }
+                    intended(
+                        hasAction(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                    )
+                }
 
             @Nested
-            inner class CropSharingTest{
+            inner class CropSharingTest {
 
                 private val cropSavingUris = ArrayList<Uri>(
                     listOf(
@@ -201,34 +204,35 @@ internal class MainActivityTest {
                     get() = onView(withId(R.id.main_menu_item_share_crops))
 
                 @Test
-                fun cropShareIntentEmission() = intentTester {
-                    button
-                        .perform(ViewActions.click())
+                fun cropShareIntentEmission() =
+                    intentTester {
+                        button
+                            .perform(ViewActions.click())
 
-                    intended(
-                        allOf(
-                            hasAction(Intent.ACTION_CHOOSER),
-                            hasExtra(
-                                equalTo(Intent.EXTRA_INTENT), allOf(
-                                    hasExtra(Intent.EXTRA_STREAM, cropSavingUris),
-                                    hasType(IMAGE_MIME_TYPE),
-                                    hasAction(Intent.ACTION_SEND_MULTIPLE)
+                        intended(
+                            allOf(
+                                hasAction(Intent.ACTION_CHOOSER),
+                                hasExtra(
+                                    equalTo(Intent.EXTRA_INTENT), allOf(
+                                        hasExtra(Intent.EXTRA_STREAM, cropSavingUris),
+                                        hasType(IMAGE_MIME_TYPE),
+                                        hasAction(Intent.ACTION_SEND_MULTIPLE)
+                                    )
                                 )
                             )
                         )
-                    )
-                }
+                    }
             }
 
             @Nested
-            inner class AboutFragmentTest{
+            inner class AboutFragmentTest {
                 @BeforeEach
-                fun invoke(){
+                fun invoke() {
                     onView(withId(R.id.main_menu_item_about))
                 }
 
                 @Test
-                fun fragmentShown(){
+                fun fragmentShown() {
                     scenarioExtension.scenario.onActivity {
                         Handler(Looper.getMainLooper()).postDelayed(
                             {
@@ -240,7 +244,7 @@ internal class MainActivityTest {
                 }
 
                 @Test
-                fun returnToFlowFieldFragmentByBackPress(){
+                fun returnToFlowFieldFragmentByBackPress() {
                     scenarioExtension.scenario.onActivity {
                         @Suppress("DEPRECATION")
                         it.onBackPressed()
@@ -257,7 +261,7 @@ internal class MainActivityTest {
     }
 
     @Test
-    fun appExit(){
+    fun appExit() {
         scenarioExtension.scenario.onActivity {
             @Suppress("DEPRECATION")
             it.onBackPressed()

@@ -13,8 +13,8 @@ import com.autocrop.activities.iodetermination.fragments.comparison.ComparisonFr
 import com.autocrop.activities.iodetermination.fragments.comparison.ComparisonViewModel
 import com.autocrop.utils.android.extensions.toggle
 
-class ComparisonIV(context: Context, attributeSet: AttributeSet):
-    AppCompatImageView(context, attributeSet){
+class ComparisonIV(context: Context, attributeSet: AttributeSet) :
+    AppCompatImageView(context, attributeSet) {
 
     private val viewModel by lazy {
         findFragment<ComparisonFragment>().viewModel
@@ -23,7 +23,7 @@ class ComparisonIV(context: Context, attributeSet: AttributeSet):
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        if (!isInEditMode){
+        if (!isInEditMode) {
             ViewCompat.setTransitionName(this, viewModel.cropBundle.identifier())
 
             insetLayoutParams = viewModel.cropFittedInsets.run {
@@ -34,14 +34,14 @@ class ComparisonIV(context: Context, attributeSet: AttributeSet):
 
             viewModel.setLiveDataObservers(findViewTreeLifecycleOwner()!!)
 
-            setOnClickListener{
+            setOnClickListener {
                 viewModel.displayScreenshot.toggle()
             }
         }
     }
 
-    private fun ComparisonViewModel.setLiveDataObservers(lifecycleOwner: LifecycleOwner){
-        useInsetLayoutParams.observe(lifecycleOwner){
+    private fun ComparisonViewModel.setLiveDataObservers(lifecycleOwner: LifecycleOwner) {
+        useInsetLayoutParams.observe(lifecycleOwner) {
             if (it)
                 setInsetLayoutParams()
             else
@@ -52,27 +52,27 @@ class ComparisonIV(context: Context, attributeSet: AttributeSet):
         }
     }
 
-    private fun setImage(displayScreenshot: Boolean){
+    private fun setImage(displayScreenshot: Boolean) {
         if (displayScreenshot)
             setImageBitmap(viewModel.screenshotBitmap)
         else
             setCrop()
     }
 
-    private fun setCrop(){
+    private fun setCrop() {
         if (viewModel.useInsetLayoutParams.value!!)
             setImageBitmap(viewModel.cropBundle.crop.bitmap)
         else
             setImageDrawable(viewModel.cropInsetDrawable)
     }
 
-    private fun setInsetLayoutParams(){
+    private fun setInsetLayoutParams() {
         layoutParams = insetLayoutParams
     }
 
     private lateinit var insetLayoutParams: RelativeLayout.LayoutParams
 
-    private fun resetLayoutParams(){
+    private fun resetLayoutParams() {
         layoutParams = (parent as View).layoutParams as RelativeLayout.LayoutParams
     }
 }

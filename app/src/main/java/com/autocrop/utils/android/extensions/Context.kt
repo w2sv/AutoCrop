@@ -44,7 +44,8 @@ fun Context.uriPermissionGranted(uri: Uri, permissionCode: Int): Boolean =
     ) == PackageManager.PERMISSION_GRANTED
 
 tailrec fun Context.getActivity(): Activity? =
-    this as? Activity ?: (this as? ContextWrapper)?.baseContext?.getActivity()
+    this as? Activity
+        ?: (this as? ContextWrapper)?.baseContext?.getActivity()
 
 @Suppress("DEPRECATION")
 inline fun <reified T : Service> Context.serviceRunning() =
@@ -68,7 +69,8 @@ fun Context.notificationBuilderWithSetChannel(
     notificationManager().createNotificationChannel(
         NotificationChannel(
             channelId,
-            channelName ?: title,
+            channelName
+                ?: title,
             NotificationManager.IMPORTANCE_DEFAULT
         )
     )

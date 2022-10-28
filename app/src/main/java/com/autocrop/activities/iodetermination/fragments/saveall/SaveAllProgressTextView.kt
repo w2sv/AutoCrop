@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import com.autocrop.ui.views.FractionTextView
 import com.autocrop.utils.android.extensions.viewModelLazy
 
-class SaveAllProgressTextView(context: Context, attr: AttributeSet):
+class SaveAllProgressTextView(context: Context, attr: AttributeSet) :
     FractionTextView(context, attr) {
 
     private val viewModel by viewModelLazy<SaveAllViewModel>()

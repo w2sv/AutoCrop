@@ -8,7 +8,7 @@ import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Cro
 import com.autocrop.ui.views.ExtendedAppCompatTextView
 import com.autocrop.utils.android.extensions.viewModelLazy
 
-class DiscardingStatisticsTextView(context: Context, attr: AttributeSet):
+class DiscardingStatisticsTextView(context: Context, attr: AttributeSet) :
     ExtendedAppCompatTextView(context, attr) {
 
     private val viewModel by viewModelLazy<CropPagerViewModel>()

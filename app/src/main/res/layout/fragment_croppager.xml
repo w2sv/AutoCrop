@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
@@ -14,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:background="@color/background"/>
+        android:background="@color/background" />
 
     <!--    Page Indication Layout-->
 
@@ -32,18 +31,17 @@
 
         <com.autocrop.activities.iodetermination.fragments.croppager.views.PageIndicationBar
             android:id="@+id/page_indication_bar"
-            android:visibility="invisible"
-
             android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
 
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:max="100"
+
+            android:outlineProvider="paddedBounds"
             android:splitTrack="false"
             android:thumb="@drawable/ic_location_on_24"
-            android:outlineProvider="paddedBounds"
-            android:max="100">
-        </com.autocrop.activities.iodetermination.fragments.croppager.views.PageIndicationBar>
+            android:visibility="invisible"></com.autocrop.activities.iodetermination.fragments.croppager.views.PageIndicationBar>
 
         <!-- Page Indication Text View -->
 
@@ -67,20 +65,20 @@
 
     <com.autocrop.activities.iodetermination.fragments.croppager.views.CancelAutoScrollButton
         android:id="@+id/cancel_auto_scroll_button"
-        android:visibility="invisible"
-
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
 
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
+
         android:layout_marginTop="30dp"
+        android:background="@drawable/shape_oval_w_border"
 
         android:paddingHorizontal="3dp"
 
         android:text="@string/cancel_autoscroll"
         android:textColor="@color/magenta_bright"
         android:textSize="14sp"
-        android:background="@drawable/shape_oval_w_border"/>
+        android:visibility="invisible" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/snackbar_repelled_hosting_layout"
@@ -91,19 +89,19 @@
         <com.autocrop.ui.SnackbarRepelledLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="?attr/actionBarSize"
-            android:layout_marginHorizontal="@dimen/margin_top_left_image_button">
+            android:layout_marginHorizontal="@dimen/margin_top_left_image_button"
+            android:layout_marginBottom="?attr/actionBarSize">
 
             <com.autocrop.activities.iodetermination.fragments.croppager.views.DiscardingStatisticsTextView
                 android:id="@+id/discarding_statistics_tv"
-                android:visibility="invisible"
-
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
 
+                android:layout_height="wrap_content"
                 android:text="@string/remove"
+
+                android:textColor="@color/light_gray"
                 android:textSize="13sp"
-                android:textColor="@color/light_gray"/>
+                android:visibility="invisible" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -120,7 +118,7 @@
                     android:background="@drawable/ic_crop_24_border"
                     android:backgroundTint="@color/magenta_bright"
 
-                    android:contentDescription="@string/manually_adjust_the_crop"/>
+                    android:contentDescription="@string/manually_adjust_the_crop" />
 
                 <com.autocrop.activities.iodetermination.fragments.croppager.views.ComparisonButton
                     android:id="@+id/comparison_button"
@@ -130,7 +128,7 @@
                     android:background="@drawable/ic_image_search_24_border"
                     android:backgroundTint="@color/magenta_bright"
 
-                    android:contentDescription="@string/compare_crop_and_original_screenshot"/>
+                    android:contentDescription="@string/compare_crop_and_original_screenshot" />
             </LinearLayout>
         </com.autocrop.ui.SnackbarRepelledLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -19,18 +19,21 @@ class SaveAllFragment :
      * onPostExecute
      */
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
-        viewModel.liveCropNumber.observe(viewLifecycleOwner){
+        viewModel.liveCropNumber.observe(viewLifecycleOwner) {
             binding.progressTv.update(it)
         }
 
         lifecycleScope.executeAsyncTaskWithProgressUpdateReceiver(
-            { processRemainingCropBundles(BooleanPreferences.deleteScreenshots, it)},
+            { processRemainingCropBundles(BooleanPreferences.deleteScreenshots, it) },
             { viewModel.liveCropNumber.increment() },
             { typedActivity.invokeSubsequentFragment() }
         )
     }
 
-    private suspend fun processRemainingCropBundles(deleteCorrespondingScreenshots: Boolean, publishProgress: suspend (Void?) -> Unit): Void? {
+    private suspend fun processRemainingCropBundles(
+        deleteCorrespondingScreenshots: Boolean,
+        publishProgress: suspend (Void?) -> Unit
+    ): Void? {
         IODeterminationActivityViewModel.cropBundles.indices.forEach {
             sharedViewModel.makeCropBundleProcessor(
                 it,

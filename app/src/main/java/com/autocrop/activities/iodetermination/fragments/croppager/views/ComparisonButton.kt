@@ -24,7 +24,7 @@ class ComparisonButton(context: Context, attributeSet: AttributeSet) :
             ComparisonFragment.instance(viewModel.dataSet.currentElement)
         )
             .addToBackStack(null)
-            .apply{
+            .apply {
                 val cropImageView =
                     fragmentHostingActivity
                         .getCastCurrentFragment<CropPagerFragment>()!!

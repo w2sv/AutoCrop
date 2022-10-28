@@ -3,11 +3,11 @@ package com.autocrop.utils.android.extensions
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
-fun LiveData<Boolean>.toggle(){
+fun LiveData<Boolean>.toggle() {
     postValue(!value!!)
 }
 
-fun <T> LiveData<T>.postValue(value: T?){
+fun <T> LiveData<T>.postValue(value: T?) {
     asMutable.postValue(value)
 }
 

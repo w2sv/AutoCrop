@@ -8,11 +8,12 @@ import com.autocrop.utils.android.extensions.notificationManager
 import com.autocrop.utils.android.extensions.showNotification
 import de.paul_woitaschek.slimber.i
 
-class NotificationGroup(context: Context,
-                        private val channelName: String,
-                        private val summaryId: NotificationId,
-                        private val makeSummaryTitle: (Int) -> String,
-                        private val applyToSummaryBuilder: ((NotificationCompat.Builder) -> NotificationCompat.Builder)? = null
+class NotificationGroup(
+    context: Context,
+    private val channelName: String,
+    private val summaryId: NotificationId,
+    private val makeSummaryTitle: (Int) -> String,
+    private val applyToSummaryBuilder: ((NotificationCompat.Builder) -> NotificationCompat.Builder)? = null
 ) : ContextWrapper(context) {
     val children = UniqueNotificationIdsWithBuilder(summaryId)
     private val channelId: String get() = summaryId.channelId
@@ -27,12 +28,12 @@ class NotificationGroup(context: Context,
             .setOnlyAlertOnce(true)
             .setGroup(groupKey)
 
-    fun addChild(id: Int, builder: NotificationCompat.Builder){
-        with(children){
+    fun addChild(id: Int, builder: NotificationCompat.Builder) {
+        with(children) {
             if (size >= 1)
                 showSummaryNotification()
             if (size == 1)
-                with(element()){
+                with(element()) {
                     showNotification(
                         first,
                         second
@@ -42,19 +43,19 @@ class NotificationGroup(context: Context,
                 }
 
             add(id to builder)
-                .also { i{"Added ${summaryId.name} notification $id"} }
+                .also { i { "Added ${summaryId.name} notification $id" } }
         }
 
         showNotification(id, builder)
     }
 
     fun onChildNotificationCancelled(id: Int) {
-        with(children){
+        with(children) {
             remove(id)
-                .also { i{"Removed notification id $id; n notifications: $size"} }
+                .also { i { "Removed notification id $id; n notifications: $size" } }
 
             if (size == 1)
-                with(element()){
+                with(element()) {
                     showNotification(
                         first,
                         second

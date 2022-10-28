@@ -139,8 +139,8 @@ class CroppingTest {
     @ParameterizedTest
     @ValueSource(
         strings = [
-//            "Bari-Italy.jpg.1584966891939.image.750.563.low.jpg",
-//            "IMG_20200709_175312.jpg",
+            //            "Bari-Italy.jpg.1584966891939.image.750.563.low.jpg",
+            //            "IMG_20200709_175312.jpg",
             "Screenshot_2021-04-13-22-48-46-461_com.android.chrome.png",
             "Screenshot_2021-04-14-22-22-17-499_com.android.chrome.png",
             "Screenshot_2021-04-18-21-58-06-781_com.android.chrome.png"

@@ -36,7 +36,7 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
 
         progress(dataSetPosition)?.let { newProgress ->
             progressAnimation = ObjectAnimator.ofInt(this, "progress", newProgress).apply {
-                with(animationInterpolatorWithDuration(newProgress)){
+                with(animationInterpolatorWithDuration(newProgress)) {
                     interpolator = first
                     duration = second
                 }

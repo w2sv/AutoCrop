@@ -1,4 +1,4 @@
-plugins{
+plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-parcelize'
@@ -30,8 +30,8 @@ android {
     signingConfigs {
         // create release signingConfig from keystore.properties file, if present
         release {
-            rootProject.file("keystore.properties").with{file ->
-                if (file.exists()){
+            rootProject.file("keystore.properties").with { file ->
+                if (file.exists()) {
                     apply from: "$rootDir/utils.gradle"
                     def keystoreProperties = loadProperties(file)
 
@@ -39,8 +39,7 @@ android {
                     storePassword keystoreProperties["storePassword"]
                     keyAlias keystoreProperties["keyAlias"]
                     keyPassword keystoreProperties["keyPassword"]
-                }
-                else
+                } else
                     println("WARNING: Failed to create release signing configuration; $file.path not present")
             }
         }

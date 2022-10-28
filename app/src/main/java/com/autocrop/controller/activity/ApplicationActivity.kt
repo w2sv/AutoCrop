@@ -12,11 +12,11 @@ import com.autocrop.utils.android.extensions.getApplicationWideSharedPreferences
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import kotlin.reflect.KClass
 
-abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
+abstract class ApplicationActivity<RF : Fragment, VM : ViewModel>(
     rootFragmentKClass: KClass<RF>,
     private val viewModelKClass: KClass<VM>,
     vararg val preferences: TypedPreferences<*>
-): FragmentHostingActivity<RF>(rootFragmentKClass.java){
+) : FragmentHostingActivity<RF>(rootFragmentKClass.java) {
 
     protected lateinit var viewModel: VM
 
@@ -52,7 +52,7 @@ abstract class ApplicationActivity<RF: Fragment, VM: ViewModel>(
         }
     }
 
-    fun startMainActivity(withReturnAnimation: Boolean = true, applyToIntent: ((Intent) -> Intent)? = null){
+    fun startMainActivity(withReturnAnimation: Boolean = true, applyToIntent: ((Intent) -> Intent)? = null) {
         startActivity(
             Intent(
                 this,

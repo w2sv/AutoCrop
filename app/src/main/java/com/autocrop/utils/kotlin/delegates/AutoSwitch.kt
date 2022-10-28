@@ -3,8 +3,7 @@ package com.autocrop.utils.kotlin.delegates
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-class AutoSwitch(private var value: Boolean, private val switchOn: Boolean)
-    : ReadWriteProperty<Any?, Boolean> {
+class AutoSwitch(private var value: Boolean, private val switchOn: Boolean) : ReadWriteProperty<Any?, Boolean> {
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): Boolean =
         value
@@ -17,8 +16,10 @@ class AutoSwitch(private var value: Boolean, private val switchOn: Boolean)
         this.value = value
     }
 
-    class Mapped(private val map: MutableMap<String, Boolean>, private val switchOn: Boolean)
-        : ReadWriteProperty<Any?, Boolean> {
+    class Mapped(
+        private val map: MutableMap<String, Boolean>,
+        private val switchOn: Boolean
+    ) : ReadWriteProperty<Any?, Boolean> {
 
         override fun getValue(thisRef: Any?, property: KProperty<*>): Boolean =
             map.getValue(property.name)

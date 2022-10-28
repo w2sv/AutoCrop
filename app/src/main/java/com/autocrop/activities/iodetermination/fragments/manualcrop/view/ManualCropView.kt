@@ -49,8 +49,8 @@ import kotlin.math.roundToInt
 class ManualCropView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0)
-    : View(context, attrs, defStyleAttr) {
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {
 
     /**
      * Touch threshold for corners and edges
@@ -190,7 +190,7 @@ class ManualCropView @JvmOverloads constructor(
 
     private val bitmapBorderRect = RectF()
 
-    private fun initializeView(){
+    private fun initializeView() {
         val bitmapMinRectSize = max(bitmapRect.width(), bitmapRect.height()) / MAX_SCALE
         bitmapMinRect.set(0f, 0f, bitmapMinRectSize, bitmapMinRectSize)
 
@@ -206,7 +206,7 @@ class ManualCropView @JvmOverloads constructor(
         invalidate()
     }
 
-    fun reset(){
+    fun reset() {
         initializeView()
         onCropRectChanged()
     }
@@ -218,7 +218,7 @@ class ManualCropView @JvmOverloads constructor(
                 val topNew = cropRect.top - distanceY
                 val bottomNew = cropRect.bottom - distanceY
 
-                if (topNew > bitmapBorderRect.top && bottomNew < bitmapBorderRect.bottom){
+                if (topNew > bitmapBorderRect.top && bottomNew < bitmapBorderRect.bottom) {
                     cropRect.top = topNew
                     cropRect.bottom = bottomNew
 
@@ -250,13 +250,14 @@ class ManualCropView @JvmOverloads constructor(
             ACTION_DOWN -> {
                 setDraggingState(event)
 
-                if (draggingState !is DraggingState.Idle){
+                if (draggingState !is DraggingState.Idle) {
                     setBitmapBorderRect()
 
                     calculateMinRect()
                     calculateMaxRect()
                 }
             }
+
             ACTION_MOVE -> {
                 when (val state = draggingState) {
                     is DraggingEdge -> {
@@ -265,9 +266,11 @@ class ManualCropView @JvmOverloads constructor(
                         updateExceedMinBorders()
                         onCropRectChanged()
                     }
+
                     else -> Unit
                 }
             }
+
             ACTION_UP -> {
                 minRect.setEmpty()
                 maxRect.setEmpty()
@@ -278,6 +281,7 @@ class ManualCropView @JvmOverloads constructor(
                         animateBitmapToCenterTarget()
                         animateCropRectToCenterTarget()
                     }
+
                     else -> Unit
                 }
             }
@@ -290,7 +294,7 @@ class ManualCropView @JvmOverloads constructor(
         return true
     }
 
-    private fun setDraggingState(event: MotionEvent){
+    private fun setDraggingState(event: MotionEvent) {
         val corner by lazy { cropRect.getCornerTouch(event, touchThreshold) }
         val edge by lazy { cropRect.getEdgeTouch(event, touchThreshold) }
 
@@ -315,43 +319,43 @@ class ManualCropView @JvmOverloads constructor(
             drawColor(maskBackgroundColor)
             restore()
 
-//            drawCropEdgePairCandidates()
+            //            drawCropEdgePairCandidates()
             drawGrid()
             drawCorners()
         }
     }
 
-//    private fun Canvas.drawCropEdgePairCandidates(){
-//        rescaledCropEdgeRectFs.forEach {
-//            drawLine(
-//                it.left,
-//                it.top,
-//                it.right,
-//                it.top,
-//                topEdgePaint
-//            )
-//
-//            drawLine(
-//                it.left,
-//                it.bottom,
-//                it.right,
-//                it.bottom,
-//                bottomEdgePaint
-//            )
-//        }
-//    }
+    //    private fun Canvas.drawCropEdgePairCandidates(){
+    //        rescaledCropEdgeRectFs.forEach {
+    //            drawLine(
+    //                it.left,
+    //                it.top,
+    //                it.right,
+    //                it.top,
+    //                topEdgePaint
+    //            )
+    //
+    //            drawLine(
+    //                it.left,
+    //                it.bottom,
+    //                it.right,
+    //                it.bottom,
+    //                bottomEdgePaint
+    //            )
+    //        }
+    //    }
 
-//    private val topEdgePaint = Paint().apply {
-//        color = Color.GREEN
-//        strokeWidth = gridLineWidthPixel
-//        style = Paint.Style.STROKE
-//    }
-//
-//    private val bottomEdgePaint = Paint().apply {
-//        color = Color.MAGENTA
-//        strokeWidth = gridLineWidthPixel
-//        style = Paint.Style.STROKE
-//    }
+    //    private val topEdgePaint = Paint().apply {
+    //        color = Color.GREEN
+    //        strokeWidth = gridLineWidthPixel
+    //        style = Paint.Style.STROKE
+    //    }
+    //
+    //    private val bottomEdgePaint = Paint().apply {
+    //        color = Color.MAGENTA
+    //        strokeWidth = gridLineWidthPixel
+    //        style = Paint.Style.STROKE
+    //    }
 
     /**
      * Draw crop rect as a grid.
@@ -542,22 +546,22 @@ class ManualCropView @JvmOverloads constructor(
         bitmapMatrix.postTranslate(translateX, translateY)
 
         setBitmapBorderRect()
-//        setRescaledCropEdgePairCandidates()
+        //        setRescaledCropEdgePairCandidates()
     }
 
-    private fun setBitmapBorderRect(){
+    private fun setBitmapBorderRect() {
         bitmapMatrix.mapRect(bitmapBorderRect, bitmapRect)
     }
 
-//    private lateinit var rescaledCropEdgeRectFs: List<RectF>
+    //    private lateinit var rescaledCropEdgeRectFs: List<RectF>
 
-//    private fun setRescaledCropEdgePairCandidates(){
-//        rescaledCropEdgeRectFs = viewModel.cropEdgePairCandidates.map {
-//            it.asRectF(viewModel.bitmap.width).apply {
-//                bitmapMatrix.mapRect(this)
-//            }
-//        }
-//    }
+    //    private fun setRescaledCropEdgePairCandidates(){
+    //        rescaledCropEdgeRectFs = viewModel.cropEdgePairCandidates.map {
+    //            it.asRectF(viewModel.bitmap.width).apply {
+    //                bitmapMatrix.mapRect(this)
+    //            }
+    //        }
+    //    }
 
     /**
      * Initializes crop rect with bitmap.
@@ -603,27 +607,32 @@ class ManualCropView @JvmOverloads constructor(
                         cropRect.right,
                         cropRect.bottom
                     )
+
                     TOP -> minRect.set(
                         cropRect.left,
                         cropRect.bottom - minSize,
                         cropRect.right,
                         cropRect.bottom
                     )
+
                     RIGHT -> minRect.set(
                         cropRect.left,
                         cropRect.top,
                         cropRect.left + minSize,
                         cropRect.bottom
                     )
+
                     BOTTOM -> minRect.set(
                         cropRect.left,
                         cropRect.top,
                         cropRect.right,
                         cropRect.top + minSize
                     )
+
                     else -> {}
                 }
             }
+
             is DraggingCorner -> {
                 when (state.corner) {
                     TOP_RIGHT -> minRect.set(
@@ -632,27 +641,32 @@ class ManualCropView @JvmOverloads constructor(
                         cropRect.left + minSize,
                         cropRect.bottom
                     )
+
                     TOP_LEFT -> minRect.set(
                         cropRect.right - minSize,
                         cropRect.bottom - minSize,
                         cropRect.right,
                         cropRect.bottom
                     )
+
                     BOTTOM_RIGHT -> minRect.set(
                         cropRect.left,
                         cropRect.top,
                         cropRect.left + minSize,
                         cropRect.top + minSize
                     )
+
                     BOTTOM_LEFT -> minRect.set(
                         cropRect.right - minSize,
                         cropRect.top,
                         cropRect.right,
                         cropRect.top + minSize
                     )
+
                     else -> {}
                 }
             }
+
             else -> {}
         }
     }
@@ -673,27 +687,32 @@ class ManualCropView @JvmOverloads constructor(
                         cropRect.right,
                         cropRect.bottom
                     )
+
                     TOP -> maxRect.set(
                         cropRect.left,
                         borderRect.top,
                         cropRect.right,
                         cropRect.bottom
                     )
+
                     RIGHT -> maxRect.set(
                         cropRect.left,
                         cropRect.top,
                         borderRect.right,
                         cropRect.bottom
                     )
+
                     BOTTOM -> maxRect.set(
                         cropRect.left,
                         cropRect.top,
                         cropRect.right,
                         borderRect.bottom
                     )
+
                     else -> {}
                 }
             }
+
             is DraggingCorner -> {
                 when (state.corner) {
                     TOP_RIGHT -> maxRect.set(
@@ -702,27 +721,32 @@ class ManualCropView @JvmOverloads constructor(
                         borderRect.right,
                         cropRect.bottom
                     )
+
                     TOP_LEFT -> maxRect.set(
                         borderRect.left,
                         borderRect.top,
                         cropRect.right,
                         cropRect.bottom
                     )
+
                     BOTTOM_RIGHT -> maxRect.set(
                         cropRect.left,
                         cropRect.top,
                         borderRect.right,
                         borderRect.bottom
                     )
+
                     BOTTOM_LEFT -> maxRect.set(
                         borderRect.left,
                         cropRect.top,
                         cropRect.right,
                         borderRect.bottom
                     )
+
                     else -> {}
                 }
             }
+
             else -> {}
         }
     }
@@ -778,7 +802,7 @@ class ManualCropView @JvmOverloads constructor(
         newBitmapMatrix.postConcat(matrix)
 
         bitmapMatrix.animateToMatrix(newBitmapMatrix) {
-//            setRescaledCropEdgePairCandidates()
+            //            setRescaledCropEdgePairCandidates()
             invalidate()
         }
     }
