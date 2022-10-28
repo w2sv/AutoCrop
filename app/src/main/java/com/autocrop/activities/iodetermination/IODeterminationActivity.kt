@@ -16,7 +16,7 @@ import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.utils.android.extensions.getInt
 import com.autocrop.utils.android.extensions.getParcelableArrayList
-import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.buildAndShow
 import com.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.autocrop.R
 
@@ -69,7 +69,7 @@ class IODeterminationActivity :
                     is SaveAllFragment -> {
                         snackyBuilder("Wait until crops have been saved")
                             .setIcon(R.drawable.ic_front_hand_24)
-                            .show()
+                            .buildAndShow()
                     }
                     is CropPagerFragment -> it.handleBackPress()
                     else -> Unit

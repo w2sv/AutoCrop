@@ -21,6 +21,7 @@ import com.autocrop.controller.activity.ApplicationActivity
 import com.autocrop.utils.android.extensions.getLong
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.buildAndShow
 import com.autocrop.utils.android.extensions.snackyBuilder
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.w2sv.autocrop.R
@@ -130,7 +131,7 @@ class MainActivity :
 
             snackyBuilder(text)
                 .setIcon(icon)
-                .show()
+                .buildAndShow()
         }
     }
 

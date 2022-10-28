@@ -31,8 +31,9 @@ class ComparisonViewModel(
     val useInsetLayoutParams: LiveData<Boolean> by lazy {
         MutableLiveData(true)
     }
-
-    var enterTransitionCompleted = false
+    val showButtons: LiveData<Boolean> by lazy {
+        MutableLiveData(false)
+    }
 
     val cropFittedInsets: Array<Int> =
         cropBundle.run {

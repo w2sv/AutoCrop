@@ -21,6 +21,8 @@ import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.showSystemBars
 import com.autocrop.utils.android.extensions.snackyBuilder
 import com.autocrop.utils.android.postDelayed
+import com.autocrop.utils.kotlin.delegates.AutoSwitch
+import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 
@@ -55,25 +57,32 @@ class ComparisonFragment
             .inflateTransition(android.R.transition.move)
             .addListener(
                 object : TransitionListenerAdapter() {
+                    private var enterTransitionCompleted by AutoSwitch(false, switchOn = false)
+
                     override fun onTransitionEnd(transition: Transition) {
                         super.onTransitionEnd(transition)
 
-                        if (!viewModel.enterTransitionCompleted) {
+                        if (!enterTransitionCompleted) {
                             postDelayed(resources.getLong(R.integer.delay_small)){
                                 viewModel.useInsetLayoutParams.postValue(false)
                                 viewModel.displayScreenshot.postValue(true)
 
-                                binding.snackbarRepelledLayout.show()
+                                if (BooleanPreferences.comparisonInstructionsShown)
+                                    viewModel.showButtons.postValue(true)
+                                else
+                                    requireActivity()
+                                        .snackyBuilder("Tap screen to toggle between the original screenshot and the crop")
+                                        .setIcon(R.drawable.ic_outline_info_24)
+                                        .build()
+                                        .addCallback(object: Snackbar.Callback(){
+                                            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                                                super.onDismissed(transientBottomBar, event)
+
+                                                viewModel.showButtons.postValue(true)
+                                            }
+                                        })
+                                        .show()
                             }
-
-                            if (!BooleanPreferences.comparisonInstructionsShown)
-                                requireActivity()
-                                    .snackyBuilder("Tap screen to toggle between the original screenshot and the crop")
-                                    .setIcon(R.drawable.ic_outline_info_24)
-                                    .setView(binding.snackbarRepelledHostingLayout)
-                                    .show()
-
-                            viewModel.enterTransitionCompleted = true
                         }
                     }
                 }
@@ -86,6 +95,12 @@ class ComparisonFragment
         binding.backButton.setOnClickListener {
             onPreRemove()
             parentFragmentManager.popBackStack()
+        }
+        viewModel.showButtons.observe(viewLifecycleOwner){
+            if (it)
+                binding.buttonLayout.show()
+            else
+                binding.buttonLayout.hide()
         }
     }
 
@@ -101,16 +116,8 @@ class ComparisonFragment
         requireActivity().showSystemBars()
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-
-        if (viewModel.enterTransitionCompleted)
-            binding.snackbarRepelledLayout.show()
-    }
-
     fun onPreRemove() {
-        binding.snackbarRepelledLayout.hide()
-
+        viewModel.showButtons.postValue(false)
         viewModel.useInsetLayoutParams.postValue(true)
         viewModel.displayScreenshot.postValue(false)
     }

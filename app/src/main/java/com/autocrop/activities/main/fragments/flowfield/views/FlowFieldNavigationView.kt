@@ -25,7 +25,7 @@ import com.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.autocrop.utils.android.extensions.activityViewModelLazy
 import com.autocrop.utils.android.extensions.ifNotInEditMode
 import com.autocrop.utils.android.extensions.serviceRunning
-import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.buildAndShow
 import com.autocrop.utils.android.extensions.snackyBuilder
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.autocrop.R
@@ -143,7 +143,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet):
         } catch (e: ActivityNotFoundException){
             activity
                 .snackyBuilder("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
-                .show()
+                .buildAndShow()
         }
     }
 

@@ -32,6 +32,7 @@ import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.loadBitmap
 import com.autocrop.utils.android.extensions.postValue
 import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.buildAndShow
 import com.autocrop.utils.android.extensions.snackyBuilder
 import com.autocrop.utils.android.postDelayed
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
@@ -65,13 +66,13 @@ class CropPagerFragment :
     private fun setManualCropResultListener() {
         setFragmentResultListener(ManualCropFragment.KEY_RESULT) {
             processAdjustedCropEdges(ManualCropFragment.getAdjustedCropEdges(it))
-            postDelayed(200L) {
+            postDelayed(resources.getLong(R.integer.delay_small)) {
                 requireActivity().snackyBuilder(
                     "Adjusted crop"
                 )
                     .setView()
                     .setIcon(R.drawable.ic_check_green_24)
-                    .show()
+                    .buildAndShow()
             }
         }
     }
@@ -213,7 +214,7 @@ class CropPagerFragment :
                 )
                     .setView()
                     .setIcon(R.drawable.ic_error_24)
-                    .show()
+                    .buildAndShow()
             }
         }
     }

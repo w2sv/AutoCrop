@@ -14,7 +14,7 @@ import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.preferences.UriPreferences
 import com.autocrop.utils.android.documentUriPathIdentifier
 import com.autocrop.utils.android.extensions.getThemedColor
-import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.buildAndShow
 import com.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
@@ -85,7 +85,7 @@ class FlowFieldFragment:
                             )
                         }
                 )
-                    .show()
+                    .buildAndShow()
             }
         }
     }

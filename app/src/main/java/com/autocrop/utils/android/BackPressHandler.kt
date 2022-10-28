@@ -2,7 +2,7 @@ package com.autocrop.utils.android
 
 import android.os.Handler
 import android.os.Looper
-import com.autocrop.utils.android.extensions.show
+import com.autocrop.utils.android.extensions.buildAndShow
 import de.mateware.snacky.Snacky
 
 /**
@@ -22,7 +22,7 @@ class BackPressHandler(
 
         pressedOnce = true
         onFirstPressNotificationSnackyBuilder
-            .show()
+            .buildAndShow()
 
         Handler(Looper.getMainLooper()).postDelayed(
             { pressedOnce = false },
