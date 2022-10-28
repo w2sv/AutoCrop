@@ -29,7 +29,7 @@
         android:background="@drawable/logo_wo_background"
         android:contentDescription="@null" />
 
-    <com.autocrop.activities.main.fragments.VersionTextView
+    <com.w2sv.autocrop.activities.main.fragments.VersionTextView
         android:id="@+id/version_tv"
         style="@style/Shadow"
         android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
         android:textColor="@android:color/holo_purple"
         android:textSize="28sp" />
 
-    <com.autocrop.activities.main.fragments.about.views.CopyrightTextView
+    <com.w2sv.autocrop.activities.main.fragments.about.views.CopyrightTextView
         android:id="@+id/copyright_tv"
 
         android:layout_width="wrap_content"

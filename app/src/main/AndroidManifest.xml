@@ -32,7 +32,7 @@
     <!-- Application -->
 
     <application
-        android:name="com.autocrop.AutoCrop"
+        android:name=".AutoCrop"
         android:appCategory="image"
 
         android:icon="@mipmap/logo"
@@ -47,7 +47,7 @@
         <!-- Activities -->
 
         <activity
-            android:name="com.autocrop.activities.main.MainActivity"
+            android:name="com.w2sv.autocrop.activities.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Splash">
             <intent-filter>
@@ -56,26 +56,26 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.autocrop.activities.cropping.CropActivity" />
-        <activity android:name="com.autocrop.activities.iodetermination.IODeterminationActivity" />
+        <activity android:name="com.w2sv.autocrop.activities.cropping.CropActivity" />
+        <activity android:name="com.w2sv.autocrop.activities.iodetermination.IODeterminationActivity" />
 
         <!-- Services -->
 
         <service
-            android:name="com.autocrop.screenshotlistening.services.ScreenshotListener"
+            android:name="com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener"
             android:exported="false" />
-        <receiver android:name="com.autocrop.screenshotlistening.services.ScreenshotListener$StopBroadcastReceiver" />
+        <receiver android:name="com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener$StopBroadcastReceiver" />
 
         <service
-            android:name="com.autocrop.screenshotlistening.services.CropIOService"
+            android:name="com.w2sv.autocrop.screenshotlistening.services.CropIOService"
             android:exported="false" />
         <activity
-            android:name="com.autocrop.screenshotlistening.services.DeleteRequestActivity"
+            android:name="com.w2sv.autocrop.screenshotlistening.services.DeleteRequestActivity"
             android:excludeFromRecents="true"
             android:noHistory="true" />
 
         <service
-            android:name="com.autocrop.screenshotlistening.services.OnPendingIntentService"
+            android:name="com.w2sv.autocrop.screenshotlistening.services.OnPendingIntentService"
             android:exported="false" />
     </application>
 </manifest>

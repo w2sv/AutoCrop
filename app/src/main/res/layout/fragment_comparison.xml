@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.autocrop.activities.iodetermination.fragments.comparison.views.ComparisonIV
+    <com.w2sv.autocrop.activities.iodetermination.fragments.comparison.views.ComparisonIV
         android:id="@+id/comparison_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,7 +20,7 @@
 
         android:visibility="invisible">
 
-        <com.autocrop.activities.iodetermination.fragments.comparison.views.ComparisonIVStatusTV
+        <com.w2sv.autocrop.activities.iodetermination.fragments.comparison.views.ComparisonIVStatusTV
             android:id="@+id/iv_status_tv"
 
             android:layout_width="95dp"

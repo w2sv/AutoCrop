@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:textSize="24sp" />
 
-    <com.autocrop.activities.main.fragments.VersionTextView
+    <com.w2sv.autocrop.activities.main.fragments.VersionTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 

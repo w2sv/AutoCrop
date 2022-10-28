@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.autocrop.activities.main.fragments.flowfield.views.FlowFieldContainer
+    <com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldContainer
         android:id="@+id/canvas_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </com.autocrop.activities.main.fragments.flowfield.views.FlowFieldContainer>
+    </com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldContainer>
 
-    <com.autocrop.activities.main.fragments.flowfield.views.FlowFieldDrawerLayout
+    <com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldDrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
 
@@ -19,7 +19,7 @@
 
         <!-- Buttons -->
 
-        <com.autocrop.activities.main.fragments.flowfield.views.ButtonsLayout
+        <com.w2sv.autocrop.activities.main.fragments.flowfield.views.ButtonsLayout
             android:id="@+id/buttons_layout"
 
             android:layout_width="match_parent"
@@ -55,7 +55,7 @@
 
             <!-- Image Selection -->
 
-            <com.autocrop.activities.main.fragments.flowfield.views.ImageSelectionButton
+            <com.w2sv.autocrop.activities.main.fragments.flowfield.views.ImageSelectionButton
                 android:id="@+id/image_selection_button"
                 android:layout_width="143dp"
                 android:layout_height="143dp"
@@ -66,9 +66,9 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@android:color/darker_gray" />
 
-        </com.autocrop.activities.main.fragments.flowfield.views.ButtonsLayout>
+        </com.w2sv.autocrop.activities.main.fragments.flowfield.views.ButtonsLayout>
 
-        <com.autocrop.activities.main.fragments.flowfield.views.FlowFieldNavigationView
+        <com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldNavigationView
             android:id="@+id/navigation_view"
             android:layout_width="wrap_content"
 
@@ -84,6 +84,6 @@
             app:itemIconTint="@color/magenta_bright"
             app:menu="@menu/flowfield" />
 
-    </com.autocrop.activities.main.fragments.flowfield.views.FlowFieldDrawerLayout>
+    </com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldDrawerLayout>
 
 </RelativeLayout>
