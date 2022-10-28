@@ -6,12 +6,13 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.core.os.bundleOf
 import androidx.core.text.color
+import androidx.core.text.italic
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.w2sv.autocrop.R
 
 class CropEntiretyDialog: AbstractCropDialog(){
     companion object{
-        const val RESULT_REQUEST_KEY = "CROP_ENTIRETY_DIALOG_RESULT_REQUEST_KEY"
+        const val KEY_RESULT = "CROP_ENTIRETY_DIALOG_RESULT_REQUEST_KEY"
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
@@ -20,7 +21,11 @@ class CropEntiretyDialog: AbstractCropDialog(){
                 setTitle(
                     SpannableStringBuilder()
                         .append("Save ")
-                        .color(context.getThemedColor(R.color.magenta_bright)) { append("all ") }
+                        .color(context.getThemedColor(R.color.magenta_bright)) {
+                            italic {
+                                append("all ")
+                            }
+                        }
                         .append("crops?")
                 )
                 setDeleteCorrespondingScreenshotsOption("Delete corresponding screenshots")
@@ -33,7 +38,7 @@ class CropEntiretyDialog: AbstractCropDialog(){
         requireActivity()
             .supportFragmentManager
             .setFragmentResult(
-                RESULT_REQUEST_KEY,
+                KEY_RESULT,
                 bundleOf(EXTRA_DIALOG_CONFIRMED to confirmed)
             )
     }

@@ -83,7 +83,7 @@
             android:text="@string/reset"
             android:textStyle="italic"
             android:textSize="15sp"
-            android:textColor="@color/magenta_saturated"
+            android:textColor="@color/magenta_bright"
             tools:ignore="RelativeOverlap" />
 
         <LinearLayout

@@ -26,13 +26,13 @@ import com.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.utils.android.BackPressHandler
 import com.autocrop.utils.android.extensions.animate
+import com.autocrop.utils.android.extensions.buildAndShow
 import com.autocrop.utils.android.extensions.crossFade
 import com.autocrop.utils.android.extensions.getLong
 import com.autocrop.utils.android.extensions.getThemedColor
 import com.autocrop.utils.android.extensions.loadBitmap
 import com.autocrop.utils.android.extensions.postValue
 import com.autocrop.utils.android.extensions.show
-import com.autocrop.utils.android.extensions.buildAndShow
 import com.autocrop.utils.android.extensions.snackyBuilder
 import com.autocrop.utils.android.postDelayed
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
@@ -106,7 +106,7 @@ class CropPagerFragment :
     }
 
     private fun setCropEntiretyDialogResultListener() {
-        setFragmentResultListener(CropEntiretyDialog.RESULT_REQUEST_KEY) {
+        setFragmentResultListener(CropEntiretyDialog.KEY_RESULT) {
             if (it.getBoolean(AbstractCropDialog.EXTRA_DIALOG_CONFIRMED))
                 fragmentHostingActivity
                     .fragmentReplacementTransaction(SaveAllFragment(), true)

@@ -71,7 +71,10 @@ class ManualCropFragment
     private fun FragmentManualCropBinding.onCropEdgesChanged(cropEdges: CropEdges) {
         heightTv.text = styledUnitSpannableString("H", min(cropEdges.height, viewModel.bitmap.height))
         percentageTv.text =
-            styledUnitSpannableString("%", (viewModel.bitmap.maintainedPercentage(cropEdges.height.toFloat()) * 100).rounded(1))
+            styledUnitSpannableString(
+                "%",
+                (viewModel.bitmap.maintainedPercentage(cropEdges.height.toFloat()) * 100).rounded(1)
+            )
 
         y1Tv.text = styledUnitSpannableString(
             "Y",
@@ -90,12 +93,18 @@ class ManualCropFragment
             View.GONE
     }
 
-    private fun styledUnitSpannableString(unit: CharSequence, value: Any, unitSubscript: Any? = null): SpannableStringBuilder =
+    private fun styledUnitSpannableString(
+        unit: CharSequence,
+        value: Any,
+        unitSubscript: Any? = null
+    ): SpannableStringBuilder =
         SpannableStringBuilder()
             .color(requireContext().getColor(R.color.magenta_bright)) {
                 append(unit)
                 unitSubscript?.let {
-                    subscript { it.toString() }
+                    subscript {
+                        append(it.toString())
+                    }
                 }
             }
             .italic {

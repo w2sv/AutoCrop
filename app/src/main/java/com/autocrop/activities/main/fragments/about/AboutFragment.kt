@@ -6,8 +6,8 @@ import android.os.Looper
 import com.autocrop.activities.main.fragments.MainActivityFragment
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.utils.android.extensions.animate
-import com.autocrop.utils.android.extensions.getLong
 import com.autocrop.utils.android.extensions.buildAndShow
+import com.autocrop.utils.android.extensions.getLong
 import com.autocrop.utils.android.extensions.snackyBuilder
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R

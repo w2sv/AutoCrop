@@ -7,9 +7,9 @@ import androidx.lifecycle.LifecycleOwner
 import com.autocrop.activities.main.MainActivity
 import com.autocrop.controller.activity.retriever.ActivityRetriever
 import com.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
+import com.autocrop.ui.views.ExtendedAppCompatTextView
 import com.autocrop.utils.android.extensions.animate
 import com.autocrop.utils.android.extensions.goToWebpage
-import com.autocrop.ui.views.ExtendedAppCompatTextView
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 

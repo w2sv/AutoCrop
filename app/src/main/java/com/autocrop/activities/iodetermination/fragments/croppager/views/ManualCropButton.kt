@@ -7,8 +7,8 @@ import com.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Cro
 import com.autocrop.activities.iodetermination.fragments.manualcrop.ManualCropFragment
 import com.autocrop.controller.activity.retriever.ActivityRetriever
 import com.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
-import com.autocrop.utils.android.extensions.viewModelLazy
 import com.autocrop.ui.views.ExtendedAppCompatImageButton
+import com.autocrop.utils.android.extensions.viewModelLazy
 
 class ManualCropButton(context: Context, attributeSet: AttributeSet) :
     ExtendedAppCompatImageButton(context, attributeSet),

@@ -14,9 +14,9 @@ import com.autocrop.activities.main.MainActivity
 import com.autocrop.controller.activity.ApplicationActivity
 import com.autocrop.preferences.BooleanPreferences
 import com.autocrop.preferences.UriPreferences
+import com.autocrop.utils.android.extensions.buildAndShow
 import com.autocrop.utils.android.extensions.getInt
 import com.autocrop.utils.android.extensions.getParcelableArrayList
-import com.autocrop.utils.android.extensions.buildAndShow
 import com.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.autocrop.R
 
