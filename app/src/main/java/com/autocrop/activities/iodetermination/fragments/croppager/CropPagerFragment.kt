@@ -2,8 +2,6 @@ package com.autocrop.activities.iodetermination.fragments.croppager
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.core.text.bold
@@ -35,6 +33,7 @@ import com.autocrop.utils.android.extensions.loadBitmap
 import com.autocrop.utils.android.extensions.postValue
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.snackyBuilder
+import com.autocrop.utils.android.postDelayed
 import com.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.autocrop.utils.kotlin.extensions.numericallyInflected
 import com.daimajia.androidanimations.library.Techniques
@@ -66,13 +65,14 @@ class CropPagerFragment :
     private fun setManualCropResultListener() {
         setFragmentResultListener(ManualCropFragment.KEY_RESULT) {
             processAdjustedCropEdges(ManualCropFragment.getAdjustedCropEdges(it))
-            requireActivity().snackyBuilder(
-                "Adjusted crop",
-                duration = Snacky.LENGTH_SHORT
-            )
-                .setView()
-                .setIcon(R.drawable.ic_check_green_24)
-                .show()
+            postDelayed(200L) {
+                requireActivity().snackyBuilder(
+                    "Adjusted crop"
+                )
+                    .setView()
+                    .setIcon(R.drawable.ic_check_green_24)
+                    .show()
+            }
         }
     }
 
@@ -144,8 +144,8 @@ class CropPagerFragment :
             }
         }
 
-        autoScroll.observe(viewLifecycleOwner) { autoScroll ->
-            if (autoScroll) {
+        autoScroll.observe(viewLifecycleOwner) {
+            if (it) {
                 binding.cancelAutoScrollButton.show()
                 scroller = Scroller().apply {
                     run(binding.viewPager, maxAutoScrolls) {
@@ -168,8 +168,8 @@ class CropPagerFragment :
                     binding.manualCropButton as View
                 )
 
-                scroller?.let {
-                    it.cancel()
+                scroller?.let { scroller ->
+                    scroller.cancel()
                     crossFade(
                         arrayOf(binding.cancelAutoScrollButton),
                         manualScrollingStateViews
@@ -178,21 +178,18 @@ class CropPagerFragment :
                     ?: manualScrollingStateViews.forEach { it.show() }
 
                 if (!BooleanPreferences.cropPagerInstructionsShown)
-                    Handler(Looper.getMainLooper()).postDelayed(
-                        {
-                            CropPagerInstructionsDialog()
-                                .apply {
-                                    positiveButtonOnClickListener = ::displayDismissedScreenshotsSnackbarIfApplicable
-                                }
-                                .show(parentFragmentManager)
-                        },
-                        resources.getLong(R.integer.delay_small)
-                    )
+                    postDelayed(resources.getLong(R.integer.delay_small)) {
+                        CropPagerInstructionsDialog()
+                            .apply {
+                                positiveButtonOnClickListener = ::displayDismissedScreenshotsSnackbarIfApplicable
+                            }
+                            .show(parentFragmentManager)
+                    }
                 else
                     displayDismissedScreenshotsSnackbarIfApplicable()
 
             }
-            binding.viewPager.isUserInputEnabled = !autoScroll
+            binding.viewPager.isUserInputEnabled = !it
         }
 
         dataSet.observe(viewLifecycleOwner) { dataSet ->

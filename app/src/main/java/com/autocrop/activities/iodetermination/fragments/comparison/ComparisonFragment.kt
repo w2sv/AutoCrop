@@ -3,8 +3,6 @@ package com.autocrop.activities.iodetermination.fragments.comparison
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -22,6 +20,7 @@ import com.autocrop.utils.android.extensions.postValue
 import com.autocrop.utils.android.extensions.show
 import com.autocrop.utils.android.extensions.showSystemBars
 import com.autocrop.utils.android.extensions.snackyBuilder
+import com.autocrop.utils.android.postDelayed
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 
@@ -60,20 +59,12 @@ class ComparisonFragment
                         super.onTransitionEnd(transition)
 
                         if (!viewModel.enterTransitionCompleted) {
-                            Handler(Looper.getMainLooper()).postDelayed(
-                                {
-                                    viewModel.useInsetLayoutParams.postValue(false)
-                                    viewModel.displayScreenshot.postValue(true)
+                            postDelayed(resources.getLong(R.integer.delay_small)){
+                                viewModel.useInsetLayoutParams.postValue(false)
+                                viewModel.displayScreenshot.postValue(true)
 
-                                    Handler(Looper.getMainLooper()).postDelayed(
-                                        {
-                                            binding.snackbarRepelledLayout.show()
-                                        },
-                                        resources.getLong(R.integer.delay_small)
-                                    )
-                                },
-                                requireContext().resources.getLong(R.integer.delay_small)
-                            )
+                                binding.snackbarRepelledLayout.show()
+                            }
 
                             if (!BooleanPreferences.comparisonInstructionsShown)
                                 requireActivity()

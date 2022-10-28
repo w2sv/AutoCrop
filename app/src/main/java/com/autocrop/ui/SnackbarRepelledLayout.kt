@@ -22,6 +22,8 @@ class SnackbarRepelledLayout(context: Context, private val attributeSet: Attribu
         override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
             child
                 .apply {
+                    clearAnimation()
+
                     val translation = min(0f, (dependency.translationY - dependency.height) * 0.75f)
                     translationY = translation
                     setPadding(0, -translation.toInt(), 0, 0)
