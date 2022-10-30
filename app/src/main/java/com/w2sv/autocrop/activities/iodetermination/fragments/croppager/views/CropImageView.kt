@@ -3,8 +3,10 @@ package com.w2sv.autocrop.activities.iodetermination.fragments.croppager.views
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.os.bundleOf
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.findFragment
 import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivity
+import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropDialog
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropEntiretyDialog
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
@@ -22,29 +24,33 @@ class CropImageView(context: Context, attributeSet: AttributeSet) :
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        setOnClickListener { onClickListener() }
-        setOnLongClickListener { onLongClickListener() }
-    }
-
-    private fun onClickListener() {
-        if (dialogInflationEnabled())
-            CropDialog().apply {
-                arguments = bundleOf(
-                    CropDialog.DATA_SET_POSITION_BUNDLE_ARG_KEY to viewModel.dataSet.currentPosition.value!!
-                )
-            }
-                .show(fragmentActivity.supportFragmentManager)
-    }
-
-    private fun onLongClickListener(): Boolean =
-        if (!dialogInflationEnabled())
-            false
-        else if (viewModel.dataSet.size == 1)
-            performClick()
-        else {
-            CropEntiretyDialog().show(fragmentActivity.supportFragmentManager)
-            true
+        setOnClickListener {
+            if (dialogInflationEnabled())
+                showDialog(cropDialog())
         }
+
+        setOnLongClickListener {
+            if (dialogInflationEnabled()) {
+                showDialog(
+                    if (viewModel.dataSet.size == 1)
+                        cropDialog()
+                    else
+                        CropEntiretyDialog()
+                )
+                true
+            }
+            else
+                false
+        }
+    }
+
+    private fun cropDialog(): CropDialog =
+        CropDialog
+            .instance(viewModel.dataSet.currentPosition.value!!)
+
+    private fun showDialog(dialog: DialogFragment) {
+        dialog.show(findFragment<CropPagerFragment>().childFragmentManager)
+    }
 
     private fun dialogInflationEnabled(): Boolean =
         viewModel.autoScroll.value == false

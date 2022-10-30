@@ -9,32 +9,33 @@ class CropDialog :
     AbstractCropDialog() {
 
     companion object {
-        const val REQUEST_KEY_RESULT = "com.w2sv.autocrop.CropDialog_RESULT"
-        const val DATA_SET_POSITION_BUNDLE_ARG_KEY = "com.w2sv.autocrop.DATA_SET_POSITION_BUNDLE_ARG"
-    }
+        private const val KEY_DATA_SET_POSITION = "com.w2sv.autocrop.DATA_SET_POSITION"
 
-    private val dataSetPosition: Int by lazy {
-        requireArguments().getInt(DATA_SET_POSITION_BUNDLE_ARG_KEY)
+        fun instance(dataSetPosition: Int): CropDialog =
+            CropDialog().apply {
+                arguments = bundleOf(KEY_DATA_SET_POSITION to dataSetPosition)
+            }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(activity).run {
             setTitle("Save crop?")
             setDeleteCorrespondingScreenshotsOption("Delete corresponding screenshot")
-            setNegativeButton("No, discard") { _, _ -> setFragmentResult(false) }
-            setPositiveButton("Yes") { _, _ -> setFragmentResult(true) }
+            setNegativeButton("No, discard") { _, _ -> notifyResultListener(false) }
+            setPositiveButton("Yes") { _, _ -> notifyResultListener(true) }
             create()
         }
 
-    override fun setFragmentResult(confirmed: Boolean) {
-        requireActivity()
-            .supportFragmentManager
-            .setFragmentResult(
-                REQUEST_KEY_RESULT,
-                bundleOf(
-                    DATA_SET_POSITION_BUNDLE_ARG_KEY to dataSetPosition,
-                    EXTRA_DIALOG_CONFIRMED to confirmed
-                )
+    interface ResultListener{
+        fun onResult(confirmed: Boolean, dataSetPosition: Int)
+    }
+
+    private fun notifyResultListener(confirmed: Boolean){
+        (requireParentFragment() as ResultListener)
+            .onResult(
+                confirmed,
+                requireArguments()
+                    .getInt(KEY_DATA_SET_POSITION)
             )
     }
 }

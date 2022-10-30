@@ -8,30 +8,33 @@ import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.w2sv.autocrop.utils.kotlin.VoidFun
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
-
-private const val DEFAULT_VIEW_ANIMATION_DURATION = 1000L
+import com.w2sv.autocrop.R
 
 fun View.animate(
     technique: Techniques,
-    duration: Long = DEFAULT_VIEW_ANIMATION_DURATION,
-    delay: Long = 0L,
-    onEnd: VoidFun? = null
+    duration: Long? = null,
+    delay: Long = 0L
 ): YoYo.YoYoString =
+    animationComposer(technique, duration, delay)
+        .playOn(this)
+
+fun View.animationComposer(
+    technique: Techniques,
+    duration: Long? = null,
+    delay: Long = 0L
+): YoYo.AnimationComposer =
     YoYo.with(technique)
         .delay(delay)
-        .duration(duration)
-        .apply {
-            onEnd?.let {
-                onEnd { it() }
-            }
-        }
-        .playOn(this)
+        .duration(
+            duration
+                ?: resources.getLong(R.integer.duration_view_animation)
+        )
 
 //$$$$$$$$$$$$$$$$$$$$$$
 // Visibility Changing $
 //$$$$$$$$$$$$$$$$$$$$$$
 
-fun crossFade(fadeOut: Iterator<View>, fadeInViews: Iterator<View>, duration: Long = DEFAULT_VIEW_ANIMATION_DURATION) {
+fun crossFade(fadeOut: Iterator<View>, fadeInViews: Iterator<View>, duration: Long? = null) {
     fadeInViews.forEach {
         it.fadeIn(duration)
     }
@@ -40,16 +43,18 @@ fun crossFade(fadeOut: Iterator<View>, fadeInViews: Iterator<View>, duration: Lo
     }
 }
 
-fun View.fadeIn(duration: Long = DEFAULT_VIEW_ANIMATION_DURATION): YoYo.YoYoString =
+fun View.fadeIn(duration: Long? = null): YoYo.YoYoString =
     apply {
         show()
     }
         .animate(Techniques.FadeIn, duration)
 
-fun View.fadeOut(duration: Long = DEFAULT_VIEW_ANIMATION_DURATION, delay: Long = 0): YoYo.YoYoString =
-    animate(Techniques.FadeOut, duration, delay = delay) {
-        hide()
-    }
+fun View.fadeOut(duration: Long? = null, delay: Long = 0): YoYo.YoYoString =
+    animationComposer(Techniques.FadeOut, duration, delay)
+        .onEnd {
+            hide()
+        }
+        .playOn(this)
 
 fun View.show() {
     visibility = View.VISIBLE

@@ -13,7 +13,6 @@ import com.w2sv.autocrop.Crop
 import com.w2sv.autocrop.CropEdges
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
-import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.dialogs.AbstractCropDialog
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropDialog
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropEntiretyDialog
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropPagerInstructionsDialog
@@ -41,7 +40,11 @@ import com.w2sv.autocrop.utils.kotlin.extensions.numericallyInflected
 import de.mateware.snacky.Snacky
 
 class CropPagerFragment :
-    IODeterminationActivityFragment<FragmentCroppagerBinding>(FragmentCroppagerBinding::class.java) {
+    IODeterminationActivityFragment<FragmentCroppagerBinding>(FragmentCroppagerBinding::class.java),
+    CropDialog.ResultListener,
+    CropEntiretyDialog.ResultListener,
+    ManualCropFragment.ResultListener,
+    CropPagerInstructionsDialog.OnDismissedListener {
 
     private val viewModel by viewModels<CropPagerViewModel>()
 
@@ -69,7 +72,7 @@ class CropPagerFragment :
                 "Tap again to return to main screen"
             )
                 .setView()
-        ){
+        ) {
             typedActivity.startMainActivity()
         }
     }
@@ -114,13 +117,10 @@ class CropPagerFragment :
                 if (!BooleanPreferences.cropPagerInstructionsShown)
                     postDelayed(resources.getLong(R.integer.delay_small)) {
                         CropPagerInstructionsDialog()
-                            .apply {
-                                positiveButtonOnClickListener = ::displayDismissedScreenshotsSnackbarIfApplicable
-                            }
-                            .show(parentFragmentManager)
+                            .show(childFragmentManager)
                     }
                 else
-                    displayDismissedScreenshotsSnackbarIfApplicable()
+                    onAutoScrollConcluded()
 
             }
             binding.viewPager.isUserInputEnabled = !autoScroll
@@ -132,12 +132,16 @@ class CropPagerFragment :
         }
     }
 
-    private fun displayDismissedScreenshotsSnackbarIfApplicable() {
+    override fun onDismissed() {
+        onAutoScrollConcluded()
+    }
+
+    private fun onAutoScrollConcluded() {
         with(sharedViewModel) {
             if (!showedDismissedScreenshotsSnackbar && nDismissedScreenshots != 0) {
                 requireActivity().snackyBuilder(
                     SpannableStringBuilder()
-                        .append("Couldn't find cropping bounds for")
+                        .append("Couldn't find crop bounds for")
                         .bold {
                             color(
                                 requireContext().getThemedColor(R.color.magenta_bright)
@@ -152,25 +156,15 @@ class CropPagerFragment :
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        setCropDialogResultListener()
-        setCropEntiretyDialogResultListener()
-        setManualCropResultListener()
-    }
-
-    private fun setManualCropResultListener() {
-        setFragmentResultListener(ManualCropFragment.REQUEST_KEY_RESULT) {
-            processAdjustedCropEdges(ManualCropFragment.getAdjustedCropEdges(it))
-            postDelayed(resources.getLong(R.integer.delay_small)) {
-                requireActivity().snackyBuilder(
-                    "Adjusted crop"
-                )
-                    .setView()
-                    .setIcon(R.drawable.ic_check_green_24)
-                    .buildAndShow()
-            }
+    override fun onResult(cropEdges: CropEdges) {
+        processAdjustedCropEdges(cropEdges)
+        postDelayed(resources.getLong(R.integer.delay_small)) {
+            requireActivity().snackyBuilder(
+                "Adjusted crop"
+            )
+                .setView()
+                .setIcon(R.drawable.ic_check_green_24)
+                .buildAndShow()
         }
     }
 
@@ -199,38 +193,31 @@ class CropPagerFragment :
      * hide pageIndicationSeekBar AND/OR
      * removes view, procedure action has been selected for, from pager
      */
-    private fun setCropDialogResultListener() {
-        setFragmentResultListener(CropDialog.REQUEST_KEY_RESULT) { bundle ->
-            val dataSetPosition = bundle.getInt(CropDialog.DATA_SET_POSITION_BUNDLE_ARG_KEY)
-            val saveCrop = bundle.getBoolean(AbstractCropDialog.EXTRA_DIALOG_CONFIRMED)
-
-            if (saveCrop)
-                with(sharedViewModel){
-                    singularCropSavingJob = lifecycleScope.executeAsyncTask(
-                        makeCropBundleProcessor(
-                            dataSetPosition,
-                            BooleanPreferences.deleteScreenshots,
-                            requireContext().contentResolver
-                        )
+    override fun onResult(confirmed: Boolean, dataSetPosition: Int) {
+        if (confirmed)
+            with(sharedViewModel) {
+                singularCropSavingJob = lifecycleScope.executeAsyncTask(
+                    makeCropBundleProcessor(
+                        dataSetPosition,
+                        BooleanPreferences.deleteScreenshots,
+                        requireContext().contentResolver
                     )
-                }
+                )
+            }
 
-            if (viewModel.dataSet.size == 1)
-                typedActivity.invokeSubsequentFragment()
-            else
-                viewPagerProxy.removeView(dataSetPosition)
-        }
+        if (viewModel.dataSet.size == 1)
+            typedActivity.invokeSubsequentFragment()
+        else
+            viewPagerProxy.removeView(dataSetPosition)
     }
 
-    private fun setCropEntiretyDialogResultListener() {
-        setFragmentResultListener(CropEntiretyDialog.REQUEST_KEY_RESULT) {
-            if (it.getBoolean(AbstractCropDialog.EXTRA_DIALOG_CONFIRMED))
-                fragmentHostingActivity
-                    .fragmentReplacementTransaction(SaveAllFragment(), true)
-                    .commit()
-            else
-                typedActivity.invokeSubsequentFragment()
-        }
+    override fun onResult(confirmed: Boolean) {
+        if (confirmed)
+            fragmentHostingActivity
+                .fragmentReplacementTransaction(SaveAllFragment(), true)
+                .commit()
+        else
+            typedActivity.invokeSubsequentFragment()
     }
 
     private fun Snacky.Builder.setView(): Snacky.Builder =

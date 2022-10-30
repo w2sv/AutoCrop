@@ -7,16 +7,15 @@ import androidx.core.os.bundleOf
 import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.core.text.subscript
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import com.w2sv.autocrop.CropBundle
 import com.w2sv.autocrop.CropEdges
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.manualcrop.utils.extensions.maintainedPercentage
+import com.w2sv.autocrop.databinding.FragmentManualCropBinding
 import com.w2sv.autocrop.utils.android.extensions.loadBitmap
 import com.w2sv.autocrop.utils.kotlin.extensions.rounded
-import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.FragmentManualCropBinding
 import kotlin.math.max
 import kotlin.math.min
 
@@ -24,19 +23,12 @@ class ManualCropFragment
     : IODeterminationActivityFragment<FragmentManualCropBinding>(FragmentManualCropBinding::class.java) {
 
     companion object {
-        private const val EXTRA_ADJUSTED_CROP_EDGES = "com.w2sv.autocrop.ADJUSTED_CROP_EDGES"
-        const val REQUEST_KEY_RESULT = "com.w2sv.autocrop.CroppyFragment_RESULT"
-
         fun instance(cropBundle: CropBundle): ManualCropFragment =
             ManualCropFragment().apply {
                 arguments = bundleOf(
                     CropBundle.EXTRA to cropBundle
                 )
             }
-
-        fun getAdjustedCropEdges(bundle: Bundle): CropEdges =
-            @Suppress("DEPRECATION")
-            bundle.getParcelable(EXTRA_ADJUSTED_CROP_EDGES)!!
     }
 
     private lateinit var viewModel: ManualCropViewModel
@@ -121,10 +113,14 @@ class ManualCropFragment
         }
         applyButton.setOnClickListener {
             parentFragmentManager.popBackStackImmediate()
-            setFragmentResult(
-                REQUEST_KEY_RESULT,
-                bundleOf(EXTRA_ADJUSTED_CROP_EDGES to viewModel.cropEdges.value!!)
-            )
+
+            // notify ResultListener
+            (fragmentHostingActivity.getCurrentFragment() as ResultListener)
+                .onResult(viewModel.cropEdges.value!!)
         }
+    }
+
+    interface ResultListener{
+        fun onResult(cropEdges: CropEdges)
     }
 }

@@ -5,11 +5,7 @@ import androidx.fragment.app.DialogFragment
 import com.w2sv.autocrop.preferences.BooleanPreferences
 
 abstract class AbstractCropDialog : DialogFragment() {
-    companion object {
-        const val EXTRA_DIALOG_CONFIRMED = "com.w2sv.autocrop.DIALOG_CONFIRMED"
-    }
-
-    fun AlertDialog.Builder.setDeleteCorrespondingScreenshotsOption(text: String) {
+    protected fun AlertDialog.Builder.setDeleteCorrespondingScreenshotsOption(text: String) {
         setMultiChoiceItems(
             arrayOf(text),
             booleanArrayOf(BooleanPreferences.deleteScreenshots)
@@ -17,6 +13,4 @@ abstract class AbstractCropDialog : DialogFragment() {
             BooleanPreferences.deleteScreenshots = !BooleanPreferences.deleteScreenshots
         }
     }
-
-    protected abstract fun setFragmentResult(confirmed: Boolean)
 }
