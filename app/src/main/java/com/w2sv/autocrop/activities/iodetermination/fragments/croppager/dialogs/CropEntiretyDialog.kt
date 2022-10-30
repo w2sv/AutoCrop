@@ -12,7 +12,7 @@ import com.w2sv.autocrop.R
 
 class CropEntiretyDialog : AbstractCropDialog() {
     companion object {
-        const val KEY_RESULT = "CROP_ENTIRETY_DIALOG_RESULT_REQUEST_KEY"
+        const val REQUEST_KEY_RESULT = "CROP_ENTIRETY_DIALOG_RESULT_REQUEST_KEY"
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
@@ -38,7 +38,7 @@ class CropEntiretyDialog : AbstractCropDialog() {
         requireActivity()
             .supportFragmentManager
             .setFragmentResult(
-                KEY_RESULT,
+                REQUEST_KEY_RESULT,
                 bundleOf(EXTRA_DIALOG_CONFIRMED to confirmed)
             )
     }

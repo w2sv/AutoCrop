@@ -1,21 +1,19 @@
 package com.w2sv.autocrop.utils.android
 
-import android.os.Handler
-import android.os.Looper
 import com.w2sv.autocrop.utils.android.extensions.buildAndShow
+import com.w2sv.autocrop.utils.kotlin.VoidFun
 import de.mateware.snacky.Snacky
 
 /**
- * Display Snackbar beset with $snackbarMessage on first back press,
- * upon second within $RESET_DURATION trigger $secondPressAction,
+ * Shows [onFirstPressNotificationSnackyBuilder] on first back press,
+ * on second within [confirmationWindowDuration] trigger [onSecondPress],
  */
 class BackPressHandler(
     private val onFirstPressNotificationSnackyBuilder: Snacky.Builder,
-    private val onSecondPress: () -> Unit,
-    private val confirmationWindowDuration: Long = 2500
+    private val confirmationWindowDuration: Long = 2500,
+    private val onSecondPress: VoidFun
 ) {
-
-    var pressedOnce: Boolean = false
+    private var pressedOnce: Boolean = false
 
     operator fun invoke() {
         if (pressedOnce)
@@ -25,9 +23,8 @@ class BackPressHandler(
         onFirstPressNotificationSnackyBuilder
             .buildAndShow()
 
-        Handler(Looper.getMainLooper()).postDelayed(
-            { pressedOnce = false },
-            confirmationWindowDuration
-        )
+        postDelayed(confirmationWindowDuration) {
+            pressedOnce = false
+        }
     }
 }

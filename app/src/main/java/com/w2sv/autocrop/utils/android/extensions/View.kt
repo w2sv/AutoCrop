@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
-import com.w2sv.autocrop.utils.kotlin.BlankFun
+import com.w2sv.autocrop.utils.kotlin.VoidFun
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 
@@ -15,7 +15,7 @@ fun View.animate(
     technique: Techniques,
     duration: Long = DEFAULT_VIEW_ANIMATION_DURATION,
     delay: Long = 0L,
-    onEnd: BlankFun? = null
+    onEnd: VoidFun? = null
 ): YoYo.YoYoString =
     YoYo.with(technique)
         .delay(delay)
@@ -31,11 +31,11 @@ fun View.animate(
 // Visibility Changing $
 //$$$$$$$$$$$$$$$$$$$$$$
 
-fun crossFade(fadeOutViews: Array<View>, fadeInViews: Array<View>, duration: Long = DEFAULT_VIEW_ANIMATION_DURATION) {
+fun crossFade(fadeOut: Iterator<View>, fadeInViews: Iterator<View>, duration: Long = DEFAULT_VIEW_ANIMATION_DURATION) {
     fadeInViews.forEach {
         it.fadeIn(duration)
     }
-    fadeOutViews.forEach {
+    fadeOut.forEach {
         it.fadeOut(duration)
     }
 }
@@ -59,7 +59,7 @@ fun View.hide() {
     visibility = View.GONE
 }
 
-inline fun View.ifNotInEditMode(f: BlankFun) {
+inline fun View.ifNotInEditMode(f: VoidFun) {
     if (!isInEditMode)
         f()
 }

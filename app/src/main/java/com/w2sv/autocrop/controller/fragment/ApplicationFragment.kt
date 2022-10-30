@@ -46,4 +46,10 @@ abstract class ApplicationFragment<A : Activity, VB : ViewBinding, VM : ViewMode
 
     override val fragmentHostingActivity: FragmentHostingActivity<*>
         get() = requireActivity() as FragmentHostingActivity<*>
+
+    protected fun setFragmentResultListener(requestKey: String, listener: (Bundle) -> Unit) {
+        parentFragmentManager.setFragmentResultListener(requestKey, viewLifecycleOwner) { _, bundle ->
+            listener(bundle)
+        }
+    }
 }

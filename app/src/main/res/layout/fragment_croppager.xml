@@ -31,17 +31,17 @@
 
         <com.w2sv.autocrop.activities.iodetermination.fragments.croppager.views.PageIndicationBar
             android:id="@+id/page_indication_bar"
-            android:layout_width="120dp"
 
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:max="100"
 
+            android:max="100"
             android:outlineProvider="paddedBounds"
             android:splitTrack="false"
             android:thumb="@drawable/ic_location_on_24"
-            android:visibility="invisible"></com.w2sv.autocrop.activities.iodetermination.fragments.croppager.views.PageIndicationBar>
+            android:visibility="invisible" />
 
         <!-- Page Indication Text View -->
 
@@ -50,7 +50,6 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_alignBaseline="@+id/page_indication_bar"
             android:layout_alignParentEnd="true"
 
@@ -87,6 +86,7 @@
         android:layout_alignParentBottom="true">
 
         <com.w2sv.autocrop.ui.SnackbarRepelledLayout
+            android:id="@+id/bottom_elements"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_top_left_image_button"
@@ -95,15 +95,13 @@
             <com.w2sv.autocrop.activities.iodetermination.fragments.croppager.views.DiscardingStatisticsTextView
                 android:id="@+id/discarding_statistics_tv"
                 android:layout_width="wrap_content"
-
                 android:layout_height="wrap_content"
                 android:text="@string/remove"
-
                 android:textColor="@color/light_gray"
-                android:textSize="13sp"
-                android:visibility="invisible" />
+                android:textSize="13sp" />
 
             <LinearLayout
+                android:id="@+id/bottom_button_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"

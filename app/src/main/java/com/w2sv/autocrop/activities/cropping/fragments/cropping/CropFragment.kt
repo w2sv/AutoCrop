@@ -32,7 +32,7 @@ class CropFragment
         super.onViewCreated(view, savedInstanceState)
 
         // attach views to currentCropNumber observable
-        sharedViewModel.liveImageNumber.observe(viewLifecycleOwner) {
+        sharedViewModel.imageNumber.observe(viewLifecycleOwner) {
             binding.progressTv.update(it)
             binding.croppingProgressBar.progress = it
         }
@@ -40,14 +40,14 @@ class CropFragment
         // launch croppingJob
         croppingJob = lifecycleScope.executeAsyncTaskWithProgressUpdateReceiver(
             ::cropImages,
-            { sharedViewModel.liveImageNumber.increment() },
+            { sharedViewModel.imageNumber.increment() },
             { startIODeterminationActivityOrInvokeCroppingFailureFragment() }
         )
     }
 
     private suspend fun cropImages(publishProgress: suspend (Void?) -> Unit): Void? {
         sharedViewModel.uris.subList(
-            sharedViewModel.liveImageNumber.value!!,
+            sharedViewModel.imageNumber.value!!,
             sharedViewModel.uris.size
         ).forEach { uri ->
             // attempt to crop image; upon success add CropBundle to sharedViewModel

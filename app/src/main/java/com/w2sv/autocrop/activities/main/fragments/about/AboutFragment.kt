@@ -12,6 +12,7 @@ import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentAboutBinding
+import com.w2sv.autocrop.utils.android.postDelayed
 
 class AboutFragment :
     MainActivityFragment<FragmentAboutBinding>(FragmentAboutBinding::class.java) {
@@ -20,18 +21,15 @@ class AboutFragment :
         super.onResume()
 
         if (!BooleanPreferences.aboutFragmentInstructionsShown)
-            Handler(Looper.getMainLooper()).postDelayed(
-                {
-                    requireActivity()
-                        .snackyBuilder(
-                            "Pro tip: check out what happens if you click on the various view elements",
-                            duration = resources.getInteger(R.integer.duration_snackbar_long)
-                        )
-                        .setIcon(R.drawable.ic_outline_info_24)
-                        .buildAndShow()
-                },
-                resources.getLong(R.integer.delay_medium)
-            )
+            postDelayed(resources.getLong(R.integer.delay_medium)){
+                requireActivity()
+                    .snackyBuilder(
+                        "Pro tip: check out what happens if you click on the various view elements",
+                        duration = resources.getInteger(R.integer.duration_snackbar_long)
+                    )
+                    .setIcon(R.drawable.ic_outline_info_24)
+                    .buildAndShow()
+            }
     }
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {

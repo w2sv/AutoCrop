@@ -11,7 +11,7 @@ import de.mateware.snacky.Snacky
 fun Activity.goToWebpage(url: String) {
     startActivity(
         Intent(
-            "android.intent.action.VIEW",
+            Intent.ACTION_VIEW,
             Uri.parse(url)
         )
     )

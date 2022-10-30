@@ -3,18 +3,17 @@ package com.w2sv.autocrop.activities.iodetermination.fragments.deletionconfirmat
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.MediaStore
 import android.view.View
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragment
-import com.w2sv.autocrop.utils.android.extensions.getLong
-import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.FragmentDeletionQueryBinding
+import com.w2sv.autocrop.utils.android.extensions.getLong
+import com.w2sv.autocrop.utils.android.postDelayed
 
 class DeletionConfirmationDialogFragment :
     IODeterminationActivityFragment<FragmentDeletionQueryBinding>(FragmentDeletionQueryBinding::class.java) {
@@ -44,12 +43,9 @@ class DeletionConfirmationDialogFragment :
                 }
 
             // launch appTitleFragment after small delay for UX smoothness
-            Handler(Looper.getMainLooper()).postDelayed(
-                {
-                    fragmentHostingActivity.fragmentReplacementTransaction(AppTitleFragment())
-                        .commit()
-                },
-                resources.getLong(R.integer.delay_small)
-            )
+            postDelayed(resources.getLong(R.integer.delay_small)){
+                fragmentHostingActivity.fragmentReplacementTransaction(AppTitleFragment())
+                    .commit()
+            }
         }
 }

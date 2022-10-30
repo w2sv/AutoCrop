@@ -8,11 +8,11 @@ import androidx.core.text.color
 import com.w2sv.autocrop.ui.views.UncancelableDialogFragment
 import com.w2sv.autocrop.utils.android.extensions.getColoredIcon
 import com.w2sv.autocrop.utils.android.extensions.getThemedColor
-import com.w2sv.autocrop.utils.kotlin.BlankFun
+import com.w2sv.autocrop.utils.kotlin.VoidFun
 import com.w2sv.autocrop.R
 
 class CropPagerInstructionsDialog : UncancelableDialogFragment() {
-    var positiveButtonOnClickListener: BlankFun? = null
+    var positiveButtonOnClickListener: VoidFun? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         builder()

@@ -26,6 +26,14 @@ class CropActivity :
      * otherwise only upon confirmed back press
      */
     override val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+        val handleBackPress by lazy {
+            BackPressHandler(
+                snackyBuilder("Tap again to cancel")
+            ){
+                startMainActivity()
+            }
+        }
+
         override fun handleOnBackPressed() {
             when (getCurrentFragment()) {
                 is CroppingFailedFragment -> startMainActivity()
@@ -33,15 +41,5 @@ class CropActivity :
                 else -> Unit
             }
         }
-    }
-
-    /**
-     * Return to MainActivity on confirmed back press
-     */
-    private val handleBackPress by lazy {
-        BackPressHandler(
-            snackyBuilder("Tap again to cancel"),
-            ::startMainActivity
-        )
     }
 }

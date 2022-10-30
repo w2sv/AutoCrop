@@ -4,7 +4,6 @@ import android.app.Application
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.utils.android.extensions.getApplicationWideSharedPreferences
-import com.w2sv.autocrop.BuildConfig
 import com.w2sv.permissionhandler.PermissionHandler
 import timber.log.Timber
 

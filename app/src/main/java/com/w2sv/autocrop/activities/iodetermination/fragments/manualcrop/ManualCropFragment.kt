@@ -25,7 +25,7 @@ class ManualCropFragment
 
     companion object {
         private const val EXTRA_ADJUSTED_CROP_EDGES = "com.w2sv.autocrop.ADJUSTED_CROP_EDGES"
-        const val KEY_RESULT = "com.w2sv.autocrop.CroppyFragment_RESULT"
+        const val REQUEST_KEY_RESULT = "com.w2sv.autocrop.CroppyFragment_RESULT"
 
         fun instance(cropBundle: CropBundle): ManualCropFragment =
             ManualCropFragment().apply {
@@ -122,7 +122,7 @@ class ManualCropFragment
         applyButton.setOnClickListener {
             parentFragmentManager.popBackStackImmediate()
             setFragmentResult(
-                KEY_RESULT,
+                REQUEST_KEY_RESULT,
                 bundleOf(EXTRA_ADJUSTED_CROP_EDGES to viewModel.cropEdges.value!!)
             )
         }

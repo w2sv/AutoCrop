@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivityViewModel
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.utils.kotlin.BlankFun
+import com.w2sv.autocrop.utils.kotlin.VoidFun
 import com.w2sv.autocrop.utils.kotlin.delegates.Consumable
 import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
 import com.w2sv.bidirectionalviewpager.recyclerview.BidirectionalRecyclerViewAdapter
@@ -18,7 +18,7 @@ class CropPagerViewModel : ViewModel() {
             halvedMaxViews - dataSet.correspondingPosition(halvedMaxViews) + dataSet.currentPosition.value!!
         }
 
-    var onScrollStateIdleListenerConsumable by Consumable<BlankFun>()
+    var onScrollStateIdleListenerConsumable by Consumable<VoidFun>()
 
     //$$$$$$$$$$$$$
     // AutoScroll $

@@ -5,5 +5,5 @@ import android.content.Context
 import android.content.Intent
 import kotlin.reflect.KFunction4
 
-typealias BlankFun = () -> Unit
+typealias VoidFun = () -> Unit
 typealias PendingIntentRenderer = KFunction4<Context, Int, Intent, Int, PendingIntent>

@@ -3,16 +3,16 @@ package com.w2sv.autocrop.activities.iodetermination.fragments.croppager
 import android.content.Context
 import android.os.Bundle
 import android.text.SpannableStringBuilder
-import android.view.View
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.TransitionInflater
+import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.Crop
 import com.w2sv.autocrop.CropEdges
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
-import com.w2sv.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.dialogs.AbstractCropDialog
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropDialog
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropEntiretyDialog
@@ -23,6 +23,7 @@ import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.viewmode
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Scroller
 import com.w2sv.autocrop.activities.iodetermination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
+import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.utils.android.BackPressHandler
 import com.w2sv.autocrop.utils.android.extensions.animate
@@ -37,16 +38,12 @@ import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.android.postDelayed
 import com.w2sv.autocrop.utils.kotlin.extensions.executeAsyncTask
 import com.w2sv.autocrop.utils.kotlin.extensions.numericallyInflected
-import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import de.mateware.snacky.Snacky
 
 class CropPagerFragment :
     IODeterminationActivityFragment<FragmentCroppagerBinding>(FragmentCroppagerBinding::class.java) {
 
     private val viewModel by viewModels<CropPagerViewModel>()
-    private lateinit var viewPagerProxy: CropPagerProxy
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -55,72 +52,8 @@ class CropPagerFragment :
             .inflateTransition(android.R.transition.move)
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        setCropDialogResultListener()
-        setCropEntiretyDialogResultListener()
-        setManualCropResultListener()
-    }
-
-    private fun setManualCropResultListener() {
-        setFragmentResultListener(ManualCropFragment.KEY_RESULT) {
-            processAdjustedCropEdges(ManualCropFragment.getAdjustedCropEdges(it))
-            postDelayed(resources.getLong(R.integer.delay_small)) {
-                requireActivity().snackyBuilder(
-                    "Adjusted crop"
-                )
-                    .setView()
-                    .setIcon(R.drawable.ic_check_green_24)
-                    .buildAndShow()
-            }
-        }
-    }
-
-    /**
-     * Increment nSavedCrops if applicable
-     *
-     * triggers activity exit if [viewModel].dataSet about to be exhausted OR
-     * hide pageIndicationSeekBar AND/OR
-     * removes view, procedure action has been selected for, from pager
-     */
-    private fun setCropDialogResultListener() {
-        setFragmentResultListener(CropDialog.RESULT_REQUEST_KEY) { bundle ->
-            val dataSetPosition = bundle.getInt(CropDialog.DATA_SET_POSITION_BUNDLE_ARG_KEY)
-            val saveCrop = bundle.getBoolean(AbstractCropDialog.EXTRA_DIALOG_CONFIRMED)
-
-            if (saveCrop)
-                sharedViewModel.singularCropSavingJob = lifecycleScope.executeAsyncTask(
-                    sharedViewModel.makeCropBundleProcessor(
-                        dataSetPosition,
-                        BooleanPreferences.deleteScreenshots,
-                        requireContext().contentResolver
-                    )
-                )
-
-            if (viewModel.dataSet.size == 1)
-                typedActivity.invokeSubsequentFragment()
-            else
-                viewPagerProxy.removeView(dataSetPosition)
-        }
-    }
-
-    private fun setCropEntiretyDialogResultListener() {
-        setFragmentResultListener(CropEntiretyDialog.KEY_RESULT) {
-            if (it.getBoolean(AbstractCropDialog.EXTRA_DIALOG_CONFIRMED))
-                fragmentHostingActivity
-                    .fragmentReplacementTransaction(SaveAllFragment(), true)
-                    .commit()
-            else
-                typedActivity.invokeSubsequentFragment()
-        }
-    }
-
-    private fun setFragmentResultListener(requestKey: String, listener: (Bundle) -> Unit) {
-        parentFragmentManager.setFragmentResultListener(requestKey, requireActivity()) { _, bundle ->
-            listener(bundle)
-        }
-    }
+    private lateinit var viewPagerProxy: CropPagerProxy
+    lateinit var handleBackPress: BackPressHandler
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         super.onViewCreatedCore(savedInstanceState)
@@ -129,18 +62,16 @@ class CropPagerFragment :
             binding.viewPager,
             viewModel
         )
-            .apply {
-                setInitialView()
-            }
         viewModel.setLiveDataObservers()
 
         handleBackPress = BackPressHandler(
             requireActivity().snackyBuilder(
                 "Tap again to return to main screen"
             )
-                .setView(),
-            typedActivity::startMainActivity
-        )
+                .setView()
+        ){
+            typedActivity.startMainActivity()
+        }
     }
 
     private fun CropPagerViewModel.setLiveDataObservers() {
@@ -153,8 +84,8 @@ class CropPagerFragment :
             }
         }
 
-        autoScroll.observe(viewLifecycleOwner) {
-            if (it) {
+        autoScroll.observe(viewLifecycleOwner) { autoScroll ->
+            if (autoScroll) {
                 binding.cancelAutoScrollButton.show()
                 scroller = Scroller().apply {
                     run(binding.viewPager, maxAutoScrolls) {
@@ -171,20 +102,14 @@ class CropPagerFragment :
                     }
                 }
 
-                val manualScrollingStateViews = arrayOf(
-                    binding.discardingStatisticsTv,
-                    binding.comparisonButton as View,
-                    binding.manualCropButton as View
-                )
-
                 scroller?.let { scroller ->
                     scroller.cancel()
                     crossFade(
-                        arrayOf(binding.cancelAutoScrollButton),
-                        manualScrollingStateViews
+                        iterator { binding.cancelAutoScrollButton },
+                        iterator { binding.bottomElements }
                     )
                 }
-                    ?: manualScrollingStateViews.forEach { it.show() }
+                    ?: binding.bottomElements.show()
 
                 if (!BooleanPreferences.cropPagerInstructionsShown)
                     postDelayed(resources.getLong(R.integer.delay_small)) {
@@ -198,7 +123,7 @@ class CropPagerFragment :
                     displayDismissedScreenshotsSnackbarIfApplicable()
 
             }
-            binding.viewPager.isUserInputEnabled = !it
+            binding.viewPager.isUserInputEnabled = !autoScroll
         }
 
         dataSet.observe(viewLifecycleOwner) { dataSet ->
@@ -227,14 +152,27 @@ class CropPagerFragment :
         }
     }
 
-    /**
-     * Block backPress throughout if either [SaveAllFragment] or [AppTitleFragment] showing,
-     * otherwise return to MainActivity after confirmation
-     */
-    lateinit var handleBackPress: BackPressHandler
+    override fun onStart() {
+        super.onStart()
 
-    private fun Snacky.Builder.setView(): Snacky.Builder =
-        setView(binding.snackbarRepelledHostingLayout)
+        setCropDialogResultListener()
+        setCropEntiretyDialogResultListener()
+        setManualCropResultListener()
+    }
+
+    private fun setManualCropResultListener() {
+        setFragmentResultListener(ManualCropFragment.REQUEST_KEY_RESULT) {
+            processAdjustedCropEdges(ManualCropFragment.getAdjustedCropEdges(it))
+            postDelayed(resources.getLong(R.integer.delay_small)) {
+                requireActivity().snackyBuilder(
+                    "Adjusted crop"
+                )
+                    .setView()
+                    .setIcon(R.drawable.ic_check_green_24)
+                    .buildAndShow()
+            }
+        }
+    }
 
     /**
      * Set new [Crop] in [viewModel].dataSet.currentPosition and notify [CropPagerAdapter]
@@ -253,6 +191,50 @@ class CropPagerFragment :
             viewModel.dataSet.size
         )
     }
+
+    /**
+     * Increment nSavedCrops if applicable
+     *
+     * triggers activity exit if [viewModel].dataSet about to be exhausted OR
+     * hide pageIndicationSeekBar AND/OR
+     * removes view, procedure action has been selected for, from pager
+     */
+    private fun setCropDialogResultListener() {
+        setFragmentResultListener(CropDialog.REQUEST_KEY_RESULT) { bundle ->
+            val dataSetPosition = bundle.getInt(CropDialog.DATA_SET_POSITION_BUNDLE_ARG_KEY)
+            val saveCrop = bundle.getBoolean(AbstractCropDialog.EXTRA_DIALOG_CONFIRMED)
+
+            if (saveCrop)
+                with(sharedViewModel){
+                    singularCropSavingJob = lifecycleScope.executeAsyncTask(
+                        makeCropBundleProcessor(
+                            dataSetPosition,
+                            BooleanPreferences.deleteScreenshots,
+                            requireContext().contentResolver
+                        )
+                    )
+                }
+
+            if (viewModel.dataSet.size == 1)
+                typedActivity.invokeSubsequentFragment()
+            else
+                viewPagerProxy.removeView(dataSetPosition)
+        }
+    }
+
+    private fun setCropEntiretyDialogResultListener() {
+        setFragmentResultListener(CropEntiretyDialog.REQUEST_KEY_RESULT) {
+            if (it.getBoolean(AbstractCropDialog.EXTRA_DIALOG_CONFIRMED))
+                fragmentHostingActivity
+                    .fragmentReplacementTransaction(SaveAllFragment(), true)
+                    .commit()
+            else
+                typedActivity.invokeSubsequentFragment()
+        }
+    }
+
+    private fun Snacky.Builder.setView(): Snacky.Builder =
+        setView(binding.snackbarRepelledHostingLayout)
 
     /**
      * Cancel and nullify scroller if set, i.e. running

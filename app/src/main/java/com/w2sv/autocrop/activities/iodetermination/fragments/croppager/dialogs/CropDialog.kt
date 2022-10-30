@@ -5,16 +5,12 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.core.os.bundleOf
 
-/**
- * Class accounting for procedure dialog display upon screen click,
- * defining respective procedure effects
- */
 class CropDialog :
     AbstractCropDialog() {
 
     companion object {
-        const val RESULT_REQUEST_KEY = "CropDialog_RESULT_REQUEST_KEY"
-        const val DATA_SET_POSITION_BUNDLE_ARG_KEY = "DATA_SET_POSITION_BUNDLE_ARG"
+        const val REQUEST_KEY_RESULT = "com.w2sv.autocrop.CropDialog_RESULT"
+        const val DATA_SET_POSITION_BUNDLE_ARG_KEY = "com.w2sv.autocrop.DATA_SET_POSITION_BUNDLE_ARG"
     }
 
     private val dataSetPosition: Int by lazy {
@@ -34,7 +30,7 @@ class CropDialog :
         requireActivity()
             .supportFragmentManager
             .setFragmentResult(
-                RESULT_REQUEST_KEY,
+                REQUEST_KEY_RESULT,
                 bundleOf(
                     DATA_SET_POSITION_BUNDLE_ARG_KEY to dataSetPosition,
                     EXTRA_DIALOG_CONFIRMED to confirmed

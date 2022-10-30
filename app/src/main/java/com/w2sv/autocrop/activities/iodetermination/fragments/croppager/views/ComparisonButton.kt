@@ -2,6 +2,7 @@ package com.w2sv.autocrop.activities.iodetermination.fragments.croppager.views
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.fragment.app.findFragment
 import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivity
 import com.w2sv.autocrop.activities.iodetermination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
@@ -26,8 +27,7 @@ class ComparisonButton(context: Context, attributeSet: AttributeSet) :
             .addToBackStack(null)
             .apply {
                 val cropImageView =
-                    fragmentHostingActivity
-                        .getCastCurrentFragment<CropPagerFragment>()!!
+                    findFragment<CropPagerFragment>()
                         .binding
                         .viewPager
                         .run {
