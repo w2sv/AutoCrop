@@ -18,3 +18,6 @@ check:
 
 build:
 	@./gradlew build  # requires release keys
+
+optimize-drawables:
+	@avocado app/src/main/res/drawable/*.xml

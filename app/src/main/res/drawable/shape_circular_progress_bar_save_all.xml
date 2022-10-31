@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rotate xmlns:android="http://schemas.android.com/apk/res/android"
-    android:pivotX="50%"
-    android:pivotY="50%">
-
-    <shape
-        android:shape="ring"
-        android:thickness="5dp"
-        android:useLevel="false">
-
-        <gradient
-            android:centerColor="@color/wine_red"
-            android:endColor="@color/brudi_pink"
-            android:startColor="@color/magenta_dark"
-            android:type="sweep" />
+<rotate xmlns:android="http://schemas.android.com/apk/res/android" android:pivotX="50%" android:pivotY="50%">
+    <shape android:shape="ring" android:thickness="5dp" android:useLevel="false">
+        <gradient android:centerColor="@color/wine_red" android:endColor="@color/brudi_pink" android:startColor="@color/magenta_dark" android:type="sweep"/>
     </shape>
-
 </rotate>
