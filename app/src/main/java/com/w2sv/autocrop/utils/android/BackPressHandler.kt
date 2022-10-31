@@ -1,6 +1,5 @@
 package com.w2sv.autocrop.utils.android
 
-import com.w2sv.autocrop.utils.android.extensions.buildAndShow
 import com.w2sv.autocrop.utils.kotlin.VoidFun
 import de.mateware.snacky.Snacky
 
@@ -21,7 +20,7 @@ class BackPressHandler(
 
         pressedOnce = true
         onFirstPressNotificationSnackyBuilder
-            .buildAndShow()
+            .build().show()
 
         postDelayed(confirmationWindowDuration) {
             pressedOnce = false

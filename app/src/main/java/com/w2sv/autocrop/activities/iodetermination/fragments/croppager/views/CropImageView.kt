@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.findFragment
-import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivity
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropDialog
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropEntiretyDialog

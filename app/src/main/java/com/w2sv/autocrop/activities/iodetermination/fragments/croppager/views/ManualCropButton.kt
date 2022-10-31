@@ -2,7 +2,6 @@ package com.w2sv.autocrop.activities.iodetermination.fragments.croppager.views
 
 import android.content.Context
 import android.util.AttributeSet
-import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivity
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.w2sv.autocrop.activities.iodetermination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.controller.activity.retriever.ActivityRetriever

@@ -8,10 +8,10 @@ import android.text.SpannableStringBuilder
 import androidx.core.os.bundleOf
 import androidx.core.text.italic
 import androidx.fragment.app.setFragmentResult
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.views.UncancelableDialogFragment
 import com.w2sv.autocrop.utils.android.extensions.getColoredIcon
 import com.w2sv.autocrop.utils.android.extensions.show
-import com.w2sv.autocrop.R
 
 class CropExplanation : UncancelableDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =

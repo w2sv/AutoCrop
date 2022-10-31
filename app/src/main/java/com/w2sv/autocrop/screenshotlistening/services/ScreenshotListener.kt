@@ -13,15 +13,17 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import androidx.core.app.NotificationCompat
+import com.google.common.collect.EvictingQueue
 import com.w2sv.autocrop.CropEdges
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.Screenshot
 import com.w2sv.autocrop.activities.cropping.cropping.cropEdges
 import com.w2sv.autocrop.activities.cropping.cropping.cropped
 import com.w2sv.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
 import com.w2sv.autocrop.activities.iodetermination.deleteRequestUri
-import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
+import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.autocrop.utils.android.extensions.compressToStream
 import com.w2sv.autocrop.utils.android.extensions.loadBitmap
 import com.w2sv.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
@@ -30,8 +32,6 @@ import com.w2sv.autocrop.utils.android.systemScreenshotsDirectory
 import com.w2sv.autocrop.utils.kotlin.PendingIntentRenderer
 import com.w2sv.autocrop.utils.kotlin.dateFromUnixTimestamp
 import com.w2sv.autocrop.utils.kotlin.timeDelta
-import com.google.common.collect.EvictingQueue
-import com.w2sv.autocrop.R
 import de.paul_woitaschek.slimber.i
 import java.io.File
 import java.io.FileOutputStream

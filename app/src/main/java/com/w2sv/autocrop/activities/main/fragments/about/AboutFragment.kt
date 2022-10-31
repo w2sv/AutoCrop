@@ -1,17 +1,14 @@
 package com.w2sv.autocrop.activities.main.fragments.about
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import com.w2sv.autocrop.activities.main.fragments.MainActivityFragment
-import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.utils.android.extensions.animate
-import com.w2sv.autocrop.utils.android.extensions.buildAndShow
-import com.w2sv.autocrop.utils.android.extensions.getLong
-import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
+import com.w2sv.autocrop.activities.main.fragments.MainActivityFragment
 import com.w2sv.autocrop.databinding.FragmentAboutBinding
+import com.w2sv.autocrop.preferences.BooleanPreferences
+import com.w2sv.autocrop.utils.android.extensions.animate
+import com.w2sv.autocrop.utils.android.extensions.getLong
+import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.android.postDelayed
 
 class AboutFragment :
@@ -28,7 +25,7 @@ class AboutFragment :
                         duration = resources.getInteger(R.integer.duration_snackbar_long)
                     )
                     .setIcon(R.drawable.ic_outline_info_24)
-                    .buildAndShow()
+                    .build().show()
             }
     }
 

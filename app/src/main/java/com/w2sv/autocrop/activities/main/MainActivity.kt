@@ -11,6 +11,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.text.color
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
@@ -18,20 +19,18 @@ import com.w2sv.autocrop.controller.activity.ApplicationActivity
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
-import com.w2sv.autocrop.utils.android.extensions.buildAndShow
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.getThemedColor
 import com.w2sv.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.kotlin.extensions.numericallyInflected
-import com.w2sv.autocrop.R
 import com.w2sv.permissionhandler.PermissionHandler
 import com.w2sv.permissionhandler.requestPermissions
 
 class MainActivity :
     ApplicationActivity<FlowFieldFragment, MainActivityViewModel>(
-        FlowFieldFragment::class,
-        MainActivityViewModel::class,
+        FlowFieldFragment::class.java,
+        MainActivityViewModel::class.java,
         BooleanPreferences, UriPreferences
     ) {
 
@@ -132,7 +131,7 @@ class MainActivity :
 
             snackyBuilder(text)
                 .setIcon(icon)
-                .buildAndShow()
+                .build().show()
         }
     }
 

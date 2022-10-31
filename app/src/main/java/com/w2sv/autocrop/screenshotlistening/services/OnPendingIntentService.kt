@@ -3,8 +3,8 @@ package com.w2sv.autocrop.screenshotlistening.services
 import android.content.Intent
 import com.w2sv.autocrop.screenshotlistening.BindingAdministrator
 import com.w2sv.autocrop.screenshotlistening.PendingIntentRequestCodes
-import com.w2sv.autocrop.screenshotlistening.services.abstrct.UnboundService
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
+import com.w2sv.autocrop.screenshotlistening.services.abstrct.UnboundService
 import com.w2sv.autocrop.utils.android.extensions.getInt
 import com.w2sv.autocrop.utils.android.extensions.notificationManager
 import de.paul_woitaschek.slimber.i

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
@@ -14,16 +15,14 @@ import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.controller.activity.ApplicationActivity
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
-import com.w2sv.autocrop.utils.android.extensions.buildAndShow
 import com.w2sv.autocrop.utils.android.extensions.getInt
 import com.w2sv.autocrop.utils.android.extensions.getParcelableArrayList
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
-import com.w2sv.autocrop.R
 
 class IODeterminationActivity :
     ApplicationActivity<CropPagerFragment, IODeterminationActivityViewModel>(
-        CropPagerFragment::class,
-        IODeterminationActivityViewModel::class,
+        CropPagerFragment::class.java,
+        IODeterminationActivityViewModel::class.java,
         BooleanPreferences
     ) {
 
@@ -71,7 +70,7 @@ class IODeterminationActivity :
                     is SaveAllFragment -> {
                         snackyBuilder("Wait until crops have been saved")
                             .setIcon(R.drawable.ic_front_hand_24)
-                            .buildAndShow()
+                            .build().show()
                     }
 
                     is CropPagerFragment -> it.handleBackPress()

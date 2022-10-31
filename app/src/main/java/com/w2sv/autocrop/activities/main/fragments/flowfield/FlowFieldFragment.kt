@@ -8,16 +8,15 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.color
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.cropping.CropActivity
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.MainActivityFragment
+import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.utils.android.documentUriPathIdentifier
-import com.w2sv.autocrop.utils.android.extensions.buildAndShow
 import com.w2sv.autocrop.utils.android.extensions.getThemedColor
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
-import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 import com.w2sv.permissionhandler.PermissionHandler
 
 class FlowFieldFragment :
@@ -87,7 +86,7 @@ class FlowFieldFragment :
                                 )
                             }
                     )
-                        .buildAndShow()
+                        .build().show()
                 }
             }
         }

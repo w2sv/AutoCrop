@@ -5,9 +5,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivityViewModel
 import com.w2sv.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
+import com.w2sv.autocrop.databinding.FragmentSaveallBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.utils.kotlin.extensions.executeAsyncTaskWithProgressUpdateReceiver
-import com.w2sv.autocrop.databinding.FragmentSaveallBinding
 
 class SaveAllFragment :
     IODeterminationActivityFragment<FragmentSaveallBinding>(FragmentSaveallBinding::class.java) {

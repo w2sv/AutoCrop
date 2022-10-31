@@ -12,8 +12,8 @@ import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 
 class CropActivity :
     ApplicationActivity<CropFragment, CropActivityViewModel>(
-        CropFragment::class,
-        CropActivityViewModel::class
+        CropFragment::class.java,
+        CropActivityViewModel::class.java
     ) {
 
     override fun viewModelFactory(): ViewModelProvider.Factory =

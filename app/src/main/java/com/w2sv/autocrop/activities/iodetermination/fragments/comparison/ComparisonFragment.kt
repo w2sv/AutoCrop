@@ -9,8 +9,11 @@ import androidx.fragment.app.viewModels
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.w2sv.autocrop.CropBundle
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
+import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.hide
@@ -22,9 +25,6 @@ import com.w2sv.autocrop.utils.android.extensions.showSystemBars
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.android.postDelayed
 import com.w2sv.autocrop.utils.kotlin.delegates.AutoSwitch
-import com.google.android.material.snackbar.Snackbar
-import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 
 class ComparisonFragment
     : IODeterminationActivityFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java) {

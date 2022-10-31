@@ -26,7 +26,6 @@ import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.utils.android.BackPressHandler
 import com.w2sv.autocrop.utils.android.extensions.animate
-import com.w2sv.autocrop.utils.android.extensions.buildAndShow
 import com.w2sv.autocrop.utils.android.extensions.crossFade
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.getThemedColor
@@ -151,7 +150,7 @@ class CropPagerFragment :
                 )
                     .setView()
                     .setIcon(R.drawable.ic_error_24)
-                    .buildAndShow()
+                    .build().show()
             }
         }
     }
@@ -164,7 +163,7 @@ class CropPagerFragment :
             )
                 .setView()
                 .setIcon(R.drawable.ic_check_green_24)
-                .buildAndShow()
+                .build().show()
         }
     }
 

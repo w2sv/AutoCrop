@@ -1,5 +1,6 @@
 package com.w2sv.autocrop.activities.main
 
+//import org.junit.jupiter.api.TestInstance
 import android.Manifest
 import android.content.Intent
 import android.net.Uri
@@ -23,11 +24,11 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.filters.FlakyTest
 import androidx.test.runner.permission.PermissionRequester
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.utils.android.IMAGE_MIME_TYPE
-import com.w2sv.autocrop.R
 import de.mannodermaus.junit5.ActivityScenarioExtension
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.equalTo
@@ -36,7 +37,6 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-//import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.RegisterExtension
 import utils.espresso.SLOW_TIMEOUT
 import utils.espresso.check

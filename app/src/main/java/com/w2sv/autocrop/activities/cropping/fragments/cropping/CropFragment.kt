@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
+import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.autocrop.CropBundle
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.Screenshot
 import com.w2sv.autocrop.activities.cropping.cropping.cropEdgesCandidates
 import com.w2sv.autocrop.activities.cropping.cropping.maxHeightEdges
@@ -13,13 +15,11 @@ import com.w2sv.autocrop.activities.cropping.fragments.croppingfailed.CroppingFa
 import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivity
 import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivityViewModel
 import com.w2sv.autocrop.activities.main.MainActivity
+import com.w2sv.autocrop.databinding.FragmentCropBinding
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.loadBitmap
 import com.w2sv.autocrop.utils.android.postDelayed
 import com.w2sv.autocrop.utils.kotlin.extensions.executeAsyncTaskWithProgressUpdateReceiver
-import com.blogspot.atifsoftwares.animatoolib.Animatoo
-import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.FragmentCropBinding
 import de.paul_woitaschek.slimber.i
 import kotlinx.coroutines.Job
 

@@ -8,18 +8,18 @@ import android.provider.MediaStore
 import android.text.SpannableStringBuilder
 import androidx.core.app.NotificationCompat
 import androidx.core.text.italic
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.Screenshot
 import com.w2sv.autocrop.activities.iodetermination.IOResult
 import com.w2sv.autocrop.activities.iodetermination.carryOutCropIO
 import com.w2sv.autocrop.activities.iodetermination.pathTail
 import com.w2sv.autocrop.preferences.UriPreferences
-import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
+import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.w2sv.autocrop.utils.android.extensions.getParcelable
 import com.w2sv.autocrop.utils.android.extensions.queryMediaStoreDatum
-import com.w2sv.autocrop.R
 
 class CropIOService :
     BoundService(),

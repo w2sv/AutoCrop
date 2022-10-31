@@ -14,7 +14,9 @@ import android.view.MotionEvent.ACTION_MOVE
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
+import com.lyrebirdstudio.croppylib.fragment.view.BitmapGestureHandler
 import com.w2sv.autocrop.CropEdges
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.iodetermination.fragments.manualcrop.ManualCropViewModel
 import com.w2sv.autocrop.activities.iodetermination.fragments.manualcrop.utils.extensions.animateToMatrix
 import com.w2sv.autocrop.activities.iodetermination.fragments.manualcrop.utils.extensions.clone
@@ -40,8 +42,6 @@ import com.w2sv.autocrop.activities.iodetermination.fragments.manualcrop.utils.m
 import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
 import com.w2sv.autocrop.utils.android.extensions.postValue
 import com.w2sv.autocrop.utils.android.extensions.viewModelLazy
-import com.lyrebirdstudio.croppylib.fragment.view.BitmapGestureHandler
-import com.w2sv.autocrop.R
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt

@@ -5,14 +5,14 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.findViewTreeLifecycleOwner
+import com.daimajia.androidanimations.library.YoYo
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.iodetermination.fragments.comparison.ComparisonViewModel
 import com.w2sv.autocrop.utils.android.extensions.fadeOut
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
 import com.w2sv.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.utils.android.extensions.viewModelLazy
-import com.daimajia.androidanimations.library.YoYo
-import com.w2sv.autocrop.R
 
 class ComparisonIVStatusTV(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
     private val viewModel by viewModelLazy<ComparisonViewModel>()

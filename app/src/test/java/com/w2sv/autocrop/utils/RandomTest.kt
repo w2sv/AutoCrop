@@ -1,6 +1,5 @@
 package com.w2sv.autocrop.utils
 
-import com.w2sv.autocrop.utils.kotlin.Random
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

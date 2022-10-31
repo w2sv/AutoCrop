@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
-import com.w2sv.autocrop.utils.kotlin.VoidFun
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.autocrop.R
+import com.w2sv.autocrop.utils.kotlin.VoidFun
 
 fun View.animate(
     technique: Techniques,

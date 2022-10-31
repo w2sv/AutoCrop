@@ -12,6 +12,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
+import com.google.android.material.navigation.NavigationView
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.MainActivityViewModel
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
@@ -23,12 +25,9 @@ import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
 import com.w2sv.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.w2sv.autocrop.utils.android.extensions.activityViewModelLazy
-import com.w2sv.autocrop.utils.android.extensions.buildAndShow
 import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
 import com.w2sv.autocrop.utils.android.extensions.serviceRunning
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
-import com.google.android.material.navigation.NavigationView
-import com.w2sv.autocrop.R
 import com.w2sv.permissionhandler.requestPermissions
 
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
@@ -144,7 +143,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         catch (e: ActivityNotFoundException) {
             activity
                 .snackyBuilder("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
-                .buildAndShow()
+                .build().show()
         }
     }
 
