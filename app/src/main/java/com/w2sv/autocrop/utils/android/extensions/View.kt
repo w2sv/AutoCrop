@@ -34,13 +34,9 @@ fun View.animationComposer(
 // Visibility Changing $
 //$$$$$$$$$$$$$$$$$$$$$$
 
-fun crossFade(fadeOut: Iterator<View>, fadeInViews: Iterator<View>, duration: Long? = null) {
-    fadeInViews.forEach {
-        it.fadeIn(duration)
-    }
-    fadeOut.forEach {
-        it.fadeOut(duration)
-    }
+fun crossFade(fadeOut: View, fadeIn: View, duration: Long? = null) {
+    fadeOut.fadeOut(duration)
+    fadeIn.fadeIn(duration)
 }
 
 fun View.fadeIn(duration: Long? = null): YoYo.YoYoString =

@@ -18,6 +18,7 @@ import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.databinding.FragmentCropBinding
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.loadBitmap
+import com.w2sv.autocrop.utils.android.extensions.postValue
 import com.w2sv.autocrop.utils.android.postDelayed
 import com.w2sv.kotlinutils.extensions.executeAsyncTaskWithProgressUpdateReceiver
 import de.paul_woitaschek.slimber.i
@@ -32,7 +33,7 @@ class CropFragment
         super.onViewCreated(view, savedInstanceState)
 
         // attach views to currentCropNumber observable
-        sharedViewModel.imageNumber.observe(viewLifecycleOwner) {
+        sharedViewModel.liveImageNumber.observe(viewLifecycleOwner) {
             binding.progressTv.update(it)
             binding.croppingProgressBar.progress = it
         }
@@ -40,14 +41,18 @@ class CropFragment
         // launch croppingJob
         croppingJob = lifecycleScope.executeAsyncTaskWithProgressUpdateReceiver(
             ::cropImages,
-            { sharedViewModel.imageNumber.increment() },
+            {
+                with(sharedViewModel.liveImageNumber){
+                    postValue(value!! + 1)
+                }
+            },
             { startIODeterminationActivityOrInvokeCroppingFailureFragment() }
         )
     }
 
     private suspend fun cropImages(publishProgress: suspend (Void?) -> Unit): Void? {
         sharedViewModel.uris.subList(
-            sharedViewModel.imageNumber.value!!,
+            sharedViewModel.liveImageNumber.value!!,
             sharedViewModel.uris.size
         ).forEach { uri ->
             // attempt to crop image; upon success add CropBundle to sharedViewModel

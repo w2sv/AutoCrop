@@ -86,12 +86,12 @@ class CropPagerFragment :
             }
         }
 
-        autoScroll.observe(viewLifecycleOwner) { autoScroll ->
+        liveAutoScroll.observe(viewLifecycleOwner) { autoScroll ->
             if (autoScroll) {
                 binding.cancelAutoScrollButton.show()
                 scroller = Scroller().apply {
-                    run(binding.viewPager, maxAutoScrolls) {
-                        this@setLiveDataObservers.autoScroll.postValue(false)
+                    run(binding.viewPager, autoScrolls) {
+                        this@setLiveDataObservers.liveAutoScroll.postValue(false)
                     }
                 }
             }
@@ -107,8 +107,8 @@ class CropPagerFragment :
                 scroller?.let { scroller ->
                     scroller.cancel()
                     crossFade(
-                        iterator { binding.cancelAutoScrollButton },
-                        iterator { binding.bottomElements }
+                        binding.cancelAutoScrollButton,
+                        binding.bottomElements
                     )
                 }
                     ?: binding.bottomElements.show()

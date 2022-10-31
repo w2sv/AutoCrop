@@ -7,6 +7,7 @@ import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivityViewM
 import com.w2sv.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
 import com.w2sv.autocrop.databinding.FragmentSaveallBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
+import com.w2sv.autocrop.utils.android.extensions.postValue
 import com.w2sv.kotlinutils.extensions.executeAsyncTaskWithProgressUpdateReceiver
 
 class SaveAllFragment :
@@ -25,7 +26,11 @@ class SaveAllFragment :
 
         lifecycleScope.executeAsyncTaskWithProgressUpdateReceiver(
             { processRemainingCropBundles(BooleanPreferences.deleteScreenshots, it) },
-            { viewModel.liveCropNumber.increment() },
+            {
+                with(viewModel.liveCropNumber){
+                    postValue(minOf(value!! + 1, viewModel.nImagesToBeSaved))
+                }
+            },
             { castActivity.invokeSubsequentFragment() }
         )
     }

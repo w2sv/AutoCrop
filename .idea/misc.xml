@@ -17,8 +17,9 @@
     </option>
   </component>
   <component name="EntryPointsManager">
-    <list size="1">
-      <item index="0" class="java.lang.String" itemvalue="org.junit.jupiter.api.extension.RegisterExtension" />
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="androidx.annotation.Keep" />
+      <item index="1" class="java.lang.String" itemvalue="org.junit.jupiter.api.extension.RegisterExtension" />
     </list>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />

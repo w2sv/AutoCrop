@@ -12,6 +12,7 @@ class ManualCropViewModel(
     val initialCropEdges: CropEdges,
     val cropEdgePairCandidates: List<CropEdges>
 ) : ViewModel() {
+
     class Factory(
         private val bitmap: Bitmap,
         private val initialCropEdges: CropEdges,

@@ -52,5 +52,5 @@ class CropImageView(context: Context, attributeSet: AttributeSet) :
     }
 
     private fun dialogInflationEnabled(): Boolean =
-        viewModel.autoScroll.value == false
+        viewModel.liveAutoScroll.value == false
 }
