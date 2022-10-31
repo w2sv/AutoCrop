@@ -18,7 +18,7 @@ class AboutFragment :
         super.onResume()
 
         if (!BooleanPreferences.aboutFragmentInstructionsShown)
-            postDelayed(resources.getLong(R.integer.delay_medium)){
+            postDelayed(resources.getLong(R.integer.delay_medium)) {
                 requireActivity()
                     .snackyBuilder(
                         "Pro tip: check out what happens if you click on the various view elements",

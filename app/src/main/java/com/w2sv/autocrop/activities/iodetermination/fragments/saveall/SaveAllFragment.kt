@@ -27,7 +27,7 @@ class SaveAllFragment :
         lifecycleScope.executeAsyncTaskWithProgressUpdateReceiver(
             { processRemainingCropBundles(BooleanPreferences.deleteScreenshots, it) },
             {
-                with(viewModel.liveCropNumber){
+                with(viewModel.liveCropNumber) {
                     postValue(minOf(value!! + 1, viewModel.nImagesToBeSaved))
                 }
             },

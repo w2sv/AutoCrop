@@ -12,7 +12,7 @@ class AppTitleFragment
     : IODeterminationActivityFragment<FragmentApptitleBinding>(FragmentApptitleBinding::class.java) {
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
-        with(binding.appTitleTextView){
+        with(binding.appTitleTextView) {
             animationComposer(
                 listOf(
                     Techniques.Shake,
@@ -23,7 +23,7 @@ class AppTitleFragment
                     .random(),
                 delay = resources.getLong(R.integer.delay_small)
             )
-                .onEnd{
+                .onEnd {
                     sharedViewModel.singularCropSavingJob?.run {
                         invokeOnCompletion {
                             castActivity.startMainActivity()

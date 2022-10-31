@@ -29,7 +29,7 @@ class CropActivity :
         val handleBackPress by lazy {
             BackPressHandler(
                 snackyBuilder("Tap again to cancel")
-            ){
+            ) {
                 startMainActivity()
             }
         }

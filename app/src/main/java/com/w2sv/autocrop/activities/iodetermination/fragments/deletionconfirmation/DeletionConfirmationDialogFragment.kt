@@ -43,7 +43,7 @@ class DeletionConfirmationDialogFragment :
                 }
 
             // launch appTitleFragment after small delay for UX smoothness
-            postDelayed(resources.getLong(R.integer.delay_small)){
+            postDelayed(resources.getLong(R.integer.delay_small)) {
                 fragmentHostingActivity.fragmentReplacementTransaction(AppTitleFragment())
                     .commit()
             }

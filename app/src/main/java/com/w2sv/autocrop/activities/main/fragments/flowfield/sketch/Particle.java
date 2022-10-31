@@ -22,6 +22,7 @@ class Particle extends PApplet {
     private final float maxSpeed;
     PVector pos;
     private boolean skipDraw = false;
+
     public Particle() {
         vel = new PVector(randomStartVelocity(), randomStartVelocity());
         acc = new PVector(0, 0);

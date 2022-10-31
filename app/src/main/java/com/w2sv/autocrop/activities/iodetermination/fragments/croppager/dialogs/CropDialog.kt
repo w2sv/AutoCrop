@@ -26,11 +26,11 @@ class CropDialog :
             create()
         }
 
-    interface ResultListener{
+    interface ResultListener {
         fun onResult(confirmed: Boolean, dataSetPosition: Int)
     }
 
-    private fun notifyResultListener(confirmed: Boolean){
+    private fun notifyResultListener(confirmed: Boolean) {
         (requireParentFragment() as ResultListener)
             .onResult(
                 confirmed,

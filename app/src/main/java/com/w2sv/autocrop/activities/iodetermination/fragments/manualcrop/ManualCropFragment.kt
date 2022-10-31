@@ -120,7 +120,7 @@ class ManualCropFragment
         }
     }
 
-    interface ResultListener{
+    interface ResultListener {
         fun onResult(cropEdges: CropEdges)
     }
 }

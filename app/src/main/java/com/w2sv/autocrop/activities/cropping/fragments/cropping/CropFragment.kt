@@ -42,7 +42,7 @@ class CropFragment
         croppingJob = lifecycleScope.executeAsyncTaskWithProgressUpdateReceiver(
             ::cropImages,
             {
-                with(sharedViewModel.liveImageNumber){
+                with(sharedViewModel.liveImageNumber) {
                     postValue(value!! + 1)
                 }
             },
@@ -90,7 +90,7 @@ class CropFragment
             startIODeterminationActivity()
         else
         // delay briefly to assure progress bar having reached 100% before UI change
-            postDelayed(resources.getLong(R.integer.delay_small)){
+            postDelayed(resources.getLong(R.integer.delay_small)) {
                 fragmentHostingActivity
                     .fragmentReplacementTransaction(CroppingFailedFragment())
                     .commit()

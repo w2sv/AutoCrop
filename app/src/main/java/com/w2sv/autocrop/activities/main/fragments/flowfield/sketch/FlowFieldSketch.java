@@ -13,6 +13,7 @@ public class FlowFieldSketch extends PApplet {
     private final ArrayList<Particle> particles = new ArrayList<>();
     private FlowField flowfield;
     private int lastAlphaDrop = 0;
+
     public FlowFieldSketch(int width, int height) {
         this.width = width;
         this.height = height;
