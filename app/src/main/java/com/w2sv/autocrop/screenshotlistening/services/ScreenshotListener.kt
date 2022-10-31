@@ -21,15 +21,15 @@ import com.w2sv.autocrop.activities.cropping.cropping.cropEdges
 import com.w2sv.autocrop.activities.cropping.cropping.cropped
 import com.w2sv.autocrop.activities.iodetermination.CROP_FILE_ADDENDUM
 import com.w2sv.autocrop.activities.iodetermination.deleteRequestUri
+import com.w2sv.autocrop.screenshotlistening.PendingIntentRenderer
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
+import com.w2sv.autocrop.screenshotlistening.notifications.notificationBuilderWithSetChannel
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.autocrop.utils.android.extensions.compressToStream
 import com.w2sv.autocrop.utils.android.extensions.loadBitmap
-import com.w2sv.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
 import com.w2sv.autocrop.utils.android.extensions.queryMediaStoreData
 import com.w2sv.autocrop.utils.android.systemScreenshotsDirectory
-import com.w2sv.autocrop.utils.PendingIntentRenderer
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
 import com.w2sv.kotlinutils.timeDelta
 import de.paul_woitaschek.slimber.i

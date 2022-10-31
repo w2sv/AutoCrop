@@ -22,7 +22,7 @@ class CropPagerInstructionsDialog : UncancelableDialogFragment() {
                     .addFormattedInstruction("Tap screen and hold to save/discard", "all", "crops \uD83D\uDC47⏳")
             )
             .setPositiveButton("Got it!") { _, _ ->
-                (parentFragmentManager as OnDismissedListener)
+                (requireParentFragment() as OnDismissedListener)
                     .onDismissed()
             }
             .create()

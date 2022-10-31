@@ -3,9 +3,6 @@ package com.w2sv.autocrop.screenshotlistening.notifications
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.core.app.NotificationCompat
-import com.w2sv.autocrop.utils.android.extensions.notificationBuilderWithSetChannel
-import com.w2sv.autocrop.utils.android.extensions.notificationManager
-import com.w2sv.autocrop.utils.android.extensions.showNotification
 import de.paul_woitaschek.slimber.i
 
 class NotificationGroup(
