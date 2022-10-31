@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.utils.kotlin
+package com.w2sv.autocrop.utils
 
 import android.app.PendingIntent
 import android.content.Context

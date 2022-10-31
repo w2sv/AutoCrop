@@ -3,7 +3,7 @@ package com.w2sv.autocrop.activities.main.fragments.flowfield.sketch;
 import androidx.annotation.NonNull;
 
 import com.google.common.collect.Sets;
-import com.w2sv.autocrop.utils.kotlin.Random;
+import com.w2sv.autocrop.utils.Random;
 
 import java.util.ArrayList;
 import java.util.Set;

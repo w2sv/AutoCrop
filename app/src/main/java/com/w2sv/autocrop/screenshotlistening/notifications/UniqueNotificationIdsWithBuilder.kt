@@ -1,7 +1,7 @@
 package com.w2sv.autocrop.screenshotlistening.notifications
 
 import androidx.core.app.NotificationCompat
-import com.w2sv.autocrop.utils.kotlin.extensions.nonZeroOrdinal
+import com.w2sv.kotlinutils.extensions.nonZeroOrdinal
 import java.util.PriorityQueue
 
 class UniqueNotificationIdsWithBuilder(groupId: NotificationId) : PriorityQueue<Pair<Int, NotificationCompat.Builder>>(

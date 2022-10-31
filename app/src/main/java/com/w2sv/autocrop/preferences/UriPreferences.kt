@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.provider.DocumentsContract
 import com.w2sv.autocrop.utils.android.extensions.uriPermissionGranted
-import com.w2sv.autocrop.utils.kotlin.delegates.mapObserver
+import com.w2sv.kotlinutils.delegates.mapObserver
 import de.paul_woitaschek.slimber.i
 
 object UriPreferences : TypedPreferences<Uri?>(mutableMapOf("treeUri" to null)) {

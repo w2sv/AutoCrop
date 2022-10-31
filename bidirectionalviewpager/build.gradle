@@ -33,6 +33,7 @@ android {
 dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.lifecycle:lifecycle-livedata-core-ktx:2.5.1'
+    implementation 'com.github.w2sv:kotlinutils:master-SNAPSHOT'
 
     // -----------------
     // Unit Tests

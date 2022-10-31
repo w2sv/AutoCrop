@@ -15,7 +15,7 @@ import com.w2sv.autocrop.activities.iodetermination.fragments.IODeterminationAct
 import com.w2sv.autocrop.activities.iodetermination.fragments.manualcrop.utils.extensions.maintainedPercentage
 import com.w2sv.autocrop.databinding.FragmentManualCropBinding
 import com.w2sv.autocrop.utils.android.extensions.loadBitmap
-import com.w2sv.autocrop.utils.kotlin.extensions.rounded
+import com.w2sv.kotlinutils.extensions.rounded
 import kotlin.math.max
 import kotlin.math.min
 

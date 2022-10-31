@@ -8,7 +8,7 @@ import android.provider.MediaStore
 import com.w2sv.autocrop.activities.cropping.cropping.cropped
 import com.w2sv.autocrop.utils.android.ImageMimeType
 import com.w2sv.autocrop.utils.android.extensions.queryMediaStoreData
-import com.w2sv.autocrop.utils.kotlin.extensions.rounded
+import com.w2sv.kotlinutils.extensions.rounded
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import kotlin.math.roundToInt

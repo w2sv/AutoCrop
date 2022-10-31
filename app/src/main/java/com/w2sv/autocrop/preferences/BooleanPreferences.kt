@@ -3,7 +3,7 @@ package com.w2sv.autocrop.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Switch
-import com.w2sv.autocrop.utils.kotlin.delegates.AutoSwitch
+import com.w2sv.kotlinutils.delegates.AutoSwitch
 
 object BooleanPreferences : TypedPreferences<Boolean>(
     mutableMapOf(

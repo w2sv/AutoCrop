@@ -1,6 +1,6 @@
 package com.w2sv.autocrop.utils.android
 
-import com.w2sv.autocrop.utils.kotlin.VoidFun
+import com.w2sv.autocrop.utils.VoidFun
 import de.mateware.snacky.Snacky
 
 /**

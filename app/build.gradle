@@ -80,6 +80,7 @@ dependencies {
 
     implementation 'com.github.w2sv:viewboundcontroller:master-SNAPSHOT'
     implementation 'com.github.w2sv:slimber:master-SNAPSHOT'
+    implementation 'com.github.w2sv:kotlinutils:master-SNAPSHOT'
 
     // Modules
     implementation project(path: ':bidirectionalviewpager')
@@ -90,8 +91,8 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
-    implementation 'androidx.fragment:fragment-ktx:1.5.3'  // enable @lifecycleScope
-    implementation 'androidx.activity:activity-ktx:1.6.0'  // enable @lifecycleScope
+    implementation 'androidx.fragment:fragment-ktx:1.5.4'  // enable @lifecycleScope
+    implementation 'androidx.activity:activity-ktx:1.6.1'  // enable @lifecycleScope
     implementation 'androidx.core:core-splashscreen:1.0.0'
 
     // Data structures

@@ -7,7 +7,7 @@ import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivityViewM
 import com.w2sv.autocrop.activities.iodetermination.fragments.IODeterminationActivityFragment
 import com.w2sv.autocrop.databinding.FragmentSaveallBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.utils.kotlin.extensions.executeAsyncTaskWithProgressUpdateReceiver
+import com.w2sv.kotlinutils.extensions.executeAsyncTaskWithProgressUpdateReceiver
 
 class SaveAllFragment :
     IODeterminationActivityFragment<FragmentSaveallBinding>(FragmentSaveallBinding::class.java) {

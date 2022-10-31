@@ -34,8 +34,8 @@ import com.w2sv.autocrop.utils.android.extensions.postValue
 import com.w2sv.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.android.postDelayed
-import com.w2sv.autocrop.utils.kotlin.extensions.executeAsyncTask
-import com.w2sv.autocrop.utils.kotlin.extensions.numericallyInflected
+import com.w2sv.kotlinutils.extensions.executeAsyncTask
+import com.w2sv.kotlinutils.extensions.numericallyInflected
 import de.mateware.snacky.Snacky
 
 class CropPagerFragment :

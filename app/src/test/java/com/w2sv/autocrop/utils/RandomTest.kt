@@ -9,7 +9,7 @@ internal class RandomTest {
         val arrayList = ArrayList((0..10).toList())
 
         (0..10).forEach { _ ->
-            Assertions.assertTrue(com.w2sv.autocrop.utils.kotlin.Random.randomElement(arrayList) in arrayList)
+            Assertions.assertTrue(Random.randomElement(arrayList) in arrayList)
         }
     }
 }

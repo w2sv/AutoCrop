@@ -1,6 +1,6 @@
 package com.w2sv.bidirectionalviewpager
 
-import com.w2sv.bidirectionalviewpager.utils.extensions.rotatedIndex
+import com.w2sv.bidirectionalviewpager.utils.rotatedIndex
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource

@@ -19,7 +19,7 @@ import com.w2sv.autocrop.databinding.FragmentCropBinding
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.loadBitmap
 import com.w2sv.autocrop.utils.android.postDelayed
-import com.w2sv.autocrop.utils.kotlin.extensions.executeAsyncTaskWithProgressUpdateReceiver
+import com.w2sv.kotlinutils.extensions.executeAsyncTaskWithProgressUpdateReceiver
 import de.paul_woitaschek.slimber.i
 import kotlinx.coroutines.Job
 

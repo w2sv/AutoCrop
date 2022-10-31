@@ -24,7 +24,7 @@ import com.w2sv.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.utils.android.extensions.showSystemBars
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.android.postDelayed
-import com.w2sv.autocrop.utils.kotlin.delegates.AutoSwitch
+import com.w2sv.kotlinutils.delegates.AutoSwitch
 
 class ComparisonFragment
     : IODeterminationActivityFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java) {
