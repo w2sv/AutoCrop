@@ -10,6 +10,9 @@ tasks:
 unit-test:
 	@./gradlew test  # runs test on debug and release
 
+android-test:
+	@./gradlew connectedCheck
+
 check:
 	@./gradlew check
 

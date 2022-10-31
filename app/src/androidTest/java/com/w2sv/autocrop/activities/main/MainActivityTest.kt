@@ -1,6 +1,5 @@
 package com.w2sv.autocrop.activities.main
 
-//import org.junit.jupiter.api.TestInstance
 import android.Manifest
 import android.content.Intent
 import android.net.Uri
@@ -260,12 +259,12 @@ internal class MainActivityTest {
         }
     }
 
-    @Test
-    fun appExit() {
-        scenarioExtension.scenario.onActivity {
-            @Suppress("DEPRECATION")
-            it.onBackPressed()
-            Assertions.assertTrue(it.isFinishing)
-        }
-    }
+//    @Test
+//    fun appExit() {
+//        scenarioExtension.scenario.onActivity {
+//            @Suppress("DEPRECATION")
+//            it.onBackPressed()
+//            Assertions.assertTrue(it.isFinishing)
+//        }
+//    }
 }
