@@ -4,14 +4,13 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.w2sv.autocrop.activities.main.MainActivity
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.autocrop.controller.activity.retriever.ActivityRetriever
 import com.w2sv.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
 import com.w2sv.autocrop.ui.views.ExtendedAppCompatTextView
-import com.w2sv.autocrop.utils.android.extensions.animate
+import com.w2sv.autocrop.utils.android.extensions.animationComposer
 import com.w2sv.autocrop.utils.android.extensions.goToWebpage
-import com.daimajia.androidanimations.library.Techniques
-import com.daimajia.androidanimations.library.YoYo
 
 abstract class AnimationHandlingTextView(
     context: Context,
@@ -21,16 +20,19 @@ abstract class AnimationHandlingTextView(
 ) :
     ExtendedAppCompatTextView(context, attr),
     DefaultLifecycleObserver,
-    ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context) {
+    ActivityRetriever by ContextBasedActivityRetriever(context) {
 
     private var animation: YoYo.YoYoString? = null
 
     init {
         @Suppress("LeakingThis")
         setOnClickListener {
-            animation = it.animate(techniques) {
-                activity.goToWebpage(url)
-            }
+            animation = it
+                .animationComposer(techniques)
+                .onEnd {
+                    activity.goToWebpage(url)
+                }
+                .playOn(it)
         }
     }
 

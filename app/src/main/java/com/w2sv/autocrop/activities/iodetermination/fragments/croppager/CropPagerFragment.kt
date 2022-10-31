@@ -73,7 +73,7 @@ class CropPagerFragment :
             )
                 .setView()
         ) {
-            typedActivity.startMainActivity()
+            castActivity.startMainActivity()
         }
     }
 
@@ -206,7 +206,7 @@ class CropPagerFragment :
             }
 
         if (viewModel.dataSet.size == 1)
-            typedActivity.invokeSubsequentFragment()
+            castActivity.invokeSubsequentFragment()
         else
             viewPagerProxy.removeView(dataSetPosition)
     }
@@ -217,7 +217,7 @@ class CropPagerFragment :
                 .fragmentReplacementTransaction(SaveAllFragment(), true)
                 .commit()
         else
-            typedActivity.invokeSubsequentFragment()
+            castActivity.invokeSubsequentFragment()
     }
 
     private fun Snacky.Builder.setView(): Snacky.Builder =

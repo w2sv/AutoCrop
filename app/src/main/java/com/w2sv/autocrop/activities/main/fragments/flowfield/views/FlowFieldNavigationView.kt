@@ -33,7 +33,7 @@ import com.w2sv.permissionhandler.requestPermissions
 
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     NavigationView(context, attributeSet),
-    ActivityRetriever<MainActivity> by ContextBasedActivityRetriever(context) {
+    ActivityRetriever by ContextBasedActivityRetriever(context) {
 
     private val viewModel by activityViewModelLazy<MainActivityViewModel>()
 
@@ -88,7 +88,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
             .apply {
                 setOnCheckedChangeListener { _, newValue ->
                     if (newValue) {
-                        typedActivity
+                        castActivity<MainActivity>()
                             .screenshotListeningPermissions
                             .iterator()
                             .requestPermissions(

@@ -15,7 +15,7 @@ class SaveAllFragment :
     private val viewModel by viewModels<SaveAllViewModel>()
 
     /**
-     * Launch async [processRemainingCropBundles] task, call [typedActivity].invokeSubsequentFragment
+     * Launch async [processRemainingCropBundles] task, call [castActivity].invokeSubsequentFragment
      * onPostExecute
      */
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
@@ -26,7 +26,7 @@ class SaveAllFragment :
         lifecycleScope.executeAsyncTaskWithProgressUpdateReceiver(
             { processRemainingCropBundles(BooleanPreferences.deleteScreenshots, it) },
             { viewModel.liveCropNumber.increment() },
-            { typedActivity.invokeSubsequentFragment() }
+            { castActivity.invokeSubsequentFragment() }
         )
     }
 

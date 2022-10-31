@@ -7,6 +7,6 @@ import com.w2sv.autocrop.controller.fragment.ApplicationFragment
 
 abstract class MainActivityFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
     ApplicationFragment<MainActivity, VB, MainActivityViewModel>(
-        MainActivityViewModel::class,
+        MainActivityViewModel::class.java,
         bindingClass
     )

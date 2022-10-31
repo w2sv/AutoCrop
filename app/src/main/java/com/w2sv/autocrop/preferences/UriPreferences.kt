@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import com.w2sv.autocrop.utils.android.buildDocumentUriFromTreeUri
+import android.provider.DocumentsContract
 import com.w2sv.autocrop.utils.android.extensions.uriPermissionGranted
 import com.w2sv.autocrop.utils.kotlin.delegates.mapObserver
 import de.paul_woitaschek.slimber.i
@@ -15,7 +15,10 @@ object UriPreferences : TypedPreferences<Uri?>(mutableMapOf("treeUri" to null)) 
      */
     var treeUri: Uri? by mapObserver(map) { _, oldValue, newValue ->
         if (newValue != null && oldValue != newValue)
-            _documentUri = buildDocumentUriFromTreeUri(newValue)
+            _documentUri = DocumentsContract.buildDocumentUriUsingTree(
+                treeUri,
+                DocumentsContract.getTreeDocumentId(treeUri)
+            )
                 .also { i { "Set new documentUri: $it" } }
     }
 

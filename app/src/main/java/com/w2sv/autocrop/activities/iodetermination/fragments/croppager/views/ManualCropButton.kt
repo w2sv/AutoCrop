@@ -12,7 +12,7 @@ import com.w2sv.autocrop.utils.android.extensions.viewModelLazy
 
 class ManualCropButton(context: Context, attributeSet: AttributeSet) :
     ExtendedAppCompatImageButton(context, attributeSet),
-    ActivityRetriever<IODeterminationActivity> by ContextBasedActivityRetriever(context) {
+    ActivityRetriever by ContextBasedActivityRetriever(context) {
 
     private val viewModel by viewModelLazy<CropPagerViewModel>()
 

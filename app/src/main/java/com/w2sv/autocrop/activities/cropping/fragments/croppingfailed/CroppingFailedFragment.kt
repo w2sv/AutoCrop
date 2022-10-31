@@ -12,7 +12,7 @@ class CroppingFailedFragment
         super.onViewCreated(view, savedInstanceState)
 
         binding.gotItButton.setOnClickListener {
-            typedActivity.startMainActivity()
+            castActivity.startMainActivity()
         }
     }
 }

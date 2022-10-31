@@ -10,16 +10,13 @@ import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
 import com.w2sv.autocrop.controller.activity.FragmentHostingActivity
 import com.w2sv.autocrop.controller.activity.retriever.FragmentHostingActivityRetriever
-import com.w2sv.autocrop.controller.activity.retriever.TypedActivityRetriever
 import com.w2sv.viewboundcontroller.ViewBoundFragment
-import kotlin.reflect.KClass
 
 abstract class ApplicationFragment<A : Activity, VB : ViewBinding, VM : ViewModel>(
-    viewModelKClass: KClass<VM>,
+    viewModelKClass: Class<VM>,
     bindingClass: Class<VB>
 ) :
     ViewBoundFragment<VB>(bindingClass),
-    TypedActivityRetriever<A>,
     FragmentHostingActivityRetriever {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,20 +33,14 @@ abstract class ApplicationFragment<A : Activity, VB : ViewBinding, VM : ViewMode
     open fun onViewCreatedCore(savedInstanceState: Bundle?) {}
 
     protected val sharedViewModel: VM by createViewModelLazy(
-        viewModelKClass,
+        viewModelKClass.kotlin,
         { requireActivity().viewModelStore }
     )
 
     @Suppress("UNCHECKED_CAST")
-    override val typedActivity: A
+    protected val castActivity: A
         get() = requireActivity() as A
 
     override val fragmentHostingActivity: FragmentHostingActivity<*>
         get() = requireActivity() as FragmentHostingActivity<*>
-
-    protected fun setFragmentResultListener(requestKey: String, listener: (Bundle) -> Unit) {
-        parentFragmentManager.setFragmentResultListener(requestKey, viewLifecycleOwner) { _, bundle ->
-            listener(bundle)
-        }
-    }
 }

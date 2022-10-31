@@ -26,10 +26,10 @@ class AppTitleFragment
                 .onEnd{
                     sharedViewModel.singularCropSavingJob?.run {
                         invokeOnCompletion {
-                            typedActivity.startMainActivity()
+                            castActivity.startMainActivity()
                         }
                     }
-                        ?: typedActivity.startMainActivity()
+                        ?: castActivity.startMainActivity()
                 }
                 .playOn(this)
         }

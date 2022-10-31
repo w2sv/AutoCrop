@@ -6,6 +6,6 @@ import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivityViewM
 import com.w2sv.autocrop.controller.fragment.ApplicationFragment
 
 abstract class IODeterminationActivityFragment<VB : ViewBinding>(bindingClass: Class<VB>) : ApplicationFragment<IODeterminationActivity, VB, IODeterminationActivityViewModel>(
-    IODeterminationActivityViewModel::class,
+    IODeterminationActivityViewModel::class.java,
     bindingClass
 )

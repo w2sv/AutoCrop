@@ -17,7 +17,7 @@ import com.w2sv.autocrop.utils.android.extensions.viewModelLazy
 
 class CropImageView(context: Context, attributeSet: AttributeSet) :
     AppCompatImageView(context, attributeSet),
-    ActivityRetriever<IODeterminationActivity> by ContextBasedActivityRetriever(context) {
+    ActivityRetriever by ContextBasedActivityRetriever(context) {
 
     private val viewModel by viewModelLazy<CropPagerViewModel>()
 

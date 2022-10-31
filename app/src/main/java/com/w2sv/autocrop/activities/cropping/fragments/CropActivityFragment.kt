@@ -6,6 +6,6 @@ import com.w2sv.autocrop.activities.cropping.CropActivityViewModel
 import com.w2sv.autocrop.controller.fragment.ApplicationFragment
 
 abstract class CropActivityFragment<VB : ViewBinding>(bindingClass: Class<VB>) : ApplicationFragment<CropActivity, VB, CropActivityViewModel>(
-    CropActivityViewModel::class,
+    CropActivityViewModel::class.java,
     bindingClass
 )
