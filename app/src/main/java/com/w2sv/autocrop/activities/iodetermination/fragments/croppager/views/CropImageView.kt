@@ -45,7 +45,7 @@ class CropImageView(context: Context, attributeSet: AttributeSet) :
 
     private fun cropDialog(): CropDialog =
         CropDialog
-            .instance(viewModel.dataSet.currentPosition.value!!)
+            .instance(viewModel.dataSet.livePosition.value!!)
 
     private fun showDialog(dialog: DialogFragment) {
         dialog.show(findFragment<CropPagerFragment>().childFragmentManager)

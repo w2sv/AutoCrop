@@ -3,6 +3,7 @@ package com.w2sv.bidirectionalviewpager
 import androidx.annotation.VisibleForTesting
 import com.w2sv.bidirectionalviewpager.livedata.MutableListLiveData
 import com.w2sv.bidirectionalviewpager.livedata.UpdateBlockableLiveData
+import com.w2sv.bidirectionalviewpager.recyclerview.BidirectionalRecyclerViewAdapter
 import com.w2sv.bidirectionalviewpager.utils.rotatedIndex
 import com.w2sv.kotlinutils.extensions.toInt
 import com.w2sv.kotlinutils.extensions.toNonZeroInt
@@ -11,8 +12,13 @@ import java.util.Collections
 open class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
     MutableListLiveData<T>(dataSet) {
 
-    val currentPosition = UpdateBlockableLiveData(0, convertUpdateValue = ::correspondingPosition)
-    val currentElement: T get() = get(currentPosition.value!!)
+    val livePosition = UpdateBlockableLiveData(0, convertUpdateValue = ::correspondingPosition)
+    val liveElement: T get() = get(livePosition.value!!)
+
+    fun initialViewPosition(): Int =
+        (BidirectionalRecyclerViewAdapter.N_VIEWS / 2).let {
+            it - correspondingPosition(it) + livePosition.value!!
+        }
 
     /**
      * For keeping track of actual order

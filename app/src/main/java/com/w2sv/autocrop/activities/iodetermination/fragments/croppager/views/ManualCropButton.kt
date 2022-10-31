@@ -18,7 +18,7 @@ class ManualCropButton(context: Context, attributeSet: AttributeSet) :
     override fun onClickListener() {
         fragmentHostingActivity.fragmentReplacementTransaction(
             ManualCropFragment.instance(
-                viewModel.dataSet.currentElement
+                viewModel.dataSet.liveElement
             ),
             true
         )

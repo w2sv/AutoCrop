@@ -16,8 +16,6 @@ import com.w2sv.autocrop.activities.iodetermination.fragments.IODeterminationAct
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropDialog
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropEntiretyDialog
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.dialogs.CropPagerInstructionsDialog
-import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.pager.CropPagerAdapter
-import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.pager.CropPagerProxy
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.viewmodel.Scroller
 import com.w2sv.autocrop.activities.iodetermination.fragments.manualcrop.ManualCropFragment
@@ -54,15 +52,15 @@ class CropPagerFragment :
             .inflateTransition(android.R.transition.move)
     }
 
-    private lateinit var viewPagerProxy: CropPagerProxy
+    private lateinit var viewPagerProxy: CropPager
     lateinit var handleBackPress: BackPressHandler
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         super.onViewCreatedCore(savedInstanceState)
 
-        viewPagerProxy = CropPagerProxy(
+        viewPagerProxy = CropPager(
             binding.viewPager,
-            viewModel
+            viewModel.dataSet
         )
         viewModel.setLiveDataObservers()
 
@@ -77,7 +75,7 @@ class CropPagerFragment :
     }
 
     private fun CropPagerViewModel.setLiveDataObservers() {
-        dataSet.currentPosition.observe(viewLifecycleOwner) { position ->
+        dataSet.livePosition.observe(viewLifecycleOwner) { position ->
             binding.discardingStatisticsTv.update(position)
 
             dataSet.pageIndex(position).let { pageIndex ->
@@ -168,10 +166,10 @@ class CropPagerFragment :
     }
 
     /**
-     * Set new [Crop] in [viewModel].dataSet.currentPosition and notify [CropPagerAdapter]
+     * Set new [Crop] in [viewModel].dataSet.currentPosition and notify [CropPager.Adapter]
      */
     private fun processAdjustedCropEdges(adjustedEdges: CropEdges) {
-        with(viewModel.dataSet.currentElement) {
+        with(viewModel.dataSet.liveElement) {
             crop = Crop.fromScreenshot(
                 requireContext().contentResolver.loadBitmap(screenshot.uri),
                 screenshot.mediaStoreData.diskUsage,
@@ -179,7 +177,7 @@ class CropPagerFragment :
             )
         }
 
-        (binding.viewPager.adapter!! as CropPagerAdapter).notifyItemChanged(
+        (binding.viewPager.adapter!! as CropPager.Adapter).notifyItemChanged(
             binding.viewPager.currentItem,
             viewModel.dataSet.size
         )

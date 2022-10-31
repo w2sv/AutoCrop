@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.fragment.app.findFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.comparison.ComparisonFragment
+import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.CropPager
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
-import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.pager.CropPagerAdapter
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.w2sv.autocrop.controller.activity.retriever.ActivityRetriever
 import com.w2sv.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
@@ -21,7 +21,7 @@ class ComparisonButton(context: Context, attributeSet: AttributeSet) :
 
     override fun onClickListener() {
         fragmentHostingActivity.fragmentReplacementTransaction(
-            ComparisonFragment.instance(viewModel.dataSet.currentElement)
+            ComparisonFragment.instance(viewModel.dataSet.liveElement)
         )
             .addToBackStack(null)
             .apply {
@@ -30,7 +30,7 @@ class ComparisonButton(context: Context, attributeSet: AttributeSet) :
                         .binding
                         .viewPager
                         .run {
-                            (recyclerView.findViewHolderForAdapterPosition(currentItem) as CropPagerAdapter.CropViewHolder)
+                            (recyclerView.findViewHolderForAdapterPosition(currentItem) as CropPager.Adapter.ViewHolder)
                                 .imageView
                         }
 
