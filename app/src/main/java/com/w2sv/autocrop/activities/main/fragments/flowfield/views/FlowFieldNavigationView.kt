@@ -14,7 +14,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.MainActivityViewModel
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
@@ -87,7 +86,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
             .apply {
                 setOnCheckedChangeListener { _, newValue ->
                     if (newValue) {
-                        castActivity<MainActivity>()
+                        findFragment<FlowFieldFragment>()
                             .screenshotListeningPermissions
                             .iterator()
                             .requestPermissions(

@@ -1,7 +1,6 @@
-package com.w2sv.autocrop.activities.main
+package com.w2sv.autocrop.activities.main.fragments.flowfield
 
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -25,17 +24,11 @@ class CropExplanation : UncancelableDialogFragment() {
                     .italic { append("Select Images ") }
                     .append("button and get croppin'!")
             )
-            .setPositiveButton("Alright!") { _, _ -> }
+            .setPositiveButton("Alright!") { _, _ -> (parentFragment as OnProceedListener).onProceed()}
             .create()
 
-    interface OnDismissListener{
-        fun onDismiss()
-    }
-
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-
-        (requireActivity() as OnDismissListener).onDismiss()
+    interface OnProceedListener{
+        fun onProceed()
     }
 }
 
@@ -74,7 +67,7 @@ class ScreenshotListenerExplanation : UncancelableDialogFragment() {
                 }
             )
             .setNegativeButton("Maybe later") { _, _ -> }
-            .setPositiveButton("Enable") { _, _ -> (requireActivity() as OnConfirmedListener).onConfirmed() }
+            .setPositiveButton("Enable") { _, _ -> (parentFragment as OnConfirmedListener).onConfirmed() }
             .create()
 
     interface OnConfirmedListener{

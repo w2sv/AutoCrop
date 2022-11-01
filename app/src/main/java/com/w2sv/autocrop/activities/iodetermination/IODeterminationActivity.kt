@@ -91,7 +91,7 @@ class IODeterminationActivity :
 
     data class Results(val cropUris: ArrayList<Uri>, val nDeletedScreenshots: Int, val saveDirName: String?) {
         companion object {
-            fun attemptRestoration(intent: Intent): Results? =
+            fun restore(intent: Intent): Results? =
                 intent.run {
                     if (hasExtra(EXTRA_CROP_URIS))
                         Results(
