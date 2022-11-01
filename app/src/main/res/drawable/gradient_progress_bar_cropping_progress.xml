@@ -3,8 +3,10 @@
     <item>
         <clip>
             <shape>
-                <corners android:radius="50dip"/>
-                <gradient android:endColor="@color/magenta_dark" android:startColor="@color/ocean_blue"/>
+                <corners android:radius="50dip" />
+                <gradient
+                    android:endColor="@color/magenta_dark"
+                    android:startColor="@color/ocean_blue" />
             </shape>
         </clip>
     </item>

@@ -1,8 +1,8 @@
 /**
- * @param file: .properties file
+ * @param file : .properties file
  * @return comprised properties as mapping
  */
-static def loadProperties(File file){
+static def loadProperties(File file) {
     def properties = new Properties()
     properties.load(new FileInputStream(file))
     return properties

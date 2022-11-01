@@ -1,4 +1,4 @@
-rootProject.name='AutoCrop'
+rootProject.name = 'AutoCrop'
 include ':app'
 include ':bidirectionalviewpager'
 include ':permissionhandler'

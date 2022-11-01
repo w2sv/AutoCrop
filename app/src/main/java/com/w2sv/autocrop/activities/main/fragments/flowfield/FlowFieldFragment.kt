@@ -32,9 +32,9 @@ import com.w2sv.permissionhandler.PermissionHandler
 class FlowFieldFragment :
     MainActivityFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java),
     CropExplanation.OnProceedListener,
-    ScreenshotListenerExplanation.OnConfirmedListener{
+    ScreenshotListenerExplanation.OnConfirmedListener {
 
-    class ViewModel: androidx.lifecycle.ViewModel(){
+    class ViewModel : androidx.lifecycle.ViewModel() {
         var enteredFragment = false
     }
 

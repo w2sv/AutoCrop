@@ -2,11 +2,11 @@ package com.w2sv.bidirectionalviewpager.livedata
 
 import androidx.lifecycle.LiveData
 
-abstract class MutableListLiveData<T>(private val delegator: MutableList<T>):
+abstract class MutableListLiveData<T>(private val delegator: MutableList<T>) :
     LiveData<MutableList<T>>(delegator),
-    MutableList<T> by delegator{
+    MutableList<T> by delegator {
 
-    private fun post(){
+    private fun post() {
         postValue(this)
     }
 

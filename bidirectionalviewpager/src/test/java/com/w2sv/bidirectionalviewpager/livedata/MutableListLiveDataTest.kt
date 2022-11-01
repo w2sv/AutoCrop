@@ -24,6 +24,9 @@ internal class MutableListLiveDataTest {
             removeAt(0)
         }
 
-        Assertions.assertEquals(3, nObserverCalls)  // observer called once more than n_manual_post calls due to instantiation
+        Assertions.assertEquals(
+            3,
+            nObserverCalls
+        )  // observer called once more than n_manual_post calls due to instantiation
     }
 }

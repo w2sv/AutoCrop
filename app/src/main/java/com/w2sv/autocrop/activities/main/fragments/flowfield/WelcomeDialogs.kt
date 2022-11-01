@@ -24,10 +24,10 @@ class CropExplanation : UncancelableDialogFragment() {
                     .italic { append("Select Images ") }
                     .append("button and get croppin'!")
             )
-            .setPositiveButton("Alright!") { _, _ -> (parentFragment as OnProceedListener).onProceed()}
+            .setPositiveButton("Alright!") { _, _ -> (parentFragment as OnProceedListener).onProceed() }
             .create()
 
-    interface OnProceedListener{
+    interface OnProceedListener {
         fun onProceed()
     }
 }
@@ -70,7 +70,7 @@ class ScreenshotListenerExplanation : UncancelableDialogFragment() {
             .setPositiveButton("Enable") { _, _ -> (parentFragment as OnConfirmedListener).onConfirmed() }
             .create()
 
-    interface OnConfirmedListener{
+    interface OnConfirmedListener {
         fun onConfirmed()
     }
 }

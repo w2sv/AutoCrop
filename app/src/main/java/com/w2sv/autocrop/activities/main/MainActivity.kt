@@ -17,7 +17,7 @@ class MainActivity :
         FlowFieldFragment::class.java,
         MainActivityViewModel::class.java,
         BooleanPreferences, UriPreferences
-    ){
+    ) {
 
     companion object {
         const val EXTRA_SELECTED_IMAGE_URIS = "com.w2sv.autocrop.extra.SELECTED_IMAGE_URIS"

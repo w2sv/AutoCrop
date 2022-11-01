@@ -4,7 +4,7 @@
 #   https://github.com/ReactiveCircus/android-emulator-runner
 
 name: Build
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 env:
   ARCH: x86_64
@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Checkout current repository
-        uses: actions/checkout@v3 
+        uses: actions/checkout@v3
 
       - name: Setup JDK
         uses: actions/setup-java@v1
@@ -40,12 +40,12 @@ jobs:
 
       # paired value syntax: @https://stackoverflow.com/a/68940067/12083276
       # @https://docs.github.com/en/actions/using-jobs/using-a-build-matrix-for-your-jobs
-      matrix:  
-        api: [26, 30, 31]  # 29 failing with inconceivable OOM error on MainActivityTest entry;
-                               # 33 not available afaik
+      matrix:
+        api: [ 26, 30, 31 ]  # 29 failing with inconceivable OOM error on MainActivityTest entry;
+        # 33 not available afaik
     steps:
       - name: Checkout current repository in ubuntu's file system
-        uses: actions/checkout@v3 
+        uses: actions/checkout@v3
 
       - name: Setup JDK
         uses: actions/setup-java@v1

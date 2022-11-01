@@ -31,6 +31,7 @@ open class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
 
     fun correspondingPosition(viewPosition: Int): Int =
         viewPosition % size
+
     fun atCorrespondingPosition(viewPosition: Int): T =
         get(correspondingPosition(viewPosition))
 
@@ -50,7 +51,7 @@ open class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
      *   same element as pre-removal
      * - Resets [tailPosition]
      */
-    fun removeAndRealign(removePosition: Int, viewPosition: Int){
+    fun removeAndRealign(removePosition: Int, viewPosition: Int) {
         val positionPostRemoval = correspondingPosition(viewPosition).run {
             if (removePosition < this)
                 minus(1)

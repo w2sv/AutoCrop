@@ -259,12 +259,12 @@ internal class MainActivityTest {
         }
     }
 
-//    @Test
-//    fun appExit() {
-//        scenarioExtension.scenario.onActivity {
-//            @Suppress("DEPRECATION")
-//            it.onBackPressed()
-//            Assertions.assertTrue(it.isFinishing)
-//        }
-//    }
+    //    @Test
+    //    fun appExit() {
+    //        scenarioExtension.scenario.onActivity {
+    //            @Suppress("DEPRECATION")
+    //            it.onBackPressed()
+    //            Assertions.assertTrue(it.isFinishing)
+    //        }
+    //    }
 }

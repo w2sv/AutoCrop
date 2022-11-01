@@ -7,19 +7,22 @@
 [![Build](https://github.com/w2sv/AutoCrop/actions/workflows/workflow.yaml/badge.svg)](https://github.com/w2sv/AutoCrop/actions/workflows/workflow.yaml)
 ![GitHub](https://img.shields.io/github/license/w2sv/AutoCrop)
 
-  __Android application for fully automatical batch cropping of phone screenshots__
+__Android application for fully automatical batch cropping of phone screenshots__
 
 ## Download
 
-[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" 
-      alt="Download from Google Play" 
-      height="80">](https://play.google.com/store/apps/details?id=com.w2sv.autocrop)
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
+alt="Download from Google Play"
+height="80">](https://play.google.com/store/apps/details?id=com.w2sv.autocrop)
 
 ## Author
+
 Janek Zangenberg
 
 ## License
+
 [GPL-3.0 License](LICENSE)
 
 ## References
+
 Heavily configured croppylib core taken from https://github.com/lyrebirdstudio/Croppy

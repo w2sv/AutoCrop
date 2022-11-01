@@ -14,7 +14,7 @@ open class ExtendedOnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
             onScrollStateIdle?.invoke()
     }
 
-    fun setRemoveView(f: UnitFun){
+    fun setRemoveView(f: UnitFun) {
         onScrollStateIdle = f
     }
 
