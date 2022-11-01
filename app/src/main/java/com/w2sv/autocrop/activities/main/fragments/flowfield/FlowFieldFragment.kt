@@ -38,8 +38,6 @@ class FlowFieldFragment :
         var enteredFragment = false
     }
 
-    private val viewModel by activityViewModels<ViewModel>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,6 +48,8 @@ class FlowFieldFragment :
             }
         }
     }
+
+    private val viewModel by activityViewModels<ViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

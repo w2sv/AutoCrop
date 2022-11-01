@@ -41,7 +41,7 @@ import com.w2sv.autocrop.activities.iodetermination.fragments.manualcrop.utils.m
 import com.w2sv.autocrop.activities.iodetermination.fragments.manualcrop.utils.model.Edge.TOP
 import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
 import com.w2sv.autocrop.utils.android.extensions.postValue
-import com.w2sv.autocrop.utils.android.extensions.viewModelLazy
+import com.w2sv.autocrop.utils.android.extensions.viewModel
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -173,7 +173,7 @@ class ManualCropView @JvmOverloads constructor(
         setWillNotDraw(false)
     }
 
-    private val viewModel by viewModelLazy<ManualCropViewModel>()
+    private val viewModel by viewModel<ManualCropViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -556,8 +556,8 @@ class ManualCropView @JvmOverloads constructor(
     //    private lateinit var rescaledCropEdgeRectFs: List<RectF>
 
     //    private fun setRescaledCropEdgePairCandidates(){
-    //        rescaledCropEdgeRectFs = viewModel.cropEdgePairCandidates.map {
-    //            it.asRectF(viewModel.bitmap.width).apply {
+    //        rescaledCropEdgeRectFs = viewModelImmediate.cropEdgePairCandidates.map {
+    //            it.asRectF(viewModelImmediate.bitmap.width).apply {
     //                bitmapMatrix.mapRect(this)
     //            }
     //        }

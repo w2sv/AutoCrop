@@ -65,14 +65,14 @@ inline fun View.ifNotInEditMode(f: UnitFun) {
         f()
 }
 
-inline fun <reified VM : ViewModel> View.viewModelLazy(): Lazy<VM> =
+inline fun <reified VM : ViewModel> View.viewModel(): Lazy<VM> =
     lazy { ViewModelProvider(findViewTreeViewModelStoreOwner()!!)[VM::class.java] }
 
-inline fun <reified VM : ViewModel> View.viewModel(): VM =
-    viewModelLazy<VM>().value
+inline fun <reified VM : ViewModel> View.viewModelImmediate(): VM =
+    viewModel<VM>().value
 
-inline fun <reified VM : ViewModel> View.activityViewModelLazy(): Lazy<VM> =
+inline fun <reified VM : ViewModel> View.activityViewModel(): Lazy<VM> =
     lazy { ViewModelProvider(context as ViewModelStoreOwner)[VM::class.java] }
 
-inline fun <reified VM : ViewModel> View.activityViewModel(): VM =
-    activityViewModelLazy<VM>().value
+inline fun <reified VM : ViewModel> View.activityViewModelImmediate(): VM =
+    activityViewModel<VM>().value

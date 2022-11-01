@@ -23,7 +23,7 @@ import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
 import com.w2sv.autocrop.utils.android.IMAGE_MIME_TYPE
-import com.w2sv.autocrop.utils.android.extensions.activityViewModelLazy
+import com.w2sv.autocrop.utils.android.extensions.activityViewModel
 import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
 import com.w2sv.autocrop.utils.android.extensions.serviceRunning
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
@@ -33,7 +33,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     NavigationView(context, attributeSet),
     ActivityRetriever by ContextBasedActivityRetriever(context) {
 
-    private val viewModel by activityViewModelLazy<MainActivityViewModel>()
+    private val viewModel by activityViewModel<MainActivityViewModel>()
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)

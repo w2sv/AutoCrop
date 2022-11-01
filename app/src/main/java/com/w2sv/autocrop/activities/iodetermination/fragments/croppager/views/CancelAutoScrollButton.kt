@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatButton
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.w2sv.autocrop.utils.android.extensions.postValue
-import com.w2sv.autocrop.utils.android.extensions.viewModel
+import com.w2sv.autocrop.utils.android.extensions.viewModelImmediate
 
 class CancelAutoScrollButton(context: Context, attributeSet: AttributeSet) :
     AppCompatButton(context, attributeSet) {
@@ -14,7 +14,7 @@ class CancelAutoScrollButton(context: Context, attributeSet: AttributeSet) :
         super.onAttachedToWindow()
 
         setOnClickListener {
-            viewModel<CropPagerViewModel>().liveAutoScroll.postValue(false)
+            viewModelImmediate<CropPagerViewModel>().liveAutoScroll.postValue(false)
         }
     }
 }

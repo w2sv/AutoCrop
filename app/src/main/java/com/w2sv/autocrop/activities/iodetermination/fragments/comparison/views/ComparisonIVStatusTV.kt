@@ -12,10 +12,10 @@ import com.w2sv.autocrop.utils.android.extensions.fadeOut
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
 import com.w2sv.autocrop.utils.android.extensions.show
-import com.w2sv.autocrop.utils.android.extensions.viewModelLazy
+import com.w2sv.autocrop.utils.android.extensions.viewModel
 
 class ComparisonIVStatusTV(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
-    private val viewModel by viewModelLazy<ComparisonViewModel>()
+    private val viewModel by viewModel<ComparisonViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

@@ -12,13 +12,13 @@ import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.viewmode
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
 import com.w2sv.autocrop.utils.android.extensions.show
-import com.w2sv.autocrop.utils.android.extensions.viewModelLazy
+import com.w2sv.autocrop.utils.android.extensions.viewModel
 import kotlin.math.roundToInt
 
 class PageIndicationBar(context: Context, attr: AttributeSet) :
     AppCompatSeekBar(context, attr) {
 
-    private val viewModel by viewModelLazy<CropPagerViewModel>()
+    private val viewModel by viewModel<CropPagerViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
