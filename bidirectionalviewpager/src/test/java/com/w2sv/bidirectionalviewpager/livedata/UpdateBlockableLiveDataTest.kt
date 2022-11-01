@@ -1,4 +1,4 @@
-package com.w2sv.bidirectionalviewpager
+package com.w2sv.bidirectionalviewpager.livedata
 
 import com.w2sv.bidirectionalviewpager.livedata.UpdateBlockableLiveData
 import com.w2sv.utils.InstantExecutorExtension

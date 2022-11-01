@@ -10,15 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/pager/CropPagerAdapter.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/pager/CropPagerProxy.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/CropPager.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/ViewPagerExtensions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/CropPager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/CropPager.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/viewmodel/CropPagerViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/viewmodel/CropPagerViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/views/ComparisonButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/views/ComparisonButton.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/views/CropImageView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/views/CropImageView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/views/ManualCropButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/views/ManualCropButton.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/BidirectionalViewPagerDataSet.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/BidirectionalViewPagerDataSet.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/recyclerview/BidirectionalRecyclerViewAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/recyclerview/BidirectionalRecyclerViewAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/utils/Collection.kt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,8 +58,8 @@
         <option value="Class" />
         <option value="JUnit5 Test Class" />
         <option value="resourceFile" />
-        <option value="Kotlin Class" />
         <option value="Kotlin File" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>

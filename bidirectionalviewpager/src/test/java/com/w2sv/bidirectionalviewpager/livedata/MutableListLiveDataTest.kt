@@ -1,6 +1,5 @@
-package com.w2sv.bidirectionalviewpager
+package com.w2sv.bidirectionalviewpager.livedata
 
-import com.w2sv.bidirectionalviewpager.livedata.MutableListLiveData
 import com.w2sv.utils.InstantExecutorExtension
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

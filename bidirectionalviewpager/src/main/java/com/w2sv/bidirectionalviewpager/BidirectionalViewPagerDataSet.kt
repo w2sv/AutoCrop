@@ -4,7 +4,6 @@ import androidx.annotation.VisibleForTesting
 import com.w2sv.bidirectionalviewpager.livedata.MutableListLiveData
 import com.w2sv.bidirectionalviewpager.livedata.UpdateBlockableLiveData
 import com.w2sv.bidirectionalviewpager.recyclerview.BidirectionalRecyclerViewAdapter
-import com.w2sv.bidirectionalviewpager.utils.rotatedIndex
 import com.w2sv.kotlinutils.extensions.toInt
 import com.w2sv.kotlinutils.extensions.toNonZeroInt
 import java.util.Collections
@@ -69,6 +68,15 @@ open class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
             rotationDistance
         )
     }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun rotatedIndex(index: Int, distance: Int): Int =
+        (index + distance).let {
+            if (it < 0)
+                size + it
+            else
+                it
+        } % size
 
     // --------------Page Index Retrieval
 

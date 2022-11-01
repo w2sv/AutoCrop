@@ -16,11 +16,7 @@ class CropPagerViewModel : ViewModel() {
 
     var scroller: Scroller? = null
 
-    val liveAutoScroll: LiveData<Boolean> by lazy {
-        MutableLiveData(
-            BooleanPreferences.autoScroll && dataSet.size > 1
-        )
-    }
+    val liveAutoScroll: LiveData<Boolean> = MutableLiveData(BooleanPreferences.autoScroll && dataSet.size > 1)
 
     val autoScrolls: Int
         get() = dataSet.size - dataSet.livePosition.value!!
