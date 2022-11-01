@@ -1,6 +1,6 @@
 package com.w2sv.autocrop.utils.android
 
-import com.w2sv.autocrop.utils.VoidFun
+import com.w2sv.autocrop.utils.UnitFun
 import de.mateware.snacky.Snacky
 
 /**
@@ -10,7 +10,7 @@ import de.mateware.snacky.Snacky
 class BackPressHandler(
     private val onFirstPressNotificationSnackyBuilder: Snacky.Builder,
     private val confirmationWindowDuration: Long = 2500,
-    private val onSecondPress: VoidFun
+    private val onSecondPress: UnitFun
 ) {
     private var pressedOnce: Boolean = false
 

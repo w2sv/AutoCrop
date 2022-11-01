@@ -3,15 +3,17 @@ package com.w2sv.bidirectionalviewpager.livedata
 import androidx.lifecycle.LiveData
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 
-class UpdateBlockableLiveData<T>(value: T, private val convertUpdateValue: (T) -> T)
-    : LiveData<T>(value){
+class UpdateBlockableLiveData<T>(value: T, private val convertUpdateValue: ((T) -> T)? = null) : LiveData<T>(value) {
 
-    fun update(value: T){
+    fun update(value: T) {
         if (!blockSubsequentUpdate)
-            postValue(convertUpdateValue(value))
+            postValue(
+                convertUpdateValue?.invoke(value)
+                    ?: value
+            )
     }
 
-    fun blockSubsequentUpdate(){
+    fun blockSubsequentUpdate() {
         blockSubsequentUpdate = true
     }
 

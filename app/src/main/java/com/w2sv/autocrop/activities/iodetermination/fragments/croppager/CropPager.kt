@@ -5,16 +5,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.w2sv.autocrop.CropBundle
 import com.w2sv.autocrop.databinding.ImageviewCropBinding
-import com.w2sv.autocrop.utils.VoidFun
 import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
 import com.w2sv.bidirectionalviewpager.livedata.UpdateBlockableLiveData
-import com.w2sv.bidirectionalviewpager.makeViewRemover
 import com.w2sv.bidirectionalviewpager.recyclerview.BidirectionalRecyclerViewAdapter
-import com.w2sv.kotlinutils.delegates.Consumable
+import com.w2sv.bidirectionalviewpager.viewpager.ExtendedOnPageChangeCallback
+import com.w2sv.bidirectionalviewpager.viewpager.makeRemoveView
 
 /**
  * Proxy (=wrapper) for unextendable [viewPager2], providing additional functionality
@@ -57,28 +55,19 @@ class CropPager(private val viewPager2: ViewPager2, private val dataSet: Bidirec
         }
     }
 
-    private class OnPageChangeCallback(private val livePosition: UpdateBlockableLiveData<Int>) : ViewPager2.OnPageChangeCallback() {
+    private class OnPageChangeCallback(private val livePosition: UpdateBlockableLiveData<Int>) : ExtendedOnPageChangeCallback() {
 
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             livePosition.update(position)
         }
-
-        override fun onPageScrollStateChanged(state: Int) {
-            super.onPageScrollStateChanged(state)
-
-            if (state == ViewPager.SCROLL_STATE_IDLE)
-                onScrollStateIdle?.invoke()
-        }
-
-        var onScrollStateIdle by Consumable<VoidFun>()
     }
 
     private val onPageChangeCallback: OnPageChangeCallback
 
     init {
         with(viewPager2) {
-            adapter = Adapter(dataSet, offscreenPageLimit)
+            adapter = Adapter(dataSet, 3)
             onPageChangeCallback = OnPageChangeCallback(dataSet.livePosition)
                 .apply {
                     registerOnPageChangeCallback(this)
@@ -91,6 +80,6 @@ class CropPager(private val viewPager2: ViewPager2, private val dataSet: Bidirec
     }
 
     fun removeView(dataSetPosition: Int) {
-        onPageChangeCallback.onScrollStateIdle = viewPager2.makeViewRemover(dataSetPosition, dataSet)
+        onPageChangeCallback.setRemoveView(viewPager2.makeRemoveView(dataSetPosition, dataSet))
     }
 }

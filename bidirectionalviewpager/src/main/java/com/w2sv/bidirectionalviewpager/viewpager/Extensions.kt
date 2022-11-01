@@ -1,6 +1,8 @@
-package com.w2sv.bidirectionalviewpager
+package com.w2sv.bidirectionalviewpager.viewpager
 
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
 import com.w2sv.bidirectionalviewpager.recyclerview.ExtendedRecyclerViewAdapter
 
 /**
@@ -10,7 +12,7 @@ import com.w2sv.bidirectionalviewpager.recyclerview.ExtendedRecyclerViewAdapter
  * • reset preloaded views around newViewPosition
  * • update pageIndex dependent views
  */
-fun ViewPager2.makeViewRemover(dataSetPosition: Int, dataSet: BidirectionalViewPagerDataSet<*>): () -> Unit {
+fun ViewPager2.makeRemoveView(dataSetPosition: Int, dataSet: BidirectionalViewPagerDataSet<*>): () -> Unit {
     val subsequentViewPosition = currentItem + dataSet.viewPositionIncrement(dataSetPosition)
 
     // scroll to newViewPosition with blocked pageDependentViewUpdating
@@ -31,3 +33,10 @@ fun ViewPager2.makeViewRemover(dataSetPosition: Int, dataSet: BidirectionalViewP
         }
     }
 }
+
+val ViewPager2.recyclerView: RecyclerView
+    get() = getChildAt(0) as RecyclerView
+
+@Suppress("UNCHECKED_CAST")
+fun <VH: RecyclerView.ViewHolder>ViewPager2.currentViewHolder(): VH =
+    (recyclerView.findViewHolderForAdapterPosition(currentItem) as VH)

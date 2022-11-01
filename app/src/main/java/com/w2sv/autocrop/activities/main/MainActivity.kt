@@ -3,8 +3,6 @@ package com.w2sv.autocrop.activities.main
 import android.Manifest
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.SpannableStringBuilder
 import androidx.activity.OnBackPressedCallback
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -23,16 +21,18 @@ import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.getThemedColor
 import com.w2sv.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
+import com.w2sv.autocrop.utils.android.postDelayed
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.permissionhandler.PermissionHandler
-import com.w2sv.permissionhandler.requestPermissions
 
 class MainActivity :
     ApplicationActivity<FlowFieldFragment, MainActivityViewModel>(
         FlowFieldFragment::class.java,
         MainActivityViewModel::class.java,
         BooleanPreferences, UriPreferences
-    ) {
+    ),
+    CropExplanation.OnDismissListener,
+    ScreenshotListenerExplanation.OnConfirmedListener{
 
     companion object {
         const val EXTRA_SELECTED_IMAGE_URIS = "com.w2sv.autocrop.extra.SELECTED_IMAGE_URIS"
@@ -79,35 +79,22 @@ class MainActivity :
     override fun onSavedInstanceStateNull() {
         super.onSavedInstanceStateNull()
 
-        if (!BooleanPreferences.welcomeDialogShown) {
-            supportFragmentManager.setFragmentResultListener(
-                ScreenshotListenerExplanation.REQUEST_KEY,
-                this
-            ) { _, bundle ->
-                if (ScreenshotListenerExplanation.dialogConfirmed(bundle))
-                    screenshotListeningPermissions
-                        .iterator()
-                        .requestPermissions(
-                            onGranted = {
-                                ScreenshotListener.startService(this)
-                            }
-                        )
+        if (!BooleanPreferences.welcomeDialogShown)
+            postDelayed(resources.getLong(R.integer.duration_flowfield_buttons_fade_in_halve)) {
+                CropExplanation().show(supportFragmentManager)
             }
-
-            Handler(Looper.getMainLooper()).postDelayed(
-                {
-                    CropExplanation().show(supportFragmentManager)
-                },
-                resources.getLong(R.integer.delay_large)
-            )
-        }
         else if (viewModel.ioResults != null)
-            Handler(Looper.getMainLooper()).postDelayed(
-                {
-                    showIOSynopsisSnackbar(viewModel.ioResults!!)
-                },
-                resources.getLong(R.integer.duration_flowfield_buttons_fade_in_halve)
-            )
+            postDelayed(resources.getLong(R.integer.duration_flowfield_buttons_fade_in_halve)){
+                showIOSynopsisSnackbar(viewModel.ioResults!!)
+            }
+    }
+
+    override fun onDismiss() {
+        ScreenshotListenerExplanation().show(supportFragmentManager)
+    }
+
+    override fun onConfirmed() {
+        ScreenshotListener.startService(this)
     }
 
     private fun showIOSynopsisSnackbar(ioResults: IODeterminationActivity.Results) {

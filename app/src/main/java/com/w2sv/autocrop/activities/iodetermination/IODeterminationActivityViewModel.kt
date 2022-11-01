@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.w2sv.autocrop.CropBundle
 import com.w2sv.autocrop.Screenshot
-import com.w2sv.autocrop.utils.VoidFun
+import com.w2sv.autocrop.utils.UnitFun
 import com.w2sv.autocrop.utils.android.extensions.queryMediaStoreDatum
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.toInt
@@ -56,7 +56,7 @@ class IODeterminationActivityViewModel(
         cropBundlePosition: Int,
         deleteScreenshot: Boolean,
         contentResolver: ContentResolver
-    ): VoidFun {
+    ): UnitFun {
         val cropBundle = cropBundles[cropBundlePosition]
 
         val addedScreenshotDeletionInquiryUri = addScreenshotDeleteRequestUri(

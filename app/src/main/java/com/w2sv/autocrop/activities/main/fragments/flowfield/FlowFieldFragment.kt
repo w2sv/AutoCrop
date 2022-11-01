@@ -17,10 +17,15 @@ import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.utils.android.documentUriPathIdentifier
 import com.w2sv.autocrop.utils.android.extensions.getThemedColor
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
+import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.permissionhandler.PermissionHandler
 
 class FlowFieldFragment :
     MainActivityFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java) {
+
+    class ViewModel: androidx.lifecycle.ViewModel(){
+        var fadeInFlowFieldButtons by AutoSwitch(true, switchOn = true)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

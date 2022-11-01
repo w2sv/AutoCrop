@@ -8,7 +8,7 @@ import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.utils.VoidFun
+import com.w2sv.autocrop.utils.UnitFun
 
 fun View.animate(
     technique: Techniques,
@@ -60,7 +60,7 @@ fun View.hide() {
     visibility = View.GONE
 }
 
-inline fun View.ifNotInEditMode(f: VoidFun) {
+inline fun View.ifNotInEditMode(f: UnitFun) {
     if (!isInEditMode)
         f()
 }

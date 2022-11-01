@@ -10,8 +10,8 @@ import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.viewmode
 import com.w2sv.autocrop.controller.activity.retriever.ActivityRetriever
 import com.w2sv.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
 import com.w2sv.autocrop.ui.views.ExtendedAppCompatImageButton
-import com.w2sv.autocrop.utils.android.extensions.recyclerView
 import com.w2sv.autocrop.utils.android.extensions.viewModelLazy
+import com.w2sv.bidirectionalviewpager.viewpager.currentViewHolder
 
 class ComparisonButton(context: Context, attributeSet: AttributeSet) :
     ExtendedAppCompatImageButton(context, attributeSet),
@@ -29,10 +29,8 @@ class ComparisonButton(context: Context, attributeSet: AttributeSet) :
                     findFragment<CropPagerFragment>()
                         .binding
                         .viewPager
-                        .run {
-                            (recyclerView.findViewHolderForAdapterPosition(currentItem) as CropPager.Adapter.ViewHolder)
-                                .imageView
-                        }
+                        .currentViewHolder<CropPager.Adapter.ViewHolder>()
+                        .imageView
 
                 addSharedElement(
                     cropImageView,

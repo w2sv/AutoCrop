@@ -5,13 +5,10 @@ import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
-import androidx.core.os.bundleOf
 import androidx.core.text.italic
-import androidx.fragment.app.setFragmentResult
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.views.UncancelableDialogFragment
 import com.w2sv.autocrop.utils.android.extensions.getColoredIcon
-import com.w2sv.autocrop.utils.android.extensions.show
 
 class CropExplanation : UncancelableDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
@@ -31,22 +28,18 @@ class CropExplanation : UncancelableDialogFragment() {
             .setPositiveButton("Alright!") { _, _ -> }
             .create()
 
+    interface OnDismissListener{
+        fun onDismiss()
+    }
+
     override fun onDismiss(dialog: DialogInterface) {
-        ScreenshotListenerExplanation().show(parentFragmentManager)
         super.onDismiss(dialog)
+
+        (requireActivity() as OnDismissListener).onDismiss()
     }
 }
 
 class ScreenshotListenerExplanation : UncancelableDialogFragment() {
-    companion object {
-        const val REQUEST_KEY = "ScreenshotListenerExplanation.REQUEST_KEY"
-
-        fun dialogConfirmed(bundle: Bundle): Boolean =
-            bundle.getBoolean(EXTRA_INQUIRE_PERMISSIONS)
-
-        private const val EXTRA_INQUIRE_PERMISSIONS = "com.w2sv.autocrop.INQUIRE_PERMISSIONS"
-    }
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         builder()
             .setTitle("Screenshot listening")
@@ -80,16 +73,11 @@ class ScreenshotListenerExplanation : UncancelableDialogFragment() {
                     )
                 }
             )
-            .setNegativeButton("Maybe later") { _, _ -> setFragmentResult(false) }
-            .setPositiveButton("Enable") { _, _ -> setFragmentResult(true) }
+            .setNegativeButton("Maybe later") { _, _ -> }
+            .setPositiveButton("Enable") { _, _ -> (requireActivity() as OnConfirmedListener).onConfirmed() }
             .create()
 
-    private fun setFragmentResult(confirmed: Boolean) {
-        setFragmentResult(
-            REQUEST_KEY,
-            bundleOf(
-                EXTRA_INQUIRE_PERMISSIONS to confirmed
-            )
-        )
+    interface OnConfirmedListener{
+        fun onConfirmed()
     }
 }
