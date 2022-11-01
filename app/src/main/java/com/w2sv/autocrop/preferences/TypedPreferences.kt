@@ -1,7 +1,7 @@
 package com.w2sv.autocrop.preferences
 
 import android.content.SharedPreferences
-import de.paul_woitaschek.slimber.i
+import slimber.log.i
 
 /**
  * Base for KEY to VALUE map delegator objects, the content of which is to be stored in [SharedPreferences]

@@ -3,7 +3,7 @@ package com.w2sv.autocrop.screenshotlistening.notifications
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.core.app.NotificationCompat
-import de.paul_woitaschek.slimber.i
+import slimber.log.i
 
 class NotificationGroup(
     context: Context,

@@ -1,6 +1,6 @@
 package com.w2sv.autocrop.screenshotlistening
 
-import de.paul_woitaschek.slimber.i
+import slimber.log.i
 import java.util.PriorityQueue
 
 class PendingIntentRequestCodes(private val base: Int) : PriorityQueue<Int>() {

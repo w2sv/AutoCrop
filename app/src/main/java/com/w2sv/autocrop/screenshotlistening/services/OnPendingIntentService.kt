@@ -7,7 +7,7 @@ import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.notificationManager
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.UnboundService
 import com.w2sv.autocrop.utils.android.extensions.getInt
-import de.paul_woitaschek.slimber.i
+import slimber.log.i
 
 class OnPendingIntentService : UnboundService() {
     companion object {

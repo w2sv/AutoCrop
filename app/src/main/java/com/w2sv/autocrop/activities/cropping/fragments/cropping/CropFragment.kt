@@ -21,8 +21,8 @@ import com.w2sv.autocrop.utils.android.extensions.loadBitmap
 import com.w2sv.autocrop.utils.android.extensions.postValue
 import com.w2sv.autocrop.utils.android.postDelayed
 import com.w2sv.kotlinutils.extensions.executeAsyncTaskWithProgressUpdateReceiver
-import de.paul_woitaschek.slimber.i
 import kotlinx.coroutines.Job
+import slimber.log.i
 
 class CropFragment
     : CropActivityFragment<FragmentCropBinding>(FragmentCropBinding::class.java) {

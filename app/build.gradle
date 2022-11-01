@@ -82,8 +82,8 @@ dependencies {
     implementation project(path: ':bidirectionalviewpager')
     implementation project(path: ':permissionhandler')
 
-    implementation 'com.github.w2sv:viewboundcontroller:master-SNAPSHOT'
-    implementation 'com.github.w2sv:kotlinutils:master-SNAPSHOT'
+    implementation 'com.github.w2sv:viewboundcontroller:0.0.5-rc1'
+    implementation 'com.github.w2sv:kotlinutils:0.0.2'
 
     // Androidx
     implementation 'androidx.appcompat:appcompat:1.5.1'
@@ -98,8 +98,7 @@ dependencies {
     implementation 'com.google.guava:guava:31.1-jre'  // EvictingQueue, Sets.difference
 
     // Logging
-    implementation 'com.jakewharton.timber:timber:5.0.1'
-    implementation 'com.github.w2sv:slimber:master-SNAPSHOT'
+    implementation 'com.github.PaulWoitaschek:Slimber:2.0.0-rc3'
 
     // Snackbar
     implementation 'com.google.android.material:material:1.7.0'

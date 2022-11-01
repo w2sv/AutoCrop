@@ -32,7 +32,7 @@ import com.w2sv.autocrop.utils.android.extensions.queryMediaStoreData
 import com.w2sv.autocrop.utils.android.systemScreenshotsDirectory
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
 import com.w2sv.kotlinutils.timeDelta
-import de.paul_woitaschek.slimber.i
+import slimber.log.i
 import java.io.File
 import java.io.FileOutputStream
 import java.util.Date

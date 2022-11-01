@@ -18,7 +18,7 @@ import com.w2sv.autocrop.utils.android.extensions.compressToStream
 import com.w2sv.autocrop.utils.android.extensions.deleteImage
 import com.w2sv.autocrop.utils.android.systemPicturesDirectory
 import com.w2sv.kotlinutils.dateTimeNow
-import de.paul_woitaschek.slimber.i
+import slimber.log.i
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream

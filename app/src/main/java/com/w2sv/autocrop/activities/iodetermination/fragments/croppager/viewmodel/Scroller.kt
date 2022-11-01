@@ -3,7 +3,7 @@ package com.w2sv.autocrop.activities.iodetermination.fragments.croppager.viewmod
 import android.os.Handler
 import android.os.Looper
 import androidx.viewpager2.widget.ViewPager2
-import com.w2sv.autocrop.utils.UnitFun
+import com.w2sv.kotlinutils.UnitFun
 import java.util.Timer
 import java.util.TimerTask
 

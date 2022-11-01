@@ -8,7 +8,7 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.kotlinutils.delegates.Consumable
-import de.paul_woitaschek.slimber.i
+import slimber.log.i
 
 class BindingAdministrator<T : BoundService>(
     context: Context,

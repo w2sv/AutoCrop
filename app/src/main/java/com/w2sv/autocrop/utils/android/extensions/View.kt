@@ -8,7 +8,7 @@ import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.utils.UnitFun
+import com.w2sv.kotlinutils.UnitFun
 
 fun View.animate(
     technique: Techniques,
