@@ -2,7 +2,7 @@
 
     <style name="Theme.App.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/magenta_saturated</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_wo_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_nobackground_splash</item>
         <item name="postSplashScreenTheme">@style/Theme.App.Main</item>
     </style>
 

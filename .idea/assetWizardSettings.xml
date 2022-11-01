@@ -81,7 +81,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="$USER_HOME$/Downloads/logo.png" />
+                                                <entry key="imagePath" value="$USER_HOME$/Downloads" />
                                                 <entry key="scalingPercent" value="60" />
                                               </map>
                                             </option>
@@ -148,8 +148,8 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="$USER_HOME$/Downloads/logo.png" />
-                                                <entry key="paddingPercent" value="15" />
+                                                <entry key="imagePath" value="$USER_HOME$/Downloads/logo.webp" />
+                                                <entry key="paddingPercent" value="35" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
@@ -185,7 +185,7 @@
                                       <entry key="assetType" value="IMAGE" />
                                       <entry key="cropped" value="true" />
                                       <entry key="iconShape" value="NONE" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/logo.png" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/logo.webp" />
                                       <entry key="outputName" value="logo_splash" />
                                     </map>
                                   </option>

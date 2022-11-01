@@ -26,7 +26,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="140dp"
 
-        android:background="@drawable/logo_wo_background"
+        android:background="@drawable/logo_nobackground"
         android:contentDescription="@null" />
 
     <com.w2sv.autocrop.activities.main.fragments.VersionTextView

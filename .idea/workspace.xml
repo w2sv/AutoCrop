@@ -10,43 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/dialogs/WelcomeDialog.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/androidTestResultsUserPreferences.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/androidTestResultsUserPreferences.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/logo_nobackground_splash.webp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/IODeterminationActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/IODeterminationActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/dialogs/CropEntiretyDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/dialogs/CropEntiretyDialog.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/dialogs/CropPagerInstructionsDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/dialogs/CropPagerInstructionsDialog.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/manualcrop/ManualCropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/manualcrop/ManualCropFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/FlowFieldFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/FlowFieldFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/WelcomeDialogs.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/dialogs/ScreenshotListenerDialog.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/ButtonsLayout.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldNavigationView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldNavigationView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/gradient_progress_bar_cropping_progress.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/gradient_progress_bar_cropping_progress.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_arrow_back_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_arrow_back_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_check_green_24.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_crop_24_border.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_crop_24_w_border.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_error_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_error_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_github_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_github_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_image_search_24_border.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_image_search_24_w_border.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_location_on_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_location_on_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_menu_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_menu_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_outline_info_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_outline_info_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_outline_sentiment_dissatisfied_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_outline_sentiment_dissatisfied_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_priority_high_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_priority_high_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_screenshot_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_screenshot_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_search_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_search_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_share_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_share_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_sharp_star_rate_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_sharp_star_rate_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/shape_circular_progress_bar_save_all.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/shape_circular_progress_bar_save_all.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/shape_oval_w_border.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/shape_oval_w_border.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_comparison.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_comparison.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_crop.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_crop.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_flowfield.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_flowfield.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_manual_crop.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_manual_crop.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/dialogs/WelcomeDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/dialogs/WelcomeDialog.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/logo_wo_background.webp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/logo_nobackground.webp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout-land/fragment_about.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout-land/fragment_about.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_about.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_about.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/logo_round.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/logo_round.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -216,7 +187,7 @@
     "full.screen.before.presentation.mode": "false",
     "ignore.preview.features.used": "true",
     "last_directory_selection": "/home/w2sv/Dev/android/AutoCrop/app/src/test/java/com/autocrop/utils",
-    "last_opened_file_path": "/home/w2sv/Dev/Android/AutoCrop/app/release/3.2.3.aab",
+    "last_opened_file_path": "/home/w2sv/Dev/Android/AutoCrop/app/src/main/res/drawable-mdpi",
     "memory.settings.postsync.last.time.stamp": "1666258257132",
     "project.structure.last.edited": "Dependencies",
     "project.structure.proportion": "0.17",
@@ -243,11 +214,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/main/res/drawable-mdpi" />
       <recent name="$PROJECT_DIR$/kotlinutils/src" />
       <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
       <recent name="$PROJECT_DIR$/app/src/main/java/com/autocrop/utils/kotlin/extensions" />
       <recent name="$PROJECT_DIR$/app/src/main/java/com/autocrop/activities/iodetermination/fragments/manualcrop" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/layout" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/src/main/res" />
