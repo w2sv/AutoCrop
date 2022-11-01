@@ -70,7 +70,8 @@ class IODeterminationActivity :
                     is SaveAllFragment -> {
                         snackyBuilder("Wait until crops have been saved")
                             .setIcon(R.drawable.ic_front_hand_24)
-                            .build().show()
+                            .build()
+                            .show()
                     }
 
                     is CropPagerFragment -> it.handleBackPress()

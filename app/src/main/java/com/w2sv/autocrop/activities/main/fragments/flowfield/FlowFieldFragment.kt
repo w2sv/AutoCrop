@@ -10,32 +10,37 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.color
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.cropping.CropActivity
 import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivity
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.MainActivityFragment
+import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.WelcomeDialog
+import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.ScreenshotListenerDialog
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
 import com.w2sv.autocrop.utils.android.documentUriPathIdentifier
+import com.w2sv.autocrop.utils.android.extensions.fadeIn
+import com.w2sv.autocrop.utils.android.extensions.getColoredIcon
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.getThemedColor
 import com.w2sv.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.android.postDelayed
+import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.permissionhandler.PermissionHandler
 
 class FlowFieldFragment :
     MainActivityFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java),
-    CropExplanation.OnProceedListener,
-    ScreenshotListenerExplanation.OnConfirmedListener {
+    WelcomeDialog.OnProceedListener,
+    ScreenshotListenerDialog.OnConfirmedListener {
 
     class ViewModel : androidx.lifecycle.ViewModel() {
-        var enteredFragment = false
+        var enteredFragment by AutoSwitch(false, switchOn = false)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,15 +54,17 @@ class FlowFieldFragment :
         }
     }
 
-    private val viewModel by activityViewModels<ViewModel>()
+    private val viewModel by viewModels<ViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         if (!viewModel.enteredFragment) {
+            binding.buttonsLayout.fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
+
             if (!BooleanPreferences.welcomeDialogShown)
                 postDelayed(resources.getLong(R.integer.delay_large)) {
-                    CropExplanation().show(childFragmentManager)
+                    WelcomeDialog().show(childFragmentManager)
                 }
             else
                 sharedViewModel.ioResults?.let {
@@ -65,9 +72,9 @@ class FlowFieldFragment :
                         showIOSynopsisSnackbar(it)
                     }
                 }
-
-            viewModel.enteredFragment = true
         }
+        else
+            binding.buttonsLayout.show()
     }
 
     val writeExternalStoragePermissionHandler by lazy {
@@ -103,7 +110,7 @@ class FlowFieldFragment :
     }
 
     override fun onProceed() {
-        ScreenshotListenerExplanation().show(childFragmentManager)
+        ScreenshotListenerDialog().show(childFragmentManager)
     }
 
     override fun onConfirmed() {
@@ -113,7 +120,7 @@ class FlowFieldFragment :
     private fun showIOSynopsisSnackbar(ioResults: IODeterminationActivity.Results) {
         with(ioResults) {
             val (text, icon) = if (nSavedCrops == 0)
-                "Discarded all crops" to R.drawable.ic_outline_sentiment_dissatisfied_24
+                "Discarded all crops" to requireContext().getColoredIcon(R.drawable.ic_outline_sentiment_dissatisfied_24, R.color.magenta_saturated)
             else
                 SpannableStringBuilder().apply {
                     append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
@@ -127,11 +134,12 @@ class FlowFieldFragment :
                                     nDeletedScreenshots
                             } ${"screenshot".numericallyInflected(nDeletedScreenshots)}"
                         )
-                } to R.drawable.ic_check_green_24
+                } to requireContext().getColoredIcon(R.drawable.ic_check_24, R.color.success)
 
             requireActivity().snackyBuilder(text)
                 .setIcon(icon)
-                .build().show()
+                .build()
+                .show()
         }
     }
 

@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:background="@color/background" />
+        android:background="@color/neutral_background" />
 
     <!--    Page Indication Layout-->
 
@@ -41,6 +41,7 @@
             android:outlineProvider="paddedBounds"
             android:splitTrack="false"
             android:thumb="@drawable/ic_location_on_24"
+            android:thumbTint="@color/magenta_saturated"
             android:visibility="invisible" />
 
         <!-- Page Indication Text View -->
@@ -54,7 +55,6 @@
             android:layout_alignParentEnd="true"
 
             android:text="@string/fraction"
-            android:textColor="@color/light_gray"
             android:textSize="15sp"
             android:textStyle="italic"
 
@@ -75,7 +75,7 @@
         android:paddingHorizontal="3dp"
 
         android:text="@string/cancel_autoscroll"
-        android:textColor="@color/magenta_bright"
+        android:textColor="@color/highlight"
         android:textSize="14sp"
         android:visibility="invisible" />
 
@@ -97,7 +97,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/remove"
-                android:textColor="@color/light_gray"
                 android:textSize="13sp" />
 
             <LinearLayout
@@ -113,8 +112,8 @@
                     android:layout_height="@dimen/size_image_button"
                     android:layout_marginEnd="20dp"
 
-                    android:background="@drawable/ic_crop_24_border"
-                    android:backgroundTint="@color/magenta_bright"
+                    android:background="@drawable/ic_crop_24_w_border"
+                    android:backgroundTint="@color/highlight"
 
                     android:contentDescription="@string/manually_adjust_the_crop" />
 
@@ -123,8 +122,8 @@
                     android:layout_width="@dimen/size_image_button"
                     android:layout_height="@dimen/size_image_button"
 
-                    android:background="@drawable/ic_image_search_24_border"
-                    android:backgroundTint="@color/magenta_bright"
+                    android:background="@drawable/ic_image_search_24_w_border"
+                    android:backgroundTint="@color/highlight"
 
                     android:contentDescription="@string/compare_crop_and_original_screenshot" />
             </LinearLayout>

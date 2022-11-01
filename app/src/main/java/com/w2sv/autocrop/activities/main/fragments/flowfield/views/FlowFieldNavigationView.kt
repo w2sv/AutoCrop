@@ -8,7 +8,6 @@ import android.net.Uri
 import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.Switch
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
@@ -24,6 +23,7 @@ import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
 import com.w2sv.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.w2sv.autocrop.utils.android.extensions.activityViewModel
+import com.w2sv.autocrop.utils.android.extensions.getColoredIcon
 import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
 import com.w2sv.autocrop.utils.android.extensions.serviceRunning
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
@@ -71,10 +71,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                     isVisible = true
                     actionView = ImageView(context).apply {
                         setImageDrawable(
-                            AppCompatResources.getDrawable(
-                                context,
-                                R.drawable.ic_priority_high_24
-                            )
+                            context.getColoredIcon(R.drawable.ic_priority_high_24, R.color.highest_light)
                         )
                     }
                 }

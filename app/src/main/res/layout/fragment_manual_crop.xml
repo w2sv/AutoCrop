@@ -24,7 +24,6 @@
                 android:layout_marginHorizontal="@dimen/margin_top_button"
                 android:background="@drawable/shape_rounded_rectangle"
                 android:gravity="center"
-                android:textColor="@color/text_default"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -34,7 +33,6 @@
                 android:layout_marginHorizontal="@dimen/margin_top_button"
                 android:background="@drawable/shape_rounded_rectangle"
                 android:gravity="center"
-                android:textColor="@color/text_default"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -44,7 +42,6 @@
                 android:layout_marginHorizontal="@dimen/margin_top_button"
                 android:background="@drawable/shape_rounded_rectangle"
                 android:gravity="center"
-                android:textColor="@color/text_default"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -54,7 +51,6 @@
                 android:layout_marginHorizontal="@dimen/margin_top_button"
                 android:background="@drawable/shape_rounded_rectangle"
                 android:gravity="center"
-                android:textColor="@color/text_default"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -80,7 +76,7 @@
 
             android:background="@drawable/shape_manual_crop_reset_btn"
             android:text="@string/reset"
-            android:textColor="@color/magenta_bright"
+            android:textColor="@color/highlight"
             android:textSize="15sp"
             android:textStyle="italic"
             tools:ignore="RelativeOverlap" />
@@ -107,6 +103,7 @@
 
                 android:background="@drawable/shape_oval_btn"
                 android:padding="@dimen/padding_image_button_w_background"
+                android:contentDescription="@string/discard_changes"
 
                 app:srcCompat="@drawable/ic_cancel_24" />
 
@@ -121,6 +118,7 @@
                 android:background="@drawable/shape_oval_btn"
                 android:padding="@dimen/padding_image_button_w_background"
 
+                android:contentDescription="@string/apply_adjusted_crop_edges"
                 app:srcCompat="@drawable/ic_check_24" />
 
         </LinearLayout>

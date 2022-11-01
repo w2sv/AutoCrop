@@ -91,7 +91,7 @@ class ManualCropFragment
         unitSubscript: Any? = null
     ): SpannableStringBuilder =
         SpannableStringBuilder()
-            .color(requireContext().getColor(R.color.magenta_bright)) {
+            .color(requireContext().getColor(R.color.highlight)) {
                 append(unit)
                 unitSubscript?.let {
                     subscript {

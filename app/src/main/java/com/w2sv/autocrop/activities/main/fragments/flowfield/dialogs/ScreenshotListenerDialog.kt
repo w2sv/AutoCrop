@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.main.fragments.flowfield
+package com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs
 
 import android.app.Dialog
 import android.os.Build
@@ -9,39 +9,16 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.views.UncancelableDialogFragment
 import com.w2sv.autocrop.utils.android.extensions.getColoredIcon
 
-class CropExplanation : UncancelableDialogFragment() {
+class ScreenshotListenerDialog : UncancelableDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         builder()
-            .setTitle("Welcome to AutoCrop \uD83C\uDF89")
-            .setIcon(R.drawable.logo_wo_background)
-            .setMessage(
-                SpannableStringBuilder()
-                    .append(
-                        "You have just unlocked the capability to automatically crop multiple screenshots from your gallery & save them all in one go." +
-                                "\n\n" +
-                                "All you need to do now is press the "
-                    )
-                    .italic { append("Select Images ") }
-                    .append("button and get croppin'!")
-            )
-            .setPositiveButton("Alright!") { _, _ -> (parentFragment as OnProceedListener).onProceed() }
-            .create()
-
-    interface OnProceedListener {
-        fun onProceed()
-    }
-}
-
-class ScreenshotListenerExplanation : UncancelableDialogFragment() {
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        builder()
-            .setTitle("Screenshot listening")
-            .setIcon(requireContext().getColoredIcon(R.drawable.ic_screenshot_24, R.color.magenta_bright))
+            .setTitle("Screenshot Listening")
+            .setIcon(requireContext().getColoredIcon(R.drawable.ic_screenshot_24, R.color.highlight))
             .setMessage(
                 SpannableStringBuilder().apply {
                     append(
                         "With screenshot listening enabled, you will get a notification whenever you take a croppable screenshot. " +
-                                "Through that, you can save the crop and delete the original screenshot without having to open the app." +
+                                "Through that, you can save the crop without having to open the app." +
                                 "\n\n" +
                                 "For this, the "
                     )

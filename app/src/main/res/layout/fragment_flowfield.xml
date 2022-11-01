@@ -19,7 +19,7 @@
 
         <!-- Buttons -->
 
-        <com.w2sv.autocrop.activities.main.fragments.flowfield.views.ButtonsLayout
+        <RelativeLayout
             android:id="@+id/buttons_layout"
 
             android:layout_width="match_parent"
@@ -66,7 +66,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@android:color/darker_gray" />
 
-        </com.w2sv.autocrop.activities.main.fragments.flowfield.views.ButtonsLayout>
+        </RelativeLayout>
 
         <com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldNavigationView
             android:id="@+id/navigation_view"
@@ -81,7 +81,7 @@
 
             android:fitsSystemWindows="true"
             app:headerLayout="@layout/navigation_drawer_header"
-            app:itemIconTint="@color/magenta_bright"
+            app:itemIconTint="@color/highlight"
             app:menu="@menu/flowfield" />
 
     </com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldDrawerLayout>

@@ -16,7 +16,7 @@ class CropEntiretyDialog : AbstractCropDialog() {
                 setTitle(
                     SpannableStringBuilder()
                         .append("Save ")
-                        .color(context.getThemedColor(R.color.magenta_bright)) {
+                        .color(context.getThemedColor(R.color.highlight)) {
                             italic {
                                 append("all ")
                             }

@@ -14,7 +14,7 @@ class CropPagerInstructionsDialog : UncancelableDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         builder()
             .setTitle("Some instructions to get ya going")
-            .setIcon(requireContext().getColoredIcon(R.drawable.ic_outline_info_24, R.color.magenta_bright))
+            .setIcon(requireContext().getColoredIcon(R.drawable.ic_outline_info_24, R.color.highlight))
             .setMessage(
                 SpannableStringBuilder()
                     .addFormattedInstruction("Tap screen once to save/discard", "current", "crop \uD83D\uDC47")

@@ -25,6 +25,7 @@ import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.utils.android.BackPressHandler
 import com.w2sv.autocrop.utils.android.extensions.animate
 import com.w2sv.autocrop.utils.android.extensions.crossFade
+import com.w2sv.autocrop.utils.android.extensions.getColoredIcon
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.getThemedColor
 import com.w2sv.autocrop.utils.android.extensions.loadBitmap
@@ -141,7 +142,7 @@ class CropPagerFragment :
                         .append("Couldn't find crop bounds for")
                         .bold {
                             color(
-                                requireContext().getThemedColor(R.color.magenta_bright)
+                                requireContext().getThemedColor(R.color.highlight)
                             ) { append(" $nDismissedScreenshots") }
                         }
                         .append(" image".numericallyInflected(nDismissedScreenshots))
@@ -160,7 +161,7 @@ class CropPagerFragment :
                 "Adjusted crop"
             )
                 .setView()
-                .setIcon(R.drawable.ic_check_green_24)
+                .setIcon(requireContext().getColoredIcon(R.drawable.ic_check_24, R.color.success))
                 .build().show()
         }
     }

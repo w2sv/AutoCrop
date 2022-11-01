@@ -23,12 +23,13 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="192.168.1.234:5555" value="120" />
-                  <entry key="Duration" value="90" />
-                  <entry key="HXY&#10; Power 5" value="120" />
+                  <entry key="192.168.2.114:5555" value="120" />
+                  <entry key="Duration" value="126" />
+                  <entry key="HXY&#10; Power 5" value="156" />
                   <entry key="Pixel_3a_API_33_x86_64" value="120" />
                   <entry key="Pixel_5_API_31" value="120" />
                   <entry key="Pixel_6_Pro_API_32" value="120" />
-                  <entry key="Tests" value="360" />
+                  <entry key="Tests" value="396" />
                 </map>
               </option>
             </AndroidTestResultsTableState>
