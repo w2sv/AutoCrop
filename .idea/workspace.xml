@@ -10,22 +10,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/logo_nobackground_splash.webp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/comparison/ComparisonFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/comparison/ComparisonFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/comparison/views/ComparisonIVStatusTV.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/comparison/views/ComparisonIVStatusTV.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/FlowFieldFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/FlowFieldFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/dialogs/WelcomeDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/dialogs/WelcomeDialog.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/logo_wo_background.webp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-mdpi/logo_nobackground.webp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout-land/fragment_about.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout-land/fragment_about.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_about.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_about.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/logo_round.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/logo_round.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/sketch/FlowFieldSketch.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/sketch/FlowFieldSketch.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[Power51280037891]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[192.168.2.114:5555]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -128,6 +125,7 @@
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/ui/MoveUpwardBehavior.kt_SELECTED": "RisingLinearLayout",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/ui/RiseBehavior.kt_SELECTED": "SnackbarRepelledLayout",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/ui/SnackbarRepelledLayout.kt_SELECTED": "SnackbarRepelledLayout",
+    "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/comparison/views/ComparisonIVStatusTV.kt_SELECTED": "ComparisonIVStatusTV",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/views/ComparisonButton.kt_SELECTED": "ComparisonButton",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/views/CropImageView.kt_SELECTED": "CropImageView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/views/DiscardingStatisticsTextView.kt_SELECTED": "DiscardingStatisticsTextView",
@@ -137,6 +135,7 @@
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/about/views/AnimationHandlingTextView.kt_SELECTED": "AnimationHandlingTextView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/ButtonsLayout.kt_SELECTED": "ButtonsLayout",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldContainer.kt_SELECTED": "FlowFieldContainer",
+    "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldDrawerLayout.kt_SELECTED": "FlowFieldDrawerLayout",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldNavigationView.kt_SELECTED": "FlowFieldNavigationView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/ImageSelectionButton.kt_SELECTED": "ImageSelectionButton",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/ui/SnackbarRepelledLayout.kt_SELECTED": "SnackbarRepelledLayout",
@@ -187,7 +186,7 @@
     "full.screen.before.presentation.mode": "false",
     "ignore.preview.features.used": "true",
     "last_directory_selection": "/home/w2sv/Dev/android/AutoCrop/app/src/test/java/com/autocrop/utils",
-    "last_opened_file_path": "/home/w2sv/Dev/Android/AutoCrop/app/src/main/res/drawable-mdpi",
+    "last_opened_file_path": "/home/w2sv/Dev/Android/AutoCrop/app/release/3.2.3.aab",
     "memory.settings.postsync.last.time.stamp": "1666258257132",
     "project.structure.last.edited": "Dependencies",
     "project.structure.proportion": "0.17",

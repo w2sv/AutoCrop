@@ -14,9 +14,9 @@ class WelcomeDialog : UncancelableDialogFragment() {
             .setTitle("Welcome to AutoCrop \uD83C\uDF89")
             .setMessage(
                 SpannableStringBuilder()
-                    .append("All you need to do from here is press the ")
+                    .append("All you need to do now is press the ")
                     .italic { append("Select Images ") }
-                    .append("button and save your first crops!")
+                    .append("button, select some screenshots and save your first crops!")
             )
             .setPositiveButton("Alright!") { _, _ -> (parentFragment as OnProceedListener).onProceed() }
             .create()

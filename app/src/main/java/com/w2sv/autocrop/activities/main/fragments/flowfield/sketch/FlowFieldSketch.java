@@ -7,6 +7,7 @@ package com.w2sv.autocrop.activities.main.fragments.flowfield.sketch;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
+import timber.log.Timber;
 
 public class FlowFieldSketch extends PApplet {
 
@@ -69,6 +70,13 @@ public class FlowFieldSketch extends PApplet {
                     blue(pixel) * REDUCTION_COEFF
             );
         }
-        g.updatePixels();
+
+        // Catch 'processing java.lang.IllegalStateException: Can't call setPixels() on a recycled bitmap',
+        // occurring upon class being destroyed due to e.g. screen rotation whilst updating pixels
+        try {
+            g.updatePixels();
+        } catch (IllegalStateException ignored) {
+            Timber.i("Caught exception");
+        }
     }
 }

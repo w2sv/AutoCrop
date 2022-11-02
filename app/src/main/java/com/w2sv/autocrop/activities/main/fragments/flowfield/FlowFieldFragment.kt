@@ -16,8 +16,8 @@ import com.w2sv.autocrop.activities.cropping.CropActivity
 import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivity
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.MainActivityFragment
-import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.WelcomeDialog
 import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.ScreenshotListenerDialog
+import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.WelcomeDialog
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
@@ -33,6 +33,7 @@ import com.w2sv.autocrop.utils.android.postDelayed
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.permissionhandler.PermissionHandler
+import com.w2sv.permissionhandler.requestPermissions
 
 class FlowFieldFragment :
     MainActivityFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java),
@@ -114,13 +115,22 @@ class FlowFieldFragment :
     }
 
     override fun onConfirmed() {
-        ScreenshotListener.startService(requireContext())
+        screenshotListeningPermissions
+            .iterator()
+            .requestPermissions(
+                onGranted = {
+                    ScreenshotListener.startService(requireContext())
+                }
+            )
     }
 
     private fun showIOSynopsisSnackbar(ioResults: IODeterminationActivity.Results) {
         with(ioResults) {
             val (text, icon) = if (nSavedCrops == 0)
-                "Discarded all crops" to requireContext().getColoredIcon(R.drawable.ic_outline_sentiment_dissatisfied_24, R.color.magenta_saturated)
+                "Discarded all crops" to requireContext().getColoredIcon(
+                    R.drawable.ic_outline_sentiment_dissatisfied_24,
+                    R.color.magenta_saturated
+                )
             else
                 SpannableStringBuilder().apply {
                     append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")

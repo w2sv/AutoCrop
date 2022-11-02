@@ -97,10 +97,12 @@ class ComparisonFragment
             parentFragmentManager.popBackStack()
         }
         viewModel.showButtons.observe(viewLifecycleOwner) {
-            if (it)
-                binding.buttonLayout.show()
-            else
-                binding.buttonLayout.hide()
+            with(binding.buttonLayout){
+                if (it)
+                    show()
+                else
+                    hide()
+            }
         }
     }
 
