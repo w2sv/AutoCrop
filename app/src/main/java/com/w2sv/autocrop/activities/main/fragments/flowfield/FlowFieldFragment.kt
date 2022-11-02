@@ -11,6 +11,7 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.color
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.cropping.CropActivity
 import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivity
@@ -29,8 +30,7 @@ import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.getThemedColor
 import com.w2sv.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
-import com.w2sv.autocrop.utils.android.postDelayed
-import com.w2sv.kotlinutils.delegates.AutoSwitch
+import com.w2sv.kotlinutils.extensions.launchDelayed
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.permissionhandler.PermissionHandler
 import com.w2sv.permissionhandler.requestPermissions
@@ -41,7 +41,7 @@ class FlowFieldFragment :
     ScreenshotListenerDialog.OnConfirmedListener {
 
     class ViewModel : androidx.lifecycle.ViewModel() {
-        var enteredFragment by AutoSwitch(false, switchOn = false)
+        var enteredFragment = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,14 +63,19 @@ class FlowFieldFragment :
         if (!viewModel.enteredFragment) {
             binding.buttonsLayout.fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
 
-            if (!BooleanPreferences.welcomeDialogShown)
-                postDelayed(resources.getLong(R.integer.delay_large)) {
+            if (!BooleanPreferences.welcomeDialogsShown)
+                lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_large)) {
                     WelcomeDialog().show(childFragmentManager)
+
+                    viewModel.enteredFragment = true
+                    BooleanPreferences.welcomeDialogsShown = true
                 }
             else
                 sharedViewModel.ioResults?.let {
-                    postDelayed(resources.getLong(R.integer.duration_flowfield_buttons_fade_in_halve)) {
+                    lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_fade_in_halve)) {
                         showIOSynopsisSnackbar(it)
+
+                        viewModel.enteredFragment = true
                     }
                 }
         }
@@ -197,12 +202,11 @@ class FlowFieldFragment :
                         SpannableStringBuilder()
                             .append("Crops will be saved to ")
                             .color(requireContext().getThemedColor(R.color.success)) {
-                                append(
-                                    documentUriPathIdentifier(UriPreferences.documentUri!!)
-                                )
+                                append(documentUriPathIdentifier(UriPreferences.documentUri!!))
                             }
                     )
-                        .build().show()
+                        .build()
+                        .show()
                 }
             }
         }

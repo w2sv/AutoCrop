@@ -7,9 +7,9 @@
         android:thickness="5dp"
         android:useLevel="false">
         <gradient
-            android:startColor="@color/ocean_blue"
             android:centerColor="@color/magenta_dark"
             android:endColor="@color/wine_red"
+            android:startColor="@color/ocean_blue"
             android:type="sweep" />
     </shape>
 </rotate>

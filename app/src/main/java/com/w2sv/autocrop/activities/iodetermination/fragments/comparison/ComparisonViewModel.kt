@@ -8,12 +8,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.w2sv.autocrop.CropBundle
+import com.w2sv.kotlinutils.delegates.AutoSwitch
 
 class ComparisonViewModel(
     val cropBundle: CropBundle,
     val screenshotBitmap: Bitmap,
     cropBitmapDrawable: BitmapDrawable
 ) : ViewModel() {
+
     class Factory(
         private val cropBundle: CropBundle,
         private val screenshotBitmap: Bitmap,
@@ -24,6 +26,8 @@ class ComparisonViewModel(
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
             ComparisonViewModel(cropBundle, screenshotBitmap, cropBitmapDrawable) as T
     }
+
+    val enterTransitionCompleted by AutoSwitch(false, switchOn = false)
 
     val displayScreenshot: LiveData<Boolean> by lazy {
         MutableLiveData(false)

@@ -102,8 +102,8 @@
                 android:layout_marginHorizontal="18dp"
 
                 android:background="@drawable/shape_oval_btn"
-                android:padding="@dimen/padding_image_button_w_background"
                 android:contentDescription="@string/discard_changes"
+                android:padding="@dimen/padding_image_button_w_background"
 
                 app:srcCompat="@drawable/ic_cancel_24" />
 
@@ -116,9 +116,9 @@
                 android:layout_marginHorizontal="18dp"
 
                 android:background="@drawable/shape_oval_btn"
-                android:padding="@dimen/padding_image_button_w_background"
-
                 android:contentDescription="@string/apply_adjusted_crop_edges"
+
+                android:padding="@dimen/padding_image_button_w_background"
                 app:srcCompat="@drawable/ic_check_24" />
 
         </LinearLayout>

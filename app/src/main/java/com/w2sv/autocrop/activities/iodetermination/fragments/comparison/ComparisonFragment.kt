@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
@@ -23,8 +24,7 @@ import com.w2sv.autocrop.utils.android.extensions.postValue
 import com.w2sv.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.utils.android.extensions.showSystemBars
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
-import com.w2sv.autocrop.utils.android.postDelayed
-import com.w2sv.kotlinutils.delegates.AutoSwitch
+import com.w2sv.kotlinutils.extensions.launchDelayed
 
 class ComparisonFragment
     : IODeterminationActivityFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java) {
@@ -57,19 +57,16 @@ class ComparisonFragment
             .inflateTransition(android.R.transition.move)
             .addListener(
                 object : TransitionListenerAdapter() {
-                    private var enterTransitionCompleted by AutoSwitch(false, switchOn = false)
 
                     override fun onTransitionEnd(transition: Transition) {
                         super.onTransitionEnd(transition)
 
-                        if (!enterTransitionCompleted) {
-                            postDelayed(resources.getLong(R.integer.delay_small)) {
+                        if (!viewModel.enterTransitionCompleted) {
+                            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
                                 viewModel.useInsetLayoutParams.postValue(false)
                                 viewModel.displayScreenshot.postValue(true)
 
-                                if (BooleanPreferences.comparisonInstructionsShown)
-                                    viewModel.showButtons.postValue(true)
-                                else
+                                if (!BooleanPreferences.comparisonInstructionsShown)
                                     requireActivity()
                                         .snackyBuilder("Tap screen to toggle between the original screenshot and the crop")
                                         .setIcon(R.drawable.ic_outline_info_24)
@@ -82,6 +79,8 @@ class ComparisonFragment
                                             }
                                         })
                                         .show()
+                                else
+                                    viewModel.showButtons.postValue(true)
                             }
                         }
                     }
@@ -97,7 +96,7 @@ class ComparisonFragment
             parentFragmentManager.popBackStack()
         }
         viewModel.showButtons.observe(viewLifecycleOwner) {
-            with(binding.buttonLayout){
+            with(binding.buttonLayout) {
                 if (it)
                     show()
                 else

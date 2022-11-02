@@ -32,7 +32,7 @@ import com.w2sv.autocrop.utils.android.extensions.loadBitmap
 import com.w2sv.autocrop.utils.android.extensions.postValue
 import com.w2sv.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
-import com.w2sv.autocrop.utils.android.postDelayed
+import com.w2sv.kotlinutils.extensions.launchDelayed
 import com.w2sv.kotlinutils.extensions.executeAsyncTask
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import de.mateware.snacky.Snacky
@@ -113,9 +113,10 @@ class CropPagerFragment :
                     ?: binding.bottomElements.show()
 
                 if (!BooleanPreferences.cropPagerInstructionsShown)
-                    postDelayed(resources.getLong(R.integer.delay_small)) {
+                    lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)){
                         CropPagerInstructionsDialog()
                             .show(childFragmentManager)
+                        BooleanPreferences.cropPagerInstructionsShown = true
                     }
                 else
                     onAutoScrollConcluded()
@@ -156,13 +157,14 @@ class CropPagerFragment :
 
     override fun onResult(cropEdges: CropEdges) {
         processAdjustedCropEdges(cropEdges)
-        postDelayed(resources.getLong(R.integer.delay_small)) {
+        lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)){
             requireActivity().snackyBuilder(
                 "Adjusted crop"
             )
                 .setView()
                 .setIcon(requireContext().getColoredIcon(R.drawable.ic_check_24, R.color.success))
-                .build().show()
+                .build()
+                .show()
         }
     }
 

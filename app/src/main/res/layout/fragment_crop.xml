@@ -14,7 +14,7 @@
 
         android:text="@string/cropping_in_progress"
         android:textColor="@color/highlight"
-        android:textSize="22sp"/>
+        android:textSize="22sp" />
 
     <com.w2sv.autocrop.activities.cropping.fragments.cropping.views.CroppingProgressBar
         android:id="@+id/cropping_progress_bar"

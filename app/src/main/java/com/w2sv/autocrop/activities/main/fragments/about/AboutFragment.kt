@@ -1,6 +1,8 @@
 package com.w2sv.autocrop.activities.main.fragments.about
 
 import android.os.Bundle
+import android.view.View
+import androidx.lifecycle.lifecycleScope
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.main.fragments.MainActivityFragment
@@ -9,29 +11,29 @@ import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.utils.android.extensions.animate
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
-import com.w2sv.autocrop.utils.android.postDelayed
+import com.w2sv.kotlinutils.extensions.launchDelayed
 
 class AboutFragment :
     MainActivityFragment<FragmentAboutBinding>(FragmentAboutBinding::class.java) {
 
-    override fun onResume() {
-        super.onResume()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         if (!BooleanPreferences.aboutFragmentInstructionsShown)
-            postDelayed(resources.getLong(R.integer.delay_medium)) {
+            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_medium)){
                 requireActivity()
                     .snackyBuilder(
-                        "Pro tip: check out what happens if you click on the various view elements",
+                        "Check out what happens if you click on the different view elements!",
                         duration = resources.getInteger(R.integer.duration_snackbar_long)
                     )
                     .setIcon(R.drawable.ic_outline_info_24)
-                    .build().show()
+                    .build()
+                    .show()
             }
     }
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         binding.setOnClickListeners()
-
         viewLifecycleOwner.lifecycle.addObserver(binding.copyrightTv)
     }
 

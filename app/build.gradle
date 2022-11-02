@@ -83,7 +83,7 @@ dependencies {
     implementation project(path: ':permissionhandler')
 
     implementation 'com.github.w2sv:viewboundcontroller:0.0.5-rc1'
-    implementation 'com.github.w2sv:kotlinutils:0.0.2'
+    implementation 'com.github.w2sv:kotlinutils:0.0.2.1'
 
     // Androidx
     implementation 'androidx.appcompat:appcompat:1.5.1'

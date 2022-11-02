@@ -10,7 +10,7 @@ object BooleanPreferences : TypedPreferences<Boolean>(
         "autoScroll" to true,
         "deleteScreenshots" to false,
 
-        "welcomeDialogShown" to false,
+        "welcomeDialogsShown" to false,
         "cropPagerInstructionsShown" to false,
         "comparisonInstructionsShown" to false,
         "aboutFragmentInstructionsShown" to false
@@ -22,8 +22,8 @@ object BooleanPreferences : TypedPreferences<Boolean>(
     var autoScroll by map
     var deleteScreenshots by map
 
-    var welcomeDialogShown by AutoSwitch.Mapped(map, false)
-    var cropPagerInstructionsShown by AutoSwitch.Mapped(map, false)
+    var welcomeDialogsShown by map
+    var cropPagerInstructionsShown by map
     var comparisonInstructionsShown by AutoSwitch.Mapped(map, false)
     var aboutFragmentInstructionsShown by AutoSwitch.Mapped(map, false)
 

@@ -19,9 +19,10 @@ import com.w2sv.autocrop.databinding.FragmentCropBinding
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.loadBitmap
 import com.w2sv.autocrop.utils.android.extensions.postValue
-import com.w2sv.autocrop.utils.android.postDelayed
 import com.w2sv.kotlinutils.extensions.executeAsyncTaskWithProgressUpdateReceiver
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import slimber.log.i
 
 class CropFragment
@@ -89,8 +90,9 @@ class CropFragment
         if (sharedViewModel.cropBundles.isNotEmpty())
             startIODeterminationActivity()
         else
-        // delay briefly to assure progress bar having reached 100% before UI change
-            postDelayed(resources.getLong(R.integer.delay_small)) {
+            lifecycleScope.launch {
+                // delay briefly to assure progress bar having reached 100% before UI change
+                delay(resources.getLong(R.integer.delay_small))
                 fragmentHostingActivity
                     .fragmentReplacementTransaction(CroppingFailedFragment())
                     .commit()

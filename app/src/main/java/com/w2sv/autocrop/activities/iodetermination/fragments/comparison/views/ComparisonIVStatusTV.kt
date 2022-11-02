@@ -1,7 +1,6 @@
 package com.w2sv.autocrop.activities.iodetermination.fragments.comparison.views
 
 import android.content.Context
-import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -32,13 +31,6 @@ class ComparisonIVStatusTV(context: Context, attributeSet: AttributeSet) : AppCo
             }
         }
     }
-
-//    override fun onSaveInstanceState(): Parcelable? {
-//        fadeOutAnimation?.stop()
-//        fadeOutAnimation = null
-//
-//        return super.onSaveInstanceState()
-//    }
 
     private var fadeOutAnimation: YoYo.YoYoString? = null
 }
