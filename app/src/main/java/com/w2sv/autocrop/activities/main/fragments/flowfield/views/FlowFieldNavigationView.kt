@@ -28,6 +28,7 @@ import com.w2sv.autocrop.utils.android.extensions.configureItem
 import com.w2sv.autocrop.utils.android.extensions.getColoredIcon
 import com.w2sv.autocrop.utils.android.extensions.goToWebpage
 import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
+import com.w2sv.autocrop.utils.android.extensions.postValue
 import com.w2sv.autocrop.utils.android.extensions.serviceRunning
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.permissionhandler.requestPermissions
@@ -89,11 +90,14 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                                 ScreenshotListener.stopService(context)
                         }
 
-                    activityViewModel.cancelledScreenshotListenerFromNotification.observe(activity as LifecycleOwner) { cancelled ->
-                        if (cancelled){
-                            setOnCheckedChangeListener(null)
-                            isChecked = false
-                            setOnCheckedChangeListener(onCheckedChangeListener)
+                    activityViewModel.cancelledScreenshotListenerFromNotification.let { liveData ->
+                        liveData.observe(activity as LifecycleOwner) { cancelled ->
+                            if (cancelled == true) {
+                                setOnCheckedChangeListener(null)
+                                isChecked = false
+                                setOnCheckedChangeListener(onCheckedChangeListener)
+                                liveData.postValue(false)
+                            }
                         }
                     }
 

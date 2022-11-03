@@ -10,25 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/utils/android/extensions/Menu.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/utils/android/extensions/CoroutineScope.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropping/CropActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropping/CropActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropping/CropActivityViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropping/CropActivityViewModel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropping/fragments/cropping/CropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropping/fragments/cropping/CropFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropping/fragments/cropping/views/CroppingProgressBar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropping/fragments/cropping/views/CroppingProgressBar.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropping/fragments/cropping/views/ProgressTextView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropping/fragments/cropping/views/ProgressTextView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/IODeterminationActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/IODeterminationActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/viewmodel/CropPagerViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/croppager/viewmodel/CropPagerViewModel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/MainActivityViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/MainActivityViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/FlowFieldFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/FlowFieldFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldNavigationView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldNavigationView.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/screenshotlistening/services/ScreenshotListener.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/screenshotlistening/services/ScreenshotListener.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/utils/android/BackPressHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/utils/android/BackPressListener.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/livedata/MutableListLiveData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/java/com/w2sv/bidirectionalviewpager/livedata/MutableListLiveData.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,8 +59,8 @@
         <option value="Class" />
         <option value="JUnit5 Test Class" />
         <option value="resourceFile" />
-        <option value="Kotlin Class" />
         <option value="Kotlin File" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>

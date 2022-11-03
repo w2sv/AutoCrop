@@ -18,7 +18,6 @@ import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
 import com.w2sv.autocrop.utils.android.extensions.postValue
-import slimber.log.i
 
 class MainActivity :
     ApplicationActivity<FlowFieldFragment, MainActivityViewModel>(
@@ -38,27 +37,17 @@ class MainActivity :
         LocalBroadcastManager
             .getInstance(this)
             .registerReceiver(
-                onStopScreenshotListener,
-                IntentFilter(ScreenshotListener.StopBroadcastReceiver.ACTION_STOP_SERVICE_FROM_NOTIFICATION)
+                onStopScreenshotListenerFromNotification,
+                IntentFilter(ScreenshotListener.OnStopFromNotificationListener.ACTION_ON_STOP_SERVICE_FROM_NOTIFICATION)
             )
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        LocalBroadcastManager
-            .getInstance(this)
-            .unregisterReceiver(onStopScreenshotListener)
+    private val onStopScreenshotListenerFromNotification by lazy {
+        OnStopScreenshotListenerFromNotification()
     }
 
-    private val onStopScreenshotListener by lazy {
-        OnStopScreenshotListener()
-    }
-
-    inner class OnStopScreenshotListener: BroadcastReceiver(){
+    inner class OnStopScreenshotListenerFromNotification: BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
-            i{"STOPPING: ScreenshotListenerStopBroadcastReceiver.onReceive"}
-
             viewModel
                 .cancelledScreenshotListenerFromNotification
                 .postValue(true)
@@ -85,5 +74,13 @@ class MainActivity :
                 finishAffinity()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        LocalBroadcastManager
+            .getInstance(this)
+            .unregisterReceiver(onStopScreenshotListenerFromNotification)
     }
 }

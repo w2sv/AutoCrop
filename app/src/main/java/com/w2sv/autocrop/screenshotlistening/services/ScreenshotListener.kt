@@ -82,6 +82,7 @@ class ScreenshotListener :
 
             stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
+            return super.onStartCommand(intent, flags, startId)
         }
         else{
             startForeground(
@@ -118,25 +119,25 @@ class ScreenshotListener :
                     PendingIntent.getBroadcast(
                         this,
                         999,
-                        Intent(this, StopBroadcastReceiver::class.java),
+                        Intent(this, OnStopFromNotificationListener::class.java),
                         PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                     )
                 )
             )
 
-    class StopBroadcastReceiver : BroadcastReceiver() {
+    class OnStopFromNotificationListener : BroadcastReceiver() {
         companion object{
-            const val ACTION_STOP_SERVICE_FROM_NOTIFICATION = "com.w2sv.autocrop.STOP_SERVICE_FROM_NOTIFICATION"
+            const val ACTION_ON_STOP_SERVICE_FROM_NOTIFICATION = "com.w2sv.autocrop.ON_STOP_SERVICE_FROM_NOTIFICATION"
         }
 
         override fun onReceive(context: Context?, intent: Intent?) {
             with(context!!){
+                stopService(this)
                 LocalBroadcastManager
                     .getInstance(this)
                     .sendBroadcast(
-                        Intent(ACTION_STOP_SERVICE_FROM_NOTIFICATION)
+                        Intent(ACTION_ON_STOP_SERVICE_FROM_NOTIFICATION)
                     )
-                stopService(this)
             }
         }
     }

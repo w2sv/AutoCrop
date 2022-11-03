@@ -2,8 +2,8 @@ package com.w2sv.bidirectionalviewpager.livedata
 
 import androidx.lifecycle.LiveData
 
-abstract class MutableListLiveData<T>(private val delegator: MutableList<T>) :
-    LiveData<MutableList<T>>(delegator),
+open class MutableListLiveData<T>(private val delegator: MutableList<T>) :
+    LiveData<List<T>>(delegator),
     MutableList<T> by delegator {
 
     private fun post() {
@@ -12,5 +12,9 @@ abstract class MutableListLiveData<T>(private val delegator: MutableList<T>) :
 
     override fun removeAt(index: Int): T =
         delegator.removeAt(index)
+            .also { post() }
+
+    override fun add(element: T): Boolean =
+        delegator.add(element)
             .also { post() }
 }

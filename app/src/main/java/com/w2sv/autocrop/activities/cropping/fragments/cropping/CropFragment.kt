@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
@@ -21,12 +22,10 @@ import com.w2sv.autocrop.databinding.FragmentCropBinding
 import com.w2sv.autocrop.utils.android.BackPressListener
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.loadBitmap
-import com.w2sv.autocrop.utils.android.extensions.postValue
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
-import com.w2sv.kotlinutils.extensions.executeAsyncTaskWithProgressUpdateReceiver
+import com.w2sv.kotlinutils.extensions.executeAsyncTask
 import com.w2sv.kotlinutils.extensions.launchDelayed
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.yield
 
 class CropFragment
     : CropActivityFragment<FragmentCropBinding>(FragmentCropBinding::class.java) {
@@ -54,9 +53,9 @@ class CropFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedViewModel.liveImageNumber.observe(viewLifecycleOwner) {
-            binding.progressTv.update(it)
-            binding.croppingProgressBar.progress = it
+        sharedViewModel.liveCropBundles.observe(activity as LifecycleOwner) {
+            binding.progressTv.update(it.size)
+            binding.croppingProgressBar.progress = it.size
         }
     }
 
@@ -65,48 +64,38 @@ class CropFragment
     override fun onResume() {
         super.onResume()
 
-        cropJob = lifecycleScope.executeAsyncTaskWithProgressUpdateReceiver(
-            ::cropImages,
-            {
-                with(sharedViewModel.liveImageNumber) {
-                    postValue(value!! + 1)
-                }
-            },
+        cropJob = lifecycleScope.executeAsyncTask(
+            { cropImages() },
             { proceed() }
         )
     }
 
-    private suspend fun cropImages(publishProgress: suspend (Void?) -> Unit): Void? {
-        sharedViewModel.uris.subList(
-            sharedViewModel.liveImageNumber.value!!,
-            sharedViewModel.uris.size
-        ).forEach { uri ->
-            yield()
+    private fun cropImages(){
+        sharedViewModel.imminentUris.forEach { uri ->
+            try {
+                // attempt to crop image; upon success add CropBundle to sharedViewModel
+                val bitmap = requireContext().contentResolver.loadBitmap(uri)
 
-            // attempt to crop image; upon success add CropBundle to sharedViewModel
-            val bitmap = requireContext().contentResolver.loadBitmap(uri)
-
-            bitmap.cropEdgesCandidates()?.let { candidates ->
-                sharedViewModel.cropBundles.add(
-                    CropBundle.assemble(
-                        Screenshot(
-                            uri,
-                            bitmap.height,
-                            candidates,
-                            Screenshot.MediaStoreData.query(requireContext().contentResolver, uri)
-                        ),
-                        bitmap,
-                        candidates.maxHeightEdges()
+                bitmap.cropEdgesCandidates()?.let { candidates ->
+                    sharedViewModel.liveCropBundles.add(
+                        CropBundle.assemble(
+                            Screenshot(
+                                uri,
+                                bitmap.height,
+                                candidates,
+                                Screenshot.MediaStoreData.query(requireContext().contentResolver, uri)
+                            ),
+                            bitmap,
+                            candidates.maxHeightEdges()
+                        )
                     )
-                )
-            }
-            publishProgress(null)
+                }
+            } catch (_: IllegalStateException){}
         }
-        return null
     }
 
     private fun proceed() {
-        if (sharedViewModel.cropBundles.isNotEmpty())
+        if (sharedViewModel.liveCropBundles.isNotEmpty())
             startIODeterminationActivity()
         else
             lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
@@ -121,7 +110,7 @@ class CropFragment
      * Inherently sets [IODeterminationActivityViewModel.cropBundles]
      */
     private fun startIODeterminationActivity() {
-        IODeterminationActivityViewModel.cropBundles = sharedViewModel.cropBundles
+        IODeterminationActivityViewModel.cropBundles = sharedViewModel.liveCropBundles
 
         requireActivity().let {
             startActivity(
@@ -134,11 +123,8 @@ class CropFragment
         }
     }
 
-    /**
-     * Cancel [cropJob]
-     */
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
 
         cropJob.cancel()
     }

@@ -1,11 +1,10 @@
 package com.w2sv.autocrop.activities.cropping
 
 import android.net.Uri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.w2sv.autocrop.CropBundle
+import com.w2sv.bidirectionalviewpager.livedata.MutableListLiveData
 
 class CropActivityViewModel(val uris: ArrayList<Uri>) : ViewModel() {
 
@@ -19,10 +18,11 @@ class CropActivityViewModel(val uris: ArrayList<Uri>) : ViewModel() {
     }
 
     val nImages: Int get() = uris.size
-    val nUncroppedImages: Int get() = nImages - cropBundles.size
+    val nUncroppedImages: Int get() = nImages - liveCropBundles.size
 
-    val cropBundles: MutableList<CropBundle> = mutableListOf()
-    val liveImageNumber: LiveData<Int> by lazy {
-        MutableLiveData(0)
+    val imminentUris: List<Uri> get() = uris.run {
+        subList(liveCropBundles.size, size)
     }
+
+    val liveCropBundles = MutableListLiveData<CropBundle>(mutableListOf())
 }
