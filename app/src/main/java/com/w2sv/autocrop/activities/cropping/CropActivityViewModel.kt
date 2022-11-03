@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.w2sv.autocrop.CropBundle
 import com.w2sv.bidirectionalviewpager.livedata.MutableListLiveData
 
-class CropActivityViewModel(val uris: ArrayList<Uri>) : ViewModel() {
+class CropActivityViewModel(private val uris: ArrayList<Uri>) : ViewModel() {
 
     class Factory(private val uris: ArrayList<Uri>) : ViewModelProvider.NewInstanceFactory() {
 

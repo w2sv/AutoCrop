@@ -106,6 +106,12 @@ class CropFragment
             }
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        cropJob.cancel()
+    }
+
     /**
      * Inherently sets [IODeterminationActivityViewModel.cropBundles]
      */
@@ -121,11 +127,5 @@ class CropFragment
             )
             Animatoo.animateSwipeLeft(it)
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        cropJob.cancel()
     }
 }
