@@ -1,16 +1,24 @@
 package com.w2sv.autocrop.activities.main
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.controller.activity.ApplicationActivity
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
+import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
+import com.w2sv.autocrop.utils.android.extensions.postValue
+import slimber.log.i
 
 class MainActivity :
     ApplicationActivity<FlowFieldFragment, MainActivityViewModel>(
@@ -21,12 +29,40 @@ class MainActivity :
 
     companion object {
         const val EXTRA_SELECTED_IMAGE_URIS = "com.w2sv.autocrop.extra.SELECTED_IMAGE_URIS"
-        const val EXTRA_N_DISMISSED_IMAGES = "com.w2sv.autocrop.extra.N_DISMISSED_IMAGES"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        LocalBroadcastManager
+            .getInstance(this)
+            .registerReceiver(
+                onStopScreenshotListener,
+                IntentFilter(ScreenshotListener.StopBroadcastReceiver.ACTION_STOP_SERVICE_FROM_NOTIFICATION)
+            )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        LocalBroadcastManager
+            .getInstance(this)
+            .unregisterReceiver(onStopScreenshotListener)
+    }
+
+    private val onStopScreenshotListener by lazy {
+        OnStopScreenshotListener()
+    }
+
+    inner class OnStopScreenshotListener: BroadcastReceiver(){
+        override fun onReceive(context: Context?, intent: Intent?) {
+            i{"STOPPING: ScreenshotListenerStopBroadcastReceiver.onReceive"}
+
+            viewModel
+                .cancelledScreenshotListenerFromNotification
+                .postValue(true)
+        }
     }
 
     override fun viewModelFactory(): ViewModelProvider.Factory =

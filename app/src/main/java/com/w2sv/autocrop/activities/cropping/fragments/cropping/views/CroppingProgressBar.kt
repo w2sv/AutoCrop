@@ -14,7 +14,7 @@ class CroppingProgressBar(context: Context, attr: AttributeSet) :
         super.onAttachedToWindow()
 
         ifNotInEditMode {
-            max = activityViewModelImmediate<CropActivityViewModel>().nSelectedImages
+            max = activityViewModelImmediate<CropActivityViewModel>().nImages
         }
     }
 }

@@ -65,6 +65,7 @@
             android:name="com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener"
             android:exported="false" />
         <receiver android:name="com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener$StopBroadcastReceiver" />
+        <receiver android:name="com.w2sv.autocrop.activities.main.MainActivity$OnStopScreenshotListener" />
 
         <service
             android:name="com.w2sv.autocrop.screenshotlistening.services.CropIOService"

@@ -13,6 +13,7 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import androidx.core.app.NotificationCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.common.collect.EvictingQueue
 import com.w2sv.autocrop.CropEdges
 import com.w2sv.autocrop.R
@@ -48,6 +49,8 @@ class ScreenshotListener :
         const val EXTRA_SCREENSHOT_MEDIASTORE_DATA = "com.w2sv.autocrop.SCREENSHOT_MEDIASTORE_DATA"
         const val EXTRA_CROP_FILE_PATH = "com.w2sv.autocrop.CROP_FILE_PATH"
 
+        private const val ACTION_STOP_SERVICE = "com.w2sv.autocrop.STOP_SERVICE"
+
         fun startService(context: Context) {
             with(context) {
                 startService(
@@ -67,8 +70,6 @@ class ScreenshotListener :
             i { "Stopping ScreenCaptureListeningService" }
         }
 
-        private const val ACTION_STOP_SERVICE = "com.w2sv.autocrop.STOP_SERVICE"
-
         private val FOREGROUND_SERVICE_NOTIFICATION_ID = NotificationId.STARTED_FOREGROUND_SERVICE
     }
 
@@ -81,22 +82,22 @@ class ScreenshotListener :
 
             stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
-            return super.onStartCommand(intent, flags, startId)
         }
+        else{
+            startForeground(
+                FOREGROUND_SERVICE_NOTIFICATION_ID.id,
+                foregroundServiceNotificationBuilder()
+                    .build()
+            )
+                .also { i { "Started foreground service" } }
 
-        startForeground(
-            FOREGROUND_SERVICE_NOTIFICATION_ID.id,
-            foregroundServiceNotificationBuilder()
-                .build()
-        )
-            .also { i { "Started foreground service" } }
-
-        contentResolver.registerContentObserver(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            true,
-            imageContentObserver
-        )
-            .also { i { "Registered imageContentObserver" } }
+            contentResolver.registerContentObserver(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                true,
+                imageContentObserver
+            )
+                .also { i { "Registered imageContentObserver" } }
+        }
 
         return START_STICKY
     }
@@ -124,8 +125,19 @@ class ScreenshotListener :
             )
 
     class StopBroadcastReceiver : BroadcastReceiver() {
+        companion object{
+            const val ACTION_STOP_SERVICE_FROM_NOTIFICATION = "com.w2sv.autocrop.STOP_SERVICE_FROM_NOTIFICATION"
+        }
+
         override fun onReceive(context: Context?, intent: Intent?) {
-            stopService(context!!)
+            with(context!!){
+                LocalBroadcastManager
+                    .getInstance(this)
+                    .sendBroadcast(
+                        Intent(ACTION_STOP_SERVICE_FROM_NOTIFICATION)
+                    )
+                stopService(this)
+            }
         }
     }
 

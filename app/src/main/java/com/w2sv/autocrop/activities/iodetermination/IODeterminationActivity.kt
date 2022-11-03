@@ -5,13 +5,13 @@ import android.net.Uri
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import com.w2sv.autocrop.R
+import com.w2sv.autocrop.activities.cropping.CropActivity
 import com.w2sv.autocrop.activities.iodetermination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.croppager.CropPagerFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.deletionconfirmation.DeletionConfirmationDialogFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
-import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.controller.activity.ApplicationActivity
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
@@ -35,7 +35,7 @@ class IODeterminationActivity :
     override fun viewModelFactory(): ViewModelProvider.Factory =
         IODeterminationActivityViewModel.Factory(
             validSaveDirDocumentUri = UriPreferences.validDocumentUri(this),
-            nDismissedScreenshots = intent.getInt(MainActivity.EXTRA_N_DISMISSED_IMAGES)
+            nDismissedScreenshots = intent.getInt(CropActivity.EXTRA_N_UNCROPPED_IMAGES)
         )
 
     //$$$$$$$$$$$$$$$$
@@ -65,7 +65,6 @@ class IODeterminationActivity :
                         it.onPreRemove()
                         supportFragmentManager.popBackStack()
                     }
-
                     is ManualCropFragment -> supportFragmentManager.popBackStack()
                     is SaveAllFragment -> {
                         snackyBuilder("Wait until crops have been saved")
@@ -74,7 +73,7 @@ class IODeterminationActivity :
                             .show()
                     }
 
-                    is CropPagerFragment -> it.handleBackPress()
+                    is CropPagerFragment -> it.onBackPress()
                     else -> Unit
                 }
             }

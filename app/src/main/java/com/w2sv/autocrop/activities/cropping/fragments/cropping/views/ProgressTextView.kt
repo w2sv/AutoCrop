@@ -12,6 +12,6 @@ class ProgressTextView(context: Context, attr: AttributeSet) :
     private val viewModel by activityViewModel<CropActivityViewModel>()
 
     fun update(nominator: Int) {
-        super.update(nominator, viewModel.nSelectedImages)
+        super.update(nominator, viewModel.nImages)
     }
 }

@@ -6,15 +6,17 @@ import com.w2sv.autocrop.activities.cropping.fragments.cropping.CropFragment
 import com.w2sv.autocrop.activities.cropping.fragments.croppingfailed.CroppingFailedFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.controller.activity.ApplicationActivity
-import com.w2sv.autocrop.utils.android.BackPressHandler
 import com.w2sv.autocrop.utils.android.extensions.getParcelableArrayList
-import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 
 class CropActivity :
     ApplicationActivity<CropFragment, CropActivityViewModel>(
         CropFragment::class.java,
         CropActivityViewModel::class.java
     ) {
+
+    companion object{
+        const val EXTRA_N_UNCROPPED_IMAGES = "com.w2sv.autocrop.extra.N_UNCROPPED_IMAGES"
+    }
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
         CropActivityViewModel.Factory(
@@ -26,19 +28,13 @@ class CropActivity :
      * otherwise only upon confirmed back press
      */
     override val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
-        val handleBackPress by lazy {
-            BackPressHandler(
-                snackyBuilder("Tap again to cancel")
-            ) {
-                startMainActivity()
-            }
-        }
-
         override fun handleOnBackPressed() {
-            when (getCurrentFragment()) {
-                is CroppingFailedFragment -> startMainActivity()
-                is CropFragment -> handleBackPress()
-                else -> Unit
+            getCurrentFragment().let {
+                when (it) {
+                    is CroppingFailedFragment -> startMainActivity()
+                    is CropFragment -> it.onBackPress()
+                    else -> Unit
+                }
             }
         }
     }

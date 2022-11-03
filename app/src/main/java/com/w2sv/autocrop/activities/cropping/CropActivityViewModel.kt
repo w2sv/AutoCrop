@@ -18,8 +18,8 @@ class CropActivityViewModel(val uris: ArrayList<Uri>) : ViewModel() {
             ) as T
     }
 
-    val nSelectedImages: Int = uris.size
-    val nDismissedImages: Int get() = nSelectedImages - cropBundles.size
+    val nImages: Int get() = uris.size
+    val nUncroppedImages: Int get() = nImages - cropBundles.size
 
     val cropBundles: MutableList<CropBundle> = mutableListOf()
     val liveImageNumber: LiveData<Int> by lazy {

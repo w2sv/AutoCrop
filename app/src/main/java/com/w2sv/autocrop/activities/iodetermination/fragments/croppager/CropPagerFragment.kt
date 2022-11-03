@@ -22,7 +22,6 @@ import com.w2sv.autocrop.activities.iodetermination.fragments.manualcrop.ManualC
 import com.w2sv.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.utils.android.BackPressHandler
 import com.w2sv.autocrop.utils.android.extensions.animate
 import com.w2sv.autocrop.utils.android.extensions.crossFade
 import com.w2sv.autocrop.utils.android.extensions.getColoredIcon
@@ -32,8 +31,8 @@ import com.w2sv.autocrop.utils.android.extensions.loadBitmap
 import com.w2sv.autocrop.utils.android.extensions.postValue
 import com.w2sv.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
-import com.w2sv.kotlinutils.extensions.launchDelayed
 import com.w2sv.kotlinutils.extensions.executeAsyncTask
+import com.w2sv.kotlinutils.extensions.launchDelayed
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import de.mateware.snacky.Snacky
 
@@ -54,7 +53,21 @@ class CropPagerFragment :
     }
 
     private lateinit var viewPagerProxy: CropPager
-    lateinit var handleBackPress: BackPressHandler
+
+    fun onBackPress(){
+        viewModel.backPressHandler(
+            {
+                requireActivity()
+                    .snackyBuilder("Tap again to return to main screen")
+                    .setView()
+                    .build()
+                    .show()
+            },
+            {
+                castActivity.startMainActivity()
+            }
+        )
+    }
 
     override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         super.onViewCreatedCore(savedInstanceState)
@@ -64,15 +77,6 @@ class CropPagerFragment :
             viewModel.dataSet
         )
         viewModel.setLiveDataObservers()
-
-        handleBackPress = BackPressHandler(
-            requireActivity().snackyBuilder(
-                "Tap again to return to main screen"
-            )
-                .setView()
-        ) {
-            castActivity.startMainActivity()
-        }
     }
 
     private fun CropPagerViewModel.setLiveDataObservers() {
@@ -113,7 +117,7 @@ class CropPagerFragment :
                     ?: binding.bottomElements.show()
 
                 if (!BooleanPreferences.cropPagerInstructionsShown)
-                    lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)){
+                    lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
                         CropPagerInstructionsDialog()
                             .show(childFragmentManager)
                         BooleanPreferences.cropPagerInstructionsShown = true
@@ -157,7 +161,7 @@ class CropPagerFragment :
 
     override fun onResult(cropEdges: CropEdges) {
         processAdjustedCropEdges(cropEdges)
-        lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)){
+        lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
             requireActivity().snackyBuilder(
                 "Adjusted crop"
             )
