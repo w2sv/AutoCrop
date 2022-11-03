@@ -117,13 +117,13 @@ class ComparisonFragment
         requireActivity().showSystemBars()
     }
 
-    fun popFromFragmentManager(fragmentManager: FragmentManager){
+    fun popFromFragmentManager(fragmentManager: FragmentManager) {
         onPreRemove()
         fragmentManager.popBackStack()
     }
 
     private fun onPreRemove() {
-        with(viewModel){
+        with(viewModel) {
             showButtons.postValue(false)
             useInsetLayoutParams.postValue(true)
             displayScreenshot.postValue(false)

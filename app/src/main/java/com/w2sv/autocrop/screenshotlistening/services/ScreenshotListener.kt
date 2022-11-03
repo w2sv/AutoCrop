@@ -84,7 +84,7 @@ class ScreenshotListener :
             stopSelf()
             return super.onStartCommand(intent, flags, startId)
         }
-        else{
+        else {
             startForeground(
                 FOREGROUND_SERVICE_NOTIFICATION_ID.id,
                 foregroundServiceNotificationBuilder()
@@ -126,12 +126,12 @@ class ScreenshotListener :
             )
 
     class OnStopFromNotificationListener : BroadcastReceiver() {
-        companion object{
+        companion object {
             const val ACTION_ON_STOP_SERVICE_FROM_NOTIFICATION = "com.w2sv.autocrop.ON_STOP_SERVICE_FROM_NOTIFICATION"
         }
 
         override fun onReceive(context: Context?, intent: Intent?) {
-            with(context!!){
+            with(context!!) {
                 stopService(this)
                 LocalBroadcastManager
                     .getInstance(this)

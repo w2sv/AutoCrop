@@ -77,7 +77,8 @@ class FlowFieldFragment :
 
                         viewModel.enteredFragment = true
                     }
-                } ?: run { viewModel.enteredFragment = true }
+                }
+                    ?: run { viewModel.enteredFragment = true }
         }
         else
             binding.buttonsLayout.show()

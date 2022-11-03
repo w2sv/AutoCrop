@@ -14,7 +14,7 @@ class CropActivity :
         CropActivityViewModel::class.java
     ) {
 
-    companion object{
+    companion object {
         const val EXTRA_N_UNCROPPED_IMAGES = "com.w2sv.autocrop.extra.N_UNCROPPED_IMAGES"
     }
 

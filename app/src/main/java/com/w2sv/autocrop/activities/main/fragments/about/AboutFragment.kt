@@ -20,7 +20,7 @@ class AboutFragment :
         super.onViewCreated(view, savedInstanceState)
 
         if (!BooleanPreferences.aboutFragmentInstructionsShown)
-            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_medium)){
+            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_medium)) {
                 requireActivity()
                     .snackyBuilder(
                         "Check out what happens if you click on the different view elements!",

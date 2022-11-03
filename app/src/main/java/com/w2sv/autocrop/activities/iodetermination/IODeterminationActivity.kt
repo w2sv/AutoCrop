@@ -69,6 +69,7 @@ class IODeterminationActivity :
                             .build()
                             .show()
                     }
+
                     is CropPagerFragment -> it.onBackPress()
                     else -> Unit
                 }

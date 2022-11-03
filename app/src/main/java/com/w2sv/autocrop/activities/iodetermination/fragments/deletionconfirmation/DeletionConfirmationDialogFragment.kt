@@ -44,7 +44,7 @@ class DeletionConfirmationDialogFragment :
                 }
 
             // launch appTitleFragment after small delay for UX smoothness
-            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)){
+            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
                 fragmentHostingActivity.fragmentReplacementTransaction(AppTitleFragment())
                     .commit()
             }

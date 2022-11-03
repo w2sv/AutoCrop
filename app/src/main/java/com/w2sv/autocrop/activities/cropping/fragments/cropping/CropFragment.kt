@@ -30,13 +30,13 @@ import kotlinx.coroutines.Job
 class CropFragment
     : CropActivityFragment<FragmentCropBinding>(FragmentCropBinding::class.java) {
 
-    class ViewModel: androidx.lifecycle.ViewModel(){
+    class ViewModel : androidx.lifecycle.ViewModel() {
         val backPressListener = BackPressListener(viewModelScope)
     }
 
     private val viewModel by viewModels<ViewModel>()
 
-    fun onBackPress(){
+    fun onBackPress() {
         viewModel.backPressListener(
             {
                 requireActivity()
@@ -70,7 +70,7 @@ class CropFragment
         )
     }
 
-    private fun cropImages(){
+    private fun cropImages() {
         sharedViewModel.imminentUris.forEach { uri ->
             try {
                 // attempt to crop image; upon success add CropBundle to sharedViewModel
@@ -90,7 +90,9 @@ class CropFragment
                         )
                     )
                 }
-            } catch (_: IllegalStateException){}
+            }
+            catch (_: IllegalStateException) {
+            }
         }
     }
 

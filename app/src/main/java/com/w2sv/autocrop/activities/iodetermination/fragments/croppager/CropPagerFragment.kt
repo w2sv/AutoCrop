@@ -54,7 +54,7 @@ class CropPagerFragment :
 
     private lateinit var viewPagerProxy: CropPager
 
-    fun onBackPress(){
+    fun onBackPress() {
         viewModel.backPressHandler(
             {
                 requireActivity()

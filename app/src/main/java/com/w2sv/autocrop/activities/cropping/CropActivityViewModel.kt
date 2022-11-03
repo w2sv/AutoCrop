@@ -20,9 +20,10 @@ class CropActivityViewModel(private val uris: ArrayList<Uri>) : ViewModel() {
     val nImages: Int get() = uris.size
     val nUncroppedImages: Int get() = nImages - liveCropBundles.size
 
-    val imminentUris: List<Uri> get() = uris.run {
-        subList(liveCropBundles.size, size)
-    }
+    val imminentUris: List<Uri>
+        get() = uris.run {
+            subList(liveCropBundles.size, size)
+        }
 
     val liveCropBundles = MutableListLiveData<CropBundle>(mutableListOf())
 }
