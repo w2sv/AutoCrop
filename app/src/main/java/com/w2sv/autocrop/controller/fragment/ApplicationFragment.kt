@@ -13,7 +13,7 @@ import com.w2sv.autocrop.controller.activity.retriever.FragmentHostingActivityRe
 import com.w2sv.viewboundcontroller.ViewBoundFragment
 
 abstract class ApplicationFragment<A : Activity, VB : ViewBinding, VM : ViewModel>(
-    viewModelKClass: Class<VM>,
+    viewModelClass: Class<VM>,
     bindingClass: Class<VB>
 ) :
     ViewBoundFragment<VB>(bindingClass),
@@ -30,10 +30,10 @@ abstract class ApplicationFragment<A : Activity, VB : ViewBinding, VM : ViewMode
         }
     }
 
-    open fun onViewCreatedCore(savedInstanceState: Bundle?) {}
+    protected open fun onViewCreatedCore(savedInstanceState: Bundle?) {}
 
-    protected val sharedViewModel: VM by createViewModelLazy(
-        viewModelKClass.kotlin,
+    protected val applicationViewModel: VM by createViewModelLazy(
+        viewModelClass.kotlin,
         { requireActivity().viewModelStore }
     )
 

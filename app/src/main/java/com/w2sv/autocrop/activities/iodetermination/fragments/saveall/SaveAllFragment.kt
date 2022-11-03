@@ -40,10 +40,10 @@ class SaveAllFragment :
         publishProgress: suspend (Void?) -> Unit
     ): Void? {
         IODeterminationActivityViewModel.cropBundles.indices.forEach {
-            sharedViewModel.makeCropBundleProcessor(
+            applicationViewModel.makeCropBundleProcessor(
                 it,
                 deleteCorrespondingScreenshots,
-                requireContext().contentResolver
+                requireContext()
             )
                 .invoke()
 

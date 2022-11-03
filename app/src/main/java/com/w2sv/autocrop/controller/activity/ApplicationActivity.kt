@@ -12,10 +12,10 @@ import com.w2sv.autocrop.preferences.TypedPreferences
 import com.w2sv.autocrop.utils.android.extensions.getApplicationWideSharedPreferences
 
 abstract class ApplicationActivity<RF : Fragment, VM : ViewModel>(
-    rootFragmentKClass: Class<RF>,
-    private val viewModelKClass: Class<VM>,
+    rootFragmentClass: Class<RF>,
+    private val viewModelClass: Class<VM>,
     vararg val preferences: TypedPreferences<*>
-) : FragmentHostingActivity<RF>(rootFragmentKClass) {
+) : FragmentHostingActivity<RF>(rootFragmentClass) {
 
     protected lateinit var viewModel: VM
 
@@ -28,10 +28,10 @@ abstract class ApplicationActivity<RF : Fragment, VM : ViewModel>(
         viewModel = ViewModelProvider(
             this,
             viewModelFactory()
-        )[viewModelKClass]
+        )[viewModelClass]
 
         if (savedInstanceState == null)
-            onSavedInstanceStateNull()
+            launchRootFragment()
 
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }

@@ -13,12 +13,8 @@ abstract class FragmentHostingActivity<RF : Fragment>(private val rootFragmentCl
 
     private val layoutId: Int get() = binding.root.id
 
-    protected open fun onSavedInstanceStateNull() {
-        launchRootFragment()
-    }
-
     @SuppressLint("CommitTransaction")
-    private fun launchRootFragment() {
+    protected fun launchRootFragment() {
         supportFragmentManager
             .beginTransaction()
             .setReorderingAllowed(true)

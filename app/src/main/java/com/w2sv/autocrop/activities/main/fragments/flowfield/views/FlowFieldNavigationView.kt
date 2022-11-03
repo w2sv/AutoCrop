@@ -90,13 +90,13 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                                 ScreenshotListener.stopService(context)
                         }
 
-                    activityViewModel.cancelledScreenshotListenerFromNotification.let { liveData ->
-                        liveData.observe(activity as LifecycleOwner) { cancelled ->
-                            if (cancelled == true) {
+                    activityViewModel.liveScreenshotListenerRunning.let { liveData ->
+                        liveData.observe(activity as LifecycleOwner) { cancelledOptional ->
+                            cancelledOptional?.let { cancelled ->
                                 setOnCheckedChangeListener(null)
-                                isChecked = false
+                                isChecked = cancelled
                                 setOnCheckedChangeListener(onCheckedChangeListener)
-                                liveData.postValue(false)
+                                liveData.postValue(null)
                             }
                         }
                     }

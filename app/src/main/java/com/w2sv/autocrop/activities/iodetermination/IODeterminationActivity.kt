@@ -14,7 +14,6 @@ import com.w2sv.autocrop.activities.iodetermination.fragments.manualcrop.ManualC
 import com.w2sv.autocrop.activities.iodetermination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.controller.activity.ApplicationActivity
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.utils.android.extensions.getInt
 import com.w2sv.autocrop.utils.android.extensions.getParcelableArrayList
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
@@ -33,14 +32,8 @@ class IODeterminationActivity :
     }
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
-        IODeterminationActivityViewModel.Factory(
-            validSaveDirDocumentUri = UriPreferences.validDocumentUri(this),
-            nDismissedScreenshots = intent.getInt(CropActivity.EXTRA_N_UNCROPPED_IMAGES)
-        )
-
-    //$$$$$$$$$$$$$$$$
-    // Post Creation $
-    //$$$$$$$$$$$$$$$$
+        IODeterminationActivityViewModel
+            .Factory(nDismissedScreenshots = intent.getInt(CropActivity.EXTRA_N_UNCROPPED_IMAGES))
 
     /**
      * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
@@ -78,7 +71,7 @@ class IODeterminationActivity :
     }
 
     fun startMainActivity() {
-        startMainActivity {
+        super.startMainActivity(true) {
             it
                 .putParcelableArrayListExtra(EXTRA_CROP_URIS, viewModel.writeUris)
                 .putExtra(EXTRA_N_DELETED_SCREENSHOTS, viewModel.nDeletedScreenshots)

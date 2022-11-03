@@ -59,7 +59,7 @@ class CropPagerFragment :
             {
                 requireActivity()
                     .snackyBuilder("Tap again to return to main screen")
-                    .setView()
+                    .setSnackbarRepelledView()
                     .build()
                     .show()
             },
@@ -140,7 +140,7 @@ class CropPagerFragment :
     }
 
     private fun onAutoScrollConcluded() {
-        with(sharedViewModel) {
+        with(applicationViewModel) {
             if (!showedDismissedScreenshotsSnackbar && nDismissedScreenshots != 0) {
                 requireActivity().snackyBuilder(
                     SpannableStringBuilder()
@@ -152,9 +152,10 @@ class CropPagerFragment :
                         }
                         .append(" image".numericallyInflected(nDismissedScreenshots))
                 )
-                    .setView()
+                    .setSnackbarRepelledView()
                     .setIcon(R.drawable.ic_error_24)
-                    .build().show()
+                    .build()
+                    .show()
             }
         }
     }
@@ -165,7 +166,7 @@ class CropPagerFragment :
             requireActivity().snackyBuilder(
                 "Adjusted crop"
             )
-                .setView()
+                .setSnackbarRepelledView()
                 .setIcon(requireContext().getColoredIcon(R.drawable.ic_check_24, R.color.success))
                 .build()
                 .show()
@@ -199,12 +200,12 @@ class CropPagerFragment :
      */
     override fun onResult(confirmed: Boolean, dataSetPosition: Int) {
         if (confirmed)
-            with(sharedViewModel) {
+            with(applicationViewModel) {
                 singularCropSavingJob = lifecycleScope.executeAsyncTask(
                     makeCropBundleProcessor(
                         dataSetPosition,
                         BooleanPreferences.deleteScreenshots,
-                        requireContext().contentResolver
+                        requireContext()
                     )
                 )
             }
@@ -224,16 +225,18 @@ class CropPagerFragment :
             castActivity.invokeSubsequentFragment()
     }
 
-    private fun Snacky.Builder.setView(): Snacky.Builder =
+    private fun Snacky.Builder.setSnackbarRepelledView(): Snacky.Builder =
         setView(binding.snackbarRepelledHostingLayout)
 
     /**
      * Cancel and nullify scroller if set, i.e. running
      */
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
+    override fun onPause() {
+        super.onPause()
 
-        viewModel.scroller?.cancel()
-        viewModel.scroller = null
+        with(viewModel){
+            scroller?.cancel()
+            scroller = null
+        }
     }
 }

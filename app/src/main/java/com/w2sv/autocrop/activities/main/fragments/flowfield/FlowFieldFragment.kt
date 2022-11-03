@@ -28,6 +28,7 @@ import com.w2sv.autocrop.utils.android.extensions.fadeIn
 import com.w2sv.autocrop.utils.android.extensions.getColoredIcon
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.getThemedColor
+import com.w2sv.autocrop.utils.android.extensions.postValue
 import com.w2sv.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.kotlinutils.extensions.launchDelayed
@@ -71,7 +72,7 @@ class FlowFieldFragment :
                     BooleanPreferences.welcomeDialogsShown = true
                 }
             else
-                sharedViewModel.ioResults?.let {
+                applicationViewModel.ioResults?.let {
                     lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_fade_in_halve)) {
                         showIOSynopsisSnackbar(it)
 
@@ -126,6 +127,7 @@ class FlowFieldFragment :
             .requestPermissions(
                 onGranted = {
                     ScreenshotListener.startService(requireContext())
+                    applicationViewModel.liveScreenshotListenerRunning.postValue(true)
                 }
             )
     }
@@ -138,21 +140,25 @@ class FlowFieldFragment :
                     R.color.magenta_saturated
                 )
             else
-                SpannableStringBuilder().apply {
-                    append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                    color(requireContext().getThemedColor(R.color.success)) { append(saveDirName) }
-                    if (nDeletedScreenshots != 0)
-                        append(
-                            " and deleted ${
-                                if (nDeletedScreenshots == nSavedCrops)
-                                    "corresponding"
-                                else
-                                    nDeletedScreenshots
-                            } ${"screenshot".numericallyInflected(nDeletedScreenshots)}"
-                        )
-                } to requireContext().getColoredIcon(R.drawable.ic_check_24, R.color.success)
+                SpannableStringBuilder()
+                    .apply {
+                        append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
+                        color(requireContext().getThemedColor(R.color.success)) {
+                            append(saveDirName)
+                        }
+                        if (nDeletedScreenshots != 0)
+                            append(
+                                " and deleted ${
+                                    if (nDeletedScreenshots == nSavedCrops)
+                                        "corresponding"
+                                    else
+                                        nDeletedScreenshots
+                                } ${"screenshot".numericallyInflected(nDeletedScreenshots)}"
+                            )
+                    } to requireContext().getColoredIcon(R.drawable.ic_check_24, R.color.success)
 
-            requireActivity().snackyBuilder(text)
+            requireActivity()
+                .snackyBuilder(text)
                 .setIcon(icon)
                 .build()
                 .show()
@@ -199,13 +205,14 @@ class FlowFieldFragment :
                             treeUri,
                             Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                         )
-                    requireActivity().snackyBuilder(
-                        SpannableStringBuilder()
-                            .append("Crops will be saved to ")
-                            .color(requireContext().getThemedColor(R.color.success)) {
-                                append(documentUriPathIdentifier(UriPreferences.documentUri!!))
-                            }
-                    )
+                    requireActivity()
+                        .snackyBuilder(
+                            SpannableStringBuilder()
+                                .append("Crops will be saved to ")
+                                .color(requireContext().getThemedColor(R.color.success)) {
+                                    append(documentUriPathIdentifier(UriPreferences.documentUri!!))
+                                }
+                        )
                         .build()
                         .show()
                 }

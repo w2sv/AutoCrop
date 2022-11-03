@@ -1,32 +1,29 @@
 package com.w2sv.autocrop.activities.iodetermination
 
 import android.content.ContentResolver
+import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.w2sv.autocrop.CropBundle
 import com.w2sv.autocrop.Screenshot
+import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.utils.android.extensions.queryMediaStoreDatum
 import com.w2sv.kotlinutils.UnitFun
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.toInt
 import kotlinx.coroutines.Job
 
-class IODeterminationActivityViewModel(
-    private val validSaveDirDocumentUri: Uri?,
-    val nDismissedScreenshots: Int
-) : ViewModel() {
+class IODeterminationActivityViewModel(val nDismissedScreenshots: Int) : ViewModel() {
 
     class Factory(
-        private val validSaveDirDocumentUri: Uri?,
         private val nDismissedScreenshots: Int
     ) : ViewModelProvider.NewInstanceFactory() {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
             IODeterminationActivityViewModel(
-                validSaveDirDocumentUri,
                 nDismissedScreenshots
             ) as T
     }
@@ -55,7 +52,7 @@ class IODeterminationActivityViewModel(
     fun makeCropBundleProcessor(
         cropBundlePosition: Int,
         deleteScreenshot: Boolean,
-        contentResolver: ContentResolver
+        context: Context
     ): UnitFun {
         val cropBundle = cropBundles[cropBundlePosition]
 
@@ -65,10 +62,10 @@ class IODeterminationActivityViewModel(
         )
 
         return {
-            val ioResult = contentResolver.carryOutCropIO(
+            val ioResult = context.contentResolver.carryOutCropIO(
                 cropBundle.crop.bitmap,
                 cropBundle.screenshot.mediaStoreData,
-                validSaveDirDocumentUri,
+                UriPreferences.validDocumentUriOrNull(context),
                 deleteScreenshot && !addedScreenshotDeletionInquiryUri
             )
 

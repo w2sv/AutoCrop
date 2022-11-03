@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
 import android.widget.FrameLayout
-import com.w2sv.autocrop.activities.main.fragments.flowfield.sketch.FlowFieldSketch
+import com.w2sv.autocrop.activities.main.fragments.flowfield.views.sketch.FlowFieldSketch
 import com.w2sv.autocrop.controller.activity.retriever.ActivityRetriever
 import com.w2sv.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
 import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
@@ -24,7 +24,12 @@ class FlowFieldContainer(context: Context, attr: AttributeSet) :
                 activity.windowManager.defaultDisplay
 
             display.resolution().let {
-                PFragment(FlowFieldSketch(it.x, it.y))
+                PFragment(
+                    FlowFieldSketch(
+                        it.x,
+                        it.y
+                    )
+                )
                     .setView(this, fragmentActivity)
             }
         }

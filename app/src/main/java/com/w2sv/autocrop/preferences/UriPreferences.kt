@@ -11,25 +11,23 @@ import slimber.log.i
 
 object UriPreferences : TypedPreferences<Uri?>(mutableMapOf("treeUri" to null)) {
     /**
-     * Inherently builds [documentUri]
+     * Inherently build [documentUri]
      */
     var treeUri: Uri? by mapObserver(map) { _, oldValue, newValue ->
         if (newValue != null && oldValue != newValue)
-            _documentUri = DocumentsContract.buildDocumentUriUsingTree(
+            documentUri = DocumentsContract.buildDocumentUriUsingTree(
                 treeUri,
                 DocumentsContract.getTreeDocumentId(treeUri)
             )
                 .also { i { "Set new documentUri: $it" } }
     }
 
-    val documentUri: Uri?
-        get() = _documentUri
-    private var _documentUri: Uri? = null
+    var documentUri: Uri? = null
 
-    fun validDocumentUri(context: Context): Uri? =
+    fun validDocumentUriOrNull(context: Context): Uri? =
         documentUri?.let {
             if (context.uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
-                documentUri
+                it
             else
                 null
         }

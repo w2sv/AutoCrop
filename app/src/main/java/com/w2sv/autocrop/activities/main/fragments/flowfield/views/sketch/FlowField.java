@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.main.fragments.flowfield.sketch;
+package com.w2sv.autocrop.activities.main.fragments.flowfield.views.sketch;
 
 import android.util.Pair;
 

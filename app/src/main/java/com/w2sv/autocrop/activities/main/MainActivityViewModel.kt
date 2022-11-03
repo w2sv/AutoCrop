@@ -14,7 +14,7 @@ class MainActivityViewModel(val ioResults: IODeterminationActivity.Results?) : V
             MainActivityViewModel(ioResults) as T
     }
 
-    val cancelledScreenshotListenerFromNotification: LiveData<Boolean> by lazy {
+    val liveScreenshotListenerRunning: LiveData<Boolean?> by lazy {
         MutableLiveData()
     }
 }

@@ -49,8 +49,8 @@ class MainActivity :
     inner class OnStopScreenshotListenerFromNotification : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             viewModel
-                .cancelledScreenshotListenerFromNotification
-                .postValue(true)
+                .liveScreenshotListenerRunning
+                .postValue(false)
         }
     }
 

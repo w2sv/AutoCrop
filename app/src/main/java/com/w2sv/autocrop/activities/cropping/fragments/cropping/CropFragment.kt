@@ -53,7 +53,7 @@ class CropFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedViewModel.liveCropBundles.observe(activity as LifecycleOwner) {
+        applicationViewModel.liveCropBundles.observe(activity as LifecycleOwner) {
             binding.progressTv.update(it.size)
             binding.croppingProgressBar.progress = it.size
         }
@@ -71,13 +71,13 @@ class CropFragment
     }
 
     private fun cropImages() {
-        sharedViewModel.imminentUris.forEach { uri ->
+        applicationViewModel.imminentUris.forEach { uri ->
             try {
                 // attempt to crop image; upon success add CropBundle to sharedViewModel
                 val bitmap = requireContext().contentResolver.loadBitmap(uri)
 
                 bitmap.cropEdgesCandidates()?.let { candidates ->
-                    sharedViewModel.liveCropBundles.add(
+                    applicationViewModel.liveCropBundles.add(
                         CropBundle.assemble(
                             Screenshot(
                                 uri,
@@ -97,7 +97,7 @@ class CropFragment
     }
 
     private fun proceed() {
-        if (sharedViewModel.liveCropBundles.isNotEmpty())
+        if (applicationViewModel.liveCropBundles.isNotEmpty())
             startIODeterminationActivity()
         else
             lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
@@ -118,13 +118,13 @@ class CropFragment
      * Inherently sets [IODeterminationActivityViewModel.cropBundles]
      */
     private fun startIODeterminationActivity() {
-        IODeterminationActivityViewModel.cropBundles = sharedViewModel.liveCropBundles
+        IODeterminationActivityViewModel.cropBundles = applicationViewModel.liveCropBundles
 
         requireActivity().let {
             startActivity(
                 Intent(it, IODeterminationActivity::class.java).putExtra(
                     CropActivity.EXTRA_N_UNCROPPED_IMAGES,
-                    sharedViewModel.nUncroppedImages
+                    applicationViewModel.nUncroppedImages
                 )
             )
             Animatoo.animateSwipeLeft(it)

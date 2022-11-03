@@ -24,7 +24,7 @@ class AppTitleFragment
                 delay = resources.getLong(R.integer.delay_small)
             )
                 .onEnd {
-                    sharedViewModel.singularCropSavingJob?.run {
+                    applicationViewModel.singularCropSavingJob?.run {
                         invokeOnCompletion {
                             castActivity.startMainActivity()
                         }

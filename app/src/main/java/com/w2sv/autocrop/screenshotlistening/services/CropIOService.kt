@@ -56,7 +56,7 @@ class CropIOService :
         contentResolver.carryOutCropIO(
             crop,
             screenshotMediaStoreData,
-            UriPreferences.validDocumentUri(this),
+            UriPreferences.validDocumentUriOrNull(this),
             deleteScreenshot
         )
 
