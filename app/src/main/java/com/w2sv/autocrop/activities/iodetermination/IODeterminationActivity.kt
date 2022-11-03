@@ -61,10 +61,7 @@ class IODeterminationActivity :
         override fun handleOnBackPressed() {
             getCurrentFragment().let {
                 when (it) {
-                    is ComparisonFragment -> {
-                        it.onPreRemove()
-                        supportFragmentManager.popBackStack()
-                    }
+                    is ComparisonFragment -> it.popFromFragmentManager(supportFragmentManager)
                     is ManualCropFragment -> supportFragmentManager.popBackStack()
                     is SaveAllFragment -> {
                         snackyBuilder("Wait until crops have been saved")
@@ -72,7 +69,6 @@ class IODeterminationActivity :
                             .build()
                             .show()
                     }
-
                     is CropPagerFragment -> it.onBackPress()
                     else -> Unit
                 }

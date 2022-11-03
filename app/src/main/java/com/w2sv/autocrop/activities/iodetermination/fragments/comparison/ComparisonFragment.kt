@@ -5,6 +5,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.Transition
@@ -92,8 +93,7 @@ class ComparisonFragment
         super.onViewCreated(view, savedInstanceState)
 
         binding.backButton.setOnClickListener {
-            onPreRemove()
-            parentFragmentManager.popBackStack()
+            popFromFragmentManager(parentFragmentManager)
         }
         viewModel.showButtons.observe(viewLifecycleOwner) {
             with(binding.buttonLayout) {
@@ -117,9 +117,16 @@ class ComparisonFragment
         requireActivity().showSystemBars()
     }
 
-    fun onPreRemove() {
-        viewModel.showButtons.postValue(false)
-        viewModel.useInsetLayoutParams.postValue(true)
-        viewModel.displayScreenshot.postValue(false)
+    fun popFromFragmentManager(fragmentManager: FragmentManager){
+        onPreRemove()
+        fragmentManager.popBackStack()
+    }
+
+    private fun onPreRemove() {
+        with(viewModel){
+            showButtons.postValue(false)
+            useInsetLayoutParams.postValue(true)
+            displayScreenshot.postValue(false)
+        }
     }
 }
