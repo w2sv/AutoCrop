@@ -5,7 +5,7 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.main.fragments.MainActivityFragment
+import com.w2sv.autocrop.controller.ApplicationFragment
 import com.w2sv.autocrop.databinding.FragmentAboutBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.utils.android.extensions.animate
@@ -14,7 +14,7 @@ import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.kotlinutils.extensions.launchDelayed
 
 class AboutFragment :
-    MainActivityFragment<FragmentAboutBinding>(FragmentAboutBinding::class.java) {
+    ApplicationFragment<FragmentAboutBinding>(FragmentAboutBinding::class.java) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

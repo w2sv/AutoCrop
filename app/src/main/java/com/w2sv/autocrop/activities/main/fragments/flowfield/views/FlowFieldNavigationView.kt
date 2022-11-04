@@ -14,7 +14,7 @@ import androidx.fragment.app.findFragment
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.main.MainActivityViewModel
+import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.controller.activity.retriever.ActivityRetriever
@@ -37,7 +37,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     NavigationView(context, attributeSet),
     ActivityRetriever by ContextBasedActivityRetriever(context) {
 
-    private val activityViewModel by activityViewModel<MainActivityViewModel>()
+    private val activityViewModel by activityViewModel<MainActivity.ViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

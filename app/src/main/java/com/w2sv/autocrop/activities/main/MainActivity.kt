@@ -8,9 +8,11 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivity
+import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.controller.activity.ApplicationActivity
@@ -20,14 +22,28 @@ import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
 import com.w2sv.autocrop.utils.android.extensions.postValue
 
 class MainActivity :
-    ApplicationActivity<FlowFieldFragment, MainActivityViewModel>(
+    ApplicationActivity<FlowFieldFragment, MainActivity.ViewModel>(
         FlowFieldFragment::class.java,
-        MainActivityViewModel::class.java,
+        ViewModel::class.java,
         BooleanPreferences, UriPreferences
     ) {
 
     companion object {
         const val EXTRA_SELECTED_IMAGE_URIS = "com.w2sv.autocrop.extra.SELECTED_IMAGE_URIS"
+    }
+
+    class ViewModel(val ioResults: CropExaminationActivity.Results?) : androidx.lifecycle.ViewModel() {
+
+        class Factory(private val ioResults: CropExaminationActivity.Results?) : ViewModelProvider.Factory {
+
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
+                ViewModel(ioResults) as T
+        }
+
+        val liveScreenshotListenerRunning: LiveData<Boolean?> by lazy {
+            MutableLiveData()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,8 +71,8 @@ class MainActivity :
     }
 
     override fun viewModelFactory(): ViewModelProvider.Factory =
-        MainActivityViewModel.Factory(
-            ioResults = IODeterminationActivity.Results.restore(intent)
+        ViewModel.Factory(
+            ioResults = CropExaminationActivity.Results.restore(intent)
         )
 
     /**

@@ -16,7 +16,7 @@
         android:textColor="@color/highlight"
         android:textSize="22sp" />
 
-    <com.w2sv.autocrop.activities.cropping.fragments.cropping.views.CroppingProgressBar
+    <com.w2sv.autocrop.activities.crop.fragments.cropping.views.CroppingProgressBar
         android:id="@+id/cropping_progress_bar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
 
@@ -28,7 +28,7 @@
         android:progress="0"
         android:progressDrawable="@drawable/gradient_progress_bar_cropping_progress" />
 
-    <com.w2sv.autocrop.activities.cropping.fragments.cropping.views.ProgressTextView
+    <com.w2sv.autocrop.activities.crop.fragments.cropping.views.ProgressTextView
         android:id="@+id/progress_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

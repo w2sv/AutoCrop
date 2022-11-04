@@ -2,9 +2,9 @@ package com.w2sv.autocrop.activities.cropping
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.w2sv.autocrop.CropEdges
-import com.w2sv.autocrop.activities.cropping.cropping.cropEdgesCandidates
-import com.w2sv.autocrop.activities.cropping.cropping.maxHeightEdges
+import com.w2sv.autocrop.cropping.CropEdges
+import com.w2sv.autocrop.cropping.cropEdgesCandidates
+import com.w2sv.autocrop.cropping.maxHeightEdges
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments

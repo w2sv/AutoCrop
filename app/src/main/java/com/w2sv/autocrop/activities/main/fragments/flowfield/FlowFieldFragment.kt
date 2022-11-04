@@ -10,15 +10,16 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.color
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.cropping.CropActivity
-import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivity
+import com.w2sv.autocrop.activities.crop.CropActivity
+import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.main.MainActivity
-import com.w2sv.autocrop.activities.main.fragments.MainActivityFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.ScreenshotListenerDialog
 import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.WelcomeDialog
+import com.w2sv.autocrop.controller.ApplicationFragment
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
@@ -37,7 +38,7 @@ import com.w2sv.permissionhandler.PermissionHandler
 import com.w2sv.permissionhandler.requestPermissions
 
 class FlowFieldFragment :
-    MainActivityFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java),
+    ApplicationFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java),
     WelcomeDialog.OnProceedListener,
     ScreenshotListenerDialog.OnConfirmedListener {
 
@@ -57,6 +58,7 @@ class FlowFieldFragment :
     }
 
     private val viewModel by viewModels<ViewModel>()
+    private val activityViewModel by activityViewModels<MainActivity.ViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,7 +74,7 @@ class FlowFieldFragment :
                     BooleanPreferences.welcomeDialogsShown = true
                 }
             else
-                applicationViewModel.ioResults?.let {
+                activityViewModel.ioResults?.let {
                     lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_fade_in_halve)) {
                         showIOSynopsisSnackbar(it)
 
@@ -127,12 +129,12 @@ class FlowFieldFragment :
             .requestPermissions(
                 onGranted = {
                     ScreenshotListener.startService(requireContext())
-                    applicationViewModel.liveScreenshotListenerRunning.postValue(true)
+                    activityViewModel.liveScreenshotListenerRunning.postValue(true)
                 }
             )
     }
 
-    private fun showIOSynopsisSnackbar(ioResults: IODeterminationActivity.Results) {
+    private fun showIOSynopsisSnackbar(ioResults: CropExaminationActivity.Results) {
         with(ioResults) {
             val (text, icon) = if (nSavedCrops == 0)
                 "Discarded all crops" to requireContext().getColoredIcon(

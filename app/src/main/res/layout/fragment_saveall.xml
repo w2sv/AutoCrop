@@ -30,7 +30,7 @@
 
         android:indeterminateDrawable="@drawable/shape_circular_progress_bar_save_all" />
 
-    <com.w2sv.autocrop.activities.iodetermination.fragments.saveall.SaveAllProgressTextView
+    <com.w2sv.autocrop.activities.cropexamination.fragments.saveall.SaveAllProgressTextView
         android:id="@+id/progress_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

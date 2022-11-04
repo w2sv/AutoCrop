@@ -56,8 +56,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.w2sv.autocrop.activities.cropping.CropActivity" />
-        <activity android:name="com.w2sv.autocrop.activities.iodetermination.IODeterminationActivity" />
+        <activity android:name="com.w2sv.autocrop.activities.crop.CropActivity" />
+        <activity android:name="com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity" />
 
         <!-- Services -->
 
