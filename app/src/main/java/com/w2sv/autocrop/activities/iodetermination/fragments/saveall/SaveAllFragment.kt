@@ -1,6 +1,7 @@
 package com.w2sv.autocrop.activities.iodetermination.fragments.saveall
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.w2sv.autocrop.activities.iodetermination.IODeterminationActivityViewModel
@@ -16,10 +17,12 @@ class SaveAllFragment :
     private val viewModel by viewModels<SaveAllViewModel>()
 
     /**
-     * Launch async [processRemainingCropBundles] task, call [castActivity].invokeSubsequentFragment
+     * Launch async [processRemainingCropBundles] task, call [castActivity].replaceWithSubsequentFragment
      * onPostExecute
      */
-    override fun onViewCreatedCore(savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         viewModel.liveCropNumber.observe(viewLifecycleOwner) {
             binding.progressTv.update(it)
         }
@@ -31,7 +34,7 @@ class SaveAllFragment :
                     postValue(minOf(value!! + 1, viewModel.nImagesToBeSaved))
                 }
             },
-            { castActivity.invokeSubsequentFragment() }
+            { castActivity.replaceWithSubsequentFragment() }
         )
     }
 

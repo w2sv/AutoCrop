@@ -30,9 +30,7 @@ class AboutFragment :
                     .build()
                     .show()
             }
-    }
 
-    override fun onViewCreatedCore(savedInstanceState: Bundle?) {
         binding.setOnClickListeners()
         viewLifecycleOwner.lifecycle.addObserver(binding.copyrightTv)
     }

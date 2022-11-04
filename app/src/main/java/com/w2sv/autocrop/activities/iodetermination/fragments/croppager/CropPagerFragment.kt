@@ -3,6 +3,7 @@ package com.w2sv.autocrop.activities.iodetermination.fragments.croppager
 import android.content.Context
 import android.os.Bundle
 import android.text.SpannableStringBuilder
+import android.view.View
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.viewModels
@@ -69,8 +70,8 @@ class CropPagerFragment :
         )
     }
 
-    override fun onViewCreatedCore(savedInstanceState: Bundle?) {
-        super.onViewCreatedCore(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewPagerProxy = CropPager(
             binding.viewPager,
@@ -211,7 +212,7 @@ class CropPagerFragment :
             }
 
         if (viewModel.dataSet.size == 1)
-            castActivity.invokeSubsequentFragment()
+            castActivity.replaceWithSubsequentFragment()
         else
             viewPagerProxy.removeView(dataSetPosition)
     }
@@ -222,7 +223,7 @@ class CropPagerFragment :
                 .fragmentReplacementTransaction(SaveAllFragment(), true)
                 .commit()
         else
-            castActivity.invokeSubsequentFragment()
+            castActivity.replaceWithSubsequentFragment()
     }
 
     private fun Snacky.Builder.setSnackbarRepelledView(): Snacky.Builder =

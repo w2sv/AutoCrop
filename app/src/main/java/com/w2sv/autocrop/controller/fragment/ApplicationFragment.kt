@@ -23,14 +23,11 @@ abstract class ApplicationFragment<A : Activity, VB : ViewBinding, VM : ViewMode
         postponeEnterTransition()
 
         super.onViewCreated(view, savedInstanceState)
-        onViewCreatedCore(savedInstanceState)
 
         (view.parent as? ViewGroup)?.doOnPreDraw {
             startPostponedEnterTransition()
         }
     }
-
-    protected open fun onViewCreatedCore(savedInstanceState: Bundle?) {}
 
     protected val applicationViewModel: VM by createViewModelLazy(
         viewModelClass.kotlin,

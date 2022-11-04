@@ -39,7 +39,7 @@ class IODeterminationActivity :
      * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
      * deletion has to be confirmed, otherwise [AppTitleFragment]
      */
-    fun invokeSubsequentFragment() {
+    fun replaceWithSubsequentFragment() {
         fragmentReplacementTransaction(
             if (viewModel.deletionInquiryUris.isNotEmpty())
                 DeletionConfirmationDialogFragment()
