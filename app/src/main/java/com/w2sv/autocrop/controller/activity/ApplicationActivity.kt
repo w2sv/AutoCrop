@@ -51,14 +51,14 @@ abstract class ApplicationActivity<RF : Fragment, VM : ViewModel>(
         }
     }
 
-    fun startMainActivity(withReturnAnimation: Boolean = true, applyToIntent: ((Intent) -> Intent)? = null) {
+    fun startMainActivity(withReturnAnimation: Boolean = true, configureIntent: ((Intent) -> Intent)? = null) {
         startActivity(
             Intent(
                 this,
                 MainActivity::class.java
             )
                 .apply {
-                    applyToIntent?.invoke(this)
+                    configureIntent?.invoke(this)
                 }
         )
         if (withReturnAnimation)
