@@ -15,7 +15,6 @@ import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.lyrebirdstudio.croppylib.fragment.view.BitmapGestureHandler
-import com.w2sv.autocrop.cropping.CropEdges
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropViewModel
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.extensions.animateToMatrix
@@ -39,6 +38,7 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.m
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.model.Edge.LEFT
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.model.Edge.RIGHT
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.model.Edge.TOP
+import com.w2sv.autocrop.cropping.CropEdges
 import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
 import com.w2sv.autocrop.utils.android.extensions.postValue
 import com.w2sv.autocrop.utils.android.extensions.viewModel

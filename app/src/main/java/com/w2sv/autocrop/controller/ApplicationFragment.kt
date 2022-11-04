@@ -25,7 +25,7 @@ abstract class ApplicationFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
     }
 
     @Suppress("UNCHECKED_CAST")
-    protected fun <A: Activity> castActivity(): A =
+    protected fun <A : Activity> castActivity(): A =
         requireActivity() as A
 
     override val fragmentHostingActivity: FragmentHostingActivity<*>

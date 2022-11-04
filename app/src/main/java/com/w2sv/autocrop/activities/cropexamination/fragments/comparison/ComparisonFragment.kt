@@ -12,9 +12,9 @@ import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
 import com.google.android.material.snackbar.Snackbar
-import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.controller.ApplicationFragment
+import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.utils.android.extensions.getLong

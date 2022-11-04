@@ -9,8 +9,8 @@ import android.text.SpannableStringBuilder
 import androidx.core.app.NotificationCompat
 import androidx.core.text.italic
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.cropping.cropbundle.Screenshot
 import com.w2sv.autocrop.cropping.cropbundle.IOResult
+import com.w2sv.autocrop.cropping.cropbundle.Screenshot
 import com.w2sv.autocrop.cropping.cropbundle.carryOutCropIO
 import com.w2sv.autocrop.cropping.cropbundle.pathTail
 import com.w2sv.autocrop.preferences.UriPreferences

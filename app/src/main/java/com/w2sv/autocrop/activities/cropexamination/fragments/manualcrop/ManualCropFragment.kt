@@ -8,11 +8,11 @@ import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.core.text.subscript
 import androidx.fragment.app.viewModels
-import com.w2sv.autocrop.cropping.cropbundle.CropBundle
-import com.w2sv.autocrop.cropping.CropEdges
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.extensions.maintainedPercentage
 import com.w2sv.autocrop.controller.ApplicationFragment
+import com.w2sv.autocrop.cropping.CropEdges
+import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.autocrop.databinding.FragmentManualCropBinding
 import com.w2sv.autocrop.utils.android.extensions.loadBitmap
 import com.w2sv.kotlinutils.extensions.rounded
