@@ -116,10 +116,10 @@ class CropPagerFragment :
                     scroller.cancel()
                     crossFade(
                         binding.cancelAutoScrollButton,
-                        binding.bottomButtonRow
+                        binding.snackbarRepelledLayout
                     )
                 }
-                    ?: binding.bottomButtonRow.show()
+                    ?: binding.snackbarRepelledLayout.show()
 
                 if (!BooleanPreferences.cropPagerInstructionsShown)
                     lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
