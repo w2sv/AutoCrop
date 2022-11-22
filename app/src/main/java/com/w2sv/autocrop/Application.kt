@@ -7,7 +7,7 @@ import com.w2sv.autocrop.utils.android.extensions.getApplicationWideSharedPrefer
 import com.w2sv.permissionhandler.PermissionHandler
 import timber.log.Timber
 
-class AutoCrop : Application() {
+class Application : Application() {
 
     /**
      * Plants [Timber] tree if applicable

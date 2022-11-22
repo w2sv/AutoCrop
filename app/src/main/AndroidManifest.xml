@@ -32,7 +32,7 @@
     <!-- Application -->
 
     <application
-        android:name=".AutoCrop"
+        android:name=".Application"
         android:appCategory="image"
 
         android:icon="@mipmap/logo"
