@@ -6,7 +6,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
@@ -15,9 +14,15 @@ import com.w2sv.autocrop.databinding.FragmentSaveallBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.utils.android.extensions.postValue
 import com.w2sv.kotlinutils.extensions.executeAsyncTaskWithProgressUpdateReceiver
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SaveAllFragment :
     ApplicationFragment<FragmentSaveallBinding>(FragmentSaveallBinding::class.java) {
+
+    @Inject
+    lateinit var booleanPreferences: BooleanPreferences
 
     class ViewModel : androidx.lifecycle.ViewModel() {
         val nImagesToBeSaved = CropExaminationActivityViewModel.cropBundles.size
@@ -41,7 +46,7 @@ class SaveAllFragment :
         }
 
         lifecycleScope.executeAsyncTaskWithProgressUpdateReceiver(
-            { processRemainingCropBundles(BooleanPreferences.deleteScreenshots, it) },
+            { processRemainingCropBundles(booleanPreferences.deleteScreenshots, it) },
             {
                 with(viewModel.liveCropNumber) {
                     postValue(minOf(value!! + 1, viewModel.nImagesToBeSaved))

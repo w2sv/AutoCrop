@@ -15,6 +15,6 @@ class ContextBasedActivityRetriever(private val context: Context) : ActivityRetr
     override val fragmentActivity: FragmentActivity
         get() = activity as FragmentActivity
 
-    override val fragmentHostingActivity: FragmentHostingActivity<*>
-        get() = activity as FragmentHostingActivity<*>
+    override val fragmentHostingActivity: FragmentHostingActivity
+        get() = activity as FragmentHostingActivity
 }

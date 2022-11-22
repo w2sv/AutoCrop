@@ -6,40 +6,33 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.SavedStateHandle
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.controller.activity.ApplicationActivity
-import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
 import com.w2sv.autocrop.utils.android.extensions.postValue
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 class MainActivity :
-    ApplicationActivity<FlowFieldFragment, MainActivity.ViewModel>(
-        FlowFieldFragment::class.java,
-        ViewModel::class.java,
-        BooleanPreferences, UriPreferences
-    ) {
+    ApplicationActivity(FlowFieldFragment::class.java) {
 
     companion object {
         const val EXTRA_SELECTED_IMAGE_URIS = "com.w2sv.autocrop.extra.SELECTED_IMAGE_URIS"
     }
 
-    class ViewModel(val ioResults: CropExaminationActivity.Results?) : androidx.lifecycle.ViewModel() {
+    @HiltViewModel
+    class ViewModel @Inject constructor(savedStateHandle: SavedStateHandle) : androidx.lifecycle.ViewModel() {
 
-        class Factory(private val ioResults: CropExaminationActivity.Results?) : ViewModelProvider.Factory {
-
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
-                ViewModel(ioResults) as T
-        }
+        val ioResults: CropExaminationActivity.Results? = CropExaminationActivity.Results.restore(savedStateHandle)
 
         val liveScreenshotListenerRunning: LiveData<Boolean?> by lazy {
             MutableLiveData()
@@ -62,6 +55,8 @@ class MainActivity :
         OnStopScreenshotListenerFromNotification()
     }
 
+    private val viewModel: ViewModel by viewModels()
+
     inner class OnStopScreenshotListenerFromNotification : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             viewModel
@@ -69,11 +64,6 @@ class MainActivity :
                 .postValue(false)
         }
     }
-
-    override fun viewModelFactory(): ViewModelProvider.Factory =
-        ViewModel.Factory(
-            ioResults = CropExaminationActivity.Results.restore(intent)
-        )
 
     /**
      * invoke [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app

@@ -1,5 +1,6 @@
 package com.w2sv.autocrop.utils.android.extensions
 
+import android.content.Context
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,6 +10,7 @@ import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.autocrop.R
 import com.w2sv.kotlinutils.UnitFun
+import dagger.hilt.android.internal.managers.ViewComponentManager
 
 fun View.animate(
     technique: Techniques,
@@ -72,7 +74,15 @@ inline fun <reified VM : ViewModel> View.viewModelImmediate(): VM =
     viewModel<VM>().value
 
 inline fun <reified VM : ViewModel> View.activityViewModel(): Lazy<VM> =
-    lazy { ViewModelProvider(context as ViewModelStoreOwner)[VM::class.java] }
+    lazy {
+        ViewModelProvider(
+            (context.activityContext() as ViewModelStoreOwner)
+        )[VM::class.java]
+    }
+
+fun Context.activityContext(): Context =
+    (this as? ViewComponentManager.FragmentContextWrapper)?.baseContext
+        ?: this
 
 inline fun <reified VM : ViewModel> View.activityViewModelImmediate(): VM =
     activityViewModel<VM>().value

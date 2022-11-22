@@ -32,10 +32,18 @@ import com.w2sv.autocrop.utils.android.extensions.postValue
 import com.w2sv.autocrop.utils.android.extensions.serviceRunning
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.permissionhandler.requestPermissions
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     NavigationView(context, attributeSet),
     ActivityRetriever by ContextBasedActivityRetriever(context) {
+
+    @Inject
+    lateinit var booleanPreferences: BooleanPreferences
+    @Inject
+    lateinit var uriPreferences: UriPreferences
 
     private val activityViewModel by activityViewModel<MainActivity.ViewModel>()
 
@@ -107,7 +115,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
 
     private fun setAutoScrollItem() =
         menu.configureItem(R.id.main_menu_item_auto_scroll) {
-            it.actionView = BooleanPreferences.createSwitch(context, "autoScroll")
+            it.actionView = booleanPreferences.createSwitch(context, "autoScroll")
         }
 
     private fun setNavigationItemSelectedListeners() {
@@ -141,7 +149,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     private fun pickSaveDestinationDir() {
         findFragment<FlowFieldFragment>()
             .saveDestinationSelectionIntentLauncher
-            .launch(UriPreferences.treeUri)
+            .launch(uriPreferences.treeUri)
     }
 
     private fun goToPlayStoreListing() {

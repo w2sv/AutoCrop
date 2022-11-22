@@ -10,15 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/about/views/CopyrightTextView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/about/views/CopyrightTextView.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/home/w2sv/.android/avd/Pixel_3a_API_33_x86_64.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[192.168.1.233:5555]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -53,8 +52,8 @@
         <option value="JUnit5 Test Class" />
         <option value="resourceFile" />
         <option value="Kotlin File" />
-        <option value="Kotlin Class" />
         <option value="Kotlin Interface" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -122,6 +121,11 @@
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/ui/MoveUpwardBehavior.kt_SELECTED": "RisingLinearLayout",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/ui/RiseBehavior.kt_SELECTED": "SnackbarRepelledLayout",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/ui/SnackbarRepelledLayout.kt_SELECTED": "SnackbarRepelledLayout",
+    "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/crop/fragments/cropping/views/CroppingProgressBar.kt_SELECTED": "CroppingProgressBar",
+    "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/crop/fragments/cropping/views/ProgressTextView.kt_SELECTED": "ProgressTextView",
+    "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ComparisonIV.kt_SELECTED": "ComparisonIV",
+    "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ComparisonIVStatusTV.kt_SELECTED": "ComparisonIVStatusTV",
+    "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ComparisonButton.kt_SELECTED": "ComparisonButton",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/saveall/SaveAllProgressTextView.kt_SELECTED": "SaveAllProgressTextView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/cropping/fragments/cropping/views/CroppingProgressBar.kt_SELECTED": "CroppingProgressBar",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/cropping/fragments/cropping/views/ProgressTextView.kt_SELECTED": "ProgressTextView",
@@ -133,6 +137,7 @@
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/iodetermination/fragments/manualcrop/view/ManualCropView.kt_SELECTED": "ManualCropView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/VersionTextView.kt_SELECTED": "VersionTextView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/about/views/AnimationHandlingTextView.kt_SELECTED": "AnimationHandlingTextView",
+    "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/about/views/CopyrightTextView.kt_SELECTED": "CopyrightTextView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/ButtonsLayout.kt_SELECTED": "ButtonsLayout",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldContainer.kt_SELECTED": "FlowFieldContainer",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldDrawerLayout.kt_SELECTED": "FlowFieldDrawerLayout",
@@ -186,7 +191,7 @@
     "full.screen.before.presentation.mode": "false",
     "ignore.preview.features.used": "true",
     "last_directory_selection": "/home/w2sv/Dev/android/AutoCrop/app/src/test/java/com/autocrop/utils",
-    "last_opened_file_path": "/home/w2sv/Dev/Android/TypedPreferences",
+    "last_opened_file_path": "/home/w2sv/Dev/Android/android-hilt",
     "memory.settings.postsync.last.time.stamp": "1667399042919",
     "project.structure.last.edited": "Build Variants",
     "project.structure.proportion": "0.17",

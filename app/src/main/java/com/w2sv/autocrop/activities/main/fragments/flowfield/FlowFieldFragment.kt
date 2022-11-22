@@ -36,11 +36,19 @@ import com.w2sv.kotlinutils.extensions.launchDelayed
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.permissionhandler.PermissionHandler
 import com.w2sv.permissionhandler.requestPermissions
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FlowFieldFragment :
     ApplicationFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java),
     WelcomeDialog.OnProceedListener,
     ScreenshotListenerDialog.OnConfirmedListener {
+
+    @Inject
+    lateinit var booleanPreferences: BooleanPreferences
+    @Inject
+    lateinit var uriPreferences: UriPreferences
 
     class ViewModel : androidx.lifecycle.ViewModel() {
         var enteredFragment = false
@@ -66,12 +74,12 @@ class FlowFieldFragment :
         if (!viewModel.enteredFragment) {
             binding.buttonsLayout.fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
 
-            if (!BooleanPreferences.welcomeDialogsShown)
+            if (!booleanPreferences.welcomeDialogsShown)
                 lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_large)) {
                     WelcomeDialog().show(childFragmentManager)
 
                     viewModel.enteredFragment = true
-                    BooleanPreferences.welcomeDialogsShown = true
+                    booleanPreferences.welcomeDialogsShown = true
                 }
             else
                 activityViewModel.ioResults?.let {
@@ -198,8 +206,8 @@ class FlowFieldFragment :
                     )
         }) {
             it?.let { treeUri ->
-                if (UriPreferences.treeUri != treeUri) {
-                    UriPreferences.treeUri = treeUri
+                if (uriPreferences.treeUri != treeUri) {
+                    uriPreferences.treeUri = treeUri
 
                     requireContext()
                         .contentResolver
@@ -212,7 +220,7 @@ class FlowFieldFragment :
                             SpannableStringBuilder()
                                 .append("Crops will be saved to ")
                                 .color(requireContext().getThemedColor(R.color.success)) {
-                                    append(documentUriPathIdentifier(UriPreferences.documentUri!!))
+                                    append(documentUriPathIdentifier(uriPreferences.documentUri!!))
                                 }
                         )
                         .build()

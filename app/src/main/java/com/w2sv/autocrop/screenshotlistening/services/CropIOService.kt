@@ -20,10 +20,16 @@ import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.autocrop.utils.android.IMAGE_MIME_TYPE
 import com.w2sv.autocrop.utils.android.extensions.getParcelable
 import com.w2sv.autocrop.utils.android.extensions.queryMediaStoreDatum
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CropIOService :
     BoundService(),
     OnPendingIntentService.ClientInterface by OnPendingIntentService.Client(1) {
+
+    @Inject
+    lateinit var uriPreferences: UriPreferences
 
     companion object {
         private const val EXTRA_WRAPPED_INTENT = "com.w2sv.autocrop.WRAPPED_INTENT"
@@ -56,7 +62,7 @@ class CropIOService :
         contentResolver.carryOutCropIO(
             crop,
             screenshotMediaStoreData,
-            UriPreferences.validDocumentUriOrNull(this),
+            uriPreferences.validDocumentUriOrNull(this),
             deleteScreenshot
         )
 

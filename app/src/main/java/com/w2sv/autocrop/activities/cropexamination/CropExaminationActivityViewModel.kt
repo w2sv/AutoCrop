@@ -4,8 +4,9 @@ import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.autocrop.cropping.cropbundle.Screenshot
 import com.w2sv.autocrop.cropping.cropbundle.carryOutCropIO
@@ -15,20 +16,18 @@ import com.w2sv.autocrop.utils.android.extensions.queryMediaStoreDatum
 import com.w2sv.kotlinutils.UnitFun
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.toInt
+import dagger.assisted.Assisted
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import javax.inject.Inject
 
-class CropExaminationActivityViewModel(val nDismissedScreenshots: Int) : ViewModel() {
+@HiltViewModel
+class CropExaminationActivityViewModel @Inject constructor(savedStateHandle: SavedStateHandle) : ViewModel() {
 
-    class Factory(
-        private val nDismissedScreenshots: Int
-    ) : ViewModelProvider.NewInstanceFactory() {
+    @Inject
+    lateinit var uriPreferences: UriPreferences
 
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            CropExaminationActivityViewModel(
-                nDismissedScreenshots
-            ) as T
-    }
+    val nDismissedScreenshots: Int = savedStateHandle[CropActivity.EXTRA_N_UNCROPPED_IMAGES]!!
 
     companion object {
         lateinit var cropBundles: MutableList<CropBundle>
@@ -58,7 +57,7 @@ class CropExaminationActivityViewModel(val nDismissedScreenshots: Int) : ViewMod
             val ioResult = context.contentResolver.carryOutCropIO(
                 cropBundle.crop.bitmap,
                 cropBundle.screenshot.mediaStoreData,
-                UriPreferences.validDocumentUriOrNull(context),
+                uriPreferences.validDocumentUriOrNull(context),
                 deleteScreenshot && !addedScreenshotDeletionInquiryUri
             )
 

@@ -3,9 +3,9 @@ package com.w2sv.autocrop.controller.activity
 import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.w2sv.autocrop.R
+import com.blogspot.atifsoftwares.animatoolib.R
 
-abstract class FragmentHostingActivity<RF : Fragment>(private val rootFragmentClass: Class<RF>) : BlankViewBoundActivity() {
+abstract class FragmentHostingActivity(private val rootFragmentClass: Class<out Fragment>) : BlankViewBoundActivity() {
 
     companion object {
         private const val ROOT_FRAGMENT_TAG = "ROOT_FRAGMENT"
@@ -26,9 +26,9 @@ abstract class FragmentHostingActivity<RF : Fragment>(private val rootFragmentCl
             .commit()
     }
 
-    @Suppress("UNCHECKED_CAST")
-    fun getRootFragment(): RF? =
-        supportFragmentManager.findFragmentByTag(ROOT_FRAGMENT_TAG) as RF?
+//    @Suppress("UNCHECKED_CAST")
+//    fun <RF : Fragment> getRootFragment(): RF? =
+//        supportFragmentManager.findFragmentByTag(ROOT_FRAGMENT_TAG) as RF?
 
     fun getCurrentFragment(): Fragment? =
         supportFragmentManager.findFragmentById(layoutId)

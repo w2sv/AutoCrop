@@ -38,14 +38,20 @@ import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.kotlinutils.extensions.executeAsyncTask
 import com.w2sv.kotlinutils.extensions.launchDelayed
 import com.w2sv.kotlinutils.extensions.numericallyInflected
+import dagger.hilt.android.AndroidEntryPoint
 import de.mateware.snacky.Snacky
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CropPagerFragment :
     ApplicationFragment<FragmentCroppagerBinding>(FragmentCroppagerBinding::class.java),
     CropDialog.ResultListener,
     CropEntiretyDialog.ResultListener,
     ManualCropFragment.ResultListener,
     CropPagerInstructionsDialog.OnDismissedListener {
+
+    @Inject
+    lateinit var booleanPreferences: BooleanPreferences
 
     private val viewModel by viewModels<CropPagerViewModel>()
     private val activityViewModel by activityViewModels<CropExaminationActivityViewModel>()
@@ -121,11 +127,11 @@ class CropPagerFragment :
                 }
                     ?: binding.snackbarRepelledLayout.show()
 
-                if (!BooleanPreferences.cropPagerInstructionsShown)
+                if (!booleanPreferences.cropPagerInstructionsShown)
                     lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
                         CropPagerInstructionsDialog()
                             .show(childFragmentManager)
-                        BooleanPreferences.cropPagerInstructionsShown = true
+                        booleanPreferences.cropPagerInstructionsShown = true
                     }
                 else
                     onAutoScrollConcluded()
@@ -158,7 +164,7 @@ class CropPagerFragment :
                         .append(" image".numericallyInflected(nDismissedScreenshots))
                 )
                     .setSnackbarRepelledView()
-                    .setIcon(R.drawable.ic_error_24)
+                    .setIcon(com.w2sv.permissionhandler.R.drawable.ic_error_24)
                     .build()
                     .show()
             }
@@ -209,7 +215,7 @@ class CropPagerFragment :
                 singularCropSavingJob = lifecycleScope.executeAsyncTask(
                     makeCropBundleProcessor(
                         dataSetPosition,
-                        BooleanPreferences.deleteScreenshots,
+                        booleanPreferences.deleteScreenshots,
                         requireContext()
                     )
                 )

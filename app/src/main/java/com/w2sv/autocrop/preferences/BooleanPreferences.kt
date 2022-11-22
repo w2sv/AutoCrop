@@ -4,35 +4,29 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Switch
 import com.w2sv.kotlinutils.delegates.AutoSwitch
+import com.w2sv.typedpreferences.descendants.BooleanPreferences
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object BooleanPreferences : TypedPreferences<Boolean>(
-    mutableMapOf(
-        "autoScroll" to true,
-        "deleteScreenshots" to false,
+@Singleton
+class BooleanPreferences @Inject constructor(sharedPreferences: SharedPreferences) : BooleanPreferences(
+    "autoScroll" to true,
+    "deleteScreenshots" to false,
 
-        "welcomeDialogsShown" to false,
-        "cropPagerInstructionsShown" to false,
-        "comparisonInstructionsShown" to false,
-        "aboutFragmentInstructionsShown" to false
-    )
+    "welcomeDialogsShown" to false,
+    "cropPagerInstructionsShown" to false,
+    "comparisonInstructionsShown" to false,
+    "aboutFragmentInstructionsShown" to false,
+    sharedPreferences = sharedPreferences
 ) {
-    /**
-     * Expose values as delegated variables for convenience
-     */
-    var autoScroll by map
-    var deleteScreenshots by map
 
-    var welcomeDialogsShown by map
-    var cropPagerInstructionsShown by map
-    var comparisonInstructionsShown by AutoSwitch.Mapped(map, false)
-    var aboutFragmentInstructionsShown by AutoSwitch.Mapped(map, false)
+    var autoScroll by this
+    var deleteScreenshots by this
 
-    override fun SharedPreferences.writeValue(key: String, value: Boolean) {
-        edit().putBoolean(key, value).apply()
-    }
-
-    override fun SharedPreferences.getValue(key: String, defaultValue: Boolean): Boolean =
-        getBoolean(key, defaultValue)
+    var welcomeDialogsShown by this
+    var cropPagerInstructionsShown by this
+    var comparisonInstructionsShown by AutoSwitch.Mapped(this, false)
+    var aboutFragmentInstructionsShown by AutoSwitch.Mapped(this, false)
 
     fun createSwitch(context: Context, key: String): Switch =
         Switch(context).apply {

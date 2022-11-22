@@ -7,13 +7,21 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import com.w2sv.autocrop.utils.android.extensions.uriPermissionGranted
 import com.w2sv.kotlinutils.delegates.mapObserver
+import com.w2sv.typedpreferences.descendants.UriPreferences
 import slimber.log.i
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object UriPreferences : TypedPreferences<Uri?>(mutableMapOf("treeUri" to null)) {
+@Singleton
+class UriPreferences @Inject constructor(sharedPreferences: SharedPreferences) : UriPreferences<Uri?>(
+    "treeUri" to null,
+    sharedPreferences = sharedPreferences
+) {
+
     /**
      * Inherently build [documentUri]
      */
-    var treeUri: Uri? by mapObserver(map) { _, oldValue, newValue ->
+    var treeUri: Uri? by mapObserver(this) { _, oldValue, newValue ->
         if (newValue != null && oldValue != newValue)
             documentUri = DocumentsContract.buildDocumentUriUsingTree(
                 treeUri,
@@ -31,20 +39,4 @@ object UriPreferences : TypedPreferences<Uri?>(mutableMapOf("treeUri" to null)) 
             else
                 null
         }
-
-    override fun SharedPreferences.writeValue(key: String, value: Uri?) {
-        edit()
-            .putString(
-                key,
-                value?.toString()
-            )
-            .apply()
-    }
-
-    override fun SharedPreferences.getValue(key: String, defaultValue: Uri?): Uri? =
-        getString(
-            key,
-            defaultValue?.toString()
-        )
-            ?.run { Uri.parse(this) }
 }

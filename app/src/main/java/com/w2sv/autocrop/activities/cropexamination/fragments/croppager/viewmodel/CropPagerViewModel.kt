@@ -8,8 +8,12 @@ import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewM
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.utils.android.BackPressListener
 import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class CropPagerViewModel : ViewModel() {
+@HiltViewModel
+class CropPagerViewModel @Inject constructor(booleanPreferences: BooleanPreferences) : ViewModel() {
+
     val dataSet = BidirectionalViewPagerDataSet(CropExaminationActivityViewModel.cropBundles)
 
     val backPressHandler = BackPressListener(viewModelScope)
@@ -20,7 +24,7 @@ class CropPagerViewModel : ViewModel() {
 
     var scroller: Scroller? = null
 
-    val liveAutoScroll: LiveData<Boolean> = MutableLiveData(BooleanPreferences.autoScroll && dataSet.size > 1)
+    val liveAutoScroll: LiveData<Boolean> = MutableLiveData(booleanPreferences.autoScroll && dataSet.size > 1)
 
     val autoScrolls: Int
         get() = dataSet.size - dataSet.livePosition.value!!

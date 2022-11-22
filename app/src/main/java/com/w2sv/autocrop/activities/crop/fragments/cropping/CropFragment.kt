@@ -11,7 +11,6 @@ import androidx.lifecycle.viewModelScope
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.crop.CropActivity
-import com.w2sv.autocrop.activities.crop.CropActivityViewModel
 import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailedFragment
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
@@ -37,7 +36,7 @@ class CropFragment
     }
 
     private val viewModel by viewModels<ViewModel>()
-    private val activityViewModel by activityViewModels<CropActivityViewModel>()
+    private val activityViewModel by activityViewModels<CropActivity.ViewModel>()
 
     fun onBackPress() {
         viewModel.backPressListener(

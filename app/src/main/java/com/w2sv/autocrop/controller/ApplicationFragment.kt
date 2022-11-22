@@ -28,6 +28,6 @@ abstract class ApplicationFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
     protected fun <A : Activity> castActivity(): A =
         requireActivity() as A
 
-    override val fragmentHostingActivity: FragmentHostingActivity<*>
-        get() = requireActivity() as FragmentHostingActivity<*>
+    override val fragmentHostingActivity: FragmentHostingActivity
+        get() = requireActivity() as FragmentHostingActivity
 }

@@ -34,7 +34,7 @@
         android:layout_marginBottom="@dimen/error_icon_cropping_failure_vertical_margin"
         android:contentDescription="@null"
 
-        android:src="@drawable/ic_error_24"/>
+        android:src="@drawable/ic_error_24" />
 
     <ImageView
         android:layout_width="@dimen/error_icon_cropping_failure_screen"
@@ -47,7 +47,7 @@
         android:layout_marginBottom="@dimen/error_icon_cropping_failure_vertical_margin"
         android:contentDescription="@null"
 
-        android:src="@drawable/ic_error_24"/>
+        android:src="@drawable/ic_error_24" />
 
     <TextView
         android:id="@+id/cropping_unsuccessful_instruction"
@@ -62,7 +62,7 @@
 
         android:text="@string/cropping_failure_instruction_text_view"
         android:textAlignment="center"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/got_it_button"

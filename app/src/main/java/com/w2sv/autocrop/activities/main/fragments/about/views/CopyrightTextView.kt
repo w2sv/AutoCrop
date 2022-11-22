@@ -11,7 +11,8 @@ class CopyrightTextView(context: Context, attr: AttributeSet) :
         attr,
         Techniques.ZoomOutRight,
         "https://github.com/w2sv/AutoCrop/blob/master/LICENSE"
-    ) { init {
-    text = template.format(Calendar.getInstance().get(Calendar.YEAR))
-}
+    ) {
+    init {
+        text = template.format(Calendar.getInstance().get(Calendar.YEAR))
+    }
 }

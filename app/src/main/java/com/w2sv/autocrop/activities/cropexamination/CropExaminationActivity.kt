@@ -1,11 +1,10 @@
 package com.w2sv.autocrop.activities.cropexamination
 
-import android.content.Intent
 import android.net.Uri
 import androidx.activity.OnBackPressedCallback
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
+import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.cropexamination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPagerFragment
@@ -13,16 +12,11 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.deletionconfirmati
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.controller.activity.ApplicationActivity
-import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.utils.android.extensions.getInt
-import com.w2sv.autocrop.utils.android.extensions.getParcelableArrayList
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 
 class CropExaminationActivity :
-    ApplicationActivity<CropPagerFragment, CropExaminationActivityViewModel>(
-        CropPagerFragment::class.java,
-        CropExaminationActivityViewModel::class.java,
-        BooleanPreferences
+    ApplicationActivity(
+        CropPagerFragment::class.java
     ) {
 
     private companion object {
@@ -31,9 +25,7 @@ class CropExaminationActivity :
         const val EXTRA_SAVE_DIR_NAME = "com.w2sv.autocrop.SAVE_DIR_NAME"
     }
 
-    override fun viewModelFactory(): ViewModelProvider.Factory =
-        CropExaminationActivityViewModel
-            .Factory(nDismissedScreenshots = intent.getInt(CropActivity.EXTRA_N_UNCROPPED_IMAGES))
+    private val viewModel: CropExaminationActivityViewModel by viewModels()
 
     /**
      * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
@@ -81,16 +73,15 @@ class CropExaminationActivity :
 
     data class Results(val cropUris: ArrayList<Uri>, val nDeletedScreenshots: Int, val saveDirName: String?) {
         companion object {
-            fun restore(intent: Intent): Results? =
-                intent.run {
-                    if (hasExtra(EXTRA_CROP_URIS))
+            fun restore(savedStateHandle: SavedStateHandle): Results? =
+                savedStateHandle.run {
+                    get<ArrayList<Uri>>(EXTRA_CROP_URIS)?.let {
                         Results(
-                            getParcelableArrayList(EXTRA_CROP_URIS)!!,
-                            getInt(EXTRA_N_DELETED_SCREENSHOTS),
-                            getStringExtra(EXTRA_SAVE_DIR_NAME)
+                            it,
+                            get(EXTRA_N_DELETED_SCREENSHOTS)!!,
+                            get(EXTRA_SAVE_DIR_NAME)!!
                         )
-                    else
-                        null
+                    }
                 }
         }
 

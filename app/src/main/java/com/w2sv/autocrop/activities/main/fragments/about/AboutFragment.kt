@@ -12,14 +12,20 @@ import com.w2sv.autocrop.utils.android.extensions.animate
 import com.w2sv.autocrop.utils.android.extensions.getLong
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.kotlinutils.extensions.launchDelayed
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AboutFragment :
     ApplicationFragment<FragmentAboutBinding>(FragmentAboutBinding::class.java) {
+
+    @Inject
+    lateinit var booleanPreferences: BooleanPreferences
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!BooleanPreferences.aboutFragmentInstructionsShown)
+        if (!booleanPreferences.aboutFragmentInstructionsShown)
             lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_medium)) {
                 requireActivity()
                     .snackyBuilder(

@@ -26,7 +26,10 @@ import com.w2sv.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.utils.android.extensions.showSystemBars
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 import com.w2sv.kotlinutils.extensions.launchDelayed
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ComparisonFragment
     : ApplicationFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java) {
 
@@ -39,6 +42,9 @@ class ComparisonFragment
                     )
                 }
     }
+
+    @Inject
+    lateinit var booleanPreferences: BooleanPreferences
 
     val viewModel by viewModels<ComparisonViewModel> {
         @Suppress("DEPRECATION")
@@ -67,7 +73,7 @@ class ComparisonFragment
                                 viewModel.useInsetLayoutParams.postValue(false)
                                 viewModel.displayScreenshot.postValue(true)
 
-                                if (!BooleanPreferences.comparisonInstructionsShown)
+                                if (!booleanPreferences.comparisonInstructionsShown)
                                     requireActivity()
                                         .snackyBuilder("Tap screen to toggle between the original screenshot and the crop")
                                         .setIcon(R.drawable.ic_outline_info_24)
