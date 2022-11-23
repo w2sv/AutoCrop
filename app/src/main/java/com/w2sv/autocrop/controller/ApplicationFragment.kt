@@ -7,12 +7,11 @@ import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.viewbinding.ViewBinding
 import com.w2sv.autocrop.controller.activity.FragmentHostingActivity
-import com.w2sv.autocrop.controller.activity.retriever.FragmentHostingActivityRetriever
 import com.w2sv.viewboundcontroller.ViewBoundFragment
 
 abstract class ApplicationFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
     ViewBoundFragment<VB>(bindingClass),
-    FragmentHostingActivityRetriever {
+    FragmentHostingActivity.Retriever {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()

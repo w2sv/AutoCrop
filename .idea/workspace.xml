@@ -10,15 +10,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/controller/retriever/ActivityRetriever.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/crop/CropActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/crop/CropActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/crop/fragments/cropping/CropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/crop/fragments/cropping/CropFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/crop/fragments/croppingfailed/CroppingFailedFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/crop/fragments/croppingfailed/CroppingFailedFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/CropExaminationActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/CropExaminationActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/DiscardingStatisticsTextView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/DiscardingStatisticsTextView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/controller/activity/ApplicationActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/controller/activity/ApplicationActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/CropExaminationActivityViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/CropExaminationActivityViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ComparisonButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ComparisonButton.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/CropImageView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/CropImageView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ManualCropButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ManualCropButton.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/about/views/CopyrightTextView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/about/views/CopyrightTextView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/dialogs/WelcomeDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/dialogs/WelcomeDialog.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldContainer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldContainer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldNavigationView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldNavigationView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/controller/ApplicationFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/controller/ApplicationFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/controller/activity/FragmentHostingActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/controller/activity/FragmentHostingActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/controller/activity/retriever/ActivityRetriever.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/controller/activity/retriever/ContextBasedActivityRetriever.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/controller/activity/retriever/FragmentHostingActivityRetriever.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/permissionhandler/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/permissionhandler/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/permissionhandler/src/main/java/com/w2sv/permissionhandler/PermissionHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/permissionhandler/src/main/java/com/w2sv/permissionhandler/PermissionHandler.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/permissionhandler/src/main/java/com/w2sv/permissionhandler/utils/Activity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/permissionhandler/src/main/java/com/w2sv/permissionhandler/utils/TypeAliases.kt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,6 +146,7 @@
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ComparisonIV.kt_SELECTED": "ComparisonIV",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ComparisonIVStatusTV.kt_SELECTED": "ComparisonIVStatusTV",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ComparisonButton.kt_SELECTED": "ComparisonButton",
+    "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/CropImageView.kt_SELECTED": "CropImageView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/DiscardingStatisticsTextView.kt_SELECTED": "DiscardingStatisticsTextView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ManualCropButton.kt_SELECTED": "ManualCropButton",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/w2sv/autocrop/activities/cropexamination/fragments/saveall/SaveAllProgressTextView.kt_SELECTED": "SaveAllProgressTextView",

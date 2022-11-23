@@ -4,8 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.autocrop.controller.activity.retriever.ActivityRetriever
-import com.w2sv.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
+import com.w2sv.autocrop.controller.retriever.ActivityRetriever
 import com.w2sv.autocrop.ui.views.AnimationHandler
 import com.w2sv.autocrop.utils.android.extensions.animationComposer
 import com.w2sv.autocrop.utils.android.extensions.goToWebpage
@@ -15,7 +14,7 @@ import java.util.Calendar
 class CopyrightTextView(context: Context, attr: AttributeSet) :
     AppCompatTextView(context, attr),
     AnimationHandler by AnimationHandler.Implementation(),
-    ActivityRetriever by ContextBasedActivityRetriever(context) {
+    ActivityRetriever by ActivityRetriever.Implementation(context) {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

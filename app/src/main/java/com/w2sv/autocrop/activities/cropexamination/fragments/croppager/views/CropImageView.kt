@@ -9,14 +9,13 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPage
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.dialogs.CropDialog
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.dialogs.CropEntiretyDialog
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmodel.CropPagerViewModel
-import com.w2sv.autocrop.controller.activity.retriever.ActivityRetriever
-import com.w2sv.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
+import com.w2sv.autocrop.controller.retriever.ActivityRetriever
 import com.w2sv.autocrop.utils.android.extensions.show
 import com.w2sv.autocrop.utils.android.extensions.viewModel
 
 class CropImageView(context: Context, attributeSet: AttributeSet) :
     AppCompatImageView(context, attributeSet),
-    ActivityRetriever by ContextBasedActivityRetriever(context) {
+    ActivityRetriever by ActivityRetriever.Implementation(context) {
 
     private val viewModel by viewModel<CropPagerViewModel>()
 

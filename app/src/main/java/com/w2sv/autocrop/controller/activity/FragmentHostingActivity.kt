@@ -11,6 +11,10 @@ abstract class FragmentHostingActivity(private val rootFragmentClass: Class<out 
         private const val ROOT_FRAGMENT_TAG = "ROOT_FRAGMENT"
     }
 
+    interface Retriever{
+        val fragmentHostingActivity: FragmentHostingActivity
+    }
+
     private val layoutId: Int get() = binding.root.id
 
     @SuppressLint("CommitTransaction")

@@ -8,15 +8,14 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.Compari
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPager
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPagerFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmodel.CropPagerViewModel
-import com.w2sv.autocrop.controller.activity.retriever.ActivityRetriever
-import com.w2sv.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
+import com.w2sv.autocrop.controller.retriever.ActivityRetriever
 import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
 import com.w2sv.autocrop.utils.android.extensions.viewModel
 import com.w2sv.bidirectionalviewpager.viewpager.currentViewHolder
 
 class ComparisonButton(context: Context, attributeSet: AttributeSet) :
     AppCompatImageButton(context, attributeSet),
-    ActivityRetriever by ContextBasedActivityRetriever(context) {
+    ActivityRetriever by ActivityRetriever.Implementation(context) {
 
     private val viewModel by viewModel<CropPagerViewModel>()
 

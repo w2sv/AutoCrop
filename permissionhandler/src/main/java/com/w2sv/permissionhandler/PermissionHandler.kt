@@ -14,21 +14,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.w2sv.permissionhandler.utils.BlankFun
-import com.w2sv.permissionhandler.utils.snacky
+import com.w2sv.kotlinutils.UnitFun
 import de.mateware.snacky.Snacky
-
-fun Iterator<PermissionHandler?>.requestPermissions(onGranted: BlankFun, onDenied: BlankFun? = null) {
-    if (!hasNext())
-        onGranted()
-    else {
-        next()?.requestPermission(
-            onGranted = { requestPermissions(onGranted, onDenied) },
-            onDenied = onDenied
-        )
-            ?: requestPermissions(onGranted, onDenied)
-    }
-}
 
 class PermissionHandler(
     private val permission: String,
@@ -88,7 +75,7 @@ class PermissionHandler(
      * Function wrapper either directly running [onGranted] if permission granted,
      * otherwise sets [onGranted] and launches [requestPermissions]
      */
-    fun requestPermission(onGranted: BlankFun, onDenied: BlankFun? = null): Unit =
+    fun requestPermission(onGranted: UnitFun, onDenied: UnitFun? = null): Unit =
         if (!grantRequired)
             onGranted()
         else {
@@ -101,8 +88,8 @@ class PermissionHandler(
     /**
      * Temporary callable to be set before, and to be cleared on exiting of [onRequestPermissionResult]
      */
-    private var onPermissionGranted: BlankFun? = null
-    private var onPermissionDenied: BlankFun? = null
+    private var onPermissionGranted: UnitFun? = null
+    private var onPermissionDenied: UnitFun? = null
 
     /**
      * Display snacky if some permission hasn't been granted,
@@ -149,3 +136,10 @@ class PermissionHandler(
                 )
             }
 }
+
+private fun Activity.snacky(text: CharSequence, duration: Int = Snacky.LENGTH_LONG): Snacky.Builder =
+    Snacky.builder()
+        .setText(text)
+        .centerText()
+        .setDuration(duration)
+        .setActivity(this)

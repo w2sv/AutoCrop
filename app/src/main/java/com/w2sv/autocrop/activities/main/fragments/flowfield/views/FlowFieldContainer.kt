@@ -5,15 +5,14 @@ import android.os.Build
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.w2sv.autocrop.activities.main.fragments.flowfield.views.sketch.FlowFieldSketch
-import com.w2sv.autocrop.controller.activity.retriever.ActivityRetriever
-import com.w2sv.autocrop.controller.activity.retriever.ContextBasedActivityRetriever
+import com.w2sv.autocrop.controller.retriever.ActivityRetriever
 import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
 import com.w2sv.autocrop.utils.android.extensions.resolution
 import processing.android.PFragment
 
 class FlowFieldContainer(context: Context, attr: AttributeSet) :
     FrameLayout(context, attr),
-    ActivityRetriever by ContextBasedActivityRetriever(context) {
+    ActivityRetriever by ActivityRetriever.Implementation(context) {
 
     init {
         ifNotInEditMode {

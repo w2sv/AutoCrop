@@ -16,7 +16,6 @@ import com.w2sv.autocrop.utils.android.extensions.queryMediaStoreDatum
 import com.w2sv.kotlinutils.UnitFun
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.toInt
-import dagger.assisted.Assisted
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import javax.inject.Inject

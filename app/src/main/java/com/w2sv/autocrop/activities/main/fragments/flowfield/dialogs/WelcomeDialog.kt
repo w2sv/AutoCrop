@@ -8,6 +8,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.views.UncancelableDialogFragment
 
 class WelcomeDialog : UncancelableDialogFragment() {
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         builder()
             .setIcon(R.drawable.logo_nobackground)
