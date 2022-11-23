@@ -34,15 +34,11 @@ class CropActivity : ApplicationActivity(CropFragment::class.java) {
         val liveCropBundles = MutableListLiveData<CropBundle>(mutableListOf())
     }
 
-    /**
-     * Directly [startMainActivity] if [CroppingFailedFragment] visible,
-     * otherwise only upon confirmed back press
-     */
     override val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             getCurrentFragment().let {
                 when (it) {
-                    is CroppingFailedFragment -> startMainActivity()
+                    is CroppingFailedFragment -> MainActivity.restart(this@CropActivity)
                     is CropFragment -> it.onBackPress()
                     else -> Unit
                 }

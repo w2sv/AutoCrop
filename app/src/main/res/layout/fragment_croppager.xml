@@ -97,7 +97,6 @@
                 android:id="@+id/discarding_statistics_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/remove"
                 android:textSize="13sp" />
 
             <LinearLayout

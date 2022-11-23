@@ -11,13 +11,12 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPage
 import com.w2sv.autocrop.activities.cropexamination.fragments.deletionconfirmation.DeletionConfirmationDialogFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.saveall.SaveAllFragment
+import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.controller.activity.ApplicationActivity
 import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
 
 class CropExaminationActivity :
-    ApplicationActivity(
-        CropPagerFragment::class.java
-    ) {
+    ApplicationActivity(CropPagerFragment::class.java) {
 
     private companion object {
         const val EXTRA_CROP_URIS = "com.w2sv.autocrop.CROP_URIS"
@@ -63,7 +62,7 @@ class CropExaminationActivity :
     }
 
     fun startMainActivity() {
-        super.startMainActivity(true) {
+        MainActivity.restart(this, true) {
             it
                 .putParcelableArrayListExtra(EXTRA_CROP_URIS, viewModel.writeUris)
                 .putExtra(EXTRA_N_DELETED_SCREENSHOTS, viewModel.nDeletedScreenshots)

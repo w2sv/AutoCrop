@@ -18,6 +18,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
@@ -34,6 +35,20 @@ class MainActivity :
 
     companion object {
         const val EXTRA_SELECTED_IMAGE_URIS = "com.w2sv.autocrop.extra.SELECTED_IMAGE_URIS"
+
+        fun restart(context: Context, withReturnAnimation: Boolean = true, configureIntent: ((Intent) -> Intent)? = null) {
+            context.startActivity(
+                Intent(
+                    context,
+                    MainActivity::class.java
+                )
+                    .apply {
+                        configureIntent?.invoke(this)
+                    }
+            )
+            if (withReturnAnimation)
+                Animatoo.animateSwipeRight(context)
+        }
     }
 
     @HiltViewModel
