@@ -22,8 +22,8 @@ android {
         targetSdkVersion COMPILE_SDK_VERSION
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
 
-        versionCode 29
-        versionName '3.2.4'
+        versionCode 30
+        versionName '3.2.5'
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'
@@ -83,7 +83,7 @@ dependencies {
     implementation project(path: ':bidirectionalviewpager')
     implementation project(path: ':permissionhandler')
     implementation 'com.github.w2sv:kotlinutils:0.0.2.1'
-    implementation 'com.github.w2sv:ViewboundController:0.0.5'
+    implementation 'com.github.w2sv:ViewboundController:main-SNAPSHOT'
     implementation 'com.github.w2sv:TypedPreferences:1.0.0'
 
     // Androidx
