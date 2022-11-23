@@ -25,8 +25,26 @@ class AboutFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.setOnClickListeners()
+    }
+
+    private fun FragmentAboutBinding.setOnClickListeners() {
+        appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
+        logoIv.setOnClickListener { it.animate(Techniques.Tada) }
+        versionTv.setOnClickListener { it.animate(Techniques.RubberBand) }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        viewLifecycleOwner.lifecycle.addObserver(binding.copyrightTv)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         if (!booleanPreferences.aboutFragmentInstructionsShown)
-            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_medium)) {
+            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
                 requireActivity()
                     .snackyBuilder(
                         "Check out what happens if you click on the different view elements!",
@@ -36,14 +54,5 @@ class AboutFragment :
                     .build()
                     .show()
             }
-
-        binding.setOnClickListeners()
-        viewLifecycleOwner.lifecycle.addObserver(binding.copyrightTv)
-    }
-
-    private fun FragmentAboutBinding.setOnClickListeners() {
-        appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
-        logoIv.setOnClickListener { it.animate(Techniques.Tada) }
-        versionTv.setOnClickListener { it.animate(Techniques.RubberBand) }
     }
 }

@@ -2,15 +2,16 @@ package com.w2sv.autocrop.activities.main.fragments
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatTextView
 import com.w2sv.autocrop.BuildConfig
-import com.w2sv.autocrop.ui.views.ExtendedAppCompatTextView
+import com.w2sv.autocrop.utils.android.extensions.textString
 
 class VersionTextView(context: Context, attr: AttributeSet) :
-    ExtendedAppCompatTextView(context, attr) {
+    AppCompatTextView(context, attr) {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        text = template.format(BuildConfig.VERSION_NAME)
+        text = textString.format(BuildConfig.VERSION_NAME)
     }
 }

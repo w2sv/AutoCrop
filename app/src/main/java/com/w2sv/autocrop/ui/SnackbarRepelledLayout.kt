@@ -16,6 +16,7 @@ class SnackbarRepelledLayout(context: Context, private val attributeSet: Attribu
     CoordinatorLayout.AttachedBehavior {
 
     class Behavior(context: Context?, attrs: AttributeSet?) : CoordinatorLayout.Behavior<View?>(context, attrs) {
+
         override fun layoutDependsOn(parent: CoordinatorLayout, child: View, dependency: View): Boolean =
             (dependency is SnackbarLayout)
 

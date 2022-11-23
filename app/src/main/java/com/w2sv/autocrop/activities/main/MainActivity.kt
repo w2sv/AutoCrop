@@ -45,7 +45,7 @@ class MainActivity :
             MutableLiveData()
         }
 
-        companion object{
+        companion object {
             var displayedSplashScreen = false
         }
     }
@@ -62,7 +62,7 @@ class MainActivity :
             )
     }
 
-    private fun handleSplashScreen(){
+    private fun handleSplashScreen() {
         installSplashScreen().apply {
             if (!ViewModel.displayedSplashScreen) {
                 setExitAnimation()
