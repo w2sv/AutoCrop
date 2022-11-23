@@ -83,7 +83,7 @@ dependencies {
     implementation project(path: ':bidirectionalviewpager')
     implementation project(path: ':permissionhandler')
     implementation 'com.github.w2sv:kotlinutils:0.0.2.1'
-    implementation 'com.github.w2sv:ViewboundController:main-SNAPSHOT'
+    implementation 'com.github.w2sv:ViewboundController:0.0.6'
     implementation 'com.github.w2sv:TypedPreferences:1.0.0'
 
     // Androidx
