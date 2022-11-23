@@ -5,7 +5,6 @@ import android.app.ActivityManager
 import android.app.Service
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -22,12 +21,6 @@ fun Context.getColoredIcon(@DrawableRes drawableId: Int, @ColorRes colorId: Int)
 
 fun Context.getThemedColor(@ColorRes id: Int): Int =
     resources.getColor(id, theme)
-
-/**
- * [Context.getSharedPreferences] with key=[Context.getPackageName] and [Context.MODE_PRIVATE]
- */
-fun Context.getApplicationWideSharedPreferences(): SharedPreferences =
-    getSharedPreferences(packageName, Context.MODE_PRIVATE)
 
 fun Context.uriPermissionGranted(uri: Uri, permissionCode: Int): Boolean =
     checkUriPermission(

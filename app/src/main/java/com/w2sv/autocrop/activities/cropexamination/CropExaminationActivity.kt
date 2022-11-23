@@ -79,7 +79,7 @@ class CropExaminationActivity :
                         Results(
                             it,
                             get(EXTRA_N_DELETED_SCREENSHOTS)!!,
-                            get(EXTRA_SAVE_DIR_NAME)!!
+                            get(EXTRA_SAVE_DIR_NAME)
                         )
                     }
                 }

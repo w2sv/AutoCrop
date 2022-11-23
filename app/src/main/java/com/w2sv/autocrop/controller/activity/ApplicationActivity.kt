@@ -29,10 +29,10 @@ abstract class ApplicationActivity(
             lifecycle.addObserver(it)
         }
 
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+
         if (savedInstanceState == null)
             launchRootFragment()
-
-        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     protected abstract val onBackPressedCallback: OnBackPressedCallback

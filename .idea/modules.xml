@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/AutoCrop.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/AutoCrop.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bidirectionalviewpager/AutoCrop.bidirectionalviewpager.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/bidirectionalviewpager/AutoCrop.bidirectionalviewpager.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/permissionhandler/AutoCrop.permissionhandler.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/permissionhandler/AutoCrop.permissionhandler.androidTest.iml" />
+    </modules>
+  </component>
+</project>
