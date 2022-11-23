@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import com.w2sv.autocrop.BuildConfig
-import com.w2sv.autocrop.utils.android.extensions.textString
+import com.w2sv.autocrop.R
 
 class VersionTextView(context: Context, attr: AttributeSet) :
     AppCompatTextView(context, attr) {
@@ -12,6 +12,6 @@ class VersionTextView(context: Context, attr: AttributeSet) :
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        text = textString.format(BuildConfig.VERSION_NAME)
+        text = resources.getString(R.string.version, BuildConfig.VERSION_NAME)
     }
 }

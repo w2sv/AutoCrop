@@ -75,7 +75,7 @@ class PermissionHandler(
      * Function wrapper either directly running [onGranted] if permission granted,
      * otherwise sets [onGranted] and launches [requestPermissions]
      */
-    fun requestPermission(onGranted: UnitFun, onDenied: UnitFun? = null): Unit =
+    fun requestPermission(onGranted: UnitFun, onDenied: UnitFun? = null) {
         if (!grantRequired)
             onGranted()
         else {
@@ -84,6 +84,7 @@ class PermissionHandler(
 
             requestPermission.launch(permission)
         }
+    }
 
     /**
      * Temporary callable to be set before, and to be cleared on exiting of [onRequestPermissionResult]

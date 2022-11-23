@@ -2,7 +2,6 @@ package com.w2sv.autocrop.utils.android.extensions
 
 import android.content.Context
 import android.view.View
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -87,5 +86,3 @@ fun Context.activityContext(): Context =
 
 inline fun <reified VM : ViewModel> View.activityViewModelImmediate(): VM =
     activityViewModel<VM>().value
-
-val AppCompatTextView.textString: String get() = text as String
