@@ -170,7 +170,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     }
 
     private fun goToGithub() {
-        activity
+        context
             .goToWebpage("https://github.com/w2sv/autocrop")
     }
 

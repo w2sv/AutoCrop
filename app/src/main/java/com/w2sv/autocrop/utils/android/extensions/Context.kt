@@ -5,6 +5,7 @@ import android.app.ActivityManager
 import android.app.Service
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -41,4 +42,13 @@ inline fun <reified T : Service> Context.serviceRunning() =
     (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
         .getRunningServices(Integer.MAX_VALUE)
         .any { it.service.className == T::class.java.name }
+
+fun Context.goToWebpage(url: String) {
+    startActivity(
+        Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse(url)
+        )
+    )
+}
 

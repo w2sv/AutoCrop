@@ -26,18 +26,13 @@ class AboutFragment :
         super.onViewCreated(view, savedInstanceState)
 
         binding.setOnClickListeners()
+        viewLifecycleOwner.lifecycle.addObserver(binding.copyrightTv)
     }
 
     private fun FragmentAboutBinding.setOnClickListeners() {
         appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
         logoIv.setOnClickListener { it.animate(Techniques.Tada) }
         versionTv.setOnClickListener { it.animate(Techniques.RubberBand) }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        viewLifecycleOwner.lifecycle.addObserver(binding.copyrightTv)
     }
 
     override fun onResume() {

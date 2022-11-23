@@ -1,21 +1,10 @@
 package com.w2sv.autocrop.utils.android.extensions
 
 import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import de.mateware.snacky.Snacky
-
-fun Activity.goToWebpage(url: String) {
-    startActivity(
-        Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse(url)
-        )
-    )
-}
 
 fun Activity.snackyBuilder(text: CharSequence, duration: Int = Snacky.LENGTH_LONG): Snacky.Builder =
     Snacky.builder()

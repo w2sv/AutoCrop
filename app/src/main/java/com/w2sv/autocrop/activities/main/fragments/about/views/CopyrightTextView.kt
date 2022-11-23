@@ -3,18 +3,20 @@ package com.w2sv.autocrop.activities.main.fragments.about.views
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.controller.retriever.ActivityRetriever
-import com.w2sv.autocrop.ui.views.AnimationHandler
 import com.w2sv.autocrop.utils.android.extensions.animationComposer
 import com.w2sv.autocrop.utils.android.extensions.goToWebpage
 import java.util.Calendar
 
 class CopyrightTextView(context: Context, attr: AttributeSet) :
     AppCompatTextView(context, attr),
-    AnimationHandler by AnimationHandler.Implementation(),
-    ActivityRetriever by ActivityRetriever.Implementation(context) {
+    DefaultLifecycleObserver {
+
+    private var animation: YoYo.YoYoString? = null
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -25,9 +27,15 @@ class CopyrightTextView(context: Context, attr: AttributeSet) :
             animation = it
                 .animationComposer(Techniques.ZoomOutRight)
                 .onEnd {
-                    activity.goToWebpage("https://github.com/w2sv/AutoCrop/blob/master/LICENSE")
+                    context.goToWebpage("https://github.com/w2sv/AutoCrop/blob/master/LICENSE")
                 }
                 .playOn(it)
         }
+    }
+
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+
+        animation?.stop(true)
     }
 }

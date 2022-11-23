@@ -10,11 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/VersionTextView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/VersionTextView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/about/AboutFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/about/AboutFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/about/views/CopyrightTextView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/about/views/CopyrightTextView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/ui/views/FractionTextView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/ui/views/FractionTextView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/utils/android/extensions/View.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/utils/android/extensions/View.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/permissionhandler/src/main/java/com/w2sv/permissionhandler/PermissionHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/permissionhandler/src/main/java/com/w2sv/permissionhandler/PermissionHandler.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldNavigationView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldNavigationView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/ui/views/AnimationHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/ui/views/AnimationHandler.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/utils/android/extensions/Activity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/utils/android/extensions/Activity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/utils/android/extensions/Context.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/w2sv/autocrop/utils/android/extensions/Context.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,7 +204,7 @@
     "full.screen.before.presentation.mode": "false",
     "ignore.preview.features.used": "true",
     "last_directory_selection": "/home/w2sv/Dev/android/AutoCrop/app/src/test/java/com/autocrop/utils",
-    "last_opened_file_path": "/home/w2sv/Dev/Android/AutoCrop",
+    "last_opened_file_path": "/home/w2sv/Dev/Android/AutoCrop/app/release/3.2.5.aab",
     "memory.settings.postsync.last.time.stamp": "1667399042919",
     "project.structure.last.edited": "Build Variants",
     "project.structure.proportion": "0.17",
