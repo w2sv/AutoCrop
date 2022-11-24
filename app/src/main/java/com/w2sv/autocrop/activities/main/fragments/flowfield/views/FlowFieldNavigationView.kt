@@ -13,23 +13,23 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.navigation.NavigationView
+import com.w2sv.androidutils.extensions.configureItem
+import com.w2sv.androidutils.extensions.getColoredIcon
+import com.w2sv.androidutils.extensions.goToWebpage
+import com.w2sv.androidutils.extensions.hiltActivityViewModel
+import com.w2sv.androidutils.extensions.ifNotInEditMode
+import com.w2sv.androidutils.extensions.postValue
+import com.w2sv.androidutils.extensions.serviceRunning
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.controller.retriever.ActivityRetriever
+import com.w2sv.autocrop.controller.activity.FragmentHostingActivity
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
-import com.w2sv.autocrop.utils.android.IMAGE_MIME_TYPE
-import com.w2sv.autocrop.utils.android.extensions.activityViewModel
-import com.w2sv.autocrop.utils.android.extensions.configureItem
-import com.w2sv.autocrop.utils.android.extensions.getColoredIcon
-import com.w2sv.autocrop.utils.android.extensions.goToWebpage
-import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
-import com.w2sv.autocrop.utils.android.extensions.postValue
-import com.w2sv.autocrop.utils.android.extensions.serviceRunning
-import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
+import com.w2sv.autocrop.utils.IMAGE_MIME_TYPE
+import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.permissionhandler.requestPermissions
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -37,14 +37,15 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     NavigationView(context, attributeSet),
-    ActivityRetriever by ActivityRetriever.Implementation(context) {
+    FragmentHostingActivity.Retriever by FragmentHostingActivity.Retriever.Implementation(context) {
 
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
+
     @Inject
     lateinit var uriPreferences: UriPreferences
 
-    private val activityViewModel by activityViewModel<MainActivity.ViewModel>()
+    private val activityViewModel by hiltActivityViewModel<MainActivity.ViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

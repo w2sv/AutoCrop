@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.utils.android.extensions
+package com.w2sv.autocrop.utils.extensions
 
 import android.content.ContentResolver
 import android.graphics.Bitmap

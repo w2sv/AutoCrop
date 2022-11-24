@@ -5,13 +5,13 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.findFragment
+import com.w2sv.androidutils.ActivityRetriever
+import com.w2sv.androidutils.extensions.show
+import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPagerFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.dialogs.CropDialog
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.dialogs.CropEntiretyDialog
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmodel.CropPagerViewModel
-import com.w2sv.autocrop.controller.retriever.ActivityRetriever
-import com.w2sv.autocrop.utils.android.extensions.show
-import com.w2sv.autocrop.utils.android.extensions.viewModel
 
 class CropImageView(context: Context, attributeSet: AttributeSet) :
     AppCompatImageView(context, attributeSet),

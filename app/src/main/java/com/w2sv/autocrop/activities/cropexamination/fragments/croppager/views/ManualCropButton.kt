@@ -3,15 +3,15 @@ package com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
+import com.w2sv.androidutils.extensions.ifNotInEditMode
+import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropFragment
-import com.w2sv.autocrop.controller.retriever.ActivityRetriever
-import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
-import com.w2sv.autocrop.utils.android.extensions.viewModel
+import com.w2sv.autocrop.controller.activity.FragmentHostingActivity
 
 class ManualCropButton(context: Context, attributeSet: AttributeSet) :
     AppCompatImageButton(context, attributeSet),
-    ActivityRetriever by ActivityRetriever.Implementation(context) {
+    FragmentHostingActivity.Retriever by FragmentHostingActivity.Retriever.Implementation(context) {
 
     private val viewModel by viewModel<CropPagerViewModel>()
 

@@ -12,7 +12,7 @@ import com.w2sv.autocrop.cropping.cropbundle.Screenshot
 import com.w2sv.autocrop.cropping.cropbundle.carryOutCropIO
 import com.w2sv.autocrop.cropping.cropbundle.deleteRequestUri
 import com.w2sv.autocrop.preferences.UriPreferences
-import com.w2sv.autocrop.utils.android.extensions.queryMediaStoreDatum
+import com.w2sv.autocrop.utils.extensions.queryMediaStoreDatum
 import com.w2sv.kotlinutils.UnitFun
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.toInt

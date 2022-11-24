@@ -5,9 +5,9 @@ import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.core.text.italic
+import com.w2sv.androidutils.extensions.getColoredIcon
+import com.w2sv.androidutils.ui.UncancelableDialogFragment
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.views.UncancelableDialogFragment
-import com.w2sv.autocrop.utils.android.extensions.getColoredIcon
 
 class ScreenshotListenerDialog : UncancelableDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =

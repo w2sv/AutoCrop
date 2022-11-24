@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import com.daimajia.androidanimations.library.Techniques
+import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
 import com.w2sv.autocrop.controller.ApplicationFragment
 import com.w2sv.autocrop.databinding.FragmentApptitleBinding
-import com.w2sv.autocrop.utils.android.extensions.animationComposer
-import com.w2sv.autocrop.utils.android.extensions.getLong
+import com.w2sv.autocrop.ui.animationComposer
 
 class AppTitleFragment
     : ApplicationFragment<FragmentApptitleBinding>(FragmentApptitleBinding::class.java) {

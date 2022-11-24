@@ -3,6 +3,8 @@ package com.w2sv.autocrop.screenshotlistening.notifications
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.core.app.NotificationCompat
+import com.w2sv.androidutils.extensions.notificationManager
+import com.w2sv.androidutils.extensions.showNotification
 import slimber.log.i
 
 class NotificationGroup(
@@ -12,6 +14,7 @@ class NotificationGroup(
     private val makeSummaryTitle: (Int) -> String,
     private val applyToSummaryBuilder: ((NotificationCompat.Builder) -> NotificationCompat.Builder)? = null
 ) : ContextWrapper(context) {
+
     val children = UniqueNotificationIdsWithBuilder(summaryId)
     private val channelId: String get() = summaryId.channelId
     private val groupKey = "GROUP_${summaryId.name}"

@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.core.text.bold
 import androidx.core.text.color
+import com.w2sv.androidutils.extensions.getColoredIcon
+import com.w2sv.androidutils.extensions.getThemedColor
+import com.w2sv.androidutils.ui.UncancelableDialogFragment
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.views.UncancelableDialogFragment
-import com.w2sv.autocrop.utils.android.extensions.getColoredIcon
-import com.w2sv.autocrop.utils.android.extensions.getThemedColor
 
 class CropPagerInstructionsDialog : UncancelableDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =

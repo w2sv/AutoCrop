@@ -4,8 +4,8 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.core.text.italic
+import com.w2sv.androidutils.ui.UncancelableDialogFragment
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.views.UncancelableDialogFragment
 
 class WelcomeDialog : UncancelableDialogFragment() {
 

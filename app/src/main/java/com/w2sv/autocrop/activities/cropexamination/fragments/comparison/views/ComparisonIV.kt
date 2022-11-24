@@ -9,9 +9,9 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
+import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonViewModel
-import com.w2sv.autocrop.utils.android.extensions.toggle
 
 class ComparisonIV(context: Context, attributeSet: AttributeSet) :
     AppCompatImageView(context, attributeSet) {

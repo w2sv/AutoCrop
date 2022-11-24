@@ -4,15 +4,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import androidx.core.app.NotificationCompat
+import com.w2sv.androidutils.extensions.notificationManager
 import com.w2sv.autocrop.R
-
-fun Context.showNotification(id: Int, builder: NotificationCompat.Builder) {
-    notificationManager()
-        .notify(
-            id,
-            builder.build()
-        )
-}
 
 fun Context.notificationBuilderWithSetChannel(
     channelId: String,
@@ -38,6 +31,3 @@ private fun Context.notificationBuilder(
         .setSmallIcon(R.drawable.ic_scissors_24)
         .setContentTitle(title)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-fun Context.notificationManager(): NotificationManager =
-    (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)

@@ -7,9 +7,9 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
+import com.w2sv.androidutils.extensions.goToWebpage
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.utils.android.extensions.animationComposer
-import com.w2sv.autocrop.utils.android.extensions.goToWebpage
+import com.w2sv.autocrop.ui.animationComposer
 import java.util.Calendar
 
 class CopyrightTextView(context: Context, attr: AttributeSet) :

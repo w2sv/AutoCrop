@@ -4,14 +4,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.daimajia.androidanimations.library.Techniques
+import com.w2sv.androidutils.extensions.getLong
+import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.controller.ApplicationFragment
 import com.w2sv.autocrop.databinding.FragmentAboutBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.utils.android.extensions.animate
-import com.w2sv.autocrop.utils.android.extensions.getLong
-import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
-import com.w2sv.kotlinutils.extensions.launchDelayed
+import com.w2sv.autocrop.ui.animate
+import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

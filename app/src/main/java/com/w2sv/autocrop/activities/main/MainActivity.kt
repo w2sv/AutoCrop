@@ -19,14 +19,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
+import com.w2sv.androidutils.extensions.getLong
+import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.controller.activity.ApplicationActivity
 import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
-import com.w2sv.autocrop.utils.android.extensions.getLong
-import com.w2sv.autocrop.utils.android.extensions.postValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

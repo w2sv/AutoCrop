@@ -14,7 +14,7 @@ import com.w2sv.autocrop.controller.ApplicationFragment
 import com.w2sv.autocrop.cropping.CropEdges
 import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.autocrop.databinding.FragmentManualCropBinding
-import com.w2sv.autocrop.utils.android.extensions.loadBitmap
+import com.w2sv.autocrop.utils.extensions.loadBitmap
 import com.w2sv.kotlinutils.extensions.rounded
 import kotlin.math.max
 import kotlin.math.min
@@ -115,7 +115,7 @@ class ManualCropFragment
             parentFragmentManager.popBackStackImmediate()
 
             // notify ResultListener
-            (fragmentHostingActivity.getCurrentFragment() as ResultListener)
+            (getFragmentHostingActivity().getCurrentFragment() as ResultListener)
                 .onResult(viewModel.cropEdges.value!!)
         }
     }

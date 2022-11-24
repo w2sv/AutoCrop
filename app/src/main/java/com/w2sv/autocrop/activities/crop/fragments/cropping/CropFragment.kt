@@ -9,6 +9,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
+import com.w2sv.androidutils.BackPressListener
+import com.w2sv.androidutils.extensions.getLong
+import com.w2sv.androidutils.extensions.launch
+import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailedFragment
@@ -21,12 +25,8 @@ import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.autocrop.cropping.cropbundle.Screenshot
 import com.w2sv.autocrop.cropping.maxHeightEdges
 import com.w2sv.autocrop.databinding.FragmentCropBinding
-import com.w2sv.autocrop.utils.android.BackPressListener
-import com.w2sv.autocrop.utils.android.extensions.getLong
-import com.w2sv.autocrop.utils.android.extensions.loadBitmap
-import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
-import com.w2sv.kotlinutils.extensions.executeAsyncTask
-import com.w2sv.kotlinutils.extensions.launchDelayed
+import com.w2sv.autocrop.utils.extensions.loadBitmap
+import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import kotlinx.coroutines.Job
 
 class CropFragment
@@ -67,7 +67,7 @@ class CropFragment
     override fun onResume() {
         super.onResume()
 
-        cropJob = lifecycleScope.executeAsyncTask(
+        cropJob = lifecycleScope.launch(
             { cropImages() },
             { proceed() }
         )
@@ -105,7 +105,7 @@ class CropFragment
         else
             lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
                 // delay briefly to assure progress bar having reached 100% before UI change
-                fragmentHostingActivity
+                getFragmentHostingActivity()
                     .fragmentReplacementTransaction(CroppingFailedFragment())
                     .commit()
             }

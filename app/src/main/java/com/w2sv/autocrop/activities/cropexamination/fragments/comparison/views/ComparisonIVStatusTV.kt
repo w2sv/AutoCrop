@@ -5,13 +5,13 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.daimajia.androidanimations.library.YoYo
+import com.w2sv.androidutils.extensions.getLong
+import com.w2sv.androidutils.extensions.ifNotInEditMode
+import com.w2sv.androidutils.extensions.show
+import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonViewModel
-import com.w2sv.autocrop.utils.android.extensions.fadeOut
-import com.w2sv.autocrop.utils.android.extensions.getLong
-import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
-import com.w2sv.autocrop.utils.android.extensions.show
-import com.w2sv.autocrop.utils.android.extensions.viewModelImmediate
+import com.w2sv.autocrop.ui.fadeOut
 
 class ComparisonIVStatusTV(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
 
@@ -19,7 +19,7 @@ class ComparisonIVStatusTV(context: Context, attributeSet: AttributeSet) : AppCo
         super.onAttachedToWindow()
 
         ifNotInEditMode {
-            viewModelImmediate<ComparisonViewModel>().displayScreenshot.observe(findViewTreeLifecycleOwner()!!) {
+            viewModel<ComparisonViewModel>().value.displayScreenshot.observe(findViewTreeLifecycleOwner()!!) {
                 fadeOutAnimation?.stop()
 
                 text = resources.getString(if (it) R.string.screenshot else R.string.crop)

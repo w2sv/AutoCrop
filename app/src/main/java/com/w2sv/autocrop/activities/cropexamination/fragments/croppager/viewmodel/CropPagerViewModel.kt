@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.w2sv.androidutils.BackPressListener
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.utils.android.BackPressListener
 import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

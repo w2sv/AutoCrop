@@ -17,9 +17,9 @@ import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
-import com.w2sv.autocrop.utils.android.IMAGE_MIME_TYPE
-import com.w2sv.autocrop.utils.android.extensions.getParcelable
-import com.w2sv.autocrop.utils.android.extensions.queryMediaStoreDatum
+import com.w2sv.autocrop.utils.IMAGE_MIME_TYPE
+import com.w2sv.autocrop.utils.extensions.getParcelable
+import com.w2sv.autocrop.utils.extensions.queryMediaStoreDatum
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

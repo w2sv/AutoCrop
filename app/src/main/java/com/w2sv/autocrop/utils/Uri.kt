@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.utils.android
+package com.w2sv.autocrop.utils
 
 import android.net.Uri
 

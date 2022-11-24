@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.core.text.color
 import androidx.core.text.italic
+import com.w2sv.androidutils.extensions.getThemedColor
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.utils.android.extensions.getThemedColor
 
 class CropEntiretyDialog : AbstractCropDialog() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =

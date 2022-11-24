@@ -6,13 +6,11 @@ plugins {
 android {
     namespace 'com.w2sv.permissionhandler'
     compileSdk 33
-
     defaultConfig {
         minSdk 24
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -32,5 +30,5 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'com.github.matecode:Snacky:1.1.5'
-    implementation 'com.github.w2sv:kotlinutils:0.0.2.1'
+    implementation 'com.github.w2sv:KotlinUtils:0.0.3'
 }

@@ -13,7 +13,7 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualC
 import com.w2sv.autocrop.activities.cropexamination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.controller.activity.ApplicationActivity
-import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
+import com.w2sv.autocrop.utils.extensions.snackyBuilder
 
 class CropExaminationActivity :
     ApplicationActivity(CropPagerFragment::class.java) {

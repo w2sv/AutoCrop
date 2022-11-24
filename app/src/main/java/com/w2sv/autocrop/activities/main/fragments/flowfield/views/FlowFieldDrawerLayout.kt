@@ -6,9 +6,9 @@ import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
+import com.w2sv.androidutils.extensions.ifNotInEditMode
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
-import com.w2sv.autocrop.utils.android.extensions.ifNotInEditMode
 
 class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : DrawerLayout(context, attributeSet) {
     override fun onAttachedToWindow() {

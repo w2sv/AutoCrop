@@ -5,9 +5,9 @@ import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.bold
+import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmodel.CropPagerViewModel
-import com.w2sv.autocrop.utils.android.extensions.viewModel
 
 class DiscardingStatisticsTextView(context: Context, attr: AttributeSet) :
     AppCompatTextView(context, attr) {

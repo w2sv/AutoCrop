@@ -27,10 +27,10 @@ import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
 import com.w2sv.autocrop.screenshotlistening.notifications.notificationBuilderWithSetChannel
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
-import com.w2sv.autocrop.utils.android.extensions.compressToStream
-import com.w2sv.autocrop.utils.android.extensions.loadBitmap
-import com.w2sv.autocrop.utils.android.extensions.queryMediaStoreData
-import com.w2sv.autocrop.utils.android.systemScreenshotsDirectory
+import com.w2sv.autocrop.utils.extensions.compressToStream
+import com.w2sv.autocrop.utils.extensions.loadBitmap
+import com.w2sv.autocrop.utils.extensions.queryMediaStoreData
+import com.w2sv.autocrop.utils.systemScreenshotsDirectory
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
 import com.w2sv.kotlinutils.timeDelta
 import slimber.log.i

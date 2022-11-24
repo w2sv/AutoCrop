@@ -11,6 +11,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.TransitionInflater
 import com.daimajia.androidanimations.library.Techniques
+import com.w2sv.androidutils.extensions.getColoredIcon
+import com.w2sv.androidutils.extensions.getLong
+import com.w2sv.androidutils.extensions.getThemedColor
+import com.w2sv.androidutils.extensions.launch
+import com.w2sv.androidutils.extensions.launchDelayed
+import com.w2sv.androidutils.extensions.postValue
+import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
@@ -26,17 +33,10 @@ import com.w2sv.autocrop.cropping.CropEdges
 import com.w2sv.autocrop.cropping.cropbundle.Crop
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.utils.android.extensions.animate
-import com.w2sv.autocrop.utils.android.extensions.crossFade
-import com.w2sv.autocrop.utils.android.extensions.getColoredIcon
-import com.w2sv.autocrop.utils.android.extensions.getLong
-import com.w2sv.autocrop.utils.android.extensions.getThemedColor
-import com.w2sv.autocrop.utils.android.extensions.loadBitmap
-import com.w2sv.autocrop.utils.android.extensions.postValue
-import com.w2sv.autocrop.utils.android.extensions.show
-import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
-import com.w2sv.kotlinutils.extensions.executeAsyncTask
-import com.w2sv.kotlinutils.extensions.launchDelayed
+import com.w2sv.autocrop.ui.animate
+import com.w2sv.autocrop.ui.crossFade
+import com.w2sv.autocrop.utils.extensions.loadBitmap
+import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
 import de.mateware.snacky.Snacky
@@ -212,7 +212,7 @@ class CropPagerFragment :
     override fun onResult(confirmed: Boolean, dataSetPosition: Int) {
         if (confirmed)
             with(activityViewModel) {
-                singularCropSavingJob = lifecycleScope.executeAsyncTask(
+                singularCropSavingJob = lifecycleScope.launch(
                     makeCropBundleProcessor(
                         dataSetPosition,
                         booleanPreferences.deleteScreenshots,
@@ -229,7 +229,7 @@ class CropPagerFragment :
 
     override fun onResult(confirmed: Boolean) {
         if (confirmed)
-            fragmentHostingActivity
+            getFragmentHostingActivity()
                 .fragmentReplacementTransaction(SaveAllFragment(), true)
                 .commit()
         else

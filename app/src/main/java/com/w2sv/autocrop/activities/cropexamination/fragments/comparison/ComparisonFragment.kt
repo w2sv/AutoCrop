@@ -12,20 +12,20 @@ import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
 import com.google.android.material.snackbar.Snackbar
+import com.w2sv.androidutils.extensions.getLong
+import com.w2sv.androidutils.extensions.hideSystemBars
+import com.w2sv.androidutils.extensions.launchDelayed
+import com.w2sv.androidutils.extensions.postValue
+import com.w2sv.androidutils.extensions.remove
+import com.w2sv.androidutils.extensions.show
+import com.w2sv.androidutils.extensions.showSystemBars
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.controller.ApplicationFragment
 import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.utils.android.extensions.getLong
-import com.w2sv.autocrop.utils.android.extensions.hide
-import com.w2sv.autocrop.utils.android.extensions.hideSystemBars
-import com.w2sv.autocrop.utils.android.extensions.loadBitmap
-import com.w2sv.autocrop.utils.android.extensions.postValue
-import com.w2sv.autocrop.utils.android.extensions.show
-import com.w2sv.autocrop.utils.android.extensions.showSystemBars
-import com.w2sv.autocrop.utils.android.extensions.snackyBuilder
-import com.w2sv.kotlinutils.extensions.launchDelayed
+import com.w2sv.autocrop.utils.extensions.loadBitmap
+import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -106,7 +106,7 @@ class ComparisonFragment
                 if (it)
                     show()
                 else
-                    hide()
+                    remove()
             }
         }
     }

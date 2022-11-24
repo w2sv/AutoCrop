@@ -10,13 +10,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.w2sv.androidutils.extensions.getLong
+import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
 import com.w2sv.autocrop.activities.cropexamination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.controller.ApplicationFragment
 import com.w2sv.autocrop.databinding.FragmentDeletionQueryBinding
-import com.w2sv.autocrop.utils.android.extensions.getLong
-import com.w2sv.kotlinutils.extensions.launchDelayed
 
 class DeletionConfirmationDialogFragment :
     ApplicationFragment<FragmentDeletionQueryBinding>(FragmentDeletionQueryBinding::class.java) {
@@ -49,7 +49,7 @@ class DeletionConfirmationDialogFragment :
 
             // launch appTitleFragment after small delay for UX smoothness
             lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
-                fragmentHostingActivity.fragmentReplacementTransaction(AppTitleFragment())
+                getFragmentHostingActivity().fragmentReplacementTransaction(AppTitleFragment())
                     .commit()
             }
         }

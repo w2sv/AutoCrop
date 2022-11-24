@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.findFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.utils.android.IMAGE_MIME_TYPE
+import com.w2sv.autocrop.utils.IMAGE_MIME_TYPE
 
 class ImageSelectionButton(context: Context, attributeSet: AttributeSet) :
     AppCompatButton(context, attributeSet) {

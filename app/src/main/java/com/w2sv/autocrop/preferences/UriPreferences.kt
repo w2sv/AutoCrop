@@ -5,8 +5,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.provider.DocumentsContract
-import com.w2sv.autocrop.utils.android.extensions.uriPermissionGranted
-import com.w2sv.kotlinutils.delegates.mapObserver
+import com.w2sv.androidutils.extensions.uriPermissionGranted
+import com.w2sv.kotlinutils.delegates.MapObserver
 import com.w2sv.typedpreferences.descendants.UriPreferences
 import slimber.log.i
 import javax.inject.Inject
@@ -21,7 +21,7 @@ class UriPreferences @Inject constructor(sharedPreferences: SharedPreferences) :
     /**
      * Inherently build [documentUri]
      */
-    var treeUri: Uri? by mapObserver(this) { _, oldValue, newValue ->
+    var treeUri: Uri? by MapObserver(this) { _, oldValue, newValue ->
         if (newValue != null && oldValue != newValue)
             documentUri = DocumentsContract.buildDocumentUriUsingTree(
                 treeUri,

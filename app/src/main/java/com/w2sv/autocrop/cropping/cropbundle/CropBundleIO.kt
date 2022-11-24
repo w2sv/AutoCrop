@@ -11,10 +11,10 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import com.w2sv.autocrop.utils.android.ImageMimeType
-import com.w2sv.autocrop.utils.android.extensions.compressToStream
-import com.w2sv.autocrop.utils.android.extensions.deleteImage
-import com.w2sv.autocrop.utils.android.systemPicturesDirectory
+import com.w2sv.autocrop.utils.ImageMimeType
+import com.w2sv.autocrop.utils.extensions.compressToStream
+import com.w2sv.autocrop.utils.extensions.deleteImage
+import com.w2sv.autocrop.utils.systemPicturesDirectory
 import com.w2sv.kotlinutils.dateTimeNow
 import slimber.log.i
 import java.io.File

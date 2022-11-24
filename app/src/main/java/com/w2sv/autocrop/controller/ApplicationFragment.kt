@@ -10,8 +10,7 @@ import com.w2sv.autocrop.controller.activity.FragmentHostingActivity
 import com.w2sv.viewboundcontroller.ViewBoundFragment
 
 abstract class ApplicationFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
-    ViewBoundFragment<VB>(bindingClass),
-    FragmentHostingActivity.Retriever {
+    ViewBoundFragment<VB>(bindingClass) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
@@ -27,6 +26,6 @@ abstract class ApplicationFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
     protected fun <A : Activity> castActivity(): A =
         requireActivity() as A
 
-    override val fragmentHostingActivity: FragmentHostingActivity
-        get() = requireActivity() as FragmentHostingActivity
+    protected fun getFragmentHostingActivity(): FragmentHostingActivity =
+        castActivity()
 }
