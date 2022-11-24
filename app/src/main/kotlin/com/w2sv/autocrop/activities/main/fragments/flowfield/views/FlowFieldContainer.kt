@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.w2sv.androidutils.ActivityRetriever
 import com.w2sv.androidutils.extensions.ifNotInEditMode
-import com.w2sv.autocrop.activities.main.fragments.flowfield.views.sketch.FlowFieldSketch
+import com.w2sv.autocrop.flowfield.FlowFieldSketch
 import com.w2sv.autocrop.utils.extensions.resolution
 import processing.android.PFragment
 

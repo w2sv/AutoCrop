@@ -48,12 +48,10 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
-
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            debuggable false  // set to true to get logs while in release mode
+//            debuggable true
         }
     }
     compileOptions {
@@ -71,6 +69,11 @@ android {
     }
     buildFeatures {
         viewBinding true
+    }
+    sourceSets {
+        getByName("main").java.srcDirs("src/main/kotlin")
+        getByName("test").java.srcDirs("src/test/kotlin")
+        getByName("androidTest").java.srcDirs("src/androidTest/kotlin")
     }
 }
 dependencies {

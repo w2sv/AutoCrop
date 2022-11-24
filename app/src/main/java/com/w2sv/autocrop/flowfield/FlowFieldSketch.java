@@ -2,7 +2,7 @@
  * Core graphical algorithm by Daniel Shiffman @ https://thecodingtrain.com/CodingChallenges/024-perlinnoiseflowfield.html
  */
 
-package com.w2sv.autocrop.activities.main.fragments.flowfield.views.sketch;
+package com.w2sv.autocrop.flowfield;
 
 import java.util.ArrayList;
 

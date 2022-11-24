@@ -1,6 +1,6 @@
 package com.w2sv.autocrop.activities.cropexamination
 
-import com.w2sv.autocrop.utils.android.ImageMimeType
+import com.w2sv.autocrop.utils.ImageMimeType
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
