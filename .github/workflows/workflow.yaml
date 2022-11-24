@@ -28,7 +28,7 @@ jobs:
       - name: Run Unit tests
         run: |
           chmod +x gradlew
-          make unit-test
+          ./gradlew test
 
   instrumentation-tests:
     # @https://github.com/ReactiveCircus/android-emulator-runner
