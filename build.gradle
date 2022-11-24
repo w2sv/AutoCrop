@@ -5,3 +5,10 @@ plugins {
     id 'de.mannodermaus.android-junit5' version '1.8.2.1' apply false
 //    id 'com.autonomousapps.dependency-analysis' version '1.16.0'
 }
+
+ext {
+    compileSdkVersion = 33
+    minSdkVersion = 26
+    kotlinVersion = '1.7.20'
+    packageName = 'com.w2sv.autocrop'
+}

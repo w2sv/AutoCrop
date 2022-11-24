@@ -8,18 +8,14 @@ plugins {
 }
 
 android {
-    def MIN_SDK_VERSION = 26
-    def COMPILE_SDK_VERSION = 33
-    def PACKAGE_NAME = 'com.w2sv.autocrop'
-
-    compileSdkVersion COMPILE_SDK_VERSION
-    namespace PACKAGE_NAME
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    namespace rootProject.ext.packageName
 
     defaultConfig {
-        applicationId PACKAGE_NAME
+        applicationId rootProject.ext.packageName
 
-        minSdkVersion MIN_SDK_VERSION
-        targetSdkVersion COMPILE_SDK_VERSION
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.compileSdkVersion
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
 
         versionCode 30
@@ -29,8 +25,8 @@ android {
         testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'
     }
     signingConfigs {
-        // create release signingConfig from keystore.properties file, if present
         release {
+            // create release signingConfig from keystore.properties file, if present
             rootProject.file("keystore.properties").with { file ->
                 if (file.exists()) {
                     def keystoreProperties = new Properties()
@@ -70,14 +66,9 @@ android {
     buildFeatures {
         viewBinding true
     }
-    sourceSets {
-        getByName("main").java.srcDirs("src/main/kotlin")
-        getByName("test").java.srcDirs("src/test/kotlin")
-        getByName("androidTest").java.srcDirs("src/androidTest/kotlin")
-    }
 }
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
     // Processing
     implementation files('libs/processing-core-4.3.0.jar')
