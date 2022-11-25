@@ -22,7 +22,6 @@ import com.w2sv.autocrop.cropping.cropbundle.CROP_FILE_ADDENDUM
 import com.w2sv.autocrop.cropping.cropbundle.Screenshot
 import com.w2sv.autocrop.cropping.cropbundle.deleteRequestUri
 import com.w2sv.autocrop.cropping.cropped
-import com.w2sv.autocrop.screenshotlistening.PendingIntentRenderer
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
 import com.w2sv.autocrop.screenshotlistening.notifications.notificationBuilderWithSetChannel
@@ -38,6 +37,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.Date
 import java.util.concurrent.TimeUnit
+import kotlin.reflect.KFunction4
+
+private typealias PendingIntentRenderer = KFunction4<Context, Int, Intent, Int, PendingIntent>
 
 class ScreenshotListener :
     BoundService(),

@@ -12,7 +12,7 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.deletionconfirmati
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
-import com.w2sv.autocrop.controller.activity.ApplicationActivity
+import com.w2sv.autocrop.activities.ApplicationActivity
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 
 class CropExaminationActivity :

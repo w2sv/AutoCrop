@@ -7,7 +7,7 @@ import com.w2sv.androidutils.extensions.ifNotInEditMode
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropFragment
-import com.w2sv.autocrop.controller.activity.FragmentHostingActivity
+import com.w2sv.autocrop.activities.FragmentHostingActivity
 
 class ManualCropButton(context: Context, attributeSet: AttributeSet) :
     AppCompatImageButton(context, attributeSet),

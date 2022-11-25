@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.controller.activity
+package com.w2sv.autocrop.activities
 
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback

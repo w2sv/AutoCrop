@@ -10,7 +10,7 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.Compari
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPager
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPagerFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmodel.CropPagerViewModel
-import com.w2sv.autocrop.controller.activity.FragmentHostingActivity
+import com.w2sv.autocrop.activities.FragmentHostingActivity
 import com.w2sv.bidirectionalviewpager.viewpager.currentViewHolder
 
 class ComparisonButton(context: Context, attributeSet: AttributeSet) :

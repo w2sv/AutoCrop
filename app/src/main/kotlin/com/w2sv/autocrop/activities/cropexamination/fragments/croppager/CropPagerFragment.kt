@@ -28,7 +28,7 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmode
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmodel.Scroller
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.saveall.SaveAllFragment
-import com.w2sv.autocrop.controller.ApplicationFragment
+import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.cropping.CropEdges
 import com.w2sv.autocrop.cropping.cropbundle.Crop
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding

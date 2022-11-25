@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.controller.activity
+package com.w2sv.autocrop.activities
 
 import com.w2sv.autocrop.databinding.ActivityBlankBinding
 import com.w2sv.viewboundcontroller.ViewBoundActivity

@@ -6,7 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.activities.crop.fragments.cropping.CropFragment
 import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailedFragment
 import com.w2sv.autocrop.activities.main.MainActivity
-import com.w2sv.autocrop.controller.activity.ApplicationActivity
+import com.w2sv.autocrop.activities.ApplicationActivity
 import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.bidirectionalviewpager.livedata.MutableListLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel

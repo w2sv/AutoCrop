@@ -19,7 +19,7 @@ import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailed
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
 import com.w2sv.autocrop.activities.main.MainActivity
-import com.w2sv.autocrop.controller.ApplicationFragment
+import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.cropping.cropEdgesCandidates
 import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.autocrop.cropping.cropbundle.Screenshot

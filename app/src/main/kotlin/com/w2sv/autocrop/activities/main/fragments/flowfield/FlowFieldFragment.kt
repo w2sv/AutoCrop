@@ -25,7 +25,7 @@ import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.ScreenshotListenerDialog
 import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.WelcomeDialog
-import com.w2sv.autocrop.controller.ApplicationFragment
+import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences

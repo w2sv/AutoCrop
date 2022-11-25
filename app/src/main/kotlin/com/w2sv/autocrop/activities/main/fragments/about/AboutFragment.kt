@@ -7,7 +7,7 @@ import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.controller.ApplicationFragment
+import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.databinding.FragmentAboutBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.ui.animate

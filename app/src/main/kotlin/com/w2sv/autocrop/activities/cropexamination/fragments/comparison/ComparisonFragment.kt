@@ -20,7 +20,7 @@ import com.w2sv.androidutils.extensions.remove
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.showSystemBars
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.controller.ApplicationFragment
+import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences

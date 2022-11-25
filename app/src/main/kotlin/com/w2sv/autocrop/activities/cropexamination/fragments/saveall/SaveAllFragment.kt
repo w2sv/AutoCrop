@@ -11,7 +11,7 @@ import com.w2sv.androidutils.extensions.launch
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
-import com.w2sv.autocrop.controller.ApplicationFragment
+import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.databinding.FragmentSaveallBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import dagger.hilt.android.AndroidEntryPoint

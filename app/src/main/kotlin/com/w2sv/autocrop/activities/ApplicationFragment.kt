@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.controller
+package com.w2sv.autocrop.activities
 
 import android.app.Activity
 import android.os.Bundle
@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.viewbinding.ViewBinding
-import com.w2sv.autocrop.controller.activity.FragmentHostingActivity
 import com.w2sv.viewboundcontroller.ViewBoundFragment
 
 abstract class ApplicationFragment<VB : ViewBinding>(bindingClass: Class<VB>) :

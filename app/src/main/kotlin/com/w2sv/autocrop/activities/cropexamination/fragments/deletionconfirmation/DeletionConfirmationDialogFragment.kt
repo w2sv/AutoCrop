@@ -15,7 +15,7 @@ import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
 import com.w2sv.autocrop.activities.cropexamination.fragments.apptitle.AppTitleFragment
-import com.w2sv.autocrop.controller.ApplicationFragment
+import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.databinding.FragmentDeletionQueryBinding
 
 class DeletionConfirmationDialogFragment :
