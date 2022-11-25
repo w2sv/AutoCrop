@@ -1,17 +1,12 @@
 package com.w2sv.autocrop.activities.main
 
-import android.animation.ObjectAnimator
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.view.View
-import android.view.animation.AnticipateInterpolator
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
-import androidx.core.animation.doOnEnd
-import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.LiveData
@@ -19,13 +14,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
-import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.postValue
-import com.w2sv.autocrop.R
+import com.w2sv.autocrop.activities.ApplicationActivity
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.activities.ApplicationActivity
 import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -59,14 +52,10 @@ class MainActivity :
         val liveScreenshotListenerRunning: LiveData<Boolean?> by lazy {
             MutableLiveData()
         }
-
-        companion object {
-            var displayedSplashScreen = false
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        handleSplashScreen()
+        installSplashScreen()
         super.onCreate(savedInstanceState)
 
         LocalBroadcastManager
@@ -75,31 +64,6 @@ class MainActivity :
                 onStopScreenshotListenerFromNotification,
                 IntentFilter(ScreenshotListener.OnStopFromNotificationListener.ACTION_ON_STOP_SERVICE_FROM_NOTIFICATION)
             )
-    }
-
-    private fun handleSplashScreen() {
-        installSplashScreen().apply {
-            if (!ViewModel.displayedSplashScreen) {
-                setExitAnimation()
-                ViewModel.displayedSplashScreen = true
-            }
-        }
-    }
-
-    private fun SplashScreen.setExitAnimation() {
-        setOnExitAnimationListener { splashScreenViewProvider ->
-            ObjectAnimator.ofFloat(
-                splashScreenViewProvider.view,
-                View.TRANSLATION_Y,
-                0f,
-                -splashScreenViewProvider.view.height.toFloat()
-            ).apply {
-                interpolator = AnticipateInterpolator()
-                duration = resources.getLong(R.integer.delay_medium)
-                doOnEnd { splashScreenViewProvider.remove() }
-                start()
-            }
-        }
     }
 
     private val onStopScreenshotListenerFromNotification by lazy {

@@ -9,5 +9,5 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'com.github.matecode:Snacky:1.1.5'
-    implementation 'com.github.w2sv:KotlinUtils:0.0.3'
+    implementation 'com.github.w2sv:KotlinUtils:0.0.5-rc1'
 }

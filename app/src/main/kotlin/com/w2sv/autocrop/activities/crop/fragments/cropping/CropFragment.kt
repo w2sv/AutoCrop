@@ -73,6 +73,12 @@ class CropFragment
         )
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        cropJob.cancel()
+    }
+
     private fun cropImages() {
         activityViewModel.imminentUris.forEach { uri ->
             try {
@@ -109,12 +115,6 @@ class CropFragment
                     .fragmentReplacementTransaction(CroppingFailedFragment())
                     .commit()
             }
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        cropJob.cancel()
     }
 
     /**

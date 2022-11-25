@@ -11,7 +11,11 @@
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/crop/fragments/cropping/CropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/crop/fragments/cropping/CropFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/main/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/main/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/permissionhandler/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/permissionhandler/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -210,7 +214,7 @@
     "full.screen.before.presentation.mode": "false",
     "ignore.preview.features.used": "true",
     "last_directory_selection": "/home/w2sv/Dev/android/AutoCrop/app/src/test/java/com/autocrop/utils",
-    "last_opened_file_path": "/home/w2sv/Dev/Android/AutoCrop",
+    "last_opened_file_path": "/home/w2sv/Dev/Android/Apps/AutoCrop",
     "memory.settings.postsync.last.time.stamp": "1667399042919",
     "project.structure.last.edited": "Build Variants",
     "project.structure.proportion": "0.17",
