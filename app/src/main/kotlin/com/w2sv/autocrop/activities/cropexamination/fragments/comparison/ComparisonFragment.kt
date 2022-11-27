@@ -6,6 +6,8 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
@@ -26,6 +28,7 @@ import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.showSystemBars
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
+import com.w2sv.autocrop.cropping.CropEdges
 import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
@@ -75,23 +78,16 @@ class ComparisonFragment
             MutableLiveData(false)
         }
 
-        val cropFittedInsets: Array<Int> =
+        val cropFittedInsets: CropEdges =
             cropBundle.run {
-                arrayOf(
-                    0,
-                    crop.edges.top,
-                    0,
-                    screenshot.height - crop.edges.bottom
-                )
+                CropEdges(crop.edges.top, screenshot.height - crop.edges.bottom)
             }
 
         val cropInsetDrawable: InsetDrawable =
-            cropFittedInsets.run {
-                InsetDrawable(
-                    BitmapDrawable(context.resources, cropBundle.crop.bitmap),
-                    get(0), get(1), get(2), get(3)
-                )
-            }
+            InsetDrawable(
+                BitmapDrawable(context.resources, cropBundle.crop.bitmap),
+                0, cropFittedInsets.top, 0, cropFittedInsets.bottom
+            )
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -101,6 +97,7 @@ class ComparisonFragment
 
         sharedElementEnterTransition = TransitionInflater.from(context)
             .inflateTransition(android.R.transition.move)
+            .setInterpolator(DecelerateInterpolator(0.8f))
             .addListener(
                 object : TransitionListenerAdapter() {
 
@@ -132,6 +129,7 @@ class ComparisonFragment
                     }
                 }
             )
+        sharedElementReturnTransition
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

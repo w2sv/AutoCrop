@@ -2,8 +2,7 @@ package com.w2sv.autocrop.activities.cropexamination.fragments.comparison.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
-import android.widget.RelativeLayout
+import android.widget.RelativeLayout.LayoutParams
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.LifecycleOwner
@@ -11,23 +10,23 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonFragment
+import slimber.log.i
 
 class ComparisonIV(context: Context, attributeSet: AttributeSet) :
     AppCompatImageView(context, attributeSet) {
 
     private val viewModel by viewModel<ComparisonFragment.ViewModel>()
 
+    private lateinit var originalLayoutParams: LayoutParams
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
+        i{"onAttachedToWindow"}
+        originalLayoutParams = layoutParams as LayoutParams
+
         if (!isInEditMode) {
             ViewCompat.setTransitionName(this, viewModel.cropBundle.identifier())
-
-            insetLayoutParams = viewModel.cropFittedInsets.run {
-                (layoutParams as RelativeLayout.LayoutParams).apply {
-                    setMargins(get(0), get(1), get(2), get(3))
-                }
-            }
 
             viewModel.setLiveDataObservers(findViewTreeLifecycleOwner()!!)
 
@@ -39,10 +38,7 @@ class ComparisonIV(context: Context, attributeSet: AttributeSet) :
 
     private fun ComparisonFragment.ViewModel.setLiveDataObservers(lifecycleOwner: LifecycleOwner) {
         useInsetLayoutParams.observe(lifecycleOwner) {
-            if (it)
-                setInsetLayoutParams()
-            else
-                resetLayoutParams()
+            setLayout(useInsetParams = it)
         }
         displayScreenshot.observe(lifecycleOwner) {
             setImage(displayScreenshot = it)
@@ -50,6 +46,7 @@ class ComparisonIV(context: Context, attributeSet: AttributeSet) :
     }
 
     private fun setImage(displayScreenshot: Boolean) {
+        i { "setImage: displayScreenshot = $displayScreenshot" }
         if (displayScreenshot)
             setImageBitmap(viewModel.screenshotBitmap)
         else
@@ -59,17 +56,30 @@ class ComparisonIV(context: Context, attributeSet: AttributeSet) :
     private fun setCrop() {
         if (viewModel.useInsetLayoutParams.value!!)
             setImageBitmap(viewModel.cropBundle.crop.bitmap)
+                .also { i{"nonInsetCrop"} }
         else
             setImageDrawable(viewModel.cropInsetDrawable)
+                .also { i{"insetCrop"} }
+    }
+
+    private fun setLayout(useInsetParams: Boolean) {
+        i { "setLayout: useInsetParams = $useInsetParams" }
+        if (useInsetParams)
+            setInsetLayoutParams()
+        else
+            resetLayoutParams()
+
+        requestLayout()
     }
 
     private fun setInsetLayoutParams() {
-        layoutParams = insetLayoutParams
+        layoutParams = LayoutParams(originalLayoutParams).apply {
+            topMargin = viewModel.cropFittedInsets.top
+            bottomMargin = viewModel.cropFittedInsets.bottom
+        }
     }
 
-    private lateinit var insetLayoutParams: RelativeLayout.LayoutParams
-
     private fun resetLayoutParams() {
-        layoutParams = (parent as View).layoutParams as RelativeLayout.LayoutParams
+        layoutParams = originalLayoutParams
     }
 }

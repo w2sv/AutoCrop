@@ -117,7 +117,7 @@
 
                     android:contentDescription="@string/manually_adjust_the_crop" />
 
-                <com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.ComparisonButton
+                <com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.ComparisonLauncherButton
                     android:id="@+id/comparison_button"
                     android:layout_width="@dimen/size_image_button"
                     android:layout_height="@dimen/size_image_button"

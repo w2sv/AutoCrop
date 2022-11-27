@@ -38,5 +38,5 @@ val ViewPager2.recyclerView: RecyclerView
     get() = getChildAt(0) as RecyclerView
 
 @Suppress("UNCHECKED_CAST")
-fun <VH : RecyclerView.ViewHolder> ViewPager2.currentViewHolder(): VH =
-    (recyclerView.findViewHolderForAdapterPosition(currentItem) as VH)
+fun <VH : RecyclerView.ViewHolder> ViewPager2.currentViewHolder(): VH? =
+    (recyclerView.findViewHolderForAdapterPosition(currentItem) as? VH)

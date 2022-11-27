@@ -9,6 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
+        android:adjustViewBounds="false"
+        android:cropToPadding="false"
+
         android:background="@color/neutral_background"
         android:contentDescription="@string/compare_crop_with_original_screenshot" />
 
