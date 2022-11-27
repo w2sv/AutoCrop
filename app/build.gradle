@@ -78,8 +78,8 @@ dependencies {
     implementation project(path: ':permissionhandler')
     implementation 'com.github.w2sv:KotlinUtils:0.0.5-rc1'
     implementation 'com.github.w2sv:ViewboundController:0.0.7-rc1'
-    implementation 'com.github.w2sv:AndroidUtils:0.0.3'  // 4
-    implementation 'com.github.w2sv:TypedPreferences:1.0.0'  // ..1
+    implementation 'com.github.w2sv:AndroidUtils:master-SNAPSHOT'  // 0.0.4
+    implementation 'com.github.w2sv:TypedPreferences:1.0.0'  // 1.0.1
 
     // Androidx
     implementation 'androidx.appcompat:appcompat:1.5.1'

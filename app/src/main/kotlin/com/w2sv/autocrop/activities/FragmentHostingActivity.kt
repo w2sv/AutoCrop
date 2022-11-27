@@ -32,15 +32,14 @@ abstract class FragmentHostingActivity(private val rootFragmentClass: Class<out 
             .setReorderingAllowed(true)
             .add(
                 layoutId,
-                rootFragmentClass.newInstance(),
+                getRootFragment(),
                 ROOT_FRAGMENT_TAG
             )
             .commit()
     }
 
-    //    @Suppress("UNCHECKED_CAST")
-    //    fun <RF : Fragment> getRootFragment(): RF? =
-    //        supportFragmentManager.findFragmentByTag(ROOT_FRAGMENT_TAG) as RF?
+    protected open fun getRootFragment(): Fragment =
+        rootFragmentClass.newInstance()
 
     fun getCurrentFragment(): Fragment? =
         supportFragmentManager.findFragmentById(layoutId)

@@ -16,7 +16,7 @@
         android:textColor="@color/highlight"
         android:textSize="22sp" />
 
-    <com.w2sv.autocrop.activities.crop.fragments.cropping.views.CroppingProgressBar
+    <ProgressBar
         android:id="@+id/cropping_progress_bar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
 

@@ -14,8 +14,8 @@ import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
-import com.w2sv.androidutils.extensions.launch
 import com.w2sv.androidutils.extensions.launchDelayed
+import com.w2sv.androidutils.extensions.launchWithOnFinishedListener
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
@@ -212,13 +212,13 @@ class CropPagerFragment :
     override fun onResult(confirmed: Boolean, dataSetPosition: Int) {
         if (confirmed)
             with(activityViewModel) {
-                singularCropSavingJob = lifecycleScope.launch(
+                singularCropSavingJob = lifecycleScope.launchWithOnFinishedListener(
                     makeCropBundleProcessor(
                         dataSetPosition,
                         booleanPreferences.deleteScreenshots,
                         requireContext()
                     )
-                )
+                ) {}  // TODO
             }
 
         if (viewModel.dataSet.size == 1)
