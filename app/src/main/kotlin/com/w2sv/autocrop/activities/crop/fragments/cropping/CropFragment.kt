@@ -7,13 +7,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.androidutils.BackPressListener
@@ -36,6 +33,7 @@ import com.w2sv.autocrop.utils.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -63,26 +61,22 @@ class CropFragment
         val cropBundles = mutableListOf<CropBundle>()
         val liveProgress: LiveData<Int> = MutableLiveData(0)
 
-        fun launchCroppingCoroutine(
-            lifecycleOwner: LifecycleOwner,
+        suspend fun launchCroppingCoroutine(
             contentResolver: ContentResolver,
-            publishProgress: () -> Unit,
             onFinishedListener: () -> Unit
         ) {
-            viewModelScope.launch {
-                lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            coroutineScope {
+                launch {
                     getImminentUris().forEach { uri ->
-                        try {
-                            withContext(Dispatchers.IO) {
-                                getCropBundle(uri, contentResolver)?.let {
-                                    cropBundles.add(it)
-                                }
-                            }
-                            withContext(Dispatchers.Main) {
-                                publishProgress()
+                        withContext(Dispatchers.IO) {
+                            getCropBundle(uri, contentResolver)?.let {
+                                cropBundles.add(it)
                             }
                         }
-                        catch (_: IllegalStateException) {
+                        withContext(Dispatchers.Main) {
+                            with(liveProgress) {
+                                postValue(value!! + 1)
+                            }
                         }
                     }
                     onFinishedListener()
@@ -92,7 +86,7 @@ class CropFragment
 
         private fun getImminentUris(): List<Uri> =
             screenshotUris.run {
-                subList(cropBundles.size, size)
+                subList(liveProgress.value!!, size)
             }
 
         private fun getCropBundle(screenshotUri: Uri, contentResolver: ContentResolver): CropBundle? {
@@ -119,17 +113,6 @@ class CropFragment
         super.onViewCreated(view, savedInstanceState)
 
         binding.initialize()
-
-        viewModel.launchCroppingCoroutine(
-            viewLifecycleOwner,
-            requireContext().contentResolver,
-            publishProgress = {
-                with(viewModel.liveProgress) {
-                    postValue(value!! + 1)
-                }
-            },
-            onFinishedListener = ::invokeSubsequentScreen
-        )
     }
 
     private fun FragmentCropBinding.initialize() {
@@ -142,12 +125,23 @@ class CropFragment
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        lifecycleScope.launch {
+            viewModel.launchCroppingCoroutine(
+                requireContext().contentResolver,
+            ) {
+                invokeSubsequentScreen()
+            }
+        }
+    }
+
     private fun invokeSubsequentScreen() {
         if (viewModel.cropBundles.isNotEmpty())
             launchCropExamination()
         else
-            // delay briefly to assure progress bar having reached 100% before UI change
-            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
+            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {  // to assure progress bar having reached 100% before UI change
                 getFragmentHostingActivity()
                     .fragmentReplacementTransaction(CroppingFailedFragment())
                     .commit()
