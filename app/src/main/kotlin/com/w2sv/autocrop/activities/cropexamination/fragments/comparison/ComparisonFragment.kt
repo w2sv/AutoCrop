@@ -1,12 +1,17 @@
 package com.w2sv.autocrop.activities.cropexamination.fragments.comparison
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
@@ -26,7 +31,10 @@ import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.utils.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
+import com.w2sv.kotlinutils.delegates.AutoSwitch
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -46,16 +54,47 @@ class ComparisonFragment
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
 
-    val viewModel by viewModels<ComparisonViewModel> {
-        @Suppress("DEPRECATION")
-        requireArguments().getParcelable<CropBundle>(CropBundle.EXTRA)!!.run {
-            ComparisonViewModel.Factory(
-                this,
-                requireContext().contentResolver.loadBitmap(screenshot.uri),
-                BitmapDrawable(resources, crop.bitmap)
-            )
+    @HiltViewModel
+    class ViewModel @Inject constructor(
+        savedStateHandle: SavedStateHandle,
+        @ApplicationContext context: Context
+    ) : androidx.lifecycle.ViewModel() {
+
+        val cropBundle: CropBundle = savedStateHandle[CropBundle.EXTRA]!!
+        val screenshotBitmap: Bitmap = context.contentResolver.loadBitmap(cropBundle.screenshot.uri)
+
+        val enterTransitionCompleted by AutoSwitch(false, switchOn = false)
+
+        val displayScreenshot: LiveData<Boolean> by lazy {
+            MutableLiveData(false)
         }
+        val useInsetLayoutParams: LiveData<Boolean> by lazy {
+            MutableLiveData(true)
+        }
+        val showButtons: LiveData<Boolean> by lazy {
+            MutableLiveData(false)
+        }
+
+        val cropFittedInsets: Array<Int> =
+            cropBundle.run {
+                arrayOf(
+                    0,
+                    crop.edges.top,
+                    0,
+                    screenshot.height - crop.edges.bottom
+                )
+            }
+
+        val cropInsetDrawable: InsetDrawable =
+            cropFittedInsets.run {
+                InsetDrawable(
+                    BitmapDrawable(context.resources, cropBundle.crop.bitmap),
+                    get(0), get(1), get(2), get(3)
+                )
+            }
     }
+
+    private val viewModel by viewModels<ViewModel>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

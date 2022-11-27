@@ -10,7 +10,7 @@ import com.w2sv.androidutils.extensions.ifNotInEditMode
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonViewModel
+import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.ui.fadeOut
 
 class ComparisonIVStatusTV(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
@@ -19,7 +19,7 @@ class ComparisonIVStatusTV(context: Context, attributeSet: AttributeSet) : AppCo
         super.onAttachedToWindow()
 
         ifNotInEditMode {
-            viewModel<ComparisonViewModel>().value.displayScreenshot.observe(findViewTreeLifecycleOwner()!!) {
+            viewModel<ComparisonFragment.ViewModel>().value.displayScreenshot.observe(findViewTreeLifecycleOwner()!!) {
                 fadeOutAnimation?.stop()
 
                 text = resources.getString(if (it) R.string.screenshot else R.string.crop)

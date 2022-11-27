@@ -9,7 +9,13 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="" />
+    <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/ComparisonFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/ComparisonFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/ComparisonViewModel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ComparisonIV.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ComparisonIV.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ComparisonIVStatusTV.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ComparisonIVStatusTV.kt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -104,6 +110,7 @@
     "android-custom-view/home/w2sv/Android/Sdk/sources/android-33/android/widget/Switch.java_SELECTED": "Switch",
     "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/crop/fragments/cropping/views/CroppingProgressBar.kt_SELECTED": "CroppingProgressBar",
     "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/crop/fragments/cropping/views/ProgressTextView.kt_SELECTED": "ProgressTextView",
+    "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ComparisonIVStatusTV.kt_SELECTED": "ComparisonIVStatusTV",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/ComparisonImageView.kt_SELECTED": "ComparisonImageView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/views/ComparisonImageView.kt_SELECTED": "ComparisonImageView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/views/StatusTV.kt_SELECTED": "ComparisonIVStatusTV",

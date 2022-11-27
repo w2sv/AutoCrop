@@ -6,19 +6,16 @@ import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.ViewCompat
-import androidx.fragment.app.findFragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.w2sv.androidutils.extensions.toggle
+import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonFragment
-import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonViewModel
 
 class ComparisonIV(context: Context, attributeSet: AttributeSet) :
     AppCompatImageView(context, attributeSet) {
 
-    private val viewModel by lazy {
-        findFragment<ComparisonFragment>().viewModel
-    }
+    private val viewModel by viewModel<ComparisonFragment.ViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -40,7 +37,7 @@ class ComparisonIV(context: Context, attributeSet: AttributeSet) :
         }
     }
 
-    private fun ComparisonViewModel.setLiveDataObservers(lifecycleOwner: LifecycleOwner) {
+    private fun ComparisonFragment.ViewModel.setLiveDataObservers(lifecycleOwner: LifecycleOwner) {
         useInsetLayoutParams.observe(lifecycleOwner) {
             if (it)
                 setInsetLayoutParams()
