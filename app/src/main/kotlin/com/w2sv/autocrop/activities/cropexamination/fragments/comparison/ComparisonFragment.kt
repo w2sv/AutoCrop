@@ -6,7 +6,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
@@ -96,7 +95,7 @@ class ComparisonFragment
         super.onAttach(context)
 
         sharedElementEnterTransition = TransitionInflater.from(context)
-            .inflateTransition(android.R.transition.move)
+            .inflateTransition(R.transition.move)
             .setInterpolator(DecelerateInterpolator(0.8f))
             .addListener(
                 object : TransitionListenerAdapter() {
@@ -129,7 +128,6 @@ class ComparisonFragment
                     }
                 }
             )
-        sharedElementReturnTransition
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
