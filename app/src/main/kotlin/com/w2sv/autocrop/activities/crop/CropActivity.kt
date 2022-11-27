@@ -7,7 +7,7 @@ import com.w2sv.autocrop.activities.crop.fragments.cropping.CropFragment
 import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailedFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 
-class CropActivity : ApplicationActivity(CropFragment::class.java) {
+class CropActivity : ApplicationActivity() {
 
     companion object {
         const val EXTRA_N_UNCROPPED_IMAGES = "com.w2sv.autocrop.extra.N_UNCROPPED_IMAGES"
