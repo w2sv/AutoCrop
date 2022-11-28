@@ -13,6 +13,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
+import androidx.transition.PathMotion
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
@@ -85,7 +86,7 @@ class ComparisonFragment
         super.onAttach(context)
 
         sharedElementEnterTransition = TransitionInflater.from(context)
-            .inflateTransition(android.R.transition.move)
+            .inflateTransition(PathMotion)
             .setInterpolator(DecelerateInterpolator(0.8f))
             .addListener(
                 object : TransitionListenerAdapter() {

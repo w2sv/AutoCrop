@@ -10,13 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/ComparisonFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/ComparisonFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ComparisonIV.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/CropImageView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ComparisonLauncherButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ComparisonLauncherButton.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/ui/ViewAnimations.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/ui/ViewAnimations.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/CropImageView.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_comparison.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_comparison.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/transition/move.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/transition/move.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,6 +114,7 @@
     "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ComparisonIV.kt_SELECTED": "CropImageView",
     "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ComparisonIVStatusTV.kt_SELECTED": "ComparisonIVStatusTV",
     "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/CropImageView.kt_SELECTED": "CropImageView",
+    "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ScreenshotImageView.kt_SELECTED": "ScreenshotImageView",
     "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ComparisonButton.kt_SELECTED": "ComparisonLauncherButton",
     "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ComparisonLauncherButton.kt_SELECTED": "ComparisonLauncherButton",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/ComparisonImageView.kt_SELECTED": "ComparisonImageView",
@@ -270,11 +266,11 @@
       <recent name="" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.w2sv.autocrop.activities.cropexamination.fragments.comparison.views" />
       <recent name="com.w2sv.autocrop.activities" />
       <recent name="com.w2sv.autocrop.ui" />
       <recent name="com.w2sv.autocrop.ui.views" />
       <recent name="com.w2sv.autocrop.cropping" />
-      <recent name="com.w2sv.autocrop.controller" />
     </key>
     <key name="android.template.942950756">
       <recent name="com.w2sv.autocrop" />

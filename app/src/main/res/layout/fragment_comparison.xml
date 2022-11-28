@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.w2sv.autocrop.activities.cropexamination.fragments.comparison.views.CropImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/crop_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
