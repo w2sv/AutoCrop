@@ -7,8 +7,12 @@ import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.daimajia.androidanimations.library.Techniques
+import com.w2sv.androidutils.BackPressListener
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
@@ -22,8 +26,6 @@ import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewM
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.dialogs.CropDialog
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.dialogs.CropEntiretyDialog
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.dialogs.CropPagerInstructionsDialog
-import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmodel.CropPagerViewModel
-import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmodel.Scroller
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.cropping.CropEdges
@@ -34,8 +36,10 @@ import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.crossFade
 import com.w2sv.autocrop.utils.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
+import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.mateware.snacky.Snacky
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,10 +52,29 @@ class CropPagerFragment :
     ManualCropFragment.ResultListener,
     CropPagerInstructionsDialog.OnDismissedListener {
 
+    @HiltViewModel
+    class ViewModel @Inject constructor(booleanPreferences: BooleanPreferences) : androidx.lifecycle.ViewModel() {
+
+        val dataSet = BidirectionalViewPagerDataSet(CropExaminationActivityViewModel.cropBundles)
+
+        val backPressHandler = BackPressListener(viewModelScope)
+
+        //$$$$$$$$$$$$$
+        // AutoScroll $
+        //$$$$$$$$$$$$$
+
+        var scroller: Scroller? = null
+
+        val liveAutoScroll: LiveData<Boolean> = MutableLiveData(booleanPreferences.autoScroll && dataSet.size > 1)
+
+        val autoScrolls: Int
+            get() = dataSet.size - dataSet.livePosition.value!!
+    }
+
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
 
-    private val viewModel by viewModels<CropPagerViewModel>()
+    private val viewModel by viewModels<ViewModel>()
     private val activityViewModel by activityViewModels<CropExaminationActivityViewModel>()
 
     private lateinit var viewPagerProxy: CropPager
@@ -81,7 +104,7 @@ class CropPagerFragment :
         viewModel.setLiveDataObservers()
     }
 
-    private fun CropPagerViewModel.setLiveDataObservers() {
+    private fun ViewModel.setLiveDataObservers() {
         dataSet.livePosition.observe(viewLifecycleOwner) { position ->
             binding.discardingStatisticsTv.update(position)
 

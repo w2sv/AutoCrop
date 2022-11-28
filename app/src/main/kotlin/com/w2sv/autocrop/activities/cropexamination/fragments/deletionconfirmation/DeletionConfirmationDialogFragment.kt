@@ -22,8 +22,8 @@ class DeletionConfirmationDialogFragment :
 
     private val activityViewModel by activityViewModels<CropExaminationActivityViewModel>()
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
 
         deletionConfirmationInquiryContract.launch(
             IntentSenderRequest.Builder(

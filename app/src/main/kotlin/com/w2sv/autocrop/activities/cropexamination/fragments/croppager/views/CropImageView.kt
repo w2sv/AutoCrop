@@ -11,13 +11,12 @@ import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPagerFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.dialogs.CropDialog
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.dialogs.CropEntiretyDialog
-import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmodel.CropPagerViewModel
 
 class CropImageView(context: Context, attributeSet: AttributeSet) :
     AppCompatImageView(context, attributeSet),
     ActivityRetriever by ActivityRetriever.Implementation(context) {
 
-    private val viewModel by viewModel<CropPagerViewModel>()
+    private val viewModel by viewModel<CropPagerFragment.ViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

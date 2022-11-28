@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmodel
+package com.w2sv.autocrop.activities.cropexamination.fragments.croppager
 
 import android.os.Handler
 import android.os.Looper

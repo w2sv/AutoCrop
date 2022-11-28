@@ -9,14 +9,13 @@ import com.w2sv.autocrop.activities.FragmentHostingActivity
 import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPager
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPagerFragment
-import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.w2sv.bidirectionalviewpager.viewpager.currentViewHolder
 
 class ComparisonLaunchButton(context: Context, attributeSet: AttributeSet) :
     AppCompatImageButton(context, attributeSet),
     FragmentHostingActivity.Retriever by FragmentHostingActivity.Retriever.Implementation(context) {
 
-    private val viewModel by viewModel<CropPagerViewModel>()
+    private val viewModel by viewModel<CropPagerFragment.ViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
