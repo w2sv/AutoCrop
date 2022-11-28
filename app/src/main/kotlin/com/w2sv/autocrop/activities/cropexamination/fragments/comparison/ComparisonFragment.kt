@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
@@ -85,7 +86,7 @@ class ComparisonFragment
         super.onAttach(context)
 
         sharedElementEnterTransition = TransitionInflater.from(context)
-            .inflateTransition(R.transition.arc_motion)
+            .inflateTransition(android.R.transition.move)
             .setInterpolator(DecelerateInterpolator(0.8f))
             .addListener(
                 object : TransitionListenerAdapter() {
@@ -125,8 +126,21 @@ class ComparisonFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.setLiveDataObservers()
         binding.initialize()
+        viewModel.setLiveDataObservers()
+    }
+
+    private fun FragmentComparisonBinding.initialize(){
+        with(cropIv){
+            ViewCompat.setTransitionName(this, viewModel.cropBundle.identifier())
+            setImageBitmap(viewModel.cropBundle.crop.bitmap)
+        }
+        root.setOnClickListener {
+            viewModel.displayScreenshotLive.toggle()
+        }
+        backButton.setOnClickListener {
+            popFromFragmentManager(parentFragmentManager)
+        }
     }
 
     private fun ViewModel.setLiveDataObservers(){
@@ -152,15 +166,6 @@ class ComparisonFragment
                 else
                     remove()
             }
-        }
-    }
-
-    private fun FragmentComparisonBinding.initialize(){
-        root.setOnClickListener {
-            viewModel.displayScreenshotLive.toggle()
-        }
-        backButton.setOnClickListener {
-            popFromFragmentManager(parentFragmentManager)
         }
     }
 

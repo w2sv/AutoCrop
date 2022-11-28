@@ -1,6 +1,5 @@
 package com.w2sv.autocrop.activities.cropexamination.fragments.croppager
 
-import android.content.Context
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
@@ -9,7 +8,6 @@ import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.transition.TransitionInflater
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
@@ -55,13 +53,6 @@ class CropPagerFragment :
 
     private val viewModel by viewModels<CropPagerViewModel>()
     private val activityViewModel by activityViewModels<CropExaminationActivityViewModel>()
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        sharedElementReturnTransition = TransitionInflater.from(context)
-            .inflateTransition(android.R.transition.move)
-    }
 
     private lateinit var viewPagerProxy: CropPager
 

@@ -6,4 +6,4 @@
     android:layout_height="match_parent"
 
     android:adjustViewBounds="false"
-    android:scaleType="fitCenter"></com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.CropImageView>
+    android:scaleType="fitCenter" />
