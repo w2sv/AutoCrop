@@ -13,7 +13,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
-import androidx.transition.PathMotion
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
@@ -86,7 +85,7 @@ class ComparisonFragment
         super.onAttach(context)
 
         sharedElementEnterTransition = TransitionInflater.from(context)
-            .inflateTransition(PathMotion)
+            .inflateTransition(R.transition.arc_motion)
             .setInterpolator(DecelerateInterpolator(0.8f))
             .addListener(
                 object : TransitionListenerAdapter() {
@@ -94,30 +93,33 @@ class ComparisonFragment
                     override fun onTransitionEnd(transition: Transition) {
                         super.onTransitionEnd(transition)
 
-                        if (!viewModel.enterTransitionCompleted) {
-                            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
-                                viewModel.displayScreenshotLive.postValue(true)
-
-                                if (!booleanPreferences.comparisonInstructionsShown)
-                                    requireActivity()
-                                        .snackyBuilder("Tap screen to toggle between the original screenshot and the crop")
-                                        .setIcon(R.drawable.ic_outline_info_24)
-                                        .build()
-                                        .addCallback(object : Snackbar.Callback() {
-                                            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                                                super.onDismissed(transientBottomBar, event)
-
-                                                viewModel.showButtonsLive.postValue(true)
-                                            }
-                                        })
-                                        .show()
-                                else
-                                    viewModel.showButtonsLive.postValue(true)
-                            }
-                        }
+                        if (!viewModel.enterTransitionCompleted)
+                            onEnterTransition()
                     }
                 }
             )
+    }
+
+    private fun onEnterTransition(){
+        lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
+            viewModel.displayScreenshotLive.postValue(true)
+
+            if (!booleanPreferences.comparisonInstructionsShown)
+                requireActivity()
+                    .snackyBuilder("Tap screen to toggle between the original screenshot and the crop")
+                    .setIcon(R.drawable.ic_outline_info_24)
+                    .build()
+                    .addCallback(object : Snackbar.Callback() {
+                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                            super.onDismissed(transientBottomBar, event)
+
+                            viewModel.showButtonsLive.postValue(true)
+                        }
+                    })
+                    .show()
+            else
+                viewModel.showButtonsLive.postValue(true)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
