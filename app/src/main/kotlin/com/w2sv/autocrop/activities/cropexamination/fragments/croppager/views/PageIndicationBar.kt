@@ -8,7 +8,6 @@ import android.view.animation.BounceInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.ifNotInEditMode
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
@@ -23,7 +22,7 @@ class PageIndicationBar(context: Context, attr: AttributeSet) :
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        ifNotInEditMode {
+        if (!isInEditMode) {
             isEnabled = false  // disables manual dragging
 
             if (viewModel.dataSet.size != 1)

@@ -6,7 +6,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.ifNotInEditMode
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
@@ -18,7 +17,7 @@ class DisplayStatusTextView(context: Context, attributeSet: AttributeSet) : AppC
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        ifNotInEditMode {
+        if (!isInEditMode){
             viewModel<ComparisonFragment.ViewModel>().value.displayScreenshotLive.observe(findViewTreeLifecycleOwner()!!) {
                 fadeOutAnimation?.stop()
 

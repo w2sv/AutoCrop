@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.findFragment
-import com.w2sv.androidutils.extensions.ifNotInEditMode
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.activities.FragmentHostingActivity
 import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonFragment
@@ -22,7 +21,7 @@ class ComparisonLaunchButton(context: Context, attributeSet: AttributeSet) :
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        ifNotInEditMode {
+        if (!isInEditMode) {
             setOnClickListener {
                 launchComparisonFragment()
             }

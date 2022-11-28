@@ -17,14 +17,13 @@ import com.w2sv.androidutils.extensions.configureItem
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.goToWebpage
 import com.w2sv.androidutils.extensions.hiltActivityViewModel
-import com.w2sv.androidutils.extensions.ifNotInEditMode
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.serviceRunning
 import com.w2sv.autocrop.R
+import com.w2sv.autocrop.activities.FragmentHostingActivity
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.activities.FragmentHostingActivity
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
@@ -50,7 +49,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        ifNotInEditMode {
+        if(!isInEditMode) {
             setShareCropsItem()
             setListenToScreenCapturesItem()
             setAutoScrollItem()

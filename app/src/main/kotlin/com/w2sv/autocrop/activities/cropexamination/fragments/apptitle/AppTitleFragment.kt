@@ -6,9 +6,9 @@ import androidx.fragment.app.activityViewModels
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.autocrop.R
+import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
-import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.databinding.FragmentApptitleBinding
 import com.w2sv.autocrop.ui.animationComposer
 

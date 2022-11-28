@@ -15,7 +15,6 @@ import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.lyrebirdstudio.croppylib.fragment.view.BitmapGestureHandler
-import com.w2sv.androidutils.extensions.ifNotInEditMode
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
@@ -178,7 +177,7 @@ class ManualCropView @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        ifNotInEditMode {
+        if (!isInEditMode) {
             bitmapRect.set(
                 0f,
                 0f,

@@ -5,7 +5,6 @@ import android.os.Build
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.w2sv.androidutils.ActivityRetriever
-import com.w2sv.androidutils.extensions.ifNotInEditMode
 import com.w2sv.autocrop.flowfield.FlowFieldSketch
 import com.w2sv.autocrop.utils.extensions.resolution
 import processing.android.PFragment
@@ -14,8 +13,10 @@ class FlowFieldContainer(context: Context, attr: AttributeSet) :
     FrameLayout(context, attr),
     ActivityRetriever by ActivityRetriever.Implementation(context) {
 
-    init {
-        ifNotInEditMode {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
+        if (!isInEditMode) {
             val display = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                 activity.display!!
             else

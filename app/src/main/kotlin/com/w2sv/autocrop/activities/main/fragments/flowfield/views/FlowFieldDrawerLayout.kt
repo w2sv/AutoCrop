@@ -6,7 +6,6 @@ import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
-import com.w2sv.androidutils.extensions.ifNotInEditMode
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 
@@ -14,7 +13,7 @@ class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : Draw
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        ifNotInEditMode {
+        if (!isInEditMode) {
             findFragment<FlowFieldFragment>()
                 .binding
                 .setAssociatedButtons()
