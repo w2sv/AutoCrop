@@ -13,7 +13,6 @@ import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
 import com.w2sv.androidutils.extensions.launchDelayed
-import com.w2sv.androidutils.extensions.launchWithOnFinishedListener
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
@@ -38,6 +37,7 @@ import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
 import de.mateware.snacky.Snacky
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -179,10 +179,10 @@ class CropPagerFragment :
      * Set new [Crop] in [viewModel].dataSet.currentPosition and notify [CropPager.Adapter]
      */
     private fun processAdjustedCropEdges(adjustedEdges: CropEdges) {
-        with(viewModel.dataSet.liveElement) {
-            crop = Crop.fromScreenshot(
-                requireContext().contentResolver.loadBitmap(screenshot.uri),
-                screenshot.mediaStoreData.diskUsage,
+        viewModel.dataSet.liveElement.let {
+            it.crop = Crop.fromScreenshot(
+                requireContext().contentResolver.loadBitmap(it.screenshot.uri),
+                it.screenshot.mediaStoreData.diskUsage,
                 adjustedEdges
             )
         }
@@ -202,14 +202,13 @@ class CropPagerFragment :
      */
     override fun onResult(confirmed: Boolean, dataSetPosition: Int) {
         if (confirmed)
-            with(activityViewModel) {
-                singularCropSavingJob = lifecycleScope.launchWithOnFinishedListener(
-                    makeCropBundleProcessor(
-                        dataSetPosition,
-                        booleanPreferences.deleteScreenshots,
-                        requireContext()
-                    )
-                ) {}  // TODO
+            activityViewModel.singularCropSavingJob = lifecycleScope.launch {
+                activityViewModel.makeCropBundleProcessor(
+                    dataSetPosition,
+                    booleanPreferences.deleteScreenshots,
+                    requireContext()
+                )
+                    .invoke()
             }
 
         if (viewModel.dataSet.size == 1)

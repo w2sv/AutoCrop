@@ -18,6 +18,7 @@ import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
 import com.google.android.material.snackbar.Snackbar
+import com.w2sv.androidutils.extensions.crossVisualize
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.hideSystemBars
 import com.w2sv.androidutils.extensions.launchDelayed
@@ -32,7 +33,6 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.e
 import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.ui.crossVisualize
 import com.w2sv.autocrop.utils.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.kotlinutils.delegates.AutoSwitch
