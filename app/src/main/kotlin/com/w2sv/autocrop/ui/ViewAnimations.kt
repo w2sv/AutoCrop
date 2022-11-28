@@ -4,9 +4,15 @@ import android.view.View
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.androidutils.extensions.getLong
+import com.w2sv.androidutils.extensions.hide
 import com.w2sv.androidutils.extensions.remove
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
+
+fun crossVisualize(hideView: View, showView: View){
+    hideView.hide()
+    showView.show()
+}
 
 fun View.animate(
     technique: Techniques,

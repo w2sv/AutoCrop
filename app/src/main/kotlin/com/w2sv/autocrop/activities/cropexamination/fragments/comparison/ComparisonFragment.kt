@@ -2,8 +2,7 @@ package com.w2sv.autocrop.activities.cropexamination.fragments.comparison
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.InsetDrawable
+import android.graphics.Matrix
 import android.os.Bundle
 import android.view.View
 import android.view.animation.DecelerateInterpolator
@@ -25,12 +24,14 @@ import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.remove
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.showSystemBars
+import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
-import com.w2sv.autocrop.cropping.CropEdges
+import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.extensions.getScaleY
 import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
+import com.w2sv.autocrop.ui.crossVisualize
 import com.w2sv.autocrop.utils.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.kotlinutils.delegates.AutoSwitch
@@ -67,26 +68,15 @@ class ComparisonFragment
 
         val enterTransitionCompleted by AutoSwitch(false, switchOn = false)
 
-        val displayScreenshot: LiveData<Boolean> by lazy {
+        val displayScreenshotLive: LiveData<Boolean> by lazy {
             MutableLiveData(false)
         }
-        val useInsetLayoutParams: LiveData<Boolean> by lazy {
-            MutableLiveData(true)
-        }
-        val showButtons: LiveData<Boolean> by lazy {
+        val showButtonsLive: LiveData<Boolean> by lazy {
             MutableLiveData(false)
         }
-
-        val cropFittedInsets: CropEdges =
-            cropBundle.run {
-                CropEdges(crop.edges.top, screenshot.height - crop.edges.bottom)
-            }
-
-        val cropInsetDrawable: InsetDrawable =
-            InsetDrawable(
-                BitmapDrawable(context.resources, cropBundle.crop.bitmap),
-                0, cropFittedInsets.top, 0, cropFittedInsets.bottom
-            )
+        val screenshotImageViewMatrixLive: LiveData<Matrix> by lazy {
+            MutableLiveData(null)
+        }
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -95,7 +85,7 @@ class ComparisonFragment
         super.onAttach(context)
 
         sharedElementEnterTransition = TransitionInflater.from(context)
-            .inflateTransition(R.transition.move)
+            .inflateTransition(android.R.transition.move)
             .setInterpolator(DecelerateInterpolator(0.8f))
             .addListener(
                 object : TransitionListenerAdapter() {
@@ -105,8 +95,7 @@ class ComparisonFragment
 
                         if (!viewModel.enterTransitionCompleted) {
                             lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
-                                viewModel.useInsetLayoutParams.postValue(false)
-                                viewModel.displayScreenshot.postValue(true)
+                                viewModel.displayScreenshotLive.postValue(true)
 
                                 if (!booleanPreferences.comparisonInstructionsShown)
                                     requireActivity()
@@ -117,12 +106,12 @@ class ComparisonFragment
                                             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                                                 super.onDismissed(transientBottomBar, event)
 
-                                                viewModel.showButtons.postValue(true)
+                                                viewModel.showButtonsLive.postValue(true)
                                             }
                                         })
                                         .show()
                                 else
-                                    viewModel.showButtons.postValue(true)
+                                    viewModel.showButtonsLive.postValue(true)
                             }
                         }
                     }
@@ -133,16 +122,42 @@ class ComparisonFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.backButton.setOnClickListener {
-            popFromFragmentManager(parentFragmentManager)
+        viewModel.setLiveDataObservers()
+        binding.initialize()
+    }
+
+    private fun ViewModel.setLiveDataObservers(){
+        screenshotImageViewMatrixLive.observe(viewLifecycleOwner){
+            it?.let {
+                with(binding.cropIv){
+                    imageMatrix = it
+                    translationY = viewModel.cropBundle.crop.edges.top.toFloat() * it.getScaleY()
+                    postInvalidate()
+                }
+            }
         }
-        viewModel.showButtons.observe(viewLifecycleOwner) {
+        displayScreenshotLive.observe(viewLifecycleOwner){
+            if (it)
+                crossVisualize(binding.cropIv, binding.screenshotIv)
+            else
+                crossVisualize(binding.screenshotIv, binding.cropIv)
+        }
+        showButtonsLive.observe(viewLifecycleOwner) {
             with(binding.buttonLayout) {
                 if (it)
                     show()
                 else
                     remove()
             }
+        }
+    }
+
+    private fun FragmentComparisonBinding.initialize(){
+        root.setOnClickListener {
+            viewModel.displayScreenshotLive.toggle()
+        }
+        backButton.setOnClickListener {
+            popFromFragmentManager(parentFragmentManager)
         }
     }
 
@@ -165,9 +180,8 @@ class ComparisonFragment
 
     private fun onPreRemove() {
         with(viewModel) {
-            showButtons.postValue(false)
-            useInsetLayoutParams.postValue(true)
-            displayScreenshot.postValue(false)
+            showButtonsLive.postValue(false)
+            binding.cropIv.show()
         }
     }
 }

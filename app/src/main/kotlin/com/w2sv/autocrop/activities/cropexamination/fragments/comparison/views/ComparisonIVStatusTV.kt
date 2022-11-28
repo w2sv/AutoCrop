@@ -19,7 +19,7 @@ class ComparisonIVStatusTV(context: Context, attributeSet: AttributeSet) : AppCo
         super.onAttachedToWindow()
 
         ifNotInEditMode {
-            viewModel<ComparisonFragment.ViewModel>().value.displayScreenshot.observe(findViewTreeLifecycleOwner()!!) {
+            viewModel<ComparisonFragment.ViewModel>().value.displayScreenshotLive.observe(findViewTreeLifecycleOwner()!!) {
                 fadeOutAnimation?.stop()
 
                 text = resources.getString(if (it) R.string.screenshot else R.string.crop)

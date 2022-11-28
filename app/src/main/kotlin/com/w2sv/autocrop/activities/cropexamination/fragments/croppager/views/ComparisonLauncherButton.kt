@@ -42,12 +42,6 @@ class ComparisonLauncherButton(context: Context, attributeSet: AttributeSet) :
                         .currentViewHolder<CropPager.Adapter.ViewHolder>()!!
                         .imageView
 
-//                cropImageView.layoutParams = (cropImageView.layoutParams as RecyclerView.LayoutParams).apply {
-//                    val margin = (rootView.height - viewModel.dataSet.liveElement.crop.edges.height) / 2
-//                    topMargin = margin
-//                    bottomMargin = margin
-//                }
-
                 addSharedElement(
                     cropImageView,
                     cropImageView.transitionName
