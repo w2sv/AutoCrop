@@ -10,9 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/transition/arc_motion.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/ComparisonFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/ComparisonFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ComparisonIVStatusTV.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/DisplayStatusTextView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ComparisonLauncherButton.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ComparisonLaunchButton.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/deletionconfirmation/DeletionConfirmationDialogFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/deletionconfirmation/DeletionConfirmationDialogFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_comparison.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_comparison.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +121,8 @@
     "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/CropImageView.kt_SELECTED": "CropImageView",
     "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ScreenshotImageView.kt_SELECTED": "ScreenshotImageView",
     "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ComparisonButton.kt_SELECTED": "ComparisonLauncherButton",
-    "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ComparisonLauncherButton.kt_SELECTED": "ComparisonLauncherButton",
+    "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/views/ComparisonLauncherButton.kt_SELECTED": "ComparisonLaunchButton",
+    "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/ui/FractionTextView.kt_SELECTED": "FractionTextView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/ComparisonImageView.kt_SELECTED": "ComparisonImageView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/views/ComparisonImageView.kt_SELECTED": "ComparisonImageView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/views/StatusTV.kt_SELECTED": "ComparisonIVStatusTV",

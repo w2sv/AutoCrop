@@ -87,10 +87,10 @@ class ComparisonFragment
 
         sharedElementEnterTransition = TransitionInflater.from(context)
             .inflateTransition(android.R.transition.move)
-            .setInterpolator(DecelerateInterpolator(0.8f))
+            .setDuration(500)
+            .setInterpolator(DecelerateInterpolator(1.5f))
             .addListener(
                 object : TransitionListenerAdapter() {
-
                     override fun onTransitionEnd(transition: Transition) {
                         super.onTransitionEnd(transition)
 

@@ -13,7 +13,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.ui.fadeOut
 
-class ComparisonIVStatusTV(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
+class DisplayStatusTextView(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

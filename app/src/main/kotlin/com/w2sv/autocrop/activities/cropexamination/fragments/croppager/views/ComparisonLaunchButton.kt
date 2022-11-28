@@ -13,7 +13,7 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPage
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.viewmodel.CropPagerViewModel
 import com.w2sv.bidirectionalviewpager.viewpager.currentViewHolder
 
-class ComparisonLauncherButton(context: Context, attributeSet: AttributeSet) :
+class ComparisonLaunchButton(context: Context, attributeSet: AttributeSet) :
     AppCompatImageButton(context, attributeSet),
     FragmentHostingActivity.Retriever by FragmentHostingActivity.Retriever.Implementation(context) {
 

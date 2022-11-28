@@ -2,9 +2,7 @@ package com.w2sv.autocrop.activities.cropexamination.fragments.deletionconfirmat
 
 import android.app.Activity
 import android.os.Build
-import android.os.Bundle
 import android.provider.MediaStore
-import android.view.View
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -13,19 +11,19 @@ import androidx.lifecycle.lifecycleScope
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.autocrop.R
+import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
 import com.w2sv.autocrop.activities.cropexamination.fragments.apptitle.AppTitleFragment
-import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.databinding.FragmentDeletionQueryBinding
 
+@RequiresApi(Build.VERSION_CODES.R)
 class DeletionConfirmationDialogFragment :
     ApplicationFragment<FragmentDeletionQueryBinding>(FragmentDeletionQueryBinding::class.java) {
 
     private val activityViewModel by activityViewModels<CropExaminationActivityViewModel>()
 
-    @RequiresApi(Build.VERSION_CODES.R)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onStart() {
+        super.onStart()
 
         deletionConfirmationInquiryContract.launch(
             IntentSenderRequest.Builder(

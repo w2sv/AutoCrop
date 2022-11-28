@@ -28,7 +28,7 @@
 
         android:visibility="invisible">
 
-        <com.w2sv.autocrop.activities.cropexamination.fragments.comparison.views.ComparisonIVStatusTV
+        <com.w2sv.autocrop.activities.cropexamination.fragments.comparison.views.DisplayStatusTextView
             android:id="@+id/iv_status_tv"
 
             android:layout_width="95dp"
