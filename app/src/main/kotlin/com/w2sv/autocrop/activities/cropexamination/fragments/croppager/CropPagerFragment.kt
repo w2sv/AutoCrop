@@ -41,7 +41,6 @@ import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.mateware.snacky.Snacky
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -225,14 +224,13 @@ class CropPagerFragment :
      */
     override fun onResult(confirmed: Boolean, dataSetPosition: Int) {
         if (confirmed)
-            activityViewModel.singularCropSavingJob = lifecycleScope.launch {
-                activityViewModel.makeCropBundleProcessor(
+            activityViewModel.launchCropSavingCoroutine(
+                processCropBundle = activityViewModel.makeCropBundleProcessor(
                     dataSetPosition,
                     booleanPreferences.deleteScreenshots,
-                    requireContext()
+                    requireActivity()
                 )
-                    .invoke()
-            }
+            )
 
         if (viewModel.dataSet.size == 1)
             castActivity<CropExaminationActivity>().replaceWithSubsequentFragment()

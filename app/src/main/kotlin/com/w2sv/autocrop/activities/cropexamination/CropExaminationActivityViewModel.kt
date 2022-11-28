@@ -6,6 +6,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.autocrop.cropping.cropbundle.Screenshot
@@ -17,7 +18,9 @@ import com.w2sv.kotlinutils.UnitFun
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.toInt
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,19 +29,25 @@ class CropExaminationActivityViewModel @Inject constructor(savedStateHandle: Sav
     @Inject
     lateinit var uriPreferences: UriPreferences
 
-    val nDismissedScreenshots: Int = savedStateHandle[CropActivity.EXTRA_N_UNCROPPED_IMAGES]!!
-
     companion object {
         lateinit var cropBundles: MutableList<CropBundle>
     }
 
-    var showedDismissedScreenshotsSnackbar by AutoSwitch(false, switchOn = false)
+    val nDismissedScreenshots: Int = savedStateHandle[CropActivity.EXTRA_N_UNCROPPED_IMAGES]!!
 
-    var singularCropSavingJob: Job? = null
+    var showedDismissedScreenshotsSnackbar by AutoSwitch(false, switchOn = false)
 
     var nDeletedScreenshots = 0
     val writeUris = arrayListOf<Uri>()
     val deletionInquiryUris = arrayListOf<Uri>()
+
+    var cropBundleProcessingJob: Job? = null
+
+    inline fun launchCropSavingCoroutine(crossinline processCropBundle: () -> Unit){
+        cropBundleProcessingJob = viewModelScope.launch(Dispatchers.IO) {
+            processCropBundle()
+        }
+    }
 
     fun makeCropBundleProcessor(
         cropBundlePosition: Int,
