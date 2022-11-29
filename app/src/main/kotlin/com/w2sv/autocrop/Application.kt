@@ -1,12 +1,12 @@
 package com.w2sv.autocrop
 
-import com.w2sv.androidutils.DebugTreeCultivatingApplication
+import android.app.Application
 import com.w2sv.permissionhandler.PermissionHandler
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
 @HiltAndroidApp
-class Application : DebugTreeCultivatingApplication() {
+class Application : Application() {
 
     override fun onCreate() {
         super.onCreate()

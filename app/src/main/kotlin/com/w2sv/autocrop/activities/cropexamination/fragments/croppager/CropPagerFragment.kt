@@ -1,14 +1,17 @@
 package com.w2sv.autocrop.activities.cropexamination.fragments.croppager
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.daimajia.androidanimations.library.Techniques
@@ -21,6 +24,7 @@ import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
+import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.dialogs.CropDialog
@@ -34,13 +38,18 @@ import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.crossFade
+import com.w2sv.autocrop.ui.scrollPeriodically
 import com.w2sv.autocrop.utils.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
+import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.mateware.snacky.Snacky
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -51,23 +60,46 @@ class CropPagerFragment :
     ManualCropFragment.ResultListener,
     CropPagerInstructionsDialog.OnDismissedListener {
 
+    companion object {
+        fun instance(nUncroppedScreenshots: Int): CropPagerFragment =
+            CropPagerFragment()
+                .apply {
+                    arguments = bundleOf(CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS to nUncroppedScreenshots)
+                }
+    }
+
     @HiltViewModel
-    class ViewModel @Inject constructor(booleanPreferences: BooleanPreferences) : androidx.lifecycle.ViewModel() {
+    class ViewModel @Inject constructor(
+        savedStateHandle: SavedStateHandle,
+        booleanPreferences: BooleanPreferences,
+        resources: Resources
+    ) : androidx.lifecycle.ViewModel() {
 
         val dataSet = BidirectionalViewPagerDataSet(CropExaminationActivityViewModel.cropBundles)
 
-        val backPressHandler = BackPressListener(viewModelScope)
+        val backPressHandler = BackPressListener(
+            viewModelScope,
+            resources.getLong(R.integer.duration_backpress_confirmation_window)
+        )
+
+        //$$$$$$$$$$$$$$$$$$$$$$$$
+        // Uncropped Screenshots $
+        //$$$$$$$$$$$$$$$$$$$$$$$$
+
+        val nUncroppedScreenshots: Int = savedStateHandle[CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS]!!
+
+        var showedUncroppedScreenshotsSnackbar by AutoSwitch(false, switchOn = false)
 
         //$$$$$$$$$$$$$
         // AutoScroll $
         //$$$$$$$$$$$$$
 
-        var scroller: Scroller? = null
+        var autoScrollCoroutine: Job? = null
 
-        val liveAutoScroll: LiveData<Boolean> = MutableLiveData(booleanPreferences.autoScroll && dataSet.size > 1)
+        val doAutoScrollLive: LiveData<Boolean> = MutableLiveData(booleanPreferences.autoScroll && dataSet.size > 1)
 
-        val autoScrolls: Int
-            get() = dataSet.size - dataSet.livePosition.value!!
+        fun getNAutoScrolls(): Int =
+            dataSet.size - dataSet.livePosition.value!!
     }
 
     @Inject
@@ -77,21 +109,6 @@ class CropPagerFragment :
     private val activityViewModel by activityViewModels<CropExaminationActivityViewModel>()
 
     private lateinit var viewPagerProxy: CropPager
-
-    fun onBackPress() {
-        viewModel.backPressHandler(
-            {
-                requireActivity()
-                    .snackyBuilder("Tap again to return to main screen")
-                    .setSnackbarRepelledView()
-                    .build()
-                    .show()
-            },
-            {
-                castActivity<CropExaminationActivity>().startMainActivity()
-            }
-        )
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -113,12 +130,21 @@ class CropPagerFragment :
             }
         }
 
-        liveAutoScroll.observe(viewLifecycleOwner) { autoScroll ->
+        doAutoScrollLive.observe(viewLifecycleOwner) { autoScroll ->
             if (autoScroll) {
                 binding.cancelAutoScrollButton.show()
-                scroller = Scroller().apply {
-                    run(binding.viewPager, autoScrolls) {
-                        this@setLiveDataObservers.liveAutoScroll.postValue(false)
+                lifecycleScope.launch {
+                    val scrollPeriod = resources.getLong(R.integer.delay_large)
+
+                    if (autoScrollCoroutine == null)
+                        delay(scrollPeriod)
+
+                    autoScrollCoroutine = binding.viewPager.scrollPeriodically(
+                        lifecycleScope,
+                        getNAutoScrolls(),
+                        resources.getLong(R.integer.delay_large)
+                    ) {
+                        doAutoScrollLive.postValue(false)
                     }
                 }
             }
@@ -131,8 +157,8 @@ class CropPagerFragment :
                     }
                 }
 
-                scroller?.let { scroller ->
-                    scroller.cancel()
+                autoScrollCoroutine?.let {
+                    it.cancel()
                     crossFade(
                         binding.cancelAutoScrollButton,
                         binding.snackbarRepelledLayout
@@ -147,7 +173,7 @@ class CropPagerFragment :
                         booleanPreferences.cropPagerInstructionsShown = true
                     }
                 else
-                    onAutoScrollConcluded()
+                    showUncroppableScreenshotsSnackbarIfApplicable()
 
             }
             binding.viewPager.isUserInputEnabled = !autoScroll
@@ -160,21 +186,21 @@ class CropPagerFragment :
     }
 
     override fun onDismissed() {
-        onAutoScrollConcluded()
+        showUncroppableScreenshotsSnackbarIfApplicable()
     }
 
-    private fun onAutoScrollConcluded() {
-        with(activityViewModel) {
-            if (!showedDismissedScreenshotsSnackbar && nDismissedScreenshots != 0) {
+    private fun showUncroppableScreenshotsSnackbarIfApplicable() {
+        with(viewModel) {
+            if (!showedUncroppedScreenshotsSnackbar && nUncroppedScreenshots != 0) {
                 requireActivity().snackyBuilder(
                     SpannableStringBuilder()
                         .append("Couldn't find crop bounds for")
                         .bold {
                             color(
                                 requireContext().getThemedColor(R.color.highlight)
-                            ) { append(" $nDismissedScreenshots") }
+                            ) { append(" $nUncroppedScreenshots") }
                         }
-                        .append(" image".numericallyInflected(nDismissedScreenshots))
+                        .append(" image".numericallyInflected(nUncroppedScreenshots))
                 )
                     .setSnackbarRepelledView()
                     .setIcon(com.w2sv.permissionhandler.R.drawable.ic_error_24)
@@ -250,15 +276,18 @@ class CropPagerFragment :
     private fun Snacky.Builder.setSnackbarRepelledView(): Snacky.Builder =
         setView(binding.snackbarRepelledHostingLayout)
 
-    /**
-     * Cancel and nullify scroller if set, i.e. running
-     */
-    override fun onPause() {
-        super.onPause()
-
-        with(viewModel) {
-            scroller?.cancel()
-            scroller = null
-        }
+    fun onBackPress() {
+        viewModel.backPressHandler(
+            {
+                requireActivity()
+                    .snackyBuilder("Tap again to return to main screen")
+                    .setSnackbarRepelledView()
+                    .build()
+                    .show()
+            },
+            {
+                castActivity<CropExaminationActivity>().startMainActivity()
+            }
+        )
     }
 }

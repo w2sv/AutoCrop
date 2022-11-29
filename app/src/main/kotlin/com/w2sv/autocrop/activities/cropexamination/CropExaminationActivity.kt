@@ -3,9 +3,11 @@ package com.w2sv.autocrop.activities.cropexamination
 import android.net.Uri
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationActivity
+import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.cropexamination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPagerFragment
@@ -13,16 +15,21 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.deletionconfirmati
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
+import com.w2sv.autocrop.utils.extensions.getInt
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 
-class CropExaminationActivity :
-    ApplicationActivity(CropPagerFragment::class.java) {
+class CropExaminationActivity : ApplicationActivity() {
 
     private companion object {
         const val EXTRA_CROP_URIS = "com.w2sv.autocrop.CROP_URIS"
         const val EXTRA_N_DELETED_SCREENSHOTS = "com.w2sv.autocrop.N_DELETED_SCREENSHOTS"
         const val EXTRA_SAVE_DIR_NAME = "com.w2sv.autocrop.SAVE_DIR_NAME"
     }
+
+    override fun getRootFragment(): Fragment =
+        CropPagerFragment.instance(
+            intent.getInt(CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS)
+        )
 
     private val viewModel: CropExaminationActivityViewModel by viewModels()
 

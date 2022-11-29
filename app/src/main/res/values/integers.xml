@@ -4,6 +4,7 @@
     <integer name="duration_flowfield_buttons_fade_in_halve">1750</integer>
     <integer name="duration_snackbar_long">4000</integer>
     <integer name="duration_snackbar_extra_long">5000</integer>
+    <integer name="duration_backpress_confirmation_window">2500</integer>
 
     <integer name="delay_small">200</integer>
     <integer name="delay_medium">500</integer>

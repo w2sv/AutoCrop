@@ -16,12 +16,12 @@ import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewM
 import com.w2sv.autocrop.activities.cropexamination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.databinding.FragmentDeletionQueryBinding
 
-@RequiresApi(Build.VERSION_CODES.R)
 class DeletionConfirmationDialogFragment :
     ApplicationFragment<FragmentDeletionQueryBinding>(FragmentDeletionQueryBinding::class.java) {
 
     private val activityViewModel by activityViewModels<CropExaminationActivityViewModel>()
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onResume() {
         super.onResume()
 

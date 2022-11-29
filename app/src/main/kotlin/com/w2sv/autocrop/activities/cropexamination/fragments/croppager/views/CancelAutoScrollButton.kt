@@ -14,7 +14,7 @@ class CancelAutoScrollButton(context: Context, attributeSet: AttributeSet) :
         super.onAttachedToWindow()
 
         setOnClickListener {
-            viewModel<CropPagerFragment.ViewModel>().value.liveAutoScroll.postValue(false)
+            viewModel<CropPagerFragment.ViewModel>().value.doAutoScrollLive.postValue(false)
         }
     }
 }
