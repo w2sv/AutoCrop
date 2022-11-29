@@ -144,36 +144,34 @@ class FlowFieldFragment :
     }
 
     private fun showIOSynopsisSnackbar(ioResults: CropExaminationActivity.Results) {
-        with(ioResults) {
-            val (text, icon) = if (nSavedCrops == 0)
-                "Discarded all crops" to requireContext().getColoredIcon(
-                    R.drawable.ic_outline_sentiment_dissatisfied_24,
-                    R.color.magenta_saturated
-                )
-            else
-                SpannableStringBuilder()
-                    .apply {
-                        append("Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)} to ")
-                        color(requireContext().getThemedColor(R.color.success)) {
-                            append(saveDirName)
-                        }
-                        if (nDeletedScreenshots != 0)
-                            append(
-                                " and deleted ${
-                                    if (nDeletedScreenshots == nSavedCrops)
-                                        "corresponding"
-                                    else
-                                        nDeletedScreenshots
-                                } ${"screenshot".numericallyInflected(nDeletedScreenshots)}"
-                            )
-                    } to requireContext().getColoredIcon(R.drawable.ic_check_24, R.color.success)
-
-            requireActivity()
-                .snackyBuilder(text)
-                .setIcon(icon)
-                .build()
-                .show()
+        ioResults.let {
+            with(requireActivity()) {
+                if (it.nSavedCrops == 0)
+                    snackyBuilder("Discarded all crops")
+                else
+                    snackyBuilder(
+                        SpannableStringBuilder()
+                            .apply {
+                                append("Saved ${it.nSavedCrops} ${"crop".numericallyInflected(it.nSavedCrops)} to ")
+                                color(getThemedColor(R.color.success)) {
+                                    append(it.saveDirName)
+                                }
+                                if (it.nDeletedScreenshots != 0)
+                                    append(
+                                        " and deleted ${
+                                            if (it.nDeletedScreenshots == it.nSavedCrops)
+                                                "corresponding"
+                                            else
+                                                it.nDeletedScreenshots
+                                        } ${"screenshot".numericallyInflected(it.nDeletedScreenshots)}"
+                                    )
+                            }
+                    )
+                        .setIcon(getColoredIcon(R.drawable.ic_check_24, R.color.success))
+            }
         }
+            .build()
+            .show()
     }
 
     val imageSelectionIntentLauncher =
