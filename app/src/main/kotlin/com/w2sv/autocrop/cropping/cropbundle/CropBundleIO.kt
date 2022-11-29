@@ -49,9 +49,13 @@ fun ContentResolver.carryOutCropIO(
     deleteScreenshot: Boolean
 ): IOResult =
     screenshotMediaStoreData.run {
-        val cropFileName = cropFileName(fileName, parsedMimeType)
         IOResult(
-            saveBitmap(cropBitmap, parsedMimeType, cropFileName, validSaveDirDocumentUri),
+            saveBitmap(
+                cropBitmap,
+                parsedMimeType,
+                cropFileName(fileName, parsedMimeType),
+                validSaveDirDocumentUri
+            ),
             deleteScreenshotIfApplicable(id, deleteScreenshot)
         )
     }
