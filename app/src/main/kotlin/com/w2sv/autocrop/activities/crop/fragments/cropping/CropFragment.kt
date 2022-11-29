@@ -1,8 +1,8 @@
 package com.w2sv.autocrop.activities.crop.fragments.cropping
 
 import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -23,7 +23,6 @@ import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailedFragment
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
-import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.cropping.cropEdgesCandidates
 import com.w2sv.autocrop.cropping.cropbundle.CropBundle
@@ -33,6 +32,7 @@ import com.w2sv.autocrop.databinding.FragmentCropBinding
 import com.w2sv.autocrop.utils.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -50,10 +50,14 @@ class CropFragment
     }
 
     @HiltViewModel
-    class ViewModel @Inject constructor(savedStateHandle: SavedStateHandle, resources: Resources) : androidx.lifecycle.ViewModel() {
+    class ViewModel @Inject constructor(
+        savedStateHandle: SavedStateHandle,
+        @ApplicationContext context: Context
+    ) : androidx.lifecycle.ViewModel() {
+
         val backPressListener = BackPressListener(
             viewModelScope,
-            resources.getLong(R.integer.duration_backpress_confirmation_window)
+            context.resources.getLong(R.integer.duration_backpress_confirmation_window)
         )
 
         private val screenshotUris: List<Uri> = savedStateHandle[MainActivity.EXTRA_SELECTED_IMAGE_URIS]!!
@@ -153,10 +157,10 @@ class CropFragment
     }
 
     /**
-     * Inherently sets [CropExaminationActivityViewModel.cropBundles]
+     * Inherently sets [CropExaminationActivity.ViewModel.cropBundles]
      */
     private fun launchCropExamination() {
-        CropExaminationActivityViewModel.cropBundles = viewModel.cropBundles
+        CropExaminationActivity.ViewModel.cropBundles = viewModel.cropBundles
 
         startActivity(
             Intent(requireContext(), CropExaminationActivity::class.java)

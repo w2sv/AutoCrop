@@ -47,6 +47,7 @@ class FlowFieldFragment :
 
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
+
     @Inject
     lateinit var uriPreferences: UriPreferences
 

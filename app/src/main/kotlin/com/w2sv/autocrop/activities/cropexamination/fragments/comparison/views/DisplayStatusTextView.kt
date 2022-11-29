@@ -17,7 +17,7 @@ class DisplayStatusTextView(context: Context, attributeSet: AttributeSet) : AppC
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        if (!isInEditMode){
+        if (!isInEditMode) {
             viewModel<ComparisonFragment.ViewModel>().value.displayScreenshotLive.observe(findViewTreeLifecycleOwner()!!) {
                 fadeOutAnimation?.stop()
 

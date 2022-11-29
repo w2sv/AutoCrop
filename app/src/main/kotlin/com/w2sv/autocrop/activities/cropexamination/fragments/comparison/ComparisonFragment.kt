@@ -101,7 +101,7 @@ class ComparisonFragment
             )
     }
 
-    private fun onEnterTransition(){
+    private fun onEnterTransition() {
         lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
             viewModel.displayScreenshotLive.postValue(true)
 
@@ -130,8 +130,8 @@ class ComparisonFragment
         viewModel.setLiveDataObservers()
     }
 
-    private fun FragmentComparisonBinding.initialize(){
-        with(cropIv){
+    private fun FragmentComparisonBinding.initialize() {
+        with(cropIv) {
             ViewCompat.setTransitionName(this, viewModel.cropBundle.identifier())
             setImageBitmap(viewModel.cropBundle.crop.bitmap)
         }
@@ -143,17 +143,17 @@ class ComparisonFragment
         }
     }
 
-    private fun ViewModel.setLiveDataObservers(){
-        screenshotImageViewMatrixLive.observe(viewLifecycleOwner){
+    private fun ViewModel.setLiveDataObservers() {
+        screenshotImageViewMatrixLive.observe(viewLifecycleOwner) {
             it?.let {
-                with(binding.cropIv){
+                with(binding.cropIv) {
                     imageMatrix = it
                     translationY = viewModel.cropBundle.crop.edges.top.toFloat() * it.getScaleY()
                     postInvalidate()
                 }
             }
         }
-        displayScreenshotLive.observe(viewLifecycleOwner){
+        displayScreenshotLive.observe(viewLifecycleOwner) {
             if (it)
                 crossVisualize(binding.cropIv, binding.screenshotIv)
             else

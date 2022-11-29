@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
-import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
+import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity.ViewModel
 import com.w2sv.autocrop.databinding.FragmentSaveallBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,14 +27,14 @@ class SaveAllFragment :
     lateinit var booleanPreferences: BooleanPreferences
 
     class ViewModel : androidx.lifecycle.ViewModel() {
-        val nUnsavedImages = CropExaminationActivityViewModel.cropBundles.size
+        val nUnsavedImages = CropExaminationActivity.ViewModel.cropBundles.size
         val liveCropNumber: LiveData<Int> by lazy {
             MutableLiveData(1)
         }
     }
 
     private val viewModel by viewModels<ViewModel>()
-    private val activityViewModel by activityViewModels<CropExaminationActivityViewModel>()
+    private val activityViewModel by activityViewModels<CropExaminationActivity.ViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,10 +49,10 @@ class SaveAllFragment :
 
         launchCropProcessingCoroutine()
     }
-    
-    private fun launchCropProcessingCoroutine(){
+
+    private fun launchCropProcessingCoroutine() {
         lifecycleScope.launch {
-            CropExaminationActivityViewModel.cropBundles.indices.forEach {
+            CropExaminationActivity.ViewModel.cropBundles.indices.forEach {
                 withContext(Dispatchers.IO) {
                     activityViewModel.makeCropBundleProcessor(
                         it,

@@ -12,14 +12,14 @@ import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
-import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivityViewModel
+import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.cropexamination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.databinding.FragmentDeletionQueryBinding
 
 class DeletionConfirmationDialogFragment :
     ApplicationFragment<FragmentDeletionQueryBinding>(FragmentDeletionQueryBinding::class.java) {
 
-    private val activityViewModel by activityViewModels<CropExaminationActivityViewModel>()
+    private val activityViewModel by activityViewModels<CropExaminationActivity.ViewModel>()
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onResume() {

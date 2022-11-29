@@ -49,7 +49,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        if(!isInEditMode) {
+        if (!isInEditMode) {
             setShareCropsItem()
             setListenToScreenCapturesItem()
             setAutoScrollItem()

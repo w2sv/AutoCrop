@@ -29,7 +29,11 @@ class MainActivity :
     companion object {
         const val EXTRA_SELECTED_IMAGE_URIS = "com.w2sv.autocrop.extra.SELECTED_IMAGE_URIS"
 
-        fun restart(context: Context, withReturnAnimation: Boolean = true, configureIntent: ((Intent) -> Intent)? = null) {
+        fun restart(
+            context: Context,
+            withReturnAnimation: Boolean = true,
+            configureIntent: ((Intent) -> Intent)? = null
+        ) {
             context.startActivity(
                 Intent(
                     context,
