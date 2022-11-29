@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CropExaminationActivity : ApplicationActivity(null) {
+class CropExaminationActivity : ApplicationActivity() {
 
     private companion object {
         const val EXTRA_CROP_URIS = "com.w2sv.autocrop.CROP_URIS"

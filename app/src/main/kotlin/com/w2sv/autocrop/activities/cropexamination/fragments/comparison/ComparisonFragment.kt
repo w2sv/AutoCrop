@@ -46,7 +46,7 @@ class ComparisonFragment
     : ApplicationFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java) {
 
     companion object {
-        fun instance(cropBundle: CropBundle): ComparisonFragment =
+        fun getInstance(cropBundle: CropBundle): ComparisonFragment =
             ComparisonFragment()
                 .apply {
                     arguments = bundleOf(

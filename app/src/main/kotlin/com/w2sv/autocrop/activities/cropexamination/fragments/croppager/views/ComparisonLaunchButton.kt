@@ -29,7 +29,7 @@ class ComparisonLaunchButton(context: Context, attributeSet: AttributeSet) :
 
     private fun launchComparisonFragment() {
         fragmentHostingActivity.fragmentReplacementTransaction(
-            ComparisonFragment.instance(viewModel.dataSet.liveElement)
+            ComparisonFragment.getInstance(viewModel.dataSet.liveElement)
         )
             .addToBackStack(null)
             .apply {

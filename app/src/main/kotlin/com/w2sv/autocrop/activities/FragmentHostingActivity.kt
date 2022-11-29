@@ -7,11 +7,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.blogspot.atifsoftwares.animatoolib.R
 import com.w2sv.androidutils.ActivityRetriever
 
-abstract class FragmentHostingActivity(private val rootFragmentClass: Class<out Fragment>?) : BlankViewBoundActivity() {
-
-    companion object {
-        private const val ROOT_FRAGMENT_TAG = "ROOT_FRAGMENT"
-    }
+abstract class FragmentHostingActivity : BlankViewBoundActivity() {
 
     interface Retriever : ActivityRetriever {
 
@@ -33,13 +29,12 @@ abstract class FragmentHostingActivity(private val rootFragmentClass: Class<out 
             .add(
                 layoutId,
                 getRootFragment(),
-                ROOT_FRAGMENT_TAG
+                "${this::class.java.name}_ROOT_FRAGMENT"
             )
             .commit()
     }
 
-    protected open fun getRootFragment(): Fragment =
-        rootFragmentClass!!.newInstance()
+    abstract fun getRootFragment(): Fragment
 
     fun getCurrentFragment(): Fragment? =
         supportFragmentManager.findFragmentById(layoutId)
