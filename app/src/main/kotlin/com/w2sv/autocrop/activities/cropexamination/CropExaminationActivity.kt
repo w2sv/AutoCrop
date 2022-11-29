@@ -28,13 +28,15 @@ import com.w2sv.autocrop.utils.extensions.getInt
 import com.w2sv.autocrop.utils.extensions.queryMediaStoreDatum
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.kotlinutils.extensions.toInt
+import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class CropExaminationActivity : ApplicationActivity() {
+@AndroidEntryPoint
+class CropExaminationActivity : ApplicationActivity(null) {
 
     private companion object {
         const val EXTRA_CROP_URIS = "com.w2sv.autocrop.CROP_URIS"
@@ -165,7 +167,7 @@ class CropExaminationActivity : ApplicationActivity() {
     }
 
     fun startMainActivity() {
-        MainActivity.restart(this, true) {
+        MainActivity.restart(this) {
             it
                 .putParcelableArrayListExtra(EXTRA_CROP_URIS, viewModel.writeUris)
                 .putExtra(EXTRA_N_DELETED_SCREENSHOTS, viewModel.nDeletedScreenshots)

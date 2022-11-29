@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 abstract class ApplicationActivity(
-    rootFragmentClass: Class<out Fragment>? = null
+    rootFragmentClass: Class<out Fragment>?
 ) : FragmentHostingActivity(rootFragmentClass) {
 
     @Inject

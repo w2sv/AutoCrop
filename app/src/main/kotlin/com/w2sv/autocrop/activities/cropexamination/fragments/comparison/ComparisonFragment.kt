@@ -135,9 +135,13 @@ class ComparisonFragment
             ViewCompat.setTransitionName(this, viewModel.cropBundle.identifier())
             setImageBitmap(viewModel.cropBundle.crop.bitmap)
         }
+
+        screenshotIv.setImageBitmap(viewModel.screenshotBitmap)
+
         root.setOnClickListener {
             viewModel.displayScreenshotLive.toggle()
         }
+
         backButton.setOnClickListener {
             popFromFragmentManager(parentFragmentManager)
         }
@@ -158,6 +162,8 @@ class ComparisonFragment
                 crossVisualize(binding.cropIv, binding.screenshotIv)
             else
                 crossVisualize(binding.screenshotIv, binding.cropIv)
+
+            binding.ivStatusTv.setTextAndShow(it)
         }
         showButtonsLive.observe(viewLifecycleOwner) {
             with(binding.buttonLayout) {

@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
-import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity.ViewModel
 import com.w2sv.autocrop.databinding.FragmentSaveallBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +26,9 @@ class SaveAllFragment :
     lateinit var booleanPreferences: BooleanPreferences
 
     class ViewModel : androidx.lifecycle.ViewModel() {
+
         val nUnsavedImages = CropExaminationActivity.ViewModel.cropBundles.size
+
         val liveCropNumber: LiveData<Int> by lazy {
             MutableLiveData(1)
         }

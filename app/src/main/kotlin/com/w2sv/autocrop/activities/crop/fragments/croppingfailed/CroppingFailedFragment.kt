@@ -13,7 +13,7 @@ class CroppingFailedFragment
         super.onViewCreated(view, savedInstanceState)
 
         binding.gotItButton.setOnClickListener {
-            MainActivity.restart(requireContext())
+            MainActivity.restart(requireActivity())
         }
     }
 }

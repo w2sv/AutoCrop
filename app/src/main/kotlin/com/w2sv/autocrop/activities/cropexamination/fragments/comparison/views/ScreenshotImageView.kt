@@ -12,14 +12,6 @@ class ScreenshotImageView(context: Context, attributeSet: AttributeSet) :
 
     private val viewModel by viewModel<ComparisonFragment.ViewModel>()
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-
-        if (!isInEditMode) {
-            setImageBitmap(viewModel.screenshotBitmap)
-        }
-    }
-
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
 

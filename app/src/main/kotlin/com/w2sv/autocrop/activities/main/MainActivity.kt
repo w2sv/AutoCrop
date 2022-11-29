@@ -1,5 +1,6 @@
 package com.w2sv.autocrop.activities.main
 
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -20,9 +21,11 @@ import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
+import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity :
     ApplicationActivity(FlowFieldFragment::class.java) {
 
@@ -30,13 +33,13 @@ class MainActivity :
         const val EXTRA_SELECTED_IMAGE_URIS = "com.w2sv.autocrop.extra.SELECTED_IMAGE_URIS"
 
         fun restart(
-            context: Context,
+            activity: Activity,
             withReturnAnimation: Boolean = true,
             configureIntent: ((Intent) -> Intent)? = null
         ) {
-            context.startActivity(
+            activity.startActivity(
                 Intent(
-                    context,
+                    activity,
                     MainActivity::class.java
                 )
                     .apply {
@@ -44,7 +47,7 @@ class MainActivity :
                     }
             )
             if (withReturnAnimation)
-                Animatoo.animateSwipeRight(context)
+                Animatoo.animateSwipeRight(activity)
         }
     }
 

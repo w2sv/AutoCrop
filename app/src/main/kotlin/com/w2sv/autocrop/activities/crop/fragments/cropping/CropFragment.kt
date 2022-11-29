@@ -31,6 +31,7 @@ import com.w2sv.autocrop.cropping.maxHeightEdges
 import com.w2sv.autocrop.databinding.FragmentCropBinding
 import com.w2sv.autocrop.utils.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +40,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class CropFragment
     : ApplicationFragment<FragmentCropBinding>(FragmentCropBinding::class.java) {
 
@@ -169,7 +171,7 @@ class CropFragment
                     viewModel.getNUncroppableImages()
                 )
         )
-        Animatoo.animateSwipeLeft(requireContext())
+        Animatoo.animateSwipeLeft(requireActivity())
     }
 
     fun onBackPress() {
@@ -181,7 +183,7 @@ class CropFragment
                     .show()
             },
             {
-                MainActivity.restart(requireContext())
+                MainActivity.restart(requireActivity())
             }
         )
     }
