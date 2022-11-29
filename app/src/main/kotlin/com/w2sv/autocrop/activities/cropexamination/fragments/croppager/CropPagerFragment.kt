@@ -1,6 +1,6 @@
 package com.w2sv.autocrop.activities.cropexamination.fragments.croppager
 
-import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
@@ -45,7 +45,6 @@ import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import de.mateware.snacky.Snacky
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -72,14 +71,14 @@ class CropPagerFragment :
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
         booleanPreferences: BooleanPreferences,
-        @ApplicationContext context: Context
+        resources: Resources
     ) : androidx.lifecycle.ViewModel() {
 
         val dataSet = BidirectionalViewPagerDataSet(CropExaminationActivity.ViewModel.cropBundles)
 
         val backPressHandler = BackPressListener(
             viewModelScope,
-            context.resources.getLong(R.integer.duration_backpress_confirmation_window)
+            resources.getLong(R.integer.duration_backpress_confirmation_window)
         )
 
         //$$$$$$$$$$$$$$$$$$$$$$$$
