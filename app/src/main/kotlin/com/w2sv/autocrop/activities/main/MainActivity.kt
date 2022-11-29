@@ -35,16 +35,14 @@ class MainActivity : ApplicationActivity() {
         fun restart(
             activity: Activity,
             withReturnAnimation: Boolean = true,
-            configureIntent: ((Intent) -> Intent)? = null
+            configureIntent: Intent.() -> Intent = { this }
         ) {
             activity.startActivity(
                 Intent(
                     activity,
                     MainActivity::class.java
                 )
-                    .apply {
-                        configureIntent?.invoke(this)
-                    }
+                    .configureIntent()
             )
             if (withReturnAnimation)
                 Animatoo.animateSwipeRight(activity)

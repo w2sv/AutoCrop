@@ -11,23 +11,22 @@
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/ApplicationActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/ApplicationActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/crop/CropActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/crop/CropActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/crop/fragments/cropping/CropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/crop/fragments/cropping/CropFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/crop/fragments/croppingfailed/CroppingFailedFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/crop/fragments/croppingfailed/CroppingFailedFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/CropExaminationActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/CropExaminationActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ScreenshotImageView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/views/ScreenshotImageView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/deletionconfirmation/DeletionConfirmationDialogFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/deletionconfirmation/DeletionConfirmationDialogFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/apptitle/AppTitleFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/apptitle/AppTitleFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/saveall/SaveAllFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/saveall/SaveAllFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/saveall/SaveAllProgressTextView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/saveall/SaveAllProgressTextView.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/main/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/main/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/cropping/cropbundle/CropBundleIO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/cropping/cropbundle/CropBundleIO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/screenshotlistening/services/ScreenshotListener.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/screenshotlistening/services/ScreenshotListener.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[192.168.1.233:5555]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[adb-50440584-ZToYkK._adb-tls-connect._tcp]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -318,7 +317,7 @@
       <option name="DEPLOY_AS_INSTANT" value="false" />
       <option name="ARTIFACT_NAME" value="" />
       <option name="PM_INSTALL_OPTIONS" value="" />
-      <option name="ALL_USERS" value="false" />
+      <option name="ALL_USERS" value="true" />
       <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
       <option name="CLEAR_APP_STORAGE" value="false" />
       <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />

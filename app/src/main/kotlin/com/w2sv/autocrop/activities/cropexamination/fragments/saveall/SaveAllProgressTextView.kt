@@ -11,6 +11,6 @@ class SaveAllProgressTextView(context: Context, attr: AttributeSet) :
     private val viewModel by viewModel<SaveAllFragment.ViewModel>()
 
     fun update(nominator: Int) {
-        super.update(nominator, viewModel.nUnsavedImages)
+        super.update(nominator, viewModel.nUnprocessedCrops)
     }
 }

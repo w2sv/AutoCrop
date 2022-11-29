@@ -1,7 +1,6 @@
 package com.w2sv.autocrop.activities.crop.fragments.cropping
 
 import android.content.ContentResolver
-import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
@@ -34,7 +33,6 @@ import com.w2sv.autocrop.utils.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch

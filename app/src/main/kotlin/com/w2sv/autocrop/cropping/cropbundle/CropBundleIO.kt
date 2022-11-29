@@ -21,7 +21,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 
-fun deleteRequestUri(mediaStoreId: Long): Uri? =
+fun getDeleteRequestUri(mediaStoreId: Long): Uri? =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
         ContentUris.withAppendedId(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,

@@ -60,7 +60,7 @@ class CropPagerFragment :
     CropPagerInstructionsDialog.OnDismissedListener {
 
     companion object {
-        fun instance(nUncroppedScreenshots: Int): CropPagerFragment =
+        fun getInstance(nUncroppedScreenshots: Int): CropPagerFragment =
             CropPagerFragment()
                 .apply {
                     arguments = bundleOf(CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS to nUncroppedScreenshots)
@@ -249,12 +249,9 @@ class CropPagerFragment :
      */
     override fun onResult(confirmed: Boolean, dataSetPosition: Int) {
         if (confirmed)
-            activityViewModel.launchCropSavingCoroutine(
-                processCropBundle = activityViewModel.makeCropBundleProcessor(
-                    dataSetPosition,
-                    booleanPreferences.deleteScreenshots,
-                    requireActivity()
-                )
+            activityViewModel.launchViewModelScopedCropProcessingCoroutine(
+                dataSetPosition,
+                requireContext().applicationContext
             )
 
         if (viewModel.dataSet.size == 1)

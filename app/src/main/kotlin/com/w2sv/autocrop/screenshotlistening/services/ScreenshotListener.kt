@@ -20,7 +20,7 @@ import com.w2sv.autocrop.cropping.CropEdges
 import com.w2sv.autocrop.cropping.cropEdges
 import com.w2sv.autocrop.cropping.cropbundle.CROP_FILE_ADDENDUM
 import com.w2sv.autocrop.cropping.cropbundle.Screenshot
-import com.w2sv.autocrop.cropping.cropbundle.deleteRequestUri
+import com.w2sv.autocrop.cropping.cropbundle.getDeleteRequestUri
 import com.w2sv.autocrop.cropping.cropped
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
@@ -267,7 +267,7 @@ class ScreenshotListener :
         val associatedRequestCodes = requestCodes.makeAndAddMultiple(4)
 
         val screenshotMediaStoreData = Screenshot.MediaStoreData.query(contentResolver, uri)
-        val deleteRequestUri = deleteRequestUri(screenshotMediaStoreData.id)
+        val deleteRequestUri = getDeleteRequestUri(screenshotMediaStoreData.id)
         val crop = screenshotBitmap.cropped(cropEdges)
         val cropPath = saveCropToTempFile(crop, screenshotMediaStoreData.id)
 

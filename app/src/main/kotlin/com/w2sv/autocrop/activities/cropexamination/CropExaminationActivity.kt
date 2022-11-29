@@ -22,7 +22,8 @@ import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.cropping.cropbundle.CropBundle
 import com.w2sv.autocrop.cropping.cropbundle.Screenshot
 import com.w2sv.autocrop.cropping.cropbundle.carryOutCropIO
-import com.w2sv.autocrop.cropping.cropbundle.deleteRequestUri
+import com.w2sv.autocrop.cropping.cropbundle.getDeleteRequestUri
+import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.utils.extensions.getInt
 import com.w2sv.autocrop.utils.extensions.queryMediaStoreDatum
@@ -45,12 +46,15 @@ class CropExaminationActivity : ApplicationActivity() {
     }
 
     override fun getRootFragment(): Fragment =
-        CropPagerFragment.instance(
+        CropPagerFragment.getInstance(
             intent.getInt(CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS)
         )
 
     @HiltViewModel
-    class ViewModel @Inject constructor(private val uriPreferences: UriPreferences) : androidx.lifecycle.ViewModel() {
+    class ViewModel @Inject constructor(
+        private val uriPreferences: UriPreferences,
+        private val booleanPreferences: BooleanPreferences
+    ) : androidx.lifecycle.ViewModel() {
 
         companion object {
             lateinit var cropBundles: MutableList<CropBundle>
@@ -60,20 +64,9 @@ class CropExaminationActivity : ApplicationActivity() {
         val writeUris = arrayListOf<Uri>()
         val deletionInquiryUris = arrayListOf<Uri>()
 
-        var cropBundleProcessingJob: Job? = null
-
-        fun launchCropSavingCoroutine(processCropBundle: () -> Unit) {
-            cropBundleProcessingJob = viewModelScope.launch(Dispatchers.IO) {
-                processCropBundle()
-            }
-        }
-
-        fun makeCropBundleProcessor(
-            cropBundlePosition: Int,
-            deleteScreenshot: Boolean,
-            context: Context
-        ): () -> Unit {
+        fun makeCropIOProcessor(cropBundlePosition: Int, applicationContext: Context): () -> Unit {
             val cropBundle = cropBundles[cropBundlePosition]
+            val deleteScreenshot = booleanPreferences.deleteScreenshots
 
             val addedScreenshotDeletionInquiryUri = addScreenshotDeleteRequestUri(
                 deleteScreenshot,
@@ -81,16 +74,27 @@ class CropExaminationActivity : ApplicationActivity() {
             )
 
             return {
-                val ioResult = context.contentResolver.carryOutCropIO(
+                val ioResult = applicationContext.contentResolver.carryOutCropIO(
                     cropBundle.crop.bitmap,
                     cropBundle.screenshot.mediaStoreData,
-                    uriPreferences.validDocumentUriOrNull(context),
+                    uriPreferences.validDocumentUriOrNull(applicationContext),
                     deleteScreenshot && !addedScreenshotDeletionInquiryUri
                 )
 
                 if (ioResult.successfullySavedCrop)
                     writeUris.add(ioResult.writeUri!!)
+
                 nDeletedScreenshots += (ioResult.deletedScreenshot == true).toInt()
+            }
+        }
+
+        var cropProcessingCoroutine: Job? = null
+
+        fun launchViewModelScopedCropProcessingCoroutine(cropBundlePosition: Int, applicationContext: Context) {
+            val processCropBundle = makeCropIOProcessor(cropBundlePosition, applicationContext)
+
+            cropProcessingCoroutine = viewModelScope.launch(Dispatchers.IO) {
+                processCropBundle()
             }
         }
 
@@ -99,7 +103,7 @@ class CropExaminationActivity : ApplicationActivity() {
             screenshot: Screenshot
         ): Boolean {
             if (deleteScreenshot)
-                deleteRequestUri(screenshot.mediaStoreData.id)?.let {
+                getDeleteRequestUri(screenshot.mediaStoreData.id)?.let {
                     deletionInquiryUris.add(it)
                     return true
                 }
@@ -168,10 +172,9 @@ class CropExaminationActivity : ApplicationActivity() {
 
     fun startMainActivity() {
         MainActivity.restart(this) {
-            it
-                .putParcelableArrayListExtra(EXTRA_CROP_URIS, viewModel.writeUris)
-                .putExtra(EXTRA_N_DELETED_SCREENSHOTS, viewModel.nDeletedScreenshots)
-                .putExtra(EXTRA_SAVE_DIR_NAME, viewModel.cropWriteDirIdentifier(contentResolver))
+            putParcelableArrayListExtra(EXTRA_CROP_URIS, viewModel.writeUris)
+            putExtra(EXTRA_N_DELETED_SCREENSHOTS, viewModel.nDeletedScreenshots)
+            putExtra(EXTRA_SAVE_DIR_NAME, viewModel.cropWriteDirIdentifier(contentResolver))
         }
     }
 

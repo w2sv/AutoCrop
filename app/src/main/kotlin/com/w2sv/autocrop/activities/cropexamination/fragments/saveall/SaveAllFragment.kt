@@ -11,23 +11,18 @@ import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.databinding.FragmentSaveallBinding
-import com.w2sv.autocrop.preferences.BooleanPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SaveAllFragment :
     ApplicationFragment<FragmentSaveallBinding>(FragmentSaveallBinding::class.java) {
 
-    @Inject
-    lateinit var booleanPreferences: BooleanPreferences
-
     class ViewModel : androidx.lifecycle.ViewModel() {
 
-        val nUnsavedImages = CropExaminationActivity.ViewModel.cropBundles.size
+        val nUnprocessedCrops = CropExaminationActivity.ViewModel.cropBundles.size
 
         val liveCropNumber: LiveData<Int> by lazy {
             MutableLiveData(1)
@@ -55,16 +50,15 @@ class SaveAllFragment :
         lifecycleScope.launch {
             CropExaminationActivity.ViewModel.cropBundles.indices.forEach {
                 withContext(Dispatchers.IO) {
-                    activityViewModel.makeCropBundleProcessor(
+                    activityViewModel.makeCropIOProcessor(
                         it,
-                        booleanPreferences.deleteScreenshots,
-                        requireContext()
+                        requireContext().applicationContext
                     )
                         .invoke()
                 }
                 withContext(Dispatchers.Main) {
                     with(viewModel.liveCropNumber) {
-                        postValue(minOf(value!! + 1, viewModel.nUnsavedImages))
+                        postValue(minOf(value!! + 1, viewModel.nUnprocessedCrops))
                     }
                 }
             }
