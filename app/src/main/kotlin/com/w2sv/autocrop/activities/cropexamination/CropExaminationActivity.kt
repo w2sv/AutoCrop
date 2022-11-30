@@ -15,18 +15,18 @@ import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.cropexamination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPagerFragment
-import com.w2sv.autocrop.activities.cropexamination.fragments.deletionconfirmation.DeletionConfirmationInquiryFragment
+import com.w2sv.autocrop.activities.cropexamination.fragments.deletionconfirmation.DeleteRequestFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.Screenshot
 import com.w2sv.autocrop.cropbundle.io.carryOutCropIO
+import com.w2sv.autocrop.cropbundle.io.extensions.queryMediaStoreDatum
 import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.utils.extensions.getInt
-import com.w2sv.autocrop.cropbundle.io.extensions.queryMediaStoreDatum
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.kotlinutils.extensions.toInt
 import dagger.hilt.android.AndroidEntryPoint
@@ -136,13 +136,13 @@ class CropExaminationActivity : ApplicationActivity() {
     private val viewModel: ViewModel by viewModels()
 
     /**
-     * Invoke [DeletionConfirmationInquiryFragment] if there are screenshots whose
+     * Invoke [DeleteRequestFragment] if there are screenshots whose
      * deletion has to be confirmed, otherwise [AppTitleFragment]
      */
     fun replaceWithSubsequentFragment() {
         fragmentReplacementTransaction(
             if (viewModel.deletionInquiryUris.isNotEmpty())
-                DeletionConfirmationInquiryFragment()
+                DeleteRequestFragment()
             else
                 AppTitleFragment(),
             true
