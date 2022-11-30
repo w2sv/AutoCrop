@@ -15,7 +15,7 @@ import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.cropexamination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPagerFragment
-import com.w2sv.autocrop.activities.cropexamination.fragments.deletionconfirmation.DeletionConfirmationDialogFragment
+import com.w2sv.autocrop.activities.cropexamination.fragments.deletionconfirmation.DeletionConfirmationInquiryFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
@@ -136,13 +136,13 @@ class CropExaminationActivity : ApplicationActivity() {
     private val viewModel: ViewModel by viewModels()
 
     /**
-     * Invoke [DeletionConfirmationDialogFragment] if there are screenshots whose
+     * Invoke [DeletionConfirmationInquiryFragment] if there are screenshots whose
      * deletion has to be confirmed, otherwise [AppTitleFragment]
      */
     fun replaceWithSubsequentFragment() {
         fragmentReplacementTransaction(
             if (viewModel.deletionInquiryUris.isNotEmpty())
-                DeletionConfirmationDialogFragment()
+                DeletionConfirmationInquiryFragment()
             else
                 AppTitleFragment(),
             true

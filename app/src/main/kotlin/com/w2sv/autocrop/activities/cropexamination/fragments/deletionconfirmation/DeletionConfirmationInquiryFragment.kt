@@ -3,30 +3,42 @@ package com.w2sv.autocrop.activities.cropexamination.fragments.deletionconfirmat
 import android.app.Activity
 import android.os.Build
 import android.provider.MediaStore
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
-import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.launchDelayed
-import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.cropexamination.fragments.apptitle.AppTitleFragment
-import com.w2sv.autocrop.databinding.FragmentDeletionQueryBinding
+import com.w2sv.autocrop.databinding.FragmentDeletionConfirmationInquiryBinding
+import com.w2sv.autocrop.utils.AnimationListenerImpl
 import dagger.hilt.android.AndroidEntryPoint
 
+@RequiresApi(Build.VERSION_CODES.R)
 @AndroidEntryPoint
-class DeletionConfirmationDialogFragment :
-    ApplicationFragment<FragmentDeletionQueryBinding>(FragmentDeletionQueryBinding::class.java) {
+class DeletionConfirmationInquiryFragment :
+    ApplicationFragment<FragmentDeletionConfirmationInquiryBinding>(FragmentDeletionConfirmationInquiryBinding::class.java) {
 
     private val activityViewModel by activityViewModels<CropExaminationActivity.ViewModel>()
 
-    @RequiresApi(Build.VERSION_CODES.R)
-    override fun onResume() {
-        super.onResume()
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? =
+        if (enter)
+            AnimationUtils.loadAnimation(requireActivity(), nextAnim)
+                .apply {
+                    setAnimationListener(
+                        object : AnimationListenerImpl() {
+                            override fun onAnimationEnd(animation: Animation?) {
+                                launchDeletionConfirmationInquiry()
+                            }
+                        }
+                    )
+                }
+        else
+            super.onCreateAnimation(transit, false, nextAnim)
 
+    private fun launchDeletionConfirmationInquiry() {
         deletionConfirmationInquiryContract.launch(
             IntentSenderRequest.Builder(
                 MediaStore.createDeleteRequest(
@@ -47,10 +59,8 @@ class DeletionConfirmationDialogFragment :
                     nDeletedScreenshots += deletionInquiryUris.size
                 }
 
-            // launch appTitleFragment after small delay for UX smoothness
-            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
-                getFragmentHostingActivity().fragmentReplacementTransaction(AppTitleFragment())
-                    .commit()
-            }
+            getFragmentHostingActivity()
+                .fragmentReplacementTransaction(AppTitleFragment(), true)
+                .commit()
         }
 }

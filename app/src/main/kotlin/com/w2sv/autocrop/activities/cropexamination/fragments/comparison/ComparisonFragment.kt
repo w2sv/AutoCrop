@@ -13,15 +13,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.lifecycleScope
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.w2sv.androidutils.extensions.crossVisualize
-import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.hideSystemBars
-import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.remove
 import com.w2sv.androidutils.extensions.show
@@ -31,9 +28,9 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.extensions.getScaleY
 import com.w2sv.autocrop.cropbundle.CropBundle
+import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import dagger.hilt.android.AndroidEntryPoint
@@ -102,7 +99,7 @@ class ComparisonFragment
     }
 
     private fun onEnterTransition() {
-        lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
+        launchAfterShortDelay {
             viewModel.displayScreenshotLive.postValue(true)
 
             if (!booleanPreferences.comparisonInstructionsShown)

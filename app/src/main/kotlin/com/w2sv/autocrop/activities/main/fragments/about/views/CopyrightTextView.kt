@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.androidutils.extensions.goToWebpage
@@ -20,6 +21,8 @@ class CopyrightTextView(context: Context, attr: AttributeSet) :
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+
+        findViewTreeLifecycleOwner()!!.lifecycle.addObserver(this)
 
         text = resources.getString(R.string.copyright, Calendar.getInstance().get(Calendar.YEAR))
 

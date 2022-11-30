@@ -16,7 +16,6 @@ import androidx.lifecycle.viewModelScope
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.androidutils.BackPressListener
 import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
@@ -24,12 +23,12 @@ import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailedFragment
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.main.MainActivity
-import com.w2sv.autocrop.cropbundle.cropping.cropEdgesCandidates
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.Screenshot
+import com.w2sv.autocrop.cropbundle.cropping.cropEdgesCandidates
 import com.w2sv.autocrop.cropbundle.cropping.maxHeightEdges
-import com.w2sv.autocrop.databinding.FragmentCropBinding
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
+import com.w2sv.autocrop.databinding.FragmentCropBinding
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -150,7 +149,7 @@ class CropFragment
         if (viewModel.cropBundles.isNotEmpty())
             launchCropExamination()
         else
-            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {  // to assure progress bar having reached 100% before UI change
+            launchAfterShortDelay {  // to assure progress bar having reached 100% before UI change
                 getFragmentHostingActivity()
                     .fragmentReplacementTransaction(CroppingFailedFragment())
                     .commit()

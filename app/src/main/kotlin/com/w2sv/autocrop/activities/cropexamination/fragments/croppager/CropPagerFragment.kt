@@ -19,7 +19,6 @@ import com.w2sv.androidutils.BackPressListener
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
-import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
@@ -31,14 +30,14 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.dialogs.
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.dialogs.CropPagerInstructionsDialog
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.saveall.SaveAllFragment
-import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.Crop
+import com.w2sv.autocrop.cropbundle.cropping.CropEdges
+import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.crossFade
 import com.w2sv.autocrop.ui.scrollPeriodically
-import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
 import com.w2sv.kotlinutils.delegates.AutoSwitch
@@ -166,7 +165,7 @@ class CropPagerFragment :
                     ?: binding.snackbarRepelledLayout.show()
 
                 if (!booleanPreferences.cropPagerInstructionsShown)
-                    lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
+                    launchAfterShortDelay {
                         CropPagerInstructionsDialog()
                             .show(childFragmentManager)
                         booleanPreferences.cropPagerInstructionsShown = true
@@ -211,7 +210,7 @@ class CropPagerFragment :
 
     override fun onResult(cropEdges: CropEdges) {
         processAdjustedCropEdges(cropEdges)
-        lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small)) {
+        launchAfterShortDelay {
             requireActivity().snackyBuilder(
                 "Adjusted crop"
             )
