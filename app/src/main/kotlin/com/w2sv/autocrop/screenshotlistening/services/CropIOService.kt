@@ -5,20 +5,13 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.Toast
 import com.w2sv.autocrop.cropbundle.Screenshot
+import com.w2sv.autocrop.cropbundle.io.CropBundleIOProcessor
 import com.w2sv.autocrop.cropbundle.io.IOResult
-import com.w2sv.autocrop.cropbundle.io.carryOutCropIO
-import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.autocrop.utils.extensions.getParcelable
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class CropIOService :
     BoundService() {
-
-    @Inject
-    lateinit var uriPreferences: UriPreferences
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         with(intent!!) {
@@ -44,10 +37,9 @@ class CropIOService :
         screenshotMediaStoreData: Screenshot.MediaStoreData,
         deleteScreenshot: Boolean
     ): IOResult =
-        contentResolver.carryOutCropIO(
+        CropBundleIOProcessor().invoke(
             crop,
             screenshotMediaStoreData,
-            uriPreferences.validDocumentUriOrNull(this),
             deleteScreenshot
         )
 
