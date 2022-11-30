@@ -35,7 +35,7 @@
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="50dp"
 
             android:background="@drawable/shape_rounded_rectangle"
             android:gravity="center"
@@ -51,7 +51,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="@dimen/margin_top_left_image_button"
-            android:layout_marginBottom="?attr/actionBarSize"
+            android:layout_marginBottom="62dp"
 
             android:background="@drawable/shape_oval_btn"
 

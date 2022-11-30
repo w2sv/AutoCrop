@@ -10,10 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/ui/SnackbarRepelledLayout.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/apptitle/AppTitleFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/apptitle/AppTitleFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/ComparisonFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/ComparisonFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/imageview_crop.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/imageview_crop.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,6 +105,7 @@
     "android-custom-view/home/w2sv/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_SELECTED": "RecyclerView",
     "android-custom-view/home/w2sv/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.2.1/f0f93e67af3f7417bdd560d5142f6dec4fe629c3/recyclerview-1.2.1-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_SELECTED": "RecyclerView",
     "android-custom-view/home/w2sv/.gradle/caches/modules-2/files-2.1/androidx.viewpager2/viewpager2/1.0.0/3c3569044e6969f1ee5c3aa03b08e6717a2d782f/viewpager2-1.0.0-sources.jar!/androidx/viewpager2/widget/ViewPager2.java_SELECTED": "ViewPager2",
+    "android-custom-view/home/w2sv/.gradle/caches/modules-2/files-2.1/com.github.w2sv/AndroidUtils/0.0.7/a5f9fa4aca435d4b3922eda10dd1b1ab63d2f6d3/AndroidUtils-0.0.7-sources.jar!/com/w2sv/androidutils/ui/SnackbarRepelledLayout.kt_SELECTED": "SnackbarRepelledLayout",
     "android-custom-view/home/w2sv/.gradle/caches/modules-2/files-2.1/com.google.android.material/material/1.6.1/d4d703885d24c61bc0ec39a9a705969e41d773ef/material-1.6.1-sources.jar!/com/google/android/material/navigation/NavigationView.java_SELECTED": "NavigationView",
     "android-custom-view/home/w2sv/Android/Sdk/sources/android-33/android/view/View.java_SELECTED": "View",
     "android-custom-view/home/w2sv/Android/Sdk/sources/android-33/android/view/ViewGroup.java_SELECTED": "ViewGroup",
@@ -132,6 +133,7 @@
     "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldDrawerLayout.kt_SELECTED": "FlowFieldDrawerLayout",
     "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/activities/main/fragments/flowfield/views/FlowFieldNavigationView.kt_SELECTED": "FlowFieldNavigationView",
     "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/ui/FractionTextView.kt_SELECTED": "FractionTextView",
+    "android-custom-view/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/main/kotlin/com/w2sv/autocrop/ui/SnackbarRepelledLayout.kt_SELECTED": "SnackbarRepelledLayout",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/ComparisonImageView.kt_SELECTED": "ComparisonImageView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/views/ComparisonImageView.kt_SELECTED": "ComparisonImageView",
     "android-custom-view/home/w2sv/Dev/Android/AutoCrop/app/src/main/java/com/autocrop/activities/iodetermination/fragments/comparison/views/StatusTV.kt_SELECTED": "ComparisonIVStatusTV",

@@ -5,17 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- View Pager -->
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/view_pager"
-
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:weightSum="1">
 
-        android:background="@color/neutral_background" />
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
 
-    <!--    Page Indication Layout-->
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.8" />
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/page_indication_layout"
@@ -26,8 +30,6 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="23dp"
         android:layout_marginEnd="18dp">
-
-        <!-- https://en.proft.me/2018/02/5/decorating-seekbar-android/ -->
 
         <com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.PageIndicationBar
             android:id="@+id/page_indication_bar"
@@ -43,8 +45,6 @@
             android:thumb="@drawable/ic_location_on_24"
             android:thumbTint="@color/magenta_saturated"
             android:visibility="invisible" />
-
-        <!-- Page Indication Text View -->
 
         <com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.PositionTextView
             android:id="@+id/page_indication_tv"
@@ -65,13 +65,11 @@
     <com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.CancelAutoScrollButton
         android:id="@+id/cancel_auto_scroll_button"
         android:layout_width="wrap_content"
-
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
-
         android:layout_marginTop="30dp"
-        android:background="@drawable/shape_oval_w_border"
 
+        android:background="@drawable/shape_oval_w_border"
         android:paddingHorizontal="3dp"
 
         android:text="@string/cancel_autoscroll"
@@ -85,12 +83,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
-        <com.w2sv.androidutils.ui.SnackbarRepelledLayout
+        <com.w2sv.autocrop.ui.SnackbarRepelledLayout
             android:id="@+id/snackbar_repelled_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_top_left_image_button"
-            android:layout_marginBottom="?attr/actionBarSize"
+            android:layout_marginBottom="40dp"
             android:visibility="invisible">
 
             <com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.DiscardingStatisticsTextView
@@ -127,6 +125,6 @@
 
                     android:contentDescription="@string/compare_crop_and_original_screenshot" />
             </LinearLayout>
-        </com.w2sv.androidutils.ui.SnackbarRepelledLayout>
+        </com.w2sv.autocrop.ui.SnackbarRepelledLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </RelativeLayout>
