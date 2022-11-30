@@ -31,21 +31,25 @@ class AboutFragment :
                             override fun onAnimationEnd(animation: Animation?) {
                                 super.onAnimationEnd(animation)
 
-                                if (!booleanPreferences.aboutFragmentInstructionsShown)
-                                    requireActivity()
-                                        .snackyBuilder(
-                                            "Check out what happens if you click on the different view elements!",
-                                            duration = resources.getInteger(R.integer.duration_snackbar_long)
-                                        )
-                                        .setIcon(R.drawable.ic_outline_info_24)
-                                        .build()
-                                        .show()
+                                showInstructionSnackbarIfApplicable()
                             }
                         }
                     )
                 }
         else
             super.onCreateAnimation(transit, false, nextAnim)
+
+    private fun showInstructionSnackbarIfApplicable(){
+        if (!booleanPreferences.aboutFragmentInstructionsShown)
+            requireActivity()
+                .snackyBuilder(
+                    "Check out what happens if you click on the different view elements!",
+                    duration = resources.getInteger(R.integer.duration_snackbar_long)
+                )
+                .setIcon(R.drawable.ic_outline_info_24)
+                .build()
+                .show()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

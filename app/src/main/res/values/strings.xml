@@ -49,4 +49,5 @@
     <string name="crop">Crop</string>
     <string name="apply_adjusted_crop_edges">Apply adjusted crop edges</string>
     <string name="discard_changes">Discard changes</string>
+    <string name="app_logo_content_description">App logo</string>
 </resources>

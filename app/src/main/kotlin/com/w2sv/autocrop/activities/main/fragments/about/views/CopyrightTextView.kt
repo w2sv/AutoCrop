@@ -17,12 +17,11 @@ class CopyrightTextView(context: Context, attr: AttributeSet) :
     AppCompatTextView(context, attr),
     DefaultLifecycleObserver {
 
-    private var animation: YoYo.YoYoString? = null
-
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        findViewTreeLifecycleOwner()!!.lifecycle.addObserver(this)
+        if (!isInEditMode)
+            findViewTreeLifecycleOwner()!!.lifecycle.addObserver(this)
 
         text = resources.getString(R.string.copyright, Calendar.getInstance().get(Calendar.YEAR))
 
@@ -35,6 +34,8 @@ class CopyrightTextView(context: Context, attr: AttributeSet) :
                 .playOn(it)
         }
     }
+
+    private var animation: YoYo.YoYoString? = null
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)

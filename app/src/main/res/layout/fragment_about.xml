@@ -27,18 +27,17 @@
         android:layout_marginTop="140dp"
 
         android:background="@drawable/logo_nobackground"
-        android:contentDescription="@null" />
+        android:contentDescription="@string/app_logo_content_description" />
 
     <com.w2sv.autocrop.activities.main.fragments.VersionTextView
         android:id="@+id/version_tv"
-        style="@style/Shadow"
         android:layout_width="wrap_content"
-
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/logo_iv"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="-120dp"
 
+        style="@style/Shadow"
         android:paddingHorizontal="2dp"
         android:text="@string/version"
         android:textColor="@android:color/holo_purple"

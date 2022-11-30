@@ -27,7 +27,7 @@
         android:layout_marginTop="70dp"
 
         android:background="@drawable/logo_nobackground"
-        android:contentDescription="@null" />
+        android:contentDescription="@string/app_logo_content_description" />
 
     <com.w2sv.autocrop.activities.main.fragments.VersionTextView
         android:id="@+id/version_tv"
