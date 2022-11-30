@@ -18,11 +18,9 @@ import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.w2sv.androidutils.extensions.crossVisualize
-import com.w2sv.androidutils.extensions.hideSystemBars
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.remove
 import com.w2sv.androidutils.extensions.show
-import com.w2sv.androidutils.extensions.showSystemBars
 import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
@@ -170,18 +168,6 @@ class ComparisonFragment
                     remove()
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        requireActivity().hideSystemBars()
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-
-        requireActivity().showSystemBars()
     }
 
     fun popFromFragmentManager(fragmentManager: FragmentManager) {

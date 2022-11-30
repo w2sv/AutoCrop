@@ -1,5 +1,6 @@
 package com.w2sv.autocrop.activities.cropexamination.fragments.croppager
 
+import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -19,6 +20,7 @@ import com.w2sv.androidutils.BackPressListener
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
+import com.w2sv.androidutils.extensions.hideSystemBars
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
@@ -115,7 +117,14 @@ class CropPagerFragment :
             binding.viewPager,
             viewModel.dataSet
         )
+
         viewModel.setLiveDataObservers()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        requireActivity().hideSystemBars()
     }
 
     private fun ViewModel.setLiveDataObservers() {
