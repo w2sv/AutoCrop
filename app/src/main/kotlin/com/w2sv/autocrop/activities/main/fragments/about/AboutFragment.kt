@@ -27,7 +27,7 @@ class AboutFragment :
             AnimationUtils.loadAnimation(requireActivity(), nextAnim)
                 .apply {
                     setAnimationListener(
-                        object: AnimationListenerImpl(){
+                        object : AnimationListenerImpl() {
                             override fun onAnimationEnd(animation: Animation?) {
                                 super.onAnimationEnd(animation)
 
@@ -39,7 +39,7 @@ class AboutFragment :
         else
             super.onCreateAnimation(transit, false, nextAnim)
 
-    private fun showInstructionSnackbarIfApplicable(){
+    private fun showInstructionSnackbarIfApplicable() {
         if (!booleanPreferences.aboutFragmentInstructionsShown)
             requireActivity()
                 .snackyBuilder(

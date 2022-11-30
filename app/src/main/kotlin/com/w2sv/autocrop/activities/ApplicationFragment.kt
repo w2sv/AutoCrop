@@ -33,7 +33,7 @@ abstract class ApplicationFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
     protected fun getFragmentHostingActivity(): FragmentHostingActivity =
         castActivity()
 
-    protected fun launchAfterShortDelay(block: CoroutineScope.() -> Unit){
+    protected fun launchAfterShortDelay(block: CoroutineScope.() -> Unit) {
         lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small), block = block)
     }
 }

@@ -11,10 +11,10 @@ import androidx.fragment.app.viewModels
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.extensions.maintainedPercentage
-import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.CropBundle
-import com.w2sv.autocrop.databinding.FragmentManualCropBinding
+import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
+import com.w2sv.autocrop.databinding.FragmentManualCropBinding
 import com.w2sv.kotlinutils.extensions.rounded
 import kotlin.math.max
 import kotlin.math.min

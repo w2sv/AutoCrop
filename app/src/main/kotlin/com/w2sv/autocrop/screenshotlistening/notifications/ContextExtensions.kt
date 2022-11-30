@@ -15,7 +15,8 @@ fun Context.notificationBuilderWithSetChannel(
     notificationManager().createNotificationChannel(
         NotificationChannel(
             channelId,
-            channelName ?: title,
+            channelName
+                ?: title,
             NotificationManager.IMPORTANCE_DEFAULT
         )
     )
