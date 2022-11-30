@@ -12,7 +12,7 @@ import android.provider.DocumentsContract
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import com.w2sv.autocrop.utils.ImageMimeType
-import com.w2sv.autocrop.utils.extensions.compressToStream
+import com.w2sv.autocrop.utils.extensions.compressToAndCloseStream
 import com.w2sv.autocrop.utils.extensions.deleteImage
 import com.w2sv.autocrop.utils.systemPicturesDirectory
 import com.w2sv.kotlinutils.dateTimeNow
@@ -92,7 +92,7 @@ fun ContentResolver.saveBitmap(
 ): Uri? {
     val (outputStream, writeUri) = GetOutputStream(this, fileName, parentDocumentUri, mimeType)
 
-    val successfullySaved = bitmap.compressToStream(outputStream, mimeType.compressFormat)
+    val successfullySaved = bitmap.compressToAndCloseStream(outputStream, mimeType.compressFormat)
         .also { i { if (it) "Successfully wrote $fileName" else "Couldn't write $fileName" } }
     return if (successfullySaved) writeUri else null
 }

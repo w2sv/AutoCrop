@@ -11,7 +11,7 @@ import com.w2sv.autocrop.ui.fadeOut
 
 class DisplayStatusTextView(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
 
-    fun setTextAndShow(displayScreenshot: Boolean){
+    fun setTextAndShow(displayScreenshot: Boolean) {
         fadeOutAnimation?.stop()
 
         text = resources.getString(if (displayScreenshot) R.string.screenshot else R.string.crop)

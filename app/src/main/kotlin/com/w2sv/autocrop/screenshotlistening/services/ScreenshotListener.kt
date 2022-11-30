@@ -26,7 +26,7 @@ import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
 import com.w2sv.autocrop.screenshotlistening.notifications.notificationBuilderWithSetChannel
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
-import com.w2sv.autocrop.utils.extensions.compressToStream
+import com.w2sv.autocrop.utils.extensions.compressToAndCloseStream
 import com.w2sv.autocrop.utils.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.queryMediaStoreData
 import com.w2sv.autocrop.utils.systemScreenshotsDirectory
@@ -363,7 +363,7 @@ class ScreenshotListener :
             screenshotMediaStoreId.toString(),
             null
         )
-        crop.compressToStream(
+        crop.compressToAndCloseStream(
             FileOutputStream(file),
             Bitmap.CompressFormat.PNG
         )

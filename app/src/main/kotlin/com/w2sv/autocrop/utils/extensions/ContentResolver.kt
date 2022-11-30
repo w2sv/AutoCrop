@@ -11,7 +11,6 @@ fun ContentResolver.loadBitmap(uri: Uri): Bitmap =
     BitmapFactory.decodeStream(openInputStream(uri))
 
 /**
- * @see
  *      https://stackoverflow.com/questions/10716642/android-deleting-an-image?noredirect=1&lq=1
  *      https://developer.android.com/training/data-storage/use-cases#modify-delete-media
  *      https://stackoverflow.com/a/12478822/12083276
