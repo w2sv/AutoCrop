@@ -21,6 +21,7 @@ import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
 import com.w2sv.androidutils.extensions.hideSystemBars
+import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
@@ -174,10 +175,9 @@ class CropPagerFragment :
                     ?: binding.snackbarRepelledLayout.show()
 
                 if (!booleanPreferences.cropPagerInstructionsShown)
-                    launchAfterShortDelay {
+                    lifecycleScope.launchDelayed(500) {
                         CropPagerInstructionsDialog()
                             .show(childFragmentManager)
-                        booleanPreferences.cropPagerInstructionsShown = true
                     }
                 else
                     showUncroppableScreenshotsSnackbarIfApplicable()

@@ -24,7 +24,7 @@
     <RelativeLayout
         android:id="@+id/page_indication_layout"
 
-        android:layout_width="153dp"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"

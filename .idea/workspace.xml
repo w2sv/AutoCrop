@@ -11,15 +11,16 @@
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/screenshotlistening/services/CropIOService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/screenshotlistening/services/CropIOService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/screenshotlistening/services/ScreenshotListener.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/screenshotlistening/services/ScreenshotListener.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/preferences/BooleanPreferences.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/preferences/BooleanPreferences.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_croppager.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[adb-50440584-ZToYkK._adb-tls-connect._tcp]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[192.168.1.233:5555]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
