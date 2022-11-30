@@ -2,7 +2,6 @@ package com.w2sv.bidirectionalviewpager.viewpager
 
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
-import com.w2sv.kotlinutils.UnitFun
 import com.w2sv.kotlinutils.delegates.Consumable
 
 open class ExtendedOnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
@@ -14,9 +13,9 @@ open class ExtendedOnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
             onScrollStateIdle?.invoke()
     }
 
-    fun setRemoveView(f: UnitFun) {
+    fun setRemoveView(f: () -> Unit) {
         onScrollStateIdle = f
     }
 
-    private var onScrollStateIdle by Consumable<UnitFun>()
+    private var onScrollStateIdle by Consumable<() -> Unit>()
 }

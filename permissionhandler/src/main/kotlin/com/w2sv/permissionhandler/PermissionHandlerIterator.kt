@@ -1,8 +1,6 @@
 package com.w2sv.permissionhandler
 
-import com.w2sv.kotlinutils.UnitFun
-
-fun Iterator<PermissionHandler?>.requestPermissions(onGranted: UnitFun, onDenied: UnitFun? = null) {
+fun Iterator<PermissionHandler?>.requestPermissions(onGranted: () -> Unit, onDenied: (() -> Unit)? = null) {
     if (!hasNext())
         onGranted()
     else {

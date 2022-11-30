@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.cropbundle.io
+package com.w2sv.autocrop.cropbundle.io.utils
 
 import android.os.Build
 import android.os.Environment

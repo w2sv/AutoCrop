@@ -10,20 +10,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/cropbundle/io/CropFileName.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/cropbundle/io/CropSaving.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/cropbundle/io/IOResult.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/cropbundle/io/ScreenshotDeletion.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/cropbundle/io/utils/Path.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/crop/fragments/cropping/CropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/crop/fragments/cropping/CropFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/CropExaminationActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/CropExaminationActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/ComparisonFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/comparison/ComparisonFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPager.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/manualcrop/ManualCropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/manualcrop/ManualCropFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/cropping/cropbundle/CropBundle.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/cropbundle/CropBundle.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/cropping/cropbundle/CropBundleIO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/cropbundle/CropBundleIO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/cropbundle/CropBundle.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/cropbundle/CropBundle.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/cropbundle/io/CropBundleIO.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/cropbundle/io/Environment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/cropbundle/io/utils/Environment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/screenshotlistening/notifications/Utils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/screenshotlistening/notifications/ContextExtensions.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/screenshotlistening/services/CropIOService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/screenshotlistening/services/CropIOService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/screenshotlistening/services/ScreenshotListener.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/screenshotlistening/services/ScreenshotListener.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/utils/extensions/Intent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/utils/extensions/Intent.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/kotlin/com/w2sv/autocrop/activities/cropexamination/CropBundleIOKtTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/kotlin/com/w2sv/autocrop/activities/cropexamination/CropBundleIOKtTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/kotlin/com/w2sv/autocrop/activities/cropexamination/CropBundleProcessingKtTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/kotlin/com/w2sv/autocrop/activities/cropexamination/CropBundleProcessingKtTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/permissionhandler/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/permissionhandler/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/permissionhandler/src/main/kotlin/com/w2sv/permissionhandler/PermissionHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/permissionhandler/src/main/kotlin/com/w2sv/permissionhandler/PermissionHandler.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/permissionhandler/src/main/kotlin/com/w2sv/permissionhandler/PermissionHandlerIterator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/permissionhandler/src/main/kotlin/com/w2sv/permissionhandler/PermissionHandlerIterator.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -290,11 +292,11 @@
       <recent name="" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.w2sv.autocrop.cropbundle.io" />
       <recent name="com.w2sv.autocrop.activities.cropexamination.fragments.croppager" />
       <recent name="com.w2sv.autocrop.activities.cropexamination.fragments.comparison.views" />
       <recent name="com.w2sv.autocrop.activities" />
       <recent name="com.w2sv.autocrop.ui" />
-      <recent name="com.w2sv.autocrop.ui.views" />
     </key>
     <key name="android.template.942950756">
       <recent name="com.w2sv.autocrop" />

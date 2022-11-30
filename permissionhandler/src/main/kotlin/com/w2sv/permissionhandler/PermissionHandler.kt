@@ -14,7 +14,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.w2sv.kotlinutils.UnitFun
 import de.mateware.snacky.Snacky
 
 class PermissionHandler(
@@ -75,7 +74,7 @@ class PermissionHandler(
      * Function wrapper either directly running [onGranted] if permission granted,
      * otherwise sets [onGranted] and launches [requestPermissions]
      */
-    fun requestPermission(onGranted: UnitFun, onDenied: UnitFun? = null) {
+    fun requestPermission(onGranted: () -> Unit, onDenied: (() -> Unit)? = null) {
         if (!grantRequired)
             onGranted()
         else {
@@ -89,8 +88,8 @@ class PermissionHandler(
     /**
      * Temporary callable to be set before, and to be cleared on exiting of [onRequestPermissionResult]
      */
-    private var onPermissionGranted: UnitFun? = null
-    private var onPermissionDenied: UnitFun? = null
+    private var onPermissionGranted: (() -> Unit)? = null
+    private var onPermissionDenied: (() -> Unit)? = null
 
     /**
      * Display snacky if some permission hasn't been granted,

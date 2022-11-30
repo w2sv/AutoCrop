@@ -13,13 +13,13 @@ import com.w2sv.autocrop.cropbundle.io.IOResult
 import com.w2sv.autocrop.cropbundle.Screenshot
 import com.w2sv.autocrop.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.autocrop.cropbundle.io.carryOutCropIO
-import com.w2sv.autocrop.cropbundle.io.pathTail
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.autocrop.utils.extensions.getParcelable
 import com.w2sv.autocrop.cropbundle.io.extensions.queryMediaStoreDatum
+import com.w2sv.autocrop.cropbundle.io.utils.pathTail
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -103,7 +103,7 @@ class CropIOService :
                                         append(
                                             pathTail(
                                                 contentResolver.queryMediaStoreDatum(
-                                                    ioResult.writeUri!!,
+                                                    ioResult.cropWriteUri!!,
                                                     MediaStore.Images.Media.DATA
                                                 )
                                             )
@@ -119,7 +119,7 @@ class CropIOService :
                                 0,
                                 Intent(Intent.ACTION_VIEW)
                                     .setDataAndType(
-                                        ioResult.writeUri,
+                                        ioResult.cropWriteUri,
                                         IMAGE_MIME_TYPE
                                     )
                             )
@@ -134,7 +134,7 @@ class CropIOService :
                                 Intent.createChooser(
                                     Intent(Intent.ACTION_SEND)
                                         .setType(IMAGE_MIME_TYPE)
-                                        .putExtra(Intent.EXTRA_STREAM, ioResult.writeUri),
+                                        .putExtra(Intent.EXTRA_STREAM, ioResult.cropWriteUri),
                                     null
                                 )
                             )

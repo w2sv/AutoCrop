@@ -82,7 +82,7 @@ class CropExaminationActivity : ApplicationActivity() {
                 )
 
                 if (ioResult.successfullySavedCrop)
-                    writeUris.add(ioResult.writeUri!!)
+                    writeUris.add(ioResult.cropWriteUri!!)
 
                 nDeletedScreenshots += (ioResult.deletedScreenshot == true).toInt()
             }

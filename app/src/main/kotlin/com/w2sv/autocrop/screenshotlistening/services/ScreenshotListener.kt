@@ -29,7 +29,7 @@ import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.autocrop.cropbundle.io.extensions.compressToAndCloseStream
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.cropbundle.io.extensions.queryMediaStoreData
-import com.w2sv.autocrop.cropbundle.io.systemScreenshotsDirectory
+import com.w2sv.autocrop.cropbundle.io.utils.systemScreenshotsDirectory
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
 import com.w2sv.kotlinutils.timeDelta
 import slimber.log.i

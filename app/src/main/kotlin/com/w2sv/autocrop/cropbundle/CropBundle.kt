@@ -16,6 +16,7 @@ import kotlin.math.roundToInt
 
 @Parcelize
 data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
+
     companion object {
         const val EXTRA = "com.w2sv.autocrop.CROP_BUNDLE"
 
@@ -41,6 +42,7 @@ data class Screenshot(
     val cropEdgesCandidates: List<CropEdges>,
     val mediaStoreData: MediaStoreData
 ) : Parcelable {
+
     @Parcelize
     data class MediaStoreData(
         val diskUsage: Long,
