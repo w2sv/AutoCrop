@@ -35,6 +35,8 @@ import com.w2sv.kotlinutils.timeDelta
 import slimber.log.i
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.Exception
+import java.lang.IllegalStateException
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KFunction4
@@ -223,7 +225,7 @@ class ScreenshotListener :
 
     /**
      * Catches [IllegalStateException] in case of [uri] not being accessible due to still pending
-     * (meaning that the device screenshot manager, := uri owner, is still accessing/processing the file,
+     * (meaning that the device screenshot manager (= uri owner) is still accessing/processing the file,
      * such that the uri is blocked for other processes).
      *
      * @return [Boolean] indicating whether [uri] was accessible, meaning that this function should not
@@ -237,7 +239,11 @@ class ScreenshotListener :
             }
             true
         }
-        catch (_: IllegalStateException) {
+        catch (ex: Exception){
+            when (ex){
+                is IllegalStateException, is NullPointerException -> Unit
+                else -> throw ex
+            }
             false
         }
 
