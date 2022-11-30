@@ -15,7 +15,7 @@ internal class CropBundleProcessingKtTest {
         Assertions.assertTrue(
             Regex(match_regex)
                 .matches(
-                    com.w2sv.autocrop.cropping.cropbundle.cropFileName(
+                    com.w2sv.autocrop.cropbundle.io.cropFileName(
                         fileName,
                         ImageMimeType.PNG
                     )
@@ -29,6 +29,6 @@ internal class CropBundleProcessingKtTest {
         "234.something.png, 234.something",
     )
     fun fileNameWOExtension(fileName: String, expected: String) {
-        Assertions.assertEquals(expected, com.w2sv.autocrop.cropping.cropbundle.fileNameWOExtension(fileName))
+        Assertions.assertEquals(expected, com.w2sv.autocrop.cropbundle.io.fileNameWOExtension(fileName))
     }
 }

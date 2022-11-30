@@ -16,5 +16,5 @@ inline fun <reified T : Parcelable> Intent.getParcelable(name: String): T? =
     @Suppress("DEPRECATION")
     getParcelableExtra(name)
 
-fun Intent.getInt(name: String): Int =
-    getIntExtra(name, -1)
+fun Intent.getInt(name: String, defaultValue: Int = -1): Int =
+    getIntExtra(name, defaultValue)

@@ -11,6 +11,6 @@ internal class CropBundleIOKtTest {
         "sadfa/myvcxlj/0/dir/file.jpg, /dir/file.jpg"
     )
     fun pathTail(input: String, expected: String) {
-        assertEquals(expected, com.w2sv.autocrop.cropping.cropbundle.pathTail(input))
+        assertEquals(expected, com.w2sv.autocrop.cropbundle.io.pathTail(input))
     }
 }

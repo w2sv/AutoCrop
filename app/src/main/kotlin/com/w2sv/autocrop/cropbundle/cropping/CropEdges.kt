@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.cropping
+package com.w2sv.autocrop.cropbundle.cropping
 
 import android.graphics.RectF
 import android.os.Parcelable

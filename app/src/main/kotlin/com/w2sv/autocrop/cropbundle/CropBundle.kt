@@ -1,14 +1,14 @@
-package com.w2sv.autocrop.cropping.cropbundle
+package com.w2sv.autocrop.cropbundle
 
 import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Parcelable
 import android.provider.MediaStore
-import com.w2sv.autocrop.cropping.CropEdges
-import com.w2sv.autocrop.cropping.cropped
-import com.w2sv.autocrop.utils.ImageMimeType
-import com.w2sv.autocrop.utils.extensions.queryMediaStoreData
+import com.w2sv.autocrop.cropbundle.cropping.CropEdges
+import com.w2sv.autocrop.cropbundle.cropping.cropped
+import com.w2sv.autocrop.cropbundle.io.ImageMimeType
+import com.w2sv.autocrop.cropbundle.io.extensions.queryMediaStoreData
 import com.w2sv.kotlinutils.extensions.rounded
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize

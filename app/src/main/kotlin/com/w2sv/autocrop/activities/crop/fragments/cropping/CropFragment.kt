@@ -24,12 +24,12 @@ import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailedFragment
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.main.MainActivity
-import com.w2sv.autocrop.cropping.cropEdgesCandidates
-import com.w2sv.autocrop.cropping.cropbundle.CropBundle
-import com.w2sv.autocrop.cropping.cropbundle.Screenshot
-import com.w2sv.autocrop.cropping.maxHeightEdges
+import com.w2sv.autocrop.cropbundle.cropping.cropEdgesCandidates
+import com.w2sv.autocrop.cropbundle.CropBundle
+import com.w2sv.autocrop.cropbundle.Screenshot
+import com.w2sv.autocrop.cropbundle.cropping.maxHeightEdges
 import com.w2sv.autocrop.databinding.FragmentCropBinding
-import com.w2sv.autocrop.utils.extensions.loadBitmap
+import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel

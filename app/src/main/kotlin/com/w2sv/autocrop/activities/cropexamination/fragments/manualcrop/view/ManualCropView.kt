@@ -40,7 +40,7 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.m
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.model.Edge.LEFT
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.model.Edge.RIGHT
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.model.Edge.TOP
-import com.w2sv.autocrop.cropping.CropEdges
+import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt

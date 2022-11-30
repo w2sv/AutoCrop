@@ -6,7 +6,7 @@ import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.w2sv.autocrop.cropping.cropbundle.CropBundle
+import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.databinding.ImageviewCropBinding
 import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
 import com.w2sv.bidirectionalviewpager.livedata.UpdateBlockableLiveData

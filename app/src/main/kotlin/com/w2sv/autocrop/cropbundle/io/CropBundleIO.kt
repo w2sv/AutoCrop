@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.cropping.cropbundle
+package com.w2sv.autocrop.cropbundle.io
 
 import android.annotation.SuppressLint
 import android.content.ContentResolver
@@ -11,10 +11,9 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import com.w2sv.autocrop.utils.ImageMimeType
-import com.w2sv.autocrop.utils.extensions.compressToAndCloseStream
-import com.w2sv.autocrop.utils.extensions.deleteImage
-import com.w2sv.autocrop.utils.systemPicturesDirectory
+import com.w2sv.autocrop.cropbundle.io.extensions.compressToAndCloseStream
+import com.w2sv.autocrop.cropbundle.io.extensions.deleteImage
+import com.w2sv.autocrop.cropbundle.Screenshot
 import com.w2sv.kotlinutils.dateTimeNow
 import slimber.log.i
 import java.io.File
@@ -35,7 +34,8 @@ fun pathTail(path: String): String =
     "/${path.split("/").takeLast(2).joinToString("/")}"
 
 data class IOResult(val writeUri: Uri?, var deletedScreenshot: Boolean?) {
-    val successfullySavedCrop: Boolean = writeUri != null
+    val successfullySavedCrop: Boolean get() =
+        writeUri != null
 }
 
 /**

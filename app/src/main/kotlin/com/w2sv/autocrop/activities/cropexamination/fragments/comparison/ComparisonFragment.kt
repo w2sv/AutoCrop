@@ -30,10 +30,10 @@ import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.extensions.getScaleY
-import com.w2sv.autocrop.cropping.cropbundle.CropBundle
+import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.utils.extensions.loadBitmap
+import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import dagger.hilt.android.AndroidEntryPoint

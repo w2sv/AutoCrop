@@ -31,14 +31,14 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.dialogs.
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.dialogs.CropPagerInstructionsDialog
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.saveall.SaveAllFragment
-import com.w2sv.autocrop.cropping.CropEdges
-import com.w2sv.autocrop.cropping.cropbundle.Crop
+import com.w2sv.autocrop.cropbundle.cropping.CropEdges
+import com.w2sv.autocrop.cropbundle.Crop
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.crossFade
 import com.w2sv.autocrop.ui.scrollPeriodically
-import com.w2sv.autocrop.utils.extensions.loadBitmap
+import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
 import com.w2sv.kotlinutils.delegates.AutoSwitch

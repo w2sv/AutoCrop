@@ -9,17 +9,17 @@ import android.text.SpannableStringBuilder
 import androidx.core.app.NotificationCompat
 import androidx.core.text.italic
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.cropping.cropbundle.IOResult
-import com.w2sv.autocrop.cropping.cropbundle.Screenshot
-import com.w2sv.autocrop.cropping.cropbundle.carryOutCropIO
-import com.w2sv.autocrop.cropping.cropbundle.pathTail
+import com.w2sv.autocrop.cropbundle.io.IOResult
+import com.w2sv.autocrop.cropbundle.Screenshot
+import com.w2sv.autocrop.cropbundle.io.IMAGE_MIME_TYPE
+import com.w2sv.autocrop.cropbundle.io.carryOutCropIO
+import com.w2sv.autocrop.cropbundle.io.pathTail
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
-import com.w2sv.autocrop.utils.IMAGE_MIME_TYPE
 import com.w2sv.autocrop.utils.extensions.getParcelable
-import com.w2sv.autocrop.utils.extensions.queryMediaStoreDatum
+import com.w2sv.autocrop.cropbundle.io.extensions.queryMediaStoreDatum
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

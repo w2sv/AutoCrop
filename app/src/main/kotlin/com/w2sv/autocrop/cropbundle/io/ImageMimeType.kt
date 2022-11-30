@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.utils
+package com.w2sv.autocrop.cropbundle.io
 
 import android.graphics.Bitmap
 
