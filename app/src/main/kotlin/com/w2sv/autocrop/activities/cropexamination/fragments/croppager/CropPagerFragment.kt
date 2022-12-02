@@ -1,7 +1,6 @@
 package com.w2sv.autocrop.activities.cropexamination.fragments.croppager
 
 import android.content.Context
-import android.content.res.Resources
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
@@ -43,10 +42,11 @@ import com.w2sv.autocrop.ui.crossFade
 import com.w2sv.autocrop.ui.scrollPeriodically
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
-import com.w2sv.kotlinutils.delegates.AutoSwitch
+import com.w2sv.kotlinutils.delegates.Consumable
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import de.mateware.snacky.Snacky
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -73,23 +73,38 @@ class CropPagerFragment :
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
         booleanPreferences: BooleanPreferences,
-        resources: Resources
+        @ApplicationContext context: Context
     ) : androidx.lifecycle.ViewModel() {
 
         val dataSet = BidirectionalViewPagerDataSet(CropExaminationActivity.ViewModel.cropBundles)
 
         val backPressHandler = BackPressListener(
             viewModelScope,
-            resources.getLong(R.integer.duration_backpress_confirmation_window)
+            context.resources.getLong(R.integer.duration_backpress_confirmation_window)
         )
 
         //$$$$$$$$$$$$$$$$$$$$$$$$
         // Uncropped Screenshots $
         //$$$$$$$$$$$$$$$$$$$$$$$$
 
-        val nUncroppedScreenshots: Int = savedStateHandle[CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS]!!
-
-        var showedUncroppedScreenshotsSnackbar by AutoSwitch(false, switchOn = false)
+        /**
+         * Inherently serves as flag, with != null meaning snackbar is to be displayed and vice-versa
+         */
+        val uncroppedScreenshotsSnackbarText by Consumable<SpannableStringBuilder>(
+            savedStateHandle.get<Int>(CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS)!!.let { nUncroppedScreenshots ->
+                if (nUncroppedScreenshots != 0)
+                    SpannableStringBuilder()
+                        .append("Couldn't find crop bounds for")
+                        .bold {
+                            color(context.getThemedColor(R.color.highlight)) {
+                                append(" $nUncroppedScreenshots")
+                            }
+                        }
+                        .append(" image".numericallyInflected(nUncroppedScreenshots))
+                else
+                    null
+            }
+        )
 
         //$$$$$$$$$$$$$
         // AutoScroll $
@@ -111,6 +126,12 @@ class CropPagerFragment :
 
     private lateinit var viewPagerProxy: CropPager
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        requireActivity().hideSystemBars()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -120,12 +141,6 @@ class CropPagerFragment :
         )
 
         viewModel.setLiveDataObservers()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        requireActivity().hideSystemBars()
     }
 
     private fun ViewModel.setLiveDataObservers() {
@@ -175,7 +190,7 @@ class CropPagerFragment :
                     ?: binding.snackbarRepelledLayout.show()
 
                 if (!booleanPreferences.cropPagerInstructionsShown)
-                    lifecycleScope.launchDelayed(500) {
+                    lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_medium)) {
                         CropPagerInstructionsDialog()
                             .show(childFragmentManager)
                     }
@@ -197,33 +212,18 @@ class CropPagerFragment :
     }
 
     private fun showUncroppableScreenshotsSnackbarIfApplicable() {
-        with(viewModel) {
-            if (!showedUncroppedScreenshotsSnackbar && nUncroppedScreenshots != 0) {
-                requireActivity().snackyBuilder(
-                    SpannableStringBuilder()
-                        .append("Couldn't find crop bounds for")
-                        .bold {
-                            color(
-                                requireContext().getThemedColor(R.color.highlight)
-                            ) { append(" $nUncroppedScreenshots") }
-                        }
-                        .append(" image".numericallyInflected(nUncroppedScreenshots))
-                )
-                    .setSnackbarRepelledView()
-                    .setIcon(com.w2sv.permissionhandler.R.drawable.ic_error_24)
-                    .build()
-                    .show()
-            }
+        viewModel.uncroppedScreenshotsSnackbarText?.let {
+            getSnackyBuilder(it)
+                .setIcon(com.w2sv.permissionhandler.R.drawable.ic_error_24)
+                .build()
+                .show()
         }
     }
 
     override fun onResult(cropEdges: CropEdges) {
         processAdjustedCropEdges(cropEdges)
         launchAfterShortDelay {
-            requireActivity().snackyBuilder(
-                "Adjusted crop"
-            )
-                .setSnackbarRepelledView()
+            getSnackyBuilder("Adjusted crop")
                 .setIcon(requireContext().getColoredIcon(R.drawable.ic_check_24, R.color.success))
                 .build()
                 .show()
@@ -277,15 +277,14 @@ class CropPagerFragment :
             castActivity<CropExaminationActivity>().replaceWithSubsequentFragment()
     }
 
-    private fun Snacky.Builder.setSnackbarRepelledView(): Snacky.Builder =
-        setView(binding.snackbarRepelledHostingLayout)
+    private fun getSnackyBuilder(text: CharSequence): Snacky.Builder =
+        requireActivity().snackyBuilder(text)
+            .setView(binding.snackbarRepelledHostingLayout)
 
     fun onBackPress() {
         viewModel.backPressHandler(
             {
-                requireActivity()
-                    .snackyBuilder("Tap again to return to main screen")
-                    .setSnackbarRepelledView()
+                getSnackyBuilder("Tap again to return to main screen")
                     .build()
                     .show()
             },

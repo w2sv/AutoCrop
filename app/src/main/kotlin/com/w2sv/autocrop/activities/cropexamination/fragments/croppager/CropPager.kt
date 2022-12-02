@@ -9,7 +9,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.databinding.ImageviewCropBinding
 import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
-import com.w2sv.bidirectionalviewpager.livedata.UpdateBlockableLiveData
 import com.w2sv.bidirectionalviewpager.recyclerview.BidirectionalRecyclerViewAdapter
 import com.w2sv.bidirectionalviewpager.viewpager.ExtendedOnPageChangeCallback
 import com.w2sv.bidirectionalviewpager.viewpager.makeRemoveView
@@ -20,10 +19,11 @@ import com.w2sv.bidirectionalviewpager.viewpager.makeRemoveView
 class CropPager(private val viewPager2: ViewPager2, private val dataSet: BidirectionalViewPagerDataSet<CropBundle>) {
 
     class Adapter(
-        private val dataSet: BidirectionalViewPagerDataSet<CropBundle>,
+        dataSet: BidirectionalViewPagerDataSet<CropBundle>,
         offscreenPageLimit: Int
-    ) : BidirectionalRecyclerViewAdapter<Adapter.ViewHolder>(
-        dataSet, offscreenPageLimit
+    ) : BidirectionalRecyclerViewAdapter<BidirectionalViewPagerDataSet<CropBundle>, Adapter.ViewHolder>(
+        dataSet,
+        offscreenPageLimit
     ) {
 
         class ViewHolder(binding: ImageviewCropBinding) : RecyclerView.ViewHolder(binding.cropIv) {
@@ -42,9 +42,6 @@ class CropPager(private val viewPager2: ViewPager2, private val dataSet: Bidirec
                 )
             )
 
-        /**
-         * Defines crop setting wrt [position]
-         */
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             dataSet.atCorrespondingPosition(position).let {
                 with(holder.imageView) {
@@ -55,27 +52,22 @@ class CropPager(private val viewPager2: ViewPager2, private val dataSet: Bidirec
         }
     }
 
-    private class OnPageChangeCallback(private val livePosition: UpdateBlockableLiveData<Int>) : ExtendedOnPageChangeCallback() {
-
-        override fun onPageSelected(position: Int) {
-            super.onPageSelected(position)
-            livePosition.update(position)
-        }
-    }
-
-    private val onPageChangeCallback: OnPageChangeCallback
-
     init {
         with(viewPager2) {
             adapter = Adapter(dataSet, 3)
-            onPageChangeCallback = OnPageChangeCallback(dataSet.livePosition)
-                .apply {
-                    registerOnPageChangeCallback(this)
-                }
+            registerOnPageChangeCallback(onPageChangeCallback)
             setCurrentItem(
                 dataSet.initialViewPosition(),
                 false
             )
+        }
+    }
+
+    private val onPageChangeCallback = object: ExtendedOnPageChangeCallback(){
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+
+            dataSet.livePosition.update(position)
         }
     }
 
