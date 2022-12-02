@@ -1,5 +1,7 @@
 package com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop
 
+import android.content.Context
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
@@ -8,6 +10,9 @@ import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.core.text.subscript
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.extensions.maintainedPercentage
@@ -16,9 +21,14 @@ import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentManualCropBinding
 import com.w2sv.kotlinutils.extensions.rounded
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
+@AndroidEntryPoint
 class ManualCropFragment
     : ApplicationFragment<FragmentManualCropBinding>(FragmentManualCropBinding::class.java) {
 
@@ -31,23 +41,26 @@ class ManualCropFragment
             }
     }
 
-    private lateinit var viewModel: ManualCropViewModel
+    @HiltViewModel
+    class ViewModel @Inject constructor(savedStateHandle: SavedStateHandle, @ApplicationContext context: Context) : androidx.lifecycle.ViewModel() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        val bitmap: Bitmap
+        val initialCropEdges: CropEdges
+//        val cropEdgePairCandidates: List<CropEdges>
 
-        @Suppress("DEPRECATION")
-        with(requireArguments().getParcelable<CropBundle>(CropBundle.EXTRA)!!) {
-            viewModel = viewModels<ManualCropViewModel> {
-                ManualCropViewModel.Factory(
-                    requireContext().contentResolver.loadBitmap(screenshot.uri),
-                    crop.edges,
-                    screenshot.cropEdgesCandidates
-                )
+        init {
+            with(savedStateHandle.get<CropBundle>(CropBundle.EXTRA)!!){
+                bitmap = context.contentResolver.loadBitmap(screenshot.uri)
+                initialCropEdges = crop.edges
             }
-                .value
+        }
+
+        val cropEdges: LiveData<CropEdges> by lazy {
+            MutableLiveData(initialCropEdges)
         }
     }
+
+    private val viewModel by viewModels<ViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

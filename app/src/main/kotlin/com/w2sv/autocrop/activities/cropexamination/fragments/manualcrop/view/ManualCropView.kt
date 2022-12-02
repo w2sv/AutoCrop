@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropViewModel
+import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.extensions.animateToMatrix
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.extensions.clone
 import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.extensions.getCornerTouch
@@ -171,7 +171,7 @@ class ManualCropView @JvmOverloads constructor(
         setWillNotDraw(false)
     }
 
-    private val viewModel by viewModel<ManualCropViewModel>()
+    private val viewModel by viewModel<ManualCropFragment.ViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

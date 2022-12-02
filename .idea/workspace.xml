@@ -10,17 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/ViewRemovableBidirectionalViewPager2.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/androidTest/kotlin/com/w2sv/autocrop/cropbundle/io/utils/PathKtTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPager.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/manualcrop/view/BitmapGestureHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/manualcrop/view/BitmapGestureHandler.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/crop/fragments/cropping/CropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/crop/fragments/cropping/CropFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/manualcrop/ManualCropFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/manualcrop/ManualCropFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/manualcrop/ManualCropViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/manualcrop/ManualCropViewModel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/manualcrop/view/ManualCropView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/manualcrop/view/ManualCropView.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/BidirectionalViewPagerDataSet.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/BidirectionalViewPagerDataSet.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/livedata/UpdateBlockableLiveData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/livedata/UpdateBlockableLiveData.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/recyclerview/BidirectionalRecyclerViewAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/recyclerview/BidirectionalRecyclerViewAdapter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/viewpager/ExtendedOnPageChangeCallback.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/viewpager/Extensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/viewpager/Extensions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/di/ResourcesModule.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/kotlin/com/w2sv/autocrop/activities/cropexamination/CropBundleIOKtTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/kotlin/com/w2sv/autocrop/utils/android/ImageMimeTypeTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/kotlin/com/w2sv/autocrop/utils/android/ImageMimeTypeTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,11 +57,11 @@
         <option value="layoutResourceFile" />
         <option value="Kotlin Enum" />
         <option value="Class" />
-        <option value="JUnit5 Test Class" />
         <option value="Kotlin Interface" />
         <option value="resourceFile" />
         <option value="Kotlin File" />
         <option value="Kotlin Class" />
+        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
@@ -247,7 +245,7 @@
     "dart.analysis.tool.window.visible": "false",
     "full.screen.before.presentation.mode": "false",
     "ignore.preview.features.used": "true",
-    "last_directory_selection": "/home/w2sv/Dev/android/AutoCrop/app/src/test/java/com/autocrop/utils",
+    "last_directory_selection": "/home/w2sv/Dev/Android/Apps/AutoCrop/app/src/androidTest/kotlin/com/w2sv/autocrop",
     "last_opened_file_path": "/home/w2sv/Dev/Android/Apps/AutoCrop/app",
     "memory.settings.postsync.last.time.stamp": "1667399042919",
     "project.structure.last.edited": "Modules",
@@ -305,6 +303,7 @@
       <recent name="com.w2sv.autocrop" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.w2sv.autocrop.cropbundle.io.utils" />
       <recent name="com.autocrop.utils.kotlin" />
       <recent name="com.autocrop.activities.iodetermination" />
       <recent name="com.autocrop.screencapturelistening.notification" />
@@ -315,7 +314,7 @@
       <recent name="com.w2sv.bidirectionalviewpager" />
     </key>
   </component>
-  <component name="RunManager" selected="Android App.app">
+  <component name="RunManager" selected="Gradle.Tests in 'AutoCrop.app.unitTest'">
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
       <module name="AutoCrop.app.main" />
       <option name="DEPLOY" value="true" />
@@ -559,6 +558,27 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
+    <configuration name="Tests in 'AutoCrop.app.unitTest'" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":app:testDebugUnitTest" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="Tests in 'AutoCrop.bidirectionalviewpager.unitTest'" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -580,23 +600,18 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="setup-emulator" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
-      <makefile filename="$PROJECT_DIR$/Makefile" target="setup-emulator" workingDirectory="" arguments="">
-        <envs />
-      </makefile>
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Android App.viewboundcontroller" />
       <item itemvalue="Android App.app" />
       <item itemvalue="Android Instrumented Tests.All Tests" />
       <item itemvalue="Android Instrumented Tests.MainActivityTest" />
+      <item itemvalue="Gradle.Tests in 'AutoCrop.app.unitTest'" />
       <item itemvalue="Gradle.Tests in 'AutoCrop.app.unitTest' (1)" />
       <item itemvalue="Gradle.Tests in 'AutoCrop.bidirectionalviewpager.unitTest'" />
-      <item itemvalue="Makefile Target.setup-emulator" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.Tests in 'AutoCrop.app.unitTest'" />
         <item itemvalue="Android Instrumented Tests.All Tests" />
         <item itemvalue="Gradle.Tests in 'AutoCrop.app.unitTest' (1)" />
         <item itemvalue="Gradle.Tests in 'AutoCrop.bidirectionalviewpager.unitTest'" />
