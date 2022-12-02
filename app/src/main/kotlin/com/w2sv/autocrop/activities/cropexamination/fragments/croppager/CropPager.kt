@@ -52,22 +52,24 @@ class CropPager(private val viewPager2: ViewPager2, private val dataSet: Bidirec
         }
     }
 
+    private val onPageChangeCallback = object : ExtendedOnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+
+            dataSet.livePosition.update(position)
+        }
+    }
+
+    val adapter = Adapter(dataSet, 3)
+
     init {
         with(viewPager2) {
-            adapter = Adapter(dataSet, 3)
+            adapter = this@CropPager.adapter
             registerOnPageChangeCallback(onPageChangeCallback)
             setCurrentItem(
                 dataSet.initialViewPosition(),
                 false
             )
-        }
-    }
-
-    private val onPageChangeCallback = object: ExtendedOnPageChangeCallback(){
-        override fun onPageSelected(position: Int) {
-            super.onPageSelected(position)
-
-            dataSet.livePosition.update(position)
         }
     }
 

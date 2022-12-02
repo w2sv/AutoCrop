@@ -116,11 +116,11 @@ class ManualCropFragment
 
             // notify ResultListener
             (getFragmentHostingActivity().getCurrentFragment() as ResultListener)
-                .onResult(viewModel.cropEdges.value!!)
+                .onManualCropResult(viewModel.cropEdges.value!!)
         }
     }
 
     interface ResultListener {
-        fun onResult(cropEdges: CropEdges)
+        fun onManualCropResult(cropEdges: CropEdges)
     }
 }

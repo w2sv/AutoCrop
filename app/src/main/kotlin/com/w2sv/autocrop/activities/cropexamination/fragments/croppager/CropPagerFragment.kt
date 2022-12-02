@@ -37,6 +37,7 @@ import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
+import com.w2sv.autocrop.ui.CubeOutPageTransformer
 import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.crossFade
 import com.w2sv.autocrop.ui.scrollPeriodically
@@ -124,7 +125,7 @@ class CropPagerFragment :
     private val viewModel by viewModels<ViewModel>()
     private val activityViewModel by activityViewModels<CropExaminationActivity.ViewModel>()
 
-    private lateinit var viewPagerProxy: CropPager
+    private lateinit var cropPager: CropPager
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -135,7 +136,7 @@ class CropPagerFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewPagerProxy = CropPager(
+        cropPager = CropPager(
             binding.viewPager,
             viewModel.dataSet
         )
@@ -165,20 +166,14 @@ class CropPagerFragment :
                     autoScrollCoroutine = binding.viewPager.scrollPeriodically(
                         lifecycleScope,
                         getNAutoScrolls(),
-                        resources.getLong(R.integer.delay_large)
+                        scrollPeriod
                     ) {
                         doAutoScrollLive.postValue(false)
                     }
                 }
             }
             else {
-                binding.viewPager.setPageTransformer { page, position ->
-                    with(page) {
-                        pivotX = (if (position < 0) width else 0).toFloat()
-                        pivotY = height * 0.5f
-                        rotationY = 90f * position
-                    }
-                }
+                binding.viewPager.setPageTransformer(CubeOutPageTransformer())
 
                 autoScrollCoroutine?.let {
                     it.cancel()
@@ -207,7 +202,7 @@ class CropPagerFragment :
         }
     }
 
-    override fun onDismissed() {
+    override fun onDismissedCropPagerInstructionsDialog() {
         showUncroppableScreenshotsSnackbarIfApplicable()
     }
 
@@ -220,8 +215,20 @@ class CropPagerFragment :
         }
     }
 
-    override fun onResult(cropEdges: CropEdges) {
-        processAdjustedCropEdges(cropEdges)
+    override fun onManualCropResult(cropEdges: CropEdges) {
+        viewModel.dataSet.liveElement.let {
+            it.crop = Crop.fromScreenshot(
+                requireContext().contentResolver.loadBitmap(it.screenshot.uri),
+                it.screenshot.mediaStoreData.diskUsage,
+                cropEdges
+            )
+        }
+
+        cropPager.adapter.notifyItemChanged(
+            binding.viewPager.currentItem,
+            viewModel.dataSet.size
+        )
+
         launchAfterShortDelay {
             getSnackyBuilder("Adjusted crop")
                 .setIcon(requireContext().getColoredIcon(R.drawable.ic_check_24, R.color.success))
@@ -231,31 +238,13 @@ class CropPagerFragment :
     }
 
     /**
-     * Set new [Crop] in [viewModel].dataSet.currentPosition and notify [CropPager.Adapter]
-     */
-    private fun processAdjustedCropEdges(adjustedEdges: CropEdges) {
-        viewModel.dataSet.liveElement.let {
-            it.crop = Crop.fromScreenshot(
-                requireContext().contentResolver.loadBitmap(it.screenshot.uri),
-                it.screenshot.mediaStoreData.diskUsage,
-                adjustedEdges
-            )
-        }
-
-        (binding.viewPager.adapter!! as CropPager.Adapter).notifyItemChanged(
-            binding.viewPager.currentItem,
-            viewModel.dataSet.size
-        )
-    }
-
-    /**
      * Increment nSavedCrops if applicable
      *
      * triggers activity exit if [viewModel].dataSet about to be exhausted OR
      * hide pageIndicationSeekBar AND/OR
      * removes view, procedure action has been selected for, from pager
      */
-    override fun onResult(confirmed: Boolean, dataSetPosition: Int) {
+    override fun onCropDialogResult(confirmed: Boolean, dataSetPosition: Int) {
         if (confirmed)
             activityViewModel.launchViewModelScopedCropProcessingCoroutine(
                 dataSetPosition,
@@ -265,10 +254,10 @@ class CropPagerFragment :
         if (viewModel.dataSet.size == 1)
             castActivity<CropExaminationActivity>().replaceWithSubsequentFragment()
         else
-            viewPagerProxy.removeView(dataSetPosition)
+            cropPager.removeView(dataSetPosition)
     }
 
-    override fun onResult(confirmed: Boolean) {
+    override fun onCropEntiretyResult(confirmed: Boolean) {
         if (confirmed)
             getFragmentHostingActivity()
                 .fragmentReplacementTransaction(SaveAllFragment(), true)
@@ -278,7 +267,8 @@ class CropPagerFragment :
     }
 
     private fun getSnackyBuilder(text: CharSequence): Snacky.Builder =
-        requireActivity().snackyBuilder(text)
+        requireActivity()
+            .snackyBuilder(text)
             .setView(binding.snackbarRepelledHostingLayout)
 
     fun onBackPress() {

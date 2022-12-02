@@ -1,5 +1,6 @@
 package com.w2sv.autocrop.ui
 
+import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,3 +23,13 @@ fun ViewPager2.scrollPeriodically(
         }
         onFinishedListener()
     }
+
+class CubeOutPageTransformer: ViewPager2.PageTransformer{
+    override fun transformPage(page: View, position: Float) {
+        with(page) {
+            pivotX = (if (position < 0) width else 0).toFloat()
+            pivotY = height * 0.5f
+            rotationY = 90f * position
+        }
+    }
+}
