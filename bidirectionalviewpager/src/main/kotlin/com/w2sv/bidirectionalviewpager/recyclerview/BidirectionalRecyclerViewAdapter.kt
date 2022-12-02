@@ -17,10 +17,10 @@ abstract class BidirectionalRecyclerViewAdapter<DS: Collection<Any>, VH : Recycl
         else
             N_VIEWS
 
-    fun notifyItemChanged(position: Int, dataSetSize: Int) {
+    fun notifyItemChangedOverride(position: Int) {
         super.notifyItemChanged(position)
 
-        if (dataSetSize == 2) {
+        if (dataSet.size == 2) {
             super.notifyItemChanged(position - 2)
             super.notifyItemChanged(position + 2)
         }

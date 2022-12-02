@@ -3,12 +3,12 @@ package com.w2sv.bidirectionalviewpager.livedata
 import androidx.lifecycle.LiveData
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 
-class UpdateBlockableLiveData<T>(value: T, private val convertUpdateValue: ((T) -> T)? = null) : LiveData<T>(value) {
+class UpdateBlockableLiveData<T>(value: T, private val convertValuePrePost: ((T) -> T)? = null) : LiveData<T>(value) {
 
     fun update(value: T) {
         if (!blockSubsequentUpdate)
             postValue(
-                convertUpdateValue?.invoke(value)
+                convertValuePrePost?.invoke(value)
                     ?: value
             )
     }

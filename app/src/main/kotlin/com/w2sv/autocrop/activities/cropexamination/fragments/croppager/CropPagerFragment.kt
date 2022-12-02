@@ -42,7 +42,6 @@ import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.crossFade
 import com.w2sv.autocrop.ui.scrollPeriodically
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
-import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
 import com.w2sv.kotlinutils.delegates.Consumable
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
@@ -77,7 +76,7 @@ class CropPagerFragment :
         @ApplicationContext context: Context
     ) : androidx.lifecycle.ViewModel() {
 
-        val dataSet = BidirectionalViewPagerDataSet(CropExaminationActivity.ViewModel.cropBundles)
+        val dataSet = CropPager.DataSet(CropExaminationActivity.ViewModel.cropBundles)
 
         val backPressHandler = BackPressListener(
             viewModelScope,
@@ -254,7 +253,7 @@ class CropPagerFragment :
         if (viewModel.dataSet.size == 1)
             castActivity<CropExaminationActivity>().replaceWithSubsequentFragment()
         else
-            cropPager.removeView(dataSetPosition)
+            cropPager.scrollToNextViewAndRemoveCurrent(dataSetPosition)
     }
 
     override fun onCropEntiretyResult(confirmed: Boolean) {

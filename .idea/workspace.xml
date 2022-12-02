@@ -10,10 +10,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d401d13-e1ad-45ba-a4d1-96ea4986ccb0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/ViewRemovableBidirectionalViewPager2.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPager.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/utils/AnimationListenerImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/utils/AnimationListenerImpl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/viewpager/ExtendedOnPageChangeCallback.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/viewpager/ExtendedOnPageChangeCallback.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPagerFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/croppager/CropPagerFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/manualcrop/view/BitmapGestureHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/manualcrop/view/BitmapGestureHandler.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/manualcrop/view/ManualCropView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/w2sv/autocrop/activities/cropexamination/fragments/manualcrop/view/ManualCropView.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/BidirectionalViewPagerDataSet.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/BidirectionalViewPagerDataSet.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/livedata/UpdateBlockableLiveData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/livedata/UpdateBlockableLiveData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/recyclerview/BidirectionalRecyclerViewAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/recyclerview/BidirectionalRecyclerViewAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/viewpager/ExtendedOnPageChangeCallback.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/viewpager/Extensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/bidirectionalviewpager/src/main/kotlin/com/w2sv/bidirectionalviewpager/viewpager/Extensions.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -286,11 +292,11 @@
       <recent name="" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.w2sv.bidirectionalviewpager" />
       <recent name="com.w2sv.autocrop.cropbundle.io" />
       <recent name="com.w2sv.autocrop.activities.cropexamination.fragments.croppager" />
       <recent name="com.w2sv.autocrop.activities.cropexamination.fragments.comparison.views" />
       <recent name="com.w2sv.autocrop.activities" />
-      <recent name="com.w2sv.autocrop.ui" />
     </key>
     <key name="android.template.942950756">
       <recent name="com.w2sv.autocrop" />
