@@ -1,5 +1,7 @@
 package com.w2sv.autocrop.ui
 
+import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,3 +24,20 @@ fun ViewPager2.scrollPeriodically(
         }
         onFinishedListener()
     }
+
+@Suppress("UNCHECKED_CAST")
+fun <VH : RecyclerView.ViewHolder> ViewPager2.currentViewHolder(): VH? =
+    (recyclerView.findViewHolderForAdapterPosition(currentItem) as? VH)
+
+val ViewPager2.recyclerView: RecyclerView
+    get() = getChildAt(0) as RecyclerView
+
+class CubeOutPageTransformer: ViewPager2.PageTransformer{
+    override fun transformPage(page: View, position: Float) {
+        with(page) {
+            pivotX = (if (position < 0) width else 0).toFloat()
+            pivotY = height * 0.5f
+            rotationY = 90f * position
+        }
+    }
+}

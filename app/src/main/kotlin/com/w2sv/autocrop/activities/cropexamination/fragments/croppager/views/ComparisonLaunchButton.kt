@@ -9,7 +9,7 @@ import com.w2sv.autocrop.activities.FragmentHostingActivity
 import com.w2sv.autocrop.activities.cropexamination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPager
 import com.w2sv.autocrop.activities.cropexamination.fragments.croppager.CropPagerFragment
-import com.w2sv.bidirectionalviewpager.viewpager.currentViewHolder
+import com.w2sv.autocrop.ui.currentViewHolder
 
 class ComparisonLaunchButton(context: Context, attributeSet: AttributeSet) :
     AppCompatImageButton(context, attributeSet),

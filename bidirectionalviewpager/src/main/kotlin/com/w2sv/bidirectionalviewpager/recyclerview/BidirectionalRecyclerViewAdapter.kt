@@ -2,8 +2,8 @@ package com.w2sv.bidirectionalviewpager.recyclerview
 
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class BidirectionalRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
-    private val dataSet: Collection<Any>,
+abstract class BidirectionalRecyclerViewAdapter<DS: Collection<Any>, VH : RecyclerView.ViewHolder>(
+    val dataSet: DS,
     offscreenPageLimit: Int
 ) : ExtendedRecyclerViewAdapter<VH>(offscreenPageLimit) {
 
@@ -17,10 +17,10 @@ abstract class BidirectionalRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
         else
             N_VIEWS
 
-    fun notifyItemChanged(position: Int, dataSetSize: Int) {
+    fun notifyItemChangedOverride(position: Int) {
         super.notifyItemChanged(position)
 
-        if (dataSetSize == 2) {
+        if (dataSet.size == 2) {
             super.notifyItemChanged(position - 2)
             super.notifyItemChanged(position + 2)
         }

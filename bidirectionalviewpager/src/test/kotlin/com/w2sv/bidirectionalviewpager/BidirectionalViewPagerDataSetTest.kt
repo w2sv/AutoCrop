@@ -37,7 +37,7 @@ internal class BidirectionalViewPagerDataSetTest {
     )
     fun correspondingPosition(expected: Int, viewPosition: Int) {
         val dataSet = getDataSet()
-        Assertions.assertEquals(expected, dataSet.correspondingPosition(viewPosition))
+        Assertions.assertEquals(expected, dataSet.getCorrespondingPosition(viewPosition))
     }
 
     @ParameterizedTest
@@ -125,7 +125,7 @@ internal class BidirectionalViewPagerDataSetTest {
     fun removeAndRealign(size: Int, viewPosition: Int, tailPosition: Int) {
         val dataSet = getDataSet(size, tailPosition = tailPosition)
 
-        val correspondingPosition = dataSet.correspondingPosition(viewPosition)
+        val correspondingPosition = dataSet.getCorrespondingPosition(viewPosition)
         val subsequentTailHash = dataSet[
                 if (dataSet.tailPosition == correspondingPosition)
                     dataSet.rotatedIndex(dataSet.tailPosition, -1)

@@ -80,7 +80,6 @@ class FlowFieldFragment :
                     WelcomeDialog().show(childFragmentManager)
 
                     viewModel.enteredFragment = true
-                    booleanPreferences.welcomeDialogsShown = true
                 }
             else
                 activityViewModel.ioResults?.let {

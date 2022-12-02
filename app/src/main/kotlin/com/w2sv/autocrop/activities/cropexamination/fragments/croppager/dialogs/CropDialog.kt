@@ -27,12 +27,12 @@ class CropDialog :
         }
 
     interface ResultListener {
-        fun onResult(confirmed: Boolean, dataSetPosition: Int)
+        fun onCropDialogResult(confirmed: Boolean, dataSetPosition: Int)
     }
 
     private fun notifyResultListener(confirmed: Boolean) {
         (requireParentFragment() as ResultListener)
-            .onResult(
+            .onCropDialogResult(
                 confirmed,
                 requireArguments()
                     .getInt(KEY_DATA_SET_POSITION)

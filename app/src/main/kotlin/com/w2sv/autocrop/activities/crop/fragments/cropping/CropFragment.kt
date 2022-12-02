@@ -1,8 +1,8 @@
 package com.w2sv.autocrop.activities.crop.fragments.cropping
 
 import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -32,6 +32,7 @@ import com.w2sv.autocrop.databinding.FragmentCropBinding
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -52,12 +53,12 @@ class CropFragment
     @HiltViewModel
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
-        resources: Resources
+        @ApplicationContext context: Context
     ) : androidx.lifecycle.ViewModel() {
 
         val backPressListener = BackPressListener(
             viewModelScope,
-            resources.getLong(R.integer.duration_backpress_confirmation_window)
+            context.resources.getLong(R.integer.duration_backpress_confirmation_window)
         )
 
         private val screenshotUris: List<Uri> = savedStateHandle[MainActivity.EXTRA_SELECTED_IMAGE_URIS]!!

@@ -16,27 +16,25 @@ import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.common.collect.EvictingQueue
 import com.w2sv.autocrop.R
+import com.w2sv.autocrop.cropbundle.Screenshot
 import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.cropping.cropEdges
-import com.w2sv.autocrop.cropbundle.io.CROP_FILE_ADDENDUM
-import com.w2sv.autocrop.cropbundle.Screenshot
-import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
 import com.w2sv.autocrop.cropbundle.cropping.cropped
+import com.w2sv.autocrop.cropbundle.io.CROP_FILE_ADDENDUM
+import com.w2sv.autocrop.cropbundle.io.extensions.compressToAndCloseStream
+import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
+import com.w2sv.autocrop.cropbundle.io.extensions.queryMediaStoreData
+import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
+import com.w2sv.autocrop.cropbundle.io.utils.systemScreenshotsDirectory
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
 import com.w2sv.autocrop.screenshotlistening.notifications.notificationBuilderWithSetChannel
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
-import com.w2sv.autocrop.cropbundle.io.extensions.compressToAndCloseStream
-import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
-import com.w2sv.autocrop.cropbundle.io.extensions.queryMediaStoreData
-import com.w2sv.autocrop.cropbundle.io.utils.systemScreenshotsDirectory
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
 import com.w2sv.kotlinutils.timeDelta
 import slimber.log.i
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.Exception
-import java.lang.IllegalStateException
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KFunction4
@@ -239,8 +237,8 @@ class ScreenshotListener :
             }
             true
         }
-        catch (ex: Exception){
-            when (ex){
+        catch (ex: Exception) {
+            when (ex) {
                 is IllegalStateException, is NullPointerException -> Unit
                 else -> throw ex
             }

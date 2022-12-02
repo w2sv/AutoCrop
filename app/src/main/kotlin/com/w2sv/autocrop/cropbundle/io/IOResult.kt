@@ -61,6 +61,7 @@ class CropBundleIOProcessor{
 
 data class IOResult(val cropWriteUri: Uri?, var deletedScreenshot: Boolean?) {
 
-    val successfullySavedCrop: Boolean get() =
-        cropWriteUri != null
+    val successfullySavedCrop: Boolean
+        get() =
+            cropWriteUri != null
 }

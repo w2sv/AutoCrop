@@ -1,6 +1,6 @@
 package com.w2sv.autocrop.activities.cropexamination
 
-import com.w2sv.autocrop.utils.ImageMimeType
+import com.w2sv.autocrop.cropbundle.io.ImageMimeType
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
@@ -21,14 +21,5 @@ internal class CropBundleProcessingKtTest {
                     )
                 )
         )
-    }
-
-    @ParameterizedTest
-    @CsvSource(
-        "screenshot234.png, screenshot234",
-        "234.something.png, 234.something",
-    )
-    fun fileNameWOExtension(fileName: String, expected: String) {
-        Assertions.assertEquals(expected, com.w2sv.autocrop.cropbundle.io.fileNameWOExtension(fileName))
     }
 }

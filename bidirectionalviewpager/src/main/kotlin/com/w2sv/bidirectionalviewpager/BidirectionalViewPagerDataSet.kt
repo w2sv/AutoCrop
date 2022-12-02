@@ -2,7 +2,6 @@ package com.w2sv.bidirectionalviewpager
 
 import androidx.annotation.VisibleForTesting
 import com.w2sv.bidirectionalviewpager.livedata.MutableListLiveData
-import com.w2sv.bidirectionalviewpager.livedata.UpdateBlockableLiveData
 import com.w2sv.bidirectionalviewpager.recyclerview.BidirectionalRecyclerViewAdapter
 import com.w2sv.kotlinutils.extensions.toInt
 import com.w2sv.kotlinutils.extensions.toNonZeroInt
@@ -11,12 +10,9 @@ import java.util.Collections
 open class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
     MutableListLiveData<T>(dataSet) {
 
-    val livePosition = UpdateBlockableLiveData(0, convertUpdateValue = ::correspondingPosition)
-    val liveElement: T get() = get(livePosition.value!!)
-
-    fun initialViewPosition(): Int =
+    fun initialViewPosition(dataSetStartPosition: Int): Int =
         (BidirectionalRecyclerViewAdapter.N_VIEWS / 2).let {
-            it - correspondingPosition(it) + livePosition.value!!
+            it - getCorrespondingPosition(it) + dataSetStartPosition
         }
 
     /**
@@ -29,17 +25,15 @@ open class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
 
     // ----------------Position Conversion
 
-    fun correspondingPosition(viewPosition: Int): Int =
+    fun getCorrespondingPosition(viewPosition: Int): Int =
         viewPosition % size
 
     fun atCorrespondingPosition(viewPosition: Int): T =
-        get(correspondingPosition(viewPosition))
+        get(getCorrespondingPosition(viewPosition))
 
     // ----------------Element Removal
 
     /**
-     * Determines new view position before element removal
-     *
      * @return if removing at tail -> preceding view, otherwise subsequent one
      */
     fun viewPositionIncrement(removePosition: Int): Int =
@@ -52,7 +46,7 @@ open class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
      * - Resets [tailPosition]
      */
     fun removeAndRealign(removePosition: Int, viewPosition: Int) {
-        val positionPostRemoval = correspondingPosition(viewPosition).run {
+        val positionPostRemoval = getCorrespondingPosition(viewPosition).run {
             if (removePosition < this)
                 minus(1)
             else
@@ -61,7 +55,7 @@ open class BidirectionalViewPagerDataSet<T>(dataSet: MutableList<T>) :
 
         removeAt(removePosition)
 
-        val rotationDistance = correspondingPosition(viewPosition) - positionPostRemoval
+        val rotationDistance = getCorrespondingPosition(viewPosition) - positionPostRemoval
 
         Collections.rotate(this, rotationDistance)
         tailPosition = rotatedIndex(

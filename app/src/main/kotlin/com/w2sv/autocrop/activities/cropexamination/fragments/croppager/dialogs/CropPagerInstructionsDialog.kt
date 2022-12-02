@@ -11,6 +11,7 @@ import com.w2sv.androidutils.ui.UncancelableDialogFragment
 import com.w2sv.autocrop.R
 
 class CropPagerInstructionsDialog : UncancelableDialogFragment() {
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         builder()
             .setTitle("Some instructions to get ya going")
@@ -23,7 +24,7 @@ class CropPagerInstructionsDialog : UncancelableDialogFragment() {
             )
             .setPositiveButton("Got it!") { _, _ ->
                 (requireParentFragment() as OnDismissedListener)
-                    .onDismissed()
+                    .onDismissedCropPagerInstructionsDialog()
             }
             .create()
 
@@ -40,6 +41,6 @@ class CropPagerInstructionsDialog : UncancelableDialogFragment() {
         }
 
     interface OnDismissedListener {
-        fun onDismissed()
+        fun onDismissedCropPagerInstructionsDialog()
     }
 }
