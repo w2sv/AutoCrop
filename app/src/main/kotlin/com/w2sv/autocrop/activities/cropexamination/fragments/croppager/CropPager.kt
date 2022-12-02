@@ -74,6 +74,6 @@ class CropPager(private val viewPager2: ViewPager2, private val dataSet: Bidirec
     }
 
     fun removeView(dataSetPosition: Int) {
-        onPageChangeCallback.setRemoveView(viewPager2.makeRemoveView(dataSetPosition, dataSet))
+        onPageChangeCallback.onScrollStateIdleListener.value = viewPager2.makeRemoveView(dataSetPosition, dataSet)
     }
 }

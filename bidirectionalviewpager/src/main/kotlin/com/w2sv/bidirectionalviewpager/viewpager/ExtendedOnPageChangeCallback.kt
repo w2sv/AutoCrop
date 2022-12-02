@@ -10,12 +10,8 @@ open class ExtendedOnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
         super.onPageScrollStateChanged(state)
 
         if (state == ViewPager.SCROLL_STATE_IDLE)
-            onScrollStateIdle?.invoke()
+            onScrollStateIdleListener.consume()?.invoke()
     }
 
-    fun setRemoveView(f: () -> Unit) {
-        onScrollStateIdle = f
-    }
-
-    private var onScrollStateIdle by Consumable<() -> Unit>()
+    val onScrollStateIdleListener = Consumable<() -> Unit>()
 }
