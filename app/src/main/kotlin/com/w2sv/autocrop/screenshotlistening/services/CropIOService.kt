@@ -37,7 +37,7 @@ class CropIOService :
         screenshotMediaStoreData: Screenshot.MediaStoreData,
         deleteScreenshot: Boolean
     ): IOResult =
-        CropBundleIOProcessor().invoke(
+        CropBundleIOProcessor.getInstance(applicationContext).invoke(
             crop,
             screenshotMediaStoreData,
             deleteScreenshot

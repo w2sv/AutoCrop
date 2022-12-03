@@ -21,11 +21,10 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.saveall.SaveAllFra
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.Screenshot
-import com.w2sv.autocrop.cropbundle.io.carryOutCropIO
+import com.w2sv.autocrop.cropbundle.io.CropBundleIOProcessor
 import com.w2sv.autocrop.cropbundle.io.extensions.queryMediaStoreDatum
 import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.utils.extensions.getInt
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.kotlinutils.extensions.toInt
@@ -52,7 +51,6 @@ class CropExaminationActivity : ApplicationActivity() {
 
     @HiltViewModel
     class ViewModel @Inject constructor(
-        private val uriPreferences: UriPreferences,
         private val booleanPreferences: BooleanPreferences
     ) : androidx.lifecycle.ViewModel() {
 
@@ -74,10 +72,9 @@ class CropExaminationActivity : ApplicationActivity() {
             )
 
             return {
-                val ioResult = applicationContext.contentResolver.carryOutCropIO(
+                val ioResult = CropBundleIOProcessor.getInstance(applicationContext).invoke(
                     cropBundle.crop.bitmap,
                     cropBundle.screenshot.mediaStoreData,
-                    uriPreferences.validDocumentUriOrNull(applicationContext),
                     deleteScreenshot && !addedScreenshotDeletionInquiryUri
                 )
 
