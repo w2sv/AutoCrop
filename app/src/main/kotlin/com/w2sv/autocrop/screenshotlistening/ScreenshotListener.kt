@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.screenshotlistening.services
+package com.w2sv.autocrop.screenshotlistening
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -26,10 +26,11 @@ import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.cropbundle.io.extensions.queryMediaStoreData
 import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
 import com.w2sv.autocrop.cropbundle.io.utils.systemScreenshotsDirectory
+import com.w2sv.autocrop.screenshotlistening.ScreenshotListener.OnCancelledFromNotificationListener.Companion.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
+import com.w2sv.autocrop.screenshotlistening.notifications.PendingIntentRequestCodes
 import com.w2sv.autocrop.screenshotlistening.notifications.notificationBuilderWithSetChannel
-import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener.OnCancelledFromNotificationListener.Companion.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
 import com.w2sv.kotlinutils.timeDelta
@@ -39,9 +40,7 @@ import java.io.FileOutputStream
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
-class ScreenshotListener :
-    BoundService(),
-    OnPendingIntentService.Client by OnPendingIntentService.Client.Impl(0) {
+class ScreenshotListener : BoundService(), NotificationResourcesCleanupService.Client {
 
     companion object {
         fun startService(context: Context) {
@@ -63,6 +62,12 @@ class ScreenshotListener :
 
         private fun getIntent(context: Context): Intent =
             Intent(context, ScreenshotListener::class.java)
+
+        fun startCleanupService(context: Context, intent: Intent){
+            context.startService(
+                intent.setClass(context, NotificationResourcesCleanupService::class.java)
+            )
+        }
 
         const val EXTRA_ATTEMPT_SCREENSHOT_DELETION = "com.w2sv.autocrop.DELETE_SCREENSHOT"
         const val EXTRA_DELETE_REQUEST_URI = "com.w2sv.autocrop.DELETE_REQUEST_URI"
@@ -94,8 +99,7 @@ class ScreenshotListener :
         override fun onReceive(context: Context?, intent: Intent?) {
             stopService(context!!)
 
-            LocalBroadcastManager
-                .getInstance(context)
+            LocalBroadcastManager.getInstance(context)
                 .sendBroadcast(
                     Intent(ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
                 )
@@ -158,7 +162,9 @@ class ScreenshotListener :
      * Observing/croppability determination
      */
 
-    private val screenshotObserver = ScreenshotObserver(contentResolver, ::onNewScreenshotUri)
+    private val screenshotObserver by lazy {
+        ScreenshotObserver(contentResolver, ::onNewScreenshotUri)
+    }
 
     /**
      * Catches [IllegalStateException] in case of [uri] not being accessible due to still pending
@@ -224,7 +230,7 @@ class ScreenshotListener :
         fun actionIntent(cls: Class<*>, saveIntent: Boolean, putCancelNotificationExtra: Boolean = true): Intent =
             Intent(this, cls)
                 .putExtra(EXTRA_TEMPORARY_CROP_FILE_PATH, temporaryCropFilePath)
-                .putOnPendingIntentServiceClientExtras(
+                .putCleanupExtras(
                     notificationId,
                     actionRequestCodes,
                     putCancelNotificationExtra
@@ -280,7 +286,7 @@ class ScreenshotListener :
                         PendingIntent.getService(
                             this,
                             actionRequestCodes[2],
-                            actionIntent(OnPendingIntentService::class.java, false),
+                            actionIntent(NotificationResourcesCleanupService::class.java, false),
                             REPLACE_CURRENT_PENDING_INTENT_FLAGS
                         )
                     )
@@ -294,7 +300,7 @@ class ScreenshotListener :
                         this,
                         actionRequestCodes[3],
                         actionIntent(
-                            OnPendingIntentService::class.java,
+                            NotificationResourcesCleanupService::class.java,
                             saveIntent = false,
                             putCancelNotificationExtra = false
                         ),
@@ -317,11 +323,13 @@ class ScreenshotListener :
         }
     )
 
+    override val requestCodes: PendingIntentRequestCodes = PendingIntentRequestCodes(0)
+
     /**
      * Clean-up
      */
 
-    override fun onPendingIntentService(intent: Intent) {
+    override fun onCleanupFinishedListener(intent: Intent) {
         File(intent.getStringExtra(EXTRA_TEMPORARY_CROP_FILE_PATH)!!).delete()
     }
 
@@ -331,7 +339,7 @@ class ScreenshotListener :
     override fun onDestroy() {
         super.onDestroy()
 
-        stopService(Intent(this, OnPendingIntentService::class.java))
+        stopService(Intent(this, NotificationResourcesCleanupService::class.java))
         stopService(Intent(this, CropIOService::class.java))
 
         contentResolver.unregisterContentObserver(screenshotObserver)

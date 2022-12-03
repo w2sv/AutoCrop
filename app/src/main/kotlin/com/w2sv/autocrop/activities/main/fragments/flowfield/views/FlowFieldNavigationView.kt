@@ -27,7 +27,7 @@ import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
-import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
+import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.permissionhandler.requestPermissions
 import dagger.hilt.android.AndroidEntryPoint

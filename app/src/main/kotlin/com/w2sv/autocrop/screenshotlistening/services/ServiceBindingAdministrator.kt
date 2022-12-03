@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.screenshotlistening
+package com.w2sv.autocrop.screenshotlistening.services
 
 import android.content.ComponentName
 import android.content.Context
@@ -10,14 +10,16 @@ import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.kotlinutils.delegates.Consumable
 import slimber.log.i
 
-class BindingAdministrator<T : BoundService>(
+open class ServiceBindingAdministrator<T : BoundService>(
     context: Context,
     private val serviceClass: Class<T>
 ) : ContextWrapper(context) {
+
     private var boundService: T? = null
     private var onServiceConnected by Consumable<(T) -> Unit>(null)
 
     private val serviceConnection = object : ServiceConnection {
+
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             i { "$name connected" }
             boundService = (service as BoundService.LocalBinder).getService()
@@ -29,9 +31,9 @@ class BindingAdministrator<T : BoundService>(
         }
     }
 
-    fun callOnBoundService(function: (T) -> Unit) {
+    fun callOnBoundService(block: (T) -> Unit) {
         if (boundService == null) {
-            onServiceConnected = function
+            onServiceConnected = block
             bindService(
                 Intent(this, serviceClass),
                 serviceConnection,
@@ -39,7 +41,7 @@ class BindingAdministrator<T : BoundService>(
             )
         }
         else
-            function(boundService!!)
+            block(boundService!!)
     }
 
     fun unbindService() {

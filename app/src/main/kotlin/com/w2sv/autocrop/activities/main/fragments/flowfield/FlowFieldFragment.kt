@@ -29,7 +29,7 @@ import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.WelcomeDial
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
-import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
+import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.utils.documentUriPathIdentifier
 import com.w2sv.autocrop.utils.extensions.snackyBuilder

@@ -1,6 +1,5 @@
-package com.w2sv.autocrop.screenshotlistening.services
+package com.w2sv.autocrop.screenshotlistening
 
-import android.app.Activity
 import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.ComponentActivity
@@ -36,7 +35,7 @@ class DeleteRequestActivity : ComponentActivity(R.layout.fragment_delete_request
             startService(
                 intent
                     .setClass(applicationContext, CropIOService::class.java)
-                    .putExtra(EXTRA_CONFIRMED_DELETION, it.resultCode == Activity.RESULT_OK)
+                    .putExtra(EXTRA_CONFIRMED_DELETION, it.resultCode == RESULT_OK)
             )
             finishAffinity()
         }

@@ -21,7 +21,7 @@ import com.w2sv.autocrop.activities.ApplicationActivity
 import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener
+import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

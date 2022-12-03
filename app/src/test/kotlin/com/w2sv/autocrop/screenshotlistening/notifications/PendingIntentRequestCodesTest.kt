@@ -1,6 +1,5 @@
 package com.w2sv.autocrop.screenshotlistening.notifications
 
-import com.w2sv.autocrop.screenshotlistening.PendingIntentRequestCodes
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource

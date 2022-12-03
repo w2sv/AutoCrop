@@ -62,24 +62,24 @@
         <!-- Services -->
 
         <service
-            android:name="com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener"
+            android:name="com.w2sv.autocrop.screenshotlistening.ScreenshotListener"
             android:exported="false" />
 
-        <receiver android:name="com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener$OnCancelledFromNotificationListener" />
+        <receiver android:name="com.w2sv.autocrop.screenshotlistening.ScreenshotListener$OnCancelledFromNotificationListener" />
         <receiver
             android:name="com.w2sv.autocrop.activities.main.MainActivity$OnCancelledScreenshotListenerFromNotificationListener"
             tools:ignore="Instantiatable" />
 
         <service
-            android:name="com.w2sv.autocrop.screenshotlistening.services.CropIOService"
+            android:name="com.w2sv.autocrop.screenshotlistening.CropIOService"
             android:exported="false" />
         <activity
-            android:name="com.w2sv.autocrop.screenshotlistening.services.DeleteRequestActivity"
+            android:name="com.w2sv.autocrop.screenshotlistening.DeleteRequestActivity"
             android:excludeFromRecents="true"
             android:noHistory="true" />
 
         <service
-            android:name="com.w2sv.autocrop.screenshotlistening.services.OnPendingIntentService"
+            android:name="com.w2sv.autocrop.screenshotlistening.NotificationResourcesCleanupService"
             android:exported="false" />
     </application>
 </manifest>

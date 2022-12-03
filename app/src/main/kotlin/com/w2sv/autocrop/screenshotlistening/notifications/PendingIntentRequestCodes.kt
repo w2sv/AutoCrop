@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.screenshotlistening
+package com.w2sv.autocrop.screenshotlistening.notifications
 
 import slimber.log.i
 import java.util.PriorityQueue

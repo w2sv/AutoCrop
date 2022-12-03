@@ -1,7 +1,6 @@
 package com.w2sv.autocrop.screenshotlistening.notifications
 
 import androidx.core.app.NotificationCompat
-import com.w2sv.autocrop.screenshotlistening.PendingIntentRequestCodes
 import com.w2sv.kotlinutils.extensions.nonZeroOrdinal
 import java.util.PriorityQueue
 

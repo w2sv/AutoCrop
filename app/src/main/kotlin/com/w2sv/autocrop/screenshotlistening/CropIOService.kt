@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.screenshotlistening.services
+package com.w2sv.autocrop.screenshotlistening
 
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -15,9 +15,7 @@ import com.w2sv.autocrop.utils.extensions.getParcelable
 class CropIOService : UnboundService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startService(
-            intent!!.setClass(applicationContext, OnPendingIntentService::class.java)
-        )
+        ScreenshotListener.startCleanupService(this, intent!!)
 
         val ioResult = runIntentParametrizedCropBundleIO(intent)
         showIOResultsNotification(ioResult)
