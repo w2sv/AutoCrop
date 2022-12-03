@@ -10,13 +10,15 @@ import com.w2sv.autocrop.utils.extensions.getInt
 import slimber.log.i
 
 class OnPendingIntentService : UnboundService() {
+
     companion object {
         const val EXTRA_ASSOCIATED_NOTIFICATION_ID = "com.w2sv.autocrop.ASSOCIATED_NOTIFICATION_ID"
         const val EXTRA_CANCEL_NOTIFICATION = "com.w2sv.autocrop.CANCEL_NOTIFICATION"
         const val EXTRA_ASSOCIATED_PENDING_REQUEST_CODES = "com.w2sv.autocrop.ASSOCIATED_PENDING_REQUEST_CODES"
     }
 
-    interface ClientInterface {
+    interface Client {
+
         companion object {
             const val EXTRA_CLIENT_INDEX = "com.w2sv.autocrop.CLIENT_INDEX"
         }
@@ -24,6 +26,7 @@ class OnPendingIntentService : UnboundService() {
         val clientIndex: Int
         val notificationGroup: NotificationGroup?
         val requestCodes: PendingIntentRequestCodes
+
         fun onPendingIntentService(intent: Intent) {}
 
         fun Intent.putOnPendingIntentServiceClientExtras(
@@ -39,13 +42,13 @@ class OnPendingIntentService : UnboundService() {
                     if (putCancelNotificationExtra)
                         putExtra(EXTRA_CANCEL_NOTIFICATION, true)
                 }
-    }
 
-    class Client(
-        override val clientIndex: Int,
-        override val notificationGroup: NotificationGroup? = null
-    ) : ClientInterface {
-        override val requestCodes: PendingIntentRequestCodes = PendingIntentRequestCodes(clientIndex * 100)
+        class Impl(
+            override val clientIndex: Int,
+            override val notificationGroup: NotificationGroup? = null
+        ) : Client {
+            override val requestCodes: PendingIntentRequestCodes = PendingIntentRequestCodes(clientIndex * 100)
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -56,9 +59,9 @@ class OnPendingIntentService : UnboundService() {
                     .cancel(notificationId)
                     .also { i { "Cancelled notification $notificationId" } }
 
-            bindingAdministrators[getInt(ClientInterface.EXTRA_CLIENT_INDEX)]
+            bindingAdministrators[getInt(Client.EXTRA_CLIENT_INDEX)]
                 .callOnBoundService { boundService ->
-                    (boundService as ClientInterface).let {
+                    (boundService as Client).let {
                         it.notificationGroup!!.onChildNotificationCancelled(notificationId)
                         it.requestCodes.removeAll(
                             getIntegerArrayListExtra(EXTRA_ASSOCIATED_PENDING_REQUEST_CODES)!!

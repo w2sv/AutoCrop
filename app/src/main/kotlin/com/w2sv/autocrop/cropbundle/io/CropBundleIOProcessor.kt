@@ -36,9 +36,9 @@ class CropBundleIOProcessor @Inject constructor(){
     @ApplicationContext
     lateinit var applicationContext: Context
 
-    fun invoke(cropBitmap: Bitmap, screenshotMediaStoreData: Screenshot.MediaStoreData, deleteScreenshot: Boolean): IOResult =
+    fun invoke(cropBitmap: Bitmap, screenshotMediaStoreData: Screenshot.MediaStoreData, deleteScreenshot: Boolean): CropBundleIOResult =
         screenshotMediaStoreData.let {
-            IOResult(
+            CropBundleIOResult(
                 applicationContext.contentResolver.saveBitmap(
                     cropBitmap,
                     it.parsedMimeType,

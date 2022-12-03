@@ -43,7 +43,7 @@ private typealias PendingIntentRenderer = KFunction4<Context, Int, Intent, Int, 
 
 class ScreenshotListener :
     BoundService(),
-    OnPendingIntentService.ClientInterface by OnPendingIntentService.Client(0) {
+    OnPendingIntentService.Client by OnPendingIntentService.Client.Impl(0) {
 
     companion object {
         const val EXTRA_ATTEMPT_SCREENSHOT_DELETION = "com.w2sv.autocrop.DELETE_SCREENSHOT"
@@ -54,11 +54,9 @@ class ScreenshotListener :
         private const val ACTION_STOP_SERVICE = "com.w2sv.autocrop.STOP_SERVICE"
 
         fun startService(context: Context) {
-            with(context) {
-                startService(
-                    Intent(this, ScreenshotListener::class.java)
-                )
-            }
+            context.startService(
+                Intent(context, ScreenshotListener::class.java)
+            )
             i { "Started ScreenCaptureListeningService" }
         }
 

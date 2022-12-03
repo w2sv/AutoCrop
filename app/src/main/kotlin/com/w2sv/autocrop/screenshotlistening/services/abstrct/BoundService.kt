@@ -7,6 +7,7 @@ import android.os.IBinder
 abstract class BoundService : LoggingService() {
 
     inner class LocalBinder : Binder() {
+
         @Suppress("UNCHECKED_CAST")
         fun <T : BoundService> getService(): T =
             (this@BoundService) as T
