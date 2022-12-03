@@ -69,24 +69,25 @@ class MainActivity : ApplicationActivity() {
         LocalBroadcastManager
             .getInstance(this)
             .registerReceiver(
-                onStopScreenshotListenerFromNotification,
-                IntentFilter(ScreenshotListener.OnStopFromNotificationListener.ACTION_ON_STOP_SERVICE_FROM_NOTIFICATION)
+                onCancelledScreenshotListenerFromNotificationListener,
+                IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
             )
     }
 
-    private val onStopScreenshotListenerFromNotification by lazy {
-        OnStopScreenshotListenerFromNotification()
+    private val onCancelledScreenshotListenerFromNotificationListener by lazy {
+        OnCancelledScreenshotListenerFromNotificationListener()
     }
 
-    private val viewModel: ViewModel by viewModels()
+    inner class OnCancelledScreenshotListenerFromNotificationListener : BroadcastReceiver() {
 
-    inner class OnStopScreenshotListenerFromNotification : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             viewModel
                 .liveScreenshotListenerRunning
                 .postValue(false)
         }
     }
+
+    private val viewModel: ViewModel by viewModels()
 
     /**
      * invoke [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app
@@ -110,6 +111,6 @@ class MainActivity : ApplicationActivity() {
 
         LocalBroadcastManager
             .getInstance(this)
-            .unregisterReceiver(onStopScreenshotListenerFromNotification)
+            .unregisterReceiver(onCancelledScreenshotListenerFromNotificationListener)
     }
 }

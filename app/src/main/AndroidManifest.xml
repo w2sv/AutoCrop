@@ -65,9 +65,9 @@
             android:name="com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener"
             android:exported="false" />
 
-        <receiver android:name="com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener$OnStopFromNotificationListener" />
+        <receiver android:name="com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener$OnCancelledFromNotificationListener" />
         <receiver
-            android:name="com.w2sv.autocrop.activities.main.MainActivity$OnStopScreenshotListenerFromNotification"
+            android:name="com.w2sv.autocrop.activities.main.MainActivity$OnCancelledScreenshotListenerFromNotificationListener"
             tools:ignore="Instantiatable" />
 
         <service

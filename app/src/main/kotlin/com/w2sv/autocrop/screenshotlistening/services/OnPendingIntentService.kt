@@ -52,25 +52,24 @@ class OnPendingIntentService : UnboundService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        with(intent!!) {
-            val notificationId = getInt(EXTRA_ASSOCIATED_NOTIFICATION_ID)
-            if (getBooleanExtra(EXTRA_CANCEL_NOTIFICATION, false))
-                notificationManager()
-                    .cancel(notificationId)
-                    .also { i { "Cancelled notification $notificationId" } }
+        val notificationId = intent!!.getInt(EXTRA_ASSOCIATED_NOTIFICATION_ID)
 
-            bindingAdministrators[getInt(Client.EXTRA_CLIENT_INDEX)]
-                .callOnBoundService { boundService ->
-                    (boundService as Client).let {
-                        it.notificationGroup!!.onChildNotificationCancelled(notificationId)
-                        it.requestCodes.removeAll(
-                            getIntegerArrayListExtra(EXTRA_ASSOCIATED_PENDING_REQUEST_CODES)!!
-                                .toSet()
-                        )
-                        it.onPendingIntentService(this)
-                    }
+        if (intent.getBooleanExtra(EXTRA_CANCEL_NOTIFICATION, false))
+            notificationManager()
+                .cancel(notificationId)
+                .also { i { "Cancelled notification $notificationId" } }
+
+        bindingAdministrators[intent.getInt(Client.EXTRA_CLIENT_INDEX)]
+            .callOnBoundService { boundService ->
+                (boundService as Client).let {
+                    it.notificationGroup!!.onChildNotificationCancelled(notificationId)
+                    it.requestCodes.removeAll(
+                        intent.getIntegerArrayListExtra(EXTRA_ASSOCIATED_PENDING_REQUEST_CODES)!!
+                            .toSet()
+                    )
+                    it.onPendingIntentService(intent)
                 }
-        }
+            }
         return START_REDELIVER_INTENT
     }
 

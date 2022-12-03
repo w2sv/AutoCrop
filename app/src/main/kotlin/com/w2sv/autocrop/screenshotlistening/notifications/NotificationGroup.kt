@@ -12,7 +12,7 @@ class NotificationGroup(
     private val channelName: String,
     private val summaryId: NotificationId,
     private val makeSummaryTitle: (Int) -> String,
-    private val applyToSummaryBuilder: ((NotificationCompat.Builder) -> NotificationCompat.Builder)? = null
+    private val applyToSummaryBuilder: (NotificationCompat.Builder.() -> NotificationCompat.Builder)? = null
 ) : ContextWrapper(context) {
 
     val children = UniqueNotificationIdsWithBuilder(summaryId)
