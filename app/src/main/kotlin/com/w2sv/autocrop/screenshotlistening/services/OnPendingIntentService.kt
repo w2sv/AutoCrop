@@ -24,7 +24,7 @@ class OnPendingIntentService : UnboundService() {
         }
 
         val clientIndex: Int
-        val notificationGroup: NotificationGroup?
+        val notificationGroup: NotificationGroup
         val requestCodes: PendingIntentRequestCodes
 
         fun onPendingIntentService(intent: Intent) {}
@@ -45,9 +45,10 @@ class OnPendingIntentService : UnboundService() {
 
         class Impl(
             override val clientIndex: Int,
-            override val notificationGroup: NotificationGroup? = null
+            override val notificationGroup: NotificationGroup
         ) : Client {
-            override val requestCodes: PendingIntentRequestCodes = PendingIntentRequestCodes(clientIndex * 100)
+
+            override val requestCodes = PendingIntentRequestCodes(clientIndex)
         }
     }
 
@@ -75,7 +76,6 @@ class OnPendingIntentService : UnboundService() {
 
     private val bindingAdministrators = arrayOf(
         BindingAdministrator(this, ScreenshotListener::class.java),
-        BindingAdministrator(this, CropIOService::class.java)
     )
 
     override fun onDestroy() {

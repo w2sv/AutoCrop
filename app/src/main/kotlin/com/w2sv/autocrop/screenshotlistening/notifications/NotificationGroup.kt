@@ -55,10 +55,10 @@ class NotificationGroup(
                 .also { i { "Removed notification id $id; n notifications: $size" } }
 
             if (size == 1)
-                with(element()) {
+                element().let {
                     showNotification(
-                        first,
-                        second
+                        it.first,
+                        it.second
                             .setSilent(true)
                             .setGroup(null)
                     )

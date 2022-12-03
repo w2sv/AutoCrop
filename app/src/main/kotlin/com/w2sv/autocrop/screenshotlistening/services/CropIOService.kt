@@ -5,14 +5,14 @@ import android.graphics.BitmapFactory
 import android.widget.Toast
 import com.w2sv.autocrop.cropbundle.io.CropBundleIOProcessor
 import com.w2sv.autocrop.cropbundle.io.CropBundleIOResult
-import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
+import com.w2sv.autocrop.screenshotlistening.services.abstrct.UnboundService
 import com.w2sv.autocrop.utils.extensions.getParcelable
 
 /**
  * Service responsible for carrying out crop bundle IO and notifying the user
  * as to the respective result
  */
-class CropIOService : BoundService() {
+class CropIOService : UnboundService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startService(

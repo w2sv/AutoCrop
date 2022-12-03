@@ -29,6 +29,7 @@ import com.w2sv.autocrop.cropbundle.io.utils.systemScreenshotsDirectory
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
 import com.w2sv.autocrop.screenshotlistening.notifications.notificationBuilderWithSetChannel
+import com.w2sv.autocrop.screenshotlistening.services.ScreenshotListener.OnCancelledFromNotificationListener.Companion.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
 import com.w2sv.kotlinutils.timeDelta
@@ -58,10 +59,10 @@ class ScreenshotListener :
             i { "Stopping ScreenshotListener" }
         }
 
+        private const val ACTION_STOP_SERVICE = "com.w2sv.autocrop.STOP_SERVICE"
+
         private fun getIntent(context: Context): Intent =
             Intent(context, ScreenshotListener::class.java)
-
-        private const val ACTION_STOP_SERVICE = "com.w2sv.autocrop.STOP_SERVICE"
 
         const val EXTRA_ATTEMPT_SCREENSHOT_DELETION = "com.w2sv.autocrop.DELETE_SCREENSHOT"
         const val EXTRA_DELETE_REQUEST_URI = "com.w2sv.autocrop.DELETE_REQUEST_URI"

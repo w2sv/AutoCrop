@@ -3,7 +3,15 @@ package com.w2sv.autocrop.screenshotlistening
 import slimber.log.i
 import java.util.PriorityQueue
 
-class PendingIntentRequestCodes(private val base: Int) : PriorityQueue<Int>() {
+class PendingIntentRequestCodes(baseSeed: Int) : PriorityQueue<Int>() {
+
+    companion object{
+        fun uniqueIdBase(seed: Int): Int =
+            seed * 100
+    }
+
+    private val base = uniqueIdBase(baseSeed)
+
     fun makeAndAdd(): Int {
         val newRequestCode = lastOrNull()?.let { it + 1 }
             ?: base
@@ -13,5 +21,6 @@ class PendingIntentRequestCodes(private val base: Int) : PriorityQueue<Int>() {
     }
 
     fun makeAndAddMultiple(n: Int): ArrayList<Int> =
-        ArrayList((0 until n).map { makeAndAdd() })
+        ArrayList((0 until n)
+            .map { makeAndAdd() })
 }
