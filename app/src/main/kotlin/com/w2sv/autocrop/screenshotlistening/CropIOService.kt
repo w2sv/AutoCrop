@@ -3,7 +3,7 @@ package com.w2sv.autocrop.screenshotlistening
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.widget.Toast
-import com.w2sv.autocrop.cropbundle.io.CropBundleIOProcessor
+import com.w2sv.autocrop.cropbundle.io.CropBundleIORunner
 import com.w2sv.autocrop.cropbundle.io.CropBundleIOResult
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.UnboundService
 import com.w2sv.autocrop.utils.extensions.getParcelable
@@ -20,11 +20,13 @@ class CropIOService : UnboundService() {
         val ioResult = runIntentParametrizedCropBundleIO(intent)
         showIOResultsNotification(ioResult)
 
+        stopSelf()
+
         return START_REDELIVER_INTENT
     }
 
     private fun runIntentParametrizedCropBundleIO(intent: Intent): CropBundleIOResult =
-        CropBundleIOProcessor.getInstance(applicationContext).invoke(
+        CropBundleIORunner.getInstance(applicationContext).invoke(
             cropBitmap = BitmapFactory.decodeFile(intent.getStringExtra(ScreenshotListener.EXTRA_TEMPORARY_CROP_FILE_PATH)),
             screenshotMediaStoreData = intent.getParcelable(ScreenshotListener.EXTRA_SCREENSHOT_MEDIASTORE_DATA)!!,
             deleteScreenshot = intent.getBooleanExtra(ScreenshotListener.EXTRA_ATTEMPT_SCREENSHOT_DELETION, false)

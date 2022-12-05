@@ -11,16 +11,16 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
-class CropBundleIOProcessor @Inject constructor(){
+class CropBundleIORunner @Inject constructor(){
 
     @InstallIn(SingletonComponent::class)
     @EntryPoint
     interface CropBundleIOProcessorEntryPoint {
-        fun cropBundleIOProcessor(): CropBundleIOProcessor
+        fun cropBundleIOProcessor(): CropBundleIORunner
     }
 
     companion object{
-        fun getInstance(appContext: Context): CropBundleIOProcessor {
+        fun getInstance(appContext: Context): CropBundleIORunner {
             val hiltEntryPoint = EntryPointAccessors.fromApplication(
                 appContext,
                 CropBundleIOProcessorEntryPoint::class.java

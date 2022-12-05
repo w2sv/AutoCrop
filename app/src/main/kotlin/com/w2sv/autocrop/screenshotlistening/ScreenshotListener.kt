@@ -34,13 +34,15 @@ import com.w2sv.autocrop.screenshotlistening.notifications.notificationBuilderWi
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
 import com.w2sv.kotlinutils.timeDelta
+import com.w2sv.kotlinutils.tripleFromIterable
 import slimber.log.i
 import java.io.File
 import java.io.FileOutputStream
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
-class ScreenshotListener : BoundService(), NotificationResourcesCleanupService.Client {
+class ScreenshotListener : BoundService(),
+                           NotificationResourcesCleanupService.Client {
 
     companion object {
         fun startService(context: Context) {
@@ -63,7 +65,7 @@ class ScreenshotListener : BoundService(), NotificationResourcesCleanupService.C
         private fun getIntent(context: Context): Intent =
             Intent(context, ScreenshotListener::class.java)
 
-        fun startCleanupService(context: Context, intent: Intent){
+        fun startCleanupService(context: Context, intent: Intent) {
             context.startService(
                 intent.setClass(context, NotificationResourcesCleanupService::class.java)
             )
@@ -333,14 +335,11 @@ class ScreenshotListener : BoundService(), NotificationResourcesCleanupService.C
         File(intent.getStringExtra(EXTRA_TEMPORARY_CROP_FILE_PATH)!!).delete()
     }
 
-    /**
-     * Stop associated services and unregister [screenshotObserver]
-     */
     override fun onDestroy() {
         super.onDestroy()
 
-        stopService(Intent(this, NotificationResourcesCleanupService::class.java))
-        stopService(Intent(this, CropIOService::class.java))
+        //        stopService(Intent(this, NotificationResourcesCleanupService::class.java))
+        //        stopService(Intent(this, CropIOService::class.java))
 
         contentResolver.unregisterContentObserver(screenshotObserver)
             .also { i { "Unregistered imageContentObserver" } }
@@ -355,20 +354,24 @@ private class ScreenshotObserver(
     private val contentResolver: ContentResolver,
     private val onNewScreenshotListener: (Uri) -> Boolean
 ) : ContentObserver(Handler(Looper.getMainLooper())) {
+
+    companion object{
+        /**
+         * Number of URIs, that could possibly require simultaneous processing
+         */
+        const val MAX_URIS = 3
+    }
+
     /**
-     * Uris which are not to be considered again.
-     *
-     * [EvictingQueue] maxSize determined with respect to the number of
-     * screenshots, that could possibly be taken in the relatively short time interval, within which
-     * a single Uri is processed.
+     * Uris which have already been processed & are not to be considered again.
      */
-    private val recentBlacklist = EvictingQueue.create<Uri>(3)
+    private val blacklist = EvictingQueue.create<Uri>(MAX_URIS)
 
     /**
      * Uris that have been asserted to correspond to a screenshot, but which were still pending
      * during last check.
      */
-    private val pendingScreenshotUris = mutableSetOf<Uri>()
+    private val pendingUris = EvictingQueue.create<Uri>(MAX_URIS)
 
     /**
      * According to own observation called on each change to a matching Uri, including
@@ -377,55 +380,55 @@ private class ScreenshotObserver(
     override fun onChange(selfChange: Boolean, uri: Uri?) {
         uri?.let {
             i { "Called onChange for $it" }
-            if (!recentBlacklist.contains(it)) {
-                if (pendingScreenshotUris.contains(it) || it.isScreenshot() == true) {
-                    if (onNewScreenshotListener(it)) {
-                        recentBlacklist.add(it)
-                        pendingScreenshotUris.remove(it)
-                        i { "Added $uri to blacklist and removed it from pendingScreenshotUris" }
+            if (!blacklist.contains(it)) {
+                if (pendingUris.contains(it))
+                    attemptOnNewScreenshotListenerInvocation(it, false)
+                else {
+                    when (it.isNewScreenshot()) {
+                        true -> attemptOnNewScreenshotListenerInvocation(it, true)
+                        false -> blacklist.add(it)
+                        null -> pendingUris.add(it)
                     }
-                    else
-                        pendingScreenshotUris.add(it)
-                            .also { i { "Added $uri to pendingScreenshotUris" } }
                 }
-                else
-                    recentBlacklist.add(it)
-                        .also { i { "Added $uri to blacklist" } }
             }
         }
     }
 
-    /**
-     * Checks if [this] not corresponding to AutoCrop-file and if its file path contains either the
-     * [systemScreenshotsDirectory]name or the word 'screenshot'.
-     */
-    private fun Uri.isScreenshot(): Boolean? {
+    private fun attemptOnNewScreenshotListenerInvocation(uri: Uri, addToPendingUrisIfInaccessible: Boolean) {
+        if (onNewScreenshotListener(uri)) {
+            blacklist.add(uri)
+            i { "Added $uri to blacklist" }
+        }
+        else if (addToPendingUrisIfInaccessible)
+            pendingUris.add(uri)
+    }
+
+    private fun Uri.isNewScreenshot(): Boolean? =
         try {
-            val mediaStoreData = contentResolver.queryMediaStoreData(
-                this,
-                arrayOf(
-                    MediaStore.Images.Media.DISPLAY_NAME,
-                    MediaStore.Images.Media.DATA,  // e.g. /storage/emulated/0/Pictures/Screenshots/.pending-1665749333-Screenshot_20221007-140853687.png
-                    MediaStore.Images.Media.DATE_ADDED
+            val (absolutePath, fileName, dateAdded) = tripleFromIterable(
+                contentResolver.queryMediaStoreData(
+                    this,
+                    arrayOf(
+                        MediaStore.Images.Media.DISPLAY_NAME,
+                        MediaStore.Images.Media.DATA,  // e.g. /storage/emulated/0/Pictures/Screenshots/.pending-1665749333-Screenshot_20221007-140853687.png
+                        MediaStore.Images.Media.DATE_ADDED
+                    )
                 )
             )
 
-            val absolutePath = mediaStoreData[0]
-            val fileName = mediaStoreData[1]
-            val dateAdded = mediaStoreData[2]
-
-            return !fileName.contains(CROP_FILE_ADDENDUM) &&
-                    (systemScreenshotsDirectory()?.let {
-                        absolutePath.contains(it.name)
-                    } == true || fileName.lowercase().contains("screenshot")) &&
-                    timeDelta(
+            !fileName.contains(CROP_FILE_ADDENDUM) &&  // exclude produced AutoCrop's
+                    timeDelta(  // exclude files having already been on the file system and which were only triggered, due to a change of their metadata
                         dateFromUnixTimestamp(dateAdded),
                         Date(System.currentTimeMillis()),
                         TimeUnit.SECONDS
-                    ) < 20
+                    ) < 20 &&
+                    (systemScreenshotsDirectory()?.let { absolutePath.contains(it.name) } == true ||  // infer whether or not actually a screenshot
+                            fileName
+                                .lowercase()
+                                .contains("screenshot"))
+
         }
         catch (e: CursorIndexOutOfBoundsException) {
-            return null
+            null
         }
-    }
 }

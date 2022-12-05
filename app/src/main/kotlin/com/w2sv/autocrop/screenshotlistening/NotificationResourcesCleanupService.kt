@@ -22,8 +22,7 @@ class NotificationResourcesCleanupService : UnboundService() {
     interface Client {
 
         /**
-         * [ServiceBindingAdministrator] which handles a type that implements
-         * [BoundService] & [Client]
+         * [ServiceBindingAdministrator] which manages a [BoundService] that also implements [Client]
          */
         class BindingAdministrator<T>(
             context: Context,
@@ -74,6 +73,8 @@ class NotificationResourcesCleanupService : UnboundService() {
             .callOnBoundService {
                 it.doCleanup(intent)
             }
+
+        stopSelf()
 
         return START_REDELIVER_INTENT
     }

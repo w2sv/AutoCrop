@@ -21,7 +21,7 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.saveall.SaveAllFra
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.Screenshot
-import com.w2sv.autocrop.cropbundle.io.CropBundleIOProcessor
+import com.w2sv.autocrop.cropbundle.io.CropBundleIORunner
 import com.w2sv.autocrop.cropbundle.io.extensions.queryMediaStoreDatum
 import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
 import com.w2sv.autocrop.preferences.BooleanPreferences
@@ -72,7 +72,7 @@ class CropExaminationActivity : ApplicationActivity() {
             )
 
             return {
-                val ioResult = CropBundleIOProcessor.getInstance(applicationContext).invoke(
+                val ioResult = CropBundleIORunner.getInstance(applicationContext).invoke(
                     cropBundle.crop.bitmap,
                     cropBundle.screenshot.mediaStoreData,
                     deleteScreenshot && !addedScreenshotDeletionInquiryUri
