@@ -246,7 +246,7 @@ class ScreenshotListener : BoundService(),
 
         notificationGroup.addChild(
             notificationId,
-            notificationGroup.childBuilder("Crafted a new AutoCrop")
+            notificationGroup.getChildBuilder("Crafted a new AutoCrop")
                 .addAction(
                     NotificationCompat.Action(
                         null,
@@ -316,11 +316,11 @@ class ScreenshotListener : BoundService(),
         this,
         "Detected croppable screenshots",
         summaryId = NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT,
-        makeSummaryTitle = { "Detected $it croppable screenshots" },
+        summaryTextStringResource = R.string.detected_n_croppable_screenshots,
         applyToSummaryBuilder = {
             setStyle(
                 NotificationCompat.InboxStyle()
-                    .setSummaryText("Expand to save")
+                    .setSummaryText("Expand to select actions")
             )
         }
     )
