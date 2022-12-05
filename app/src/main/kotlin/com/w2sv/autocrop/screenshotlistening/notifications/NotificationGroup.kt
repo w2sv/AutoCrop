@@ -16,11 +16,11 @@ class NotificationGroup(
 ) : ContextWrapper(context) {
 
     val children = UniqueNotificationIdsWithBuilder(summaryId)
-    private val channelId: String get() = summaryId.channelId
     private val groupKey = "GROUP_${summaryId.name}"
+    private val channelId: String by summaryId::channelId
 
     fun childBuilder(title: String): NotificationCompat.Builder =
-        notificationBuilderWithSetChannel(
+        setChannelAndGetNotificationBuilder(
             channelId,
             title,
             channelName
@@ -33,10 +33,10 @@ class NotificationGroup(
             if (size >= 1)
                 showSummaryNotification()
             if (size == 1)
-                with(element()) {
+                element().let {
                     showNotification(
-                        first,
-                        second
+                        it.first,
+                        it.second
                             .setSilent(true)
                             .setGroup(groupKey)
                     )
@@ -52,7 +52,7 @@ class NotificationGroup(
     fun onChildNotificationCancelled(id: Int) {
         with(children) {
             remove(id)
-                .also { i { "Removed notification id $id; n notifications: $size" } }
+                .also { i { "Removed notification id $id; New # notifications: $size" } }
 
             if (size == 1)
                 element().let {
@@ -71,7 +71,7 @@ class NotificationGroup(
     private fun showSummaryNotification() {
         showNotification(
             summaryId.id,
-            notificationBuilderWithSetChannel(
+            setChannelAndGetNotificationBuilder(
                 channelId,
                 makeSummaryTitle(children.size),
                 channelName

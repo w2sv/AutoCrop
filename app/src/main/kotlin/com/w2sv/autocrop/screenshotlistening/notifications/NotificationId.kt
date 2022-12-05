@@ -6,6 +6,6 @@ enum class NotificationId {
     STARTED_FOREGROUND_SERVICE,
     DETECTED_NEW_CROPPABLE_SCREENSHOT;
 
-    val id: Int get() = nonZeroOrdinal
-    val channelId: String get() = name
+    val id: Int by ::nonZeroOrdinal
+    val channelId: String by ::name
 }

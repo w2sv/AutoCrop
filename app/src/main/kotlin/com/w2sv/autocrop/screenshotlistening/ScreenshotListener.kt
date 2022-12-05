@@ -30,7 +30,7 @@ import com.w2sv.autocrop.screenshotlistening.ScreenshotListener.OnCancelledFromN
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
 import com.w2sv.autocrop.screenshotlistening.notifications.PendingIntentRequestCodes
-import com.w2sv.autocrop.screenshotlistening.notifications.notificationBuilderWithSetChannel
+import com.w2sv.autocrop.screenshotlistening.notifications.setChannelAndGetNotificationBuilder
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
 import com.w2sv.kotlinutils.timeDelta
@@ -144,7 +144,7 @@ class ScreenshotListener : BoundService(),
     }
 
     private fun foregroundServiceNotificationBuilder(): NotificationCompat.Builder =
-        notificationBuilderWithSetChannel(
+        setChannelAndGetNotificationBuilder(
             NotificationId.STARTED_FOREGROUND_SERVICE.channelId,
             "Listening to screen captures"
         )

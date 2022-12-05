@@ -7,7 +7,7 @@ import androidx.core.app.NotificationCompat
 import com.w2sv.androidutils.extensions.notificationManager
 import com.w2sv.autocrop.R
 
-fun Context.notificationBuilderWithSetChannel(
+fun Context.setChannelAndGetNotificationBuilder(
     channelId: String,
     title: String,
     channelName: String? = null
