@@ -29,7 +29,6 @@ import com.w2sv.autocrop.cropbundle.io.utils.systemScreenshotsDirectory
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener.OnCancelledFromNotificationListener.Companion.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
-import com.w2sv.autocrop.screenshotlistening.notifications.PendingIntentRequestCodes
 import com.w2sv.autocrop.screenshotlistening.notifications.setChannelAndGetNotificationBuilder
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
@@ -37,6 +36,7 @@ import com.w2sv.kotlinutils.timeDelta
 import com.w2sv.kotlinutils.tripleFromIterable
 import slimber.log.i
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.util.Date
 import java.util.concurrent.TimeUnit
@@ -197,7 +197,7 @@ class ScreenshotListener : BoundService(),
         }
         catch (ex: Exception) {
             when (ex) {
-                is IllegalStateException, is NullPointerException -> Unit
+                is IllegalStateException, is NullPointerException, is FileNotFoundException -> Unit
                 else -> throw ex
             }
             false
@@ -226,10 +226,10 @@ class ScreenshotListener : BoundService(),
         deleteRequestUri: Uri?,
         temporaryCropFilePath: String
     ) {
-        val notificationId = notificationGroup.children.newId()
-        val actionRequestCodes = requestCodes.makeAndAddMultiple(4)
+        val notificationId = notificationGroup.children.getNewId()
+        val actionRequestCodes = notificationGroup.requestCodes.makeAndAddMultiple(4)
 
-        fun actionIntent(cls: Class<*>, saveIntent: Boolean, putCancelNotificationExtra: Boolean = true): Intent =
+        fun getActionIntent(cls: Class<*>, isSaveIntent: Boolean, putCancelNotificationExtra: Boolean = true): Intent =
             Intent(this, cls)
                 .putExtra(EXTRA_TEMPORARY_CROP_FILE_PATH, temporaryCropFilePath)
                 .putCleanupExtras(
@@ -238,83 +238,83 @@ class ScreenshotListener : BoundService(),
                     putCancelNotificationExtra
                 )
                 .apply {
-                    if (saveIntent) {
+                    if (isSaveIntent) {
                         data = uri
                         putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
                     }
                 }
 
-        notificationGroup.addChild(
-            notificationId,
-            notificationGroup.getChildBuilder("Crafted a new AutoCrop")
-                .addAction(
-                    NotificationCompat.Action(
-                        null,
-                        "Save",
-                        PendingIntent.getService(
-                            this,
-                            actionRequestCodes[0],
-                            actionIntent(CropIOService::class.java, true),
+        notificationGroup.addChild(notificationId) {
+            addAction(
+                NotificationCompat.Action(
+                    null,
+                    "Save",
+                    PendingIntent.getService(
+                        this@ScreenshotListener,
+                        actionRequestCodes[0],
+                        getActionIntent(CropIOService::class.java, true),
+                        REPLACE_CURRENT_PENDING_INTENT_FLAGS
+                    )
+                )
+            )
+            addAction(
+                NotificationCompat.Action(
+                    null,
+                    "Save & delete Screenshot",
+                    if (deleteRequestUri is Uri && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                        PendingIntent.getActivity(
+                            this@ScreenshotListener,
+                            actionRequestCodes[1],
+                            getActionIntent(DeleteRequestActivity::class.java, true)
+                                .putExtra(EXTRA_DELETE_REQUEST_URI, deleteRequestUri),
                             REPLACE_CURRENT_PENDING_INTENT_FLAGS
                         )
-                    )
+                    else
+                        PendingIntent.getService(
+                            this@ScreenshotListener,
+                            actionRequestCodes[1],
+                            getActionIntent(CropIOService::class.java, true)
+                                .putExtra(EXTRA_ATTEMPT_SCREENSHOT_DELETION, true),
+                            REPLACE_CURRENT_PENDING_INTENT_FLAGS
+                        )
                 )
-                .addAction(
-                    NotificationCompat.Action(
-                        null,
-                        "Save & delete Screenshot",
-                        if (deleteRequestUri is Uri && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                            PendingIntent.getActivity(
-                                this,
-                                actionRequestCodes[1],
-                                actionIntent(DeleteRequestActivity::class.java, true)
-                                    .putExtra(EXTRA_DELETE_REQUEST_URI, deleteRequestUri),
-                                REPLACE_CURRENT_PENDING_INTENT_FLAGS
-                            )
-                        else
-                            PendingIntent.getService(
-                                this,
-                                actionRequestCodes[1],
-                                actionIntent(CropIOService::class.java, true)
-                                    .putExtra(EXTRA_ATTEMPT_SCREENSHOT_DELETION, true),
-                                REPLACE_CURRENT_PENDING_INTENT_FLAGS
-                            )
-                    )
-                )
+            )
                 .addAction(
                     NotificationCompat.Action(
                         null,
                         "Dismiss",
                         PendingIntent.getService(
-                            this,
+                            this@ScreenshotListener,
                             actionRequestCodes[2],
-                            actionIntent(NotificationResourcesCleanupService::class.java, false),
+                            getActionIntent(NotificationResourcesCleanupService::class.java, false),
                             REPLACE_CURRENT_PENDING_INTENT_FLAGS
                         )
                     )
                 )
-                .setStyle(
-                    NotificationCompat.BigPictureStyle()
-                        .bigPicture(cropBitmap)
+            setStyle(
+                NotificationCompat.BigPictureStyle()
+                    .bigPicture(cropBitmap)
+            )
+            setDeleteIntent(
+                PendingIntent.getService(
+                    this@ScreenshotListener,
+                    actionRequestCodes[3],
+                    getActionIntent(
+                        NotificationResourcesCleanupService::class.java,
+                        isSaveIntent = false,
+                        putCancelNotificationExtra = false
+                    ),
+                    REPLACE_CURRENT_PENDING_INTENT_FLAGS
                 )
-                .setDeleteIntent(
-                    PendingIntent.getService(
-                        this,
-                        actionRequestCodes[3],
-                        actionIntent(
-                            NotificationResourcesCleanupService::class.java,
-                            saveIntent = false,
-                            putCancelNotificationExtra = false
-                        ),
-                        REPLACE_CURRENT_PENDING_INTENT_FLAGS
-                    )
-                )
-        )
+            )
+        }
     }
 
     override val notificationGroup = NotificationGroup(
         this,
         "Detected croppable screenshots",
+        0,
+        "Crafted a new AutoCrop",
         summaryId = NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT,
         summaryTextStringResource = R.string.detected_n_croppable_screenshots,
         applyToSummaryBuilder = {
@@ -324,8 +324,6 @@ class ScreenshotListener : BoundService(),
             )
         }
     )
-
-    override val requestCodes: PendingIntentRequestCodes = PendingIntentRequestCodes(0)
 
     /**
      * Clean-up
@@ -352,7 +350,7 @@ private class ScreenshotObserver(
     private val onNewScreenshotListener: (Uri) -> Boolean
 ) : ContentObserver(Handler(Looper.getMainLooper())) {
 
-    companion object{
+    companion object {
         /**
          * Number of URIs, that could possibly require simultaneous processing
          */

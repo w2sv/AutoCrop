@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import com.w2sv.androidutils.extensions.notificationManager
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
-import com.w2sv.autocrop.screenshotlistening.notifications.PendingIntentRequestCodes
 import com.w2sv.autocrop.screenshotlistening.services.ServiceBindingAdministrator
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.UnboundService
@@ -32,7 +31,6 @@ class NotificationResourcesCleanupService : UnboundService() {
                       T : Client
 
         val notificationGroup: NotificationGroup
-        val requestCodes: PendingIntentRequestCodes
 
         fun Intent.putCleanupExtras(
             notificationId: Int,
@@ -45,10 +43,9 @@ class NotificationResourcesCleanupService : UnboundService() {
                 .putExtra(EXTRA_CANCEL_NOTIFICATION, cancelNotification)
 
         fun doCleanup(intent: Intent) {
-            notificationGroup.onChildNotificationCancelled(intent.getInt(EXTRA_ASSOCIATED_NOTIFICATION_ID))
-            requestCodes.removeAll(
+            notificationGroup.onChildNotificationCancelled(
+                intent.getInt(EXTRA_ASSOCIATED_NOTIFICATION_ID),
                 intent.getIntegerArrayListExtra(EXTRA_ASSOCIATED_PENDING_REQUEST_CODES)!!
-                    .toSet()
             )
             onCleanupFinishedListener(intent)
         }
@@ -72,9 +69,8 @@ class NotificationResourcesCleanupService : UnboundService() {
         bindingAdministrator
             .callOnBoundService {
                 it.doCleanup(intent)
+                stopSelf()
             }
-
-        stopSelf()
 
         return START_REDELIVER_INTENT
     }
