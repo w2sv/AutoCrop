@@ -246,7 +246,7 @@ class ScreenshotListener : BoundService(),
 
         notificationGroup.addChild(
             notificationId,
-            notificationGroup.childBuilder("Fancy a crop?")
+            notificationGroup.childBuilder("Crafted a new AutoCrop")
                 .addAction(
                     NotificationCompat.Action(
                         null,
@@ -262,7 +262,7 @@ class ScreenshotListener : BoundService(),
                 .addAction(
                     NotificationCompat.Action(
                         null,
-                        "Save & delete",
+                        "Save & delete Screenshot",
                         if (deleteRequestUri is Uri && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                             PendingIntent.getActivity(
                                 this,
@@ -337,9 +337,6 @@ class ScreenshotListener : BoundService(),
 
     override fun onDestroy() {
         super.onDestroy()
-
-        //        stopService(Intent(this, NotificationResourcesCleanupService::class.java))
-        //        stopService(Intent(this, CropIOService::class.java))
 
         contentResolver.unregisterContentObserver(screenshotObserver)
             .also { i { "Unregistered imageContentObserver" } }
