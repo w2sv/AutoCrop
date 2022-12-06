@@ -10,7 +10,9 @@ import com.w2sv.autocrop.screenshotlistening.services.abstrct.UnboundService
 import com.w2sv.autocrop.utils.extensions.getInt
 import slimber.log.i
 
-class NotificationResourcesCleanupService : UnboundService() {
+abstract class PendingIntentAssociatedResourcesCleanupService<T>(private val clientClass: Class<T>) : UnboundService()
+        where T : BoundService,
+              T : PendingIntentAssociatedResourcesCleanupService.Client {
 
     companion object {
         const val EXTRA_ASSOCIATED_NOTIFICATION_ID = "com.w2sv.autocrop.ASSOCIATED_NOTIFICATION_ID"
@@ -56,8 +58,6 @@ class NotificationResourcesCleanupService : UnboundService() {
         fun onCleanupFinishedListener(intent: Intent) {}
     }
 
-    private val bindingAdministrator = Client.BindingAdministrator(this, ScreenshotListener::class.java)
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val notificationId = intent!!.getInt(EXTRA_ASSOCIATED_NOTIFICATION_ID)
 
@@ -66,18 +66,16 @@ class NotificationResourcesCleanupService : UnboundService() {
                 .cancel(notificationId)
                 .also { i { "Cancelled notification $notificationId" } }
 
-        bindingAdministrator
-            .callOnBoundService {
-                it.doCleanup(intent)
-                stopSelf()
+        Client.BindingAdministrator(this, clientClass)
+            .apply {
+                callOnBoundService {
+                    it.doCleanup(intent)
+
+                    unbindService()
+                    stopSelf()
+                }
             }
 
         return START_REDELIVER_INTENT
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        bindingAdministrator.unbindService()
     }
 }

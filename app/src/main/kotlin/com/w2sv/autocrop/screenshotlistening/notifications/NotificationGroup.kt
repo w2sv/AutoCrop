@@ -22,7 +22,7 @@ class NotificationGroup(
 ) : ContextWrapper(context) {
 
     val children = UniqueAssociatedIds(baseSeed = summaryId.nonZeroOrdinal)
-    val requestCodes = PendingIntentRequestCodes(pendingIntentRequestCodesSeed)
+    val requestCodes = UniqueAssociatedIds(baseSeed = pendingIntentRequestCodesSeed)
     private val groupKey = "GROUP_${summaryId.name}"
     private val channelId: String by summaryId::channelId
 

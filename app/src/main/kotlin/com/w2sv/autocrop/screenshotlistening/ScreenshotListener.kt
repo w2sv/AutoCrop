@@ -42,7 +42,7 @@ import java.util.Date
 import java.util.concurrent.TimeUnit
 
 class ScreenshotListener : BoundService(),
-                           NotificationResourcesCleanupService.Client {
+                           PendingIntentAssociatedResourcesCleanupService.Client {
 
     companion object {
         fun startService(context: Context) {
@@ -67,7 +67,7 @@ class ScreenshotListener : BoundService(),
 
         fun startCleanupService(context: Context, intent: Intent) {
             context.startService(
-                intent.setClass(context, NotificationResourcesCleanupService::class.java)
+                intent.setClass(context, CleanupService::class.java)
             )
         }
 
@@ -76,6 +76,8 @@ class ScreenshotListener : BoundService(),
         const val EXTRA_SCREENSHOT_MEDIASTORE_DATA = "com.w2sv.autocrop.SCREENSHOT_MEDIASTORE_DATA"
         const val EXTRA_TEMPORARY_CROP_FILE_PATH = "com.w2sv.autocrop.CROP_FILE_PATH"
     }
+
+    class CleanupService: PendingIntentAssociatedResourcesCleanupService<ScreenshotListener>(ScreenshotListener::class.java)
 
     /**
      * Triggered by ScreenshotListener "Stop"-action and responsible for calling [stopService] &
@@ -227,7 +229,7 @@ class ScreenshotListener : BoundService(),
         temporaryCropFilePath: String
     ) {
         val notificationId = notificationGroup.children.getNewId()
-        val actionRequestCodes = notificationGroup.requestCodes.makeAndAddMultiple(4)
+        val actionRequestCodes = notificationGroup.requestCodes.getAndAddMultipleNewIds(4)
 
         fun getActionIntent(cls: Class<*>, isSaveIntent: Boolean, putCancelNotificationExtra: Boolean = true): Intent =
             Intent(this, cls)
@@ -279,18 +281,18 @@ class ScreenshotListener : BoundService(),
                         )
                 )
             )
-                .addAction(
-                    NotificationCompat.Action(
-                        null,
-                        "Dismiss",
-                        PendingIntent.getService(
-                            this@ScreenshotListener,
-                            actionRequestCodes[2],
-                            getActionIntent(NotificationResourcesCleanupService::class.java, false),
-                            REPLACE_CURRENT_PENDING_INTENT_FLAGS
-                        )
+            addAction(
+                NotificationCompat.Action(
+                    null,
+                    "Dismiss",
+                    PendingIntent.getService(
+                        this@ScreenshotListener,
+                        actionRequestCodes[2],
+                        getActionIntent(CleanupService::class.java, false),
+                        REPLACE_CURRENT_PENDING_INTENT_FLAGS
                     )
                 )
+            )
             setStyle(
                 NotificationCompat.BigPictureStyle()
                     .bigPicture(cropBitmap)
@@ -300,7 +302,7 @@ class ScreenshotListener : BoundService(),
                     this@ScreenshotListener,
                     actionRequestCodes[3],
                     getActionIntent(
-                        NotificationResourcesCleanupService::class.java,
+                        CleanupService::class.java,
                         isSaveIntent = false,
                         putCancelNotificationExtra = false
                     ),

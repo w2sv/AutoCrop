@@ -1,5 +1,6 @@
 package com.w2sv.autocrop.screenshotlistening.notifications
 
+import slimber.log.i
 import java.util.PriorityQueue
 
 open class UniqueAssociatedIds(baseSeed: Int) : PriorityQueue<Int>() {
@@ -14,4 +15,15 @@ open class UniqueAssociatedIds(baseSeed: Int) : PriorityQueue<Int>() {
     fun getNewId(): Int =
         lastOrNull()?.let { it + 1 }
             ?: idBase
+
+    fun getAndAddNewId(): Int =
+        getNewId()
+            .also {
+                add(it)
+                i { "Added pendingRequestCode $it" }
+            }
+
+    fun getAndAddMultipleNewIds(n: Int): ArrayList<Int> =
+        ArrayList((0 until n)
+            .map { getAndAddNewId() })
 }

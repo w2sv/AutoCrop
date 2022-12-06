@@ -79,7 +79,7 @@
             android:noHistory="true" />
 
         <service
-            android:name="com.w2sv.autocrop.screenshotlistening.NotificationResourcesCleanupService"
+            android:name="com.w2sv.autocrop.screenshotlistening.ScreenshotListener$CleanupService"
             android:exported="false" />
     </application>
 </manifest>
