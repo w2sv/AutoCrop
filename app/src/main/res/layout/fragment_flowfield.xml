@@ -7,9 +7,7 @@
     <com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldContainer
         android:id="@+id/canvas_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldContainer>
+        android:layout_height="match_parent" />
 
     <com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldDrawerLayout
         android:id="@+id/drawer_layout"
@@ -66,15 +64,14 @@
 
         <com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldNavigationView
             android:id="@+id/navigation_view"
-            android:layout_width="wrap_content"
 
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignTop="@+id/navigation_drawer_button_burger"
             android:layout_gravity="start"
             android:layout_marginTop="60dp"
 
             android:background="@android:color/transparent"
-
             android:fitsSystemWindows="true"
             app:headerLayout="@layout/navigation_drawer_header"
             app:itemIconTint="@color/highlight"

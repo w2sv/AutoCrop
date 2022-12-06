@@ -10,7 +10,6 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical"
 
-    android:paddingBottom="50dp"
     tools:viewBindingIgnore="true">
 
     <TextView
@@ -26,6 +25,7 @@
 
         android:layout_marginStart="14dp"
         android:layout_marginTop="4dp"
+        android:paddingBottom="60dp"
 
         android:text="@string/version"
         android:textSize="16sp"
