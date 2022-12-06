@@ -73,3 +73,5 @@ lint/reports/
 
 # Android Profiling
 *.hprof
+
+.idea/workspace.xml
