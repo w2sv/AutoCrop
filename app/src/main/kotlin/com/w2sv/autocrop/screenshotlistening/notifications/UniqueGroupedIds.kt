@@ -5,7 +5,7 @@ import java.util.PriorityQueue
 
 open class UniqueGroupedIds(baseSeed: Int) : PriorityQueue<Int>() {
 
-    companion object{
+    companion object {
         fun idBase(seed: Int): Int =
             seed * 100
     }

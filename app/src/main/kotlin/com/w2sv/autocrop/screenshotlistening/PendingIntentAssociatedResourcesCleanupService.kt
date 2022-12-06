@@ -59,7 +59,7 @@ abstract class PendingIntentAssociatedResourcesCleanupService<T>(private val cli
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent!!.getBooleanExtra(EXTRA_CANCEL_NOTIFICATION, false)){
+        if (intent!!.getBooleanExtra(EXTRA_CANCEL_NOTIFICATION, false)) {
             val notificationId = intent.getInt(EXTRA_ASSOCIATED_NOTIFICATION_ID)
 
             notificationManager()

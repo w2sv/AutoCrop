@@ -3,8 +3,8 @@ package com.w2sv.autocrop.screenshotlistening
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.widget.Toast
-import com.w2sv.autocrop.cropbundle.io.CropBundleIORunner
 import com.w2sv.autocrop.cropbundle.io.CropBundleIOResult
+import com.w2sv.autocrop.cropbundle.io.CropBundleIORunner
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.UnboundService
 import com.w2sv.autocrop.utils.extensions.getParcelable
 

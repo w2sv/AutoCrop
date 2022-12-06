@@ -13,10 +13,10 @@
     tools:viewBindingIgnore="true">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
         style="@style/AutoCropTV"
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
         android:textSize="24sp" />
 
     <com.w2sv.autocrop.activities.main.fragments.VersionTextView

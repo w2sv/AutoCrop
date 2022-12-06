@@ -11,7 +11,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
-class CropBundleIORunner @Inject constructor(){
+class CropBundleIORunner @Inject constructor() {
 
     @InstallIn(SingletonComponent::class)
     @EntryPoint
@@ -19,7 +19,7 @@ class CropBundleIORunner @Inject constructor(){
         fun cropBundleIOProcessor(): CropBundleIORunner
     }
 
-    companion object{
+    companion object {
         fun getInstance(appContext: Context): CropBundleIORunner {
             val hiltEntryPoint = EntryPointAccessors.fromApplication(
                 appContext,
@@ -36,7 +36,11 @@ class CropBundleIORunner @Inject constructor(){
     @ApplicationContext
     lateinit var applicationContext: Context
 
-    fun invoke(cropBitmap: Bitmap, screenshotMediaStoreData: Screenshot.MediaStoreData, deleteScreenshot: Boolean): CropBundleIOResult =
+    fun invoke(
+        cropBitmap: Bitmap,
+        screenshotMediaStoreData: Screenshot.MediaStoreData,
+        deleteScreenshot: Boolean
+    ): CropBundleIOResult =
         screenshotMediaStoreData.let {
             CropBundleIOResult(
                 applicationContext.contentResolver.saveBitmap(

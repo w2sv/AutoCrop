@@ -42,14 +42,17 @@ class ManualCropFragment
     }
 
     @HiltViewModel
-    class ViewModel @Inject constructor(savedStateHandle: SavedStateHandle, @ApplicationContext context: Context) : androidx.lifecycle.ViewModel() {
+    class ViewModel @Inject constructor(
+        savedStateHandle: SavedStateHandle,
+        @ApplicationContext context: Context
+    ) : androidx.lifecycle.ViewModel() {
 
         val bitmap: Bitmap
         val initialCropEdges: CropEdges
-//        val cropEdgePairCandidates: List<CropEdges>
+        //        val cropEdgePairCandidates: List<CropEdges>
 
         init {
-            with(savedStateHandle.get<CropBundle>(CropBundle.EXTRA)!!){
+            with(savedStateHandle.get<CropBundle>(CropBundle.EXTRA)!!) {
                 bitmap = context.contentResolver.loadBitmap(screenshot.uri)
                 initialCropEdges = crop.edges
             }

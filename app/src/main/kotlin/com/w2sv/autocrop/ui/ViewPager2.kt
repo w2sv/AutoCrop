@@ -32,7 +32,7 @@ fun <VH : RecyclerView.ViewHolder> ViewPager2.currentViewHolder(): VH? =
 val ViewPager2.recyclerView: RecyclerView
     get() = getChildAt(0) as RecyclerView
 
-class CubeOutPageTransformer: ViewPager2.PageTransformer{
+class CubeOutPageTransformer : ViewPager2.PageTransformer {
     override fun transformPage(page: View, position: Float) {
         with(page) {
             pivotX = (if (position < 0) width else 0).toFloat()
