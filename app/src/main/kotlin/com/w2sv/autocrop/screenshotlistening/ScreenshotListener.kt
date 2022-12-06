@@ -27,8 +27,8 @@ import com.w2sv.autocrop.cropbundle.io.extensions.queryMediaStoreData
 import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
 import com.w2sv.autocrop.cropbundle.io.utils.systemScreenshotsDirectory
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener.OnCancelledFromNotificationListener.Companion.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS
+import com.w2sv.autocrop.screenshotlistening.notifications.AppNotificationChannel
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
-import com.w2sv.autocrop.screenshotlistening.notifications.NotificationId
 import com.w2sv.autocrop.screenshotlistening.notifications.setChannelAndGetNotificationBuilder
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
@@ -77,10 +77,10 @@ class ScreenshotListener : BoundService(),
         const val EXTRA_TEMPORARY_CROP_FILE_PATH = "com.w2sv.autocrop.CROP_FILE_PATH"
     }
 
-    class CleanupService: PendingIntentAssociatedResourcesCleanupService<ScreenshotListener>(ScreenshotListener::class.java)
+    class CleanupService : PendingIntentAssociatedResourcesCleanupService<ScreenshotListener>(ScreenshotListener::class.java)
 
     /**
-     * Triggered by ScreenshotListener "Stop"-action and responsible for calling [stopService] &
+     * Triggered by ScreenshotListener notification "Stop"-action and responsible for calling [stopService] &
      * triggering BroadcastReceivers subscribed to [ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS]
      */
     class OnCancelledFromNotificationListener : BroadcastReceiver() {
@@ -127,7 +127,7 @@ class ScreenshotListener : BoundService(),
                  */
 
                 startForeground(
-                    NotificationId.STARTED_FOREGROUND_SERVICE.id,
+                    AppNotificationChannel.STARTED_FOREGROUND_SERVICE.childIdSeed,
                     foregroundServiceNotificationBuilder()
                         .build()
                 )
@@ -147,8 +147,8 @@ class ScreenshotListener : BoundService(),
 
     private fun foregroundServiceNotificationBuilder(): NotificationCompat.Builder =
         setChannelAndGetNotificationBuilder(
-            NotificationId.STARTED_FOREGROUND_SERVICE.channelId,
-            "Listening to screen captures"
+            AppNotificationChannel.STARTED_FOREGROUND_SERVICE,
+            AppNotificationChannel.STARTED_FOREGROUND_SERVICE.title
         )
             .setStyle(
                 NotificationCompat.BigTextStyle()
@@ -228,7 +228,7 @@ class ScreenshotListener : BoundService(),
         deleteRequestUri: Uri?,
         temporaryCropFilePath: String
     ) {
-        val notificationId = notificationGroup.children.getNewId()
+        val notificationId = notificationGroup.childrenIds.getNewId()
         val actionRequestCodes = notificationGroup.requestCodes.getAndAddMultipleNewIds(4)
 
         fun getActionIntent(cls: Class<*>, isSaveIntent: Boolean, putCancelNotificationExtra: Boolean = true): Intent =
@@ -247,6 +247,7 @@ class ScreenshotListener : BoundService(),
                 }
 
         notificationGroup.addChild(notificationId) {
+            setContentTitle("Crafted a new AutoCrop")
             addAction(
                 NotificationCompat.Action(
                     null,
@@ -314,12 +315,9 @@ class ScreenshotListener : BoundService(),
 
     override val notificationGroup = NotificationGroup(
         this,
-        "Detected croppable screenshots",
-        0,
-        "Crafted a new AutoCrop",
-        summaryId = NotificationId.DETECTED_NEW_CROPPABLE_SCREENSHOT,
-        summaryTextStringResource = R.string.detected_n_croppable_screenshots,
-        applyToSummaryBuilder = {
+        notificationChannel = AppNotificationChannel.DETECTED_NEW_CROPPABLE_SCREENSHOT,
+        summaryBuilderConfigurator = { nChildren ->
+            setContentTitle(getString(R.string.detected_n_croppable_screenshots, nChildren))
             setStyle(
                 NotificationCompat.InboxStyle()
                     .setSummaryText("Expand to select actions")

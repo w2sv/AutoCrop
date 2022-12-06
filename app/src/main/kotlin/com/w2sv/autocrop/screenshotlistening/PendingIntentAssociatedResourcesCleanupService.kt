@@ -45,7 +45,7 @@ abstract class PendingIntentAssociatedResourcesCleanupService<T>(private val cli
                 .putExtra(EXTRA_CANCEL_NOTIFICATION, cancelNotification)
 
         fun doCleanup(intent: Intent) {
-            notificationGroup.onChildNotificationCancelled(
+            notificationGroup.onNotificationCancelled(
                 intent.getInt(EXTRA_ASSOCIATED_NOTIFICATION_ID),
                 intent.getIntegerArrayListExtra(EXTRA_ASSOCIATED_PENDING_REQUEST_CODES)!!
             )
@@ -59,12 +59,13 @@ abstract class PendingIntentAssociatedResourcesCleanupService<T>(private val cli
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val notificationId = intent!!.getInt(EXTRA_ASSOCIATED_NOTIFICATION_ID)
+        if (intent!!.getBooleanExtra(EXTRA_CANCEL_NOTIFICATION, false)){
+            val notificationId = intent.getInt(EXTRA_ASSOCIATED_NOTIFICATION_ID)
 
-        if (intent.getBooleanExtra(EXTRA_CANCEL_NOTIFICATION, false))
             notificationManager()
                 .cancel(notificationId)
                 .also { i { "Cancelled notification $notificationId" } }
+        }
 
         Client.BindingAdministrator(this, clientClass)
             .apply {

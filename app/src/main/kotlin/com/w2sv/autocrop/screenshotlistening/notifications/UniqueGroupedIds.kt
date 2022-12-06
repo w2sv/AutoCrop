@@ -3,7 +3,7 @@ package com.w2sv.autocrop.screenshotlistening.notifications
 import slimber.log.i
 import java.util.PriorityQueue
 
-open class UniqueAssociatedIds(baseSeed: Int) : PriorityQueue<Int>() {
+open class UniqueGroupedIds(baseSeed: Int) : PriorityQueue<Int>() {
 
     companion object{
         fun idBase(seed: Int): Int =

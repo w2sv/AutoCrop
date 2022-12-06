@@ -2,73 +2,58 @@ package com.w2sv.autocrop.screenshotlistening.notifications
 
 import android.content.Context
 import android.content.ContextWrapper
-import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import com.w2sv.androidutils.extensions.notificationManager
 import com.w2sv.androidutils.extensions.showNotification
-import com.w2sv.kotlinutils.extensions.nonZeroOrdinal
 import slimber.log.i
-
-private typealias ApplyToBuilder = NotificationCompat.Builder.() -> NotificationCompat.Builder
 
 class NotificationGroup(
     context: Context,
-    private val channelName: String,
-    pendingIntentRequestCodesSeed: Int,
-    private val childTitle: String,
-    private val summaryId: NotificationId,
-    @StringRes private val summaryTextStringResource: Int,
-    private val applyToSummaryBuilder: ApplyToBuilder = { this }
+    private val notificationChannel: AppNotificationChannel,
+    private val summaryBuilderConfigurator: NotificationCompat.Builder.(nChildren: Int) -> NotificationCompat.Builder
 ) : ContextWrapper(context) {
 
-    val children = UniqueAssociatedIds(baseSeed = summaryId.nonZeroOrdinal)
-    val requestCodes = UniqueAssociatedIds(baseSeed = pendingIntentRequestCodesSeed)
-    private val groupKey = "GROUP_${summaryId.name}"
-    private val channelId: String by summaryId::channelId
+    val childrenIds = UniqueGroupedIds(baseSeed = notificationChannel.childIdSeed)
+    val requestCodes = UniqueGroupedIds(baseSeed = notificationChannel.requestCodeSeed)
+    private val groupKey = "GROUP_${notificationChannel.id}"
 
-    fun addChild(id: Int, applyToBuilder: ApplyToBuilder) {
-        if (children.isNotEmpty())
+    fun addChild(id: Int, builderConfigurator: NotificationCompat.Builder.() -> NotificationCompat.Builder) {
+        if (childrenIds.isNotEmpty())
             showSummaryNotification()
 
-        children.add(id)
-            .also { i { "Added ${summaryId.name} notification $id" } }
+        childrenIds.add(id)
+            .also { i { "Added ${notificationChannel.name} notification $id" } }
 
         showNotification(
             id,
-            getChildBuilder()
-                .applyToBuilder()
+            setChannelAndGetNotificationBuilder(
+                notificationChannel
+            )
+                .setOnlyAlertOnce(true)
+                .setGroup(groupKey)
+                .builderConfigurator()
         )
     }
 
-    private fun getChildBuilder(): NotificationCompat.Builder =
-        setChannelAndGetNotificationBuilder(
-            channelId,
-            childTitle,
-            channelName
-        )
-            .setOnlyAlertOnce(true)
-            .setGroup(groupKey)
-
     private fun showSummaryNotification() {
         showNotification(
-            summaryId.id,
+            notificationChannel.groupSummaryId,
             setChannelAndGetNotificationBuilder(
-                channelId,
-                getString(summaryTextStringResource, children.size),
-                channelName
+                notificationChannel,
             )
-                .applyToSummaryBuilder()
+                .summaryBuilderConfigurator(childrenIds.size)
                 .setGroup(groupKey)
                 .setGroupSummary(true)
         )
     }
 
-    fun onChildNotificationCancelled(id: Int, associatedRequestCodes: Collection<Int>) {
-        children.remove(id)
+    fun onNotificationCancelled(id: Int, associatedRequestCodes: Collection<Int>) {
+        childrenIds.remove(id)
+        i { "Removed notification id $id; New # notifications: ${childrenIds.size}" }
         requestCodes.removeAll(associatedRequestCodes.toSet())
-        i { "Removed notification id $id; New # notifications: ${children.size}" }
+        i { "Removed request codes $associatedRequestCodes" }
 
-        if (children.isEmpty())
-            notificationManager().cancel(summaryId.id)
+        if (childrenIds.isEmpty())
+            notificationManager().cancel(notificationChannel.childIdSeed)
     }
 }

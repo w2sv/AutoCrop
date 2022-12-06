@@ -8,24 +8,22 @@ import com.w2sv.androidutils.extensions.notificationManager
 import com.w2sv.autocrop.R
 
 fun Context.setChannelAndGetNotificationBuilder(
-    channelId: String,
-    title: String,
-    channelName: String? = null
+    channel: AppNotificationChannel,
+    contentTitle: String? = null
 ): NotificationCompat.Builder {
     notificationManager().createNotificationChannel(
         NotificationChannel(
-            channelId,
-            channelName
-                ?: title,
+            channel.id,
+            channel.title,
             NotificationManager.IMPORTANCE_DEFAULT
         )
     )
-    return notificationBuilder(channelId, title)
+    return notificationBuilder(channel.id, contentTitle)
 }
 
 private fun Context.notificationBuilder(
     channelId: String,
-    title: String,
+    title: String?,
 ): NotificationCompat.Builder =
     NotificationCompat.Builder(this, channelId)
         .setSmallIcon(R.drawable.ic_scissors_24)
