@@ -14,6 +14,9 @@ import android.view.MotionEvent.ACTION_MOVE
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
@@ -48,7 +51,8 @@ class ManualCropView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+) : View(context, attrs, defStyleAttr),
+    DefaultLifecycleObserver {
 
     /**
      * Touch threshold for corners and edges
@@ -153,12 +157,7 @@ class ManualCropView @JvmOverloads constructor(
      */
     private val cornerEdgeLengthInPixel = resources.getDimension(R.dimen.corner_toggle_length)
 
-    private val minRectLength = resources.getDimension(R.dimen.min_rect)
-
-    /**
-     * Mask color
-     */
-    private val maskBackgroundColor = ContextCompat.getColor(context, R.color.crop_mask)
+    private val bitmapBorderRect = RectF()
 
     companion object {
         /**
@@ -167,26 +166,28 @@ class ManualCropView @JvmOverloads constructor(
         private const val MAX_SCALE = 15f
     }
 
+    private val viewModel by viewModel<ManualCropFragment.ViewModel>()
+
     init {
         setWillNotDraw(false)
     }
 
-    private val viewModel by viewModel<ManualCropFragment.ViewModel>()
-
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        if (!isInEditMode) {
-            bitmapRect.set(
-                0f,
-                0f,
-                viewModel.bitmap.width.toFloat(),
-                viewModel.bitmap.height.toFloat(),
-            )
-        }
+        findViewTreeLifecycleOwner()!!.lifecycle.addObserver(this)
     }
 
-    private val bitmapBorderRect = RectF()
+    override fun onCreate(owner: LifecycleOwner) {
+        super.onCreate(owner)
+
+        bitmapRect.set(
+            0f,
+            0f,
+            viewModel.bitmap.width.toFloat(),
+            viewModel.bitmap.height.toFloat(),
+        )
+    }
 
     private fun initializeView() {
         val bitmapMinRectSize = max(bitmapRect.width(), bitmapRect.height()) / MAX_SCALE
@@ -314,7 +315,7 @@ class ManualCropView @JvmOverloads constructor(
             drawBitmap(viewModel.bitmap, bitmapMatrix, emptyPaint)
             save()
             clipRect(cropRect)
-            drawColor(maskBackgroundColor)
+            drawColor(ContextCompat.getColor(context, R.color.crop_mask))
             restore()
 
             //            drawCropEdgePairCandidates()
@@ -594,7 +595,7 @@ class ManualCropView @JvmOverloads constructor(
             .apply { bitmapMatrix.mapRect(this, bitmapMinRect) }
             .width()
 
-        val minSize = max(mappedBitmapMinRectSize, minRectLength)
+        val minSize = max(mappedBitmapMinRectSize, resources.getDimension(R.dimen.min_rect))
 
         when (val state = draggingState) {
             is DraggingEdge -> {

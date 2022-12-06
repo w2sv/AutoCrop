@@ -17,8 +17,6 @@
 
         android:layout_height="match_parent">
 
-        <!-- Buttons -->
-
         <RelativeLayout
             android:id="@+id/buttons_layout"
 
@@ -52,8 +50,6 @@
                 android:background="@drawable/ic_arrow_back_24"
 
                 android:contentDescription="@string/main_menu_toggle" />
-
-            <!-- Image Selection -->
 
             <com.w2sv.autocrop.activities.main.fragments.flowfield.views.ImageSelectionButton
                 android:id="@+id/image_selection_button"

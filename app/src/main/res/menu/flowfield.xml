@@ -7,12 +7,12 @@
         android:id="@+id/main_menu_item_share_crops"
         android:icon="@drawable/ic_share_24"
         android:title="@string/share_crops"
-        android:visible="false"></item>
+        android:visible="false" />
 
     <item
         android:id="@+id/main_menu_item_listen_to_screen_captures"
         android:icon="@drawable/ic_screenshot_24"
-        android:title="@string/screenshot_listener"></item>
+        android:title="@string/screenshot_listener" />
 
     <!--  Examination  -->
 
