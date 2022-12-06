@@ -175,7 +175,8 @@ class ManualCropView @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        findViewTreeLifecycleOwner()!!.lifecycle.addObserver(this)
+        if (!isInEditMode)
+            findViewTreeLifecycleOwner()!!.lifecycle.addObserver(this)
     }
 
     override fun onCreate(owner: LifecycleOwner) {

@@ -17,7 +17,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.8" />
+            android:layout_weight="0.75" />
 
     </LinearLayout>
 
@@ -88,20 +88,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_top_left_image_button"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="58dp"
             android:visibility="invisible">
 
             <com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.DiscardingStatisticsTextView
                 android:id="@+id/discarding_statistics_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:textSize="13sp" />
 
             <LinearLayout
                 android:id="@+id/bottom_button_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
                 android:gravity="end">
 
                 <com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.ManualCropButton
