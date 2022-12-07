@@ -63,6 +63,7 @@ fastlane/readme.md
 
 # Version control
 vcs.xml
+workspace.xml
 
 # lint
 lint/intermediates/
@@ -73,5 +74,3 @@ lint/reports/
 
 # Android Profiling
 *.hprof
-
-.idea/workspace.xml
