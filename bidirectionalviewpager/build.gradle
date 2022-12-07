@@ -5,15 +5,11 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation libs.androidx.viewpager2
     implementation 'androidx.lifecycle:lifecycle-livedata-core-ktx:2.5.1'
-    implementation 'androidx.viewpager2:viewpager2:1.0.0'
-    implementation 'com.github.w2sv:KotlinUtils:0.0.5'
+    implementation libs.kotlinutils
 
-    // -----------------
-    // Unit Tests
-
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
-    testImplementation 'androidx.test.ext:junit:1.1.4'
-    testImplementation 'androidx.arch.core:core-runtime:2.1.0'
+    // unitTest
+    testImplementation libs.bundles.unitTest
+    testImplementation libs.androidx.core
 }
