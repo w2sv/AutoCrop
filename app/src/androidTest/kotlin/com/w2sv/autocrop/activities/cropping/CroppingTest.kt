@@ -5,7 +5,8 @@ import android.graphics.BitmapFactory
 import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.cropping.cropEdgesCandidates
 import com.w2sv.autocrop.cropbundle.cropping.maxHeightEdges
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -19,16 +20,6 @@ import java.util.stream.Stream
  * inherent infeasibility of loading images
  */
 class CroppingTest {
-    @ParameterizedTest
-    @MethodSource
-    fun validScreenshotCropEdges(fileName: String, expectedCropEdges: CropEdges) {
-        Assertions.assertEquals(
-            expectedCropEdges,
-            loadTestScreenshot(fileName, "valid").cropEdgesCandidates()!!
-                .maxHeightEdges()
-        )
-    }
-
     companion object {
         @JvmStatic
         fun validScreenshotCropEdges(): Stream<Arguments> =
@@ -134,12 +125,45 @@ class CroppingTest {
                     CropEdges(top = 326, bottom = 1225)
                 )
             )
+
+        @JvmStatic
+        fun defectiveScreenshotCropEdges(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                "Screenshot_2022-12-06-09-26-12-769_com.android.chrome.jpg",
+                CropEdges(top = 493, bottom = 1845)
+            ),
+            Arguments.of(
+                "Screenshot_2022-12-05-19-33-16-693_com.android.chrome.jpg",
+                CropEdges(top = 764, bottom = 1436)
+            )
+        )
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    fun validScreenshotCropEdges(fileName: String, expected: CropEdges) {
+        assertEquals(
+            expected,
+            loadTestScreenshot(fileName, "valid").cropEdgesCandidates()!!
+                .maxHeightEdges()
+        )
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    fun defectiveScreenshotCropEdges(fileName: String, expected: CropEdges) {
+        val delta = 15f
+        val edges = loadTestScreenshot(fileName, "defective").cropEdgesCandidates()!!
+            .maxHeightEdges()
+
+        assertEquals(expected.top.toFloat(), edges.top.toFloat(), delta)
+        assertEquals(expected.bottom.toFloat(), edges.bottom.toFloat(), delta)
     }
 
     @ParameterizedTest
     @ValueSource(
         strings = [
-            //            "Bari-Italy.jpg.1584966891939.image.750.563.low.jpg",
+            //            "Bari-Italy.jpg.1584966891939.image.750.563.low.jpg",  TODO
             //            "IMG_20200709_175312.jpg",
             "Screenshot_2021-04-13-22-48-46-461_com.android.chrome.png",
             "Screenshot_2021-04-14-22-22-17-499_com.android.chrome.png",
@@ -147,7 +171,7 @@ class CroppingTest {
         ]
     )
     fun invalidScreenshotsReturnNull(fileName: String) {
-        Assertions.assertNull(
+        assertNull(
             loadTestScreenshot(
                 fileName,
                 "invalid"
