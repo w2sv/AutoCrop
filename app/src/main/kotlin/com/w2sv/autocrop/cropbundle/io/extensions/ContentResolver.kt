@@ -17,8 +17,8 @@ fun ContentResolver.loadBitmap(uri: Uri): Bitmap =
  *
  * @return flag indicating whether image was successfully deleted
  */
-fun ContentResolver.deleteImage(mediaStoreId: Long): Boolean {
-    return try {
+fun ContentResolver.deleteImage(mediaStoreId: Long): Boolean =
+    try {
         val rowsDeleted = delete(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             "${MediaStore.Images.Media._ID}=?",
@@ -36,7 +36,6 @@ fun ContentResolver.deleteImage(mediaStoreId: Long): Boolean {
         i(e)
         false
     }
-}
 
 /**
  * @see

@@ -62,7 +62,9 @@ class CropFragment
         )
 
         private val screenshotUris: List<Uri> = savedStateHandle[MainActivity.EXTRA_SELECTED_IMAGE_URIS]!!
-        val nScreenshots: Int get() = screenshotUris.size
+
+        val nScreenshots: Int
+            get() = screenshotUris.size
 
         fun getNUncroppableImages(): Int =
             nScreenshots - cropBundles.size
@@ -70,7 +72,7 @@ class CropFragment
         val cropBundles = mutableListOf<CropBundle>()
         val liveProgress: LiveData<Int> = MutableLiveData(0)
 
-        suspend fun launchCroppingCoroutine(
+        suspend fun launchCropCoroutine(
             contentResolver: ContentResolver,
             onFinishedListener: () -> Unit
         ) {
@@ -138,9 +140,7 @@ class CropFragment
         super.onResume()
 
         lifecycleScope.launch {
-            viewModel.launchCroppingCoroutine(
-                requireContext().contentResolver,
-            ) {
+            viewModel.launchCropCoroutine(requireContext().contentResolver) {
                 invokeSubsequentScreen()
             }
         }
