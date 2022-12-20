@@ -6,8 +6,18 @@ import slimber.log.i
 
 abstract class LoggingService : Service() {
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        i { "${this::class.java.simpleName}.onStartCommand; startId $startId" }
-        return super.onStartCommand(intent, flags, startId)
+    fun emitOnStartCommandLog(intent: Intent?, flags: Int, startId: Int) {
+        i {
+            "onStartCommand; " +
+                    "intent: $intent | " +
+                    "flags: $flags | " +
+                    "startId: $startId"
+        }
+    }
+
+    fun emitOnReceiveLog(intent: Intent?){
+        i{
+            "onReceive; intent: $intent"
+        }
     }
 }

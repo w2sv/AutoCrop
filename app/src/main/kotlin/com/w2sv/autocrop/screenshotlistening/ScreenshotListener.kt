@@ -115,6 +115,8 @@ class ScreenshotListener : BoundService(),
      */
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        emitOnStartCommandLog(intent, flags, startId)
+
         when (intent!!.action) {
             ACTION_STOP_SERVICE -> {
                 stopForeground(STOP_FOREGROUND_REMOVE)
@@ -142,7 +144,7 @@ class ScreenshotListener : BoundService(),
             }
         }
 
-        return super.onStartCommand(intent, flags, startId)
+        return START_REDELIVER_INTENT
     }
 
     private fun foregroundServiceNotificationBuilder(): NotificationCompat.Builder =

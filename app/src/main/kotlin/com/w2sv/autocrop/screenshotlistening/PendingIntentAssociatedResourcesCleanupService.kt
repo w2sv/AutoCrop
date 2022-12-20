@@ -53,9 +53,9 @@ abstract class PendingIntentAssociatedResourcesCleanupService<T>(private val cli
         }
 
         /**
-         * To be overriden for carrying out custom clean up actions
+         * For carrying out custom clean-up actions
          */
-        fun onCleanupFinishedListener(intent: Intent) {}
+        fun onCleanupFinishedListener(intent: Intent)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
