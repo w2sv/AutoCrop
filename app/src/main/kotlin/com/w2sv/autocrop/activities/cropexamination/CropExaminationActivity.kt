@@ -46,7 +46,8 @@ class CropExaminationActivity : ApplicationActivity() {
 
     override fun getRootFragment(): Fragment =
         CropPagerFragment.getInstance(
-            intent.getInt(CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS)
+            intent.getInt(CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS),
+            intent.getInt(CropActivity.EXTRA_N_NOT_OPENABLE_URIS)
         )
 
     @HiltViewModel

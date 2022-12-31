@@ -60,7 +60,7 @@ class ComparisonFragment
     ) : androidx.lifecycle.ViewModel() {
 
         val cropBundle: CropBundle = savedStateHandle[CropBundle.EXTRA]!!
-        val screenshotBitmap: Bitmap = context.contentResolver.loadBitmap(cropBundle.screenshot.uri)
+        val screenshotBitmap: Bitmap = context.contentResolver.loadBitmap(cropBundle.screenshot.uri)!!
 
         val enterTransitionCompleted by AutoSwitch(false, switchOn = false)
 

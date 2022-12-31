@@ -53,7 +53,7 @@ class ManualCropFragment
 
         init {
             with(savedStateHandle.get<CropBundle>(CropBundle.EXTRA)!!) {
-                bitmap = context.contentResolver.loadBitmap(screenshot.uri)
+                bitmap = context.contentResolver.loadBitmap(screenshot.uri)!!
                 initialCropEdges = crop.edges
             }
         }

@@ -6,9 +6,16 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
 import slimber.log.i
+import java.io.FileNotFoundException
 
-fun ContentResolver.loadBitmap(uri: Uri): Bitmap =
-    BitmapFactory.decodeStream(openInputStream(uri))
+fun ContentResolver.loadBitmap(uri: Uri): Bitmap? =
+    try {
+        BitmapFactory.decodeStream(openInputStream(uri))
+    }
+    catch (e: FileNotFoundException) {
+        i(e)
+        null
+    }
 
 /**
  *      https://stackoverflow.com/questions/10716642/android-deleting-an-image?noredirect=1&lq=1

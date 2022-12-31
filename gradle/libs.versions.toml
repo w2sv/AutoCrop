@@ -12,7 +12,7 @@ androidx-appcompat = 'androidx.appcompat:appcompat:1.5.1'
 androidx-core = 'androidx.core:core-ktx:1.9.0'
 androidx-viewpager2 = 'androidx.viewpager2:viewpager2:1.0.0'
 androidx-viewmodel = 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-alpha03'
-androidx-fragment = 'androidx.fragment:fragment-ktx:1.6.0-alpha03'
+androidx-fragment = 'androidx.fragment:fragment-ktx:1.6.0-alpha04'
 androidx-activity = 'androidx.activity:activity-ktx:1.7.0-alpha02'
 androidx-splashscreen = 'androidx.core:core-splashscreen:1.0.0'
 
@@ -24,7 +24,7 @@ google-hilt-kapt = 'com.google.dagger:hilt-android-compiler:2.44.2'
 slimber = 'com.github.PaulWoitaschek:Slimber:2.0.0'
 snacky = 'com.github.matecode:Snacky:1.1.5'
 animatoo = 'com.github.mohammadatif:Animatoo:master'
-viewanimations = 'com.github.w2sv:AndroidViewAnimations:master-SNAPSHOT'
+viewanimations = 'com.github.w2sv:AndroidViewAnimations:3.0.0'
 
 # unitTest
 junit5 = 'org.junit.jupiter:junit-jupiter:5.9.1'

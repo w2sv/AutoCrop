@@ -5,7 +5,10 @@ import androidx.viewpager2.widget.ViewPager2
 import com.w2sv.bidirectionalviewpager.recyclerview.ExtendedRecyclerViewAdapter
 import com.w2sv.kotlinutils.delegates.Consumable
 
-open class ViewRemovableBidirectionalViewPager2<T>(private val viewPager2: ViewPager2, private val dataSet: BidirectionalViewPagerDataSet<T>) {
+open class ViewRemovableBidirectionalViewPager2<T>(
+    private val viewPager2: ViewPager2,
+    private val dataSet: BidirectionalViewPagerDataSet<T>
+) {
 
     private val onScrollStateIdleListener = Consumable<() -> Unit>()
 

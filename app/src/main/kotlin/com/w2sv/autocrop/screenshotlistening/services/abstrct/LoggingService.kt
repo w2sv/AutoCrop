@@ -15,8 +15,8 @@ abstract class LoggingService : Service() {
         }
     }
 
-    fun emitOnReceiveLog(intent: Intent?){
-        i{
+    fun emitOnReceiveLog(intent: Intent?) {
+        i {
             "onReceive; intent: $intent"
         }
     }

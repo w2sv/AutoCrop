@@ -33,7 +33,6 @@ import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.utils.documentUriPathIdentifier
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
-import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.permissionhandler.PermissionHandler
 import com.w2sv.permissionhandler.requestPermissions
 import dagger.hilt.android.AndroidEntryPoint
@@ -151,7 +150,14 @@ class FlowFieldFragment :
                     snackyBuilder(
                         SpannableStringBuilder()
                             .apply {
-                                append("Saved ${it.nSavedCrops} ${"crop".numericallyInflected(it.nSavedCrops)} to ")
+                                append(
+                                    "Saved ${it.nSavedCrops} ${
+                                        resources.getQuantityString(
+                                            R.plurals.crop,
+                                            it.nSavedCrops
+                                        )
+                                    } to "
+                                )
                                 color(getThemedColor(R.color.success)) {
                                     append(it.saveDirName)
                                 }
@@ -162,7 +168,7 @@ class FlowFieldFragment :
                                                 "corresponding"
                                             else
                                                 it.nDeletedScreenshots
-                                        } ${"screenshot".numericallyInflected(it.nDeletedScreenshots)}"
+                                        } ${resources.getQuantityString(R.plurals.screenshot, it.nDeletedScreenshots)}"
                                     )
                             }
                     )

@@ -62,14 +62,14 @@ class CropFragment
         )
 
         private val screenshotUris: List<Uri> = savedStateHandle[MainActivity.EXTRA_SELECTED_IMAGE_URIS]!!
-
-        val nScreenshots: Int
-            get() = screenshotUris.size
+        val nScreenshots = screenshotUris.size
 
         fun getNUncroppableImages(): Int =
             nScreenshots - cropBundles.size
 
         val cropBundles = mutableListOf<CropBundle>()
+        var nNotOpenableUris = 0
+
         val liveProgress: LiveData<Int> = MutableLiveData(0)
 
         suspend fun launchCropCoroutine(
@@ -100,22 +100,24 @@ class CropFragment
                 subList(liveProgress.value!!, size)
             }
 
-        private fun getCropBundle(screenshotUri: Uri, contentResolver: ContentResolver): CropBundle? {
-            val screenshotBitmap = contentResolver.loadBitmap(screenshotUri)
-
-            return screenshotBitmap.cropEdgesCandidates()?.let { candidates ->
-                CropBundle.assemble(
-                    Screenshot(
-                        screenshotUri,
-                        screenshotBitmap.height,
-                        candidates,
-                        Screenshot.MediaStoreData.query(contentResolver, screenshotUri)
-                    ),
-                    screenshotBitmap,
-                    candidates.maxHeightEdges()
-                )
+        private fun getCropBundle(screenshotUri: Uri, contentResolver: ContentResolver): CropBundle? =
+            contentResolver.loadBitmap(screenshotUri)?.let { screenshotBitmap ->
+                screenshotBitmap.cropEdgesCandidates()?.let { candidates ->
+                    CropBundle.assemble(
+                        Screenshot(
+                            screenshotUri,
+                            screenshotBitmap.height,
+                            candidates,
+                            Screenshot.MediaStoreData.query(contentResolver, screenshotUri)
+                        ),
+                        screenshotBitmap,
+                        candidates.maxHeightEdges()
+                    )
+                }
             }
-        }
+                ?: null.also {
+                    nNotOpenableUris += 1
+                }
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -168,6 +170,10 @@ class CropFragment
                 .putExtra(
                     CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS,
                     viewModel.getNUncroppableImages()
+                )
+                .putExtra(
+                    CropActivity.EXTRA_N_NOT_OPENABLE_URIS,
+                    viewModel.nNotOpenableUris
                 )
         )
         Animatoo.animateSwipeLeft(requireActivity())

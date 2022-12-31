@@ -43,7 +43,6 @@ import com.w2sv.autocrop.ui.crossFade
 import com.w2sv.autocrop.ui.scrollPeriodically
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.kotlinutils.delegates.Consumable
-import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -62,10 +61,13 @@ class CropPagerFragment :
     CropPagerInstructionsDialog.OnDismissedListener {
 
     companion object {
-        fun getInstance(nUncroppedScreenshots: Int): CropPagerFragment =
+        fun getInstance(nUncroppedScreenshots: Int, nNotOpenableUris: Int): CropPagerFragment =
             CropPagerFragment()
                 .apply {
-                    arguments = bundleOf(CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS to nUncroppedScreenshots)
+                    arguments = bundleOf(
+                        CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS to nUncroppedScreenshots,
+                        CropActivity.EXTRA_N_NOT_OPENABLE_URIS to nNotOpenableUris
+                    )
                 }
     }
 
@@ -90,20 +92,51 @@ class CropPagerFragment :
         /**
          * Inherently serves as flag, with != null meaning snackbar is to be displayed and vice-versa
          */
-        val uncroppedScreenshotsSnackbarText by Consumable<SpannableStringBuilder>(
-            savedStateHandle.get<Int>(CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS)!!.let { nUncroppedScreenshots ->
-                if (nUncroppedScreenshots != 0)
-                    SpannableStringBuilder()
-                        .append("Couldn't find crop bounds for")
-                        .bold {
-                            color(context.getThemedColor(R.color.highlight)) {
-                                append(" $nUncroppedScreenshots")
+        val uncroppedScreenshotsSnackbarText by Consumable(
+            SpannableStringBuilder()
+                .run {
+                    savedStateHandle.get<Int>(CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS)!!
+                        .let { nUncroppedScreenshots ->
+                            if (nUncroppedScreenshots != 0) {
+                                append("Couldn't find crop bounds for")
+                                bold {
+                                    color(context.getThemedColor(R.color.highlight)) {
+                                        append(" $nUncroppedScreenshots")
+                                    }
+                                }
+                                append(context.resources.getQuantityString(R.plurals.image, nUncroppedScreenshots))
                             }
                         }
-                        .append(" image".numericallyInflected(nUncroppedScreenshots))
-                else
-                    null
-            }
+
+                    savedStateHandle.get<Int>(CropActivity.EXTRA_N_NOT_OPENABLE_URIS)!!
+                        .let { nNotOpenableUris ->
+                            when {
+                                nNotOpenableUris == 0 -> Unit
+                                isEmpty() -> {
+                                    append(
+                                        "Couldn't open $nNotOpenableUris ${
+                                            context.resources.getQuantityString(
+                                                R.plurals.image,
+                                                nNotOpenableUris
+                                            )
+                                        }"
+                                    )
+                                }
+
+                                else -> {
+                                    append(
+                                        "& couldn't open $nNotOpenableUris ${
+                                            context.resources.getQuantityString(
+                                                R.plurals.image,
+                                                nNotOpenableUris
+                                            )
+                                        }"
+                                    )
+                                }
+                            }
+                        }
+                    ifEmpty { null }
+                }
         )
 
         //$$$$$$$$$$$$$
@@ -217,7 +250,7 @@ class CropPagerFragment :
     override fun onManualCropResult(cropEdges: CropEdges) {
         viewModel.dataSet.liveElement.let {
             it.crop = Crop.fromScreenshot(
-                requireContext().contentResolver.loadBitmap(it.screenshot.uri),
+                requireContext().contentResolver.loadBitmap(it.screenshot.uri)!!,
                 it.screenshot.mediaStoreData.diskUsage,
                 cropEdges
             )
