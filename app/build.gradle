@@ -8,11 +8,13 @@ plugins {
 }
 
 android {
+    def PACKAGE_NAME = "com.w2sv.autocrop"
+
     compileSdkVersion rootProject.ext.compileSdkVersion
-    namespace rootProject.ext.packageName
+    namespace PACKAGE_NAME
 
     defaultConfig {
-        applicationId rootProject.ext.packageName
+        applicationId PACKAGE_NAME
 
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.compileSdkVersion
