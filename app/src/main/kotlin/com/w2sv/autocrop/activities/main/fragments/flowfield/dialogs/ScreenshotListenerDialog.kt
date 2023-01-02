@@ -44,10 +44,10 @@ class ScreenshotListenerDialog : UncancelableDialogFragment() {
                 }
             )
             .setNegativeButton("Maybe later") { _, _ -> }
-            .setPositiveButton("Enable") { _, _ -> (parentFragment as OnConfirmedListener).onConfirmed() }
+            .setPositiveButton("Enable") { _, _ -> (parentFragment as Listener).onScreenshotListenerDialogConfirmedListener() }
             .create()
 
-    interface OnConfirmedListener {
-        fun onConfirmed()
+    interface Listener {
+        fun onScreenshotListenerDialogConfirmedListener()
     }
 }

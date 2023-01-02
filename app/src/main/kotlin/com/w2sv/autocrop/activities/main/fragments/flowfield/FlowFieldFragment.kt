@@ -41,8 +41,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FlowFieldFragment :
     ApplicationFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java),
-    WelcomeDialog.OnProceedListener,
-    ScreenshotListenerDialog.OnConfirmedListener {
+    WelcomeDialog.Listener,
+    ScreenshotListenerDialog.Listener {
 
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
@@ -126,11 +126,11 @@ class FlowFieldFragment :
         )
     }
 
-    override fun onProceed() {
+    override fun onWelcomeDialogClosedListener() {
         ScreenshotListenerDialog().show(childFragmentManager)
     }
 
-    override fun onConfirmed() {
+    override fun onScreenshotListenerDialogConfirmedListener() {
         screenshotListeningPermissions
             .iterator()
             .requestPermissions(

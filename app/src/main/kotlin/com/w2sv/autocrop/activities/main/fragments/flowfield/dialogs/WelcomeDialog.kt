@@ -19,10 +19,10 @@ class WelcomeDialog : UncancelableDialogFragment() {
                     .italic { append("Select Images ") }
                     .append("button, select some screenshots and save your first crops!")
             )
-            .setPositiveButton("Alright!") { _, _ -> (parentFragment as OnProceedListener).onProceed() }
+            .setPositiveButton("Alright!") { _, _ -> (parentFragment as Listener).onWelcomeDialogClosedListener() }
             .create()
 
-    interface OnProceedListener {
-        fun onProceed()
+    interface Listener {
+        fun onWelcomeDialogClosedListener()
     }
 }
