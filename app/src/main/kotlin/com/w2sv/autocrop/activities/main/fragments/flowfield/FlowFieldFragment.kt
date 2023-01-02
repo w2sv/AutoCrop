@@ -9,15 +9,12 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.activity.ComponentActivity
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.w2sv.androidutils.ActivityCallContractAdministrator
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
@@ -57,7 +54,7 @@ class FlowFieldFragment :
     lateinit var uriPreferences: UriPreferences
 
     class ViewModel : androidx.lifecycle.ViewModel() {
-        var enteredFragment = false
+        var enteredFragmentAtLeastOnce = false
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -66,8 +63,12 @@ class FlowFieldFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        addLifecycleObservers()
+    }
+
+    private fun addLifecycleObservers(){
         lifecycle.addObserver(selectImagesContractHandler)
-        lifecycle.addObserver(openDocumentTreeContractHandler)
+        lifecycle.addObserver(openDocumentTreeContractAdministrator)
 
         lifecycle.addObserver(writeExternalStoragePermissionHandler)
         screenshotListeningPermissionHandlers.forEach(lifecycle::addObserver)
@@ -76,61 +77,32 @@ class FlowFieldFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!viewModel.enteredFragment) {
-            binding.buttonsLayout.fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
-
-            if (!booleanPreferences.welcomeDialogsShown)
-                lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_large)) {
-                    WelcomeDialog().show(childFragmentManager)
-
-                    viewModel.enteredFragment = true
-                }
-            else
-                activityViewModel.ioResults?.let {
-                    lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_fade_in_halve)) {
-                        showIOSynopsisSnackbar(it)
-
-                        viewModel.enteredFragment = true
-                    }
-                }
-                    ?: run { viewModel.enteredFragment = true }
-        }
+        if (!viewModel.enteredFragmentAtLeastOnce)
+            onNewlyConstructed()
         else
             binding.buttonsLayout.show()
+
+        binding.setOnClickListeners()
     }
 
-    val writeExternalStoragePermissionHandler by lazy {
-        PermissionHandler(
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            requireActivity(),
-            "Media file writing required for saving crops",
-            "Go to app settings and grant media file writing in order for the app to work"
-        )
-    }
+    private fun onNewlyConstructed(){
+        binding.buttonsLayout.fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
 
-    val screenshotListeningPermissionHandlers by lazy {
-        buildList {
-            add(
-                PermissionHandler(
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                        Manifest.permission.READ_MEDIA_IMAGES
-                    else
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                    requireActivity(),
-                    "Media file access required for listening to screen captures",
-                    "Go to app settings and grant media file access for screen capture listening to work"
-                )
-            )
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                add(
-                    PermissionHandler(
-                        Manifest.permission.POST_NOTIFICATIONS,
-                        requireActivity(),
-                        "If you don't allow for the posting of notifications AutoCrop can't inform you about croppable screenshots",
-                        "Go to app settings and enable notification posting for screen capture listening to work"
-                    )
-                )
-        }
+        if (!booleanPreferences.welcomeDialogsShown)
+            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_large)) {
+                WelcomeDialog().show(childFragmentManager)
+
+                viewModel.enteredFragmentAtLeastOnce = true
+            }
+        else
+            activityViewModel.ioResults?.let {
+                lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_fade_in_halve)) {
+                    showIOSynopsisSnackbar(it)
+
+                    viewModel.enteredFragmentAtLeastOnce = true
+                }
+            }
+                ?: run { viewModel.enteredFragmentAtLeastOnce = true }
     }
 
     override fun onWelcomeDialogClosedListener() {
@@ -180,99 +152,123 @@ class FlowFieldFragment :
             .show()
     }
 
-    val selectImagesContractHandler by lazy {
-        SelectImagesContractHandler(
-            (requireActivity() as ComponentActivity).activityResultRegistry
-        ) { imageUris ->
-            requireActivity().startActivity(
-                Intent(
-                    activity,
-                    CropActivity::class.java
-                )
-                    .putParcelableArrayListExtra(
-                        MainActivity.EXTRA_SELECTED_IMAGE_URIS,
-                        ArrayList(imageUris)
-                    )
+    private fun FragmentFlowfieldBinding.setOnClickListeners(){
+        imageSelectionButton.setOnClickListener {
+            writeExternalStoragePermissionHandler.requestPermission(
+                onGranted = selectImagesContractHandler::selectImages
             )
         }
     }
 
-    val openDocumentTreeContractHandler by lazy {
-        OpenDocumentTreeContractHandler(
-            (requireActivity() as ComponentActivity).activityResultRegistry
-        ) { treeUri ->
-            if (uriPreferences.treeUri != treeUri) {
-                uriPreferences.treeUri = treeUri
+    private val writeExternalStoragePermissionHandler by lazy {
+        PermissionHandler(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            requireActivity(),
+            "Media file writing required for saving crops",
+            "Go to app settings and grant media file writing in order for the app to work"
+        )
+    }
 
-                requireContext()
-                    .contentResolver
-                    .takePersistableUriPermission(
-                        treeUri,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+    val screenshotListeningPermissionHandlers by lazy {
+        buildList {
+            add(
+                PermissionHandler(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                        Manifest.permission.READ_MEDIA_IMAGES
+                    else
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                    requireActivity(),
+                    "Media file access required for listening to screen captures",
+                    "Go to app settings and grant media file access for screen capture listening to work"
+                )
+            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                add(
+                    PermissionHandler(
+                        Manifest.permission.POST_NOTIFICATIONS,
+                        requireActivity(),
+                        "If you don't allow for the posting of notifications AutoCrop can't inform you about croppable screenshots",
+                        "Go to app settings and enable notification posting for screen capture listening to work"
                     )
-                requireActivity()
-                    .snackyBuilder(
-                        SpannableStringBuilder()
-                            .append("Crops will be saved to ")
-                            .color(requireContext().getThemedColor(R.color.success)) {
-                                append(documentUriPathIdentifier(uriPreferences.documentUri!!))
-                            }
+                )
+        }
+    }
+
+    private val selectImagesContractHandler by lazy {
+        SelectImagesContractHandler(requireActivity()) { imageUris ->
+            if (imageUris.isNotEmpty())
+                requireActivity().startActivity(
+                    Intent(
+                        activity,
+                        CropActivity::class.java
                     )
-                    .build()
-                    .show()
+                        .putParcelableArrayListExtra(
+                            MainActivity.EXTRA_SELECTED_IMAGE_URIS,
+                            ArrayList(imageUris)
+                        )
+                )
+        }
+    }
+
+    val openDocumentTreeContractAdministrator by lazy {
+        OpenDocumentTreeContractAdministrator(
+            requireActivity()
+        ) {
+            it?.let { treeUri ->
+                if (uriPreferences.treeUri != treeUri) {
+                    uriPreferences.treeUri = treeUri
+
+                    requireContext()
+                        .contentResolver
+                        .takePersistableUriPermission(
+                            treeUri,
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                        )
+                    requireActivity()
+                        .snackyBuilder(
+                            SpannableStringBuilder()
+                                .append("Crops will be saved to ")
+                                .color(requireContext().getThemedColor(R.color.success)) {
+                                    append(documentUriPathIdentifier(uriPreferences.documentUri!!))
+                                }
+                        )
+                        .build()
+                        .show()
+                }
             }
         }
     }
 }
 
-class OpenDocumentTreeContractHandler(
-    private val registry: ActivityResultRegistry,
-    private val onReceivedUri: (Uri) -> Unit
-) : DefaultLifecycleObserver {
-
-    private lateinit var openDocumentTree: ActivityResultLauncher<Uri?>
-
-    override fun onCreate(owner: LifecycleOwner) {
-        openDocumentTree =
-            registry.register(
-                this::class.java.name,
-                owner,
-                object : ActivityResultContracts.OpenDocumentTree() {
-                    override fun createIntent(context: Context, input: Uri?): Intent =
-                        super.createIntent(context, input)
-                            .setFlags(
-                                Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
-                                        Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                                        Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
-                                        Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
-                            )
-                }
-            ) { treeUri ->
-                treeUri?.let(onReceivedUri)
-            }
+class OpenDocumentTreeContractAdministrator(
+    activity: ComponentActivity,
+    override val activityResultCallback: (Uri?) -> Unit
+) : ActivityCallContractAdministrator<Uri?, Uri?>(
+    activity,
+    object : ActivityResultContracts.OpenDocumentTree() {
+        override fun createIntent(context: Context, input: Uri?): Intent =
+            super.createIntent(context, input)
+                .setFlags(
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                            Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                            Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+                )
     }
-
+) {
     fun selectDocument(treeUri: Uri?) {
-        openDocumentTree.launch(treeUri)
+        activityResultLauncher.launch(treeUri)
     }
 }
 
-class SelectImagesContractHandler(
-    private val registry: ActivityResultRegistry,
-    private val onReceivedUrisListener: (List<Uri>) -> Unit
-) : DefaultLifecycleObserver {
-
-    private lateinit var getContents: ActivityResultLauncher<String>
-
-    override fun onCreate(owner: LifecycleOwner) {
-        getContents =
-            registry.register(this::class.java.name, owner, ActivityResultContracts.GetMultipleContents()) { uris ->
-                if (uris.isNotEmpty())
-                    onReceivedUrisListener(uris)
-            }
-    }
-
+private class SelectImagesContractHandler(
+    activity: ComponentActivity,
+    override val activityResultCallback: (List<Uri>) -> Unit
+) : ActivityCallContractAdministrator<String, List<Uri>>(
+    activity,
+    ActivityResultContracts.GetMultipleContents()
+) {
     fun selectImages() {
-        getContents.launch(IMAGE_MIME_TYPE)
+        activityResultLauncher.launch(IMAGE_MIME_TYPE)
     }
 }

@@ -9,7 +9,7 @@ import com.w2sv.autocrop.flowfield.FlowFieldSketch
 import com.w2sv.autocrop.utils.extensions.resolution
 import processing.android.PFragment
 
-class FlowFieldContainer(context: Context, attr: AttributeSet) :
+class FlowFieldLayout(context: Context, attr: AttributeSet) :
     FrameLayout(context, attr),
     ActivityRetriever by ActivityRetriever.Implementation(context) {
 

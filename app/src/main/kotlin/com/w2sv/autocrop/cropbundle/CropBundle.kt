@@ -18,7 +18,7 @@ import kotlin.math.roundToInt
 data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
 
     companion object {
-        const val EXTRA = "com.w2sv.autocrop.CROP_BUNDLE"
+        const val EXTRA = "com.w2sv.autocrop.EXTRA_CROP_BUNDLE"
 
         fun assemble(screenshot: Screenshot, screenshotBitmap: Bitmap, edges: CropEdges): CropBundle =
             CropBundle(
@@ -50,6 +50,7 @@ data class Screenshot(
         val parsedMimeType: ImageMimeType,
         val id: Long
     ) : Parcelable {
+
         companion object {
             fun query(contentResolver: ContentResolver, uri: Uri): MediaStoreData =
                 contentResolver.queryMediaStoreData(

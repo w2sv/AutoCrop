@@ -146,7 +146,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
 
     private fun pickSaveDestinationDir() {
         findFragment<FlowFieldFragment>()
-            .openDocumentTreeContractHandler
+            .openDocumentTreeContractAdministrator
             .selectDocument(uriPreferences.treeUri)
     }
 

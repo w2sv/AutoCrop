@@ -10,30 +10,44 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.activity.ComponentActivity
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
+import com.w2sv.androidutils.ActivityCallContractAdministrator
 import de.mateware.snacky.Snacky
 
 class PermissionHandler(
     private val permission: String,
-    private val activity: Activity,
+    private val activity: ComponentActivity,
     private val permissionDeniedMessage: String,
     private val permissionRequestingSuppressedMessage: String
-) : DefaultLifecycleObserver {
+) : ActivityCallContractAdministrator<String, Boolean>(
+    activity,
+    ActivityResultContracts.RequestPermission()
+) {
 
-    private lateinit var requestPermission: ActivityResultLauncher<String>
+    override val key: String = "${this::class.java.name}.$permission"
 
-    override fun onCreate(owner: LifecycleOwner) {
-        super.onCreate(owner)
+    /**
+     * Display snacky if some permission hasn't been granted,
+     * otherwise run previously set [onPermissionGranted]
+     */
+    override val activityResultCallback: (Boolean) -> Unit = { permissionGranted ->
+        if (!permissionGranted) {
+            activity.run {
+                if (shouldShowRequestPermissionRationale(permission))
+                    permissionDeniedSnacky()
+                else
+                    permissionRequestingSuppressedSnacky()
+            }
+                .build()
+                .show()
 
-        requestPermission = (activity as ComponentActivity).activityResultRegistry.register(
-            "${this::class.java.name}.$permission",
-            owner,
-            ActivityResultContracts.RequestPermission(),
-            ::onRequestPermissionResult
-        )
+            onPermissionDenied?.invoke()
+        }
+        else
+            onPermissionGranted?.invoke()
+
+        onPermissionDenied = null
+        onPermissionGranted = null
     }
 
     /**
@@ -72,7 +86,7 @@ class PermissionHandler(
 
     /**
      * Function wrapper either directly running [onGranted] if permission granted,
-     * otherwise sets [onGranted] and launches [requestPermissions]
+     * otherwise sets [onGranted] and launches [activityResultCallback]
      */
     fun requestPermission(onGranted: () -> Unit, onDenied: (() -> Unit)? = null) {
         if (!grantRequired)
@@ -81,39 +95,15 @@ class PermissionHandler(
             onPermissionGranted = onGranted
             onPermissionDenied = onDenied
 
-            requestPermission.launch(permission)
+            activityResultLauncher.launch(permission)
         }
     }
 
     /**
-     * Temporary callable to be set before, and to be cleared on exiting of [onRequestPermissionResult]
+     * Temporary callable to be set before, and to be cleared on exiting of [activityResultCallback]
      */
     private var onPermissionGranted: (() -> Unit)? = null
     private var onPermissionDenied: (() -> Unit)? = null
-
-    /**
-     * Display snacky if some permission hasn't been granted,
-     * otherwise run previously set [onPermissionGranted]
-     */
-    private fun onRequestPermissionResult(permissionGranted: Boolean) {
-        if (!permissionGranted) {
-            activity.run {
-                if (shouldShowRequestPermissionRationale(permission))
-                    permissionDeniedSnacky()
-                else
-                    permissionRequestingSuppressedSnacky()
-            }
-                .build()
-                .show()
-
-            onPermissionDenied?.invoke()
-        }
-        else
-            onPermissionGranted?.invoke()
-
-        onPermissionDenied = null
-        onPermissionGranted = null
-    }
 
     private fun Activity.permissionDeniedSnacky(): Snacky.Builder =
         snacky(permissionDeniedMessage)
@@ -143,3 +133,18 @@ private fun Activity.snacky(text: CharSequence, duration: Int = Snacky.LENGTH_LO
         .centerText()
         .setDuration(duration)
         .setActivity(this)
+
+fun Iterable<PermissionHandler>.requestPermissions(onGranted: () -> Unit, onDenied: (() -> Unit)? = null) {
+    iterator().requestPermissions(onGranted, onDenied)
+}
+
+private fun Iterator<PermissionHandler>.requestPermissions(onGranted: () -> Unit, onDenied: (() -> Unit)? = null) {
+    if (!hasNext())
+        onGranted()
+    else {
+        next().requestPermission(
+            onGranted = { requestPermissions(onGranted, onDenied) },
+            onDenied = onDenied
+        )
+    }
+}

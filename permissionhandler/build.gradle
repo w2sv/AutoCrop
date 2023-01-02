@@ -8,4 +8,5 @@ dependencies {
     implementation libs.androidx.core
     implementation libs.google.material
     implementation libs.snacky
+    implementation libs.androidutils
 }

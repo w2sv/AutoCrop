@@ -23,19 +23,18 @@ class ScreenshotListenerDialog : UncancelableDialogFragment() {
                                 "For this, the "
                     )
                     italic { append("media file reading ") }
-                    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU).let { notificationPermissionRequired ->
-                        if (notificationPermissionRequired) {
-                            append("& ")
-                            italic { append("notification posting ") }
-                        }
-                        append("permission")
-                        append(
-                            if (notificationPermissionRequired)
-                                "s are "
-                            else
-                                " is "
-                        )
+                    val notificationPermissionRequired = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    if (notificationPermissionRequired) {
+                        append("& ")
+                        italic { append("notification posting ") }
                     }
+                    append("permission")
+                    append(
+                        if (notificationPermissionRequired)
+                            "s are "
+                        else
+                            " is "
+                    )
                     append(
                         "required." +
                                 "\n\n" +
