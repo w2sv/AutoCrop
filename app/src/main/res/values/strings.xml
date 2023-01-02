@@ -1,23 +1,16 @@
 <resources>
-    <string name="app_title">AutoCrop</string>
-
+    <string name="app_name">AutoCrop</string>
     <string name="select_images">SELECT IMAGES</string>
-    <string name="menu_inflation_button_description">Inflate settings menu</string>
-    <string name="screenshot_button_description">Capture Flow Field image</string>
-    <string name="crop_sharing_button_description">Share saved crops</string>
-
     <string name="menu_item_divider_examination">Examination</string>
     <string name="menu_item_divider_crop_saving">Crop Saving</string>
     <string name="menu_item_divider_other">Other</string>
-
     <string name="menu_item_auto_scroll">AutoScroll</string>
     <string name="menu_item_rate_the_app">Rate the app</string>
     <string name="menu_item_about">About</string>
     <string name="menu_item_change_directory">Change Directory</string>
-
-    <string name="cropping_in_progress">Cropping…</string>
+    <string name="cropping">Cropping…</string>
     <string name="fraction">%1$d/%2$d</string>
-    <string name="crops_processing_in_progress">Processing crops…</string>
+    <string name="processing_crops">Processing crops…</string>
     <string name="cropping_failure">No cropping borders found</string>
     <string name="cancel_autoscroll">Cancel Scroll</string>
     <string name="remove">Removed</string>
@@ -25,13 +18,8 @@
     <string name="version">Version: %1$s</string>
     <string name="copyright">© 2021-%1$d | Janek Zangenberg</string>
     <string name="got_it">Got it</string>
-    <string name="compare">Compare</string>
     <string name="crop_transition_name">CROP_TRANSITION</string>
     <string name="compare_crop_with_original_screenshot">Compare crop with original screenshot</string>
-    <string name="original">Original</string>
-    <string name="cropped">Cropped</string>
-    <string name="inflate_options_popup_menu">Inflate options popup menu</string>
-    <string name="adjust">Adjust</string>
     <string name="all_crops">All Crops</string>
     <string name="current_crop">Current Crop</string>
     <string name="save">Save</string>
@@ -42,7 +30,6 @@
     <string name="compare_crop_and_original_screenshot">Compare crop and original screenshot</string>
     <string name="manually_adjust_the_crop">Manually adjust the crop</string>
     <string name="screenshot_listener">Screenshot Listener</string>
-    <string name="height">Height</string>
     <string name="reset">Reset</string>
     <string name="go_back_to_crop_pager">Go back to crop pager</string>
     <string name="screenshot">Screenshot</string>

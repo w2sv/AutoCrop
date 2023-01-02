@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="-70dp"
 
-        android:text="@string/crops_processing_in_progress"
+        android:text="@string/processing_crops"
         android:textColor="@color/magenta_saturated"
         android:textSize="30sp"
         android:textStyle="bold" />

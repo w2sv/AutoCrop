@@ -104,7 +104,7 @@ class CropPagerFragment :
                                         append(" $nUncroppedScreenshots")
                                     }
                                 }
-                                append(context.resources.getQuantityString(R.plurals.image, nUncroppedScreenshots))
+                                append(" screenshot(s)")
                             }
                         }
 
@@ -114,23 +114,13 @@ class CropPagerFragment :
                                 nNotOpenableUris == 0 -> Unit
                                 isEmpty() -> {
                                     append(
-                                        "Couldn't open $nNotOpenableUris ${
-                                            context.resources.getQuantityString(
-                                                R.plurals.image,
-                                                nNotOpenableUris
-                                            )
-                                        }"
+                                        "Couldn't open $nNotOpenableUris image(s)"
                                     )
                                 }
 
                                 else -> {
                                     append(
-                                        "& couldn't open $nNotOpenableUris ${
-                                            context.resources.getQuantityString(
-                                                R.plurals.image,
-                                                nNotOpenableUris
-                                            )
-                                        }"
+                                        "& couldn't open $nNotOpenableUris image(s)"
                                     )
                                 }
                             }

@@ -151,12 +151,7 @@ class FlowFieldFragment :
                         SpannableStringBuilder()
                             .apply {
                                 append(
-                                    "Saved ${it.nSavedCrops} ${
-                                        resources.getQuantityString(
-                                            R.plurals.crop,
-                                            it.nSavedCrops
-                                        )
-                                    } to "
+                                    "Saved ${it.nSavedCrops} crop(s) to "
                                 )
                                 color(getThemedColor(R.color.success)) {
                                     append(it.saveDirName)
@@ -168,7 +163,7 @@ class FlowFieldFragment :
                                                 "corresponding"
                                             else
                                                 it.nDeletedScreenshots
-                                        } ${resources.getQuantityString(R.plurals.screenshot, it.nDeletedScreenshots)}"
+                                        } screenshot(s)"
                                     )
                             }
                     )

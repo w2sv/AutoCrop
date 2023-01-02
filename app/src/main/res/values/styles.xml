@@ -44,7 +44,7 @@
     <!--    App Title TextView-->
 
     <style name="AutoCropTV" parent="Shadow">
-        <item name="android:text">@string/app_title</item>
+        <item name="android:text">@string/app_name</item>
         <item name="android:textColor">@color/magenta_saturated</item>
         <item name="android:fontFamily">@font/london</item>
     </style>

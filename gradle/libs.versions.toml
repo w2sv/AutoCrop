@@ -24,8 +24,8 @@ androidx-splashscreen = 'androidx.core:core-splashscreen:1.0.0'
 # google
 google-guava = 'com.google.guava:guava:31.1-jre'
 google-material = 'com.google.android.material:material:1.7.0'
-google-hilt = {module = 'com.google.dagger:hilt-android', version.ref = 'hilt'}
-google-hilt-kapt = {module = 'com.google.dagger:hilt-android-compiler', version.ref = 'hilt'}
+google-hilt = { module = 'com.google.dagger:hilt-android', version.ref = 'hilt' }
+google-hilt-kapt = { module = 'com.google.dagger:hilt-android-compiler', version.ref = 'hilt' }
 
 # other
 slimber = 'com.github.PaulWoitaschek:Slimber:2.0.0'
