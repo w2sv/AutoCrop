@@ -19,7 +19,7 @@ import de.mateware.snacky.Snacky
 class PermissionHandler(
     private val permission: String,
     private val activity: Activity,
-    private val permissionDenialMessage: String,
+    private val permissionDeniedMessage: String,
     private val permissionRequestingSuppressedMessage: String
 ) : DefaultLifecycleObserver {
 
@@ -116,7 +116,7 @@ class PermissionHandler(
     }
 
     private fun Activity.permissionDeniedSnacky(): Snacky.Builder =
-        snacky(permissionDenialMessage)
+        snacky(permissionDeniedMessage)
             .setIcon(R.drawable.ic_error_24)
 
     private fun Activity.permissionRequestingSuppressedSnacky(): Snacky.Builder =

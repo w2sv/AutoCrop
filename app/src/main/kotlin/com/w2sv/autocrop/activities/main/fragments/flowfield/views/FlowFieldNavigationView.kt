@@ -82,8 +82,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                         CompoundButton.OnCheckedChangeListener { _, newValue ->
                             if (newValue) {
                                 findFragment<FlowFieldFragment>()
-                                    .screenshotListeningPermissions
-                                    .iterator()
+                                    .screenshotListeningPermissionHandlers
                                     .requestPermissions(
                                         onGranted = {
                                             ScreenshotListener.startService(context)
@@ -147,8 +146,8 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
 
     private fun pickSaveDestinationDir() {
         findFragment<FlowFieldFragment>()
-            .saveDestinationSelectionIntentLauncher
-            .launch(uriPreferences.treeUri)
+            .openDocumentTreeContractHandler
+            .selectDocument(uriPreferences.treeUri)
     }
 
     private fun goToPlayStoreListing() {
