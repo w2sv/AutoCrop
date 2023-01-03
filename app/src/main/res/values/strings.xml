@@ -1,13 +1,13 @@
 <resources>
-    <string name="app_name">AutoCrop</string>
+    <string name="auto_crop">AutoCrop</string>
     <string name="select_images">SELECT IMAGES</string>
-    <string name="menu_item_divider_examination">Examination</string>
+    <string name="menu_item_divider_examination">Crop Examination</string>
     <string name="menu_item_divider_crop_saving">Crop Saving</string>
     <string name="menu_item_divider_other">Other</string>
-    <string name="menu_item_auto_scroll">AutoScroll</string>
+    <string name="menu_item_auto_scroll">Do AutoScroll</string>
     <string name="menu_item_rate_the_app">Rate the app</string>
     <string name="menu_item_about">About</string>
-    <string name="menu_item_change_directory">Change Directory</string>
+    <string name="menu_item_change_directory">Target Directory</string>
     <string name="cropping">Cropping…</string>
     <string name="fraction">%1$d/%2$d</string>
     <string name="processing_crops">Processing crops…</string>
@@ -24,7 +24,7 @@
     <string name="current_crop">Current Crop</string>
     <string name="save">Save</string>
     <string name="discard">Discard</string>
-    <string name="code">Code</string>
+    <string name="source">Source</string>
     <string name="share_crops">Share Crops</string>
     <string name="main_menu_toggle">Toggle main menu</string>
     <string name="compare_crop_and_original_screenshot">Compare crop and original screenshot</string>
