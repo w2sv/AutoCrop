@@ -12,7 +12,7 @@
 
     <item
         android:id="@+id/main_menu_item_listen_to_screen_captures"
-        android:icon="@drawable/ic_screenshot_24"
+        android:icon="@drawable/ic_hearing_24"
         android:title="@string/screenshot_listener" />
 
     <!--  Examination  -->
