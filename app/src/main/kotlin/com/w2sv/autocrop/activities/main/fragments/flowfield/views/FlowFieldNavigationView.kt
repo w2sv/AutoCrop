@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.util.AttributeSet
 import android.widget.CompoundButton
-import android.widget.ImageView
 import android.widget.Switch
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -14,7 +13,6 @@ import androidx.fragment.app.findFragment
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.androidutils.extensions.configureItem
-import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.goToWebpage
 import com.w2sv.androidutils.extensions.hiltActivityViewModel
 import com.w2sv.androidutils.extensions.postValue
@@ -24,7 +22,6 @@ import com.w2sv.autocrop.activities.FragmentHostingActivity
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
@@ -53,27 +50,11 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
             menu.configureItem(R.id.main_menu_item_current_crop_dir){
                 it.title = uriPreferences.cropDirIdentifier
             }
-            setShareCropsItem()
             setListenToScreenCapturesItem()
             setAutoScrollItem()
-
-            setNavigationItemSelectedListeners()
+            setSwitchLessItems()
         }
     }
-
-    private fun setShareCropsItem() =
-        menu.configureItem(R.id.main_menu_item_share_crops) {
-            activityViewModel.ioResults?.let { results ->
-                if (results.nSavedCrops != 0) {
-                    it.isVisible = true
-                    it.actionView = ImageView(context).apply {
-                        setImageDrawable(
-                            context.getColoredIcon(R.drawable.ic_priority_high_24, R.color.highest_light)
-                        )
-                    }
-                }
-            }
-        }
 
     private fun setListenToScreenCapturesItem() =
         menu.configureItem(R.id.main_menu_item_listen_to_screen_captures) {
@@ -119,10 +100,9 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
             it.actionView = booleanPreferences.createSwitch(context, "autoScroll")
         }
 
-    private fun setNavigationItemSelectedListeners() {
+    private fun setSwitchLessItems() {
         setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.main_menu_item_share_crops -> launchCropSharingIntent()
                 R.id.main_menu_item_change_crop_dir -> pickSaveDestinationDir()
                 R.id.main_menu_item_about -> invokeAboutFragment()
                 R.id.main_menu_item_go_to_github -> goToGithub()
@@ -131,20 +111,6 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
             (parent as DrawerLayout).closeDrawer(GravityCompat.START)
             return@setNavigationItemSelectedListener false
         }
-    }
-
-    private fun launchCropSharingIntent() {
-        context.startActivity(
-            Intent.createChooser(
-                Intent(Intent.ACTION_SEND_MULTIPLE)
-                    .putExtra(
-                        Intent.EXTRA_STREAM,
-                        activityViewModel.ioResults!!.cropUris
-                    )
-                    .setType(IMAGE_MIME_TYPE),
-                null
-            )
-        )
     }
 
     private fun pickSaveDestinationDir() {

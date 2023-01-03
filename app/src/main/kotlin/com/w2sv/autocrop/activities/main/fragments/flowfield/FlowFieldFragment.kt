@@ -14,6 +14,7 @@ import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.ActivityCallContractAdministrator
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
@@ -33,6 +34,7 @@ import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
+import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.utils.documentUriPathIdentifier
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
@@ -66,7 +68,7 @@ class FlowFieldFragment :
         addLifecycleObservers()
     }
 
-    private fun addLifecycleObservers(){
+    private fun addLifecycleObservers() {
         lifecycle.addObserver(selectImagesContractHandler)
         lifecycle.addObserver(openDocumentTreeContractAdministrator)
 
@@ -79,14 +81,27 @@ class FlowFieldFragment :
 
         if (!viewModel.enteredFragmentAtLeastOnce)
             onNewlyConstructed()
-        else
-            binding.buttonsLayout.show()
+        else {
+            binding.fadeInButtons.forEach {
+                it.show()
+            }
+            binding.shareCropsButton.show()
+        }
 
         binding.setOnClickListeners()
     }
 
-    private fun onNewlyConstructed(){
-        binding.buttonsLayout.fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
+    private fun onNewlyConstructed() {
+        binding.fadeInButtons.forEach {
+            it.fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
+        }
+        lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_fade_in) / 2) {
+            with(binding.shareCropsButton) {
+                alpha = 0f
+                show()
+                animate(Techniques.RotateInUpLeft)
+            }
+        }
 
         if (!booleanPreferences.welcomeDialogsShown)
             lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_large)) {
@@ -96,7 +111,7 @@ class FlowFieldFragment :
             }
         else
             activityViewModel.ioResults?.let {
-                lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_fade_in_halve)) {
+                lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_fade_in) / 2) {
                     showIOSynopsisSnackbar(it)
 
                     viewModel.enteredFragmentAtLeastOnce = true
@@ -152,13 +167,32 @@ class FlowFieldFragment :
             .show()
     }
 
-    private fun FragmentFlowfieldBinding.setOnClickListeners(){
+    private fun FragmentFlowfieldBinding.setOnClickListeners() {
         imageSelectionButton.setOnClickListener {
             writeExternalStoragePermissionHandler.requestPermission(
                 onGranted = selectImagesContractHandler::selectImages
             )
         }
+        shareCropsButton.setOnClickListener {
+            startActivity(
+                Intent.createChooser(
+                    Intent(Intent.ACTION_SEND_MULTIPLE)
+                        .putExtra(
+                            Intent.EXTRA_STREAM,
+                            activityViewModel.ioResults!!.cropUris
+                        )
+                        .setType(IMAGE_MIME_TYPE),
+                    null
+                )
+            )
+        }
     }
+
+    private val FragmentFlowfieldBinding.fadeInButtons: List<View>
+        get() = listOf(
+            navigationDrawerButtonBurger,
+            imageSelectionButton
+        )
 
     private val writeExternalStoragePermissionHandler by lazy {
         PermissionHandler(

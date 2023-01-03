@@ -15,12 +15,8 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/buttons_layout"
-
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            android:visibility="invisible">
+            android:layout_height="match_parent">
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/navigation_drawer_button_burger"
@@ -58,6 +54,16 @@
                 android:text="@string/select_images"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@android:color/darker_gray" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/share_crops_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="120dp"
+                android:layout_centerHorizontal="true"
+                android:visibility="invisible"
+                android:background="@drawable/ic_share_24"/>
 
         </RelativeLayout>
 

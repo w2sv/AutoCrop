@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="duration_flowfield_buttons_fade_in">3500</integer>
-    <integer name="duration_flowfield_buttons_fade_in_halve">1750</integer>
     <integer name="duration_snackbar_long">4000</integer>
     <integer name="duration_snackbar_extra_long">5000</integer>
     <integer name="duration_backpress_confirmation_window">2500</integer>
