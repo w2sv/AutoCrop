@@ -12,7 +12,6 @@
     <com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldDrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-
         android:layout_height="match_parent">
 
         <RelativeLayout
@@ -21,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:visibility="visible">
+            android:visibility="invisible">
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/navigation_drawer_button_burger"
@@ -32,7 +31,6 @@
                 android:layout_marginTop="@dimen/margin_top_left_image_button"
 
                 android:background="@drawable/ic_menu_24"
-
                 android:contentDescription="@string/main_menu_toggle" />
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -46,16 +44,17 @@
                 android:alpha="0"
 
                 android:background="@drawable/ic_arrow_back_24"
-
                 android:contentDescription="@string/main_menu_toggle" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/image_selection_button"
+
                 android:layout_width="143dp"
                 android:layout_height="143dp"
                 android:layout_centerInParent="true"
 
                 android:background="@drawable/shape_imageselection_button"
+
                 android:text="@string/select_images"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@android:color/darker_gray" />
@@ -69,11 +68,11 @@
             android:layout_height="match_parent"
             android:layout_alignTop="@+id/navigation_drawer_button_burger"
             android:layout_gravity="start"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="80dp"
 
             android:background="@android:color/transparent"
-            android:fitsSystemWindows="true"
-            app:headerLayout="@layout/navigation_drawer_header"
+
+            app:headerLayout="@layout/navigation_view_header"
             app:itemIconTint="@color/highlight"
             app:menu="@menu/flowfield" />
 

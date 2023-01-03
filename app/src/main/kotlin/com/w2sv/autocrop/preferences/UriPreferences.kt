@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.provider.DocumentsContract
 import com.w2sv.androidutils.extensions.uriPermissionGranted
+import com.w2sv.autocrop.cropbundle.io.utils.systemPicturesDirectory
 import com.w2sv.kotlinutils.delegates.MapObservable
 import com.w2sv.typedpreferences.descendants.UriPreferences
 import slimber.log.i
@@ -29,6 +30,8 @@ class UriPreferences @Inject constructor(sharedPreferences: SharedPreferences) :
             )
                 .also { i { "Set new documentUri: $it" } }
     }
+
+    val cropDirIdentifier: String get() = documentUri?.toString() ?: systemPicturesDirectory().path
 
     var documentUri: Uri? = null
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -35,9 +36,13 @@
 
             <menu>
                 <item
-                    android:id="@+id/main_menu_item_change_crop_saving_dir"
+                    android:id="@+id/main_menu_item_change_crop_dir"
                     android:icon="@drawable/ic_round_save_24"
                     android:title="@string/menu_item_change_directory" />
+                <item
+                    android:id="@+id/main_menu_item_current_crop_dir"
+                    android:enabled="false"
+                    tools:ignore="MenuTitle" />
             </menu>
         </item>
     </group>

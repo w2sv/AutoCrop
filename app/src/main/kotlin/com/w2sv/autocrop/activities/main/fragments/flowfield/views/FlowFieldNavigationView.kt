@@ -50,6 +50,9 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         super.onAttachedToWindow()
 
         if (!isInEditMode) {
+            menu.configureItem(R.id.main_menu_item_current_crop_dir){
+                it.title = uriPreferences.cropDirIdentifier
+            }
             setShareCropsItem()
             setListenToScreenCapturesItem()
             setAutoScrollItem()
@@ -120,7 +123,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.main_menu_item_share_crops -> launchCropSharingIntent()
-                R.id.main_menu_item_change_crop_saving_dir -> pickSaveDestinationDir()
+                R.id.main_menu_item_change_crop_dir -> pickSaveDestinationDir()
                 R.id.main_menu_item_about -> invokeAboutFragment()
                 R.id.main_menu_item_go_to_github -> goToGithub()
                 R.id.main_menu_item_rate_the_app -> goToPlayStoreListing()
