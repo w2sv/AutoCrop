@@ -8,7 +8,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
-import kotlin.math.max
 
 class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : DrawerLayout(context, attributeSet) {
     override fun onAttachedToWindow() {
@@ -25,11 +24,9 @@ class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : Draw
         addDrawerListener(
             object : SimpleDrawerListener() {
                 override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                    val fadeOutOnDrawerOpenAlpha = 1 - slideOffset
-
                     navigationViewToggleButton.progress = slideOffset
 
-                    val alphaOverlaidButtons = max(fadeOutOnDrawerOpenAlpha, 0.35f)
+                    val alphaOverlaidButtons = 1 - slideOffset
                     imageSelectionButton.alpha = alphaOverlaidButtons
                     shareCropsButton.alpha = alphaOverlaidButtons
                 }

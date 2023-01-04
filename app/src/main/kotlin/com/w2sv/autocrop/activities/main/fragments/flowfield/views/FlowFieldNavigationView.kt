@@ -11,12 +11,14 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.androidutils.extensions.configureItem
 import com.w2sv.androidutils.extensions.goToWebpage
 import com.w2sv.androidutils.extensions.hiltActivityViewModel
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.serviceRunning
+import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.FragmentHostingActivity
 import com.w2sv.autocrop.activities.main.MainActivity
@@ -43,13 +45,18 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
 
     private val activityViewModel by hiltActivityViewModel<MainActivity.ViewModel>()
 
+    private val viewModel by viewModel<FlowFieldFragment.ViewModel>()
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
         if (!isInEditMode) {
-            menu.configureItem(R.id.main_menu_item_current_crop_dir) {
-                it.title = uriPreferences.cropDirIdentifier
+            viewModel.liveCropSaveDirIdentifier.observe(findViewTreeLifecycleOwner()!!) { cropSaveDirIdentifier ->
+                menu.configureItem(R.id.main_menu_item_current_crop_dir) {
+                    it.title = cropSaveDirIdentifier
+                }
             }
+
             setListenToScreenCapturesItem()
             setAutoScrollItem()
             setSwitchLessItems()
@@ -80,14 +87,12 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                                 ScreenshotListener.stopService(context)
                         }
 
-                    activityViewModel.liveScreenshotListenerRunning.let { liveData ->
-                        liveData.observe(activity as LifecycleOwner) { cancelledOptional ->
-                            cancelledOptional?.let { cancelled ->
-                                setOnCheckedChangeListener(null)
-                                isChecked = cancelled
-                                setOnCheckedChangeListener(onCheckedChangeListener)
-                                liveData.postValue(null)
-                            }
+                    activityViewModel.liveScreenshotListenerRunning.observe(activity as LifecycleOwner) { isRunningOptional ->
+                        isRunningOptional?.let { isRunning ->
+                            setOnCheckedChangeListener(null)
+                            isChecked = isRunning
+                            setOnCheckedChangeListener(onCheckedChangeListener)
+                            activityViewModel.liveScreenshotListenerRunning.postValue(null)
                         }
                     }
 
@@ -131,7 +136,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         }
         catch (e: ActivityNotFoundException) {
             activity
-                .snackyBuilder("Seems like you're not signed into the Play Store, pal \uD83E\uDD14")
+                .snackyBuilder("Seems like you're not signed into the Play Store \uD83E\uDD14")
                 .build()
                 .show()
         }

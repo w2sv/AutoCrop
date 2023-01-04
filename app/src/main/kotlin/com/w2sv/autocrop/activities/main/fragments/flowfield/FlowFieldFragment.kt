@@ -11,6 +11,8 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.extensions.getColoredIcon
@@ -39,6 +41,7 @@ import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.permissionhandler.PermissionHandler
 import com.w2sv.permissionhandler.requestPermissions
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -53,9 +56,12 @@ class FlowFieldFragment :
     @Inject
     lateinit var uriPreferences: UriPreferences
 
-    class ViewModel : androidx.lifecycle.ViewModel() {
+    @HiltViewModel
+    class ViewModel @Inject constructor(uriPreferences: UriPreferences) : androidx.lifecycle.ViewModel() {
         var fadedInButtons: Boolean = false
         var showedSnackbar: Boolean = false
+
+        val liveCropSaveDirIdentifier: LiveData<String> = MutableLiveData(uriPreferences.cropSaveDirIdentifier)
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -222,15 +228,9 @@ class FlowFieldFragment :
     val openDocumentTreeContractHandler by lazy {
         OpenDocumentTreeContractHandler(requireActivity()) {
             it?.let { treeUri ->
-                if (uriPreferences.treeUri != treeUri) {
-                    uriPreferences.treeUri = treeUri
+                if (uriPreferences.setNewUri(treeUri, requireContext().contentResolver)) {
+                    viewModel.liveCropSaveDirIdentifier.postValue(uriPreferences.cropSaveDirIdentifier)
 
-                    requireContext()
-                        .contentResolver
-                        .takePersistableUriPermission(
-                            treeUri,
-                            Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                        )
                     requireActivity()
                         .snackyBuilder(
                             SpannableStringBuilder()
