@@ -97,9 +97,9 @@ class FlowFieldFragment :
         binding.setOnClickListeners()
     }
 
-    private fun showUIElements(){
+    private fun showUIElements() {
         val fadeInButtons: List<View> = listOf(
-            binding.navigationDrawerButtonBurger,
+            binding.navigationViewToggleButton,
             binding.imageSelectionButton
         )
 
@@ -111,7 +111,6 @@ class FlowFieldFragment :
             if (activityViewModel.savedCrops)
                 lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_half_faded_in)) {
                     with(binding.shareCropsButton) {
-                        alpha = 0f
                         show()
                         animate(Techniques.RotateInUpLeft)
                     }
@@ -119,13 +118,8 @@ class FlowFieldFragment :
 
             viewModel.fadedInButtons = true
         }
-        else {
-            fadeInButtons.forEach {
-                it.show()
-            }
-            if (activityViewModel.savedCrops)
-                binding.shareCropsButton.show()
-        }
+        else if (activityViewModel.savedCrops)
+            binding.shareCropsButton.show()
     }
 
     private fun FragmentFlowfieldBinding.setOnClickListeners() {

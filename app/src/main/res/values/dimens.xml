@@ -5,6 +5,7 @@
     <dimen name="error_icon_cropping_failure_vertical_margin">-1dip</dimen>
 
     <dimen name="margin_top_left_image_button">35dp</dimen>
+    <dimen name="size_lottie_button">46dp</dimen>
     <dimen name="size_image_button">28dp</dimen>
     <dimen name="padding_image_button_w_background">11dp</dimen>
     <dimen name="margin_crop_progress_bar">-80dp</dimen>

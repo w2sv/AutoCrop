@@ -27,17 +27,16 @@ class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : Draw
                 override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                     val fadeOutOnDrawerOpenAlpha = 1 - slideOffset
 
-                    navigationDrawerButtonBurger.alpha = fadeOutOnDrawerOpenAlpha
-                    navigationDrawerButtonArrow.alpha = slideOffset
+                    navigationViewToggleButton.progress = slideOffset
 
-                    val alphaOtherButtons = max(fadeOutOnDrawerOpenAlpha, 0.35f)
-                    imageSelectionButton.alpha = alphaOtherButtons
-                    shareCropsButton.alpha = alphaOtherButtons
+                    val alphaOverlaidButtons = max(fadeOutOnDrawerOpenAlpha, 0.35f)
+                    imageSelectionButton.alpha = alphaOverlaidButtons
+                    shareCropsButton.alpha = alphaOverlaidButtons
                 }
             }
         )
 
-        navigationDrawerButtonArrow.setOnClickListener {
+        navigationViewToggleButton.setOnClickListener {
             if (isOpen)
                 closeDrawer(GravityCompat.START)
             else
