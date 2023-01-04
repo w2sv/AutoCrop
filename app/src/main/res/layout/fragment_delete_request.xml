@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    android:background="@drawable/gradient_blue_magenta">
+    android:background="@drawable/gradient_blue_magenta_top_to_bottom">
 
     <ImageView
         android:layout_width="wrap_content"
