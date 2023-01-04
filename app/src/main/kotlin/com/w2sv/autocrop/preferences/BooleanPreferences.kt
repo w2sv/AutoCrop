@@ -23,7 +23,7 @@ class BooleanPreferences @Inject constructor(sharedPreferences: SharedPreference
     var autoScroll by this
     var deleteScreenshots by this
 
-    var welcomeDialogsShown by AutoSwitch.Mapped(this, false)
+    var welcomeDialogsShown by this
     var cropPagerInstructionsShown by AutoSwitch.Mapped(this, false)
     var comparisonInstructionsShown by AutoSwitch.Mapped(this, false)
     var aboutFragmentInstructionsShown by AutoSwitch.Mapped(this, false)

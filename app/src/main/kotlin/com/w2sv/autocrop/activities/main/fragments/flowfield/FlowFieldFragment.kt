@@ -3,19 +3,16 @@ package com.w2sv.autocrop.activities.main.fragments.flowfield
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
-import androidx.activity.ComponentActivity
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.androidutils.ActivityCallContractAdministrator
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
@@ -34,6 +31,7 @@ import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.UriPreferences
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
+import com.w2sv.autocrop.ui.SnackbarData
 import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.utils.documentUriPathIdentifier
@@ -56,21 +54,19 @@ class FlowFieldFragment :
     lateinit var uriPreferences: UriPreferences
 
     class ViewModel : androidx.lifecycle.ViewModel() {
-        var enteredFragmentAtLeastOnce = false
+        var fadedInButtons: Boolean = false
+        var showedSnackbar: Boolean = false
     }
 
     private val viewModel by viewModels<ViewModel>()
+
     private val activityViewModel by activityViewModels<MainActivity.ViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        addLifecycleObservers()
-    }
-
-    private fun addLifecycleObservers() {
         lifecycle.addObserver(selectImagesContractHandler)
-        lifecycle.addObserver(openDocumentTreeContractAdministrator)
+        lifecycle.addObserver(openDocumentTreeContractHandler)
 
         lifecycle.addObserver(writeExternalStoragePermissionHandler)
         screenshotListeningPermissionHandlers.forEach(lifecycle::addObserver)
@@ -79,92 +75,57 @@ class FlowFieldFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!viewModel.enteredFragmentAtLeastOnce)
-            onNewlyConstructed()
-        else {
-            binding.fadeInButtons.forEach {
-                it.show()
+        showUIElements()
+
+        if (!booleanPreferences.welcomeDialogsShown)
+            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_large)) {
+                WelcomeDialog().show(childFragmentManager)
             }
-            binding.shareCropsButton.show()
+        else if (activityViewModel.followingCropExaminationActivity && !viewModel.showedSnackbar) {
+            lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_half_faded_in)) {
+                with(activityViewModel.ioResults!!.snackbarData(requireContext())) {
+                    requireActivity()
+                        .snackyBuilder(text)
+                        .setIcon(icon)
+                        .build()
+                        .show()
+                }
+                viewModel.showedSnackbar = true
+            }
         }
 
         binding.setOnClickListeners()
     }
 
-    private fun onNewlyConstructed() {
-        binding.fadeInButtons.forEach {
-            it.fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
-        }
-        lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_fade_in) / 2) {
-            with(binding.shareCropsButton) {
-                alpha = 0f
-                show()
-                animate(Techniques.RotateInUpLeft)
+    private fun showUIElements(){
+        val fadeInButtons: List<View> = listOf(
+            binding.navigationDrawerButtonBurger,
+            binding.imageSelectionButton
+        )
+
+        if (!viewModel.fadedInButtons) {
+            fadeInButtons.forEach {
+                it.fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
             }
-        }
 
-        if (!booleanPreferences.welcomeDialogsShown)
-            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_large)) {
-                WelcomeDialog().show(childFragmentManager)
-
-                viewModel.enteredFragmentAtLeastOnce = true
-            }
-        else
-            activityViewModel.ioResults?.let {
-                lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_fade_in) / 2) {
-                    showIOSynopsisSnackbar(it)
-
-                    viewModel.enteredFragmentAtLeastOnce = true
+            if (activityViewModel.savedCrops)
+                lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_half_faded_in)) {
+                    with(binding.shareCropsButton) {
+                        alpha = 0f
+                        show()
+                        animate(Techniques.RotateInUpLeft)
+                    }
                 }
-            }
-                ?: run { viewModel.enteredFragmentAtLeastOnce = true }
-    }
 
-    override fun onWelcomeDialogClosedListener() {
-        ScreenshotListenerDialog().show(childFragmentManager)
-    }
-
-    override fun onScreenshotListenerDialogConfirmedListener() {
-        screenshotListeningPermissionHandlers
-            .requestPermissions(
-                onGranted = {
-                    ScreenshotListener.startService(requireContext())
-                    activityViewModel.liveScreenshotListenerRunning.postValue(true)
-                }
-            )
-    }
-
-    private fun showIOSynopsisSnackbar(ioResults: CropExaminationActivity.Results) {
-        ioResults.let {
-            with(requireActivity()) {
-                if (it.nSavedCrops == 0)
-                    snackyBuilder("Discarded all crops")
-                else
-                    snackyBuilder(
-                        SpannableStringBuilder()
-                            .apply {
-                                append(
-                                    "Saved ${it.nSavedCrops} crop(s) to "
-                                )
-                                color(getThemedColor(R.color.success)) {
-                                    append(it.saveDirName)
-                                }
-                                if (it.nDeletedScreenshots != 0)
-                                    append(
-                                        " and deleted ${
-                                            if (it.nDeletedScreenshots == it.nSavedCrops)
-                                                "corresponding"
-                                            else
-                                                it.nDeletedScreenshots
-                                        } screenshot(s)"
-                                    )
-                            }
-                    )
-                        .setIcon(getColoredIcon(R.drawable.ic_check_24, R.color.success))
-            }
+            viewModel.fadedInButtons = true
         }
-            .build()
-            .show()
+        else {
+            fadeInButtons.forEach {
+                it.show()
+            }
+            if (activityViewModel.savedCrops)
+                binding.shareCropsButton.show()
+        }
     }
 
     private fun FragmentFlowfieldBinding.setOnClickListeners() {
@@ -188,11 +149,31 @@ class FlowFieldFragment :
         }
     }
 
-    private val FragmentFlowfieldBinding.fadeInButtons: List<View>
-        get() = listOf(
-            navigationDrawerButtonBurger,
-            imageSelectionButton
-        )
+    // $$$$$$$$$$$$$$$$$$
+    // Dialog Listeners
+    // $$$$$$$$$$$$$$$$$$
+
+    override fun onWelcomeDialogClosedListener() {
+        ScreenshotListenerDialog().show(childFragmentManager)
+    }
+
+    override fun onScreenshotListenerDialogConfirmedListener() {
+        screenshotListeningPermissionHandlers
+            .requestPermissions(
+                onGranted = {
+                    ScreenshotListener.startService(requireContext())
+                    activityViewModel.liveScreenshotListenerRunning.postValue(true)
+                }
+            )
+    }
+
+    override fun onScreenshotListenerDialogAnsweredListener() {
+        booleanPreferences.welcomeDialogsShown = true
+    }
+
+    // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    // ActivityCallContractAdministrators
+    // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
     private val writeExternalStoragePermissionHandler by lazy {
         PermissionHandler(
@@ -244,10 +225,8 @@ class FlowFieldFragment :
         }
     }
 
-    val openDocumentTreeContractAdministrator by lazy {
-        OpenDocumentTreeContractAdministrator(
-            requireActivity()
-        ) {
+    val openDocumentTreeContractHandler by lazy {
+        OpenDocumentTreeContractHandler(requireActivity()) {
             it?.let { treeUri ->
                 if (uriPreferences.treeUri != treeUri) {
                     uriPreferences.treeUri = treeUri
@@ -274,35 +253,27 @@ class FlowFieldFragment :
     }
 }
 
-class OpenDocumentTreeContractAdministrator(
-    activity: ComponentActivity,
-    override val activityResultCallback: (Uri?) -> Unit
-) : ActivityCallContractAdministrator<Uri?, Uri?>(
-    activity,
-    object : ActivityResultContracts.OpenDocumentTree() {
-        override fun createIntent(context: Context, input: Uri?): Intent =
-            super.createIntent(context, input)
-                .setFlags(
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
-                            Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                            Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
-                            Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+private fun CropExaminationActivity.Results.snackbarData(context: Context): SnackbarData =
+    if (nSavedCrops == 0)
+        SnackbarData("Discarded all crops")
+    else
+        SnackbarData(
+            buildSpannedString {
+                append(
+                    "Saved $nSavedCrops crop(s) to "
                 )
-    }
-) {
-    fun selectDocument(treeUri: Uri?) {
-        activityResultLauncher.launch(treeUri)
-    }
-}
-
-private class SelectImagesContractHandler(
-    activity: ComponentActivity,
-    override val activityResultCallback: (List<Uri>) -> Unit
-) : ActivityCallContractAdministrator<String, List<Uri>>(
-    activity,
-    ActivityResultContracts.GetMultipleContents()
-) {
-    fun selectImages() {
-        activityResultLauncher.launch(IMAGE_MIME_TYPE)
-    }
-}
+                color(context.getThemedColor(R.color.success)) {
+                    append(saveDirName)
+                }
+                if (nDeletedScreenshots != 0)
+                    append(
+                        " and deleted ${
+                            if (nDeletedScreenshots == nSavedCrops)
+                                "corresponding"
+                            else
+                                nDeletedScreenshots
+                        } screenshot(s)"
+                    )
+            },
+            context.getColoredIcon(R.drawable.ic_check_24, R.color.success)
+        )

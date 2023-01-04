@@ -109,13 +109,13 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 R.id.main_menu_item_rate_the_app -> goToPlayStoreListing()
             }
             (parent as DrawerLayout).closeDrawer(GravityCompat.START)
-            return@setNavigationItemSelectedListener false
+            false
         }
     }
 
     private fun pickSaveDestinationDir() {
         findFragment<FlowFieldFragment>()
-            .openDocumentTreeContractAdministrator
+            .openDocumentTreeContractHandler
             .selectDocument(uriPreferences.treeUri)
     }
 

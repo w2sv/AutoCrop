@@ -10,6 +10,7 @@ import com.w2sv.androidutils.ui.UncancelableDialogFragment
 import com.w2sv.autocrop.R
 
 class ScreenshotListenerDialog : UncancelableDialogFragment() {
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         builder()
             .setTitle("Screenshot Listening")
@@ -42,11 +43,20 @@ class ScreenshotListenerDialog : UncancelableDialogFragment() {
                     )
                 }
             )
-            .setNegativeButton("Maybe later") { _, _ -> }
-            .setPositiveButton("Enable") { _, _ -> (parentFragment as Listener).onScreenshotListenerDialogConfirmedListener() }
+            .setNegativeButton("Maybe later") { _, _ ->
+                (parentFragment as Listener)
+                    .onScreenshotListenerDialogAnsweredListener()
+            }
+            .setPositiveButton("Enable") { _, _ ->
+                with(parentFragment as Listener) {
+                    onScreenshotListenerDialogConfirmedListener()
+                    onScreenshotListenerDialogAnsweredListener()
+                }
+            }
             .create()
 
     interface Listener {
         fun onScreenshotListenerDialogConfirmedListener()
+        fun onScreenshotListenerDialogAnsweredListener()
     }
 }
