@@ -210,18 +210,22 @@ class FlowFieldFragment :
     }
 
     private val selectImagesContractHandler by lazy {
-        SelectImagesContractHandler(requireActivity()) { imageUris ->
-            if (imageUris.isNotEmpty())
-                requireActivity().startActivity(
-                    Intent(
-                        activity,
-                        CropActivity::class.java
-                    )
-                        .putParcelableArrayListExtra(
-                            MainActivity.EXTRA_SELECTED_IMAGE_URIS,
-                            ArrayList(imageUris)
+        SelectImagesContractHandler(requireActivity()) { activityResult ->
+            activityResult.data?.let { intent ->
+                intent.clipData?.let { clipData ->
+                    startActivity(
+                        Intent(
+                            requireActivity(),
+                            CropActivity::class.java
                         )
-                )
+                            .putParcelableArrayListExtra(
+                                MainActivity.EXTRA_SELECTED_IMAGE_URIS,
+                                ArrayList((0 until clipData.itemCount)
+                                    .map { clipData.getItemAt(it).uri })
+                            )
+                    )
+                }
+            }
         }
     }
 
@@ -242,6 +246,11 @@ class FlowFieldFragment :
                         .build()
                         .show()
                 }
+                else
+                    requireActivity()
+                        .snackyBuilder("Reselected preset directory")
+                        .build()
+                        .show()
             }
         }
     }

@@ -31,7 +31,8 @@ fun ContentResolver.saveBitmap(
     val (outputStream, writeUri) = GetOutputStream(this, fileName, parentDocumentUri, mimeType)
 
     val successfullySaved = bitmap.compressToAndCloseStream(outputStream, mimeType.compressFormat)
-        .also { i { if (it) "Successfully wrote $fileName" else "Couldn't write $fileName" } }
+    i { if (successfullySaved) "Successfully wrote $fileName" else "Couldn't write $fileName" }
+    i { "Write uri: $writeUri" }
     return if (successfullySaved) writeUri else null
 }
 

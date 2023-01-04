@@ -17,13 +17,14 @@ import javax.inject.Singleton
 @Singleton
 class CropSaveDirPreferences @Inject constructor(sharedPreferences: SharedPreferences) : UriPreferences<Uri?>(
     "treeUri" to null,
+    "documentUri" to null,
     sharedPreferences = sharedPreferences
 ) {
 
     var treeUri: Uri? by this
         private set
 
-    var documentUri: Uri? = null
+    var documentUri: Uri? by this
         private set
 
     fun setNewUri(treeUri: Uri, contentResolver: ContentResolver): Boolean {
@@ -39,6 +40,7 @@ class CropSaveDirPreferences @Inject constructor(sharedPreferences: SharedPrefer
                 treeUri,
                 DocumentsContract.getTreeDocumentId(treeUri)
             )
+
             i { "Set new documentUri: $documentUri" }
 
             return true

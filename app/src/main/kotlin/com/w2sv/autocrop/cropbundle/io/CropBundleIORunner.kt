@@ -41,15 +41,19 @@ class CropBundleIORunner @Inject constructor() {
         screenshotMediaStoreData: Screenshot.MediaStoreData,
         deleteScreenshot: Boolean
     ): CropBundleIOResult =
-        screenshotMediaStoreData.let {
-            CropBundleIOResult(
-                applicationContext.contentResolver.saveBitmap(
-                    cropBitmap,
-                    it.parsedMimeType,
-                    cropFileName(it.fileName, it.parsedMimeType),
-                    cropSaveDirPreferences.validDocumentUriOrNull(applicationContext)
+        CropBundleIOResult(
+            applicationContext.contentResolver.saveBitmap(
+                cropBitmap,
+                screenshotMediaStoreData.parsedMimeType,
+                cropFileName(
+                    screenshotMediaStoreData.fileName,
+                    screenshotMediaStoreData.parsedMimeType
                 ),
-                applicationContext.contentResolver.deleteScreenshotIfApplicable(it.id, deleteScreenshot)
+                cropSaveDirPreferences.validDocumentUriOrNull(applicationContext)
+            ),
+            applicationContext.contentResolver.deleteScreenshotIfApplicable(
+                screenshotMediaStoreData.id,
+                deleteScreenshot
             )
-        }
+        )
 }
