@@ -49,12 +49,8 @@ class MainActivity : ApplicationActivity() {
         }
     }
 
-    override fun getRootFragment(): Fragment =
-        FlowFieldFragment()
-
     @HiltViewModel
     class ViewModel @Inject constructor(savedStateHandle: SavedStateHandle) : androidx.lifecycle.ViewModel() {
-
         val ioResults: CropExaminationActivity.Results? = CropExaminationActivity.Results.restore(savedStateHandle)
 
         val followingCropExaminationActivity: Boolean = ioResults != null
@@ -64,7 +60,13 @@ class MainActivity : ApplicationActivity() {
         val liveScreenshotListenerRunning: LiveData<Boolean?> by lazy {
             MutableLiveData()
         }
+
     }
+
+    private val viewModel: ViewModel by viewModels()
+
+    override fun getRootFragment(): Fragment =
+        FlowFieldFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -90,8 +92,6 @@ class MainActivity : ApplicationActivity() {
                 .postValue(false)
         }
     }
-
-    private val viewModel: ViewModel by viewModels()
 
     /**
      * invoke [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app

@@ -22,22 +22,20 @@ class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : Draw
     }
 
     private fun FragmentFlowfieldBinding.setAssociatedButtons() {
-        addDrawerListener(object : DrawerListener {
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                val fadeOutOnDrawerOpenAlpha = 1 - slideOffset
+        addDrawerListener(
+            object : SimpleDrawerListener() {
+                override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                    val fadeOutOnDrawerOpenAlpha = 1 - slideOffset
 
-                navigationDrawerButtonBurger.alpha = fadeOutOnDrawerOpenAlpha
-                navigationDrawerButtonArrow.alpha = slideOffset
+                    navigationDrawerButtonBurger.alpha = fadeOutOnDrawerOpenAlpha
+                    navigationDrawerButtonArrow.alpha = slideOffset
 
-                val alphaOtherButtons = max(fadeOutOnDrawerOpenAlpha, 0.35f)
-                imageSelectionButton.alpha = alphaOtherButtons
-                shareCropsButton.alpha = alphaOtherButtons
+                    val alphaOtherButtons = max(fadeOutOnDrawerOpenAlpha, 0.35f)
+                    imageSelectionButton.alpha = alphaOtherButtons
+                    shareCropsButton.alpha = alphaOtherButtons
+                }
             }
-
-            override fun onDrawerOpened(drawerView: View) {}
-            override fun onDrawerClosed(drawerView: View) {}
-            override fun onDrawerStateChanged(newState: Int) {}
-        })
+        )
 
         navigationDrawerButtonArrow.setOnClickListener {
             if (isOpen)

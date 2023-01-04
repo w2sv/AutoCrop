@@ -1,8 +1,10 @@
 package com.w2sv.autocrop.activities.main.fragments.flowfield.views
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
+import android.view.Display
 import android.widget.FrameLayout
 import com.w2sv.androidutils.ActivityRetriever
 import com.w2sv.autocrop.flowfield.FlowFieldSketch
@@ -17,13 +19,7 @@ class FlowFieldLayout(context: Context, attr: AttributeSet) :
         super.onAttachedToWindow()
 
         if (!isInEditMode) {
-            val display = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                activity.display!!
-            else
-                @Suppress("DEPRECATION")
-                activity.windowManager.defaultDisplay
-
-            display.resolution().let {
+            activity.getDisplayCompat().resolution().let {
                 PFragment(
                     FlowFieldSketch(
                         it.x,
@@ -35,3 +31,10 @@ class FlowFieldLayout(context: Context, attr: AttributeSet) :
         }
     }
 }
+
+private fun Activity.getDisplayCompat(): Display =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+        display!!
+    else
+        @Suppress("DEPRECATION")
+        windowManager.defaultDisplay
