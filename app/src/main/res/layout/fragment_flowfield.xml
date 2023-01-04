@@ -26,7 +26,9 @@
                 android:layout_marginStart="@dimen/margin_top_left_image_button"
                 android:layout_marginTop="@dimen/margin_top_left_image_button"
 
-                app:lottie_rawRes="@raw/hamburger_to_backarrow"/>
+                android:contentDescription="@string/main_menu_toggle"
+
+                app:lottie_rawRes="@raw/hamburger_to_backarrow" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/image_selection_button"
@@ -37,6 +39,7 @@
 
                 android:background="@drawable/shape_imageselection_button"
 
+                android:lineSpacingExtra="10dp"
                 android:text="@string/select_images"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@android:color/white" />

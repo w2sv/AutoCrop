@@ -21,7 +21,7 @@
                 android:id="@+id/height_tv"
                 android:layout_width="@dimen/width_button"
                 android:layout_height="@dimen/height_button"
-                android:layout_marginHorizontal="@dimen/margin_top_button"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_manual_crop_fragment_top_button"
                 android:background="@drawable/shape_rounded_rectangle"
                 android:gravity="center"
                 android:textStyle="bold" />
@@ -30,7 +30,7 @@
                 android:id="@+id/percentage_tv"
                 android:layout_width="@dimen/width_button"
                 android:layout_height="@dimen/height_button"
-                android:layout_marginHorizontal="@dimen/margin_top_button"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_manual_crop_fragment_top_button"
                 android:background="@drawable/shape_rounded_rectangle"
                 android:gravity="center"
                 android:textStyle="bold" />
@@ -39,7 +39,7 @@
                 android:id="@+id/y1_tv"
                 android:layout_width="@dimen/width_button"
                 android:layout_height="@dimen/height_button"
-                android:layout_marginHorizontal="@dimen/margin_top_button"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_manual_crop_fragment_top_button"
                 android:background="@drawable/shape_rounded_rectangle"
                 android:gravity="center"
                 android:textStyle="bold" />
@@ -48,7 +48,7 @@
                 android:id="@+id/y2_tv"
                 android:layout_width="@dimen/width_button"
                 android:layout_height="@dimen/height_button"
-                android:layout_marginHorizontal="@dimen/margin_top_button"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_manual_crop_fragment_top_button"
                 android:background="@drawable/shape_rounded_rectangle"
                 android:gravity="center"
                 android:textStyle="bold" />

@@ -26,6 +26,8 @@
                 android:layout_marginStart="@dimen/margin_top_left_image_button"
                 android:layout_marginTop="@dimen/margin_top_left_image_button"
 
+                android:contentDescription="@string/main_menu_toggle"
+
                 app:lottie_rawRes="@raw/hamburger_to_backarrow" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -33,13 +35,13 @@
 
                 android:layout_width="143dp"
                 android:layout_height="143dp"
+
                 android:layout_centerInParent="true"
 
                 android:background="@drawable/shape_imageselection_button"
-
                 android:text="@string/select_images"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@android:color/white" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/share_crops_button"
