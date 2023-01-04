@@ -46,7 +46,7 @@ class AboutFragment :
                     "Check out what happens if you click on the different view elements!",
                     duration = resources.getInteger(R.integer.duration_snackbar_long)
                 )
-                .setIcon(R.drawable.ic_outline_info_24)
+                .setIcon(R.drawable.ic_info_24)
                 .build()
                 .show()
     }

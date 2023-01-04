@@ -14,4 +14,5 @@
     <color name="neutral_background">#000000</color>
     <color name="crop_mask">#AB1C1C1E</color>
     <color name="button_background">#80303033</color>
+    <color name="image_selection_button_foreground">@android:color/white</color>
 </resources>

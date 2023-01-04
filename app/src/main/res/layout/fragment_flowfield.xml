@@ -42,7 +42,7 @@
                 android:lineSpacingExtra="10dp"
                 android:text="@string/select_images"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@android:color/white" />
+                android:textColor="@color/image_selection_button_foreground" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/share_crops_button"

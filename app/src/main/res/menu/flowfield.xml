@@ -49,7 +49,7 @@
             <menu>
                 <item
                     android:id="@+id/main_menu_item_about"
-                    android:icon="@drawable/ic_outline_info_24"
+                    android:icon="@drawable/ic_info_24"
                     android:title="@string/menu_item_about" />
 
                 <item

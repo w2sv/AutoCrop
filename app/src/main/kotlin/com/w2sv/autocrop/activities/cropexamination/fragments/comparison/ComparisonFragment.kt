@@ -103,7 +103,7 @@ class ComparisonFragment
             if (!booleanPreferences.comparisonInstructionsShown)
                 requireActivity()
                     .snackyBuilder("Tap screen to toggle between the original screenshot and the crop")
-                    .setIcon(R.drawable.ic_outline_info_24)
+                    .setIcon(R.drawable.ic_info_24)
                     .build()
                     .addCallback(object : Snackbar.Callback() {
                         override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
