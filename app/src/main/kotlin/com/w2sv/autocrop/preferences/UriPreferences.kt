@@ -31,7 +31,9 @@ class UriPreferences @Inject constructor(sharedPreferences: SharedPreferences) :
                 .also { i { "Set new documentUri: $it" } }
     }
 
-    val cropDirIdentifier: String get() = documentUri?.toString() ?: systemPicturesDirectory().path
+    val cropDirIdentifier: String
+        get() = documentUri?.toString()
+            ?: systemPicturesDirectory().path
 
     var documentUri: Uri? = null
 

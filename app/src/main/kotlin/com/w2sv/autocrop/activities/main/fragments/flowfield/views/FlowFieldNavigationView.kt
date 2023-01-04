@@ -47,7 +47,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         super.onAttachedToWindow()
 
         if (!isInEditMode) {
-            menu.configureItem(R.id.main_menu_item_current_crop_dir){
+            menu.configureItem(R.id.main_menu_item_current_crop_dir) {
                 it.title = uriPreferences.cropDirIdentifier
             }
             setListenToScreenCapturesItem()

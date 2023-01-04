@@ -55,7 +55,8 @@ class MainActivity : ApplicationActivity() {
 
         val followingCropExaminationActivity: Boolean = ioResults != null
 
-        val savedCrops: Boolean = ioResults?.let { it.nSavedCrops != 0 } ?: false
+        val savedCrops: Boolean = ioResults?.let { it.nSavedCrops != 0 }
+            ?: false
 
         val liveScreenshotListenerRunning: LiveData<Boolean?> by lazy {
             MutableLiveData()
