@@ -3,7 +3,7 @@ package com.w2sv.autocrop.cropbundle.io
 import android.content.Context
 import android.graphics.Bitmap
 import com.w2sv.autocrop.cropbundle.Screenshot
-import com.w2sv.autocrop.preferences.UriPreferences
+import com.w2sv.autocrop.preferences.CropSaveDirPreferences
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -30,7 +30,7 @@ class CropBundleIORunner @Inject constructor() {
     }
 
     @Inject
-    lateinit var uriPreferences: UriPreferences
+    lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
     @Inject
     @ApplicationContext
@@ -47,7 +47,7 @@ class CropBundleIORunner @Inject constructor() {
                     cropBitmap,
                     it.parsedMimeType,
                     cropFileName(it.fileName, it.parsedMimeType),
-                    uriPreferences.validDocumentUriOrNull(applicationContext)
+                    cropSaveDirPreferences.validDocumentUriOrNull(applicationContext)
                 ),
                 applicationContext.contentResolver.deleteScreenshotIfApplicable(it.id, deleteScreenshot)
             )

@@ -25,7 +25,7 @@ import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.preferences.UriPreferences
+import com.w2sv.autocrop.preferences.CropSaveDirPreferences
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.permissionhandler.requestPermissions
@@ -41,7 +41,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     lateinit var booleanPreferences: BooleanPreferences
 
     @Inject
-    lateinit var uriPreferences: UriPreferences
+    lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
     private val activityViewModel by hiltActivityViewModel<MainActivity.ViewModel>()
 
@@ -121,7 +121,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     private fun pickSaveDestinationDir() {
         findFragment<FlowFieldFragment>()
             .openDocumentTreeContractHandler
-            .selectDocument(uriPreferences.treeUri)
+            .selectDocument(cropSaveDirPreferences.treeUri)
     }
 
     private fun goToPlayStoreListing() {

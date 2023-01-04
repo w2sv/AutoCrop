@@ -28,7 +28,7 @@ import com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.utils.e
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
-import com.w2sv.autocrop.preferences.BooleanPreferences
+import com.w2sv.autocrop.preferences.ShownFlags
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,7 +51,7 @@ class ComparisonFragment
     }
 
     @Inject
-    lateinit var booleanPreferences: BooleanPreferences
+    lateinit var shownFlags: ShownFlags
 
     @HiltViewModel
     class ViewModel @Inject constructor(
@@ -100,7 +100,7 @@ class ComparisonFragment
         launchAfterShortDelay {
             viewModel.displayScreenshotLive.postValue(true)
 
-            if (!booleanPreferences.comparisonInstructionsShown)
+            if (!shownFlags.comparisonInstructionsShown)
                 requireActivity()
                     .snackyBuilder("Tap screen to toggle between the original screenshot and the crop")
                     .setIcon(R.drawable.ic_info_24)

@@ -3,7 +3,7 @@ package com.w2sv.autocrop.activities
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.preferences.UriPreferences
+import com.w2sv.autocrop.preferences.CropSaveDirPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -14,12 +14,12 @@ abstract class ApplicationActivity : FragmentHostingActivity() {
     lateinit var booleanPreferences: BooleanPreferences
 
     @Inject
-    lateinit var uriPreferences: UriPreferences
+    lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        listOf(booleanPreferences, uriPreferences).forEach {
+        listOf(booleanPreferences, cropSaveDirPreferences).forEach {
             lifecycle.addObserver(it)
         }
 

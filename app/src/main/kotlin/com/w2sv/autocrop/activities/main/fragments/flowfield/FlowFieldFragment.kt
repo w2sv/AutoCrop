@@ -30,8 +30,8 @@ import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.ScreenshotL
 import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.WelcomeDialog
 import com.w2sv.autocrop.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
-import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.preferences.UriPreferences
+import com.w2sv.autocrop.preferences.CropSaveDirPreferences
+import com.w2sv.autocrop.preferences.ShownFlags
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.ui.SnackbarData
 import com.w2sv.autocrop.ui.animate
@@ -51,17 +51,17 @@ class FlowFieldFragment :
     ScreenshotListenerDialog.Listener {
 
     @Inject
-    lateinit var booleanPreferences: BooleanPreferences
+    lateinit var shownFlags: ShownFlags
 
     @Inject
-    lateinit var uriPreferences: UriPreferences
+    lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
     @HiltViewModel
-    class ViewModel @Inject constructor(uriPreferences: UriPreferences) : androidx.lifecycle.ViewModel() {
+    class ViewModel @Inject constructor(cropSaveDirPreferences: CropSaveDirPreferences) : androidx.lifecycle.ViewModel() {
         var fadedInButtons: Boolean = false
         var showedSnackbar: Boolean = false
 
-        val liveCropSaveDirIdentifier: LiveData<String> = MutableLiveData(uriPreferences.cropSaveDirIdentifier)
+        val liveCropSaveDirIdentifier: LiveData<String> = MutableLiveData(cropSaveDirPreferences.cropSaveDirIdentifier)
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -83,7 +83,7 @@ class FlowFieldFragment :
 
         showUIElements()
 
-        if (!booleanPreferences.welcomeDialogsShown)
+        if (!shownFlags.welcomeDialogsShown)
             lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_large)) {
                 WelcomeDialog().show(childFragmentManager)
             }
@@ -168,7 +168,7 @@ class FlowFieldFragment :
     }
 
     override fun onScreenshotListenerDialogAnsweredListener() {
-        booleanPreferences.welcomeDialogsShown = true
+        shownFlags.welcomeDialogsShown = true
     }
 
     // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -228,15 +228,15 @@ class FlowFieldFragment :
     val openDocumentTreeContractHandler by lazy {
         OpenDocumentTreeContractHandler(requireActivity()) {
             it?.let { treeUri ->
-                if (uriPreferences.setNewUri(treeUri, requireContext().contentResolver)) {
-                    viewModel.liveCropSaveDirIdentifier.postValue(uriPreferences.cropSaveDirIdentifier)
+                if (cropSaveDirPreferences.setNewUri(treeUri, requireContext().contentResolver)) {
+                    viewModel.liveCropSaveDirIdentifier.postValue(cropSaveDirPreferences.cropSaveDirIdentifier)
 
                     requireActivity()
                         .snackyBuilder(
                             SpannableStringBuilder()
                                 .append("Crops will be saved to ")
                                 .color(requireContext().getThemedColor(R.color.success)) {
-                                    append(documentUriPathIdentifier(uriPreferences.documentUri!!))
+                                    append(documentUriPathIdentifier(cropSaveDirPreferences.documentUri!!))
                                 }
                         )
                         .build()

@@ -37,6 +37,7 @@ import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
+import com.w2sv.autocrop.preferences.ShownFlags
 import com.w2sv.autocrop.ui.CubeOutPageTransformer
 import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.crossFade
@@ -142,7 +143,7 @@ class CropPagerFragment :
     }
 
     @Inject
-    lateinit var booleanPreferences: BooleanPreferences
+    lateinit var shownFlags: ShownFlags
 
     private val viewModel by viewModels<ViewModel>()
     private val activityViewModel by activityViewModels<CropExaminationActivity.ViewModel>()
@@ -206,7 +207,7 @@ class CropPagerFragment :
                 }
                     ?: binding.snackbarRepelledLayout.show()
 
-                if (!booleanPreferences.cropPagerInstructionsShown)
+                if (!shownFlags.cropPagerInstructionsShown)
                     lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_medium)) {
                         CropPagerInstructionsDialog()
                             .show(childFragmentManager)

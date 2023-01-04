@@ -15,7 +15,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UriPreferences @Inject constructor(sharedPreferences: SharedPreferences) : UriPreferences<Uri?>(
+class CropSaveDirPreferences @Inject constructor(sharedPreferences: SharedPreferences) : UriPreferences<Uri?>(
     "treeUri" to null,
     sharedPreferences = sharedPreferences
 ) {
