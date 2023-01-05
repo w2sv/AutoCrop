@@ -9,11 +9,6 @@ import com.w2sv.autocrop.activities.main.MainActivity
 
 class CropActivity : ApplicationActivity() {
 
-    companion object {
-        const val EXTRA_N_UNCROPPED_SCREENSHOTS = "com.w2sv.autocrop.EXTRA_N_UNCROPPED_SCREENSHOTS"
-        const val EXTRA_N_NOT_OPENABLE_URIS = "com.w2sv.autocrop.EXTRA_N_NOT_OPENABLE_URIS"
-    }
-
     override fun getRootFragment(): Fragment =
         @Suppress("DEPRECATION")
         CropFragment

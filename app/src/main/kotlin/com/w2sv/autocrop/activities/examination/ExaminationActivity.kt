@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationActivity
-import com.w2sv.autocrop.activities.crop.CropActivity
+import com.w2sv.autocrop.activities.crop.CropResults
 import com.w2sv.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.examination.fragments.croppager.CropPagerFragment
@@ -21,7 +21,7 @@ import com.w2sv.autocrop.cropbundle.Screenshot
 import com.w2sv.autocrop.cropbundle.io.CropBundleIORunner
 import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.utils.extensions.getInt
+import com.w2sv.autocrop.utils.extensions.getParcelable
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,8 +35,7 @@ class ExaminationActivity : ApplicationActivity() {
 
     override fun getRootFragment(): Fragment =
         CropPagerFragment.getInstance(
-            intent.getInt(CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS),
-            intent.getInt(CropActivity.EXTRA_N_NOT_OPENABLE_URIS)
+            intent.getParcelable(CropResults.EXTRA)!!,
         )
 
     @HiltViewModel

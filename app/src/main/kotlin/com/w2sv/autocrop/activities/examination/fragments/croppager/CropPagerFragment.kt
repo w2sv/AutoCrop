@@ -27,7 +27,7 @@ import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
-import com.w2sv.autocrop.activities.crop.CropActivity
+import com.w2sv.autocrop.activities.crop.CropResults
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.CropDialog
 import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.CropEntiretyDialog
@@ -64,12 +64,11 @@ class CropPagerFragment :
     CropPagerInstructionsDialog.OnDismissedListener {
 
     companion object {
-        fun getInstance(nUncroppedScreenshots: Int, nNotOpenableUris: Int): CropPagerFragment =
+        fun getInstance(cropResults: CropResults): CropPagerFragment =
             CropPagerFragment()
                 .apply {
                     arguments = bundleOf(
-                        CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS to nUncroppedScreenshots,
-                        CropActivity.EXTRA_N_NOT_OPENABLE_URIS to nNotOpenableUris
+                        CropResults.EXTRA to cropResults
                     )
                 }
     }
@@ -98,36 +97,32 @@ class CropPagerFragment :
         val uncroppedScreenshotsSnackbarText by Consumable(
             SpannableStringBuilder()
                 .run {
-                    savedStateHandle.get<Int>(CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS)!!
-                        .let { nUncroppedScreenshots ->
-                            if (nUncroppedScreenshots != 0) {
-                                append("Couldn't find crop bounds for")
-                                bold {
-                                    color(context.getThemedColor(R.color.highlight)) {
-                                        append(" $nUncroppedScreenshots")
-                                    }
-                                }
-                                append(" screenshot(s)")
+                    val cropResults = savedStateHandle.get<CropResults>(CropResults.EXTRA)!!
+
+                    if (cropResults.nNotCroppableImages != 0) {
+                        append("Couldn't find crop bounds for")
+                        bold {
+                            color(context.getThemedColor(R.color.highlight)) {
+                                append(" ${cropResults.nNotCroppableImages}")
                             }
                         }
+                        append(" screenshot(s)")
+                    }
 
-                    savedStateHandle.get<Int>(CropActivity.EXTRA_N_NOT_OPENABLE_URIS)!!
-                        .let { nNotOpenableUris ->
-                            when {
-                                nNotOpenableUris == 0 -> Unit
-                                isEmpty() -> {
-                                    append(
-                                        "Couldn't open $nNotOpenableUris image(s)"
-                                    )
-                                }
-
-                                else -> {
-                                    append(
-                                        "& couldn't open $nNotOpenableUris image(s)"
-                                    )
-                                }
-                            }
+                    when {
+                        cropResults.nNotOpenableImages == 0 -> Unit
+                        isEmpty() -> {
+                            append(
+                                "Couldn't open ${cropResults.nNotOpenableImages} image(s)"
+                            )
                         }
+
+                        else -> {
+                            append(
+                                "& couldn't open ${cropResults.nNotOpenableImages} image(s)"
+                            )
+                        }
+                    }
                     ifEmpty { null }
                 }
         )

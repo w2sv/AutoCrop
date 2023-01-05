@@ -19,7 +19,7 @@ import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
-import com.w2sv.autocrop.activities.crop.CropActivity
+import com.w2sv.autocrop.activities.crop.CropResults
 import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailedFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.main.MainActivity
@@ -64,12 +64,8 @@ class CropFragment
         private val screenshotUris: List<Uri> = savedStateHandle[MainActivity.EXTRA_SELECTED_IMAGE_URIS]!!
         val nScreenshots = screenshotUris.size
 
-        fun getNUncroppableImages(): Int =
-            nScreenshots - cropBundles.size
-
         val cropBundles = mutableListOf<CropBundle>()
-        var nNotOpenableUris = 0
-
+        val cropResults = CropResults()
         val liveProgress: LiveData<Int> = MutableLiveData(0)
 
         suspend fun launchCropCoroutine(
@@ -114,10 +110,15 @@ class CropFragment
                         candidates.maxHeightEdges()
                     )
                 }
+                    ?: null
+                        .also {
+                            cropResults.nNotCroppableImages += 1
+                        }
             }
-                ?: null.also {
-                    nNotOpenableUris += 1
-                }
+                ?: null
+                    .also {
+                        cropResults.nNotOpenableImages += 1
+                    }
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -168,12 +169,8 @@ class CropFragment
         startActivity(
             Intent(requireContext(), ExaminationActivity::class.java)
                 .putExtra(
-                    CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS,
-                    viewModel.getNUncroppableImages()
-                )
-                .putExtra(
-                    CropActivity.EXTRA_N_NOT_OPENABLE_URIS,
-                    viewModel.nNotOpenableUris
+                    CropResults.EXTRA,
+                    viewModel.cropResults
                 )
         )
         Animatoo.animateSwipeLeft(requireActivity())
