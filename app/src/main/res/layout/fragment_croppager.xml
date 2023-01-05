@@ -31,7 +31,7 @@
         android:layout_marginTop="23dp"
         android:layout_marginEnd="18dp">
 
-        <com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.PageIndicationBar
+        <com.w2sv.autocrop.activities.examination.fragments.croppager.views.PageIndicationBar
             android:id="@+id/page_indication_bar"
 
             android:layout_width="120dp"
@@ -46,7 +46,7 @@
             android:thumbTint="@color/magenta_saturated"
             android:visibility="invisible" />
 
-        <com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.PositionTextView
+        <com.w2sv.autocrop.activities.examination.fragments.croppager.views.PositionTextView
             android:id="@+id/page_indication_tv"
 
             android:layout_width="wrap_content"
@@ -62,7 +62,7 @@
 
     </RelativeLayout>
 
-    <com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.CancelAutoScrollButton
+    <com.w2sv.autocrop.activities.examination.fragments.croppager.views.CancelAutoScrollButton
         android:id="@+id/cancel_auto_scroll_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             android:layout_marginBottom="58dp"
             android:visibility="invisible">
 
-            <com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.DiscardingStatisticsTextView
+            <com.w2sv.autocrop.activities.examination.fragments.croppager.views.DiscardingStatisticsTextView
                 android:id="@+id/discarding_statistics_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="end">
 
-                <com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.ManualCropButton
+                <com.w2sv.autocrop.activities.examination.fragments.croppager.views.ManualCropButton
                     android:id="@+id/manual_crop_button"
                     android:layout_width="@dimen/size_image_button"
                     android:layout_height="@dimen/size_image_button"
@@ -115,7 +115,7 @@
 
                     android:contentDescription="@string/manually_adjust_the_crop" />
 
-                <com.w2sv.autocrop.activities.cropexamination.fragments.croppager.views.ComparisonLaunchButton
+                <com.w2sv.autocrop.activities.examination.fragments.croppager.views.ComparisonLaunchButton
                     android:id="@+id/comparison_button"
                     android:layout_width="@dimen/size_image_button"
                     android:layout_height="@dimen/size_image_button"

@@ -21,7 +21,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailedFragment
-import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
+import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.Screenshot
@@ -160,13 +160,13 @@ class CropFragment
     }
 
     /**
-     * Inherently sets [CropExaminationActivity.ViewModel.cropBundles]
+     * Inherently sets [ExaminationActivity.ViewModel.cropBundles]
      */
     private fun launchCropExamination() {
-        CropExaminationActivity.ViewModel.cropBundles = viewModel.cropBundles
+        ExaminationActivity.ViewModel.cropBundles = viewModel.cropBundles
 
         startActivity(
-            Intent(requireContext(), CropExaminationActivity::class.java)
+            Intent(requireContext(), ExaminationActivity::class.java)
                 .putExtra(
                     CropActivity.EXTRA_N_UNCROPPED_SCREENSHOTS,
                     viewModel.getNUncroppableImages()

@@ -55,7 +55,7 @@
 
         </LinearLayout>
 
-        <com.w2sv.autocrop.activities.cropexamination.fragments.manualcrop.view.ManualCropView
+        <com.w2sv.autocrop.activities.examination.fragments.manualcrop.view.ManualCropView
             android:id="@+id/crop_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

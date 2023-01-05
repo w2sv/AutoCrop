@@ -7,12 +7,14 @@ import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.extensions.getColoredIcon
@@ -24,7 +26,7 @@ import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
-import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
+import com.w2sv.autocrop.activities.examination.IOResults
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.ScreenshotListenerDialog
 import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.WelcomeDialog
@@ -42,6 +44,7 @@ import com.w2sv.permissionhandler.PermissionHandler
 import com.w2sv.permissionhandler.requestPermissions
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -50,6 +53,13 @@ class FlowFieldFragment :
     WelcomeDialog.Listener,
     ScreenshotListenerDialog.Listener {
 
+    companion object {
+        fun getInstance(ioResults: IOResults?): FlowFieldFragment =
+            FlowFieldFragment().apply {
+                arguments = bundleOf(IOResults.EXTRA to ioResults)
+            }
+    }
+
     @Inject
     lateinit var shownFlags: ShownFlags
 
@@ -57,7 +67,42 @@ class FlowFieldFragment :
     lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
     @HiltViewModel
-    class ViewModel @Inject constructor(cropSaveDirPreferences: CropSaveDirPreferences) : androidx.lifecycle.ViewModel() {
+    class ViewModel @Inject constructor(
+        savedStateHandle: SavedStateHandle,
+        cropSaveDirPreferences: CropSaveDirPreferences,
+        @ApplicationContext context: Context
+    ) : androidx.lifecycle.ViewModel() {
+
+        val ioResults: IOResults? = savedStateHandle[IOResults.EXTRA]
+
+        val ioResultsSnackbarData: SnackbarData? = ioResults?.let {
+            if (it.nSavedCrops == 0)
+                SnackbarData("Discarded all crops")
+            else
+                SnackbarData(
+                    buildSpannedString {
+                        append(
+                            "Saved ${it.nSavedCrops} crop(s) to "
+                        )
+                        color(context.getThemedColor(R.color.success)) {
+                            append(cropSaveDirPreferences.cropSaveDirIdentifier)
+                        }
+                        if (it.nDeletedScreenshots != 0)
+                            append(
+                                " and deleted ${
+                                    if (it.nDeletedScreenshots == it.nSavedCrops)
+                                        "corresponding"
+                                    else
+                                        it.nDeletedScreenshots
+                                } screenshot(s)"
+                            )
+                    },
+                    context.getColoredIcon(R.drawable.ic_check_24, R.color.success)
+                )
+        }
+
+        val followingExaminationActivity: Boolean = ioResults != null
+
         var fadedInButtons: Boolean = false
         var showedSnackbar: Boolean = false
 
@@ -87,9 +132,9 @@ class FlowFieldFragment :
             lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_large)) {
                 WelcomeDialog().show(childFragmentManager)
             }
-        else if (activityViewModel.followingCropExaminationActivity && !viewModel.showedSnackbar) {
+        else if (viewModel.followingExaminationActivity && !viewModel.showedSnackbar) {
             lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_half_faded_in)) {
-                with(activityViewModel.ioResults!!.snackbarData(requireContext())) {
+                with(viewModel.ioResultsSnackbarData!!) {
                     requireActivity()
                         .snackyBuilder(text)
                         .setIcon(icon)
@@ -108,13 +153,15 @@ class FlowFieldFragment :
             binding.navigationViewToggleButton,
             binding.imageSelectionButton
         )
+        val savedAnyCrops: Boolean = viewModel.ioResults?.let { it.nSavedCrops != 0 }
+            ?: false
 
         if (!viewModel.fadedInButtons) {
             fadeInButtons.forEach {
                 it.fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
             }
 
-            if (activityViewModel.savedCrops)
+            if (savedAnyCrops)
                 lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_half_faded_in)) {
                     with(binding.shareCropsButton) {
                         show()
@@ -124,7 +171,7 @@ class FlowFieldFragment :
 
             viewModel.fadedInButtons = true
         }
-        else if (activityViewModel.savedCrops)
+        else if (savedAnyCrops)
             binding.shareCropsButton.show()
     }
 
@@ -140,7 +187,7 @@ class FlowFieldFragment :
                     Intent(Intent.ACTION_SEND_MULTIPLE)
                         .putExtra(
                             Intent.EXTRA_STREAM,
-                            activityViewModel.ioResults!!.cropUris
+                            viewModel.ioResults!!.cropUris
                         )
                         .setType(IMAGE_MIME_TYPE),
                     null
@@ -255,28 +302,3 @@ class FlowFieldFragment :
         }
     }
 }
-
-private fun CropExaminationActivity.Results.snackbarData(context: Context): SnackbarData =
-    if (nSavedCrops == 0)
-        SnackbarData("Discarded all crops")
-    else
-        SnackbarData(
-            buildSpannedString {
-                append(
-                    "Saved $nSavedCrops crop(s) to "
-                )
-                color(context.getThemedColor(R.color.success)) {
-                    append(saveDirName)
-                }
-                if (nDeletedScreenshots != 0)
-                    append(
-                        " and deleted ${
-                            if (nDeletedScreenshots == nSavedCrops)
-                                "corresponding"
-                            else
-                                nDeletedScreenshots
-                        } screenshot(s)"
-                    )
-            },
-            context.getColoredIcon(R.drawable.ic_check_24, R.color.success)
-        )

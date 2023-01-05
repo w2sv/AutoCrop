@@ -13,18 +13,16 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.autocrop.activities.ApplicationActivity
-import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
+import com.w2sv.autocrop.activities.examination.IOResults
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
+import com.w2sv.autocrop.utils.extensions.getParcelable
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ApplicationActivity() {
@@ -49,25 +47,16 @@ class MainActivity : ApplicationActivity() {
         }
     }
 
-    @HiltViewModel
-    class ViewModel @Inject constructor(savedStateHandle: SavedStateHandle) : androidx.lifecycle.ViewModel() {
-        val ioResults: CropExaminationActivity.Results? = CropExaminationActivity.Results.restore(savedStateHandle)
-
-        val followingCropExaminationActivity: Boolean = ioResults != null
-
-        val savedCrops: Boolean = ioResults?.let { it.nSavedCrops != 0 }
-            ?: false
-
+    class ViewModel : androidx.lifecycle.ViewModel() {
         val liveScreenshotListenerRunning: LiveData<Boolean?> by lazy {
             MutableLiveData()
         }
-
     }
 
     private val viewModel: ViewModel by viewModels()
 
     override fun getRootFragment(): Fragment =
-        FlowFieldFragment()
+        FlowFieldFragment.getInstance(intent.getParcelable(IOResults.EXTRA))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()

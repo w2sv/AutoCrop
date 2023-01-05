@@ -27,15 +27,21 @@ class CropSaveDirPreferences @Inject constructor(sharedPreferences: SharedPrefer
     var documentUri: Uri? by this
         private set
 
+    /**
+     * @return true if passed [treeUri] != this.[treeUri]
+     */
     fun setNewUri(treeUri: Uri, contentResolver: ContentResolver): Boolean {
         if (treeUri != this.treeUri) {
             this.treeUri = treeUri
+
+            // take persistable read & write permission grants regarding treeUri
             contentResolver
                 .takePersistableUriPermission(
                     treeUri,
                     Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                 )
 
+            // build & set documentUri
             documentUri = DocumentsContract.buildDocumentUriUsingTree(
                 treeUri,
                 DocumentsContract.getTreeDocumentId(treeUri)
@@ -52,6 +58,10 @@ class CropSaveDirPreferences @Inject constructor(sharedPreferences: SharedPrefer
         get() = documentUri?.let { documentUriPathIdentifier(it) }
             ?: systemPicturesDirectory().path
 
+    /**
+     * @return [documentUri] if != null and in possession of [Intent.FLAG_GRANT_WRITE_URI_PERMISSION],
+     * otherwise null
+     */
     fun validDocumentUriOrNull(context: Context): Uri? =
         documentUri?.let {
             if (context.uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION))

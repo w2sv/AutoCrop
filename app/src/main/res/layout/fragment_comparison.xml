@@ -12,7 +12,7 @@
 
         android:scaleType="matrix" />
 
-    <com.w2sv.autocrop.activities.cropexamination.fragments.comparison.views.ScreenshotImageView
+    <com.w2sv.autocrop.activities.examination.fragments.comparison.views.ScreenshotImageView
         android:id="@+id/screenshot_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,7 +28,7 @@
 
         android:visibility="invisible">
 
-        <com.w2sv.autocrop.activities.cropexamination.fragments.comparison.views.DisplayStatusTextView
+        <com.w2sv.autocrop.activities.examination.fragments.comparison.views.DisplayStatusTextView
             android:id="@+id/iv_status_tv"
 
             android:layout_width="95dp"
