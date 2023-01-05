@@ -19,10 +19,12 @@ import com.w2sv.androidutils.BackPressListener
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
+import com.w2sv.androidutils.extensions.hide
 import com.w2sv.androidutils.extensions.hideSystemBars
 import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
+import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
@@ -40,7 +42,7 @@ import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.ShownFlags
 import com.w2sv.autocrop.ui.CubeOutPageTransformer
 import com.w2sv.autocrop.ui.animate
-import com.w2sv.autocrop.ui.crossFade
+import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.ui.scrollPeriodically
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.kotlinutils.delegates.Consumable
@@ -165,6 +167,7 @@ class CropPagerFragment :
         )
 
         viewModel.setLiveDataObservers()
+        binding.setOnClickListeners()
     }
 
     private fun ViewModel.setLiveDataObservers() {
@@ -200,10 +203,8 @@ class CropPagerFragment :
 
                 autoScrollCoroutine?.let {
                     it.cancel()
-                    crossFade(
-                        binding.cancelAutoScrollButton,
-                        binding.snackbarRepelledLayout
-                    )
+                    binding.cancelAutoScrollButton.hide()
+                    binding.snackbarRepelledLayout.fadeIn()
                 }
                     ?: binding.snackbarRepelledLayout.show()
 
@@ -222,6 +223,12 @@ class CropPagerFragment :
         dataSet.observe(viewLifecycleOwner) { dataSet ->
             if (dataSet.size == 1)
                 binding.pageIndicationBar.animate(Techniques.ZoomOut)
+        }
+    }
+
+    private fun FragmentCroppagerBinding.setOnClickListeners(){
+        cancelAutoScrollButton.setOnClickListener {
+            viewModel.doAutoScrollLive.postValue(false)
         }
     }
 
