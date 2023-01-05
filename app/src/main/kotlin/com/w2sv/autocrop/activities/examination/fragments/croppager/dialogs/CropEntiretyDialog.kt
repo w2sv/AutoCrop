@@ -30,11 +30,11 @@ class CropEntiretyDialog : AbstractCropDialog() {
             .create()
 
     interface ResultListener {
-        fun onCropEntiretyResult(confirmed: Boolean)
+        fun onCropEntiretyDialogResult(confirmed: Boolean)
     }
 
     private fun notifyResultListener(confirmed: Boolean) {
         (parentFragment as ResultListener)
-            .onCropEntiretyResult(confirmed)
+            .onCropEntiretyDialogResult(confirmed)
     }
 }

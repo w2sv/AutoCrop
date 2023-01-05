@@ -10,5 +10,7 @@
     <integer name="delay_medium">500</integer>
     <integer name="delay_large">1000</integer>
 
+    <integer name="period_auto_scroll">@integer/delay_large</integer>
+
     <integer name="duration_view_animation">1000</integer>
 </resources>

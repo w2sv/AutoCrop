@@ -171,59 +171,65 @@ class CropPagerFragment :
     }
 
     private fun ViewModel.setLiveDataObservers() {
-        dataSet.livePosition.observe(viewLifecycleOwner) { position ->
-            binding.discardingStatisticsTv.update(position)
-
-            dataSet.pageIndex(position).let { pageIndex ->
-                binding.pageIndicationTv.update(pageIndex + 1)
-                binding.pageIndicationBar.update(pageIndex)
-            }
+        dataSet.livePosition.observe(viewLifecycleOwner) {
+            binding.updateOnDataSetPositionChanged(it)
         }
 
-        doAutoScrollLive.observe(viewLifecycleOwner) { autoScroll ->
-            if (autoScroll) {
-                binding.cancelAutoScrollButton.show()
-                lifecycleScope.launch {
-                    val scrollPeriod = resources.getLong(R.integer.delay_large)
-
-                    if (autoScrollCoroutine == null)
-                        delay(scrollPeriod)
-
-                    autoScrollCoroutine = binding.viewPager.scrollPeriodically(
-                        lifecycleScope,
-                        getNAutoScrolls(),
-                        scrollPeriod
-                    ) {
-                        doAutoScrollLive.postValue(false)
-                    }
-                }
-            }
-            else {
-                binding.viewPager.setPageTransformer(CubeOutPageTransformer())
-
-                autoScrollCoroutine?.let {
-                    it.cancel()
-                    binding.cancelAutoScrollButton.hide()
-                    binding.snackbarRepelledLayout.fadeIn()
-                }
-                    ?: binding.snackbarRepelledLayout.show()
-
-                if (!shownFlags.cropPagerInstructionsShown)
-                    lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_medium)) {
-                        CropPagerInstructionsDialog()
-                            .show(childFragmentManager)
-                    }
-                else
-                    showUncroppableScreenshotsSnackbarIfApplicable()
-
-            }
-            binding.viewPager.isUserInputEnabled = !autoScroll
+        doAutoScrollLive.observe(viewLifecycleOwner) {
+            binding.updateOnAutoScrollStatusChanged(it)
         }
 
         dataSet.observe(viewLifecycleOwner) { dataSet ->
             if (dataSet.size == 1)
                 binding.pageIndicationBar.animate(Techniques.ZoomOut)
         }
+    }
+
+    private fun FragmentCroppagerBinding.updateOnDataSetPositionChanged(position: Int){
+        discardingStatisticsTv.update(position)
+
+        viewModel.dataSet.pageIndex(position).let { pageIndex ->
+            pageIndicationTv.update(pageIndex + 1)
+            pageIndicationBar.update(pageIndex)
+        }
+    }
+
+    private fun FragmentCroppagerBinding.updateOnAutoScrollStatusChanged(doAutoScroll: Boolean){
+        if (doAutoScroll) {
+            cancelAutoScrollButton.show()
+            lifecycleScope.launch {
+                if (viewModel.autoScrollCoroutine == null)
+                    delay(resources.getLong(R.integer.period_auto_scroll))
+
+                viewModel.autoScrollCoroutine = binding.viewPager.scrollPeriodically(
+                    lifecycleScope,
+                    viewModel.getNAutoScrolls(),
+                    resources.getLong(R.integer.period_auto_scroll)
+                ) {
+                    viewModel.doAutoScrollLive.postValue(false)
+                }
+            }
+        }
+        else {
+            viewPager.setPageTransformer(CubeOutPageTransformer())
+
+            viewModel.autoScrollCoroutine?.let {
+                it.cancel()
+                cancelAutoScrollButton.hide()
+                snackbarRepelledLayout.fadeIn()
+            }
+                ?: snackbarRepelledLayout.show()
+
+            if (!shownFlags.cropPagerInstructionsShown)
+                lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_medium)) {
+                    CropPagerInstructionsDialog()
+                        .show(childFragmentManager)
+                }
+            else
+                showUncroppableScreenshotsSnackbarIfApplicable()
+
+        }
+        viewPager.isUserInputEnabled = !doAutoScroll
     }
 
     private fun FragmentCroppagerBinding.setOnClickListeners(){
@@ -238,7 +244,7 @@ class CropPagerFragment :
 
     private fun showUncroppableScreenshotsSnackbarIfApplicable() {
         viewModel.uncroppedScreenshotsSnackbarText?.let {
-            getSnackyBuilder(it)
+            getRepellingSnackyBuilder(it)
                 .setIcon(com.w2sv.permissionhandler.R.drawable.ic_error_24)
                 .build()
                 .show()
@@ -260,7 +266,7 @@ class CropPagerFragment :
         )
 
         launchAfterShortDelay {
-            getSnackyBuilder("Adjusted crop")
+            getRepellingSnackyBuilder("Adjusted crop")
                 .setIcon(requireContext().getColoredIcon(R.drawable.ic_check_24, R.color.success))
                 .build()
                 .show()
@@ -287,7 +293,7 @@ class CropPagerFragment :
             cropPager.scrollToNextViewAndRemoveCurrent(dataSetPosition)
     }
 
-    override fun onCropEntiretyResult(confirmed: Boolean) {
+    override fun onCropEntiretyDialogResult(confirmed: Boolean) {
         if (confirmed)
             getFragmentHostingActivity()
                 .fragmentReplacementTransaction(SaveAllFragment(), true)
@@ -296,7 +302,7 @@ class CropPagerFragment :
             castActivity<ExaminationActivity>().replaceWithSubsequentFragment()
     }
 
-    private fun getSnackyBuilder(text: CharSequence): Snacky.Builder =
+    private fun getRepellingSnackyBuilder(text: CharSequence): Snacky.Builder =
         requireActivity()
             .snackyBuilder(text)
             .setView(binding.snackbarRepelledHostingLayout)
@@ -304,7 +310,7 @@ class CropPagerFragment :
     fun onBackPress() {
         viewModel.backPressHandler(
             {
-                getSnackyBuilder("Tap again to return to main screen")
+                getRepellingSnackyBuilder("Tap again to return to main screen")
                     .build()
                     .show()
             },
