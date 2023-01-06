@@ -3,22 +3,22 @@ package com.w2sv.autocrop.preferences
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.provider.DocumentsContract
 import com.w2sv.androidutils.extensions.uriPermissionGranted
 import com.w2sv.autocrop.cropbundle.io.utils.systemPicturesDirectory
+import com.w2sv.autocrop.utils.documentUriPathIdentifier
 import com.w2sv.typedpreferences.descendants.UriPreferences
-import com.w2sv.typedpreferences.extensions.getAppPreferences
-import dagger.hilt.android.qualifiers.ApplicationContext
 import slimber.log.i
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CropSaveDirPreferences @Inject constructor(@ApplicationContext context: Context) : UriPreferences<Uri?>(
+class CropSaveDirPreferences @Inject constructor(appPreferences: SharedPreferences) : UriPreferences<Uri?>(
     "treeUri" to null,
     "documentUri" to null,
-    sharedPreferences = context.getAppPreferences()
+    sharedPreferences = appPreferences
 ) {
 
     var treeUri: Uri? by this
@@ -26,10 +26,9 @@ class CropSaveDirPreferences @Inject constructor(@ApplicationContext context: Co
 
     private var documentUri: Uri? by this
 
-    var pathIdentifier: String = treeUri
-        ?.let { treeUriPathIdentifier(context.contentResolver, it) }
-        ?: systemPicturesDirectory().path
-        private set
+    val pathIdentifier: String
+        get() = documentUri?.let { documentUriPathIdentifier(it) }
+            ?: systemPicturesDirectory().path
 
     /**
      * @return true if passed [treeUri] != this.[treeUri]
@@ -50,11 +49,8 @@ class CropSaveDirPreferences @Inject constructor(@ApplicationContext context: Co
                 treeUri,
                 DocumentsContract.getTreeDocumentId(treeUri)
             )
-            
-            i { "Set new documentUri: $documentUri" }
 
-            // set new cropSaveDirIdentifier 
-            pathIdentifier = treeUriPathIdentifier(contentResolver, treeUri)
+            i { "Set new documentUri: $documentUri" }
 
             return true
         }
@@ -73,15 +69,3 @@ class CropSaveDirPreferences @Inject constructor(@ApplicationContext context: Co
                 null
         }
 }
-
-private fun treeUriPathIdentifier(contentResolver: ContentResolver, treeUri: Uri): String =
-    DocumentsContract.findDocumentPath(
-        contentResolver,
-        DocumentsContract.buildChildDocumentsUriUsingTree(
-            treeUri,
-            DocumentsContract.getTreeDocumentId(treeUri)
-        )
-    )!!
-        .path
-        .joinToString("/")
-        .also { i{"Built treeUriPathIdentifier: $it"} }

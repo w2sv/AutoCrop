@@ -1,5 +1,6 @@
 package com.w2sv.autocrop.utils
 
+import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.os.Build
@@ -22,3 +23,15 @@ fun getMediaUri(context: Context, uri: Uri): Uri? =
     catch (e: IllegalArgumentException) {
         null
     }
+
+fun documentUriPathIdentifier(documentUri: Uri): String =
+    documentUri.pathSegments[1]
+
+fun treeUriPath(contentResolver: ContentResolver, treeUri: Uri): DocumentsContract.Path? =
+    DocumentsContract.findDocumentPath(
+        contentResolver,
+        DocumentsContract.buildChildDocumentsUriUsingTree(
+            treeUri,
+            DocumentsContract.getTreeDocumentId(treeUri)
+        )
+    )
