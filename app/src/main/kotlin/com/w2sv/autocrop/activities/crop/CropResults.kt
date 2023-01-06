@@ -4,9 +4,9 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class CropResults(var nNotOpenableImages: Int = 0, var nNotCroppableImages: Int = 0) : Parcelable{
+data class CropResults(var nNotOpenableImages: Int = 0, var nNotCroppableImages: Int = 0) : Parcelable {
 
-    companion object{
+    companion object {
         const val EXTRA = "com.w2sv.autocrop.EXTRA_CROP_RESULTS"
     }
 }

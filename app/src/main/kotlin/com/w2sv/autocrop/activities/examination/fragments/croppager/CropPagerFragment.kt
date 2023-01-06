@@ -180,7 +180,7 @@ class CropPagerFragment :
         }
     }
 
-    private fun FragmentCroppagerBinding.updateOnDataSetPositionChanged(position: Int){
+    private fun FragmentCroppagerBinding.updateOnDataSetPositionChanged(position: Int) {
         discardingStatisticsTv.update(position)
 
         viewModel.dataSet.pageIndex(position).let { pageIndex ->
@@ -189,7 +189,7 @@ class CropPagerFragment :
         }
     }
 
-    private fun FragmentCroppagerBinding.updateOnAutoScrollStatusChanged(doAutoScroll: Boolean){
+    private fun FragmentCroppagerBinding.updateOnAutoScrollStatusChanged(doAutoScroll: Boolean) {
         if (doAutoScroll) {
             cancelAutoScrollButton.show()
             lifecycleScope.launch {
@@ -227,7 +227,7 @@ class CropPagerFragment :
         viewPager.isUserInputEnabled = !doAutoScroll
     }
 
-    private fun FragmentCroppagerBinding.setOnClickListeners(){
+    private fun FragmentCroppagerBinding.setOnClickListeners() {
         cancelAutoScrollButton.setOnClickListener {
             viewModel.doAutoScrollLive.postValue(false)
         }

@@ -76,7 +76,7 @@ class DeleteRequestFragment :
 private class DeleteRequestIntentContractAdministrator(
     activity: ComponentActivity,
     override val activityResultCallback: (ActivityResult) -> Unit
-) : ActivityCallContractAdministrator<IntentSenderRequest, ActivityResult>(
+) : ActivityCallContractAdministrator.Impl<IntentSenderRequest, ActivityResult>(
     activity,
     ActivityResultContracts.StartIntentSenderForResult()
 ) {

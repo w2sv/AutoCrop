@@ -15,16 +15,16 @@ import com.w2sv.androidutils.ActivityCallContractAdministrator
 import de.mateware.snacky.Snacky
 
 class PermissionHandler(
-    private val permission: String,
     private val activity: ComponentActivity,
+    private val permission: String,
     private val permissionDeniedMessage: String,
     private val permissionRequestingSuppressedMessage: String
-) : ActivityCallContractAdministrator<String, Boolean>(
+) : ActivityCallContractAdministrator.Impl<String, Boolean>(
     activity,
     ActivityResultContracts.RequestPermission()
 ) {
 
-    override val key: String = "${this::class.java.name}.$permission"
+    override val registryKey: String = "${this::class.java.name}.$permission"
 
     /**
      * Display snacky if some permission hasn't been granted,

@@ -24,6 +24,7 @@ import com.w2sv.androidutils.extensions.getThemedColor
 import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
+import com.w2sv.androidutils.extensions.uris
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
@@ -40,7 +41,6 @@ import com.w2sv.autocrop.ui.SnackbarData
 import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
-import com.w2sv.autocrop.utils.extensions.uris
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.permissionhandler.PermissionHandler
 import com.w2sv.permissionhandler.requestPermissions
@@ -128,7 +128,7 @@ class FlowFieldFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showUIElements()
+        showLayoutElements()
 
         if (!shownFlags.welcomeDialogsShown)
             lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_large)) {
@@ -150,7 +150,7 @@ class FlowFieldFragment :
         binding.setOnClickListeners()
     }
 
-    private fun showUIElements() {
+    private fun showLayoutElements() {
         val fadeInButtons: List<View> = listOf(
             binding.navigationViewToggleButton,
             binding.imageSelectionButton
@@ -192,7 +192,7 @@ class FlowFieldFragment :
                             viewModel.ioResults!!.cropUris
                         )
                         .setType(IMAGE_MIME_TYPE),
-                    null
+                    "Share Crops"
                 )
             )
         }
@@ -226,8 +226,8 @@ class FlowFieldFragment :
 
     private val writeExternalStoragePermissionHandler by lazy {
         PermissionHandler(
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             requireActivity(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             "Media file writing required for saving crops",
             "Go to app settings and grant media file writing in order for the app to work"
         )
@@ -237,11 +237,11 @@ class FlowFieldFragment :
         buildList {
             add(
                 PermissionHandler(
+                    requireActivity(),
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                         Manifest.permission.READ_MEDIA_IMAGES
                     else
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                    requireActivity(),
                     "Media file access required for listening to screen captures",
                     "Go to app settings and grant media file access for screen capture listening to work"
                 )
@@ -249,8 +249,8 @@ class FlowFieldFragment :
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                 add(
                     PermissionHandler(
-                        Manifest.permission.POST_NOTIFICATIONS,
                         requireActivity(),
+                        Manifest.permission.POST_NOTIFICATIONS,
                         "If you don't allow for the posting of notifications AutoCrop can't inform you about croppable screenshots",
                         "Go to app settings and enable notification posting for screen capture listening to work"
                     )
@@ -258,7 +258,7 @@ class FlowFieldFragment :
         }
     }
 
-    private val selectImagesContractHandler by lazy {
+    private val selectImagesContractHandler: SelectImagesContractHandlerCompat<*, *> by lazy {
         SelectImagesContractHandlerCompat.getInstance(
             requireActivity(),
             callbackLowerThanQ = {
@@ -302,7 +302,7 @@ class FlowFieldFragment :
     val openDocumentTreeContractHandler by lazy {
         OpenDocumentTreeContractHandler(requireActivity()) {
             it?.let { treeUri ->
-                if (cropSaveDirPreferences.setNewUri(treeUri, requireContext().contentResolver)) {
+                if (cropSaveDirPreferences.setNewUriIfApplicable(treeUri, requireContext().contentResolver)) {
                     viewModel.liveCropSaveDirIdentifier.postValue(cropSaveDirPreferences.pathIdentifier)
 
                     requireActivity()

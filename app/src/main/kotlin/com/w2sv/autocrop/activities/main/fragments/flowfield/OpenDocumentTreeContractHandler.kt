@@ -10,7 +10,7 @@ import com.w2sv.androidutils.ActivityCallContractAdministrator
 class OpenDocumentTreeContractHandler(
     activity: ComponentActivity,
     override val activityResultCallback: (Uri?) -> Unit
-) : ActivityCallContractAdministrator<Uri?, Uri?>(
+) : ActivityCallContractAdministrator.Impl<Uri?, Uri?>(
     activity,
     object : ActivityResultContracts.OpenDocumentTree() {
         override fun createIntent(context: Context, input: Uri?): Intent =

@@ -33,7 +33,7 @@ class CropSaveDirPreferences @Inject constructor(appPreferences: SharedPreferenc
     /**
      * @return true if passed [treeUri] != this.[treeUri]
      */
-    fun setNewUri(treeUri: Uri, contentResolver: ContentResolver): Boolean {
+    fun setNewUriIfApplicable(treeUri: Uri, contentResolver: ContentResolver): Boolean {
         if (treeUri != this.treeUri) {
             this.treeUri = treeUri
 

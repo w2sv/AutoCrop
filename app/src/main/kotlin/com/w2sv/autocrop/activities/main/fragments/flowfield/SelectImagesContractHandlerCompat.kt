@@ -6,18 +6,17 @@ import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.DefaultLifecycleObserver
 import com.w2sv.androidutils.ActivityCallContractAdministrator
 import com.w2sv.autocrop.cropbundle.io.IMAGE_MIME_TYPE
 
-interface SelectImagesContractHandlerCompat: DefaultLifecycleObserver {
+interface SelectImagesContractHandlerCompat<I, O> : ActivityCallContractAdministrator<I, O> {
 
     companion object {
         fun getInstance(
             activity: ComponentActivity,
             callbackLowerThanQ: (ActivityResult) -> Unit,
             callbackFromQ: (List<Uri>) -> Unit
-        ): SelectImagesContractHandlerCompat =
+        ): SelectImagesContractHandlerCompat<*, *> =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
                 FromQ(activity, callbackFromQ)
             else
@@ -29,11 +28,11 @@ interface SelectImagesContractHandlerCompat: DefaultLifecycleObserver {
     class LowerThanQ(
         activity: ComponentActivity,
         override val activityResultCallback: (ActivityResult) -> Unit
-    ) : ActivityCallContractAdministrator<Intent, ActivityResult>(
+    ) : ActivityCallContractAdministrator.Impl<Intent, ActivityResult>(
         activity,
         ActivityResultContracts.StartActivityForResult()
     ),
-        SelectImagesContractHandlerCompat {
+        SelectImagesContractHandlerCompat<Intent, ActivityResult> {
 
         override fun selectImages() {
             activityResultLauncher.launch(
@@ -48,11 +47,11 @@ interface SelectImagesContractHandlerCompat: DefaultLifecycleObserver {
     class FromQ(
         activity: ComponentActivity,
         override val activityResultCallback: (List<Uri>) -> Unit
-    ) : ActivityCallContractAdministrator<String, List<Uri>>(
+    ) : ActivityCallContractAdministrator.Impl<String, List<Uri>>(
         activity,
         ActivityResultContracts.GetMultipleContents()
     ),
-        SelectImagesContractHandlerCompat {
+        SelectImagesContractHandlerCompat<String, List<Uri>> {
 
         override fun selectImages() {
             activityResultLauncher.launch(IMAGE_MIME_TYPE)
