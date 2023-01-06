@@ -89,13 +89,19 @@ class MainActivity : ApplicationActivity() {
     override val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             getCurrentFragment().let {
-                if (it is AboutFragment)
-                    return supportFragmentManager.popBackStack()
-                (it as? FlowFieldFragment)?.binding?.drawerLayout?.run {
-                    if (isOpen)
-                        return closeDrawer(GravityCompat.START)
+                when (it) {
+                    is AboutFragment -> supportFragmentManager.popBackStack()
+                    is FlowFieldFragment -> {
+                        it.binding.drawerLayout.run {
+                            if (isOpen)
+                                closeDrawer(GravityCompat.START)
+                            else
+                                it.onBackPress()
+                        }
+                    }
+
+                    else -> Unit
                 }
-                finishAffinity()
             }
         }
     }

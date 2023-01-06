@@ -17,7 +17,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.daimajia.androidanimations.library.Techniques
+import com.w2sv.androidutils.BackPressListener
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
@@ -110,6 +112,11 @@ class FlowFieldFragment :
         var showedSnackbar: Boolean = false
 
         val liveCropSaveDirIdentifier: LiveData<String> = MutableLiveData(cropSaveDirPreferences.pathIdentifier)
+
+        val backPressHandler = BackPressListener(
+            viewModelScope,
+            context.resources.getLong(R.integer.duration_backpress_confirmation_window)
+        )
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -138,7 +145,7 @@ class FlowFieldFragment :
         else if (viewModel.followingExaminationActivity && !viewModel.showedSnackbar) {
             lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_half_faded_in)) {
                 with(viewModel.ioResultsSnackbarData!!) {
-                    getRepellingSnackyBuilder(text)
+                    repelledSnackyBuilder(text)
                         .setIcon(icon)
                         .build()
                         .show()
@@ -149,11 +156,6 @@ class FlowFieldFragment :
 
         binding.setOnClickListeners()
     }
-
-    private fun getRepellingSnackyBuilder(text: CharSequence): Snacky.Builder =
-        requireActivity()
-            .snackyBuilder(text)
-            .setView(binding.snackbarRepelledLayout.parent as View)
 
     private fun showLayoutElements() {
         val fadeInButtons: List<View> = listOf(
@@ -310,8 +312,7 @@ class FlowFieldFragment :
                 if (cropSaveDirPreferences.setNewUriIfApplicable(treeUri, requireContext().contentResolver)) {
                     viewModel.liveCropSaveDirIdentifier.postValue(cropSaveDirPreferences.pathIdentifier)
 
-                    requireActivity()
-                        .snackyBuilder(
+                    repelledSnackyBuilder(
                             SpannableStringBuilder()
                                 .append("Crops will be saved to ")
                                 .color(requireContext().getThemedColor(R.color.success)) {
@@ -322,11 +323,28 @@ class FlowFieldFragment :
                         .show()
                 }
                 else
-                    requireActivity()
-                        .snackyBuilder("Reselected preset directory")
+                    repelledSnackyBuilder("Reselected preset directory")
                         .build()
                         .show()
             }
         }
     }
+
+    fun onBackPress(){
+        viewModel.backPressHandler(
+            {
+                repelledSnackyBuilder("Tap again to exit")
+                    .build()
+                    .show()
+            },
+            {
+                requireActivity().finishAffinity()
+            }
+        )
+    }
+
+    private fun repelledSnackyBuilder(text: CharSequence): Snacky.Builder =
+        requireActivity()
+            .snackyBuilder(text)
+            .setView(binding.snackbarRepelledLayout.parent as View)
 }

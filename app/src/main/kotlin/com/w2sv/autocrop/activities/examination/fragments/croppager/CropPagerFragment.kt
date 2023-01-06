@@ -239,7 +239,7 @@ class CropPagerFragment :
 
     private fun showUncroppableScreenshotsSnackbarIfApplicable() {
         viewModel.uncroppedScreenshotsSnackbarText?.let {
-            getRepellingSnackyBuilder(it)
+            repelledSnackyBuilder(it)
                 .setIcon(com.w2sv.permissionhandler.R.drawable.ic_error_24)
                 .build()
                 .show()
@@ -261,7 +261,7 @@ class CropPagerFragment :
         )
 
         launchAfterShortDelay {
-            getRepellingSnackyBuilder("Adjusted crop")
+            repelledSnackyBuilder("Adjusted crop")
                 .setIcon(requireContext().getColoredIcon(R.drawable.ic_check_24, R.color.success))
                 .build()
                 .show()
@@ -297,7 +297,7 @@ class CropPagerFragment :
             castActivity<ExaminationActivity>().replaceWithSubsequentFragment()
     }
 
-    private fun getRepellingSnackyBuilder(text: CharSequence): Snacky.Builder =
+    private fun repelledSnackyBuilder(text: CharSequence): Snacky.Builder =
         requireActivity()
             .snackyBuilder(text)
             .setView(binding.snackbarRepelledLayout.parent as View)
@@ -305,7 +305,7 @@ class CropPagerFragment :
     fun onBackPress() {
         viewModel.backPressHandler(
             {
-                getRepellingSnackyBuilder("Tap again to return to main screen")
+                repelledSnackyBuilder("Tap again to return to main screen")
                     .build()
                     .show()
             },
