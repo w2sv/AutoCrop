@@ -13,7 +13,7 @@ public class FlowFieldSketch extends PApplet {
 
     private final ArrayList<Particle> particles = new ArrayList<>();
     private FlowField flowfield;
-    private int lastAlphaDrop = 0;
+    private int lastAlphaDrop = -1;
 
     public FlowFieldSketch(int width, int height) {
         this.width = width;
@@ -32,14 +32,13 @@ public class FlowFieldSketch extends PApplet {
         flowfield = new FlowField();
 
         // initialize particles
-        Particle.staticInitialization(width, height);
-
+        Particle.setFlowFieldDimensions(width, height);
         for (int i = 0; i < 800; i++)
             particles.add(new Particle());
     }
 
     public void draw() {
-        Particle.colorAdministrator.changeColorIfApplicable(second());
+        Particle.colorHandler.changeColorIfApplicable(second());
         dropAlphaIfAppropriate();
 
         flowfield.update(particles);
@@ -52,14 +51,14 @@ public class FlowFieldSketch extends PApplet {
 
     private void dropAlphaIfAppropriate() {
         int second = second();
-        if (second != lastAlphaDrop && second % 3 == 0) {
+        if (lastAlphaDrop != second && second % 3 == 0) {
             alphaDrop();
             lastAlphaDrop = second;
         }
     }
 
     private void alphaDrop() {
-        final float REDUCTION_COEFF = 0.85f;
+        final float REDUCTION_COEFF = 0.87f;
 
         g.loadPixels();
         for (int i = 0; i < g.pixels.length; i++) {

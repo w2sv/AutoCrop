@@ -12,9 +12,9 @@ import processing.core.PGraphics;
 import processing.core.PVector;
 
 class Particle extends PApplet {
-    static ColorAdministrator colorAdministrator;
-    private static int width;
-    private static int height;
+    static ColorHandler colorHandler = new ColorHandler();
+    private static int flowFieldWidth;
+    private static int flowFieldHeight;
     private final PVector previousPos;
     private final PVector acc;
     private final PVector vel;
@@ -27,19 +27,13 @@ class Particle extends PApplet {
         acc = new PVector(0, 0);
         maxSpeed = random(6, 8);
 
-        pos = new PVector(random(width), random(height));
+        pos = new PVector(random(flowFieldWidth), random(flowFieldHeight));
         previousPos = pos.copy();
     }
 
-    private static void initializeColorAdministrator() {
-        colorAdministrator = new ColorAdministrator();
-    }
-
-    public static void staticInitialization(int width, int height) {
-        Particle.width = width;
-        Particle.height = height;
-
-        initializeColorAdministrator();
+    public static void setFlowFieldDimensions(int width, int height) {
+        Particle.flowFieldWidth = width;
+        Particle.flowFieldHeight = height;
     }
 
     private float randomStartVelocity() {
@@ -66,19 +60,19 @@ class Particle extends PApplet {
     private boolean invertEdgeIfNecessary(PVector pos) {
         boolean invertedEdge = false;
 
-        if (pos.x > width) {
+        if (pos.x > flowFieldWidth) {
             pos.x = 0;
             invertedEdge = true;
         } else if (pos.x < 0) {
-            pos.x = width;
+            pos.x = flowFieldWidth;
             invertedEdge = true;
         }
 
-        if (pos.y > height) {
+        if (pos.y > flowFieldHeight) {
             pos.y = 0;
             invertedEdge = true;
         } else if (pos.y < 0) {
-            pos.y = height;
+            pos.y = flowFieldHeight;
             invertedEdge = true;
         }
 
@@ -89,7 +83,7 @@ class Particle extends PApplet {
         if (skipDraw)
             skipDraw = false;
         else {
-            canvas.stroke(colorAdministrator.color, alpha);
+            canvas.stroke(colorHandler.color, alpha);
             canvas.line(pos.x, pos.y, previousPos.x, previousPos.y);
             updatePreviousPos();
         }
@@ -100,7 +94,7 @@ class Particle extends PApplet {
         previousPos.y = pos.y;
     }
 
-    static class ColorAdministrator {
+    static class ColorHandler {
         private final Set<Integer> COLORS = Set.of(
                 -3727295,  // magenta
                 -3732903,  // light magenta
@@ -108,22 +102,23 @@ class Particle extends PApplet {
                 -15070521  // blue
         );
         public int color;
-        private int lastColorChange = 0;
+        private int lastColorChangeSecond = -1;
 
-        ColorAdministrator() {
-            color = Random.randomElement(new ArrayList<>(COLORS));
+        ColorHandler() {
+            setNewRandomlyPickedColor();
         }
 
         public void changeColorIfApplicable(int second) {
-            if (second != lastColorChange && second % 5 == 0) {
-                pickNewColor();
-                lastColorChange = second;
+            int colorChangePeriod = 5;
+
+            if (second != lastColorChangeSecond && second % colorChangePeriod == 0) {
+                setNewRandomlyPickedColor();
+                lastColorChangeSecond = second;
             }
         }
 
-        private void pickNewColor() {
-            Set<Integer> unusedColors = Sets.difference(COLORS, Set.of(color));
-            color = Random.randomElement(new ArrayList<>(unusedColors));
+        private void setNewRandomlyPickedColor() {
+            color = Random.randomElement(new ArrayList<>(Sets.difference(COLORS, Set.of(color))));
         }
     }
 }
