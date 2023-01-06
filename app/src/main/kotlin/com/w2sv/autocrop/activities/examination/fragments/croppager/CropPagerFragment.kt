@@ -300,7 +300,7 @@ class CropPagerFragment :
     private fun getRepellingSnackyBuilder(text: CharSequence): Snacky.Builder =
         requireActivity()
             .snackyBuilder(text)
-            .setView(binding.snackbarRepelledHostingLayout)
+            .setView(binding.snackbarRepelledLayout.parent as View)
 
     fun onBackPress() {
         viewModel.backPressHandler(

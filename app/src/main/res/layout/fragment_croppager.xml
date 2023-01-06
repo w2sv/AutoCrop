@@ -79,7 +79,6 @@
         android:visibility="invisible" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/snackbar_repelled_hosting_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">

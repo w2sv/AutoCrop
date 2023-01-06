@@ -47,6 +47,7 @@ import com.w2sv.permissionhandler.requestPermissions
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import de.mateware.snacky.Snacky
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -137,8 +138,7 @@ class FlowFieldFragment :
         else if (viewModel.followingExaminationActivity && !viewModel.showedSnackbar) {
             lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_half_faded_in)) {
                 with(viewModel.ioResultsSnackbarData!!) {
-                    requireActivity()
-                        .snackyBuilder(text)
+                    getRepellingSnackyBuilder(text)
                         .setIcon(icon)
                         .build()
                         .show()
@@ -149,6 +149,11 @@ class FlowFieldFragment :
 
         binding.setOnClickListeners()
     }
+
+    private fun getRepellingSnackyBuilder(text: CharSequence): Snacky.Builder =
+        requireActivity()
+            .snackyBuilder(text)
+            .setView(binding.snackbarRepelledLayout.parent as View)
 
     private fun showLayoutElements() {
         val fadeInButtons: List<View> = listOf(
