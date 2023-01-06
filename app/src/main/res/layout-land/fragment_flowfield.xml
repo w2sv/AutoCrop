@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true">
 
-                <com.w2sv.autocrop.ui.SnackbarRepelledLayout
+                <com.w2sv.androidutils.ui.SnackbarRepelledLayout
                     android:id="@+id/snackbar_repelled_layout"
 
                     android:layout_width="match_parent"
@@ -64,7 +64,7 @@
                         android:background="@drawable/ic_share_24"
                         android:visibility="invisible" />
 
-                </com.w2sv.autocrop.ui.SnackbarRepelledLayout>
+                </com.w2sv.androidutils.ui.SnackbarRepelledLayout>
 
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

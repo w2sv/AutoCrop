@@ -83,7 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
-        <com.w2sv.autocrop.ui.SnackbarRepelledLayout
+        <com.w2sv.androidutils.ui.SnackbarRepelledLayout
             android:id="@+id/snackbar_repelled_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -125,6 +125,6 @@
 
                     android:contentDescription="@string/compare_crop_and_original_screenshot" />
             </LinearLayout>
-        </com.w2sv.autocrop.ui.SnackbarRepelledLayout>
+        </com.w2sv.androidutils.ui.SnackbarRepelledLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </RelativeLayout>
