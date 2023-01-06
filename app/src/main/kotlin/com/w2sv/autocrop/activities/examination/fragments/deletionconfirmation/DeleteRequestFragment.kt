@@ -20,7 +20,7 @@ import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.databinding.FragmentDeleteRequestBinding
-import com.w2sv.autocrop.utils.AnimationListenerImpl
+import com.w2sv.autocrop.utils.SimpleAnimationListener
 
 class DeleteRequestFragment :
     ApplicationFragment<FragmentDeleteRequestBinding>(FragmentDeleteRequestBinding::class.java) {
@@ -59,7 +59,7 @@ class DeleteRequestFragment :
             AnimationUtils.loadAnimation(requireActivity(), nextAnim)
                 .apply {
                     setAnimationListener(
-                        object : AnimationListenerImpl() {
+                        object : SimpleAnimationListener() {
                             override fun onAnimationEnd(animation: Animation?) {
                                 deleteRequestIntentContractAdministrator.emitDeleteRequest(
                                     requireContext().contentResolver,

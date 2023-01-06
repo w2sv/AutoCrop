@@ -10,7 +10,7 @@ import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.databinding.FragmentAboutBinding
 import com.w2sv.autocrop.preferences.ShownFlags
 import com.w2sv.autocrop.ui.animate
-import com.w2sv.autocrop.utils.AnimationListenerImpl
+import com.w2sv.autocrop.utils.SimpleAnimationListener
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -27,7 +27,7 @@ class AboutFragment :
             AnimationUtils.loadAnimation(requireActivity(), nextAnim)
                 .apply {
                     setAnimationListener(
-                        object : AnimationListenerImpl() {
+                        object : SimpleAnimationListener() {
                             override fun onAnimationEnd(animation: Animation?) {
                                 super.onAnimationEnd(animation)
 

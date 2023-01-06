@@ -1,9 +1,9 @@
 package com.w2sv.autocrop.activities.crop.fragments.cropping
 
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
@@ -30,6 +30,7 @@ import com.w2sv.autocrop.cropbundle.cropping.maxHeightEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentCropBinding
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
+import com.w2sv.autocrop.utils.getMediaUri
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -37,7 +38,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import slimber.log.i
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class CropFragment
@@ -69,14 +72,14 @@ class CropFragment
         val liveProgress: LiveData<Int> = MutableLiveData(0)
 
         suspend fun launchCropCoroutine(
-            contentResolver: ContentResolver,
+            context: Context,
             onFinishedListener: () -> Unit
         ) {
             coroutineScope {
                 launch {
                     getImminentUris().forEach { uri ->
                         withContext(Dispatchers.IO) {
-                            getCropBundle(uri, contentResolver)?.let {
+                            getCropBundle(uri, context)?.let {
                                 cropBundles.add(it)
                             }
                         }
@@ -96,15 +99,22 @@ class CropFragment
                 subList(liveProgress.value!!, size)
             }
 
-        private fun getCropBundle(screenshotUri: Uri, contentResolver: ContentResolver): CropBundle? =
-            contentResolver.loadBitmap(screenshotUri)?.let { screenshotBitmap ->
+        private fun getCropBundle(screenshotUri: Uri, context: Context): CropBundle? {
+            i { "getCropBundle $screenshotUri" }
+
+            val mediaUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                getMediaUri(context, screenshotUri)!!
+            else
+                screenshotUri
+
+            return context.contentResolver.loadBitmap(mediaUri)?.let { screenshotBitmap ->
                 screenshotBitmap.cropEdgesCandidates()?.let { candidates ->
                     CropBundle.assemble(
                         Screenshot(
-                            screenshotUri,
+                            mediaUri,
                             screenshotBitmap.height,
                             candidates,
-                            Screenshot.MediaStoreData.query(contentResolver, screenshotUri)
+                            Screenshot.MediaStoreData.query(context.contentResolver, mediaUri)
                         ),
                         screenshotBitmap,
                         candidates.maxHeightEdges()
@@ -119,6 +129,7 @@ class CropFragment
                     .also {
                         cropResults.nNotOpenableImages += 1
                     }
+        }
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -143,7 +154,7 @@ class CropFragment
         super.onResume()
 
         lifecycleScope.launch {
-            viewModel.launchCropCoroutine(requireContext().contentResolver) {
+            viewModel.launchCropCoroutine(requireContext()) {
                 invokeSubsequentScreen()
             }
         }

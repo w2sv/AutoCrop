@@ -1,6 +1,7 @@
 package com.w2sv.autocrop.activities.main.fragments.flowfield
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -38,8 +39,9 @@ import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.ui.SnackbarData
 import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.fadeIn
-import com.w2sv.autocrop.utils.documentUriPathIdentifier
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
+import com.w2sv.autocrop.utils.extensions.uris
+import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.permissionhandler.PermissionHandler
 import com.w2sv.permissionhandler.requestPermissions
 import dagger.hilt.android.AndroidEntryPoint
@@ -85,7 +87,7 @@ class FlowFieldFragment :
                             "Saved ${it.nSavedCrops} crop(s) to "
                         )
                         color(context.getThemedColor(R.color.success)) {
-                            append(cropSaveDirPreferences.cropSaveDirIdentifier)
+                            append(cropSaveDirPreferences.pathIdentifier)
                         }
                         if (it.nDeletedScreenshots != 0)
                             append(
@@ -106,7 +108,7 @@ class FlowFieldFragment :
         var fadedInButtons: Boolean = false
         var showedSnackbar: Boolean = false
 
-        val liveCropSaveDirIdentifier: LiveData<String> = MutableLiveData(cropSaveDirPreferences.cropSaveDirIdentifier)
+        val liveCropSaveDirIdentifier: LiveData<String> = MutableLiveData(cropSaveDirPreferences.pathIdentifier)
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -257,33 +259,58 @@ class FlowFieldFragment :
     }
 
     private val selectImagesContractHandler by lazy {
-        SelectImagesContractHandler(requireActivity()) { imageUris ->
-            if (imageUris.isNotEmpty())
-                requireActivity().startActivity(
-                    Intent(
-                        activity,
-                        CropActivity::class.java
-                    )
-                        .putParcelableArrayListExtra(
-                            MainActivity.EXTRA_SELECTED_IMAGE_URIS,
-                            ArrayList(imageUris)
+        SelectImagesContractHandlerCompat.getInstance(
+            requireActivity(),
+            callbackLowerThanQ = {
+                it.uris?.let { uris ->
+                    startActivity(
+                        Intent(
+                            requireActivity(),
+                            CropActivity::class.java
                         )
-                )
-        }
+                            .putParcelableArrayListExtra(
+                                MainActivity.EXTRA_SELECTED_IMAGE_URIS,
+                                ArrayList(uris)
+                            )
+                    )
+                }
+            },
+            callbackFromQ = @SuppressLint("NewApi") { imageUris ->
+                if (imageUris.isNotEmpty()) {
+                    if (getMediaUri(requireContext(), imageUris.first()) == null)
+                        requireActivity()
+                            .snackyBuilder("Content provider not supported. Please use a different one")
+                            .setIcon(com.w2sv.permissionhandler.R.drawable.ic_error_24)
+                            .build()
+                            .show()
+                    else
+                        requireActivity().startActivity(
+                            Intent(
+                                activity,
+                                CropActivity::class.java
+                            )
+                                .putParcelableArrayListExtra(
+                                    MainActivity.EXTRA_SELECTED_IMAGE_URIS,
+                                    ArrayList(imageUris)
+                                )
+                        )
+                }
+            }
+        )
     }
 
     val openDocumentTreeContractHandler by lazy {
         OpenDocumentTreeContractHandler(requireActivity()) {
             it?.let { treeUri ->
                 if (cropSaveDirPreferences.setNewUri(treeUri, requireContext().contentResolver)) {
-                    viewModel.liveCropSaveDirIdentifier.postValue(cropSaveDirPreferences.cropSaveDirIdentifier)
+                    viewModel.liveCropSaveDirIdentifier.postValue(cropSaveDirPreferences.pathIdentifier)
 
                     requireActivity()
                         .snackyBuilder(
                             SpannableStringBuilder()
                                 .append("Crops will be saved to ")
                                 .color(requireContext().getThemedColor(R.color.success)) {
-                                    append(documentUriPathIdentifier(cropSaveDirPreferences.documentUri!!))
+                                    append(viewModel.liveCropSaveDirIdentifier.value!!)
                                 }
                         )
                         .build()
