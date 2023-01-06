@@ -14,7 +14,7 @@ class ShownFlags @Inject constructor(appPreferences: SharedPreferences) : Boolea
     "aboutFragmentInstructionsShown" to false,
     sharedPreferences = appPreferences
 ) {
-    var welcomeDialogsShown by this
+    var welcomeDialogsShown by AutoSwitch.Mapped(this, false)
     var cropPagerInstructionsShown by AutoSwitch.Mapped(this, false)
     var comparisonInstructionsShown by AutoSwitch.Mapped(this, false)
     var aboutFragmentInstructionsShown by AutoSwitch.Mapped(this, false)

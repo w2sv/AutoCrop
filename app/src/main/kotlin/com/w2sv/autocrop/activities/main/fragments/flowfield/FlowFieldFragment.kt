@@ -223,10 +223,6 @@ class FlowFieldFragment :
             )
     }
 
-    override fun onScreenshotListenerDialogAnsweredListener() {
-        shownFlags.welcomeDialogsShown = true
-    }
-
     // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     // ActivityCallContractAdministrators
     // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
