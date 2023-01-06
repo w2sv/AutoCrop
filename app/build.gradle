@@ -21,7 +21,7 @@ android {
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
 
         versionCode 36
-        versionName '3.3.0'
+        versionName '3.2.9'
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'

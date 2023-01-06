@@ -309,12 +309,12 @@ class FlowFieldFragment :
                     viewModel.liveCropSaveDirIdentifier.postValue(cropSaveDirPreferences.pathIdentifier)
 
                     repelledSnackyBuilder(
-                            SpannableStringBuilder()
-                                .append("Crops will be saved to ")
-                                .color(requireContext().getThemedColor(R.color.success)) {
-                                    append(viewModel.liveCropSaveDirIdentifier.value!!)
-                                }
-                        )
+                        SpannableStringBuilder()
+                            .append("Crops will be saved to ")
+                            .color(requireContext().getThemedColor(R.color.success)) {
+                                append(viewModel.liveCropSaveDirIdentifier.value!!)
+                            }
+                    )
                         .build()
                         .show()
                 }
@@ -326,7 +326,7 @@ class FlowFieldFragment :
         }
     }
 
-    fun onBackPress(){
+    fun onBackPress() {
         viewModel.backPressHandler(
             {
                 repelledSnackyBuilder("Tap again to exit")
