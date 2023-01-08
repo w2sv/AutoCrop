@@ -12,17 +12,18 @@ import processing.core.PApplet;
 import processing.core.PVector;
 
 class FlowField extends PApplet {
-    final static private int FLOW_FIELD_RESOLUTION = 200;
     private static final Map<Pair<Integer, Integer>, Float> xOffCache = new HashMap<>();
     private float zOff = 0;
 
     void update(ArrayList<Particle> particles) {
+        final int RESOLUTION = 200;
+
         var pos2Noise = new HashMap<Pair<Integer, Integer>, PVector>();
 
         for (int i = 0; i < particles.size(); i++) {
             var pos = new Pair<>(
-                    floor(particles.get(i).pos.x / FLOW_FIELD_RESOLUTION) + 1,
-                    floor(particles.get(i).pos.y / FLOW_FIELD_RESOLUTION) + 1
+                    floor(particles.get(i).pos.x / RESOLUTION) + 1,
+                    floor(particles.get(i).pos.y / RESOLUTION) + 1
             );
 
             if (pos2Noise.containsKey(pos))
@@ -39,6 +40,7 @@ class FlowField extends PApplet {
 
     private float xOff(@NonNull Pair<Integer, Integer> pos) {
         if (xOffCache.containsKey(pos))
+            //noinspection ConstantConditions
             return xOffCache.get(pos);
         float xOff = pos.first * pos.second * 0.1f;
         xOffCache.put(pos, xOff);

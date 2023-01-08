@@ -22,6 +22,15 @@ class Particle extends PApplet {
     PVector pos;
     private boolean skipDraw = false;
 
+    public static void setFlowFieldDimensions(int width, int height) {
+        Particle.flowFieldWidth = width;
+        Particle.flowFieldHeight = height;
+    }
+
+    public static void initializeCanvas(PGraphics canvas){
+        canvas.strokeWeight(2);
+    }
+
     public Particle() {
         vel = new PVector(randomStartVelocity(), randomStartVelocity());
         acc = new PVector(0, 0);
@@ -29,11 +38,6 @@ class Particle extends PApplet {
 
         pos = new PVector(random(flowFieldWidth), random(flowFieldHeight));
         previousPos = pos.copy();
-    }
-
-    public static void setFlowFieldDimensions(int width, int height) {
-        Particle.flowFieldWidth = width;
-        Particle.flowFieldHeight = height;
     }
 
     private float randomStartVelocity() {
@@ -79,11 +83,10 @@ class Particle extends PApplet {
         return invertedEdge;
     }
 
-    public void draw(@NonNull PGraphics canvas, int alpha) {
+    public void draw(@NonNull PGraphics canvas) {
         if (skipDraw)
             skipDraw = false;
         else {
-            canvas.stroke(colorHandler.color, alpha);
             canvas.line(pos.x, pos.y, previousPos.x, previousPos.y);
             updatePreviousPos();
         }
@@ -108,12 +111,14 @@ class Particle extends PApplet {
             setNewRandomlyPickedColor();
         }
 
-        public void changeColorIfApplicable(int second) {
-            int colorChangePeriod = 5;
+        public void changeColorIfDue(int second, PGraphics canvas) {
+            int colorChangePeriod = 3;
 
             if (second != lastColorChangeSecond && second % colorChangePeriod == 0) {
                 setNewRandomlyPickedColor();
                 lastColorChangeSecond = second;
+
+                canvas.stroke(Particle.colorHandler.color, 48f);
             }
         }
 

@@ -25,57 +25,75 @@ public class FlowFieldSketch extends PApplet {
     }
 
     public void setup() {
+        frameRate(120);
         background(0);
-        strokeWeight(2);
 
         // initialize flowfield
         flowfield = new FlowField();
 
         // initialize particles
         Particle.setFlowFieldDimensions(width, height);
-        for (int i = 0; i < 800; i++)
+        Particle.initializeCanvas(g);
+
+        for (int i = 0; i < 400; i++)
             particles.add(new Particle());
     }
 
     public void draw() {
-        Particle.colorHandler.changeColorIfApplicable(second());
-        dropAlphaIfAppropriate();
+        dropAlphaIfDue();
 
         flowfield.update(particles);
 
+        Particle.colorHandler.changeColorIfDue(second(), g);
+
         for (Particle p : particles) {
             p.update();
-            p.draw(g, 23);
+            p.draw(g);
         }
     }
 
-    private void dropAlphaIfAppropriate() {
-        int second = second();
-        if (lastAlphaDrop != second && second % 3 == 0) {
+    private void dropAlphaIfDue() {
+        int t = millis();
+        if (t - lastAlphaDrop >= 350) {
             alphaDrop();
-            lastAlphaDrop = second;
+            lastAlphaDrop = t;
         }
     }
 
     private void alphaDrop() {
-        final float REDUCTION_COEFF = 0.87f;
-
         g.loadPixels();
-        for (int i = 0; i < g.pixels.length; i++) {
-            int pixel = g.pixels[i];
-            g.pixels[i] = color(
-                    red(pixel) * REDUCTION_COEFF,
-                    green(pixel) * REDUCTION_COEFF,
-                    blue(pixel) * REDUCTION_COEFF
-            );
-        }
+
+        int t1 = millis();
+
+        attenuateColorIntensities();
+
+        Timber.i("Took %sms", millis() - t1);
 
         // Catch 'processing java.lang.IllegalStateException: Can't call setPixels() on a recycled bitmap',
         // occurring upon class being destroyed due to e.g. screen rotation whilst updating pixels
         try {
             g.updatePixels();
         } catch (IllegalStateException ignored) {
-            Timber.i("Caught exception");
         }
+    }
+
+    private void attenuateColorIntensities() {
+        final int UNSET = -16777216;
+
+        for (int i = 0; i < g.pixels.length; i++) {
+            int argb = g.pixels[i];
+            if (argb != UNSET) {
+                g.pixels[i] = UNSET |
+                        attenuatedValue((argb >> 16) & 0xFF) << 16 |
+                        attenuatedValue((argb >> 8) & 0xFF) << 8 |
+                        attenuatedValue(argb & 0xFF);
+            }
+        }
+    }
+
+    private int attenuatedValue(int value) {
+        if (value == 0)
+            return value;
+        return value >= 32 ? value - (value >> 5) : value - 1;
     }
 }
