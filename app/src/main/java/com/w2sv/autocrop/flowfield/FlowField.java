@@ -16,7 +16,7 @@ class FlowField extends PApplet {
     private float zOff = 0;
 
     void update(ArrayList<Particle> particles) {
-        final int RESOLUTION = 200;
+        final int RESOLUTION = Sketch.Config.FLOW_FIELD_RESOLUTION;
 
         var pos2Noise = new HashMap<Pair<Integer, Integer>, PVector>();
 
@@ -35,7 +35,7 @@ class FlowField extends PApplet {
             }
         }
 
-        zOff += 0.004;
+        zOff += Sketch.Config.FLOW_FIELD_Z_OFF_INCREMENT;
     }
 
     private float xOff(@NonNull Pair<Integer, Integer> pos) {

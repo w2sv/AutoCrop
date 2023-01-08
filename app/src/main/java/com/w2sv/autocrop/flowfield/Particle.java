@@ -32,16 +32,15 @@ class Particle extends PApplet {
     }
 
     public Particle() {
-        vel = new PVector(randomStartVelocity(), randomStartVelocity());
+        vel = new PVector(
+                random(Sketch.Config.PARTICLE_START_VELOCITY_LOW, Sketch.Config.PARTICLE_START_VELOCITY_HIGH),
+                random(Sketch.Config.PARTICLE_START_VELOCITY_LOW, Sketch.Config.PARTICLE_START_VELOCITY_HIGH)
+        );
         acc = new PVector(0, 0);
         maxSpeed = random(6, 8);
 
         pos = new PVector(random(flowFieldWidth), random(flowFieldHeight));
         previousPos = pos.copy();
-    }
-
-    private float randomStartVelocity() {
-        return random(1, 3);
     }
 
     void applyFlowFieldVector(PVector v) {
@@ -98,14 +97,9 @@ class Particle extends PApplet {
     }
 
     static class ColorHandler {
-        private final Set<Integer> COLORS = Set.of(
-                -3727295,  // magenta
-                -3732903,  // light magenta
-                -6746332,  // dark red
-                -15070521  // blue
-        );
+
         public int color;
-        private final PeriodicalRunner runner = new PeriodicalRunner(3000);
+        private final PeriodicalRunner runner = new PeriodicalRunner(Sketch.Config.PARTICLE_COLOR_CHANGE_PERIOD);
 
         ColorHandler() {
             setNewRandomlyPickedColor();
@@ -114,12 +108,12 @@ class Particle extends PApplet {
         public void changeColorIfDue(int millis, PGraphics canvas) {
             runner.runIfDue(millis, () -> {
                 setNewRandomlyPickedColor();
-                canvas.stroke(color, 48f);
+                canvas.stroke(color, Sketch.Config.PARTICLE_STROKE_ALPHA);
             });
         }
 
         private void setNewRandomlyPickedColor() {
-            color = Random.randomElement(new ArrayList<>(Sets.difference(COLORS, Set.of(color))));
+            color = Random.randomElement(new ArrayList<>(Sets.difference(Sketch.Config.PARTICLE_COLORS, Set.of(color))));
         }
     }
 }

@@ -5,17 +5,36 @@
 package com.w2sv.autocrop.flowfield;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
-public class FlowFieldSketch extends PApplet {
+public class Sketch extends PApplet {
+
+    static class Config{
+        static final int N_PARTICLES = 400;
+        static final int ALPHA_DROP_PERIOD = 350;
+
+        static final int PARTICLE_START_VELOCITY_LOW = 1;
+        static final int PARTICLE_START_VELOCITY_HIGH = 3;
+        static final int PARTICLE_COLOR_CHANGE_PERIOD = 3000;
+        static final float PARTICLE_STROKE_ALPHA = 48;
+        static final Set<Integer> PARTICLE_COLORS = Set.of(
+                -3727295,  // magenta
+                -3732903,  // light magenta
+                -6746332,  // dark red
+                -15070521  // blue
+        );
+        static final int FLOW_FIELD_RESOLUTION = 200;
+        static final float FLOW_FIELD_Z_OFF_INCREMENT = 0.004f;
+    }
 
     private final FlowField flowfield = new FlowField();
     private final ArrayList<Particle> particles = new ArrayList<>();
     private final AlphaDropper alphaDropper = new AlphaDropper();
 
-    public FlowFieldSketch(int width, int height) {
+    public Sketch(int width, int height) {
         this.width = width;
         this.height = height;
     }
@@ -34,7 +53,7 @@ public class FlowFieldSketch extends PApplet {
         Particle.setFlowFieldDimensions(width, height);
         Particle.initializeCanvas(g);
 
-        for (int i = 0; i < 400; i++)
+        for (int i = 0; i < Config.N_PARTICLES; i++)
             particles.add(new Particle());
     }
 
@@ -53,7 +72,7 @@ public class FlowFieldSketch extends PApplet {
 }
 
 class AlphaDropper{
-    private final PeriodicalRunner periodicalRunner = new PeriodicalRunner(350);
+    private final PeriodicalRunner periodicalRunner = new PeriodicalRunner(Sketch.Config.ALPHA_DROP_PERIOD);
 
     void dropAlphaIfDue(int millis, PGraphics canvas) {
         periodicalRunner.runIfDue(millis, () -> alphaDrop(canvas));

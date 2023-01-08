@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import com.w2sv.androidutils.ActivityRetriever
-import com.w2sv.autocrop.flowfield.FlowFieldSketch
+import com.w2sv.autocrop.flowfield.Sketch
 import com.w2sv.autocrop.utils.extensions.resolution
 import processing.android.PFragment
 
@@ -23,7 +23,7 @@ class FlowFieldLayout(context: Context, attr: AttributeSet) :
         if (!isInEditMode) {
             activity.getDisplayCompat().resolution().let {
                 PFragment(
-                    FlowFieldSketch(
+                    Sketch(
                         it.x,
                         it.y
                     )
