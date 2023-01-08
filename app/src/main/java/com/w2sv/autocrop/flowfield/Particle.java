@@ -1,7 +1,5 @@
 package com.w2sv.autocrop.flowfield;
 
-import androidx.annotation.NonNull;
-
 import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
@@ -16,7 +14,7 @@ class Particle {
     private static int flowFieldWidth;
     private static int flowFieldHeight;
     private final PVector previousPos;
-    private final PVector acc;
+    private PVector acc;
     private final PVector vel;
     private final float maxSpeed;
     PVector pos;
@@ -38,19 +36,17 @@ class Particle {
                 parent.random(Sketch.Config.PARTICLE_START_VELOCITY_LOW, Sketch.Config.PARTICLE_START_VELOCITY_HIGH),
                 parent.random(Sketch.Config.PARTICLE_START_VELOCITY_LOW, Sketch.Config.PARTICLE_START_VELOCITY_HIGH)
         );
-        acc = new PVector(0, 0);
-        maxSpeed = parent.random(6, 8);
+        maxSpeed = parent.random(Sketch.Config.PARTICLE_MAX_VELOCITY_LOW, Sketch.Config.PARTICLE_MAX_VELOCITY_HIGH);
 
         pos = new PVector(parent.random(flowFieldWidth), parent.random(flowFieldHeight));
         previousPos = pos.copy();
     }
 
     void applyFlowFieldVector(PVector v) {
-        acc.add(v);
+        acc = v;
     }
 
     public void update() {
-        vel.limit(maxSpeed);
         pos.add(vel);
 
         if (invertEdgeIfNecessary(pos)) {
@@ -58,8 +54,7 @@ class Particle {
             skipDraw = true;
         }
 
-        vel.add(acc);
-        acc.set(0, 0);
+        vel.add(acc).limit(maxSpeed);
     }
 
     private boolean invertEdgeIfNecessary(PVector pos) {
@@ -84,7 +79,7 @@ class Particle {
         return invertedEdge;
     }
 
-    public void draw(@NonNull PGraphics canvas) {
+    public void draw(PGraphics canvas) {
         if (skipDraw)
             skipDraw = false;
         else {
@@ -110,7 +105,7 @@ class Particle {
             });
         }
 
-        public void setStrokeColor(PGraphics canvas) {
+        public void setStrokeColor(PGraphics canvas){
             canvas.stroke(color, Sketch.Config.PARTICLE_STROKE_ALPHA);
         }
 

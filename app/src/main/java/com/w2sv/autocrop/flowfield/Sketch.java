@@ -18,6 +18,8 @@ public class Sketch extends PApplet {
 
         static final int PARTICLE_START_VELOCITY_LOW = 1;
         static final int PARTICLE_START_VELOCITY_HIGH = 3;
+        static final int PARTICLE_MAX_VELOCITY_LOW = 6;
+        static final int PARTICLE_MAX_VELOCITY_HIGH = 8;
         static final int PARTICLE_COLOR_CHANGE_PERIOD = 3000;
         static final float PARTICLE_STROKE_ALPHA = 48;
         static final int PARTICLE_STROKE_WEIGHT = 2;
