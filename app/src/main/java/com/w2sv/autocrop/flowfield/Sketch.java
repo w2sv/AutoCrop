@@ -29,7 +29,7 @@ public class Sketch extends PApplet {
                 0xFF6B13B5,  // purple
                 0xFF1a0ac7   // ocean blue
         );
-        static final int FLOW_FIELD_RESOLUTION = 200;
+        static final int FLOW_FIELD_GRANULARITY = 200;
         static final float FLOW_FIELD_Z_OFF_INCREMENT = 0.004f;
     }
 

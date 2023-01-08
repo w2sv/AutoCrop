@@ -20,8 +20,8 @@ class FlowField {
 
         for (int i = 0; i < particles.size(); i++) {
             var pos = new Pair<>(
-                    PApplet.floor(particles.get(i).pos.x / Sketch.Config.FLOW_FIELD_RESOLUTION) + 1,
-                    PApplet.floor(particles.get(i).pos.y / Sketch.Config.FLOW_FIELD_RESOLUTION) + 1
+                    PApplet.floor(particles.get(i).pos.x / Sketch.Config.FLOW_FIELD_GRANULARITY) + 1,
+                    PApplet.floor(particles.get(i).pos.y / Sketch.Config.FLOW_FIELD_GRANULARITY) + 1
             );
 
             if (pos2Noise.containsKey(pos))
