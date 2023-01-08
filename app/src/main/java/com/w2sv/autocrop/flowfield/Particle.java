@@ -11,8 +11,8 @@ import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
-class Particle extends PApplet {
-    static ColorHandler colorHandler = new ColorHandler();
+class Particle {
+    static ColorHandler colorHandler;
     private static int flowFieldWidth;
     private static int flowFieldHeight;
     private final PVector previousPos;
@@ -28,18 +28,20 @@ class Particle extends PApplet {
     }
 
     public static void initializeCanvas(PGraphics canvas) {
-        canvas.strokeWeight(2);
+        colorHandler = new ColorHandler();
+        colorHandler.setStrokeColor(canvas);
+        canvas.strokeWeight(Sketch.Config.PARTICLE_STROKE_WEIGHT);
     }
 
-    public Particle() {
+    public Particle(PApplet parent) {
         vel = new PVector(
-                random(Sketch.Config.PARTICLE_START_VELOCITY_LOW, Sketch.Config.PARTICLE_START_VELOCITY_HIGH),
-                random(Sketch.Config.PARTICLE_START_VELOCITY_LOW, Sketch.Config.PARTICLE_START_VELOCITY_HIGH)
+                parent.random(Sketch.Config.PARTICLE_START_VELOCITY_LOW, Sketch.Config.PARTICLE_START_VELOCITY_HIGH),
+                parent.random(Sketch.Config.PARTICLE_START_VELOCITY_LOW, Sketch.Config.PARTICLE_START_VELOCITY_HIGH)
         );
         acc = new PVector(0, 0);
-        maxSpeed = random(6, 8);
+        maxSpeed = parent.random(6, 8);
 
-        pos = new PVector(random(flowFieldWidth), random(flowFieldHeight));
+        pos = new PVector(parent.random(flowFieldWidth), parent.random(flowFieldHeight));
         previousPos = pos.copy();
     }
 
@@ -98,18 +100,18 @@ class Particle extends PApplet {
 
     static class ColorHandler {
 
-        public int color;
+        public int color = Random.randomElement(new ArrayList<>(Sketch.Config.PARTICLE_COLORS));
         private final PeriodicalRunner runner = new PeriodicalRunner(Sketch.Config.PARTICLE_COLOR_CHANGE_PERIOD);
-
-        ColorHandler() {
-            setNewRandomlyPickedColor();
-        }
 
         public void changeColorIfDue(int millis, PGraphics canvas) {
             runner.runIfDue(millis, () -> {
                 setNewRandomlyPickedColor();
-                canvas.stroke(color, Sketch.Config.PARTICLE_STROKE_ALPHA);
+                setStrokeColor(canvas);
             });
+        }
+
+        public void setStrokeColor(PGraphics canvas) {
+            canvas.stroke(color, Sketch.Config.PARTICLE_STROKE_ALPHA);
         }
 
         private void setNewRandomlyPickedColor() {

@@ -20,6 +20,7 @@ public class Sketch extends PApplet {
         static final int PARTICLE_START_VELOCITY_HIGH = 3;
         static final int PARTICLE_COLOR_CHANGE_PERIOD = 3000;
         static final float PARTICLE_STROKE_ALPHA = 48;
+        static final int PARTICLE_STROKE_WEIGHT = 2;
         static final Set<Integer> PARTICLE_COLORS = Set.of(
                 -3727295,  // magenta
                 -3732903,  // light magenta
@@ -54,12 +55,12 @@ public class Sketch extends PApplet {
         Particle.initializeCanvas(g);
 
         for (int i = 0; i < Config.N_PARTICLES; i++)
-            particles.add(new Particle());
+            particles.add(new Particle(this));
     }
 
     @Override
     public void draw() {
-        flowfield.update(particles);
+        flowfield.update(particles, this);
 
         alphaDropper.dropAlphaIfDue(millis(), g);
         Particle.colorHandler.changeColorIfDue(millis(), g);
