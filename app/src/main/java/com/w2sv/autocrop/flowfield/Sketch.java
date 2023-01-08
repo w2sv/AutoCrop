@@ -22,10 +22,12 @@ public class Sketch extends PApplet {
         static final float PARTICLE_STROKE_ALPHA = 48;
         static final int PARTICLE_STROKE_WEIGHT = 2;
         static final Set<Integer> PARTICLE_COLORS = Set.of(
-                -3727295,  // magenta
-                -3732903,  // light magenta
-                -6746332,  // dark red
-                -15070521  // blue
+                0xFFBC275E,  // magenta bright
+                0xFF911945,  // magenta saturated
+                0xFF701145,  // magenta dark
+                0xFFB00020,  // red
+                0xFF6B13B5,  // purple
+                0xFF1a0ac7   // ocean blue
         );
         static final int FLOW_FIELD_RESOLUTION = 200;
         static final float FLOW_FIELD_Z_OFF_INCREMENT = 0.004f;
