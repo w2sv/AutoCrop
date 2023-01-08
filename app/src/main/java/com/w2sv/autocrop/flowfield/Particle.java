@@ -27,7 +27,7 @@ class Particle extends PApplet {
         Particle.flowFieldHeight = height;
     }
 
-    public static void initializeCanvas(PGraphics canvas){
+    public static void initializeCanvas(PGraphics canvas) {
         canvas.strokeWeight(2);
     }
 
@@ -105,21 +105,17 @@ class Particle extends PApplet {
                 -15070521  // blue
         );
         public int color;
-        private int lastColorChangeSecond = -1;
+        private final PeriodicalRunner runner = new PeriodicalRunner(3000);
 
         ColorHandler() {
             setNewRandomlyPickedColor();
         }
 
-        public void changeColorIfDue(int second, PGraphics canvas) {
-            int colorChangePeriod = 3;
-
-            if (second != lastColorChangeSecond && second % colorChangePeriod == 0) {
+        public void changeColorIfDue(int millis, PGraphics canvas) {
+            runner.runIfDue(millis, () -> {
                 setNewRandomlyPickedColor();
-                lastColorChangeSecond = second;
-
-                canvas.stroke(Particle.colorHandler.color, 48f);
-            }
+                canvas.stroke(color, 48f);
+            });
         }
 
         private void setNewRandomlyPickedColor() {

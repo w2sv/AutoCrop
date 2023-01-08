@@ -7,29 +7,28 @@ package com.w2sv.autocrop.flowfield;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
-import timber.log.Timber;
+import processing.core.PGraphics;
 
 public class FlowFieldSketch extends PApplet {
 
+    private final FlowField flowfield = new FlowField();
     private final ArrayList<Particle> particles = new ArrayList<>();
-    private FlowField flowfield;
-    private int lastAlphaDrop = -1;
+    private final AlphaDropper alphaDropper = new AlphaDropper();
 
     public FlowFieldSketch(int width, int height) {
         this.width = width;
         this.height = height;
     }
 
+    @Override
     public void settings() {
         size(width, height, JAVA2D);
     }
 
+    @Override
     public void setup() {
         frameRate(120);
         background(0);
-
-        // initialize flowfield
-        flowfield = new FlowField();
 
         // initialize particles
         Particle.setFlowFieldDimensions(width, height);
@@ -39,51 +38,47 @@ public class FlowFieldSketch extends PApplet {
             particles.add(new Particle());
     }
 
+    @Override
     public void draw() {
-        dropAlphaIfDue();
-
         flowfield.update(particles);
 
-        Particle.colorHandler.changeColorIfDue(second(), g);
+        alphaDropper.dropAlphaIfDue(millis(), g);
+        Particle.colorHandler.changeColorIfDue(millis(), g);
 
         for (Particle p : particles) {
             p.update();
             p.draw(g);
         }
     }
+}
 
-    private void dropAlphaIfDue() {
-        int t = millis();
-        if (t - lastAlphaDrop >= 350) {
-            alphaDrop();
-            lastAlphaDrop = t;
-        }
+class AlphaDropper{
+    private final PeriodicalRunner periodicalRunner = new PeriodicalRunner(350);
+
+    void dropAlphaIfDue(int millis, PGraphics canvas) {
+        periodicalRunner.runIfDue(millis, () -> alphaDrop(canvas));
     }
 
-    private void alphaDrop() {
-        g.loadPixels();
+    private void alphaDrop(PGraphics canvas) {
+        canvas.loadPixels();
 
-        int t1 = millis();
-
-        attenuateColorIntensities();
-
-        Timber.i("Took %sms", millis() - t1);
+        attenuateColorIntensities(canvas);
 
         // Catch 'processing java.lang.IllegalStateException: Can't call setPixels() on a recycled bitmap',
         // occurring upon class being destroyed due to e.g. screen rotation whilst updating pixels
         try {
-            g.updatePixels();
+            canvas.updatePixels();
         } catch (IllegalStateException ignored) {
         }
     }
 
-    private void attenuateColorIntensities() {
+    private void attenuateColorIntensities(PGraphics canvas) {
         final int UNSET = -16777216;
 
-        for (int i = 0; i < g.pixels.length; i++) {
-            int argb = g.pixels[i];
+        for (int i = 0; i < canvas.pixels.length; i++) {
+            int argb = canvas.pixels[i];
             if (argb != UNSET) {
-                g.pixels[i] = UNSET |
+                canvas.pixels[i] = UNSET |
                         attenuatedValue((argb >> 16) & 0xFF) << 16 |
                         attenuatedValue((argb >> 8) & 0xFF) << 8 |
                         attenuatedValue(argb & 0xFF);
