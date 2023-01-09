@@ -172,19 +172,19 @@ class FlowFieldFragment :
     }
 
     private fun ViewModel.setLiveDataObservers() {
-        hideForegroundLive.observe(viewLifecycleOwner) {
-            if (it) {
-                requireActivity().hideSystemBars()
-                with(binding.foregroundLayout) {
+        hideForegroundLive.observe(viewLifecycleOwner) { hideForeground ->
+            binding.highAlphaForegroundLayout.let {
+                if (hideForeground) {
+                    requireActivity().hideSystemBars()
                     if (lifecycle.currentState == Lifecycle.State.STARTED)
-                        hide()
+                        it.hide()
                     else
-                        foregroundToggleAnimation = fadeOut()
+                        foregroundToggleAnimation = it.fadeOut()
                 }
-            }
-            else {
-                requireActivity().showSystemBars()
-                foregroundToggleAnimation = binding.foregroundLayout.fadeIn()
+                else {
+                    requireActivity().showSystemBars()
+                    foregroundToggleAnimation = it.fadeIn()
+                }
             }
         }
     }
@@ -194,12 +194,7 @@ class FlowFieldFragment :
             ?: false
 
         if (!viewModel.fadedInButtons) {
-            fadeIn(
-                binding.navigationViewToggleButton,
-                binding.imageSelectionButton,
-                binding.foregroundToggleButton,
-                duration = resources.getLong(R.integer.duration_flowfield_buttons_fade_in)
-            )
+            binding.foregroundLayout.fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
 
             if (savedAnyCrops)
                 lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_half_faded_in)) {

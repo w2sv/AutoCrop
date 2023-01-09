@@ -16,6 +16,7 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
+            android:id="@+id/foreground_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -32,7 +33,7 @@
                 android:backgroundTint="@color/low_alpha_gray" />
 
             <RelativeLayout
-                android:id="@+id/foreground_layout"
+                android:id="@+id/high_alpha_foreground_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
