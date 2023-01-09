@@ -26,8 +26,8 @@
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginEnd="26dp"
-                android:layout_marginBottom="56dp"
+                android:layout_marginEnd="56dp"
+                android:layout_marginBottom="26dp"
                 android:background="@drawable/ic_eye_24"
                 android:backgroundTint="@color/low_alpha_gray" />
 
@@ -78,7 +78,7 @@
                             android:id="@+id/share_crops_button"
                             android:layout_width="36dp"
                             android:layout_height="36dp"
-                            android:layout_marginBottom="70dp"
+                            android:layout_marginBottom="20dp"
                             android:background="@drawable/ic_share_24"
                             android:visibility="invisible" />
 

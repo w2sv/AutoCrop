@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="dark_gray">#656565</color>
+    <color name="low_alpha_gray">#809B9B9B</color>
+
     <color name="pseudo_black">#1C1C1E</color>
     <color name="magenta_bright">#BC275E</color>
     <color name="magenta_saturated">#911945</color>
