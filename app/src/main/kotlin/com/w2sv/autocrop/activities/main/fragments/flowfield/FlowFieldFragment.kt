@@ -13,6 +13,7 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -23,9 +24,12 @@ import com.w2sv.androidutils.BackPressListener
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
+import com.w2sv.androidutils.extensions.hide
+import com.w2sv.androidutils.extensions.hideSystemBars
 import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
+import com.w2sv.androidutils.extensions.showSystemBars
 import com.w2sv.androidutils.extensions.uris
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
@@ -42,6 +46,7 @@ import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.ui.SnackbarData
 import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.fadeIn
+import com.w2sv.autocrop.ui.fadeOut
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.permissionhandler.PermissionHandler
@@ -113,6 +118,8 @@ class FlowFieldFragment :
 
         val liveCropSaveDirIdentifier: LiveData<String> = MutableLiveData(cropSaveDirPreferences.pathIdentifier)
 
+        var liveShowingFlowField: LiveData<Boolean> = MutableLiveData(false)
+
         val backPressHandler = BackPressListener(
             viewModelScope,
             context.resources.getLong(R.integer.duration_backpress_confirmation_window)
@@ -155,6 +162,25 @@ class FlowFieldFragment :
         }
 
         binding.setOnClickListeners()
+        viewModel.setLiveDataObservers()
+    }
+
+    private fun ViewModel.setLiveDataObservers() {
+        liveShowingFlowField.observe(viewLifecycleOwner) {
+            if (it) {
+                requireActivity().hideSystemBars()
+                with(binding.foregroundLayout) {
+                    if (lifecycle.currentState == Lifecycle.State.STARTED)
+                        hide()
+                    else
+                        fadeOut()
+                }
+            }
+            else {
+                requireActivity().showSystemBars()
+                binding.foregroundLayout.fadeIn()
+            }
+        }
     }
 
     private fun showLayoutElements() {
@@ -202,6 +228,15 @@ class FlowFieldFragment :
                     "Share Crops"
                 )
             )
+        }
+        showFlowfieldButton.setOnClickListener {
+            viewModel.liveShowingFlowField.postValue(true)
+        }
+        relativeLayout.setOnClickListener {
+            with(viewModel.liveShowingFlowField) {
+                if (value == true)
+                    postValue(false)
+            }
         }
     }
 

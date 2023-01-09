@@ -29,6 +29,7 @@ class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : Draw
                     val alphaOverlaidButtons = 1 - slideOffset
                     imageSelectionButton.alpha = alphaOverlaidButtons
                     shareCropsButton.alpha = alphaOverlaidButtons
+                    showFlowfieldButton.alpha = alphaOverlaidButtons
                 }
             }
         )

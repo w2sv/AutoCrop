@@ -4,7 +4,6 @@ import android.view.View
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.remove
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
 
@@ -33,15 +32,27 @@ fun crossFade(fadeOut: View, fadeIn: View, duration: Long? = null) {
     fadeIn.fadeIn(duration)
 }
 
+fun fadeIn(vararg view: View, duration: Long? = null){
+    view.forEach {
+        it.fadeIn(duration)
+    }
+}
+
+fun fadeOut(vararg view: View, duration: Long? = null){
+    view.forEach {
+        it.fadeOut(duration)
+    }
+}
+
 fun View.fadeIn(duration: Long? = null): YoYo.YoYoString =
     apply {
         show()
     }
         .animate(Techniques.FadeIn, duration)
 
-fun View.fadeOut(duration: Long? = null, delay: Long = 0): YoYo.YoYoString =
+fun View.fadeOut(duration: Long? = null, delay: Long = 0, onEndVisibility: Int = View.GONE): YoYo.YoYoString =
     animationComposer(Techniques.FadeOut, duration, delay)
         .onEnd {
-            remove()
+            visibility = onEndVisibility
         }
         .playOn(this)

@@ -10,7 +10,7 @@ import processing.core.PApplet;
 import processing.core.PVector;
 
 class FlowField {
-    private static final Map<Pair<Integer, Integer>, Float> xOffCache = new HashMap<>();
+    private final Map<Pair<Integer, Integer>, Float> xOffCache = new HashMap<>();
 
     private float zOff = 0;
 

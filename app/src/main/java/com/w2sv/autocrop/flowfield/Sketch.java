@@ -13,7 +13,7 @@ import processing.core.PGraphics;
 public class Sketch extends PApplet {
 
     static class Config{
-        static final int N_PARTICLES = 400;
+        static final int N_PARTICLES = 600;
         static final int ALPHA_DROP_PERIOD = 350;
         static final int PARTICLE_START_VELOCITY_LOW = 1;
         static final int PARTICLE_START_VELOCITY_HIGH = 3;
