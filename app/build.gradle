@@ -102,6 +102,7 @@ dependencies {
     implementation libs.snacky
     implementation libs.animatoo
     implementation libs.lottie
+    implementation libs.paperonboarding
 
     // ---------------
     // unitTest
