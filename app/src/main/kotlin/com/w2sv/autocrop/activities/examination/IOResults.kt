@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 data class IOResults(var cropUris: ArrayList<Uri> = ArrayList(), var nDeletedScreenshots: Int = 0) : Parcelable {
 
     companion object {
-        const val EXTRA = "com.w2sv.autocrop.EXTRA_IO_RESULTS"
+        const val EXTRA = "com.w2sv.autocrop.extra.IO_RESULTS"
     }
 
     val nSavedCrops: Int get() = cropUris.size

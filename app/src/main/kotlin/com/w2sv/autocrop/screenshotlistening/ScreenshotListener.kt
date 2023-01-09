@@ -71,10 +71,10 @@ class ScreenshotListener : BoundService(),
             )
         }
 
-        const val EXTRA_ATTEMPT_SCREENSHOT_DELETION = "com.w2sv.autocrop.DELETE_SCREENSHOT"
-        const val EXTRA_DELETE_REQUEST_URI = "com.w2sv.autocrop.DELETE_REQUEST_URI"
-        const val EXTRA_SCREENSHOT_MEDIASTORE_DATA = "com.w2sv.autocrop.SCREENSHOT_MEDIASTORE_DATA"
-        const val EXTRA_TEMPORARY_CROP_FILE_PATH = "com.w2sv.autocrop.CROP_FILE_PATH"
+        const val EXTRA_ATTEMPT_SCREENSHOT_DELETION = "com.w2sv.autocrop.extra.DELETE_SCREENSHOT"
+        const val EXTRA_DELETE_REQUEST_URI = "com.w2sv.autocrop.extra.DELETE_REQUEST_URI"
+        const val EXTRA_SCREENSHOT_MEDIASTORE_DATA = "com.w2sv.autocrop.extra.SCREENSHOT_MEDIASTORE_DATA"
+        const val EXTRA_TEMPORARY_CROP_FILE_PATH = "com.w2sv.autocrop.extra.CROP_FILE_PATH"
     }
 
     class CleanupService : PendingIntentAssociatedResourcesCleanupService<ScreenshotListener>(ScreenshotListener::class.java)
@@ -87,7 +87,7 @@ class ScreenshotListener : BoundService(),
 
         companion object {
             const val ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS =
-                "com.w2sv.autocrop.NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS"
+                "com.w2sv.autocrop.action.NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS"
 
             private const val PENDING_INTENT_REQUEST_CODE = 1447
 

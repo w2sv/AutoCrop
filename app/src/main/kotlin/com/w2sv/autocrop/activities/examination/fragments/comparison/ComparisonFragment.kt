@@ -8,6 +8,7 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
@@ -18,6 +19,7 @@ import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.w2sv.androidutils.extensions.crossVisualize
+import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.remove
 import com.w2sv.androidutils.extensions.show
@@ -64,15 +66,9 @@ class ComparisonFragment
 
         val enterTransitionCompleted by AutoSwitch(false, switchOn = false)
 
-        val displayScreenshotLive: LiveData<Boolean> by lazy {
-            MutableLiveData(false)
-        }
-        val showButtonsLive: LiveData<Boolean> by lazy {
-            MutableLiveData(false)
-        }
-        val screenshotImageViewMatrixLive: LiveData<Matrix> by lazy {
-            MutableLiveData(null)
-        }
+        val displayScreenshotLive: LiveData<Boolean> = MutableLiveData(false)
+        val showButtonsLive: LiveData<Boolean>  = MutableLiveData(false)
+        val screenshotImageViewMatrixLive: LiveData<Matrix> = MutableLiveData(null)
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -82,7 +78,7 @@ class ComparisonFragment
 
         sharedElementEnterTransition = TransitionInflater.from(context)
             .inflateTransition(android.R.transition.move)
-            .setDuration(500)
+            .setDuration(resources.getLong(R.integer.delay_medium))
             .setInterpolator(DecelerateInterpolator(1.5f))
             .addListener(
                 object : TransitionListenerAdapter() {
@@ -121,33 +117,32 @@ class ComparisonFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.initialize()
-        viewModel.setLiveDataObservers()
-    }
-
-    private fun FragmentComparisonBinding.initialize() {
-        with(cropIv) {
+        with(binding.cropIv) {
             ViewCompat.setTransitionName(this, viewModel.cropBundle.identifier())
             setImageBitmap(viewModel.cropBundle.crop.bitmap)
         }
+        binding.screenshotIv.setImageBitmap(viewModel.screenshotBitmap)
 
-        screenshotIv.setImageBitmap(viewModel.screenshotBitmap)
+        binding.setOnClickListeners()
+        viewModel.setLiveDataObservers()
+    }
 
+    private fun FragmentComparisonBinding.setOnClickListeners() {
         root.setOnClickListener {
             viewModel.displayScreenshotLive.toggle()
         }
 
         backButton.setOnClickListener {
-            popFromFragmentManager(parentFragmentManager)
+            popFromFragmentManager((this@ComparisonFragment as Fragment).parentFragmentManager)
         }
     }
 
     private fun ViewModel.setLiveDataObservers() {
-        screenshotImageViewMatrixLive.observe(viewLifecycleOwner) {
-            it?.let {
+        screenshotImageViewMatrixLive.observe(viewLifecycleOwner) { optionalMatrix ->
+            optionalMatrix?.let { matrix ->
                 with(binding.cropIv) {
-                    imageMatrix = it
-                    translationY = viewModel.cropBundle.crop.edges.top.toFloat() * it.getScaleY()
+                    imageMatrix = matrix
+                    translationY = viewModel.cropBundle.crop.edges.top.toFloat() * matrix.getScaleY()
                     postInvalidate()
                 }
             }

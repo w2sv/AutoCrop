@@ -38,6 +38,8 @@ import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.examination.IOResults
 import com.w2sv.autocrop.activities.main.MainActivity
+import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.OpenDocumentTreeContractHandler
+import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.SelectImagesContractHandlerCompat
 import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.ScreenshotListenerDialog
 import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.WelcomeDialog
 import com.w2sv.autocrop.cropbundle.io.IMAGE_MIME_TYPE
@@ -120,7 +122,7 @@ class FlowFieldFragment :
 
         val liveCropSaveDirIdentifier: LiveData<String> = MutableLiveData(cropSaveDirPreferences.pathIdentifier)
 
-        var hideForegroundLive: LiveData<Boolean> = MutableLiveData(false)
+        val hideForegroundLive: LiveData<Boolean> = MutableLiveData(false)
         val hideForegroundTogglingEnabled: Boolean
             get() = foregroundToggleAnimation?.let { !it.isStarted }
                 ?: true

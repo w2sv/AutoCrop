@@ -15,9 +15,9 @@ abstract class PendingIntentAssociatedResourcesCleanupService<T>(private val cli
               T : PendingIntentAssociatedResourcesCleanupService.Client {
 
     companion object {
-        const val EXTRA_ASSOCIATED_NOTIFICATION_ID = "com.w2sv.autocrop.ASSOCIATED_NOTIFICATION_ID"
-        const val EXTRA_CANCEL_NOTIFICATION = "com.w2sv.autocrop.CANCEL_NOTIFICATION"
-        const val EXTRA_ASSOCIATED_PENDING_REQUEST_CODES = "com.w2sv.autocrop.ASSOCIATED_PENDING_REQUEST_CODES"
+        const val EXTRA_ASSOCIATED_NOTIFICATION_ID = "com.w2sv.autocrop.extra.ASSOCIATED_NOTIFICATION_ID"
+        const val EXTRA_CANCEL_NOTIFICATION = "com.w2sv.autocrop.extra.CANCEL_NOTIFICATION"
+        const val EXTRA_ASSOCIATED_PENDING_REQUEST_CODES = "com.w2sv.autocrop.extra.ASSOCIATED_PENDING_REQUEST_CODES"
     }
 
     interface Client {

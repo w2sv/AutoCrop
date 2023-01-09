@@ -12,7 +12,7 @@ import com.w2sv.autocrop.utils.extensions.getParcelable
 @RequiresApi(Build.VERSION_CODES.R)
 class DeleteRequestActivity : ComponentActivity(R.layout.fragment_delete_request) {
     companion object {
-        const val EXTRA_CONFIRMED_DELETION = "com.w2sv.autocrop.CONFIRMED_DELETION"
+        const val EXTRA_CONFIRMED_DELETION = "com.w2sv.autocrop.extra.CONFIRMED_DELETION"
     }
 
     override fun onStart() {
