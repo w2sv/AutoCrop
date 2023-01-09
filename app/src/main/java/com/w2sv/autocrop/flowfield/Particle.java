@@ -49,17 +49,20 @@ class Particle {
     public void update() {
         pos.add(vel);
 
-        if (invertEdgeIfNecessary(pos)) {
-            updatePreviousPos();
+        if (invertPosEdgesIfNecessary()) {
             skipDraw = true;
         }
 
         vel.add(acc).limit(maxSpeed);
     }
 
-    private boolean invertEdgeIfNecessary(PVector pos) {
+    /**
+     * @return boolean: whether any pos-coordinate has been modified to correspond to opposing display edge
+     */
+    private boolean invertPosEdgesIfNecessary() {
         boolean invertedEdge = false;
 
+        // x-edges
         if (pos.x > flowFieldWidth) {
             pos.x = 0;
             invertedEdge = true;
@@ -68,6 +71,7 @@ class Particle {
             invertedEdge = true;
         }
 
+        // y-edges
         if (pos.y > flowFieldHeight) {
             pos.y = 0;
             invertedEdge = true;
@@ -82,10 +86,10 @@ class Particle {
     public void draw(PGraphics canvas) {
         if (skipDraw)
             skipDraw = false;
-        else {
+        else
             canvas.line(pos.x, pos.y, previousPos.x, previousPos.y);
-            updatePreviousPos();
-        }
+
+        updatePreviousPos();
     }
 
     private void updatePreviousPos() {
@@ -93,6 +97,9 @@ class Particle {
         previousPos.y = pos.y;
     }
 
+    /**
+     * Handles period color changing & inherent random picking, color-dependent canvas modification
+     */
     static class ColorHandler {
 
         public int color = Random.randomElement(new ArrayList<>(Sketch.Config.PARTICLE_COLORS));

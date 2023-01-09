@@ -15,7 +15,6 @@ public class Sketch extends PApplet {
     static class Config{
         static final int N_PARTICLES = 400;
         static final int ALPHA_DROP_PERIOD = 350;
-
         static final int PARTICLE_START_VELOCITY_LOW = 1;
         static final int PARTICLE_START_VELOCITY_HIGH = 3;
         static final int PARTICLE_MAX_VELOCITY_LOW = 6;
@@ -51,6 +50,8 @@ public class Sketch extends PApplet {
 
     @Override
     public void setup() {
+        // enable 120fps for devices being capable of it; Otherwise the fps produced by the sketch will
+        // accommodate the hardware-determined limit
         frameRate(120);
         background(0);
 
@@ -80,10 +81,10 @@ class AlphaDropper{
     private final PeriodicalRunner periodicalRunner = new PeriodicalRunner(Sketch.Config.ALPHA_DROP_PERIOD);
 
     void dropAlphaIfDue(int millis, PGraphics canvas) {
-        periodicalRunner.runIfDue(millis, () -> alphaDrop(canvas));
+        periodicalRunner.runIfDue(millis, () -> dropAlpha(canvas));
     }
 
-    private void alphaDrop(PGraphics canvas) {
+    private void dropAlpha(PGraphics canvas) {
         canvas.loadPixels();
 
         attenuateColorIntensities(canvas);
@@ -113,6 +114,6 @@ class AlphaDropper{
     private int attenuatedValue(int value) {
         if (value == 0)
             return value;
-        return value >= 32 ? value - (value >> 5) : value - 1;
+        return value >= 32 ? value - (value >> 5) : PApplet.max(value - 2, 0);
     }
 }
