@@ -30,6 +30,7 @@ public class Sketch extends PApplet {
                 0xFF6B13B5,  // purple
                 0xFF1a0ac7   // ocean blue
         );
+        static final int BACKGROUND_COLOR = 0;
         static final int FLOW_FIELD_GRANULARITY = 200;
         static final float FLOW_FIELD_Z_OFF_INCREMENT = 0.004f;
     }
@@ -53,7 +54,7 @@ public class Sketch extends PApplet {
         // enable 120fps for devices being capable of it; Otherwise the fps produced by the sketch will
         // accommodate the hardware-determined limit
         frameRate(120);
-        background(0);
+        background(Config.BACKGROUND_COLOR);
 
         // initialize particles
         Particle.setFlowFieldDimensions(width, height);
@@ -65,7 +66,7 @@ public class Sketch extends PApplet {
 
     @Override
     public void draw() {
-        flowfield.update(particles, this);
+        flowfield.updateAndApplyTo(particles.iterator(), this);
 
         alphaDropper.dropAlphaIfDue(millis(), g);
         Particle.colorHandler.changeColorIfDue(millis(), g);

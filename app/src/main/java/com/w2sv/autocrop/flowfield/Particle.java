@@ -42,7 +42,7 @@ class Particle {
         previousPos = pos.copy();
     }
 
-    void applyFlowFieldVector(PVector v) {
+    void applyForceVector(PVector v) {
         acc = v;
     }
 
