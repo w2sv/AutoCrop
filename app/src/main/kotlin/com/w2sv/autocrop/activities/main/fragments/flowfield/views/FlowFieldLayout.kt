@@ -37,7 +37,7 @@ class FlowFieldLayout(context: Context, attr: AttributeSet) :
 /**
  * Fixes Exception java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
  */
-private fun PFragment.setViewAllowingStateLoss(view: View, fragmentActivity: FragmentActivity){
+private fun PFragment.setViewAllowingStateLoss(view: View, fragmentActivity: FragmentActivity) {
     fragmentActivity.supportFragmentManager
         .beginTransaction()
         .add(view.id, this)
