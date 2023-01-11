@@ -32,7 +32,7 @@ class CropIOService : UnboundService() {
             deleteScreenshot = intent.getBooleanExtra(ScreenshotListener.EXTRA_ATTEMPT_SCREENSHOT_DELETION, false)
         )
             .apply {
-                if (intent.getBooleanExtra(DeleteRequestActivity.EXTRA_CONFIRMED_DELETION, false))
+                if (intent.getBooleanExtra(ScreenshotDeleteRequestActivity.EXTRA_CONFIRMED_DELETION, false))
                     deletedScreenshot = true
             }
 

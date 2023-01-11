@@ -20,7 +20,7 @@ class CropActivity : ApplicationActivity() {
         override fun handleOnBackPressed() {
             getCurrentFragment().let {
                 when (it) {
-                    is CroppingFailedFragment -> MainActivity.restart(this@CropActivity)
+                    is CroppingFailedFragment -> MainActivity.start(this@CropActivity)
                     is CropFragment -> it.onBackPress()
                     else -> Unit
                 }

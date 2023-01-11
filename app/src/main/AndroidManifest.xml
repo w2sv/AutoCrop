@@ -47,6 +47,9 @@
         <!-- Activities -->
 
         <activity
+            android:name="com.w2sv.autocrop.activities.onboarding.OnboardingActivity" />
+
+        <activity
             android:name="com.w2sv.autocrop.activities.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Splash">
@@ -59,7 +62,7 @@
         <activity android:name="com.w2sv.autocrop.activities.crop.CropActivity" />
         <activity android:name="com.w2sv.autocrop.activities.examination.ExaminationActivity" />
 
-        <!-- Services -->
+        <!-- Screenshot Listening -->
 
         <service
             android:name="com.w2sv.autocrop.screenshotlistening.ScreenshotListener"
@@ -74,7 +77,7 @@
             android:name="com.w2sv.autocrop.screenshotlistening.CropIOService"
             android:exported="false" />
         <activity
-            android:name="com.w2sv.autocrop.screenshotlistening.DeleteRequestActivity"
+            android:name="com.w2sv.autocrop.screenshotlistening.ScreenshotDeleteRequestActivity"
             android:excludeFromRecents="true"
             android:noHistory="true" />
 

@@ -1,5 +1,6 @@
 package com.w2sv.autocrop.screenshotlistening
 
+import android.Manifest
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.ContentResolver
@@ -13,6 +14,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import androidx.activity.ComponentActivity
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.common.collect.EvictingQueue
@@ -34,6 +36,7 @@ import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
 import com.w2sv.kotlinutils.timeDelta
 import com.w2sv.kotlinutils.tripleFromIterable
+import com.w2sv.permissionhandler.PermissionHandler
 import slimber.log.i
 import java.io.File
 import java.io.FileNotFoundException
@@ -75,6 +78,30 @@ class ScreenshotListener : BoundService(),
         const val EXTRA_DELETE_REQUEST_URI = "com.w2sv.autocrop.extra.DELETE_REQUEST_URI"
         const val EXTRA_SCREENSHOT_MEDIASTORE_DATA = "com.w2sv.autocrop.extra.SCREENSHOT_MEDIASTORE_DATA"
         const val EXTRA_TEMPORARY_CROP_FILE_PATH = "com.w2sv.autocrop.extra.CROP_FILE_PATH"
+
+        fun permissionHandlers(componentActivity: ComponentActivity): List<PermissionHandler> =
+            buildList {
+                add(
+                    PermissionHandler(
+                        componentActivity,
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                            Manifest.permission.READ_MEDIA_IMAGES
+                        else
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                        "Media file access required for listening to screen captures",
+                        "Go to app settings and grant media file access for screen capture listening to work"
+                    )
+                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                    add(
+                        PermissionHandler(
+                            componentActivity,
+                            Manifest.permission.POST_NOTIFICATIONS,
+                            "If you don't allow for the posting of notifications AutoCrop can't inform you about croppable screenshots",
+                            "Go to app settings and enable notification posting for screen capture listening to work"
+                        )
+                    )
+            }
     }
 
     class CleanupService : PendingIntentAssociatedResourcesCleanupService<ScreenshotListener>(ScreenshotListener::class.java)
@@ -270,7 +297,7 @@ class ScreenshotListener : BoundService(),
                         PendingIntent.getActivity(
                             this@ScreenshotListener,
                             actionRequestCodes[1],
-                            getActionIntent(DeleteRequestActivity::class.java, true)
+                            getActionIntent(ScreenshotDeleteRequestActivity::class.java, true)
                                 .putExtra(EXTRA_DELETE_REQUEST_URI, deleteRequestUri),
                             REPLACE_CURRENT_PENDING_INTENT_FLAGS
                         )

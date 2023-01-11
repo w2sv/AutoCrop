@@ -20,6 +20,7 @@ import com.w2sv.autocrop.activities.ApplicationActivity
 import com.w2sv.autocrop.activities.examination.IOResults
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
+import com.w2sv.autocrop.activities.onboarding.OnboardingActivity
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.utils.extensions.getParcelable
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,9 +31,9 @@ class MainActivity : ApplicationActivity() {
     companion object {
         const val EXTRA_SELECTED_IMAGE_URIS = "com.w2sv.autocrop.extra.SELECTED_IMAGE_URIS"
 
-        fun restart(
+        fun start(
             activity: Activity,
-            withReturnAnimation: Boolean = true,
+            animation: ((Context) -> Unit)? = Animatoo::animateSwipeRight,
             configureIntent: Intent.() -> Intent = { this }
         ) {
             activity.startActivity(
@@ -42,8 +43,7 @@ class MainActivity : ApplicationActivity() {
                 )
                     .configureIntent()
             )
-            if (withReturnAnimation)
-                Animatoo.animateSwipeRight(activity)
+            animation?.invoke(activity)
         }
     }
 
@@ -55,20 +55,29 @@ class MainActivity : ApplicationActivity() {
 
     private val viewModel: ViewModel by viewModels()
 
-    override fun getRootFragment(): Fragment =
-        FlowFieldFragment.getInstance(intent.getParcelable(IOResults.EXTRA))
-
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        LocalBroadcastManager
-            .getInstance(this)
-            .registerReceiver(
-                onCancelledScreenshotListenerFromNotificationListener,
-                IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
+        if (!flags.onboardingDone) {
+            startActivity(
+                Intent(this, OnboardingActivity::class.java)
             )
+        }
+        else {
+            onCreateCore(savedInstanceState)
+
+            LocalBroadcastManager
+                .getInstance(this)
+                .registerReceiver(
+                    onCancelledScreenshotListenerFromNotificationListener,
+                    IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
+                )
+        }
     }
+
+    override fun getRootFragment(): Fragment =
+        FlowFieldFragment.getInstance(intent.getParcelable(IOResults.EXTRA))
 
     private val onCancelledScreenshotListenerFromNotificationListener by lazy {
         OnCancelledScreenshotListenerFromNotificationListener()

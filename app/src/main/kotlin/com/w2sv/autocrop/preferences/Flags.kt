@@ -7,14 +7,14 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ShownFlags @Inject constructor(appPreferences: SharedPreferences) : BooleanPreferences(
-    "welcomeDialogsShown" to false,
+class Flags @Inject constructor(appPreferences: SharedPreferences) : BooleanPreferences(
+    "onboardingDone" to false,
     "cropPagerInstructionsShown" to false,
     "comparisonInstructionsShown" to false,
     "aboutFragmentInstructionsShown" to false,
     sharedPreferences = appPreferences
 ) {
-    var welcomeDialogsShown by AutoSwitch.Mapped(this, false)
+    var onboardingDone by this
     var cropPagerInstructionsShown by AutoSwitch.Mapped(this, false)
     var comparisonInstructionsShown by AutoSwitch.Mapped(this, false)
     var aboutFragmentInstructionsShown by AutoSwitch.Mapped(this, false)

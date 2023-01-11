@@ -30,6 +30,7 @@
     <string name="compare_crop_and_original_screenshot">Compare crop and original screenshot</string>
     <string name="manually_adjust_the_crop">Manually adjust the crop</string>
     <string name="screenshot_listener">Screenshot Listener</string>
+    <string name="screenshot_listening">Screenshot Listening</string>
     <string name="reset">Reset</string>
     <string name="go_back_to_crop_pager">Go back to crop pager</string>
     <string name="screenshot">Screenshot</string>
@@ -38,4 +39,13 @@
     <string name="discard_changes">Discard changes</string>
     <string name="app_logo_content_description">App logo</string>
     <string name="detected_n_croppable_screenshots">Detected %1$d croppable screenshots</string>
+    <string name="onboarding_page_1_title">🎉 Welcome to AutoCrop 🎉</string>
+    <string name="onboarding_page_1_description">Let\'s get you set up for your AutoCropping experience!</string>
+    <string name="screenshot_listener_description">Screenshot Listening lets you create and save crops through notifications, i.e., without having to open the app.\n\n
+        If enabled, you will receive a notification whenever AutoCrop detects a newly taken, croppable screenshot, the saving/discarding of which you may then determine.\n\n
+        To register new screenshots, Screenshot Listening requires the <i>media file read</i> permission.
+    </string>
+    <string name="onboarding_page_2_title">Your\'re all set!</string>
+    <string name="onboarding_page_2_description">Now go ahead select some screenshots, let the cropping magic happen and save your first AutoCrops!</string>
+    <string name="enable">Enable</string>
 </resources>

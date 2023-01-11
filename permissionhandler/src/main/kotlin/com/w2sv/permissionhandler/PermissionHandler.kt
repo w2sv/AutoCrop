@@ -23,43 +23,6 @@ class PermissionHandler(
     activity,
     ActivityResultContracts.RequestPermission()
 ) {
-
-    override val registryKey: String = "${this::class.java.name}.$permission"
-
-    /**
-     * Display snacky if some permission hasn't been granted,
-     * otherwise run previously set [onPermissionGranted]
-     */
-    override val activityResultCallback: (Boolean) -> Unit = { permissionGranted ->
-        if (!permissionGranted) {
-            activity.run {
-                if (shouldShowRequestPermissionRationale(permission))
-                    permissionDeniedSnacky()
-                else
-                    permissionRequestingSuppressedSnacky()
-            }
-                .build()
-                .show()
-
-            onPermissionDenied?.invoke()
-        }
-        else
-            onPermissionGranted?.invoke()
-
-        onPermissionDenied = null
-        onPermissionGranted = null
-    }
-
-    /**
-     * Returns [permission] which are also [requiredPermissions] and haven't
-     * yet been granted
-     */
-    private val grantRequired: Boolean
-        get() = requiredPermissions.contains(permission) && !activity.permissionGranted(permission)
-
-    private fun Activity.permissionGranted(permission: String): Boolean =
-        checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
-
     companion object {
         /**
          * Permissions declared within package Manifest actually required by the api,
@@ -85,15 +48,20 @@ class PermissionHandler(
     }
 
     /**
-     * Function wrapper either directly running [onGranted] if permission granted,
-     * otherwise sets [onGranted] and launches [activityResultCallback]
+     * Function wrapper either directly running [onPermissionGranted] if permission granted,
+     * otherwise sets [onPermissionGranted] and launches [activityResultCallback]
      */
-    fun requestPermission(onGranted: () -> Unit, onDenied: (() -> Unit)? = null) {
+    fun requestPermission(
+        onPermissionGranted: () -> Unit,
+        onPermissionDenied: (() -> Unit)? = null,
+        onDialogClosed: (() -> Unit)? = null
+    ) {
         if (!grantRequired)
-            onGranted()
+            onPermissionGranted()
         else {
-            onPermissionGranted = onGranted
-            onPermissionDenied = onDenied
+            this.onPermissionGranted = onPermissionGranted
+            this.onPermissionDenied = onPermissionDenied
+            this.onDialogClosed = onDialogClosed
 
             activityResultLauncher.launch(permission)
         }
@@ -104,13 +72,53 @@ class PermissionHandler(
      */
     private var onPermissionGranted: (() -> Unit)? = null
     private var onPermissionDenied: (() -> Unit)? = null
+    private var onDialogClosed: (() -> Unit)? = null
+
+    override val registryKey: String = "${this::class.java.name}.$permission"
+
+    /**
+     * Display getSnackyBuilder if some permission hasn't been granted,
+     * otherwise run previously set [onPermissionGranted]
+     */
+    override val activityResultCallback: (Boolean) -> Unit = { permissionGranted ->
+        if (!permissionGranted) {
+            activity.run {
+                if (shouldShowRequestPermissionRationale(permission))
+                    permissionDeniedSnacky()
+                else
+                    permissionRequestingSuppressedSnacky()
+            }
+                .build()
+                .show()
+
+            onPermissionDenied?.invoke()
+        }
+        else
+            onPermissionGranted?.invoke()
+
+        onDialogClosed?.invoke()
+
+        onDialogClosed = null
+        onPermissionDenied = null
+        onPermissionGranted = null
+    }
+
+    /**
+     * Returns [permission] which are also [requiredPermissions] and haven't
+     * yet been granted
+     */
+    private val grantRequired: Boolean
+        get() = requiredPermissions.contains(permission) && !activity.permissionGranted(permission)
+
+    private fun Activity.permissionGranted(permission: String): Boolean =
+        checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
 
     private fun Activity.permissionDeniedSnacky(): Snacky.Builder =
-        snacky(permissionDeniedMessage)
+        getSnackyBuilder(permissionDeniedMessage)
             .setIcon(R.drawable.ic_error_24)
 
     private fun Activity.permissionRequestingSuppressedSnacky(): Snacky.Builder =
-        snacky(permissionRequestingSuppressedMessage)
+        getSnackyBuilder(permissionRequestingSuppressedMessage)
             .setIcon(R.drawable.ic_error_24)
             .setActionText("Settings")
             .setActionClickListener {
@@ -127,24 +135,9 @@ class PermissionHandler(
             }
 }
 
-private fun Activity.snacky(text: CharSequence, duration: Int = Snacky.LENGTH_LONG): Snacky.Builder =
+private fun Activity.getSnackyBuilder(text: CharSequence): Snacky.Builder =
     Snacky.builder()
         .setText(text)
         .centerText()
-        .setDuration(duration)
+        .setDuration(Snacky.LENGTH_LONG)
         .setActivity(this)
-
-fun Iterable<PermissionHandler>.requestPermissions(onGranted: () -> Unit, onDenied: (() -> Unit)? = null) {
-    iterator().requestPermissions(onGranted, onDenied)
-}
-
-private fun Iterator<PermissionHandler>.requestPermissions(onGranted: () -> Unit, onDenied: (() -> Unit)? = null) {
-    if (!hasNext())
-        onGranted()
-    else {
-        next().requestPermission(
-            onGranted = { requestPermissions(onGranted, onDenied) },
-            onDenied = onDenied
-        )
-    }
-}

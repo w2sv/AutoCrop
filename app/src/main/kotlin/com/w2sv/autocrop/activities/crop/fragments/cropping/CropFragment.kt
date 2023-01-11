@@ -196,7 +196,7 @@ class CropFragment
                     .show()
             },
             {
-                MainActivity.restart(requireActivity())
+                MainActivity.start(requireActivity())
             }
         )
     }

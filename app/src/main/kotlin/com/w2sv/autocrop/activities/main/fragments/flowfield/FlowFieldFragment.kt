@@ -4,14 +4,12 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
@@ -40,12 +38,10 @@ import com.w2sv.autocrop.activities.examination.IOResults
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.OpenDocumentTreeContractHandler
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.SelectImagesContractHandlerCompat
-import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.ScreenshotListenerDialog
-import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.WelcomeDialog
 import com.w2sv.autocrop.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 import com.w2sv.autocrop.preferences.CropSaveDirPreferences
-import com.w2sv.autocrop.preferences.ShownFlags
+import com.w2sv.autocrop.preferences.Flags
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.ui.SnackbarData
 import com.w2sv.autocrop.ui.animate
@@ -54,7 +50,6 @@ import com.w2sv.autocrop.ui.fadeOut
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.permissionhandler.PermissionHandler
-import com.w2sv.permissionhandler.requestPermissions
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -63,9 +58,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class FlowFieldFragment :
-    ApplicationFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java),
-    WelcomeDialog.Listener,
-    ScreenshotListenerDialog.Listener {
+    ApplicationFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java) {
 
     companion object {
         fun getInstance(ioResults: IOResults?): FlowFieldFragment =
@@ -75,7 +68,7 @@ class FlowFieldFragment :
     }
 
     @Inject
-    lateinit var shownFlags: ShownFlags
+    lateinit var flags: Flags
 
     @Inject
     lateinit var cropSaveDirPreferences: CropSaveDirPreferences
@@ -136,8 +129,6 @@ class FlowFieldFragment :
 
     private val viewModel by viewModels<ViewModel>()
 
-    private val activityViewModel by activityViewModels<MainActivity.ViewModel>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -153,11 +144,7 @@ class FlowFieldFragment :
 
         showLayoutElements()
 
-        if (!shownFlags.welcomeDialogsShown)
-            lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_large)) {
-                WelcomeDialog().show(childFragmentManager)
-            }
-        else if (viewModel.followingExaminationActivity && !viewModel.showedSnackbar) {
+        if (viewModel.followingExaminationActivity && !viewModel.showedSnackbar) {
             lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_half_faded_in)) {
                 with(viewModel.ioResultsSnackbarData!!) {
                     repelledSnackyBuilder(text)
@@ -215,7 +202,7 @@ class FlowFieldFragment :
     private fun FragmentFlowfieldBinding.setOnClickListeners() {
         imageSelectionButton.setOnClickListener {
             writeExternalStoragePermissionHandler.requestPermission(
-                onGranted = selectImagesContractHandler::selectImages
+                onPermissionGranted = selectImagesContractHandler::selectImages
             )
         }
         shareCropsButton.setOnClickListener {
@@ -237,24 +224,6 @@ class FlowFieldFragment :
         }
     }
 
-    // $$$$$$$$$$$$$$$$$$
-    // Dialog Listeners
-    // $$$$$$$$$$$$$$$$$$
-
-    override fun onWelcomeDialogClosedListener() {
-        ScreenshotListenerDialog().show(childFragmentManager)
-    }
-
-    override fun onScreenshotListenerDialogConfirmedListener() {
-        screenshotListeningPermissionHandlers
-            .requestPermissions(
-                onGranted = {
-                    ScreenshotListener.startService(requireContext())
-                    activityViewModel.liveScreenshotListenerRunning.postValue(true)
-                }
-            )
-    }
-
     // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     // ActivityCallContractAdministrators
     // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -269,28 +238,7 @@ class FlowFieldFragment :
     }
 
     val screenshotListeningPermissionHandlers by lazy {
-        buildList {
-            add(
-                PermissionHandler(
-                    requireActivity(),
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                        Manifest.permission.READ_MEDIA_IMAGES
-                    else
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                    "Media file access required for listening to screen captures",
-                    "Go to app settings and grant media file access for screen capture listening to work"
-                )
-            )
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                add(
-                    PermissionHandler(
-                        requireActivity(),
-                        Manifest.permission.POST_NOTIFICATIONS,
-                        "If you don't allow for the posting of notifications AutoCrop can't inform you about croppable screenshots",
-                        "Go to app settings and enable notification posting for screen capture listening to work"
-                    )
-                )
-        }
+        ScreenshotListener.permissionHandlers(requireActivity())
     }
 
     private val selectImagesContractHandler: SelectImagesContractHandlerCompat<*, *> by lazy {

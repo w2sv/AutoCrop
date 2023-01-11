@@ -141,7 +141,7 @@ class ExaminationActivity : ApplicationActivity() {
     }
 
     fun startMainActivity() {
-        MainActivity.restart(this) {
+        MainActivity.start(this) {
             putExtra(IOResults.EXTRA, viewModel.ioResults)
         }
     }

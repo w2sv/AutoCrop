@@ -39,7 +39,7 @@ import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.preferences.ShownFlags
+import com.w2sv.autocrop.preferences.Flags
 import com.w2sv.autocrop.ui.CubeOutPageTransformer
 import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.fadeIn
@@ -140,7 +140,7 @@ class CropPagerFragment :
     }
 
     @Inject
-    lateinit var shownFlags: ShownFlags
+    lateinit var flags: Flags
 
     private val viewModel by viewModels<ViewModel>()
     private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
@@ -215,7 +215,7 @@ class CropPagerFragment :
             }
                 ?: snackbarRepelledLayout.show()
 
-            if (!shownFlags.cropPagerInstructionsShown)
+            if (!flags.cropPagerInstructionsShown)
                 lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_medium)) {
                     CropPagerInstructionsDialog()
                         .show(childFragmentManager)

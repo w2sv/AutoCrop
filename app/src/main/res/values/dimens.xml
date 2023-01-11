@@ -11,6 +11,9 @@
     <dimen name="size_image_button">28dp</dimen>
     <dimen name="padding_image_button_w_background">11dp</dimen>
 
+    <dimen name="onboarding_description_text_size">18sp</dimen>
+    <dimen name="onboarding_page_indicator_dot_size">12dp</dimen>
+
     <!-- Crop overlay view-->
     <dimen name="margin_max_crop_rect">24dp</dimen>
     <dimen name="min_rect">56dp</dimen>

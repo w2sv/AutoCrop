@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="dark_gray">#656565</color>
+    <color name="dark_gray">#FF656565</color>
     <color name="low_alpha_gray">#809B9B9B</color>
+    <color name="light_gray">#CECECE</color>
 
     <color name="pseudo_black">#1C1C1E</color>
-    <color name="magenta_bright">#BC275E</color>
-    <color name="magenta_saturated">#911945</color>
-    <color name="red">#B00020</color>
-    <color name="ocean_blue">#1a0ac7</color>
-    <color name="turquoise_greenish">#008577</color>
+    <color name="magenta_bright">#FFBC275E</color>
+    <color name="magenta_saturated">#FF911945</color>
+    <color name="red">#FFB00020</color>
+    <color name="ocean_blue">#ff1a0ac7</color>
+    <color name="turquoise_greenish">#FF008577</color>
 
     <color name="highlight">@color/magenta_bright</color>
-    <color name="highest_light">@android:color/holo_purple</color>
+    <color name="higher_light">@android:color/holo_purple</color>
     <color name="success">@color/turquoise_greenish</color>
     <color name="neutral_background">#000000</color>
     <color name="crop_mask">#AB1C1C1E</color>
     <color name="button_background">#80303033</color>
     <color name="image_selection_button_foreground">@android:color/white</color>
+
+    <color name="onboarding_description">@color/light_gray</color>
 </resources>

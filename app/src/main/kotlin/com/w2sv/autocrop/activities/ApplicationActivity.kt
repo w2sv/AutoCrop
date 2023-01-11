@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.CropSaveDirPreferences
-import com.w2sv.autocrop.preferences.ShownFlags
+import com.w2sv.autocrop.preferences.Flags
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -18,12 +18,10 @@ abstract class ApplicationActivity : FragmentHostingActivity() {
     lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
     @Inject
-    lateinit var shownFlags: ShownFlags
+    lateinit var flags: Flags
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        listOf(booleanPreferences, cropSaveDirPreferences, shownFlags).forEach {
+    protected fun onCreateCore(savedInstanceState: Bundle?){
+        listOf(booleanPreferences, cropSaveDirPreferences, flags).forEach {
             lifecycle.addObserver(it)
         }
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
