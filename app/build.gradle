@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-parcelize'
-    id 'de.mannodermaus.android-junit5'
+//    id 'de.mannodermaus.android-junit5'  TODO: uncomment upon release of AGP 8.0.0-beta01/8.0.1-alpha01
     id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
 }
