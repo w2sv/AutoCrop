@@ -104,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="end">
 
-                <com.w2sv.autocrop.activities.examination.fragments.croppager.views.ManualCropButton
+                <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/manual_crop_button"
                     android:layout_width="@dimen/size_image_button"
                     android:layout_height="@dimen/size_image_button"
@@ -115,7 +115,7 @@
 
                     android:contentDescription="@string/manually_adjust_the_crop" />
 
-                <com.w2sv.autocrop.activities.examination.fragments.croppager.views.ComparisonLaunchButton
+                <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/comparison_button"
                     android:layout_width="@dimen/size_image_button"
                     android:layout_height="@dimen/size_image_button"

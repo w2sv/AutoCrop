@@ -27,8 +27,10 @@ import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
+import com.w2sv.autocrop.activities.FragmentedActivity
 import com.w2sv.autocrop.activities.crop.CropResults
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
+import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.CropDialog
 import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.CropEntiretyDialog
 import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.CropPagerInstructionsDialog
@@ -42,6 +44,7 @@ import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.Flags
 import com.w2sv.autocrop.ui.CubeOutPageTransformer
 import com.w2sv.autocrop.ui.animate
+import com.w2sv.autocrop.ui.currentViewHolder
 import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.ui.scrollPeriodically
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
@@ -230,6 +233,35 @@ class CropPagerFragment :
     private fun FragmentCroppagerBinding.setOnClickListeners() {
         cancelAutoScrollButton.setOnClickListener {
             viewModel.doAutoScrollLive.postValue(false)
+        }
+        manualCropButton.setOnClickListener {
+            (requireActivity() as FragmentedActivity).fragmentReplacementTransaction(
+                ManualCropFragment.instance(
+                    viewModel.dataSet.liveElement
+                ),
+                true
+            )
+                .addToBackStack(null)
+                .commit()
+        }
+        comparisonButton.setOnClickListener {
+            (requireActivity() as FragmentedActivity).fragmentReplacementTransaction(
+                ComparisonFragment.getInstance(viewModel.dataSet.liveElement)
+            )
+                .addToBackStack(null)
+                .apply {
+                    val cropImageView =
+                        binding
+                            .viewPager
+                            .currentViewHolder<CropPager.Adapter.ViewHolder>()!!
+                            .imageView
+
+                    addSharedElement(
+                        cropImageView,
+                        cropImageView.transitionName
+                    )
+                }
+                .commit()
         }
     }
 

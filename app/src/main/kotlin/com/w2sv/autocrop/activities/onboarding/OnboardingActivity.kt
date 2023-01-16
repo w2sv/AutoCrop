@@ -3,7 +3,6 @@ package com.w2sv.autocrop.activities.onboarding
 import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
 import com.airbnb.lottie.LottieAnimationView
@@ -15,6 +14,7 @@ import com.w2sv.androidutils.extensions.getThemedColor
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.main.MainActivity
+import com.w2sv.autocrop.activities.registerObservers
 import com.w2sv.autocrop.preferences.Flags
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.ui.animationComposer
@@ -44,17 +44,13 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        onBackPressedDispatcher.addCallback(
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    finishAffinity()
-                }
+        registerObservers(
+            buildList {
+                addAll(screenshotListeningPermissionHandlers)
+                add(flags)
             }
-        )
-
-        lifecycle.addObserver(flags)
-        screenshotListeningPermissionHandlers.forEach {
-            lifecycle.addObserver(it)
+        ){
+            finishAffinity()
         }
 
         setPages(
