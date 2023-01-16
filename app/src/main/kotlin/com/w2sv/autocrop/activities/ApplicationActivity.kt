@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.LifecycleObserver
 
-abstract class ApplicationActivity : FragmentHostingActivity() {
+abstract class ApplicationActivity : FragmentedActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

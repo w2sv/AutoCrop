@@ -30,7 +30,7 @@ abstract class ApplicationFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
     protected fun <A : Activity> castActivity(): A =
         requireActivity() as A
 
-    protected fun getFragmentHostingActivity(): FragmentHostingActivity =
+    protected fun getFragmentHostingActivity(): FragmentedActivity =
         castActivity()
 
     protected fun launchAfterShortDelay(block: CoroutineScope.() -> Unit) {

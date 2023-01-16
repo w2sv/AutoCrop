@@ -20,7 +20,7 @@ import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.serviceRunning
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.FragmentHostingActivity
+import com.w2sv.autocrop.activities.FragmentedActivity
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
@@ -35,7 +35,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     NavigationView(context, attributeSet),
-    FragmentHostingActivity.Retriever by FragmentHostingActivity.Retriever.Implementation(context) {
+    FragmentedActivity.Retriever by FragmentedActivity.Retriever.Implementation(context) {
 
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
@@ -148,7 +148,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     }
 
     private fun invokeAboutFragment() {
-        fragmentHostingActivity.fragmentReplacementTransaction(
+        fragmentedActivity.fragmentReplacementTransaction(
             AboutFragment(),
             animated = true,
         )
