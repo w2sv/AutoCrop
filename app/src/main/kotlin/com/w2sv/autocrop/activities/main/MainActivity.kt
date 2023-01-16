@@ -11,6 +11,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -20,9 +21,13 @@ import com.w2sv.autocrop.activities.ApplicationActivity
 import com.w2sv.autocrop.activities.examination.IOResults
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
+import com.w2sv.autocrop.preferences.BooleanPreferences
+import com.w2sv.autocrop.preferences.CropSaveDirPreferences
+import com.w2sv.autocrop.preferences.Flags
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.utils.extensions.getParcelable
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ApplicationActivity() {
@@ -59,6 +64,13 @@ class MainActivity : ApplicationActivity() {
     }
 
     private val viewModel: ViewModel by viewModels()
+
+    @Inject lateinit var flags: Flags
+    @Inject lateinit var booleanPreferences: BooleanPreferences
+    @Inject lateinit var cropSaveDirPreferences: CropSaveDirPreferences
+
+    override val lifecycleObservers: List<LifecycleObserver>
+        get() = listOf(flags, booleanPreferences, cropSaveDirPreferences)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

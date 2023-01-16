@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.viewModelScope
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationActivity
@@ -21,6 +22,7 @@ import com.w2sv.autocrop.cropbundle.Screenshot
 import com.w2sv.autocrop.cropbundle.io.CropBundleIORunner
 import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
 import com.w2sv.autocrop.preferences.BooleanPreferences
+import com.w2sv.autocrop.preferences.Flags
 import com.w2sv.autocrop.utils.extensions.getParcelable
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,11 +34,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ExaminationActivity : ApplicationActivity() {
-
-    override fun getRootFragment(): Fragment =
-        CropPagerFragment.getInstance(
-            intent.getParcelable(CropResults.EXTRA)!!,
-        )
 
     @HiltViewModel
     class ViewModel @Inject constructor(
@@ -103,7 +100,18 @@ class ExaminationActivity : ApplicationActivity() {
         }
     }
 
+    override fun getRootFragment(): Fragment =
+        CropPagerFragment.getInstance(
+            intent.getParcelable(CropResults.EXTRA)!!,
+        )
+
     private val viewModel: ViewModel by viewModels()
+
+    @Inject lateinit var flags: Flags
+    @Inject lateinit var booleanPreferences: BooleanPreferences
+
+    override val lifecycleObservers: List<LifecycleObserver>
+        get() = listOf(flags, booleanPreferences)
 
     /**
      * Invoke [DeleteRequestFragment] if there are screenshots whose
