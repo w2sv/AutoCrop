@@ -20,8 +20,8 @@ android {
         targetSdkVersion rootProject.ext.compileSdkVersion
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
 
-        versionCode 38
-        versionName '3.2.11'
+        versionCode 39
+        versionName '3.2.12'
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'

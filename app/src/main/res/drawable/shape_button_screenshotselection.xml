@@ -6,7 +6,7 @@
             <stroke
                 android:width="1.5dip"
                 android:height="1.5dip"
-                android:color="@color/image_selection_button_foreground" />
+                android:color="@color/image_selection_button" />
             <solid android:color="#0ABFBFBF" />
         </shape>
     </item>
