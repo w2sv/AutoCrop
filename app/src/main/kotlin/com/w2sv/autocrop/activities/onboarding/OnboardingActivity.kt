@@ -1,7 +1,6 @@
 package com.w2sv.autocrop.activities.onboarding
 
 import android.os.Bundle
-import android.util.TypedValue
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
@@ -22,7 +21,6 @@ import com.w2sv.onboarding.OnboardingPage
 import com.w2sv.permissionhandler.requestPermissions
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
