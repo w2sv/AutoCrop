@@ -42,8 +42,8 @@
 
                     android:layout_width="@dimen/size_lottie_button"
                     android:layout_height="@dimen/size_lottie_button"
-                    android:layout_marginStart="@dimen/margin_top_left_image_button"
-                    android:layout_marginTop="@dimen/margin_top_left_image_button"
+                    android:layout_marginStart="@dimen/margin_horizontal"
+                    android:layout_marginTop="@dimen/margin_horizontal"
 
                     android:contentDescription="@string/main_menu_toggle"
 

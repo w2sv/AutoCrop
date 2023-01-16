@@ -42,8 +42,8 @@
 
                     android:layout_width="@dimen/size_lottie_button"
                     android:layout_height="@dimen/size_lottie_button"
-                    android:layout_marginStart="@dimen/margin_top_left_image_button"
-                    android:layout_marginTop="@dimen/margin_top_left_image_button"
+                    android:layout_marginStart="@dimen/margin_horizontal"
+                    android:layout_marginTop="46dp"
 
                     android:contentDescription="@string/main_menu_toggle"
 
@@ -98,7 +98,7 @@
             android:layout_height="match_parent"
             android:layout_alignTop="@+id/navigation_drawer_button_burger"
             android:layout_gravity="start"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="92dp"
 
             android:background="@android:color/transparent"
 

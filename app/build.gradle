@@ -70,10 +70,6 @@ android {
     }
 }
 dependencies {
-    implementation fileTree(include: ['*.aar'], dir: 'libs')
-    implementation 'com.tbuonomo:dotsindicator:4.3'
-//    implementation libs.onboarder
-
     implementation libs.jetbrains.kotlin
 
     // androidx
@@ -99,6 +95,7 @@ dependencies {
     implementation libs.androidutils
     implementation libs.typedpreferences
     implementation libs.viewanimations
+    implementation libs.onboarder
 
     // other
     implementation files('libs/processing-core-4.3.0.jar')

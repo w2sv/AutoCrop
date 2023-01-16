@@ -24,11 +24,9 @@ import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
 import com.w2sv.androidutils.extensions.hide
-import com.w2sv.androidutils.extensions.hideSystemBars
 import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
-import com.w2sv.androidutils.extensions.showSystemBars
 import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.androidutils.extensions.uris
 import com.w2sv.autocrop.R
@@ -110,16 +108,13 @@ class FlowFieldFragment :
 
         val followingExaminationActivity: Boolean = ioResults != null
 
-        var fadedInButtons: Boolean = false
+        var fadedInButtonsOnCreate: Boolean = false
         var showedSnackbar: Boolean = false
 
         val liveCropSaveDirIdentifier: LiveData<String> = MutableLiveData(cropSaveDirPreferences.pathIdentifier)
 
-        val hideForegroundLive: LiveData<Boolean> = MutableLiveData(false)
-        val hideForegroundTogglingEnabled: Boolean
-            get() = foregroundToggleAnimation?.let { !it.isStarted }
-                ?: true
-        var foregroundToggleAnimation: YoYo.YoYoString? = null
+        val hideButtonsLive: LiveData<Boolean> = MutableLiveData(false)
+        var buttonFadeAnimation: YoYo.YoYoString? = null
 
         val backPressHandler = BackPressListener(
             viewModelScope,
@@ -161,18 +156,19 @@ class FlowFieldFragment :
     }
 
     private fun ViewModel.setLiveDataObservers() {
-        hideForegroundLive.observe(viewLifecycleOwner) { hideForeground ->
+        hideButtonsLive.observe(viewLifecycleOwner) { hideForeground ->
             binding.highAlphaForegroundLayout.let {
                 if (hideForeground) {
-                    requireActivity().hideSystemBars()
                     if (lifecycle.currentState == Lifecycle.State.STARTED)
                         it.hide()
-                    else
-                        foregroundToggleAnimation = it.fadeOut()
+                    else {
+                        buttonFadeAnimation?.stop()
+                        buttonFadeAnimation = it.fadeOut()
+                    }
                 }
                 else {
-                    requireActivity().showSystemBars()
-                    foregroundToggleAnimation = it.fadeIn()
+                    buttonFadeAnimation?.stop()
+                    buttonFadeAnimation = it.fadeIn()
                 }
             }
         }
@@ -182,7 +178,7 @@ class FlowFieldFragment :
         val savedAnyCrops: Boolean = viewModel.ioResults?.let { it.nSavedCrops != 0 }
             ?: false
 
-        if (!viewModel.fadedInButtons) {
+        if (!viewModel.fadedInButtonsOnCreate) {
             binding.foregroundLayout.fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
 
             if (savedAnyCrops)
@@ -193,7 +189,7 @@ class FlowFieldFragment :
                     }
                 }
 
-            viewModel.fadedInButtons = true
+            viewModel.fadedInButtonsOnCreate = true
         }
         else if (savedAnyCrops)
             binding.shareCropsButton.show()
@@ -219,8 +215,7 @@ class FlowFieldFragment :
             )
         }
         foregroundToggleButton.setOnClickListener {
-            if (viewModel.hideForegroundTogglingEnabled)
-                viewModel.hideForegroundLive.toggle()
+            viewModel.hideButtonsLive.toggle()
         }
     }
 

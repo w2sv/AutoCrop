@@ -4,7 +4,7 @@
     <dimen name="error_icon_cropping_failure_horizontal_margin">-42dip</dimen>
     <dimen name="error_icon_cropping_failure_vertical_margin">-1dip</dimen>
 
-    <dimen name="margin_top_left_image_button">35dp</dimen>
+    <dimen name="margin_horizontal">35dp</dimen>
     <dimen name="margin_horizontal_manual_crop_fragment_top_button">4dp</dimen>
     <dimen name="margin_crop_progress_bar">-80dp</dimen>
     <dimen name="size_lottie_button">46dp</dimen>
