@@ -48,4 +48,5 @@
     <string name="onboarding_page_2_title">Your\'re all set!</string>
     <string name="onboarding_page_2_description">Now go ahead select some screenshots, let the cropping magic happen and save your first AutoCrops!</string>
     <string name="enable">Enable</string>
+    <string name="share">Share</string>
 </resources>

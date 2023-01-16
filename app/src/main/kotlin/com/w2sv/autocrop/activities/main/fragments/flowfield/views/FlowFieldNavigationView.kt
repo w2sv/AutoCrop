@@ -7,6 +7,7 @@ import android.net.Uri
 import android.util.AttributeSet
 import android.widget.CompoundButton
 import android.widget.Switch
+import androidx.core.app.ShareCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
@@ -112,6 +113,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 R.id.main_menu_item_about -> invokeAboutFragment()
                 R.id.main_menu_item_go_to_github -> goToGithub()
                 R.id.main_menu_item_rate_the_app -> goToPlayStoreListing()
+                R.id.main_menu_item_share -> shareLink()
             }
             (parent as DrawerLayout).closeDrawer(GravityCompat.START)
             false
@@ -129,7 +131,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
             context.startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=${activity.packageName}")
+                    Uri.parse(playStoreLink())
                 )
                     .setPackage("com.android.vending")
             )
@@ -141,6 +143,9 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 .show()
         }
     }
+
+    private fun playStoreLink(): String =
+        "https://play.google.com/store/apps/details?id=${activity.packageName}"
 
     private fun goToGithub() {
         context
@@ -154,5 +159,13 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         )
             .addToBackStack(null)
             .commit()
+    }
+
+    private fun shareLink(){
+        ShareCompat.IntentBuilder(context)
+            .setType("text/plain")
+            .setText("Check out AutoCrop!\n\n${playStoreLink()}")
+            .setChooserTitle("Choose an app")
+            .startChooser()
     }
 }
