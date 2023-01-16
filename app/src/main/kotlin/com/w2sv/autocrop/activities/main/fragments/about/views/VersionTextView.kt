@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.main.fragments
+package com.w2sv.autocrop.activities.main.fragments.about.views
 
 import android.content.Context
 import android.util.AttributeSet

@@ -2,7 +2,6 @@ package com.w2sv.autocrop.activities.examination
 
 import android.content.Context
 import android.net.Uri
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleObserver
@@ -109,6 +108,7 @@ class ExaminationActivity : ApplicationActivity() {
 
     @Inject
     lateinit var flags: Flags
+
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
 
@@ -130,22 +130,20 @@ class ExaminationActivity : ApplicationActivity() {
             .commit()
     }
 
-    override val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            getCurrentFragment().let {
-                when (it) {
-                    is ComparisonFragment -> it.popFromFragmentManager(supportFragmentManager)
-                    is ManualCropFragment -> supportFragmentManager.popBackStack()
-                    is SaveAllFragment -> {
-                        snackyBuilder("Wait until crops have been saved")
-                            .setIcon(R.drawable.ic_front_hand_24)
-                            .build()
-                            .show()
-                    }
-
-                    is CropPagerFragment -> it.onBackPress()
-                    else -> Unit
+    override fun handleOnBackPressed() {
+        getCurrentFragment().let {
+            when (it) {
+                is ComparisonFragment -> it.popFromFragmentManager(supportFragmentManager)
+                is ManualCropFragment -> supportFragmentManager.popBackStack()
+                is SaveAllFragment -> {
+                    snackyBuilder("Wait until crops have been saved")
+                        .setIcon(R.drawable.ic_front_hand_24)
+                        .build()
+                        .show()
                 }
+
+                is CropPagerFragment -> it.onBackPress()
+                else -> Unit
             }
         }
     }

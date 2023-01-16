@@ -29,7 +29,7 @@
         android:background="@drawable/logo_nobackground"
         android:contentDescription="@string/app_logo_content_description" />
 
-    <com.w2sv.autocrop.activities.main.fragments.VersionTextView
+    <com.w2sv.autocrop.activities.main.fragments.about.views.VersionTextView
         android:id="@+id/version_tv"
         style="@style/Shadow"
         android:layout_width="wrap_content"

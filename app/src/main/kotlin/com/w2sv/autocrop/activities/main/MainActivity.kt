@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.IntentFilter
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
@@ -67,8 +66,10 @@ class MainActivity : ApplicationActivity() {
 
     @Inject
     lateinit var flags: Flags
+
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
+
     @Inject
     lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
@@ -105,22 +106,20 @@ class MainActivity : ApplicationActivity() {
     /**
      * invoke [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app
      */
-    override val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            getCurrentFragment().let {
-                when (it) {
-                    is AboutFragment -> supportFragmentManager.popBackStack()
-                    is FlowFieldFragment -> {
-                        it.binding.drawerLayout.run {
-                            if (isOpen)
-                                closeDrawer(GravityCompat.START)
-                            else
-                                it.onBackPress()
-                        }
+    override fun handleOnBackPressed() {
+        getCurrentFragment().let {
+            when (it) {
+                is AboutFragment -> supportFragmentManager.popBackStack()
+                is FlowFieldFragment -> {
+                    it.binding.drawerLayout.run {
+                        if (isOpen)
+                            closeDrawer(GravityCompat.START)
+                        else
+                            it.onBackPress()
                     }
-
-                    else -> Unit
                 }
+
+                else -> Unit
             }
         }
     }

@@ -3,9 +3,7 @@ package com.w2sv.autocrop.activities
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.LifecycleObserver
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 abstract class ApplicationActivity : FragmentHostingActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,15 +15,22 @@ abstract class ApplicationActivity : FragmentHostingActivity() {
             launchRootFragment()
     }
 
-    protected open val lifecycleObservers: List<LifecycleObserver>
-        get() = listOf()
-
     private fun registerObserversAndCallbacks() {
-        lifecycleObservers.forEach {
+        lifecycleObservers?.forEach {
             lifecycle.addObserver(it)
         }
-        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    this@ApplicationActivity.handleOnBackPressed()
+                }
+            }
+        )
     }
 
-    protected abstract val onBackPressedCallback: OnBackPressedCallback
+    protected open val lifecycleObservers: List<LifecycleObserver>?
+        get() = null
+
+    protected abstract fun handleOnBackPressed()
 }
