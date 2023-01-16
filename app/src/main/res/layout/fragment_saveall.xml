@@ -28,7 +28,7 @@
 
         android:layout_centerInParent="true"
 
-        android:indeterminateDrawable="@drawable/shape_circular_progress_bar_save_all" />
+        android:indeterminateDrawable="@drawable/shape_progress_bar_save_all" />
 
     <com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllProgressTextView
         android:id="@+id/progress_tv"

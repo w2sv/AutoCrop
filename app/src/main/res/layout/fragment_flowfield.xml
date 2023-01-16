@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -43,7 +42,7 @@
                     android:layout_width="@dimen/size_lottie_button"
                     android:layout_height="@dimen/size_lottie_button"
                     android:layout_marginStart="@dimen/margin_horizontal"
-                    android:layout_marginTop="46dp"
+                    android:layout_marginTop="@dimen/margin_top_portrait"
 
                     android:contentDescription="@string/main_menu_toggle"
 
@@ -56,12 +55,12 @@
                     android:layout_height="143dp"
                     android:layout_centerInParent="true"
 
-                    android:background="@drawable/shape_imageselection_button"
+                    android:background="@drawable/shape_button_screenshotselection"
 
                     android:lineSpacingExtra="10dp"
                     android:text="@string/select_images"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textColor="@color/image_selection_button_foreground" />
+                    android:textColor="@color/image_selection_button" />
 
                 <androidx.coordinatorlayout.widget.CoordinatorLayout
                     android:layout_width="match_parent"
@@ -104,7 +103,7 @@
 
             app:headerLayout="@layout/navigation_view_header"
             app:itemIconTint="@color/highlight"
-            app:menu="@menu/flowfield" />
+            app:menu="@menu/navigation_view" />
 
     </com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldDrawerLayout>
 

@@ -70,7 +70,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
 
-        android:background="@drawable/shape_oval_w_border"
+        android:background="@drawable/shape_button_cancel_autoscroll"
         android:paddingHorizontal="3dp"
 
         android:text="@string/cancel_autoscroll"

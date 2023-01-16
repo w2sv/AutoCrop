@@ -37,7 +37,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="50dp"
 
-            android:background="@drawable/shape_rounded_rectangle"
+            android:background="@drawable/shape_rounded_rectangle_w_button_background"
             android:gravity="center"
 
             android:textColor="@android:color/white"
@@ -53,7 +53,7 @@
             android:layout_marginEnd="@dimen/margin_horizontal"
             android:layout_marginBottom="62dp"
 
-            android:background="@drawable/shape_oval_btn"
+            android:background="@drawable/shape_oval_w_button_background"
 
             android:contentDescription="@string/go_back_to_crop_pager"
             android:padding="@dimen/padding_image_button_w_background"

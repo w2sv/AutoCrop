@@ -11,9 +11,10 @@
         android:layout_gravity="bottom|center_horizontal"
         android:layout_margin="12dp"
 
-        android:background="@drawable/shape_oval_w_border_white"
+        android:background="@drawable/shape_button_enable_ssl"
         android:paddingHorizontal="3dp"
         android:text="@string/enable"
+        android:textColor="@android:color/white"
         android:textSize="18sp" />
 
     <com.airbnb.lottie.LottieAnimationView

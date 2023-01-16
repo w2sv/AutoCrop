@@ -6,6 +6,7 @@
 
     <dimen name="margin_horizontal">35dp</dimen>
     <dimen name="margin_horizontal_manual_crop_fragment_top_button">4dp</dimen>
+    <dimen name="margin_top_portrait">46dp</dimen>
     <dimen name="margin_crop_progress_bar">-80dp</dimen>
     <dimen name="size_lottie_button">46dp</dimen>
     <dimen name="size_image_button">28dp</dimen>

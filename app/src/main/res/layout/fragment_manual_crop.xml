@@ -22,7 +22,7 @@
                 android:layout_width="@dimen/width_button"
                 android:layout_height="@dimen/height_button"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_manual_crop_fragment_top_button"
-                android:background="@drawable/shape_rounded_rectangle"
+                android:background="@drawable/shape_rounded_rectangle_w_button_background"
                 android:gravity="center"
                 android:textStyle="bold" />
 
@@ -31,7 +31,7 @@
                 android:layout_width="@dimen/width_button"
                 android:layout_height="@dimen/height_button"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_manual_crop_fragment_top_button"
-                android:background="@drawable/shape_rounded_rectangle"
+                android:background="@drawable/shape_rounded_rectangle_w_button_background"
                 android:gravity="center"
                 android:textStyle="bold" />
 
@@ -40,7 +40,7 @@
                 android:layout_width="@dimen/width_button"
                 android:layout_height="@dimen/height_button"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_manual_crop_fragment_top_button"
-                android:background="@drawable/shape_rounded_rectangle"
+                android:background="@drawable/shape_rounded_rectangle_w_button_background"
                 android:gravity="center"
                 android:textStyle="bold" />
 
@@ -49,7 +49,7 @@
                 android:layout_width="@dimen/width_button"
                 android:layout_height="@dimen/height_button"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_manual_crop_fragment_top_button"
-                android:background="@drawable/shape_rounded_rectangle"
+                android:background="@drawable/shape_rounded_rectangle_w_button_background"
                 android:gravity="center"
                 android:textStyle="bold" />
 
@@ -74,7 +74,7 @@
             android:layout_marginTop="-30dp"
             android:layout_marginEnd="10dp"
 
-            android:background="@drawable/shape_manual_crop_reset_btn"
+            android:background="@drawable/shape_button_reset_crop_adjustment"
             android:text="@string/reset"
             android:textColor="@color/highlight"
             android:textSize="15sp"
@@ -101,7 +101,7 @@
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="18dp"
 
-                android:background="@drawable/shape_oval_btn"
+                android:background="@drawable/shape_oval_w_button_background"
                 android:contentDescription="@string/discard_changes"
                 android:padding="@dimen/padding_image_button_w_background"
 
@@ -115,7 +115,7 @@
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="18dp"
 
-                android:background="@drawable/shape_oval_btn"
+                android:background="@drawable/shape_oval_w_button_background"
                 android:contentDescription="@string/apply_adjusted_crop_edges"
 
                 android:padding="@dimen/padding_image_button_w_background"
