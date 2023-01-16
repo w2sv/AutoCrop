@@ -14,22 +14,11 @@ class Particle {
     private static int flowFieldWidth;
     private static int flowFieldHeight;
     private final PVector previousPos;
-    private PVector acc;
     private final PVector vel;
     private final float maxSpeed;
     PVector pos;
+    private PVector acc;
     private boolean skipDraw = false;
-
-    public static void setFlowFieldDimensions(int width, int height) {
-        Particle.flowFieldWidth = width;
-        Particle.flowFieldHeight = height;
-    }
-
-    public static void initializeCanvas(PGraphics canvas) {
-        colorHandler = new ColorHandler();
-        colorHandler.setStrokeColor(canvas);
-        canvas.strokeWeight(Sketch.Config.PARTICLE_STROKE_WEIGHT);
-    }
 
     public Particle(PApplet parent) {
         vel = new PVector(
@@ -40,6 +29,17 @@ class Particle {
 
         pos = new PVector(parent.random(flowFieldWidth), parent.random(flowFieldHeight));
         previousPos = pos.copy();
+    }
+
+    public static void setFlowFieldDimensions(int width, int height) {
+        Particle.flowFieldWidth = width;
+        Particle.flowFieldHeight = height;
+    }
+
+    public static void initializeCanvas(PGraphics canvas) {
+        colorHandler = new ColorHandler();
+        colorHandler.setStrokeColor(canvas);
+        canvas.strokeWeight(Sketch.Config.PARTICLE_STROKE_WEIGHT);
     }
 
     void applyForceVector(PVector v) {
@@ -102,8 +102,8 @@ class Particle {
      */
     static class ColorHandler {
 
-        public int color = Random.randomElement(new ArrayList<>(Sketch.Config.PARTICLE_COLORS));
         private final PeriodicalRunner runner = new PeriodicalRunner(Sketch.Config.PARTICLE_COLOR_CHANGE_PERIOD);
+        public int color = Random.randomElement(new ArrayList<>(Sketch.Config.PARTICLE_COLORS));
 
         public void changeColorIfDue(int millis, PGraphics canvas) {
             runner.runIfDue(millis, () -> {
@@ -112,7 +112,7 @@ class Particle {
             });
         }
 
-        public void setStrokeColor(PGraphics canvas){
+        public void setStrokeColor(PGraphics canvas) {
             canvas.stroke(color, Sketch.Config.PARTICLE_STROKE_ALPHA);
         }
 

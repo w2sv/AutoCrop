@@ -25,6 +25,6 @@
         android:visibility="gone"
         app:lottie_loop="false"
         app:lottie_progress="1"
-        app:lottie_rawRes="@raw/done"/>
+        app:lottie_rawRes="@raw/done" />
 
 </FrameLayout>

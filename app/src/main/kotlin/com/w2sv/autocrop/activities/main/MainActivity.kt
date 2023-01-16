@@ -65,9 +65,12 @@ class MainActivity : ApplicationActivity() {
 
     private val viewModel: ViewModel by viewModels()
 
-    @Inject lateinit var flags: Flags
-    @Inject lateinit var booleanPreferences: BooleanPreferences
-    @Inject lateinit var cropSaveDirPreferences: CropSaveDirPreferences
+    @Inject
+    lateinit var flags: Flags
+    @Inject
+    lateinit var booleanPreferences: BooleanPreferences
+    @Inject
+    lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
     override val lifecycleObservers: List<LifecycleObserver>
         get() = listOf(flags, booleanPreferences, cropSaveDirPreferences)

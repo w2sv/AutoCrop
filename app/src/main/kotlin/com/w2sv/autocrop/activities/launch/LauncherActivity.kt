@@ -11,7 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LauncherActivity: AppCompatActivity() {
+class LauncherActivity : AppCompatActivity() {
 
     @Inject
     lateinit var flags: Flags

@@ -107,8 +107,10 @@ class ExaminationActivity : ApplicationActivity() {
 
     private val viewModel: ViewModel by viewModels()
 
-    @Inject lateinit var flags: Flags
-    @Inject lateinit var booleanPreferences: BooleanPreferences
+    @Inject
+    lateinit var flags: Flags
+    @Inject
+    lateinit var booleanPreferences: BooleanPreferences
 
     override val lifecycleObservers: List<LifecycleObserver>
         get() = listOf(flags, booleanPreferences)

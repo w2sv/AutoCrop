@@ -67,7 +67,7 @@ class ComparisonFragment
         val enterTransitionCompleted by AutoSwitch(false, switchOn = false)
 
         val displayScreenshotLive: LiveData<Boolean> = MutableLiveData(false)
-        val showButtonsLive: LiveData<Boolean>  = MutableLiveData(false)
+        val showButtonsLive: LiveData<Boolean> = MutableLiveData(false)
         val screenshotImageViewMatrixLive: LiveData<Matrix> = MutableLiveData(null)
     }
 

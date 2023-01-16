@@ -12,33 +12,9 @@ import processing.core.PGraphics;
 
 public class Sketch extends PApplet {
 
-    static class Config{
-        static final int N_PARTICLES = 600;
-        static final int ALPHA_DROP_PERIOD = 350;
-        static final int PARTICLE_START_VELOCITY_LOW = 1;
-        static final int PARTICLE_START_VELOCITY_HIGH = 3;
-        static final int PARTICLE_MAX_VELOCITY_LOW = 6;
-        static final int PARTICLE_MAX_VELOCITY_HIGH = 8;
-        static final int PARTICLE_COLOR_CHANGE_PERIOD = 3000;
-        static final float PARTICLE_STROKE_ALPHA = 48;
-        static final int PARTICLE_STROKE_WEIGHT = 2;
-        static final Set<Integer> PARTICLE_COLORS = Set.of(
-                0xFFBC275E,  // magenta bright
-                0xFF911945,  // magenta saturated
-                0xFF701145,  // magenta dark
-                0xFFB00020,  // red
-                0xFF6B13B5,  // purple
-                0xFF1a0ac7   // ocean blue
-        );
-        static final int BACKGROUND_COLOR = 0;
-        static final int FLOW_FIELD_GRANULARITY = 200;
-        static final float FLOW_FIELD_Z_OFF_INCREMENT = 0.004f;
-    }
-
     private final FlowField flowfield = new FlowField();
     private final ArrayList<Particle> particles = new ArrayList<>();
     private final AlphaDropper alphaDropper = new AlphaDropper();
-
     public Sketch(int width, int height) {
         this.width = width;
         this.height = height;
@@ -76,9 +52,32 @@ public class Sketch extends PApplet {
             p.draw(g);
         }
     }
+
+    static class Config {
+        static final int N_PARTICLES = 600;
+        static final int ALPHA_DROP_PERIOD = 350;
+        static final int PARTICLE_START_VELOCITY_LOW = 1;
+        static final int PARTICLE_START_VELOCITY_HIGH = 3;
+        static final int PARTICLE_MAX_VELOCITY_LOW = 6;
+        static final int PARTICLE_MAX_VELOCITY_HIGH = 8;
+        static final int PARTICLE_COLOR_CHANGE_PERIOD = 3000;
+        static final float PARTICLE_STROKE_ALPHA = 48;
+        static final int PARTICLE_STROKE_WEIGHT = 2;
+        static final Set<Integer> PARTICLE_COLORS = Set.of(
+                0xFFBC275E,  // magenta bright
+                0xFF911945,  // magenta saturated
+                0xFF701145,  // magenta dark
+                0xFFB00020,  // red
+                0xFF6B13B5,  // purple
+                0xFF1a0ac7   // ocean blue
+        );
+        static final int BACKGROUND_COLOR = 0;
+        static final int FLOW_FIELD_GRANULARITY = 200;
+        static final float FLOW_FIELD_Z_OFF_INCREMENT = 0.004f;
+    }
 }
 
-class AlphaDropper{
+class AlphaDropper {
     private final PeriodicalRunner periodicalRunner = new PeriodicalRunner(Sketch.Config.ALPHA_DROP_PERIOD);
 
     void dropAlphaIfDue(int millis, PGraphics canvas) {

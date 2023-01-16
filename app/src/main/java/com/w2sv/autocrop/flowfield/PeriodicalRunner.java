@@ -1,13 +1,8 @@
 package com.w2sv.autocrop.flowfield;
 
 class PeriodicalRunner {
-    public interface Listener {
-        void listener();
-    }
-
-    private int tLastRun = 0;
     private final int milliPeriod;
-
+    private int tLastRun = 0;
     PeriodicalRunner(int milliPeriod) {
         this.milliPeriod = milliPeriod;
     }
@@ -17,5 +12,9 @@ class PeriodicalRunner {
             listener.listener();
             tLastRun = millis;
         }
+    }
+
+    public interface Listener {
+        void listener();
     }
 }
