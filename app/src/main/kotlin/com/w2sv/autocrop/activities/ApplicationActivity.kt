@@ -11,6 +11,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 abstract class ApplicationActivity : FragmentHostingActivity() {
 
+    // TODO: only inject what's actually required by child activity
+
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
 
@@ -20,14 +22,20 @@ abstract class ApplicationActivity : FragmentHostingActivity() {
     @Inject
     lateinit var flags: Flags
 
-    protected fun onCreateCore(savedInstanceState: Bundle?){
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        registerObserversAndCallbacks()
+
+        if (savedInstanceState == null)
+            launchRootFragment()
+    }
+
+    private fun registerObserversAndCallbacks(){
         listOf(booleanPreferences, cropSaveDirPreferences, flags).forEach {
             lifecycle.addObserver(it)
         }
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-
-        if (savedInstanceState == null)
-            launchRootFragment()
     }
 
     protected abstract val onBackPressedCallback: OnBackPressedCallback

@@ -4,11 +4,11 @@ import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.IntentFilter
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
@@ -20,7 +20,6 @@ import com.w2sv.autocrop.activities.ApplicationActivity
 import com.w2sv.autocrop.activities.examination.IOResults
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.activities.onboarding.OnboardingActivity
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.utils.extensions.getParcelable
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,15 +32,21 @@ class MainActivity : ApplicationActivity() {
 
         fun start(
             activity: Activity,
+            clearPreviousActivity: Boolean = false,
             animation: ((Context) -> Unit)? = Animatoo::animateSwipeRight,
-            configureIntent: Intent.() -> Intent = { this }
+            configureIntent: (Intent.() -> Intent)? = null
         ) {
             activity.startActivity(
                 Intent(
                     activity,
                     MainActivity::class.java
                 )
-                    .configureIntent()
+                    .apply {
+                        if (clearPreviousActivity) {
+                            flags = FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                        configureIntent?.invoke(this)
+                    }
             )
             animation?.invoke(activity)
         }
@@ -56,24 +61,14 @@ class MainActivity : ApplicationActivity() {
     private val viewModel: ViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        if (!flags.onboardingDone) {
-            startActivity(
-                Intent(this, OnboardingActivity::class.java)
+        LocalBroadcastManager
+            .getInstance(this)
+            .registerReceiver(
+                onCancelledScreenshotListenerFromNotificationListener,
+                IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
             )
-        }
-        else {
-            onCreateCore(savedInstanceState)
-
-            LocalBroadcastManager
-                .getInstance(this)
-                .registerReceiver(
-                    onCancelledScreenshotListenerFromNotificationListener,
-                    IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
-                )
-        }
     }
 
     override fun getRootFragment(): Fragment =

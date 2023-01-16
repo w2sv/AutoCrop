@@ -72,6 +72,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.aar'], dir: 'libs')
     implementation 'com.tbuonomo:dotsindicator:4.3'
+//    implementation libs.onboarder
 
     implementation libs.jetbrains.kotlin
 

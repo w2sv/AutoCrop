@@ -1,6 +1,7 @@
 package com.w2sv.autocrop.activities.onboarding
 
 import android.os.Bundle
+import android.util.TypedValue
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
@@ -21,6 +22,7 @@ import com.w2sv.onboarding.OnboardingPage
 import com.w2sv.permissionhandler.requestPermissions
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -94,7 +96,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                                     )
                             }
                     },
-                    onPageSelectedListener = { view, activity ->
+                    onPageFullyVisibleListener = { view, activity ->
                         val viewModel by (activity as ComponentActivity).viewModels<ViewModel>()
 
                         if (view != null && !viewModel.enabledScreenshotListening)
@@ -107,7 +109,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                     }
                 ),
                 OnboardingPage(
-                    titleTextRes = R.string.onboarding_page_2_title,  // to get title layout spacing
+                    titleTextRes = R.string.onboarding_page_2_title,
                     emblemDrawableRes = R.drawable.ic_scissors_24,
                     descriptionTextRes = R.string.onboarding_page_2_description,
                     backgroundColorRes = R.color.ocean_blue
@@ -122,10 +124,8 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
         ScreenshotListener.permissionHandlers(this)
     }
 
-    override fun onFinishButtonPressed() {
+    override fun onOnboardingFinished() {
         flags.onboardingDone = true
-        MainActivity.start(this, Animatoo::animateSwipeLeft)
-
-        finishAndRemoveTask()
+        MainActivity.start(this, true, Animatoo::animateSwipeLeft)
     }
 }
