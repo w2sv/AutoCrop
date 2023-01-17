@@ -6,6 +6,7 @@ import android.widget.Switch
 import com.w2sv.typedpreferences.descendants.BooleanPreferences
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.reflect.KMutableProperty0
 
 @Singleton
 class BooleanPreferences @Inject constructor(appPreferences: SharedPreferences) : BooleanPreferences(
@@ -15,13 +16,12 @@ class BooleanPreferences @Inject constructor(appPreferences: SharedPreferences) 
 ) {
     var autoScroll by this
     var deleteScreenshots by this
-
-    fun createSwitch(context: Context, key: String): Switch =
-        Switch(context).apply {
-            isChecked = getValue(key)
-            setOnCheckedChangeListener { _, isChecked ->
-                this@BooleanPreferences[key] = isChecked
-            }
-        }
 }
 
+fun KMutableProperty0<Boolean>.getConnectedSwitch(context: Context): Switch =
+    Switch(context).apply {
+        isChecked = get()
+        setOnCheckedChangeListener { _, isChecked ->
+            set(isChecked)
+        }
+    }

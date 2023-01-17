@@ -26,6 +26,7 @@ import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.CropSaveDirPreferences
+import com.w2sv.autocrop.preferences.getConnectedSwitch
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.permissionhandler.requestPermissions
@@ -101,7 +102,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
 
     private fun setAutoScrollItem() =
         menu.configureItem(R.id.main_menu_item_auto_scroll) {
-            it.actionView = booleanPreferences.createSwitch(context, "autoScroll")
+            it.actionView = booleanPreferences::autoScroll.getConnectedSwitch(context)
         }
 
     private fun setOnClickListeners() {
