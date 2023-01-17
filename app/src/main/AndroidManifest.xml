@@ -74,7 +74,7 @@
 
         <receiver android:name="com.w2sv.autocrop.screenshotlistening.ScreenshotListener$OnCancelledFromNotificationListener" />
         <receiver
-            android:name="com.w2sv.autocrop.activities.main.MainActivity$OnCancelledScreenshotListenerFromNotificationListener"
+            android:name="com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment$CancelledSSLFromNotificationListener"
             tools:ignore="Instantiatable" />
 
         <!-- ..Activities -->

@@ -15,13 +15,11 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.androidutils.extensions.configureItem
 import com.w2sv.androidutils.extensions.goToWebpage
-import com.w2sv.androidutils.extensions.hiltActivityViewModel
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.serviceRunning
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.FragmentedActivity
-import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.preferences.BooleanPreferences
@@ -45,7 +43,6 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
     private val viewModel by viewModel<FlowFieldFragment.ViewModel>()
-    private val activityViewModel by hiltActivityViewModel<MainActivity.ViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -65,8 +62,8 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                     isChecked = context.serviceRunning<ScreenshotListener>()
                     setOnCheckedChangeListener { _, value ->
                         when {
-                            activityViewModel.liveScreenshotListenerRunning.value != null -> activityViewModel.liveScreenshotListenerRunning.postValue(
-                                null
+                            viewModel.screenshotListenerCancelledFromNotification.value != null -> viewModel.screenshotListenerCancelledFromNotification.postValue(
+                                false
                             )
 
                             value -> findFragment<FlowFieldFragment>()
@@ -84,10 +81,9 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                         }
                     }
 
-                    activityViewModel.liveScreenshotListenerRunning.observe(activity as LifecycleOwner) { isRunningOptional ->
-                        isRunningOptional?.let { isRunning ->
-                            isChecked = isRunning
-                        }
+                    viewModel.screenshotListenerCancelledFromNotification.observe(activity as LifecycleOwner) { isCancelled ->
+                        if (isCancelled)
+                            isChecked = false
                     }
                 }
         }

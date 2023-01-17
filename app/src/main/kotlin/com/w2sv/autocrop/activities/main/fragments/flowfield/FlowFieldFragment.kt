@@ -2,8 +2,10 @@ package com.w2sv.autocrop.activities.main.fragments.flowfield
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
@@ -17,6 +19,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.androidutils.BackPressListener
@@ -120,18 +123,62 @@ class FlowFieldFragment :
             viewModelScope,
             context.resources.getLong(R.integer.duration_backpress_confirmation_window)
         )
+
+        val screenshotListenerCancelledFromNotification: LiveData<Boolean> by lazy {
+            MutableLiveData(false)
+        }
     }
 
     private val viewModel by viewModels<ViewModel>()
 
+    inner class CancelledSSLFromNotificationListener : BroadcastReceiver() {
+
+        override fun onReceive(context: Context?, intent: Intent?) {
+            viewModel
+                .screenshotListenerCancelledFromNotification
+                .postValue(true)
+        }
+
+        fun register(){
+            LocalBroadcastManager
+                .getInstance(requireContext())
+                .registerReceiver(
+                    this,
+                    IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
+                )
+        }
+
+        fun unregister(){
+            LocalBroadcastManager
+                .getInstance(requireContext())
+                .unregisterReceiver(this)
+        }
+
+    }
+
+    private val cancelledSSLFromNotificationListener by lazy {
+        CancelledSSLFromNotificationListener()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycle.addObserver(selectImagesContractHandler)
-        lifecycle.addObserver(openDocumentTreeContractHandler)
+        cancelledSSLFromNotificationListener.register()
 
-        lifecycle.addObserver(writeExternalStoragePermissionHandler)
-        screenshotListeningPermissionHandlers.forEach(lifecycle::addObserver)
+        registerLifecycleObservers(
+            buildList {
+                add(selectImagesContractHandler)
+                add(openDocumentTreeContractHandler)
+                add(writeExternalStoragePermissionHandler)
+                addAll(screenshotListeningPermissionHandlers)
+            }
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        cancelledSSLFromNotificationListener.unregister()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
