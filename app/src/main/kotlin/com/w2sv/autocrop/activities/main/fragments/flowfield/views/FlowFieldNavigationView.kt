@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.AttributeSet
-import android.widget.CompoundButton
 import android.widget.Switch
 import androidx.core.app.ShareCompat
 import androidx.core.view.GravityCompat
@@ -44,23 +43,17 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     @Inject
     lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
-    private val activityViewModel by hiltActivityViewModel<MainActivity.ViewModel>()
-
     private val viewModel by viewModel<FlowFieldFragment.ViewModel>()
+    private val activityViewModel by hiltActivityViewModel<MainActivity.ViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
         if (!isInEditMode) {
-            viewModel.liveCropSaveDirIdentifier.observe(findViewTreeLifecycleOwner()!!) { cropSaveDirIdentifier ->
-                menu.configureItem(R.id.main_menu_item_current_crop_dir) {
-                    it.title = cropSaveDirIdentifier
-                }
-            }
-
             setListenToScreenCapturesItem()
+            setCurrentCropDirIdentifier()
             setAutoScrollItem()
-            setSwitchLessItems()
+            setOnClickListeners()
         }
     }
 
@@ -69,103 +62,103 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
             it.actionView = Switch(context)
                 .apply {
                     isChecked = context.serviceRunning<ScreenshotListener>()
+                    setOnCheckedChangeListener { _, value ->
+                        when {
+                            activityViewModel.liveScreenshotListenerRunning.value != null -> activityViewModel.liveScreenshotListenerRunning.postValue(
+                                null
+                            )
 
-                    val onCheckedChangeListener =
-                        CompoundButton.OnCheckedChangeListener { _, newValue ->
-                            if (newValue) {
-                                findFragment<FlowFieldFragment>()
-                                    .screenshotListeningPermissionHandlers
-                                    .requestPermissions(
-                                        onGranted = {
-                                            ScreenshotListener.startService(context)
-                                        },
-                                        onDenied = {
-                                            isChecked = false
-                                        }
-                                    )
-                            }
-                            else
-                                ScreenshotListener.stopService(context)
-                        }
+                            value -> findFragment<FlowFieldFragment>()
+                                .screenshotListeningPermissionHandlers
+                                .requestPermissions(
+                                    onGranted = {
+                                        ScreenshotListener.startService(context)
+                                    },
+                                    onDenied = {
+                                        isChecked = false
+                                    }
+                                )
 
-                    activityViewModel.liveScreenshotListenerRunning.observe(activity as LifecycleOwner) { isRunningOptional ->
-                        isRunningOptional?.let { isRunning ->
-                            setOnCheckedChangeListener(null)
-                            isChecked = isRunning
-                            setOnCheckedChangeListener(onCheckedChangeListener)
-                            activityViewModel.liveScreenshotListenerRunning.postValue(null)
+                            else -> ScreenshotListener.stopService(context)
                         }
                     }
 
-                    setOnCheckedChangeListener(onCheckedChangeListener)
+                    activityViewModel.liveScreenshotListenerRunning.observe(activity as LifecycleOwner) { isRunningOptional ->
+                        isRunningOptional?.let { isRunning ->
+                            isChecked = isRunning
+                        }
+                    }
                 }
         }
+
+    private fun setCurrentCropDirIdentifier() {
+        viewModel.liveCropSaveDirIdentifier.observe(findViewTreeLifecycleOwner()!!) { cropSaveDirIdentifier ->
+            menu.configureItem(R.id.main_menu_item_current_crop_dir) { item ->
+                item.title = cropSaveDirIdentifier
+            }
+        }
+    }
 
     private fun setAutoScrollItem() =
         menu.configureItem(R.id.main_menu_item_auto_scroll) {
             it.actionView = booleanPreferences.createSwitch(context, "autoScroll")
         }
 
-    private fun setSwitchLessItems() {
+    private fun setOnClickListeners() {
         setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.main_menu_item_change_crop_dir -> pickSaveDestinationDir()
-                R.id.main_menu_item_about -> invokeAboutFragment()
-                R.id.main_menu_item_go_to_github -> goToGithub()
-                R.id.main_menu_item_rate_the_app -> goToPlayStoreListing()
-                R.id.main_menu_item_share -> shareLink()
+                R.id.main_menu_item_change_crop_dir -> {
+                    findFragment<FlowFieldFragment>()
+                        .openDocumentTreeContractHandler
+                        .selectDocument(cropSaveDirPreferences.treeUri)
+                }
+
+                R.id.main_menu_item_about -> {
+                    fragmentedActivity.fragmentReplacementTransaction(
+                        AboutFragment(),
+                        animated = true,
+                    )
+                        .addToBackStack(null)
+                        .commit()
+                }
+
+                R.id.main_menu_item_go_to_github -> {
+                    context
+                        .goToWebpage("https://github.com/w2sv/autocrop")
+                }
+
+                R.id.main_menu_item_rate_the_app -> {
+                    try {
+                        context.startActivity(
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(playStoreLink())
+                            )
+                                .setPackage("com.android.vending")
+                        )
+                    }
+                    catch (e: ActivityNotFoundException) {
+                        activity
+                            .snackyBuilder("Seems like you're not signed into the Play Store \uD83E\uDD14")
+                            .build()
+                            .show()
+                    }
+                }
+
+                R.id.main_menu_item_share -> {
+                    ShareCompat.IntentBuilder(context)
+                        .setType("text/plain")
+                        .setText("Check out AutoCrop!\n\n${playStoreLink()}")
+                        .setChooserTitle("Choose an app")
+                        .startChooser()
+                }
             }
+
             (parent as DrawerLayout).closeDrawer(GravityCompat.START)
             false
         }
     }
 
-    private fun pickSaveDestinationDir() {
-        findFragment<FlowFieldFragment>()
-            .openDocumentTreeContractHandler
-            .selectDocument(cropSaveDirPreferences.treeUri)
-    }
-
-    private fun goToPlayStoreListing() {
-        try {
-            context.startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(playStoreLink())
-                )
-                    .setPackage("com.android.vending")
-            )
-        }
-        catch (e: ActivityNotFoundException) {
-            activity
-                .snackyBuilder("Seems like you're not signed into the Play Store \uD83E\uDD14")
-                .build()
-                .show()
-        }
-    }
-
     private fun playStoreLink(): String =
         "https://play.google.com/store/apps/details?id=${activity.packageName}"
-
-    private fun goToGithub() {
-        context
-            .goToWebpage("https://github.com/w2sv/autocrop")
-    }
-
-    private fun invokeAboutFragment() {
-        fragmentedActivity.fragmentReplacementTransaction(
-            AboutFragment(),
-            animated = true,
-        )
-            .addToBackStack(null)
-            .commit()
-    }
-
-    private fun shareLink(){
-        ShareCompat.IntentBuilder(context)
-            .setType("text/plain")
-            .setText("Check out AutoCrop!\n\n${playStoreLink()}")
-            .setChooserTitle("Choose an app")
-            .startChooser()
-    }
 }
