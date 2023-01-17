@@ -20,9 +20,9 @@ class CropBundleIORunner @Inject constructor() {
     }
 
     companion object {
-        fun getInstance(appContext: Context): CropBundleIORunner {
+        fun getInstance(context: Context): CropBundleIORunner {
             val hiltEntryPoint = EntryPointAccessors.fromApplication(
-                appContext,
+                context,
                 CropBundleIOProcessorEntryPoint::class.java
             )
             return hiltEntryPoint.cropBundleIOProcessor()
@@ -34,7 +34,7 @@ class CropBundleIORunner @Inject constructor() {
 
     @Inject
     @ApplicationContext
-    lateinit var applicationContext: Context
+    lateinit var context: Context
 
     fun invoke(
         cropBitmap: Bitmap,
@@ -42,16 +42,16 @@ class CropBundleIORunner @Inject constructor() {
         deleteScreenshot: Boolean
     ): CropBundleIOResult =
         CropBundleIOResult(
-            applicationContext.contentResolver.saveBitmap(
+            context.contentResolver.saveBitmap(
                 cropBitmap,
                 screenshotMediaStoreData.parsedMimeType,
                 cropFileName(
                     screenshotMediaStoreData.fileName,
                     screenshotMediaStoreData.parsedMimeType
                 ),
-                cropSaveDirPreferences.validDocumentUriOrNull(applicationContext)
+                cropSaveDirPreferences.validDocumentUriOrNull(context)
             ),
-            applicationContext.contentResolver.deleteScreenshotIfApplicable(
+            context.contentResolver.deleteScreenshotIfApplicable(
                 screenshotMediaStoreData.id,
                 deleteScreenshot
             )

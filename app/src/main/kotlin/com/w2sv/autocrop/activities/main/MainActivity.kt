@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleObserver
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.autocrop.activities.ApplicationActivity
-import com.w2sv.autocrop.activities.examination.IOResults
+import com.w2sv.autocrop.activities.examination.AccumulatedIOResults
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.preferences.BooleanPreferences
@@ -62,7 +62,7 @@ class MainActivity : ApplicationActivity() {
         get() = listOf(globalFlags, booleanPreferences, cropSaveDirPreferences)
 
     override fun getRootFragment(): Fragment =
-        FlowFieldFragment.getInstance(intent.getParcelable(IOResults.EXTRA))
+        FlowFieldFragment.getInstance(intent.getParcelable(AccumulatedIOResults.EXTRA))
 
     /**
      * invoke [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app

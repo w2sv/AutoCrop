@@ -34,7 +34,7 @@ class DeleteRequestFragment :
             // increment sharedViewModel.nDeletedScreenshots if deletion request successfully emitted
             if (it.resultCode == Activity.RESULT_OK)
                 with(activityViewModel) {
-                    ioResults.nDeletedScreenshots += deletionInquiryUris.size
+                    accumulatedIoResults.nDeletedScreenshots += deletionInquiryUris.size
                 }
 
             launchAfterShortDelay {  // necessary for showing of transition animation, which otherwise is just skipped

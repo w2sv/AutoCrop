@@ -43,11 +43,11 @@ class ExaminationActivity : ApplicationActivity() {
             lateinit var cropBundles: MutableList<CropBundle>
         }
 
-        val ioResults = IOResults()
+        val accumulatedIoResults = AccumulatedIOResults()
 
         val deletionInquiryUris = arrayListOf<Uri>()
 
-        fun makeCropIOProcessor(cropBundlePosition: Int, applicationContext: Context): () -> Unit {
+        fun makeCropIOProcessor(cropBundlePosition: Int, context: Context): () -> Unit {
             val cropBundle = cropBundles[cropBundlePosition]
             val deleteScreenshot = booleanPreferences.deleteScreenshots
 
@@ -57,13 +57,13 @@ class ExaminationActivity : ApplicationActivity() {
             )
 
             return {
-                val ioResult = CropBundleIORunner.getInstance(applicationContext).invoke(
+                val ioResult = CropBundleIORunner.getInstance(context).invoke(
                     cropBundle.crop.bitmap,
                     cropBundle.screenshot.mediaStoreData,
                     deleteScreenshot && !addedScreenshotDeletionInquiryUri
                 )
 
-                ioResults.addFrom(ioResult)
+                accumulatedIoResults.addFrom(ioResult)
             }
         }
 
@@ -150,7 +150,7 @@ class ExaminationActivity : ApplicationActivity() {
 
     fun startMainActivity() {
         MainActivity.start(this) {
-            putExtra(IOResults.EXTRA, viewModel.ioResults)
+            putExtra(AccumulatedIOResults.EXTRA, viewModel.accumulatedIoResults)
         }
     }
 }

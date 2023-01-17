@@ -48,11 +48,11 @@ class SaveAllFragment :
 
     private fun launchCropProcessingCoroutine() {
         lifecycleScope.launch {
-            ExaminationActivity.ViewModel.cropBundles.indices.forEach {
+            ExaminationActivity.ViewModel.cropBundles.indices.forEach { bundleIndex ->
                 withContext(Dispatchers.IO) {
                     activityViewModel.makeCropIOProcessor(
-                        it,
-                        requireContext().applicationContext
+                        bundleIndex,
+                        requireContext()
                     )
                         .invoke()
                 }

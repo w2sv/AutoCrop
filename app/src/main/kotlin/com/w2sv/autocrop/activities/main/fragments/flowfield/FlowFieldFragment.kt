@@ -38,7 +38,7 @@ import com.w2sv.androidutils.extensions.uris
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
-import com.w2sv.autocrop.activities.examination.IOResults
+import com.w2sv.autocrop.activities.examination.AccumulatedIOResults
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.OpenDocumentTreeContractHandler
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.SelectImagesContractHandlerCompat
@@ -65,9 +65,9 @@ class FlowFieldFragment :
     ApplicationFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java) {
 
     companion object {
-        fun getInstance(ioResults: IOResults?): FlowFieldFragment =
+        fun getInstance(accumulatedIoResults: AccumulatedIOResults?): FlowFieldFragment =
             FlowFieldFragment().apply {
-                arguments = bundleOf(IOResults.EXTRA to ioResults)
+                arguments = bundleOf(AccumulatedIOResults.EXTRA to accumulatedIoResults)
             }
     }
 
@@ -84,9 +84,9 @@ class FlowFieldFragment :
         @ApplicationContext context: Context
     ) : androidx.lifecycle.ViewModel() {
 
-        val ioResults: IOResults? = savedStateHandle[IOResults.EXTRA]
+        val accumulatedIoResults: AccumulatedIOResults? = savedStateHandle[AccumulatedIOResults.EXTRA]
 
-        val ioResultsSnackbarData: SnackbarData? = ioResults?.let {
+        val ioResultsSnackbarData: SnackbarData? = accumulatedIoResults?.let {
             if (it.nSavedCrops == 0)
                 SnackbarData("Discarded all crops")
             else
@@ -112,7 +112,7 @@ class FlowFieldFragment :
                 )
         }
 
-        val followingExaminationActivity: Boolean = ioResults != null
+        val followingExaminationActivity: Boolean = accumulatedIoResults != null
 
         var fadedInButtonsOnCreate: Boolean = false
         var showedSnackbar: Boolean = false
@@ -228,7 +228,7 @@ class FlowFieldFragment :
     }
 
     private fun showLayoutElements() {
-        val savedAnyCrops: Boolean = viewModel.ioResults?.let { it.nSavedCrops != 0 }
+        val savedAnyCrops: Boolean = viewModel.accumulatedIoResults?.let { it.nSavedCrops != 0 }
             ?: false
 
         if (!viewModel.fadedInButtonsOnCreate) {
@@ -268,7 +268,7 @@ class FlowFieldFragment :
                     Intent(Intent.ACTION_SEND_MULTIPLE)
                         .putExtra(
                             Intent.EXTRA_STREAM,
-                            viewModel.ioResults!!.cropUris
+                            viewModel.accumulatedIoResults!!.cropUris
                         )
                         .setType(IMAGE_MIME_TYPE),
                     "Share Crops"
