@@ -7,8 +7,6 @@ import android.net.Uri
 import android.util.AttributeSet
 import android.widget.Switch
 import androidx.core.app.ShareCompat
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.navigation.NavigationView
@@ -25,6 +23,7 @@ import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.CropSaveDirPreferences
 import com.w2sv.autocrop.preferences.getConnectedSwitch
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
+import com.w2sv.autocrop.utils.extensions.playStoreLink
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.permissionhandler.requestPermissions
 import dagger.hilt.android.AndroidEntryPoint
@@ -126,7 +125,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                         context.startActivity(
                             Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse(playStoreLink())
+                                Uri.parse(activity.playStoreLink)
                             )
                                 .setPackage("com.android.vending")
                         )
@@ -142,17 +141,14 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 R.id.main_menu_item_share -> {
                     ShareCompat.IntentBuilder(context)
                         .setType("text/plain")
-                        .setText("Check out AutoCrop!\n\n${playStoreLink()}")
+                        .setText("Check out AutoCrop!\n\n${activity.playStoreLink}")
                         .setChooserTitle("Choose an app")
                         .startChooser()
                 }
             }
 
-            (parent as DrawerLayout).closeDrawer(GravityCompat.START)
+            findFragment<FlowFieldFragment>().binding.drawerLayout.closeDrawer()
             false
         }
     }
-
-    private fun playStoreLink(): String =
-        "https://play.google.com/store/apps/details?id=${activity.packageName}"
 }

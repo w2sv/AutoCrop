@@ -14,31 +14,29 @@ class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : Draw
         super.onAttachedToWindow()
 
         if (!isInEditMode) {
-            findFragment<FlowFieldFragment>()
-                .binding
-                .setAssociatedButtons()
+            addDrawerListener(
+                object : SimpleDrawerListener() {
+
+                    private val binding: FragmentFlowfieldBinding = findFragment<FlowFieldFragment>().binding
+
+                    override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                        binding.navigationViewToggleButton.progress = slideOffset
+
+                        val alphaOverlaidButtons = 1 - slideOffset
+                        binding.imageSelectionButton.alpha = alphaOverlaidButtons
+                        binding.shareCropsButton.alpha = alphaOverlaidButtons
+                        binding.foregroundToggleButton.alpha = alphaOverlaidButtons
+                    }
+                }
+            )
         }
     }
 
-    private fun FragmentFlowfieldBinding.setAssociatedButtons() {
-        addDrawerListener(
-            object : SimpleDrawerListener() {
-                override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                    navigationViewToggleButton.progress = slideOffset
+    fun openDrawer() {
+        openDrawer(GravityCompat.START)
+    }
 
-                    val alphaOverlaidButtons = 1 - slideOffset
-                    imageSelectionButton.alpha = alphaOverlaidButtons
-                    shareCropsButton.alpha = alphaOverlaidButtons
-                    foregroundToggleButton.alpha = alphaOverlaidButtons
-                }
-            }
-        )
-
-        navigationViewToggleButton.setOnClickListener {
-            if (isOpen)
-                closeDrawer(GravityCompat.START)
-            else
-                openDrawer(GravityCompat.START)
-        }
+    fun closeDrawer() {
+        closeDrawer(GravityCompat.START)
     }
 }

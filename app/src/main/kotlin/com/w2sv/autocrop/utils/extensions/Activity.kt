@@ -9,3 +9,6 @@ fun Activity.snackyBuilder(text: CharSequence, duration: Int = Snacky.LENGTH_LON
         .centerText()
         .setDuration(duration)
         .setActivity(this)
+
+val Activity.playStoreLink: String
+    get() = "https://play.google.com/store/apps/details?id=$packageName"

@@ -249,6 +249,14 @@ class FlowFieldFragment :
     }
 
     private fun FragmentFlowfieldBinding.setOnClickListeners() {
+        navigationViewToggleButton.setOnClickListener {
+            with(drawerLayout) {
+                if (isOpen)
+                    closeDrawer()
+                else
+                    openDrawer()
+            }
+        }
         imageSelectionButton.setOnClickListener {
             writeExternalStoragePermissionHandler.requestPermission(
                 onPermissionGranted = selectImagesContractHandler::selectImages

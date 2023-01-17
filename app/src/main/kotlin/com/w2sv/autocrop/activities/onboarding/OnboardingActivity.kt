@@ -1,8 +1,6 @@
 package com.w2sv.autocrop.activities.onboarding
 
-import android.app.Activity
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
 import com.airbnb.lottie.LottieAnimationView
@@ -32,11 +30,6 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
 
     @HiltViewModel
     class ViewModel @Inject constructor() : androidx.lifecycle.ViewModel() {
-
-        companion object {
-            fun getInstance(activity: Activity): ViewModel =
-                (activity as ComponentActivity).viewModels<ViewModel>().value
-        }
 
         var enabledScreenshotListening: Boolean = false
     }
@@ -71,7 +64,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                         val enableButton = view.findViewById<AppCompatButton>(R.id.enable_button)
                         val doneAnimation = view.findViewById<LottieAnimationView>(R.id.done_animation)
 
-                        val viewModel = ViewModel.getInstance(activity)
+                        val viewModel by activity.viewModels<ViewModel>()
 
                         if (viewModel.enabledScreenshotListening)
                             crossVisualize(enableButton, doneAnimation)
@@ -98,7 +91,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                             }
                     },
                     onPageFullyVisibleListener = { view, activity ->
-                        if (view != null && !ViewModel.getInstance(activity).enabledScreenshotListening)
+                        if (view != null && !activity.viewModels<ViewModel>().value.enabledScreenshotListening)
                             view.findViewById<AppCompatButton>(R.id.enable_button)
                                 .apply {
                                     animationComposer(Techniques.Tada)
