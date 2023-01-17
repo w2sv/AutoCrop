@@ -141,7 +141,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 R.id.main_menu_item_share -> {
                     ShareCompat.IntentBuilder(context)
                         .setType("text/plain")
-                        .setText("Check out AutoCrop!\n\n${activity.playStoreLink}")
+                        .setText("Check out AutoCrop @ ${activity.playStoreLink}")
                         .setChooserTitle("Choose an app")
                         .startChooser()
                 }

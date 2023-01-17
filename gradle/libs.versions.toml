@@ -11,7 +11,7 @@ viewboundcontroller = 'com.github.w2sv:ViewboundController:0.0.7-rc1'
 androidutils = 'com.github.w2sv:AndroidUtils:0.0.10-rc1'
 typedpreferences = 'com.github.w2sv:TypedPreferences:1.0.0'
 viewanimations = 'com.github.w2sv:AndroidViewAnimations:3.0.0'
-onboarder = 'com.github.w2sv:AndroidOnboarder:0.0.2-rc2'
+onboarder = 'com.github.w2sv:AndroidOnboarder:0.0.2-rc3'
 
 # androidx
 androidx-appcompat = 'androidx.appcompat:appcompat:1.5.1'

@@ -46,75 +46,74 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
             finishAffinity()
         }
 
-        setPages(
-            listOf(
-                OnboardingPage(
-                    titleTextRes = R.string.onboarding_page_1_title,
-                    backgroundColorRes = R.color.magenta_saturated,
-                    emblemDrawableRes = R.drawable.logo_nobackground,
-                    descriptionText = getString(R.string.onboarding_page_1_description)
-                ),
-                OnboardingPage(
-                    titleTextRes = R.string.screenshot_listening,
-                    descriptionTextRes = R.string.screenshot_listener_description,
-                    backgroundColorRes = android.R.color.holo_purple,
-                    emblemDrawableRes = R.drawable.ic_hearing_24,
-                    actionLayoutRes = R.layout.action_layout_screenshotlistener_onboardingpage,
-                    onViewCreatedListener = { view, activity ->
-                        val enableButton = view.findViewById<AppCompatButton>(R.id.enable_button)
-                        val doneAnimation = view.findViewById<LottieAnimationView>(R.id.done_animation)
-
-                        val viewModel by activity.viewModels<ViewModel>()
-
-                        if (viewModel.enabledScreenshotListening)
-                            crossVisualize(enableButton, doneAnimation)
-                        else
-                            enableButton.setOnClickListener {
-                                (activity as OnboardingActivity).screenshotListeningPermissionHandlers
-                                    .requestPermissions(
-                                        onGranted = {
-                                            ScreenshotListener.startService(activity)
-                                            viewModel.enabledScreenshotListening = true
-                                        },
-                                        onDialogClosed = {
-                                            it
-                                                .animationComposer(Techniques.ZoomOut, 750L)
-                                                .onEnd {
-                                                    with(doneAnimation) {
-                                                        show()
-                                                        playAnimation()
-                                                    }
-                                                }
-                                                .playOn(it)
-                                        }
-                                    )
-                            }
-                    },
-                    onPageFullyVisibleListener = { view, activity ->
-                        if (view != null && !activity.viewModels<ViewModel>().value.enabledScreenshotListening)
-                            view.findViewById<AppCompatButton>(R.id.enable_button)
-                                .apply {
-                                    animationComposer(Techniques.Tada)
-                                        .delay(resources.getLong(R.integer.delay_small))
-                                        .playOn(this)
-                                }
-                    }
-                ),
-                OnboardingPage(
-                    titleTextRes = R.string.onboarding_page_2_title,
-                    emblemDrawableRes = R.drawable.ic_scissors_24,
-                    descriptionTextRes = R.string.onboarding_page_2_description,
-                    backgroundColorRes = R.color.ocean_blue
-                )
-            )
-        )
-
         setFabColor(getThemedColor(R.color.low_alpha_gray))
     }
 
     private val screenshotListeningPermissionHandlers by lazy {
         ScreenshotListener.permissionHandlers(this)
     }
+
+    override fun getPages(): List<OnboardingPage> =
+        listOf(
+            OnboardingPage(
+                titleTextRes = R.string.onboarding_page_1_title,
+                backgroundColorRes = R.color.magenta_saturated,
+                emblemDrawableRes = R.drawable.logo_nobackground,
+                descriptionText = getString(R.string.onboarding_page_1_description)
+            ),
+            OnboardingPage(
+                titleTextRes = R.string.screenshot_listening,
+                descriptionTextRes = R.string.screenshot_listener_description,
+                backgroundColorRes = android.R.color.holo_purple,
+                emblemDrawableRes = R.drawable.ic_hearing_24,
+                actionLayoutRes = R.layout.action_layout_screenshotlistener_onboardingpage,
+                onViewCreatedListener = { view, activity ->
+                    val enableButton = view.findViewById<AppCompatButton>(R.id.enable_button)
+                    val doneAnimation = view.findViewById<LottieAnimationView>(R.id.done_animation)
+
+                    val viewModel by activity.viewModels<ViewModel>()
+
+                    if (viewModel.enabledScreenshotListening)
+                        crossVisualize(enableButton, doneAnimation)
+                    else
+                        enableButton.setOnClickListener {
+                            (activity as OnboardingActivity).screenshotListeningPermissionHandlers
+                                .requestPermissions(
+                                    onGranted = {
+                                        ScreenshotListener.startService(activity)
+                                        viewModel.enabledScreenshotListening = true
+                                    },
+                                    onDialogClosed = {
+                                        it
+                                            .animationComposer(Techniques.ZoomOut, 750L)
+                                            .onEnd {
+                                                with(doneAnimation) {
+                                                    show()
+                                                    playAnimation()
+                                                }
+                                            }
+                                            .playOn(it)
+                                    }
+                                )
+                        }
+                },
+                onPageFullyVisibleListener = { view, activity ->
+                    if (view != null && !activity.viewModels<ViewModel>().value.enabledScreenshotListening)
+                        view.findViewById<AppCompatButton>(R.id.enable_button)
+                            .apply {
+                                animationComposer(Techniques.Tada)
+                                    .delay(resources.getLong(R.integer.delay_small))
+                                    .playOn(this)
+                            }
+                }
+            ),
+            OnboardingPage(
+                titleTextRes = R.string.onboarding_page_2_title,
+                emblemDrawableRes = R.drawable.ic_scissors_24,
+                descriptionTextRes = R.string.onboarding_page_2_description,
+                backgroundColorRes = R.color.ocean_blue
+            )
+        )
 
     override fun onOnboardingFinished() {
         flags.onboardingDone = true
