@@ -69,8 +69,8 @@ class ExaminationActivity : ApplicationActivity() {
 
         var cropProcessingCoroutine: Job? = null
 
-        fun launchViewModelScopedCropProcessingCoroutine(cropBundlePosition: Int, applicationContext: Context) {
-            val processCropBundle = makeCropIOProcessor(cropBundlePosition, applicationContext)
+        fun launchViewModelScopedCropProcessingCoroutine(cropBundlePosition: Int, context: Context) {
+            val processCropBundle = makeCropIOProcessor(cropBundlePosition, context)
 
             cropProcessingCoroutine = viewModelScope.launch(Dispatchers.IO) {
                 processCropBundle()

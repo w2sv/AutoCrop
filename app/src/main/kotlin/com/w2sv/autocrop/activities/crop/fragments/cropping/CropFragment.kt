@@ -16,7 +16,6 @@ import androidx.lifecycle.viewModelScope
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.androidutils.BackPressListener
 import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.activities.crop.CropResults
@@ -29,6 +28,7 @@ import com.w2sv.autocrop.cropbundle.cropping.cropEdgesCandidates
 import com.w2sv.autocrop.cropbundle.cropping.maxHeightEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentCropBinding
+import com.w2sv.autocrop.utils.extensions.increment
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.getMediaUri
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,26 +71,22 @@ class CropFragment
         val cropResults = CropResults()
         val liveProgress: LiveData<Int> = MutableLiveData(0)
 
-        suspend fun launchCropCoroutine(
+        suspend fun cropCoroutine(
             context: Context,
             onFinishedListener: () -> Unit
         ) {
             coroutineScope {
-                launch {
-                    getImminentUris().forEach { uri ->
-                        withContext(Dispatchers.IO) {
-                            getCropBundle(uri, context)?.let {
-                                cropBundles.add(it)
-                            }
-                        }
-                        withContext(Dispatchers.Main) {
-                            with(liveProgress) {
-                                postValue(value!! + 1)
-                            }
+                getImminentUris().forEach { uri ->
+                    withContext(Dispatchers.IO) {
+                        getCropBundle(uri, context)?.let {
+                            cropBundles.add(it)
                         }
                     }
-                    onFinishedListener()
+                    withContext(Dispatchers.Main) {
+                        liveProgress.increment()
+                    }
                 }
+                onFinishedListener()
             }
         }
 
@@ -154,7 +150,7 @@ class CropFragment
         super.onResume()
 
         lifecycleScope.launch {
-            viewModel.launchCropCoroutine(requireContext()) {
+            viewModel.cropCoroutine(requireContext()) {
                 invokeSubsequentScreen()
             }
         }

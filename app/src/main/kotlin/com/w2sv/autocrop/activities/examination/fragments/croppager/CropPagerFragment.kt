@@ -187,7 +187,7 @@ class CropPagerFragment :
         discardingStatisticsTv.update(position)
 
         viewModel.dataSet.pageIndex(position).let { pageIndex ->
-            pageIndicationTv.update(pageIndex + 1)
+            pageIndicationTv.update(pageIndex + 1, viewModel.dataSet.size)
             pageIndicationBar.update(pageIndex)
         }
     }
@@ -323,7 +323,12 @@ class CropPagerFragment :
     override fun onCropEntiretyDialogResult(confirmed: Boolean) {
         if (confirmed)
             getFragmentHostingActivity()
-                .fragmentReplacementTransaction(SaveAllFragment(), true)
+                .fragmentReplacementTransaction(
+                    SaveAllFragment.getInstance(ArrayList(viewModel.dataSet.indices.toList())) {
+                        (it as ExaminationActivity).replaceWithSubsequentFragment()
+                    },
+                    true
+                )
                 .commit()
         else
             castActivity<ExaminationActivity>().replaceWithSubsequentFragment()

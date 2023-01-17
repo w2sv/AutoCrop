@@ -46,7 +46,7 @@
             android:thumbTint="@color/magenta_saturated"
             android:visibility="invisible" />
 
-        <com.w2sv.autocrop.activities.examination.fragments.croppager.views.PositionTextView
+        <com.w2sv.autocrop.ui.FractionTextView
             android:id="@+id/page_indication_tv"
 
             android:layout_width="wrap_content"
