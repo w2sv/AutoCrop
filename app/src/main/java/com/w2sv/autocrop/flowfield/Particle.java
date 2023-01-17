@@ -1,16 +1,10 @@
 package com.w2sv.autocrop.flowfield;
 
-import com.google.common.collect.Sets;
-
-import java.util.ArrayList;
-import java.util.Set;
-
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
 class Particle {
-    static ColorHandler colorHandler;
     private static int flowFieldWidth;
     private static int flowFieldHeight;
     private final PVector previousPos;
@@ -34,12 +28,6 @@ class Particle {
     public static void setFlowFieldDimensions(int width, int height) {
         Particle.flowFieldWidth = width;
         Particle.flowFieldHeight = height;
-    }
-
-    public static void initializeCanvas(PGraphics canvas) {
-        colorHandler = new ColorHandler();
-        colorHandler.setStrokeColor(canvas);
-        canvas.strokeWeight(Sketch.Config.PARTICLE_STROKE_WEIGHT);
     }
 
     void applyForceVector(PVector v) {
@@ -95,29 +83,5 @@ class Particle {
     private void updatePreviousPos() {
         previousPos.x = pos.x;
         previousPos.y = pos.y;
-    }
-
-    /**
-     * Handles period color changing & inherent random picking, color-dependent canvas modification
-     */
-    static class ColorHandler {
-
-        private final PeriodicalRunner runner = new PeriodicalRunner(Sketch.Config.PARTICLE_COLOR_CHANGE_PERIOD);
-        public int color = Random.randomElement(new ArrayList<>(Sketch.Config.PARTICLE_COLORS));
-
-        public void changeColorIfDue(int millis, PGraphics canvas) {
-            runner.runIfDue(millis, () -> {
-                setNewRandomlyPickedColor();
-                setStrokeColor(canvas);
-            });
-        }
-
-        public void setStrokeColor(PGraphics canvas) {
-            canvas.stroke(color, Sketch.Config.PARTICLE_STROKE_ALPHA);
-        }
-
-        private void setNewRandomlyPickedColor() {
-            color = Random.randomElement(new ArrayList<>(Sets.difference(Sketch.Config.PARTICLE_COLORS, Set.of(color))));
-        }
     }
 }
