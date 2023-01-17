@@ -10,13 +10,12 @@ import androidx.core.app.ShareCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.androidutils.extensions.configureItem
 import com.w2sv.androidutils.extensions.goToWebpage
-import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.serviceRunning
+import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.FragmentedActivity
@@ -62,9 +61,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                     isChecked = context.serviceRunning<ScreenshotListener>()
                     setOnCheckedChangeListener { _, value ->
                         when {
-                            viewModel.screenshotListenerCancelledFromNotification.value != null -> viewModel.screenshotListenerCancelledFromNotification.postValue(
-                                false
-                            )
+                            viewModel.screenshotListenerCancelledFromNotification.value == true -> viewModel.screenshotListenerCancelledFromNotification.toggle()
 
                             value -> findFragment<FlowFieldFragment>()
                                 .screenshotListeningPermissionHandlers
@@ -81,7 +78,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                         }
                     }
 
-                    viewModel.screenshotListenerCancelledFromNotification.observe(activity as LifecycleOwner) { isCancelled ->
+                    viewModel.screenshotListenerCancelledFromNotification.observe(this@FlowFieldNavigationView.findViewTreeLifecycleOwner()!!) { isCancelled ->
                         if (isCancelled)
                             isChecked = false
                     }

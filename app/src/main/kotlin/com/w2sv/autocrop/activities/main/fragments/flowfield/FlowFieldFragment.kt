@@ -12,6 +12,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
@@ -133,41 +134,37 @@ class FlowFieldFragment :
 
     private val viewModel by viewModels<ViewModel>()
 
-    inner class CancelledSSLFromNotificationListener : BroadcastReceiver(), DefaultLifecycleObserver {
-
-        override fun onReceive(context: Context?, intent: Intent?) {
-            viewModel
-                .screenshotListenerCancelledFromNotification
-                .postValue(true)
-        }
+    class CancelledSSLFromNotificationListener(
+        lifecycleOwner: LifecycleOwner,
+        private val onReceiveListener: () -> Unit
+    ) : BroadcastReceiver(),
+        DefaultLifecycleObserver {
 
         init {
-            register()
-        }
-
-        private fun register(){
-            lifecycle.addObserver(this)
+            lifecycleOwner.lifecycle.addObserver(this)
 
             LocalBroadcastManager
-                .getInstance(requireContext())
+                .getInstance(lifecycleOwner.requireContext())
                 .registerReceiver(
                     this,
                     IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
                 )
         }
 
+        override fun onReceive(context: Context?, intent: Intent?) {
+            onReceiveListener()
+        }
+
         override fun onDestroy(owner: LifecycleOwner) {
             super.onDestroy(owner)
 
-            unregister()
-        }
-
-        private fun unregister(){
             LocalBroadcastManager
-                .getInstance(requireContext())
+                .getInstance(owner.requireContext())
                 .unregisterReceiver(this)
         }
 
+        private fun LifecycleOwner.requireContext(): Context =
+            (this as Fragment).requireContext()
     }
 
     private lateinit var cancelledSSLFromNotificationListener: CancelledSSLFromNotificationListener
@@ -175,7 +172,10 @@ class FlowFieldFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        cancelledSSLFromNotificationListener = CancelledSSLFromNotificationListener()
+        cancelledSSLFromNotificationListener =
+            CancelledSSLFromNotificationListener(this) {
+                viewModel.screenshotListenerCancelledFromNotification.postValue(true)
+            }
 
         registerLifecycleObservers(
             buildList {
