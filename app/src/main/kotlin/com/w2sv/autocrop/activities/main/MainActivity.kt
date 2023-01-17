@@ -14,7 +14,7 @@ import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.CropSaveDirPreferences
-import com.w2sv.autocrop.preferences.Flags
+import com.w2sv.autocrop.preferences.GlobalFlags
 import com.w2sv.autocrop.utils.extensions.getParcelable
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -52,14 +52,14 @@ class MainActivity : ApplicationActivity() {
      */
 
     @Inject
-    lateinit var flags: Flags
+    lateinit var globalFlags: GlobalFlags
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
     @Inject
     lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
     override val lifecycleObservers: List<LifecycleObserver>
-        get() = listOf(flags, booleanPreferences, cropSaveDirPreferences)
+        get() = listOf(globalFlags, booleanPreferences, cropSaveDirPreferences)
 
     override fun getRootFragment(): Fragment =
         FlowFieldFragment.getInstance(intent.getParcelable(IOResults.EXTRA))

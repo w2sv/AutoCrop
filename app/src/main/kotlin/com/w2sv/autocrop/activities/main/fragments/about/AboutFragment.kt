@@ -8,7 +8,7 @@ import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ApplicationFragment
 import com.w2sv.autocrop.databinding.FragmentAboutBinding
-import com.w2sv.autocrop.preferences.Flags
+import com.w2sv.autocrop.preferences.GlobalFlags
 import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.utils.SimpleAnimationListener
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
@@ -20,7 +20,7 @@ class AboutFragment :
     ApplicationFragment<FragmentAboutBinding>(FragmentAboutBinding::class.java) {
 
     @Inject
-    lateinit var flags: Flags
+    lateinit var globalFlags: GlobalFlags
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? =
         if (enter)
@@ -40,7 +40,7 @@ class AboutFragment :
             super.onCreateAnimation(transit, false, nextAnim)
 
     private fun showInstructionSnackbarIfApplicable() {
-        if (!flags.aboutFragmentInstructionsShown)
+        if (!globalFlags.aboutFragmentInstructionsShown)
             requireActivity()
                 .snackyBuilder(
                     "Check out what happens if you click on the different view elements!",

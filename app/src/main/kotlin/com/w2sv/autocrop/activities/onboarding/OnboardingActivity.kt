@@ -13,7 +13,7 @@ import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.registerObservers
-import com.w2sv.autocrop.preferences.Flags
+import com.w2sv.autocrop.preferences.GlobalFlags
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.ui.animationComposer
 import com.w2sv.onboarding.OnboardingPage
@@ -26,7 +26,7 @@ import javax.inject.Inject
 class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
 
     @Inject
-    lateinit var flags: Flags
+    lateinit var globalFlags: GlobalFlags
 
     @HiltViewModel
     class ViewModel @Inject constructor() : androidx.lifecycle.ViewModel() {
@@ -40,7 +40,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
         registerObservers(
             buildList {
                 addAll(screenshotListeningPermissionHandlers)
-                add(flags)
+                add(globalFlags)
             }
         ){
             finishAffinity()
@@ -116,7 +116,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
         )
 
     override fun onOnboardingFinished() {
-        flags.onboardingDone = true
+        globalFlags.onboardingDone = true
         MainActivity.start(this, true, Animatoo::animateSwipeLeft)
     }
 }

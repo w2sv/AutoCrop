@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.onboarding.OnboardingActivity
-import com.w2sv.autocrop.preferences.Flags
+import com.w2sv.autocrop.preferences.GlobalFlags
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -14,7 +14,7 @@ import javax.inject.Inject
 class LauncherActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var flags: Flags
+    lateinit var globalFlags: GlobalFlags
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -24,7 +24,7 @@ class LauncherActivity : AppCompatActivity() {
         startActivity(
             Intent(
                 this,
-                if (flags.onboardingDone)
+                if (globalFlags.onboardingDone)
                     MainActivity::class.java
                 else
                     OnboardingActivity::class.java

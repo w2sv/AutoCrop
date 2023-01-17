@@ -21,7 +21,7 @@ import com.w2sv.autocrop.cropbundle.Screenshot
 import com.w2sv.autocrop.cropbundle.io.CropBundleIORunner
 import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.preferences.Flags
+import com.w2sv.autocrop.preferences.GlobalFlags
 import com.w2sv.autocrop.utils.extensions.getParcelable
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -107,13 +107,13 @@ class ExaminationActivity : ApplicationActivity() {
     private val viewModel: ViewModel by viewModels()
 
     @Inject
-    lateinit var flags: Flags
+    lateinit var globalFlags: GlobalFlags
 
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
 
     override val lifecycleObservers: List<LifecycleObserver>
-        get() = listOf(flags, booleanPreferences)
+        get() = listOf(globalFlags, booleanPreferences)
 
     /**
      * Invoke [DeleteRequestFragment] if there are screenshots whose

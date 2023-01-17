@@ -7,7 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Flags @Inject constructor(appPreferences: SharedPreferences) : BooleanPreferences(
+class GlobalFlags @Inject constructor(appPreferences: SharedPreferences) : BooleanPreferences(
     "onboardingDone" to false,
     "cropPagerInstructionsShown" to false,
     "comparisonInstructionsShown" to false,
