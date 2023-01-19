@@ -309,7 +309,7 @@ class CropPagerFragment :
      */
     override fun onCropDialogResult(confirmed: Boolean, dataSetPosition: Int) {
         if (confirmed)
-            activityViewModel.launchViewModelScopedCropProcessingCoroutine(
+            activityViewModel.processCropBundleAsScopedCoroutine(
                 dataSetPosition,
                 requireContext().applicationContext
             )

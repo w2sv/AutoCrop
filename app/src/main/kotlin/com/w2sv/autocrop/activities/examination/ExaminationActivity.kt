@@ -17,7 +17,6 @@ import com.w2sv.autocrop.activities.examination.fragments.manualcrop.ManualCropF
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.cropbundle.CropBundle
-import com.w2sv.autocrop.cropbundle.Screenshot
 import com.w2sv.autocrop.cropbundle.io.CropBundleIORunner
 import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
 import com.w2sv.autocrop.preferences.BooleanPreferences
@@ -43,52 +42,6 @@ class ExaminationActivity : ApplicationActivity() {
             lateinit var cropBundles: MutableList<CropBundle>
         }
 
-        val accumulatedIoResults = AccumulatedIOResults()
-
-        val deletionInquiryUris = arrayListOf<Uri>()
-
-        fun makeCropIOProcessor(cropBundlePosition: Int, context: Context): () -> Unit {
-            val cropBundle = cropBundles[cropBundlePosition]
-            val deleteScreenshot = booleanPreferences.deleteScreenshots
-
-            val addedScreenshotDeletionInquiryUri = addScreenshotDeleteRequestUri(
-                deleteScreenshot,
-                cropBundle.screenshot
-            )
-
-            return {
-                val ioResult = CropBundleIORunner.getInstance(context).invoke(
-                    cropBundle.crop.bitmap,
-                    cropBundle.screenshot.mediaStoreData,
-                    deleteScreenshot && !addedScreenshotDeletionInquiryUri
-                )
-
-                accumulatedIoResults.addFrom(ioResult)
-            }
-        }
-
-        var cropProcessingCoroutine: Job? = null
-
-        fun launchViewModelScopedCropProcessingCoroutine(cropBundlePosition: Int, context: Context) {
-            val processCropBundle = makeCropIOProcessor(cropBundlePosition, context)
-
-            cropProcessingCoroutine = viewModelScope.launch(Dispatchers.IO) {
-                processCropBundle()
-            }
-        }
-
-        private fun addScreenshotDeleteRequestUri(
-            deleteScreenshot: Boolean,
-            screenshot: Screenshot
-        ): Boolean {
-            if (deleteScreenshot)
-                getDeleteRequestUri(screenshot.mediaStoreData.id)?.let {
-                    deletionInquiryUris.add(it)
-                    return true
-                }
-            return false
-        }
-
         /**
          * Clear [cropBundles]
          */
@@ -97,6 +50,63 @@ class ExaminationActivity : ApplicationActivity() {
 
             cropBundles.clear()
         }
+
+        val accumulatedIoResults = AccumulatedIOResults()
+        val deleteRequestUris = arrayListOf<Uri>()
+
+        fun onDeleteRequestUrisDeleted(){
+            accumulatedIoResults.nDeletedScreenshots += deleteRequestUris.size
+        }
+
+        fun processCropBundle(cropBundlePosition: Int, context: Context) {
+            val cropBundle = cropBundles[cropBundlePosition]
+
+            getAndAccumulateCropBundleIOResult(
+                cropBundle,
+                addScreenshotDeleteRequestUriIfApplicable(cropBundle.screenshot.mediaStoreData.id),
+                context
+            )
+        }
+
+        fun processCropBundleAsScopedCoroutine(cropBundlePosition: Int, context: Context) {
+            val cropBundle = cropBundles[cropBundlePosition]
+            val deleteScreenshotWODeletionRequest = addScreenshotDeleteRequestUriIfApplicable(cropBundle.screenshot.mediaStoreData.id)
+
+            cropProcessingCoroutine = viewModelScope.launch(Dispatchers.IO) {
+                getAndAccumulateCropBundleIOResult(cropBundle, deleteScreenshotWODeletionRequest, context)
+            }
+        }
+
+        var cropProcessingCoroutine: Job? = null
+            private set
+
+        private fun getAndAccumulateCropBundleIOResult(
+            cropBundle: CropBundle,
+            deleteScreenshot: Boolean,
+            context: Context
+        ) {
+            accumulatedIoResults.addFrom(
+                CropBundleIORunner.getInstance(context).invoke(
+                    cropBundle,
+                    deleteScreenshot
+                )
+            )
+        }
+
+        /**
+         * @return bool: indicating whether screenshot to be deleted w/o deletion request
+         */
+        private fun addScreenshotDeleteRequestUriIfApplicable(
+            screenshotMediaStoreId: Long
+        ): Boolean =
+            when (booleanPreferences.deleteScreenshots) {
+                false -> false
+                else -> getDeleteRequestUri(screenshotMediaStoreId)?.let {
+                    deleteRequestUris.add(it)
+                    false
+                }
+                    ?: true
+            }
     }
 
     override fun getRootFragment(): Fragment =
@@ -121,7 +131,7 @@ class ExaminationActivity : ApplicationActivity() {
      */
     fun replaceWithSubsequentFragment() {
         fragmentReplacementTransaction(
-            if (viewModel.deletionInquiryUris.isNotEmpty())
+            if (viewModel.deleteRequestUris.isNotEmpty())
                 DeleteRequestFragment()
             else
                 AppTitleFragment(),

@@ -61,11 +61,10 @@ class SaveAllFragment :
             coroutineScope {
                 unprocessedCropBundleIndices.forEach { bundleIndex ->
                     withContext(Dispatchers.IO) {
-                        activityViewModel.makeCropIOProcessor(
+                        activityViewModel.processCropBundle(
                             bundleIndex,
                             activity
                         )
-                            .invoke()
                     }
                     withContext(Dispatchers.Main) {
                         progressLive.increment()

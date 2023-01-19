@@ -33,9 +33,7 @@ class DeleteRequestFragment :
         ) {
             // increment sharedViewModel.nDeletedScreenshots if deletion request successfully emitted
             if (it.resultCode == Activity.RESULT_OK)
-                with(activityViewModel) {
-                    accumulatedIoResults.nDeletedScreenshots += deletionInquiryUris.size
-                }
+                activityViewModel.onDeleteRequestUrisDeleted()
 
             launchAfterShortDelay {  // necessary for showing of transition animation, which otherwise is just skipped
                 getFragmentHostingActivity()
@@ -63,7 +61,7 @@ class DeleteRequestFragment :
                             override fun onAnimationEnd(animation: Animation?) {
                                 deleteRequestIntentContractAdministrator.emitDeleteRequest(
                                     requireContext().contentResolver,
-                                    activityViewModel.deletionInquiryUris
+                                    activityViewModel.deleteRequestUris
                                 )
                             }
                         }

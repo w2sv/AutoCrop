@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-parcelize'
-//    id 'de.mannodermaus.android-junit5'  TODO: uncomment upon release of AGP 8.0.0-beta01/8.0.1-alpha01
+    id 'de.mannodermaus.android-junit5'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
 }
@@ -10,14 +10,14 @@ plugins {
 android {
     def PACKAGE_NAME = "com.w2sv.autocrop"
 
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdk rootProject.ext.compileSdkVersion
     namespace PACKAGE_NAME
 
     defaultConfig {
         applicationId PACKAGE_NAME
 
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.compileSdkVersion
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.compileSdkVersion
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
 
         versionCode 39
@@ -53,18 +53,18 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '17'
     }
     testOptions {
         animationsDisabled = true
     }
-    packagingOptions {
-        resources.excludes.add("META-INF/*")  // fixes build error
-    }
+//    packagingOptions {
+//        resources.excludes.add("META-INF/*")  // fixes build error
+//    }
     buildFeatures {
         viewBinding true
     }

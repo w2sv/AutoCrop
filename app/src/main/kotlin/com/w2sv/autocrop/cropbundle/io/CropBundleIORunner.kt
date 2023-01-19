@@ -2,6 +2,7 @@ package com.w2sv.autocrop.cropbundle.io
 
 import android.content.Context
 import android.graphics.Bitmap
+import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.Screenshot
 import com.w2sv.autocrop.preferences.CropSaveDirPreferences
 import dagger.hilt.EntryPoint
@@ -35,6 +36,9 @@ class CropBundleIORunner @Inject constructor() {
     @Inject
     @ApplicationContext
     lateinit var context: Context
+
+    fun invoke(cropBundle: CropBundle, deleteScreenshot: Boolean): CropBundleIOResult =
+        invoke(cropBundle.crop.bitmap, cropBundle.screenshot.mediaStoreData, deleteScreenshot)
 
     fun invoke(
         cropBitmap: Bitmap,
