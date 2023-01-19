@@ -19,7 +19,7 @@ class AppTitleFragment
     override fun onResume() {
         super.onResume()
 
-        lifecycleScope.launch(Dispatchers.Main) {  // TODO
+        lifecycleScope.launch(Dispatchers.Main) {
             with(binding.appTitleTextView) {
                 animationComposer(
                     listOf(

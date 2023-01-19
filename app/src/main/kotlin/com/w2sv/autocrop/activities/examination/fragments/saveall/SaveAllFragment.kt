@@ -1,6 +1,7 @@
 package com.w2sv.autocrop.activities.examination.fragments.saveall
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
@@ -57,11 +58,11 @@ class SaveAllFragment :
                 subList(progressLive.value!!, size)
             }
 
-        suspend fun cropProcessingCoroutine(activityViewModel: ExaminationActivity.ViewModel, activity: Activity) {
+        suspend fun cropProcessingCoroutine(processCropBundle: (Int, Context) -> Unit, activity: Activity) {
             coroutineScope {
                 unprocessedCropBundleIndices.forEach { bundleIndex ->
                     withContext(Dispatchers.IO) {
-                        activityViewModel.processCropBundle(
+                        processCropBundle(
                             bundleIndex,
                             activity
                         )
@@ -93,7 +94,7 @@ class SaveAllFragment :
 
         lifecycleScope.launch {
             viewModel.cropProcessingCoroutine(
-                activityViewModels<ExaminationActivity.ViewModel>().value,
+                activityViewModels<ExaminationActivity.ViewModel>().value::processCropBundle,
                 requireActivity()
             )
         }

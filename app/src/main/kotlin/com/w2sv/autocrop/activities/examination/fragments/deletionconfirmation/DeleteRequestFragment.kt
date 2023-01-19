@@ -25,13 +25,33 @@ import com.w2sv.autocrop.utils.SimpleAnimationListener
 class DeleteRequestFragment :
     ApplicationFragment<FragmentDeleteRequestBinding>(FragmentDeleteRequestBinding::class.java) {
 
+    private class DeleteRequestIntentContractAdministrator(
+        activity: ComponentActivity,
+        override val activityResultCallback: (ActivityResult) -> Unit
+    ) : ActivityCallContractAdministrator.Impl<IntentSenderRequest, ActivityResult>(
+        activity,
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) {
+        fun emitDeleteRequest(contentResolver: ContentResolver, deletionInquiryUris: ArrayList<Uri>) {
+            activityResultLauncher.launch(
+                IntentSenderRequest.Builder(
+                    MediaStore.createDeleteRequest(
+                        contentResolver,
+                        deletionInquiryUris
+                    )
+                        .intentSender
+                )
+                    .build()
+            )
+        }
+    }
+
     private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
 
     private val deleteRequestIntentContractAdministrator by lazy {
         DeleteRequestIntentContractAdministrator(
             requireActivity()
         ) {
-            // increment sharedViewModel.nDeletedScreenshots if deletion request successfully emitted
             if (it.resultCode == Activity.RESULT_OK)
                 activityViewModel.onDeleteRequestUrisDeleted()
 
@@ -69,25 +89,4 @@ class DeleteRequestFragment :
                 }
         else
             super.onCreateAnimation(transit, false, nextAnim)
-}
-
-private class DeleteRequestIntentContractAdministrator(
-    activity: ComponentActivity,
-    override val activityResultCallback: (ActivityResult) -> Unit
-) : ActivityCallContractAdministrator.Impl<IntentSenderRequest, ActivityResult>(
-    activity,
-    ActivityResultContracts.StartIntentSenderForResult()
-) {
-    fun emitDeleteRequest(contentResolver: ContentResolver, deletionInquiryUris: ArrayList<Uri>) {
-        activityResultLauncher.launch(
-            IntentSenderRequest.Builder(
-                MediaStore.createDeleteRequest(
-                    contentResolver,
-                    deletionInquiryUris
-                )
-                    .intentSender
-            )
-                .build()
-        )
-    }
 }
