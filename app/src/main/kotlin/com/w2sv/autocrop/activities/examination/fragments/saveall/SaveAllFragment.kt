@@ -11,7 +11,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import com.w2sv.autocrop.activities.AppFragment
-import com.w2sv.autocrop.activities.AppFragmentReceiver
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.databinding.FragmentSaveallBinding
 import com.w2sv.autocrop.utils.extensions.increment
@@ -30,12 +29,11 @@ class SaveAllFragment :
     companion object {
         private const val EXTRA_CROP_BUNDLE_INDICES = "com.w2sv.autocrop.extra.CROP_BUNDLE_INDICES"
 
-        fun getInstance(cropBundleIndices: ArrayList<Int>, onFinishedListener: AppFragmentReceiver): SaveAllFragment =
+        fun getInstance(cropBundleIndices: ArrayList<Int>): SaveAllFragment =
             SaveAllFragment()
                 .apply {
                     arguments = bundleOf(
-                        EXTRA_CROP_BUNDLE_INDICES to cropBundleIndices,
-                        EXTRA_ON_FRAGMENT_FINISHED_LISTENER to onFinishedListener
+                        EXTRA_CROP_BUNDLE_INDICES to cropBundleIndices
                     )
                 }
     }
@@ -43,7 +41,6 @@ class SaveAllFragment :
     @HiltViewModel
     class ViewModel @Inject constructor(handle: SavedStateHandle) : androidx.lifecycle.ViewModel() {
 
-        private val onFinishedListener: AppFragmentReceiver = handle[EXTRA_ON_FRAGMENT_FINISHED_LISTENER]!!
         private val cropBundleIndices: ArrayList<Int> = handle[EXTRA_CROP_BUNDLE_INDICES]!!
 
         val nUnprocessedCrops: Int = cropBundleIndices.size
@@ -52,10 +49,11 @@ class SaveAllFragment :
             MutableLiveData(0)
         }
 
-        private val unprocessedCropBundleIndices: List<Int> get() =
-            cropBundleIndices.run {
-                subList(progressLive.value!!, size)
-            }
+        private val unprocessedCropBundleIndices: List<Int>
+            get() =
+                cropBundleIndices.run {
+                    subList(progressLive.value!!, size)
+                }
 
         suspend fun cropProcessingCoroutine(processCropBundle: (Int, Context) -> Unit, fragment: AppFragment<*>) {
             coroutineScope {
@@ -70,7 +68,8 @@ class SaveAllFragment :
                         progressLive.increment()
                     }
                 }
-                onFinishedListener(fragment)
+
+                fragment.castActivity<ExaminationActivity>().invokeSubsequentController(fragment)
             }
         }
     }

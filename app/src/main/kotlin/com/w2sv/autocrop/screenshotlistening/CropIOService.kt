@@ -6,7 +6,7 @@ import android.widget.Toast
 import com.w2sv.autocrop.cropbundle.io.CropBundleIOResult
 import com.w2sv.autocrop.cropbundle.io.CropBundleIORunner
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.UnboundService
-import com.w2sv.autocrop.utils.extensions.getParcelable
+import com.w2sv.autocrop.utils.extensions.getParcelableExtraCompat
 
 /**
  * Service responsible for carrying out crop bundle IO and notifying the user
@@ -28,7 +28,7 @@ class CropIOService : UnboundService() {
     private fun runIntentParametrizedCropBundleIO(intent: Intent): CropBundleIOResult =
         CropBundleIORunner.getInstance(applicationContext).invoke(
             cropBitmap = BitmapFactory.decodeFile(intent.getStringExtra(ScreenshotListener.EXTRA_TEMPORARY_CROP_FILE_PATH)),
-            screenshotMediaStoreData = intent.getParcelable(ScreenshotListener.EXTRA_SCREENSHOT_MEDIASTORE_DATA)!!,
+            screenshotMediaStoreData = intent.getParcelableExtraCompat(ScreenshotListener.EXTRA_SCREENSHOT_MEDIASTORE_DATA)!!,
             deleteScreenshot = intent.getBooleanExtra(ScreenshotListener.EXTRA_ATTEMPT_SCREENSHOT_DELETION, false)
         )
             .apply {

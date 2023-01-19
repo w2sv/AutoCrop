@@ -315,7 +315,7 @@ class CropPagerFragment :
             )
 
         if (viewModel.dataSet.size == 1)
-            castActivity<ExaminationActivity>().replaceWithSubsequentFragment()
+            castActivity<ExaminationActivity>().invokeSubsequentController(this)
         else
             cropPager.scrollToNextViewAndRemoveCurrent(dataSetPosition)
     }
@@ -324,14 +324,12 @@ class CropPagerFragment :
         if (confirmed)
             fragmentHostingActivity()
                 .fragmentReplacementTransaction(
-                    SaveAllFragment.getInstance(ArrayList(viewModel.dataSet.indices.toList())) {
-                        castActivity<ExaminationActivity>().replaceWithSubsequentFragment()
-                    },
+                    SaveAllFragment.getInstance(ArrayList(viewModel.dataSet.indices.toList())),
                     true
                 )
                 .commit()
         else
-            castActivity<ExaminationActivity>().replaceWithSubsequentFragment()
+            castActivity<ExaminationActivity>().invokeSubsequentController(this)
     }
 
     private fun repelledSnackyBuilder(text: CharSequence): Snacky.Builder =

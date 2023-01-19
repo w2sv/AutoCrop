@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.core.text.subscript
@@ -34,11 +33,7 @@ class ManualCropFragment
 
     companion object {
         fun getInstance(cropBundle: CropBundle): ManualCropFragment =
-            ManualCropFragment().apply {
-                arguments = bundleOf(
-                    CropBundle.EXTRA to cropBundle
-                )
-            }
+            getInstance(ManualCropFragment::class.java, CropBundle.EXTRA to cropBundle)
     }
 
     @HiltViewModel

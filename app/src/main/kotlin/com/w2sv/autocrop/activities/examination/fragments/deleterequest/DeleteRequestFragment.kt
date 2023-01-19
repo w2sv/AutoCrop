@@ -15,21 +15,14 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.w2sv.androidutils.ActivityCallContractAdministrator
 import com.w2sv.autocrop.activities.AppFragment
-import com.w2sv.autocrop.activities.AppFragmentReceiver
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.databinding.FragmentDeleteRequestBinding
 import com.w2sv.autocrop.utils.SimpleAnimationListener
 
 class DeleteRequestFragment :
     AppFragment<FragmentDeleteRequestBinding>(FragmentDeleteRequestBinding::class.java) {
-
-    companion object{
-        fun getInstance(onFinishedListener: AppFragmentReceiver): DeleteRequestFragment =
-            getInstance(DeleteRequestFragment::class.java, onFinishedListener)
-    }
 
     private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
 
@@ -41,7 +34,7 @@ class DeleteRequestFragment :
                 activityViewModel.onDeleteRequestUrisDeleted()
 
             launchAfterShortDelay {  // necessary for showing of transition animation, which otherwise is just skipped
-                viewModels<ViewModel>().value.onFinishedListener(this@DeleteRequestFragment)
+                castActivity<ExaminationActivity>().invokeSubsequentController(this@DeleteRequestFragment)
             }
         }
     }

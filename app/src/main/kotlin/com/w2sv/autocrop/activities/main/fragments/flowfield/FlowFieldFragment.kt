@@ -9,9 +9,9 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -66,9 +66,7 @@ class FlowFieldFragment :
 
     companion object {
         fun getInstance(accumulatedIoResults: AccumulatedIOResults?): FlowFieldFragment =
-            FlowFieldFragment().apply {
-                arguments = bundleOf(AccumulatedIOResults.EXTRA to accumulatedIoResults)
-            }
+            getInstance(FlowFieldFragment::class.java, AccumulatedIOResults.EXTRA to accumulatedIoResults)
     }
 
     @Inject
@@ -363,16 +361,21 @@ class FlowFieldFragment :
     }
 
     fun onBackPress() {
-        viewModel.backPressHandler(
-            {
-                repelledSnackyBuilder("Tap again to exit")
-                    .build()
-                    .show()
-            },
-            {
-                requireActivity().finishAffinity()
-            }
-        )
+        binding.drawerLayout.run {
+            if (isOpen)
+                closeDrawer(GravityCompat.START)
+            else
+                viewModel.backPressHandler(
+                    {
+                        repelledSnackyBuilder("Tap again to exit")
+                            .build()
+                            .show()
+                    },
+                    {
+                        requireActivity().finishAffinity()
+                    }
+                )
+        }
     }
 
     private fun repelledSnackyBuilder(text: CharSequence): Snacky.Builder =

@@ -18,27 +18,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
-typealias AppFragmentReceiver = AppFragment<*>.() -> Unit
-
 abstract class AppFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
     ViewBoundFragment<VB>(bindingClass) {
 
     companion object {
-        const val EXTRA_ON_FRAGMENT_FINISHED_LISTENER = "com.w2sv.autocrop.extra.ON_FRAGMENT_FINISHED_LISTENER"
-
-        fun <F: AppFragment<*>> getInstance(clazz: Class<F>, onFinishedListener: AppFragmentReceiver): F =
+        fun <F: AppFragment<*>> getInstance(clazz: Class<F>, vararg bundlePairs: Pair<String, Any?>): F =
             clazz.newInstance()
                 .apply {
-                    arguments = bundleOf(
-                        EXTRA_ON_FRAGMENT_FINISHED_LISTENER to onFinishedListener
-                    )
+                    arguments = bundleOf(*bundlePairs)
                 }
-    }
-
-    @HiltViewModel
-    class ViewModel @Inject constructor(savedStateHandle: SavedStateHandle) : androidx.lifecycle.ViewModel() {
-        val onFinishedListener: AppFragmentReceiver =
-            savedStateHandle[EXTRA_ON_FRAGMENT_FINISHED_LISTENER]!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

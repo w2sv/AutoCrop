@@ -1,7 +1,6 @@
 package com.w2sv.autocrop.utils.extensions
 
 import android.content.Intent
-import android.os.Bundle
 import android.os.Parcelable
 
 /**
@@ -13,13 +12,9 @@ import android.os.Parcelable
  *      https://issuetracker.google.com/issues/242048899
  *      https://issuetracker.google.com/issues/240585930
  */
-inline fun <reified T : Parcelable> Intent.getParcelable(name: String): T? =
+inline fun <reified T : Parcelable> Intent.getParcelableExtraCompat(name: String): T? =
     @Suppress("DEPRECATION")
     getParcelableExtra(name)
-
-inline fun <reified T : Parcelable> Bundle.getParcelableCompat(name: String): T? =
-    @Suppress("DEPRECATION")
-    getParcelable(name)
 
 fun Intent.getInt(name: String, defaultValue: Int = -1): Int =
     getIntExtra(name, defaultValue)

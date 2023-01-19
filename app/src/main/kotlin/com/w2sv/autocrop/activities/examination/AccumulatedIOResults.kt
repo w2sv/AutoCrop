@@ -7,7 +7,10 @@ import com.w2sv.kotlinutils.extensions.toInt
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class AccumulatedIOResults(var cropUris: ArrayList<Uri> = ArrayList(), var nDeletedScreenshots: Int = 0) : Parcelable {
+data class AccumulatedIOResults(
+    var cropUris: ArrayList<Uri> = ArrayList(),
+    var nDeletedScreenshots: Int = 0
+) : Parcelable {
 
     companion object {
         const val EXTRA = "com.w2sv.autocrop.extra.IO_RESULTS"

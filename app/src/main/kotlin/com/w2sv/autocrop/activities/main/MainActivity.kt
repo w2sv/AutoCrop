@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
-import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleObserver
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
@@ -15,7 +14,7 @@ import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.CropSaveDirPreferences
 import com.w2sv.autocrop.preferences.GlobalFlags
-import com.w2sv.autocrop.utils.extensions.getParcelable
+import com.w2sv.autocrop.utils.extensions.getParcelableExtraCompat
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -53,8 +52,10 @@ class MainActivity : AppActivity() {
 
     @Inject
     lateinit var globalFlags: GlobalFlags
+
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
+
     @Inject
     lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
@@ -62,7 +63,7 @@ class MainActivity : AppActivity() {
         get() = listOf(globalFlags, booleanPreferences, cropSaveDirPreferences)
 
     override fun getRootFragment(): Fragment =
-        FlowFieldFragment.getInstance(intent.getParcelable(AccumulatedIOResults.EXTRA))
+        FlowFieldFragment.getInstance(intent.getParcelableExtraCompat(AccumulatedIOResults.EXTRA))
 
     /**
      * invoke [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app
@@ -71,15 +72,7 @@ class MainActivity : AppActivity() {
         getCurrentFragment().let {
             when (it) {
                 is AboutFragment -> supportFragmentManager.popBackStack()
-                is FlowFieldFragment -> {
-                    it.binding.drawerLayout.run {
-                        if (isOpen)
-                            closeDrawer(GravityCompat.START)
-                        else
-                            it.onBackPress()
-                    }
-                }
-
+                is FlowFieldFragment -> it.onBackPress()
                 else -> Unit
             }
         }

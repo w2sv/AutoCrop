@@ -7,7 +7,7 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.utils.extensions.getParcelable
+import com.w2sv.autocrop.utils.extensions.getParcelableExtraCompat
 
 @RequiresApi(Build.VERSION_CODES.R)
 class ScreenshotDeleteRequestActivity : ComponentActivity(R.layout.fragment_delete_request) {
@@ -22,7 +22,7 @@ class ScreenshotDeleteRequestActivity : ComponentActivity(R.layout.fragment_dele
             IntentSenderRequest.Builder(
                 MediaStore.createDeleteRequest(
                     contentResolver,
-                    listOf(intent.getParcelable(ScreenshotListener.EXTRA_DELETE_REQUEST_URI))
+                    listOf(intent.getParcelableExtraCompat(ScreenshotListener.EXTRA_DELETE_REQUEST_URI))
                 )
                     .intentSender
             )
