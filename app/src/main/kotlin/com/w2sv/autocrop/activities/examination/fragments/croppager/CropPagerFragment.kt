@@ -26,7 +26,7 @@ import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.ApplicationFragment
+import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.FragmentedActivity
 import com.w2sv.autocrop.activities.crop.CropResults
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
@@ -60,7 +60,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class CropPagerFragment :
-    ApplicationFragment<FragmentCroppagerBinding>(FragmentCroppagerBinding::class.java),
+    AppFragment<FragmentCroppagerBinding>(FragmentCroppagerBinding::class.java),
     CropDialog.ResultListener,
     CropEntiretyDialog.ResultListener,
     ManualCropFragment.ResultListener,
@@ -236,7 +236,7 @@ class CropPagerFragment :
         }
         manualCropButton.setOnClickListener {
             (requireActivity() as FragmentedActivity).fragmentReplacementTransaction(
-                ManualCropFragment.instance(
+                ManualCropFragment.getInstance(
                     viewModel.dataSet.liveElement
                 ),
                 true
@@ -322,10 +322,10 @@ class CropPagerFragment :
 
     override fun onCropEntiretyDialogResult(confirmed: Boolean) {
         if (confirmed)
-            getFragmentHostingActivity()
+            fragmentHostingActivity()
                 .fragmentReplacementTransaction(
                     SaveAllFragment.getInstance(ArrayList(viewModel.dataSet.indices.toList())) {
-                        (it as ExaminationActivity).replaceWithSubsequentFragment()
+                        castActivity<ExaminationActivity>().replaceWithSubsequentFragment()
                     },
                     true
                 )

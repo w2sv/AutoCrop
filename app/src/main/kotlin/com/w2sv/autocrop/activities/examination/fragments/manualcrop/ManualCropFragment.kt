@@ -14,7 +14,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.ApplicationFragment
+import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.fragments.manualcrop.utils.extensions.maintainedPercentage
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.cropping.CropEdges
@@ -30,10 +30,10 @@ import kotlin.math.min
 
 @AndroidEntryPoint
 class ManualCropFragment
-    : ApplicationFragment<FragmentManualCropBinding>(FragmentManualCropBinding::class.java) {
+    : AppFragment<FragmentManualCropBinding>(FragmentManualCropBinding::class.java) {
 
     companion object {
-        fun instance(cropBundle: CropBundle): ManualCropFragment =
+        fun getInstance(cropBundle: CropBundle): ManualCropFragment =
             ManualCropFragment().apply {
                 arguments = bundleOf(
                     CropBundle.EXTRA to cropBundle
@@ -123,7 +123,6 @@ class ManualCropFragment
         resetButton.setOnClickListener {
             cropView.reset()
         }
-
         cancelButton.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
@@ -131,7 +130,7 @@ class ManualCropFragment
             parentFragmentManager.popBackStackImmediate()
 
             // notify ResultListener
-            (getFragmentHostingActivity().getCurrentFragment() as ResultListener)
+            (fragmentHostingActivity().getCurrentFragment() as ResultListener)
                 .onManualCropResult(viewModel.cropEdges.value!!)
         }
     }

@@ -7,12 +7,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.viewModelScope
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.ApplicationActivity
+import com.w2sv.autocrop.activities.AppActivity
 import com.w2sv.autocrop.activities.crop.CropResults
 import com.w2sv.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.examination.fragments.croppager.CropPagerFragment
-import com.w2sv.autocrop.activities.examination.fragments.deletionconfirmation.DeleteRequestFragment
+import com.w2sv.autocrop.activities.examination.fragments.deleterequest.DeleteRequestFragment
 import com.w2sv.autocrop.activities.examination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ExaminationActivity : ApplicationActivity() {
+class ExaminationActivity : AppActivity() {
 
     @HiltViewModel
     class ViewModel @Inject constructor(
@@ -54,7 +54,7 @@ class ExaminationActivity : ApplicationActivity() {
         val accumulatedIoResults = AccumulatedIOResults()
         val deleteRequestUris = arrayListOf<Uri>()
 
-        fun onDeleteRequestUrisDeleted(){
+        fun onDeleteRequestUrisDeleted() {
             accumulatedIoResults.nDeletedScreenshots += deleteRequestUris.size
         }
 
@@ -70,7 +70,8 @@ class ExaminationActivity : ApplicationActivity() {
 
         fun processCropBundleAsScopedCoroutine(cropBundlePosition: Int, context: Context) {
             val cropBundle = cropBundles[cropBundlePosition]
-            val deleteScreenshotWODeletionRequest = addScreenshotDeleteRequestUriIfApplicable(cropBundle.screenshot.mediaStoreData.id)
+            val deleteScreenshotWODeletionRequest =
+                addScreenshotDeleteRequestUriIfApplicable(cropBundle.screenshot.mediaStoreData.id)
 
             cropProcessingCoroutine = viewModelScope.launch(Dispatchers.IO) {
                 getAndAccumulateCropBundleIOResult(cropBundle, deleteScreenshotWODeletionRequest, context)
@@ -132,9 +133,16 @@ class ExaminationActivity : ApplicationActivity() {
     fun replaceWithSubsequentFragment() {
         fragmentReplacementTransaction(
             if (viewModel.deleteRequestUris.isNotEmpty())
-                DeleteRequestFragment()
+                DeleteRequestFragment.getInstance {
+                    fragmentHostingActivity()
+                        .fragmentReplacementTransaction(
+                            getAppTitleFragment(),
+                            true
+                        )
+                        .commit()
+                }
             else
-                AppTitleFragment(),
+                getAppTitleFragment(),
             true
         )
             .commit()
@@ -145,12 +153,10 @@ class ExaminationActivity : ApplicationActivity() {
             when (it) {
                 is ComparisonFragment -> it.popFromFragmentManager(supportFragmentManager)
                 is ManualCropFragment -> supportFragmentManager.popBackStack()
-                is SaveAllFragment -> {
-                    snackyBuilder("Wait until crops have been saved")
-                        .setIcon(R.drawable.ic_front_hand_24)
-                        .build()
-                        .show()
-                }
+                is SaveAllFragment -> snackyBuilder("Wait until crops have been saved")
+                    .setIcon(R.drawable.ic_front_hand_24)
+                    .build()
+                    .show()
 
                 is CropPagerFragment -> it.onBackPress()
                 else -> Unit
@@ -164,3 +170,8 @@ class ExaminationActivity : ApplicationActivity() {
         }
     }
 }
+
+private fun getAppTitleFragment(): AppTitleFragment =
+    AppTitleFragment.getInstance {
+        castActivity<ExaminationActivity>().startMainActivity()
+    }

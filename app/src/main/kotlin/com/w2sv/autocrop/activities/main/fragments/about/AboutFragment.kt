@@ -6,7 +6,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.ApplicationFragment
+import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.databinding.FragmentAboutBinding
 import com.w2sv.autocrop.preferences.GlobalFlags
 import com.w2sv.autocrop.ui.animate
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class AboutFragment :
-    ApplicationFragment<FragmentAboutBinding>(FragmentAboutBinding::class.java) {
+    AppFragment<FragmentAboutBinding>(FragmentAboutBinding::class.java) {
 
     @Inject
     lateinit var globalFlags: GlobalFlags

@@ -17,7 +17,7 @@ import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.androidutils.BackPressListener
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.ApplicationFragment
+import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropResults
 import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailedFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
@@ -44,7 +44,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class CropFragment
-    : ApplicationFragment<FragmentCropBinding>(FragmentCropBinding::class.java) {
+    : AppFragment<FragmentCropBinding>(FragmentCropBinding::class.java) {
 
     companion object {
         fun getInstance(screenshotUris: List<Uri>): CropFragment =
@@ -161,7 +161,7 @@ class CropFragment
             launchCropExamination()
         else
             launchAfterShortDelay {  // to assure progress bar having reached 100% before UI change
-                getFragmentHostingActivity()
+                fragmentHostingActivity()
                     .fragmentReplacementTransaction(CroppingFailedFragment())
                     .commit()
             }

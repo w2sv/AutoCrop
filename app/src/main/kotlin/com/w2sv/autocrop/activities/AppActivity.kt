@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.LifecycleObserver
 
-abstract class ApplicationActivity : FragmentedActivity() {
+abstract class AppActivity : FragmentedActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

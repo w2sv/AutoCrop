@@ -36,7 +36,7 @@ import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.androidutils.extensions.uris
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.ApplicationFragment
+import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.examination.AccumulatedIOResults
 import com.w2sv.autocrop.activities.main.MainActivity
@@ -62,7 +62,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class FlowFieldFragment :
-    ApplicationFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java) {
+    AppFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java) {
 
     companion object {
         fun getInstance(accumulatedIoResults: AccumulatedIOResults?): FlowFieldFragment =

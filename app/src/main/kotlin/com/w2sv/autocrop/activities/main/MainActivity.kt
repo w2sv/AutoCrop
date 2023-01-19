@@ -8,7 +8,7 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleObserver
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
-import com.w2sv.autocrop.activities.ApplicationActivity
+import com.w2sv.autocrop.activities.AppActivity
 import com.w2sv.autocrop.activities.examination.AccumulatedIOResults
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ApplicationActivity() {
+class MainActivity : AppActivity() {
 
     companion object {
         const val EXTRA_SELECTED_IMAGE_URIS = "com.w2sv.autocrop.extra.SELECTED_IMAGE_URIS"

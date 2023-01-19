@@ -25,7 +25,7 @@ import com.w2sv.androidutils.extensions.remove
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.ApplicationFragment
+import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.fragments.manualcrop.utils.extensions.getScaleY
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
@@ -40,7 +40,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ComparisonFragment
-    : ApplicationFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java) {
+    : AppFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java) {
 
     companion object {
         fun getInstance(cropBundle: CropBundle): ComparisonFragment =

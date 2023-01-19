@@ -1,10 +1,12 @@
 package com.w2sv.autocrop.activities.examination.fragments.apptitle
 
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.extensions.invokeOnCompletion
-import com.w2sv.autocrop.activities.ApplicationFragment
+import com.w2sv.autocrop.activities.AppFragment
+import com.w2sv.autocrop.activities.AppFragmentReceiver
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.databinding.FragmentApptitleBinding
 import com.w2sv.autocrop.ui.animationComposer
@@ -12,9 +14,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AppTitleFragment
-    : ApplicationFragment<FragmentApptitleBinding>(FragmentApptitleBinding::class.java) {
+    : AppFragment<FragmentApptitleBinding>(FragmentApptitleBinding::class.java) {
 
-    private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
+    companion object {
+        fun getInstance(onFinishedListener: AppFragmentReceiver): AppTitleFragment =
+            getInstance(AppTitleFragment::class.java, onFinishedListener)
+    }
 
     override fun onResume() {
         super.onResume()
@@ -31,8 +36,8 @@ class AppTitleFragment
                         .random()
                 )
                     .onEnd {
-                        activityViewModel.cropProcessingCoroutine.invokeOnCompletion {
-                            castActivity<ExaminationActivity>().startMainActivity()
+                        activityViewModels<ExaminationActivity.ViewModel>().value.cropProcessingCoroutine.invokeOnCompletion {
+                            viewModels<ViewModel>().value.onFinishedListener(this@AppTitleFragment)
                         }
                     }
                     .playOn(this)
