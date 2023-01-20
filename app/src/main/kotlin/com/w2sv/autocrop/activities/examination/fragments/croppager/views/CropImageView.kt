@@ -8,8 +8,8 @@ import androidx.fragment.app.findFragment
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.activities.examination.fragments.croppager.CropPagerFragment
-import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.CropDialog
-import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.CropEntiretyDialog
+import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.SaveAllCropsDialog
+import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.SaveCropDialog
 
 class CropImageView(context: Context, attributeSet: AttributeSet) :
     AppCompatImageView(context, attributeSet) {
@@ -21,16 +21,17 @@ class CropImageView(context: Context, attributeSet: AttributeSet) :
 
         setOnClickListener {
             if (viewModel.dialogInflationEnabled)
-                viewModel.getCropDialog().show()
+                showDialogFragment(viewModel.getCropDialog())
         }
 
         setOnLongClickListener {
             if (viewModel.dialogInflationEnabled) {
-                (if (viewModel.dataSet.size == 1)
-                    viewModel.getCropDialog()
-                else
-                    CropEntiretyDialog())
-                    .show()
+                showDialogFragment(
+                    if (viewModel.singleCropRemaining)
+                        viewModel.getCropDialog()
+                    else
+                        SaveAllCropsDialog.getInstance(viewModel.dataSet.size)
+                )
                 true
             }
             else
@@ -38,14 +39,11 @@ class CropImageView(context: Context, attributeSet: AttributeSet) :
         }
     }
 
-    private fun DialogFragment.show() {
-        show(findFragment<CropPagerFragment>().childFragmentManager)
+    private fun showDialogFragment(fragment: DialogFragment) {
+        fragment.show(findFragment<CropPagerFragment>().childFragmentManager)
     }
 
-    private fun CropPagerFragment.ViewModel.getCropDialog(): CropDialog =
-        CropDialog
-            .instance(dataSet.livePosition.value!!)
-
-    private val CropPagerFragment.ViewModel.dialogInflationEnabled: Boolean
-        get() = doAutoScrollLive.value == false
+    private fun CropPagerFragment.ViewModel.getCropDialog(): SaveCropDialog =
+        SaveCropDialog
+            .getInstance(dataSet.livePosition.value!!)
 }

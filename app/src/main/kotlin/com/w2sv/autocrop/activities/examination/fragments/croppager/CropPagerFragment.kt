@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
@@ -21,7 +20,6 @@ import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
 import com.w2sv.androidutils.extensions.hide
 import com.w2sv.androidutils.extensions.hideSystemBars
-import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.viewModel
@@ -31,11 +29,11 @@ import com.w2sv.autocrop.activities.FragmentedActivity
 import com.w2sv.autocrop.activities.crop.CropResults
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
-import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.CropDialog
-import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.CropEntiretyDialog
-import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.CropPagerInstructionsDialog
+import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.SaveAllCropsDialog
+import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.SaveCropDialog
 import com.w2sv.autocrop.activities.examination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
+import com.w2sv.autocrop.activities.getFragmentInstance
 import com.w2sv.autocrop.cropbundle.Crop
 import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
@@ -61,19 +59,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CropPagerFragment :
     AppFragment<FragmentCroppagerBinding>(FragmentCroppagerBinding::class.java),
-    CropDialog.ResultListener,
-    CropEntiretyDialog.ResultListener,
-    ManualCropFragment.ResultListener,
-    CropPagerInstructionsDialog.OnDismissedListener {
+    SaveCropDialog.ResultListener,
+    SaveAllCropsDialog.ResultListener,
+    ManualCropFragment.ResultListener {
 
     companion object {
         fun getInstance(cropResults: CropResults): CropPagerFragment =
-            CropPagerFragment()
-                .apply {
-                    arguments = bundleOf(
-                        CropResults.EXTRA to cropResults
-                    )
-                }
+            getFragmentInstance(CropPagerFragment::class.java, CropResults.EXTRA to cropResults)
     }
 
     @HiltViewModel
@@ -84,6 +76,9 @@ class CropPagerFragment :
     ) : androidx.lifecycle.ViewModel() {
 
         val dataSet = CropPager.DataSet(ExaminationActivity.ViewModel.cropBundles)
+
+        val singleCropRemaining: Boolean
+            get() = dataSet.size == 1
 
         val backPressHandler = BackPressListener(
             viewModelScope,
@@ -138,7 +133,10 @@ class CropPagerFragment :
 
         val doAutoScrollLive: LiveData<Boolean> = MutableLiveData(booleanPreferences.autoScroll && dataSet.size > 1)
 
-        fun getNAutoScrolls(): Int =
+        val dialogInflationEnabled: Boolean
+            get() = doAutoScrollLive.value == false
+
+        fun maxAutoScrolls(): Int =
             dataSet.size - dataSet.livePosition.value!!
     }
 
@@ -146,6 +144,7 @@ class CropPagerFragment :
     lateinit var globalFlags: GlobalFlags
 
     private val viewModel by viewModels<ViewModel>()
+
     private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
 
     private lateinit var cropPager: CropPager
@@ -177,9 +176,9 @@ class CropPagerFragment :
             binding.updateOnAutoScrollStatusChanged(it)
         }
 
-        dataSet.observe(viewLifecycleOwner) { dataSet ->
-            if (dataSet.size == 1)
-                binding.pageIndicationBar.animate(Techniques.ZoomOut)
+        dataSet.observe(viewLifecycleOwner) {
+            if (singleCropRemaining)
+                binding.cropEntiretyButtons.animate(Techniques.ZoomOut)
         }
     }
 
@@ -188,21 +187,27 @@ class CropPagerFragment :
 
         viewModel.dataSet.pageIndex(position).let { pageIndex ->
             pageIndicationTv.update(pageIndex + 1, viewModel.dataSet.size)
-            pageIndicationBar.update(pageIndex)
         }
     }
 
     private fun FragmentCroppagerBinding.updateOnAutoScrollStatusChanged(doAutoScroll: Boolean) {
+        // en-/disable viewPager input
+        viewPager.isUserInputEnabled = !doAutoScroll
+
         if (doAutoScroll) {
             cancelAutoScrollButton.show()
-            lifecycleScope.launch {
-                if (viewModel.autoScrollCoroutine == null)
-                    delay(resources.getLong(R.integer.period_auto_scroll))
 
-                viewModel.autoScrollCoroutine = binding.viewPager.scrollPeriodically(
-                    lifecycleScope,
-                    viewModel.getNAutoScrolls(),
-                    resources.getLong(R.integer.period_auto_scroll)
+            // launch AutoScroll coroutine
+            lifecycleScope.launch {
+                val scrollPeriod = resources.getLong(R.integer.period_auto_scroll)
+
+                if (viewModel.autoScrollCoroutine == null)
+                    delay(scrollPeriod)
+
+                viewModel.autoScrollCoroutine = viewPager.scrollPeriodically(
+                    this,
+                    viewModel.maxAutoScrolls(),
+                    scrollPeriod
                 ) {
                     viewModel.doAutoScrollLive.postValue(false)
                 }
@@ -210,29 +215,46 @@ class CropPagerFragment :
         }
         else {
             viewPager.setPageTransformer(CubeOutPageTransformer())
+            cancelAutoScrollButton.hide()
 
+            // fade in/show views
             viewModel.autoScrollCoroutine?.let {
                 it.cancel()
-                cancelAutoScrollButton.hide()
                 snackbarRepelledLayout.fadeIn()
+                cropEntiretyButtons.fadeIn()
             }
-                ?: snackbarRepelledLayout.show()
-
-            if (!globalFlags.cropPagerInstructionsShown)
-                lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_medium)) {
-                    CropPagerInstructionsDialog()
-                        .show(childFragmentManager)
+                ?: run {
+                    snackbarRepelledLayout.show()
+                    if (!viewModel.singleCropRemaining)
+                        cropEntiretyButtons.show()
                 }
-            else
-                showUncroppableScreenshotsSnackbarIfApplicable()
 
+            // show snackbar if applicable
+            viewModel.uncroppedScreenshotsSnackbarText?.let {
+                repelledSnackyBuilder(it)
+                    .setIcon(com.w2sv.permissionhandler.R.drawable.ic_error_24)
+                    .build()
+                    .show()
+            }
         }
-        viewPager.isUserInputEnabled = !doAutoScroll
     }
 
     private fun FragmentCroppagerBinding.setOnClickListeners() {
+        discardAllButton.setOnClickListener {
+            castActivity<ExaminationActivity>().invokeSubsequentController(this@CropPagerFragment)
+        }
+        saveAllButton.setOnClickListener {
+            SaveAllCropsDialog.getInstance(viewModel.dataSet.size).show(childFragmentManager)
+        }
         cancelAutoScrollButton.setOnClickListener {
             viewModel.doAutoScrollLive.postValue(false)
+        }
+        discardCropButton.setOnClickListener {
+            removeView(viewModel.dataSet.livePosition.value!!)
+        }
+        saveCropButton.setOnClickListener {
+            SaveCropDialog.getInstance(viewModel.dataSet.livePosition.value!!)
+                .show(childFragmentManager)
         }
         manualCropButton.setOnClickListener {
             (requireActivity() as FragmentedActivity).fragmentReplacementTransaction(
@@ -265,19 +287,6 @@ class CropPagerFragment :
         }
     }
 
-    override fun onDismissedCropPagerInstructionsDialog() {
-        showUncroppableScreenshotsSnackbarIfApplicable()
-    }
-
-    private fun showUncroppableScreenshotsSnackbarIfApplicable() {
-        viewModel.uncroppedScreenshotsSnackbarText?.let {
-            repelledSnackyBuilder(it)
-                .setIcon(com.w2sv.permissionhandler.R.drawable.ic_error_24)
-                .build()
-                .show()
-        }
-    }
-
     override fun onManualCropResult(cropEdges: CropEdges) {
         viewModel.dataSet.liveElement.let {
             it.crop = Crop.fromScreenshot(
@@ -307,29 +316,28 @@ class CropPagerFragment :
      * hide pageIndicationSeekBar AND/OR
      * removes view, procedure action has been selected for, from pager
      */
-    override fun onCropDialogResult(confirmed: Boolean, dataSetPosition: Int) {
-        if (confirmed)
-            activityViewModel.processCropBundleAsScopedCoroutine(
-                dataSetPosition,
-                requireContext().applicationContext
-            )
+    override fun onCropDialogResult(dataSetPosition: Int) {
+        activityViewModel.processCropBundleAsScopedCoroutine(
+            dataSetPosition,
+            requireContext().applicationContext
+        )
+        removeView(dataSetPosition)
+    }
 
-        if (viewModel.dataSet.size == 1)
+    private fun removeView(dataSetPosition: Int) {
+        if (viewModel.singleCropRemaining)
             castActivity<ExaminationActivity>().invokeSubsequentController(this)
         else
             cropPager.scrollToNextViewAndRemoveCurrent(dataSetPosition)
     }
 
-    override fun onCropEntiretyDialogResult(confirmed: Boolean) {
-        if (confirmed)
-            fragmentHostingActivity()
-                .fragmentReplacementTransaction(
-                    SaveAllFragment.getInstance(ArrayList(viewModel.dataSet.indices.toList())),
-                    true
-                )
-                .commit()
-        else
-            castActivity<ExaminationActivity>().invokeSubsequentController(this)
+    override fun onCropEntiretyDialogResult() {
+        fragmentHostingActivity()
+            .fragmentReplacementTransaction(
+                SaveAllFragment.getInstance(ArrayList(viewModel.dataSet.indices.toList())),
+                true
+            )
+            .commit()
     }
 
     private fun repelledSnackyBuilder(text: CharSequence): Snacky.Builder =

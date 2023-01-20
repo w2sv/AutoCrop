@@ -7,7 +7,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-abstract class AbstractCropDialog : DialogFragment() {
+abstract class CropSavingDialog : DialogFragment() {
 
     @Inject
     lateinit var booleanPreferences: BooleanPreferences

@@ -15,6 +15,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.fragments.manualcrop.utils.extensions.maintainedPercentage
+import com.w2sv.autocrop.activities.getFragmentInstance
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
@@ -33,7 +34,7 @@ class ManualCropFragment
 
     companion object {
         fun getInstance(cropBundle: CropBundle): ManualCropFragment =
-            getInstance(ManualCropFragment::class.java, CropBundle.EXTRA to cropBundle)
+            getFragmentInstance(ManualCropFragment::class.java, CropBundle.EXTRA to cropBundle)
     }
 
     @HiltViewModel

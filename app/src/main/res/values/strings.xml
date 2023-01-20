@@ -49,4 +49,8 @@
     <string name="onboarding_page_2_description">Now go ahead select some screenshots, let the cropping magic happen and save your first AutoCrops!</string>
     <string name="enable">Enable</string>
     <string name="share">Share</string>
+    <string name="discard_crop">Discard crop</string>
+    <string name="save_crop">Save crop</string>
+    <string name="discard_all_crops">Discard all crops</string>
+    <string name="save_all_crops">Save all crops</string>
 </resources>

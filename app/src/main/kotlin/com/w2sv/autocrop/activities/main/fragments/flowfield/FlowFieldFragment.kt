@@ -39,6 +39,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.examination.AccumulatedIOResults
+import com.w2sv.autocrop.activities.getFragmentInstance
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.OpenDocumentTreeContractHandler
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.SelectImagesContractHandlerCompat
@@ -66,7 +67,7 @@ class FlowFieldFragment :
 
     companion object {
         fun getInstance(accumulatedIoResults: AccumulatedIOResults?): FlowFieldFragment =
-            getInstance(FlowFieldFragment::class.java, AccumulatedIOResults.EXTRA to accumulatedIoResults)
+            getFragmentInstance(FlowFieldFragment::class.java, AccumulatedIOResults.EXTRA to accumulatedIoResults)
     }
 
     @Inject

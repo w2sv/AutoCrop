@@ -69,7 +69,7 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/bottom_button_row"
+            android:layout_alignTop="@id/current_crop_buttons"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="-30dp"
             android:layout_marginEnd="10dp"
@@ -82,7 +82,7 @@
             tools:ignore="RelativeOverlap" />
 
         <LinearLayout
-            android:id="@+id/bottom_button_row"
+            android:id="@+id/current_crop_buttons"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
