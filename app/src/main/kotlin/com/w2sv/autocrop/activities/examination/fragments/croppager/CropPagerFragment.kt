@@ -205,7 +205,7 @@ class CropPagerFragment :
 
         dataSet.observe(viewLifecycleOwner) {
             if (singleCropRemaining)
-                binding.cropEntiretyButtons.animate(Techniques.ZoomOut)
+                binding.allCropsButtonsWLabel.animate(Techniques.ZoomOut)
         }
     }
 
@@ -254,12 +254,12 @@ class CropPagerFragment :
             viewModel.autoScrollCoroutine?.let {
                 it.cancel()
                 snackbarRepelledLayout.fadeIn()
-                cropEntiretyButtons.fadeIn()
+                allCropsButtonsWLabel.fadeIn()
             }
                 ?: run {
                     snackbarRepelledLayout.show()
                     if (!viewModel.singleCropRemaining)
-                        cropEntiretyButtons.show()
+                        allCropsButtonsWLabel.show()
                 }
 
             // show snackbar if applicable

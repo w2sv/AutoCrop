@@ -21,7 +21,6 @@ class AppTitleFragment
             with(binding.appTitleTextView) {
                 animationComposer(
                     listOf(
-                        Techniques.Shake,
                         Techniques.Wobble,
                         Techniques.Wave,
                         Techniques.Tada

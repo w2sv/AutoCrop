@@ -32,4 +32,5 @@
     <dimen name="height_button">40dp</dimen>
     <dimen name="width_button">70dp</dimen>
     <dimen name="margin_inter_buttons_in_row">14dp</dimen>
+    <dimen name="height_button_row_w_label">60dp</dimen>
 </resources>

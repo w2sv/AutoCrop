@@ -53,4 +53,6 @@
     <string name="save_crop">Save crop</string>
     <string name="discard_all_crops">Discard all crops</string>
     <string name="save_all_crops">Save all crops</string>
+    <string name="all">All</string>
+    <string name="current">Current</string>
 </resources>
