@@ -45,7 +45,9 @@ import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.currentViewHolder
 import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.ui.scrollPeriodically
+import com.w2sv.autocrop.utils.extensions.getHtmlText
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
+import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.kotlinutils.delegates.Consumable
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -80,14 +82,29 @@ class CropPagerFragment :
         val singleCropRemaining: Boolean
             get() = dataSet.size == 1
 
-        val backPressHandler = BackPressListener(
-            viewModelScope,
-            context.resources.getLong(R.integer.duration_backpress_confirmation_window)
-        )
+        fun getSaveCropDialog(showDismissButton: Boolean): SaveCropDialog =
+            SaveCropDialog.getInstance(dataSet.livePosition.value!!, showDismissButton)
 
-        //$$$$$$$$$$$$$$$$$$$$$$$$
-        // Uncropped Screenshots $
-        //$$$$$$$$$$$$$$$$$$$$$$$$
+        fun getSaveAllCropsDialog(showDismissButton: Boolean): SaveAllCropsDialog =
+            SaveAllCropsDialog.getInstance(dataSet.size, showDismissButton)
+
+        /**
+         * AutoScroll
+         */
+
+        var autoScrollCoroutine: Job? = null
+
+        val doAutoScrollLive: LiveData<Boolean> = MutableLiveData(booleanPreferences.autoScroll && dataSet.size > 1)
+
+        val dialogInflationEnabled: Boolean
+            get() = doAutoScrollLive.value == false
+
+        fun maxAutoScrolls(): Int =
+            dataSet.size - dataSet.livePosition.value!!
+
+        /**
+         * Other
+         */
 
         /**
          * Inherently serves as flag, with != null meaning snackbar is to be displayed and vice-versa
@@ -125,19 +142,10 @@ class CropPagerFragment :
                 }
         )
 
-        //$$$$$$$$$$$$$
-        // AutoScroll $
-        //$$$$$$$$$$$$$
-
-        var autoScrollCoroutine: Job? = null
-
-        val doAutoScrollLive: LiveData<Boolean> = MutableLiveData(booleanPreferences.autoScroll && dataSet.size > 1)
-
-        val dialogInflationEnabled: Boolean
-            get() = doAutoScrollLive.value == false
-
-        fun maxAutoScrolls(): Int =
-            dataSet.size - dataSet.livePosition.value!!
+        val backPressHandler = BackPressListener(
+            viewModelScope,
+            context.resources.getLong(R.integer.duration_backpress_confirmation_window)
+        )
     }
 
     @Inject
@@ -160,7 +168,26 @@ class CropPagerFragment :
 
         cropPager = CropPager(
             binding.viewPager,
-            viewModel.dataSet
+            viewModel.dataSet,
+            onClickListener = {
+                if (viewModel.dialogInflationEnabled)
+                    viewModel.getSaveCropDialog(true)
+                        .show(childFragmentManager)
+            },
+            onLongClickListener = {
+                if (viewModel.dialogInflationEnabled) {
+                    (
+                            if (viewModel.singleCropRemaining)
+                                viewModel.getSaveCropDialog(true)
+                            else
+                                viewModel.getSaveAllCropsDialog(true)
+                            )
+                        .show(childFragmentManager)
+                    true
+                }
+                else
+                    false
+            }
         )
 
         viewModel.setLiveDataObservers()
@@ -183,7 +210,13 @@ class CropPagerFragment :
     }
 
     private fun FragmentCroppagerBinding.updateOnDataSetPositionChanged(position: Int) {
-        discardingStatisticsTv.update(position)
+        with(viewModel.dataSet.liveElement) {
+            discardingStatisticsTv.text = resources.getHtmlText(
+                R.string.discarding_statistics,
+                "${crop.discardedPercentage}%",
+                crop.discardedFileSizeString
+            )
+        }
 
         viewModel.dataSet.pageIndex(position).let { pageIndex ->
             pageIndicationTv.update(pageIndex + 1, viewModel.dataSet.size)
@@ -244,7 +277,8 @@ class CropPagerFragment :
             castActivity<ExaminationActivity>().invokeSubsequentController(this@CropPagerFragment)
         }
         saveAllButton.setOnClickListener {
-            SaveAllCropsDialog.getInstance(viewModel.dataSet.size).show(childFragmentManager)
+            viewModel.getSaveAllCropsDialog(false)
+                .show(childFragmentManager)
         }
         cancelAutoScrollButton.setOnClickListener {
             viewModel.doAutoScrollLive.postValue(false)
@@ -253,7 +287,7 @@ class CropPagerFragment :
             removeView(viewModel.dataSet.livePosition.value!!)
         }
         saveCropButton.setOnClickListener {
-            SaveCropDialog.getInstance(viewModel.dataSet.livePosition.value!!)
+            viewModel.getSaveCropDialog(false)
                 .show(childFragmentManager)
         }
         manualCropButton.setOnClickListener {
@@ -275,7 +309,7 @@ class CropPagerFragment :
                     val cropImageView =
                         binding
                             .viewPager
-                            .currentViewHolder<CropPager.Adapter.ViewHolder>()!!
+                            .currentViewHolder<ImageViewHolder>()!!
                             .imageView
 
                     addSharedElement(
@@ -296,7 +330,7 @@ class CropPagerFragment :
             )
         }
 
-        cropPager.adapter.notifyItemChanged(
+        binding.viewPager.adapter!!.notifyItemChanged(
             binding.viewPager.currentItem,
             viewModel.dataSet.size
         )
@@ -316,11 +350,15 @@ class CropPagerFragment :
      * hide pageIndicationSeekBar AND/OR
      * removes view, procedure action has been selected for, from pager
      */
-    override fun onCropDialogResult(dataSetPosition: Int) {
+    override fun onSaveCrop(dataSetPosition: Int) {
         activityViewModel.processCropBundleAsScopedCoroutine(
             dataSetPosition,
             requireContext().applicationContext
         )
+        removeView(dataSetPosition)
+    }
+
+    override fun onDiscardCrop(dataSetPosition: Int) {
         removeView(dataSetPosition)
     }
 
@@ -331,13 +369,17 @@ class CropPagerFragment :
             cropPager.scrollToNextViewAndRemoveCurrent(dataSetPosition)
     }
 
-    override fun onCropEntiretyDialogResult() {
+    override fun onSaveAllCrops() {
         fragmentHostingActivity()
             .fragmentReplacementTransaction(
                 SaveAllFragment.getInstance(ArrayList(viewModel.dataSet.indices.toList())),
                 true
             )
             .commit()
+    }
+
+    override fun onDiscardAllCrops() {
+        castActivity<ExaminationActivity>().invokeSubsequentController(this)
     }
 
     private fun repelledSnackyBuilder(text: CharSequence): Snacky.Builder =

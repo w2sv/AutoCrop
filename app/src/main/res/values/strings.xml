@@ -13,7 +13,7 @@
     <string name="processing_crops">Processing crops…</string>
     <string name="cropping_failure">No cropping borders found</string>
     <string name="cancel_autoscroll">Cancel Scroll</string>
-    <string name="remove">Removed</string>
+    <string name="discarding_statistics"><![CDATA[Removed <b>%s</b>=<b>%s</b>]]></string>
     <string name="cropping_failure_instruction_text_view">Make sure the selected screenshots comprise a continuous monochromatic border both above and below the core image area</string>
     <string name="version">Version: %1$s</string>
     <string name="copyright">© 2021-%1$d | Janek Zangenberg</string>

@@ -9,11 +9,15 @@ import com.w2sv.autocrop.activities.getFragmentInstance
 
 class SaveAllCropsDialog : CropSavingDialog() {
 
-    companion object{
+    companion object {
         private const val EXTRA_N_CROPS = "com.w2sv.autocrop.extra.EXTRA_N_CROPS"
 
-        fun getInstance(nCrops: Int): SaveAllCropsDialog =
-            getFragmentInstance(SaveAllCropsDialog::class.java, EXTRA_N_CROPS to nCrops)
+        fun getInstance(nCrops: Int, showDismissButton: Boolean): SaveAllCropsDialog =
+            getFragmentInstance(
+                SaveAllCropsDialog::class.java,
+                EXTRA_N_CROPS to nCrops,
+                EXTRA_SHOW_DISMISS_BUTTON to showDismissButton
+            )
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
@@ -31,12 +35,18 @@ class SaveAllCropsDialog : CropSavingDialog() {
                 setNegativeButton("No") { _, _ -> }
                 setPositiveButton("Yes") { _, _ ->
                     (parentFragment as ResultListener)
-                        .onCropEntiretyDialogResult()
+                        .onSaveAllCrops()
                 }
+                if (requireArguments().getBoolean(EXTRA_SHOW_DISMISS_BUTTON))
+                    setNeutralButton("No, dismiss all"){_, _ ->
+                        (parentFragment as ResultListener)
+                            .onDiscardAllCrops()
+                    }
             }
             .create()
 
     interface ResultListener {
-        fun onCropEntiretyDialogResult()
+        fun onSaveAllCrops()
+        fun onDiscardAllCrops()
     }
 }

@@ -104,12 +104,13 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="50dp">
 
-                <com.w2sv.autocrop.activities.examination.fragments.croppager.views.DiscardingStatisticsTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/discarding_statistics_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    android:text="@string/discarding_statistics"/>
 
                 <LinearLayout
                     android:id="@+id/current_crop_buttons"
