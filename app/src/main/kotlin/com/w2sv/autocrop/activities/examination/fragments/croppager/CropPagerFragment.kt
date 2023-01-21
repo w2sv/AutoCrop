@@ -16,6 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.BackPressListener
 import com.w2sv.androidutils.extensions.getColoredIcon
+import com.w2sv.androidutils.extensions.getHtmlText
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
 import com.w2sv.androidutils.extensions.hide
@@ -45,7 +46,6 @@ import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.currentViewHolder
 import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.ui.scrollPeriodically
-import com.w2sv.autocrop.utils.extensions.getHtmlText
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.kotlinutils.delegates.Consumable

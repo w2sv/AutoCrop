@@ -16,6 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.androidutils.BackPressListener
 import com.w2sv.androidutils.extensions.getLong
+import com.w2sv.androidutils.extensions.increment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropResults
@@ -28,7 +29,6 @@ import com.w2sv.autocrop.cropbundle.cropping.cropEdgesCandidates
 import com.w2sv.autocrop.cropbundle.cropping.maxHeightEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentCropBinding
-import com.w2sv.autocrop.utils.extensions.increment
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.getMediaUri
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +40,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import slimber.log.i
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class CropFragment
