@@ -29,7 +29,6 @@ import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.getThemedColor
 import com.w2sv.androidutils.extensions.hide
-import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.toggle
@@ -38,7 +37,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.examination.AccumulatedIOResults
-import com.w2sv.autocrop.activities.getFragmentInstance
+import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.OpenDocumentTreeContractHandler
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.SelectImagesContractHandlerCompat
@@ -50,7 +49,10 @@ import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.ui.SnackbarData
 import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.fadeIn
+import com.w2sv.autocrop.ui.fadeInAnimationComposer
 import com.w2sv.autocrop.ui.fadeOut
+import com.w2sv.autocrop.ui.onHalfwayFinished
+import com.w2sv.autocrop.utils.extensions.onHalfwayShown
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.kotlinutils.extensions.numericallyInflected
@@ -59,6 +61,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.mateware.snacky.Snacky
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -67,7 +70,7 @@ class FlowFieldFragment :
 
     companion object {
         fun getInstance(accumulatedIoResults: AccumulatedIOResults?): FlowFieldFragment =
-            getFragmentInstance(FlowFieldFragment::class.java, AccumulatedIOResults.EXTRA to accumulatedIoResults)
+            getFragment(FlowFieldFragment::class.java, AccumulatedIOResults.EXTRA to accumulatedIoResults)
     }
 
     @Inject
@@ -85,7 +88,22 @@ class FlowFieldFragment :
 
         val accumulatedIoResults: AccumulatedIOResults? = savedStateHandle[AccumulatedIOResults.EXTRA]
 
-        val ioResultsSnackbarData: SnackbarData? = accumulatedIoResults?.let {
+        fun showIOResultsSnackbarIfApplicable(
+            coroutineScope: CoroutineScope,
+            getSnackyBuilder: (CharSequence) -> Snacky.Builder
+        ) {
+            if (ioResultsSnackbarData != null && !showedSnackbar) {
+                getSnackyBuilder(ioResultsSnackbarData.text)
+                    .setIcon(ioResultsSnackbarData.icon)
+                    .build()
+                    .onHalfwayShown(coroutineScope) {
+                        showedSnackbar = true
+                    }
+                    .show()
+            }
+        }
+
+        private val ioResultsSnackbarData: SnackbarData? = accumulatedIoResults?.let {
             if (it.nSavedCrops == 0)
                 SnackbarData("Discarded all crops")
             else
@@ -111,10 +129,9 @@ class FlowFieldFragment :
                 )
         }
 
-        val followingExaminationActivity: Boolean = accumulatedIoResults != null
+        private var showedSnackbar: Boolean = false
 
         var fadedInButtonsOnCreate: Boolean = false
-        var showedSnackbar: Boolean = false
 
         val liveCropSaveDirIdentifier: LiveData<String> = MutableLiveData(cropSaveDirPreferences.pathIdentifier)
 
@@ -189,20 +206,7 @@ class FlowFieldFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showLayoutElements()
-
-        if (viewModel.followingExaminationActivity && !viewModel.showedSnackbar) {
-            lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_half_faded_in)) {
-                with(viewModel.ioResultsSnackbarData!!) {
-                    repelledSnackyBuilder(text)
-                        .setIcon(icon)
-                        .build()
-                        .show()
-                }
-                viewModel.showedSnackbar = true
-            }
-        }
-
+        binding.showLayoutElements()
         binding.setOnClickListeners()
         viewModel.setLiveDataObservers()
     }
@@ -226,25 +230,28 @@ class FlowFieldFragment :
         }
     }
 
-    private fun showLayoutElements() {
+    private fun FragmentFlowfieldBinding.showLayoutElements() {
         val savedAnyCrops: Boolean = viewModel.accumulatedIoResults?.let { it.nSavedCrops != 0 }
             ?: false
 
         if (!viewModel.fadedInButtonsOnCreate) {
-            binding.foregroundLayout.fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
+            foregroundLayout
+                .fadeInAnimationComposer(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
+                .onHalfwayFinished(lifecycleScope){
+                    viewModel.showIOResultsSnackbarIfApplicable(lifecycleScope, ::repelledSnackyBuilder)
 
-            if (savedAnyCrops)
-                lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_half_faded_in)) {
-                    with(binding.shareCropsButton) {
-                        show()
-                        animate(Techniques.RotateInUpLeft)
-                    }
+                    if (savedAnyCrops)
+                        with(shareCropsButton) {
+                            show()
+                            animate(Techniques.RotateInUpLeft)
+                        }
                 }
+                .play()
 
             viewModel.fadedInButtonsOnCreate = true
         }
         else if (savedAnyCrops)
-            binding.shareCropsButton.show()
+            shareCropsButton.show()
     }
 
     private fun FragmentFlowfieldBinding.setOnClickListeners() {

@@ -26,7 +26,7 @@ import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.fragments.manualcrop.extensions.getScaleY
-import com.w2sv.autocrop.activities.getFragmentInstance
+import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
@@ -44,7 +44,7 @@ class ComparisonFragment
 
     companion object {
         fun getInstance(cropBundle: CropBundle): ComparisonFragment =
-            getFragmentInstance(ComparisonFragment::class.java, CropBundle.EXTRA to cropBundle)
+            getFragment(ComparisonFragment::class.java, CropBundle.EXTRA to cropBundle)
     }
 
     @Inject

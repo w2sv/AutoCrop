@@ -92,7 +92,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                                                     playAnimation()
                                                 }
                                             }
-                                            .playOn(it)
+                                            .play()
                                     }
                                 )
                         }
@@ -103,7 +103,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                             .apply {
                                 animationComposer(Techniques.Tada)
                                     .delay(resources.getLong(R.integer.delay_small))
-                                    .playOn(this)
+                                    .play()
                             }
                 }
             ),

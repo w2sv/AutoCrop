@@ -13,6 +13,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import androidx.viewpager2.widget.ViewPager2
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.BackPressListener
 import com.w2sv.androidutils.extensions.getColoredIcon
@@ -34,7 +35,7 @@ import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.Save
 import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.SaveCropDialog
 import com.w2sv.autocrop.activities.examination.fragments.manualcrop.ManualCropFragment
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
-import com.w2sv.autocrop.activities.getFragmentInstance
+import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.cropbundle.Crop
 import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
@@ -46,14 +47,15 @@ import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.currentViewHolder
 import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.ui.scrollPeriodically
+import com.w2sv.autocrop.utils.extensions.onHalfwayShown
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
-import com.w2sv.kotlinutils.delegates.Consumable
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.mateware.snacky.Snacky
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -68,7 +70,7 @@ class CropPagerFragment :
 
     companion object {
         fun getInstance(cropResults: CropResults): CropPagerFragment =
-            getFragmentInstance(CropPagerFragment::class.java, CropResults.EXTRA to cropResults)
+            getFragment(CropPagerFragment::class.java, CropResults.EXTRA to cropResults)
     }
 
     @HiltViewModel
@@ -93,6 +95,21 @@ class CropPagerFragment :
          * AutoScroll
          */
 
+        fun launchAutoScrollCoroutine(coroutineScope: CoroutineScope, viewPager: ViewPager2, period: Long) {
+            coroutineScope.launch {
+                if (autoScrollCoroutine == null)
+                    delay(period)
+
+                autoScrollCoroutine = viewPager.scrollPeriodically(
+                    this,
+                    maxAutoScrolls(),
+                    period
+                ) {
+                    doAutoScrollLive.postValue(false)
+                }
+            }
+        }
+
         var autoScrollCoroutine: Job? = null
 
         val doAutoScrollLive: LiveData<Boolean> = MutableLiveData(booleanPreferences.autoScroll && dataSet.size > 1)
@@ -100,17 +117,28 @@ class CropPagerFragment :
         val dialogInflationEnabled: Boolean
             get() = doAutoScrollLive.value == false
 
-        fun maxAutoScrolls(): Int =
+        private fun maxAutoScrolls(): Int =
             dataSet.size - dataSet.livePosition.value!!
 
         /**
          * Other
          */
 
-        /**
-         * Inherently serves as flag, with != null meaning snackbar is to be displayed
-         */
-        val uncroppedScreenshotsSnackbarText by Consumable(
+        fun showCropResultsSnackbarIfApplicable(
+            coroutineScope: CoroutineScope,
+            getSnackyBuilder: (CharSequence) -> Snacky.Builder
+        ) {
+            if (uncroppedScreenshotsSnackbarText != null && !showedSnackbar)
+                getSnackyBuilder(uncroppedScreenshotsSnackbarText)
+                    .setIcon(com.w2sv.permissionhandler.R.drawable.ic_error_24)
+                    .build()
+                    .onHalfwayShown(coroutineScope) {
+                        showedSnackbar = true
+                    }
+                    .show()
+        }
+
+        private val uncroppedScreenshotsSnackbarText: SpannableStringBuilder? =
             SpannableStringBuilder()
                 .run {
                     val cropResults = savedStateHandle.get<CropResults>(CropResults.EXTRA)!!
@@ -136,7 +164,8 @@ class CropPagerFragment :
                     }
                     ifEmpty { null }
                 }
-        )
+
+        private var showedSnackbar: Boolean = false
 
         val backPressHandler = BackPressListener(
             viewModelScope,
@@ -172,12 +201,10 @@ class CropPagerFragment :
             },
             onLongClickListener = {
                 if (viewModel.dialogInflationEnabled) {
-                    (
-                            if (viewModel.singleCropRemaining)
-                                viewModel.getSaveCropDialog(true)
-                            else
-                                viewModel.getSaveAllCropsDialog(true)
-                            )
+                    (if (viewModel.singleCropRemaining)
+                        viewModel.getSaveCropDialog(true)
+                    else
+                        viewModel.getSaveAllCropsDialog(true))
                         .show(childFragmentManager)
                     true
                 }
@@ -225,22 +252,11 @@ class CropPagerFragment :
 
         if (doAutoScroll) {
             cancelAutoScrollButton.show()
-
-            // launch AutoScroll coroutine
-            lifecycleScope.launch {
-                val scrollPeriod = resources.getLong(R.integer.period_auto_scroll)
-
-                if (viewModel.autoScrollCoroutine == null)
-                    delay(scrollPeriod)
-
-                viewModel.autoScrollCoroutine = viewPager.scrollPeriodically(
-                    this,
-                    viewModel.maxAutoScrolls(),
-                    scrollPeriod
-                ) {
-                    viewModel.doAutoScrollLive.postValue(false)
-                }
-            }
+            viewModel.launchAutoScrollCoroutine(
+                lifecycleScope,
+                viewPager,
+                resources.getLong(R.integer.period_auto_scroll)
+            )
         }
         else {
             viewPager.setPageTransformer(CubeOutPageTransformer())
@@ -259,12 +275,7 @@ class CropPagerFragment :
                 }
 
             // show snackbar if applicable
-            viewModel.uncroppedScreenshotsSnackbarText?.let {
-                repelledSnackyBuilder(it)
-                    .setIcon(com.w2sv.permissionhandler.R.drawable.ic_error_24)
-                    .build()
-                    .show()
-            }
+            viewModel.showCropResultsSnackbarIfApplicable(lifecycleScope, ::repelledSnackyBuilder)
         }
     }
 

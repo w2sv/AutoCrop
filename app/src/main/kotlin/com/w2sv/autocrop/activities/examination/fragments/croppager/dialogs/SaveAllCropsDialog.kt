@@ -5,7 +5,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.core.text.italic
-import com.w2sv.autocrop.activities.getFragmentInstance
+import com.w2sv.autocrop.activities.getFragment
 
 class SaveAllCropsDialog : CropSavingDialog() {
 
@@ -13,7 +13,7 @@ class SaveAllCropsDialog : CropSavingDialog() {
         private const val EXTRA_N_CROPS = "com.w2sv.autocrop.extra.EXTRA_N_CROPS"
 
         fun getInstance(nCrops: Int, showDismissButton: Boolean): SaveAllCropsDialog =
-            getFragmentInstance(
+            getFragment(
                 SaveAllCropsDialog::class.java,
                 EXTRA_N_CROPS to nCrops,
                 EXTRA_SHOW_DISMISS_BUTTON to showDismissButton

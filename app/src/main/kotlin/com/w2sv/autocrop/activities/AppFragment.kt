@@ -16,7 +16,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.viewboundcontroller.ViewBoundFragment
 import kotlinx.coroutines.CoroutineScope
 
-fun <F: Fragment> getFragmentInstance(clazz: Class<F>, vararg bundlePairs: Pair<String, Any?>): F =
+fun <F: Fragment> getFragment(clazz: Class<F>, vararg bundlePairs: Pair<String, Any?>): F =
     clazz.newInstance()
         .apply {
             arguments = bundleOf(*bundlePairs)

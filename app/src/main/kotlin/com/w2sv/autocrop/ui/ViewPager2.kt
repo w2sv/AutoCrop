@@ -16,10 +16,9 @@ fun ViewPager2.scrollPeriodically(
     onFinishedListener: () -> Unit
 ): Job =
     coroutineScope.launch(Dispatchers.Main) {
-        val finalIterationIndex = maxScrolls - 1
         (0 until maxScrolls).forEach {
             setCurrentItem(currentItem + 1, true)
-            if (it != finalIterationIndex)
+            if (it != maxScrolls - 1)
                 delay(period)
         }
         onFinishedListener()
@@ -27,7 +26,7 @@ fun ViewPager2.scrollPeriodically(
 
 @Suppress("UNCHECKED_CAST")
 fun <VH : RecyclerView.ViewHolder> ViewPager2.currentViewHolder(): VH? =
-    (recyclerView.findViewHolderForAdapterPosition(currentItem) as? VH)
+    recyclerView.findViewHolderForAdapterPosition(currentItem) as? VH
 
 val ViewPager2.recyclerView: RecyclerView
     get() = getChildAt(0) as RecyclerView

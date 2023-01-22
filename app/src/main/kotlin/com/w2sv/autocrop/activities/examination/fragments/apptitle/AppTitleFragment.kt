@@ -18,22 +18,20 @@ class AppTitleFragment
         super.onResume()
 
         lifecycleScope.launch(Dispatchers.Main) {
-            with(binding.appTitleTextView) {
-                animationComposer(
-                    listOf(
-                        Techniques.Wobble,
-                        Techniques.Wave,
-                        Techniques.Tada
-                    )
-                        .random()
+            binding.appTitleTextView.animationComposer(
+                listOf(
+                    Techniques.Wobble,
+                    Techniques.Wave,
+                    Techniques.Tada
                 )
-                    .onEnd {
-                        activityViewModels<ExaminationActivity.ViewModel>().value.cropProcessingCoroutine.invokeOnCompletion {
-                            castActivity<ExaminationActivity>().invokeSubsequentController(this@AppTitleFragment)
-                        }
+                    .random()
+            )
+                .onEnd {
+                    activityViewModels<ExaminationActivity.ViewModel>().value.cropProcessingCoroutine.invokeOnCompletion {
+                        castActivity<ExaminationActivity>().invokeSubsequentController(this@AppTitleFragment)
                     }
-                    .playOn(this)
-            }
+                }
+                .play()
         }
     }
 }

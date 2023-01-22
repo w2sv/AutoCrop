@@ -3,7 +3,7 @@ package com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import com.w2sv.autocrop.activities.getFragmentInstance
+import com.w2sv.autocrop.activities.getFragment
 
 class SaveCropDialog : CropSavingDialog() {
 
@@ -11,7 +11,7 @@ class SaveCropDialog : CropSavingDialog() {
         private const val EXTRA_DATA_SET_POSITION = "com.w2sv.autocrop.extra.DATA_SET_POSITION"
 
         fun getInstance(dataSetPosition: Int, showDismissButton: Boolean): SaveCropDialog =
-            getFragmentInstance(
+            getFragment(
                 SaveCropDialog::class.java,
                 EXTRA_DATA_SET_POSITION to dataSetPosition,
                 EXTRA_SHOW_DISMISS_BUTTON to showDismissButton
