@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.examination.fragments.manualcrop.utils.model
+package com.w2sv.autocrop.activities.examination.fragments.manualcrop.model
 
 enum class Corner {
     NONE,

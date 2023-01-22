@@ -11,7 +11,6 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
-import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -54,6 +53,7 @@ import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.ui.fadeOut
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.getMediaUri
+import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.permissionhandler.PermissionHandler
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -92,7 +92,7 @@ class FlowFieldFragment :
                 SnackbarData(
                     buildSpannedString {
                         append(
-                            "Saved ${it.nSavedCrops} crop(s) to "
+                            "Saved ${it.nSavedCrops} ${"crop".numericallyInflected(it.nSavedCrops)} to "
                         )
                         color(context.getThemedColor(R.color.success)) {
                             append(cropSaveDirPreferences.pathIdentifier)
@@ -104,7 +104,7 @@ class FlowFieldFragment :
                                         "corresponding"
                                     else
                                         it.nDeletedScreenshots
-                                } screenshot(s)"
+                                } ${"screenshot".numericallyInflected(it.nDeletedScreenshots)}"
                             )
                     },
                     context.getColoredIcon(R.drawable.ic_check_24, R.color.success)
@@ -364,7 +364,7 @@ class FlowFieldFragment :
     fun onBackPress() {
         binding.drawerLayout.run {
             if (isOpen)
-                closeDrawer(GravityCompat.START)
+                closeDrawer()
             else
                 viewModel.backPressHandler(
                     {

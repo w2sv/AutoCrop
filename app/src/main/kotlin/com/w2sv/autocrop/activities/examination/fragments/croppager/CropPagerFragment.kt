@@ -49,6 +49,7 @@ import com.w2sv.autocrop.ui.scrollPeriodically
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.kotlinutils.delegates.Consumable
+import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -107,7 +108,7 @@ class CropPagerFragment :
          */
 
         /**
-         * Inherently serves as flag, with != null meaning snackbar is to be displayed and vice-versa
+         * Inherently serves as flag, with != null meaning snackbar is to be displayed
          */
         val uncroppedScreenshotsSnackbarText by Consumable(
             SpannableStringBuilder()
@@ -121,22 +122,17 @@ class CropPagerFragment :
                                 append(" ${cropResults.nNotCroppableImages}")
                             }
                         }
-                        append(" screenshot(s)")
+                        append(" ${"screenshot".numericallyInflected(cropResults.nNotCroppableImages)}")
                     }
 
-                    when {
-                        cropResults.nNotOpenableImages == 0 -> Unit
-                        isEmpty() -> {
-                            append(
-                                "Couldn't open ${cropResults.nNotOpenableImages} image(s)"
-                            )
-                        }
-
-                        else -> {
-                            append(
-                                "& couldn't open ${cropResults.nNotOpenableImages} image(s)"
-                            )
-                        }
+                    if (cropResults.nNotOpenableImages != 0) {
+                        append(
+                            if (isEmpty())
+                                "Couldn't"
+                            else
+                                "& couldn't"
+                        )
+                        append("open ${cropResults.nNotOpenableImages} ${"image".numericallyInflected(cropResults.nNotOpenableImages)}")
                     }
                     ifEmpty { null }
                 }

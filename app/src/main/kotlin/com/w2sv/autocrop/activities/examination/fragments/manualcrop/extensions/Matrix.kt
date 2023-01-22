@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.examination.fragments.manualcrop.utils.extensions
+package com.w2sv.autocrop.activities.examination.fragments.manualcrop.extensions
 
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator

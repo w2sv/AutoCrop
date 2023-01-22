@@ -14,7 +14,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.utils.extensions.maintainedPercentage
+import com.w2sv.autocrop.activities.examination.fragments.manualcrop.extensions.maintainedPercentage
 import com.w2sv.autocrop.activities.getFragmentInstance
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.cropping.CropEdges
