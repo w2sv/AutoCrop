@@ -16,10 +16,10 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import com.w2sv.androidutils.ActivityCallContractAdministrator
+import com.w2sv.androidutils.ui.SimpleAnimationListener
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.databinding.FragmentDeleteRequestBinding
-import com.w2sv.autocrop.utils.SimpleAnimationListener
 
 class DeleteRequestFragment :
     AppFragment<FragmentDeleteRequestBinding>(FragmentDeleteRequestBinding::class.java) {

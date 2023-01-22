@@ -6,7 +6,6 @@ import android.graphics.Matrix
 import android.os.Bundle
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -27,6 +26,7 @@ import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.fragments.manualcrop.utils.extensions.getScaleY
+import com.w2sv.autocrop.activities.getFragmentInstance
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
@@ -44,12 +44,7 @@ class ComparisonFragment
 
     companion object {
         fun getInstance(cropBundle: CropBundle): ComparisonFragment =
-            ComparisonFragment()
-                .apply {
-                    arguments = bundleOf(
-                        CropBundle.EXTRA to cropBundle
-                    )
-                }
+            getFragmentInstance(ComparisonFragment::class.java, CropBundle.EXTRA to cropBundle)
     }
 
     @Inject
@@ -133,7 +128,7 @@ class ComparisonFragment
         }
 
         backButton.setOnClickListener {
-            popFromFragmentManager((this@ComparisonFragment as Fragment).parentFragmentManager)
+            popFromFragmentManager((this@ComparisonFragment as Fragment).parentFragmentManager)  // to resolve AS lint issue
         }
     }
 

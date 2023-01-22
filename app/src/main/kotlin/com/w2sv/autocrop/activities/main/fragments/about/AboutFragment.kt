@@ -5,12 +5,12 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.daimajia.androidanimations.library.Techniques
+import com.w2sv.androidutils.ui.SimpleAnimationListener
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.databinding.FragmentAboutBinding
 import com.w2sv.autocrop.preferences.GlobalFlags
 import com.w2sv.autocrop.ui.animate
-import com.w2sv.autocrop.utils.SimpleAnimationListener
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
