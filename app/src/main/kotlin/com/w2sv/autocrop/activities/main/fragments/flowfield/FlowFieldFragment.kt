@@ -54,7 +54,6 @@ import com.w2sv.autocrop.ui.fadeOut
 import com.w2sv.autocrop.ui.onHalfwayFinished
 import com.w2sv.autocrop.utils.extensions.onHalfwayShown
 import com.w2sv.autocrop.utils.extensions.showToast
-import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.permissionhandler.PermissionHandler
@@ -239,7 +238,7 @@ class FlowFieldFragment :
             foregroundLayout
                 .fadeInAnimationComposer(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
                 .onHalfwayFinished(lifecycleScope) {
-                    viewModel.showIOResultsSnackbarIfApplicable(this, ::repelledSnackyBuilder)
+                    viewModel.showIOResultsSnackbarIfApplicable(this, ::getSnackyBuilder)
 
                     if (savedAnyCrops)
                         with(shareCropsButton) {
@@ -324,11 +323,10 @@ class FlowFieldFragment :
             callbackFromQ = @SuppressLint("NewApi") { imageUris ->
                 if (imageUris.isNotEmpty()) {
                     if (getMediaUri(requireContext(), imageUris.first()) == null)
-                        requireActivity()
-                            .snackyBuilder("Content provider not supported. Please use a different one")
-                            .setIcon(com.w2sv.permissionhandler.R.drawable.ic_error_24)
-                            .build()
-                            .show()
+                        requireContext().showToast(
+                            "Content provider not supported. Please use a different one",
+                            Toast.LENGTH_LONG
+                        )
                     else
                         requireActivity().startActivity(
                             Intent(
@@ -364,6 +362,9 @@ class FlowFieldFragment :
         }
     }
 
+    override val snackbarAnchorView: View
+        get() = binding.snackbarRepelledLayout.parent as View
+
     fun onBackPress() {
         binding.drawerLayout.run {
             if (isOpen)
@@ -379,9 +380,4 @@ class FlowFieldFragment :
                 )
         }
     }
-
-    private fun repelledSnackyBuilder(text: CharSequence): Snacky.Builder =
-        requireActivity()
-            .snackyBuilder(text)
-            .setView(binding.snackbarRepelledLayout.parent as View)
 }

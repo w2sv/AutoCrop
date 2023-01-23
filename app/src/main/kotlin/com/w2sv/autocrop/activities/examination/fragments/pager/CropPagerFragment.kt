@@ -50,7 +50,6 @@ import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.ui.scrollPeriodically
 import com.w2sv.autocrop.utils.extensions.onHalfwayShown
 import com.w2sv.autocrop.utils.extensions.showToast
-import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
@@ -280,7 +279,7 @@ class CropPagerFragment :
                 }
 
             // show snackbar if applicable
-            viewModel.showCropResultsSnackbarIfApplicable(lifecycleScope, ::repelledSnackyBuilder)
+            viewModel.showCropResultsSnackbarIfApplicable(lifecycleScope, ::getSnackyBuilder)
         }
     }
 
@@ -405,10 +404,8 @@ class CropPagerFragment :
         castActivity<ExaminationActivity>().invokeSubsequentController(this)
     }
 
-    private fun repelledSnackyBuilder(text: CharSequence): Snacky.Builder =
-        requireActivity()
-            .snackyBuilder(text)
-            .setView(binding.snackbarRepelledLayout.parent as View)
+    override val snackbarAnchorView: View
+        get() = binding.snackbarRepelledLayout.parent as View
 
     fun onBackPress() {
         viewModel.backPressHandler(

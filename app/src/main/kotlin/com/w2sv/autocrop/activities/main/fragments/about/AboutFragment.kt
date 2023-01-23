@@ -11,7 +11,6 @@ import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.databinding.FragmentAboutBinding
 import com.w2sv.autocrop.preferences.GlobalFlags
 import com.w2sv.autocrop.ui.animate
-import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -41,11 +40,10 @@ class AboutFragment :
 
     private fun showInstructionSnackbarIfApplicable() {
         if (!globalFlags.aboutFragmentInstructionsShown)
-            requireActivity()
-                .snackyBuilder(
-                    "Check out what happens if you click on the different view elements!",
-                    duration = resources.getInteger(R.integer.duration_snackbar_long)
-                )
+            getSnackyBuilder(
+                "Check out what happens if you click on the different view elements!",
+                duration = resources.getInteger(R.integer.duration_snackbar_long)
+            )
                 .setIcon(R.drawable.ic_info_24)
                 .build()
                 .show()
