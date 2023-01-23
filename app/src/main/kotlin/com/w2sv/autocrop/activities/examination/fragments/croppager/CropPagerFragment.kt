@@ -27,7 +27,6 @@ import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
-import com.w2sv.autocrop.activities.FragmentedActivity
 import com.w2sv.autocrop.activities.crop.CropResults
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
@@ -298,7 +297,7 @@ class CropPagerFragment :
                 .show(childFragmentManager)
         }
         manualCropButton.setOnClickListener {
-            (requireActivity() as FragmentedActivity).fragmentReplacementTransaction(
+            requireViewBoundFragmentActivity().fragmentReplacementTransaction(
                 ManualCropFragment.getInstance(
                     viewModel.dataSet.liveElement
                 ),
@@ -308,7 +307,7 @@ class CropPagerFragment :
                 .commit()
         }
         comparisonButton.setOnClickListener {
-            (requireActivity() as FragmentedActivity).fragmentReplacementTransaction(
+            requireViewBoundFragmentActivity().fragmentReplacementTransaction(
                 ComparisonFragment.getInstance(viewModel.dataSet.liveElement)
             )
                 .addToBackStack(null)
@@ -377,7 +376,7 @@ class CropPagerFragment :
     }
 
     override fun onSaveAllCrops() {
-        fragmentHostingActivity()
+        requireViewBoundFragmentActivity()
             .fragmentReplacementTransaction(
                 SaveAllFragment.getInstance(ArrayList(viewModel.dataSet.indices.toList())),
                 true

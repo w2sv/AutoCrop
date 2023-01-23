@@ -10,13 +10,14 @@ import androidx.core.app.ShareCompat
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.navigation.NavigationView
+import com.w2sv.androidutils.ActivityRetriever
 import com.w2sv.androidutils.extensions.configureItem
 import com.w2sv.androidutils.extensions.goToWebpage
 import com.w2sv.androidutils.extensions.serviceRunning
 import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.FragmentedActivity
+import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.preferences.BooleanPreferences
@@ -32,7 +33,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     NavigationView(context, attributeSet),
-    FragmentedActivity.Retriever by FragmentedActivity.Retriever.Implementation(context) {
+    ActivityRetriever by ActivityRetriever.Implementation(context) {
 
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
@@ -107,7 +108,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 }
 
                 R.id.main_menu_item_about -> {
-                    fragmentedActivity.fragmentReplacementTransaction(
+                    (activity as ViewBoundFragmentActivity<*>).fragmentReplacementTransaction(
                         AboutFragment(),
                         animated = true,
                     )

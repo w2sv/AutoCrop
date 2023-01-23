@@ -11,7 +11,6 @@ import processing.core.PVector;
 
 class FlowField {
     private final Map<Pair<Integer, Integer>, Float> xOffCache = new HashMap<>();
-
     private float zOff = 0;
 
     void updateAndApplyTo(Iterator<Particle> particles, PApplet parent) {

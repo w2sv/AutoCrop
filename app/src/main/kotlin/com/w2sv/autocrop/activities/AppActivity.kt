@@ -4,8 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.LifecycleObserver
+import androidx.viewbinding.ViewBinding
 
-abstract class AppActivity : FragmentedActivity() {
+abstract class AppActivity<VB : ViewBinding>(bindingClass: Class<VB>) : ViewBoundFragmentActivity<VB>(bindingClass) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +23,10 @@ abstract class AppActivity : FragmentedActivity() {
     protected abstract fun handleOnBackPressed()
 }
 
-fun ComponentActivity.registerObservers(lifecycleObservers: Iterable<LifecycleObserver>?, handleOnBackPressed: () -> Unit){
+fun ComponentActivity.registerObservers(
+    lifecycleObservers: Iterable<LifecycleObserver>?,
+    handleOnBackPressed: () -> Unit
+) {
     lifecycleObservers?.forEach {
         lifecycle.addObserver(it)
     }

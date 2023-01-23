@@ -11,6 +11,7 @@ import com.w2sv.autocrop.activities.AppActivity
 import com.w2sv.autocrop.activities.examination.AccumulatedIOResults
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
+import com.w2sv.autocrop.databinding.ActivityBlankBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.CropSaveDirPreferences
 import com.w2sv.autocrop.preferences.GlobalFlags
@@ -19,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppActivity() {
+class MainActivity : AppActivity<ActivityBlankBinding>(ActivityBlankBinding::class.java) {
 
     companion object {
         const val EXTRA_SELECTED_IMAGE_URIS = "com.w2sv.autocrop.extra.SELECTED_IMAGE_URIS"

@@ -39,14 +39,21 @@ abstract class AppFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
         observers.forEach(lifecycle::addObserver)
     }
 
+    protected fun launchAfterShortDelay(block: CoroutineScope.() -> Unit) {
+        lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small), block = block)
+    }
+
+    /**
+     * Activity retrieval
+     */
+
     @Suppress("UNCHECKED_CAST")
     fun <A : Activity> castActivity(): A =
         requireActivity() as A
 
-    fun fragmentHostingActivity(): FragmentedActivity =
+    fun requireViewBoundFragmentActivity(): ViewBoundFragmentActivity<*> =
         castActivity()
 
-    protected fun launchAfterShortDelay(block: CoroutineScope.() -> Unit) {
-        lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_small), block = block)
-    }
+    fun requireAppActivity(): AppActivity<*> =
+        castActivity()
 }

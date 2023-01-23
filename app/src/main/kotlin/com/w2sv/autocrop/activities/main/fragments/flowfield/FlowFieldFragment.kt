@@ -237,8 +237,8 @@ class FlowFieldFragment :
         if (!viewModel.fadedInButtonsOnCreate) {
             foregroundLayout
                 .fadeInAnimationComposer(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
-                .onHalfwayFinished(lifecycleScope){
-                    viewModel.showIOResultsSnackbarIfApplicable(lifecycleScope, ::repelledSnackyBuilder)
+                .onHalfwayFinished(lifecycleScope) {
+                    viewModel.showIOResultsSnackbarIfApplicable(this, ::repelledSnackyBuilder)
 
                     if (savedAnyCrops)
                         with(shareCropsButton) {

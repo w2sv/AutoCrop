@@ -26,7 +26,7 @@ fun View.animationComposer(
             }
         }
 
-fun YoYo.AnimationComposer.onHalfwayFinished(coroutineScope: CoroutineScope, block: suspend () -> Unit): YoYo.AnimationComposer =
+fun YoYo.AnimationComposer.onHalfwayFinished(coroutineScope: CoroutineScope, block: suspend CoroutineScope.() -> Unit): YoYo.AnimationComposer =
     apply {
         coroutineScope.launchDelayed(duration / 2){
             block()

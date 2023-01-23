@@ -160,7 +160,7 @@ class CropFragment
             launchCropExamination()
         else
             launchAfterShortDelay {  // to assure progress bar having reached 100% before UI change
-                fragmentHostingActivity()
+                requireViewBoundFragmentActivity()
                     .fragmentReplacementTransaction(CroppingFailedFragment())
                     .commit()
             }

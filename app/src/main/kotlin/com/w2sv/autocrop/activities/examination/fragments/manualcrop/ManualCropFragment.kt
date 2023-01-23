@@ -126,7 +126,7 @@ class ManualCropFragment
             parentFragmentManager.popBackStackImmediate()
 
             // notify ResultListener
-            (fragmentHostingActivity().getCurrentFragment() as ResultListener)
+            (requireViewBoundFragmentActivity().getCurrentFragment() as ResultListener)
                 .onManualCropResult(viewModel.cropEdges.value!!)
         }
     }

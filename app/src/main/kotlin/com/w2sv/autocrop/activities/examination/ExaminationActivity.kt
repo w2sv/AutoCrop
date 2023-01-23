@@ -20,6 +20,7 @@ import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.io.CropBundleIORunner
 import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
+import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.GlobalFlags
 import com.w2sv.autocrop.utils.extensions.getParcelableExtraCompat
@@ -32,7 +33,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ExaminationActivity : AppActivity() {
+class ExaminationActivity : AppActivity<ActivityExaminationBinding>(ActivityExaminationBinding::class.java) {
 
     @HiltViewModel
     class ViewModel @Inject constructor(

@@ -8,7 +8,9 @@
     <color name="pseudo_black">#1C1C1E</color>
     <color name="magenta_bright">#FFBC275E</color>
     <color name="magenta_saturated">#FF911945</color>
+    <color name="magenta_marginal">#80911945</color>
     <color name="red">#FFB00020</color>
+    <color name="purple">#FF6B13B5</color>
     <color name="ocean_blue">#ff1a0ac7</color>
 
     <color name="button_cancel_autoscroll">@android:color/white</color>
