@@ -151,7 +151,7 @@ class CropPagerFragment :
             SpannableStringBuilder()
                 .run {
                     val cropResults = savedStateHandle.get<CropResults>(CropResults.EXTRA)!!
-                    i{"$cropResults"}
+                    i { "$cropResults" }
 
                     if (cropResults.nNotCroppableImages != 0) {
                         append("Couldn't find crop bounds for")
@@ -171,8 +171,8 @@ class CropPagerFragment :
                                 " & couldn't"
                         )
                         append(" open")
-                        bold{
-                            color(context.getColor(R.color.highlight)){
+                        bold {
+                            color(context.getColor(R.color.highlight)) {
                                 append(" ${cropResults.nNotOpenableImages}")
                             }
                         }
@@ -314,7 +314,7 @@ class CropPagerFragment :
         }
         manualCropButton.setOnClickListener {
             requireViewBoundFragmentActivity().fragmentReplacementTransaction(
-                viewModel.dataSet.liveElement.run{
+                viewModel.dataSet.liveElement.run {
                     CropAdjustmentFragment.getInstance(
                         screenshot.uri,
                         crop.edges

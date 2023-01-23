@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:scaleType="matrix"/>
+        android:scaleType="matrix" />
 
     <com.w2sv.autocrop.activities.examination.fragments.comparison.views.ScreenshotImageView
         android:id="@+id/screenshot_iv"
@@ -20,7 +20,7 @@
 
         android:contentDescription="@string/compare_crop_with_original_screenshot"
         android:scaleType="fitCenter"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
     <RelativeLayout
         android:layout_width="match_parent"
