@@ -1,5 +1,6 @@
 package com.w2sv.autocrop.activities.examination.fragments.comparison
 
+import android.app.Dialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
@@ -16,13 +17,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
-import com.google.android.material.snackbar.Snackbar
 import com.w2sv.androidutils.extensions.crossVisualize
+import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.remove
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.toggle
+import com.w2sv.androidutils.ui.UncancelableDialogFragment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getScaleY
@@ -31,7 +33,6 @@ import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 import com.w2sv.autocrop.preferences.GlobalFlags
-import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -92,20 +93,9 @@ class ComparisonFragment
             viewModel.displayScreenshotLive.postValue(true)
 
             if (!globalFlags.comparisonInstructionsShown)
-                requireActivity()
-                    .snackyBuilder("Tap screen to toggle between the screenshot and the crop")
-                    .setIcon(R.drawable.ic_info_24)
-                    .build()
-                    .addCallback(object : Snackbar.Callback() {
-                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                            super.onDismissed(transientBottomBar, event)
+                ComparisonInstructionsDialog().show(childFragmentManager)
 
-                            viewModel.showButtonsLive.postValue(true)
-                        }
-                    })
-                    .show()
-            else
-                viewModel.showButtonsLive.postValue(true)
+            viewModel.showButtonsLive.postValue(true)
         }
     }
 
@@ -171,4 +161,16 @@ class ComparisonFragment
             binding.cropIv.show()
         }
     }
+}
+
+class ComparisonInstructionsDialog : UncancelableDialogFragment() {
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        builder()
+            .apply {
+                setTitle("Comparison Screen")
+                setIcon(context.getColoredIcon(R.drawable.ic_image_search_24, R.color.magenta_saturated))
+                setMessage("Tap screen to toggle between the screenshot and the crop \uD83D\uDC47")
+                setPositiveButton("Got it!") { _, _ -> }
+            }
+            .create()
 }
