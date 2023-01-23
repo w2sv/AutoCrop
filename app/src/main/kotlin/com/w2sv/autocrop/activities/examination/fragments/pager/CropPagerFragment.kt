@@ -282,15 +282,18 @@ class CropPagerFragment :
                 snackbarRepelledLayout.fadeIn()
                 if (!viewModel.singleCropRemaining)
                     allCropsButtonsWLabel.fadeIn()
+
+                viewModel.showCropResultsSnackbarIfApplicable(lifecycleScope, ::getSnackyBuilder)
             }
                 ?: run {
                     snackbarRepelledLayout.show()
                     if (!viewModel.singleCropRemaining)
                         allCropsButtonsWLabel.show()
-                }
 
-            // show snackbar if applicable
-            viewModel.showCropResultsSnackbarIfApplicable(lifecycleScope, ::getSnackyBuilder)
+                    launchAfterShortDelay {
+                        viewModel.showCropResultsSnackbarIfApplicable(this, ::getSnackyBuilder)
+                    }
+                }
         }
     }
 
