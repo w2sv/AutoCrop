@@ -10,7 +10,7 @@
     <dimen name="margin_buttons_within_row">14dp</dimen>
 
     <dimen name="size_lottie_button">46dp</dimen>
-    <dimen name="size_image_button">28dp</dimen>
+    <dimen name="size_image_button">30dp</dimen>
 
     <dimen name="height_button_row">40dp</dimen>
     <dimen name="height_button_row_w_label">60dp</dimen>

@@ -31,6 +31,11 @@
         <item name="android:shadowRadius">2</item>
     </style>
 
+    <style name="ButtonRowLabel" parent="Shadow">
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingHorizontal">2dp</item>
+    </style>
+
     <!--    App Title TextView-->
 
     <style name="AutoCropTV" parent="Shadow">
