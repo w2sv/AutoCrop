@@ -28,10 +28,11 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropResults
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
+import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.CropSavingDialog
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveAllCropsDialog
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveCropDialog
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.cropbundle.Crop
@@ -40,6 +41,7 @@ import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.GlobalFlags
+import com.w2sv.autocrop.ui.Click
 import com.w2sv.autocrop.ui.CubeOutPageTransformer
 import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.currentViewHolder
@@ -83,6 +85,13 @@ class CropPagerFragment :
         val singleCropRemaining: Boolean
             get() = dataSet.size == 1
 
+        fun getCropSavingDialogOnClick(click: Click): CropSavingDialog? =
+            when {
+                doAutoScrollLive.value == true -> null
+                click == Click.Single || singleCropRemaining -> getSaveCropDialog(true)
+                else -> getSaveAllCropsDialog(true)
+            }
+
         fun getSaveCropDialog(showDismissButton: Boolean): SaveCropDialog =
             SaveCropDialog.getInstance(dataSet.livePosition.value!!, showDismissButton)
 
@@ -111,9 +120,6 @@ class CropPagerFragment :
         var autoScrollCoroutine: Job? = null
 
         val doAutoScrollLive: LiveData<Boolean> = MutableLiveData(booleanPreferences.autoScroll && dataSet.size > 1)
-
-        val dialogInflationEnabled: Boolean
-            get() = doAutoScrollLive.value == false
 
         private fun maxAutoScrolls(): Int =
             dataSet.size - dataSet.livePosition.value!!
@@ -197,21 +203,15 @@ class CropPagerFragment :
             binding.viewPager,
             viewModel.dataSet,
             onClickListener = {
-                if (viewModel.dialogInflationEnabled)
-                    viewModel.getSaveCropDialog(true)
-                        .show(childFragmentManager)
+                viewModel.getCropSavingDialogOnClick(Click.Single)
+                    ?.show(childFragmentManager)
             },
             onLongClickListener = {
-                if (viewModel.dialogInflationEnabled) {
-                    (if (viewModel.singleCropRemaining)
-                        viewModel.getSaveCropDialog(true)
-                    else
-                        viewModel.getSaveAllCropsDialog(true))
-                        .show(childFragmentManager)
+                viewModel.getCropSavingDialogOnClick(Click.Long)?.run {
+                    show(childFragmentManager)
                     true
                 }
-                else
-                    false
+                    ?: false
             }
         )
 
