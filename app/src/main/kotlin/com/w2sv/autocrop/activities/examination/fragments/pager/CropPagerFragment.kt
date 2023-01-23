@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
+import android.widget.Toast
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
@@ -47,6 +48,7 @@ import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.currentViewHolder
 import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.ui.scrollPeriodically
+import com.w2sv.autocrop.utils.extensions.getToast
 import com.w2sv.autocrop.utils.extensions.onHalfwayShown
 import com.w2sv.autocrop.utils.extensions.showToast
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
@@ -191,6 +193,8 @@ class CropPagerFragment :
             viewModelScope,
             context.resources.getLong(R.integer.duration_backpress_confirmation_window)
         )
+
+        var lastCropProcedureToast: Toast? = null
     }
 
     @Inject
@@ -399,12 +403,17 @@ class CropPagerFragment :
         }
 
         cropPager.scrollToNextViewAndRemoveCurrent(dataSetPosition)
-        requireContext().showToast(
+
+        viewModel.lastCropProcedureToast?.cancel()
+        viewModel.lastCropProcedureToast = requireContext().getToast(
             when (cropProcedure) {
                 CropProcedure.Discard -> "Discarded crop"
                 CropProcedure.Save -> "Saved crop"
             }
         )
+            .apply {
+                show()
+            }
     }
 
     override fun onSaveAllCrops() {
