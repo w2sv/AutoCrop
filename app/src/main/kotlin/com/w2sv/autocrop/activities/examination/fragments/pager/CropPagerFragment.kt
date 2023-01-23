@@ -208,8 +208,8 @@ class CropPagerFragment :
                     ?.show(childFragmentManager)
             },
             onLongClickListener = {
-                viewModel.getCropSavingDialogOnClick(Click.Long)?.run {
-                    show(childFragmentManager)
+                viewModel.getCropSavingDialogOnClick(Click.Long)?.let {
+                    it.show(childFragmentManager)
                     true
                 }
                     ?: false
