@@ -2,6 +2,7 @@ package com.w2sv.autocrop.activities.examination.fragments.adjustment
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
@@ -16,7 +17,6 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maintainedPercentage
 import com.w2sv.autocrop.activities.getFragment
-import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentCropAdjustmentBinding
@@ -33,8 +33,15 @@ class CropAdjustmentFragment
     : AppFragment<FragmentCropAdjustmentBinding>(FragmentCropAdjustmentBinding::class.java) {
 
     companion object {
-        fun getInstance(cropBundle: CropBundle): CropAdjustmentFragment =
-            getFragment(CropAdjustmentFragment::class.java, CropBundle.EXTRA to cropBundle)
+        private const val EXTRA_SCREENSHOT_URI = "com.w2sv.autocrop.extra.SCREENSHOT_URI"
+        private const val EXTRA_CROP_EDGES = "com.w2sv.autocrop.extra.CROP_EDGES"
+
+        fun getInstance(screenshotUri: Uri, cropEdges: CropEdges): CropAdjustmentFragment =
+            getFragment(
+                CropAdjustmentFragment::class.java,
+                EXTRA_SCREENSHOT_URI to screenshotUri,
+                EXTRA_CROP_EDGES to cropEdges
+            )
     }
 
     @HiltViewModel
@@ -43,16 +50,8 @@ class CropAdjustmentFragment
         @ApplicationContext context: Context
     ) : androidx.lifecycle.ViewModel() {
 
-        val bitmap: Bitmap
-        val initialCropEdges: CropEdges
-        //        val cropEdgePairCandidates: List<CropEdges>
-
-        init {
-            with(savedStateHandle.get<CropBundle>(CropBundle.EXTRA)!!) {
-                bitmap = context.contentResolver.loadBitmap(screenshot.uri)!!
-                initialCropEdges = crop.edges
-            }
-        }
+        val bitmap: Bitmap = context.contentResolver.loadBitmap(savedStateHandle[EXTRA_SCREENSHOT_URI]!!)!!
+        val initialCropEdges: CropEdges = savedStateHandle[EXTRA_CROP_EDGES]!!
 
         val cropEdges: LiveData<CropEdges> by lazy {
             MutableLiveData(initialCropEdges)

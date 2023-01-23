@@ -302,9 +302,12 @@ class CropPagerFragment :
         }
         manualCropButton.setOnClickListener {
             requireViewBoundFragmentActivity().fragmentReplacementTransaction(
-                CropAdjustmentFragment.getInstance(
-                    viewModel.dataSet.liveElement
-                ),
+                viewModel.dataSet.liveElement.run{
+                    CropAdjustmentFragment.getInstance(
+                        screenshot.uri,
+                        crop.edges
+                    )
+                },
                 true
             )
                 .addToBackStack(null)
@@ -312,7 +315,7 @@ class CropPagerFragment :
         }
         comparisonButton.setOnClickListener {
             requireViewBoundFragmentActivity().fragmentReplacementTransaction(
-                ComparisonFragment.getInstance(viewModel.dataSet.liveElement)
+                ComparisonFragment.getInstance(viewModel.dataSet.livePosition.value!!)
             )
                 .addToBackStack(null)
                 .apply {

@@ -26,13 +26,13 @@ import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.ui.UncancelableDialogFragment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
+import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getScaleY
 import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
 import com.w2sv.autocrop.preferences.GlobalFlags
-import com.w2sv.kotlinutils.delegates.AutoSwitch
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -44,8 +44,8 @@ class ComparisonFragment
       ComparisonInstructionsDialog.Listener {
 
     companion object {
-        fun getInstance(cropBundle: CropBundle): ComparisonFragment =
-            getFragment(ComparisonFragment::class.java, CropBundle.EXTRA to cropBundle)
+        fun getInstance(cropBundlePosition: Int): ComparisonFragment =
+            getFragment(ComparisonFragment::class.java, CropBundle.EXTRA_POSITION to cropBundlePosition)
     }
 
     @Inject
@@ -57,7 +57,7 @@ class ComparisonFragment
         @ApplicationContext context: Context
     ) : androidx.lifecycle.ViewModel() {
 
-        val cropBundle: CropBundle = savedStateHandle[CropBundle.EXTRA]!!
+        val cropBundle: CropBundle = ExaminationActivity.ViewModel.cropBundles[savedStateHandle[CropBundle.EXTRA_POSITION]!!]
         val screenshotBitmap: Bitmap = context.contentResolver.loadBitmap(cropBundle.screenshot.uri)!!
 
         var enterTransitionCompleted: Boolean = false
@@ -109,11 +109,11 @@ class ComparisonFragment
         unblockStatusTVDisplay()
     }
 
-    private fun unblockStatusTVDisplay(){
+    private fun unblockStatusTVDisplay() {
         viewModel.blockStatusTVDisplay = false
 
-        // repost current 'displayScreenshotLive' value to trigger display of tv
-        with(viewModel.displayScreenshotLive){
+        // trigger display of tv
+        with(viewModel.displayScreenshotLive) {
             value?.let {
                 postValue(it)
             }

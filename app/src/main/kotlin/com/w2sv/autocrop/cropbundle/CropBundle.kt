@@ -18,7 +18,7 @@ import kotlin.math.roundToInt
 data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
 
     companion object {
-        const val EXTRA = "com.w2sv.autocropCropExaminationActivity.ViewModelCROP_BUNDLE"
+        const val EXTRA_POSITION = "com.w2sv.autocrop.extra.CROP_BUNDLE_POSITION"
 
         fun assemble(screenshot: Screenshot, screenshotBitmap: Bitmap, edges: CropEdges): CropBundle =
             CropBundle(
