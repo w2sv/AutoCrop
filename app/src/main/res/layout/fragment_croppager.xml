@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.72"
-            android:background="@color/low_alpha_white"/>
+            android:background="@color/low_alpha_white" />
 
     </LinearLayout>
 
@@ -35,9 +35,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top|center_horizontal"
             android:text="@string/all"
-            android:textStyle="italic"
+            android:textColor="@color/higher_light"
             android:textSize="13sp"
-            android:textColor="@color/higher_light" />
+            android:textStyle="italic" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -75,9 +75,9 @@
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="23dp"
         android:layout_marginEnd="18dp"
-        android:layout_alignParentEnd="true"
 
         android:text="@string/fraction"
         android:textSize="15sp"
@@ -113,8 +113,8 @@
             android:visibility="invisible">
 
             <FrameLayout
-                android:layout_height="match_parent"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="50dp">
 
@@ -123,16 +123,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:textSize="13sp"
-                    android:text="@string/discarding_statistics"/>
+                    android:text="@string/discarding_statistics"
+                    android:textSize="13sp" />
 
                 <!--Current Crop Button Row w Label-->
 
                 <FrameLayout
+                    android:id="@+id/current_crop_buttons_w_label"
                     android:layout_width="170dp"
                     android:layout_height="@dimen/height_button_row_w_label"
-                    android:layout_gravity="end|center_vertical"
-                    android:id="@+id/current_crop_buttons_w_label">
+                    android:layout_gravity="end|center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -141,7 +141,7 @@
                         android:text="@string/current"
                         android:textColor="@color/highlight"
                         android:textSize="13sp"
-                        android:textStyle="italic"/>
+                        android:textStyle="italic" />
 
                     <!--Button Row-->
 
@@ -149,8 +149,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/height_button_row"
                         android:layout_gravity="bottom"
-                        android:gravity="center"
                         android:background="@drawable/shape_rounded_rectangle_w_button_background"
+                        android:gravity="center"
                         tools:ignore="UselessParent">
 
                         <androidx.appcompat.widget.AppCompatImageButton

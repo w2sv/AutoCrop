@@ -3,6 +3,7 @@ package com.w2sv.autocrop.flowfield;
 class PeriodicalRunner {
     private final int milliPeriod;
     private int tLastRun = 0;
+
     PeriodicalRunner(int milliPeriod) {
         this.milliPeriod = milliPeriod;
     }

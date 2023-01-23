@@ -16,7 +16,7 @@ inline fun <reified T : Parcelable> Intent.getParcelableExtraCompat(name: String
     @Suppress("DEPRECATION")
     getParcelableExtra(name)
 
-inline fun <reified  T: Parcelable> Intent.getParcelableArrayListExtraCompat(name: String): ArrayList<T>? =
+inline fun <reified T : Parcelable> Intent.getParcelableArrayListExtraCompat(name: String): ArrayList<T>? =
     @Suppress("DEPRECATION")
     getParcelableArrayListExtra(name)
 

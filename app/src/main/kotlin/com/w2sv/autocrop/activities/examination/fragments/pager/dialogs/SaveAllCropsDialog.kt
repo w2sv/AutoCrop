@@ -38,7 +38,7 @@ class SaveAllCropsDialog : CropSavingDialog() {
                         .onSaveAllCrops()
                 }
                 if (requireArguments().getBoolean(EXTRA_SHOW_DISMISS_BUTTON))
-                    setNeutralButton("No, dismiss all"){_, _ ->
+                    setNeutralButton("No, dismiss all") { _, _ ->
                         (parentFragment as ResultListener)
                             .onDiscardAllCrops()
                     }

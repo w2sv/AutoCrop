@@ -108,7 +108,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 }
 
                 R.id.main_menu_item_about -> {
-                    (activity as ViewBoundFragmentActivity<*>).fragmentReplacementTransaction(
+                    (activity as ViewBoundFragmentActivity).fragmentReplacementTransaction(
                         AboutFragment(),
                         animated = true,
                     )

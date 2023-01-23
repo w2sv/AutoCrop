@@ -16,7 +16,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.viewboundcontroller.ViewBoundFragment
 import kotlinx.coroutines.CoroutineScope
 
-fun <F: Fragment> getFragment(clazz: Class<F>, vararg bundlePairs: Pair<String, Any?>): F =
+fun <F : Fragment> getFragment(clazz: Class<F>, vararg bundlePairs: Pair<String, Any?>): F =
     clazz.newInstance()
         .apply {
             arguments = bundleOf(*bundlePairs)
@@ -51,9 +51,9 @@ abstract class AppFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
     fun <A : Activity> castActivity(): A =
         requireActivity() as A
 
-    fun requireViewBoundFragmentActivity(): ViewBoundFragmentActivity<*> =
+    fun requireViewBoundFragmentActivity(): ViewBoundFragmentActivity =
         castActivity()
 
-    fun requireAppActivity(): AppActivity<*> =
+    fun requireAppActivity(): AppActivity =
         castActivity()
 }

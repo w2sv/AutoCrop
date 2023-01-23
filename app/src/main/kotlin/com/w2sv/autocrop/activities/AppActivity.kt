@@ -4,9 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.LifecycleObserver
-import androidx.viewbinding.ViewBinding
 
-abstract class AppActivity<VB : ViewBinding>(bindingClass: Class<VB>) : ViewBoundFragmentActivity<VB>(bindingClass) {
+abstract class AppActivity : ViewBoundFragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

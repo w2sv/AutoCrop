@@ -10,17 +10,16 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppActivity
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropResults
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
 import com.w2sv.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
-import com.w2sv.autocrop.activities.examination.fragments.pager.CropPagerFragment
 import com.w2sv.autocrop.activities.examination.fragments.deleterequest.DeleteRequestFragment
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
+import com.w2sv.autocrop.activities.examination.fragments.pager.CropPagerFragment
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.io.CropBundleIORunner
 import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
-import com.w2sv.autocrop.databinding.ActivityExaminationBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.GlobalFlags
 import com.w2sv.autocrop.utils.extensions.getParcelableExtraCompat
@@ -33,7 +32,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ExaminationActivity : AppActivity<ActivityExaminationBinding>(ActivityExaminationBinding::class.java) {
+class ExaminationActivity : AppActivity() {
 
     @HiltViewModel
     class ViewModel @Inject constructor(
