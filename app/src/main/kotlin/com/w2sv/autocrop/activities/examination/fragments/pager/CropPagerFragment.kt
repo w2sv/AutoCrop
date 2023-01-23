@@ -59,6 +59,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import slimber.log.i
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -84,6 +85,10 @@ class CropPagerFragment :
 
         val singleCropRemaining: Boolean
             get() = dataSet.size == 1
+
+        /**
+         * CropSavingDialogs
+         */
 
         fun getCropSavingDialogOnClick(click: Click): CropSavingDialog? =
             when {
@@ -146,6 +151,7 @@ class CropPagerFragment :
             SpannableStringBuilder()
                 .run {
                     val cropResults = savedStateHandle.get<CropResults>(CropResults.EXTRA)!!
+                    i{"$cropResults"}
 
                     if (cropResults.nNotCroppableImages != 0) {
                         append("Couldn't find crop bounds for")
@@ -162,9 +168,15 @@ class CropPagerFragment :
                             if (isEmpty())
                                 "Couldn't"
                             else
-                                "& couldn't"
+                                " & couldn't"
                         )
-                        append("open ${cropResults.nNotOpenableImages} ${"image".numericallyInflected(cropResults.nNotOpenableImages)}")
+                        append(" open")
+                        bold{
+                            color(context.getColor(R.color.highlight)){
+                                append(" ${cropResults.nNotOpenableImages}")
+                            }
+                        }
+                        append(" ${"image".numericallyInflected(cropResults.nNotOpenableImages)}")
                     }
                     ifEmpty { null }
                 }

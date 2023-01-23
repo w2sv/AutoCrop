@@ -100,9 +100,9 @@ class CropFragment
             else
                 screenshotUri
 
-            return context.contentResolver.loadBitmap(mediaUri)?.let { screenshotBitmap ->
+            context.contentResolver.loadBitmap(mediaUri)?.let { screenshotBitmap ->
                 screenshotBitmap.cropEdgesCandidates()?.let { candidates ->
-                    CropBundle.assemble(
+                    return CropBundle.assemble(
                         Screenshot(
                             mediaUri,
                             screenshotBitmap.height,
@@ -113,15 +113,15 @@ class CropFragment
                         candidates.maxHeightEdges()
                     )
                 }
-                    ?: null
-                        .also {
-                            cropResults.nNotCroppableImages += 1
-                        }
-            }
-                ?: null
-                    .also {
-                        cropResults.nNotOpenableImages += 1
+                    ?: run {
+                        cropResults.nNotCroppableImages += 1
+                        return null
                     }
+            }
+                ?: run {
+                    cropResults.nNotOpenableImages += 1
+                    return null
+                }
         }
     }
 
@@ -130,10 +130,10 @@ class CropFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.initialize()
+        binding.populate()
     }
 
-    private fun FragmentCropBinding.initialize() {
+    private fun FragmentCropBinding.populate() {
         croppingProgressBar.max = viewModel.nScreenshots
         progressTv.max = viewModel.nScreenshots
 
