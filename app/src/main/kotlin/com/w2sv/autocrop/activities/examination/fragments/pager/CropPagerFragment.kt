@@ -8,6 +8,7 @@ import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -229,17 +230,17 @@ class CropPagerFragment :
         }
 
         dataSet.observe(viewLifecycleOwner) {
-            if (singleCropRemaining)
+            if (singleCropRemaining && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED))
                 binding.allCropsButtonsWLabel.animate(Techniques.ZoomOut)
         }
     }
 
     private fun FragmentCroppagerBinding.updateOnDataSetPositionChanged(position: Int) {
-        with(viewModel.dataSet.liveElement) {
+        with(viewModel.dataSet[position].crop) {
             discardingStatisticsTv.text = resources.getHtmlText(
                 R.string.discarding_statistics,
-                "${crop.discardedPercentage}%",
-                crop.discardedFileSizeString
+                "$discardedPercentage%",
+                discardedFileSizeString
             )
         }
 
@@ -268,7 +269,8 @@ class CropPagerFragment :
             viewModel.autoScrollCoroutine?.let {
                 it.cancel()
                 snackbarRepelledLayout.fadeIn()
-                allCropsButtonsWLabel.fadeIn()
+                if (!viewModel.singleCropRemaining)
+                    allCropsButtonsWLabel.fadeIn()
             }
                 ?: run {
                     snackbarRepelledLayout.show()
