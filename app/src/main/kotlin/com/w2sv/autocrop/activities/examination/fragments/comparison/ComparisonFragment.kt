@@ -7,7 +7,6 @@ import android.graphics.Matrix
 import android.os.Bundle
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
@@ -41,7 +40,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ComparisonFragment
-    : AppFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java) {
+    : AppFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java),
+      ComparisonInstructionsDialog.Listener {
 
     companion object {
         fun getInstance(cropBundle: CropBundle): ComparisonFragment =
@@ -60,7 +60,8 @@ class ComparisonFragment
         val cropBundle: CropBundle = savedStateHandle[CropBundle.EXTRA]!!
         val screenshotBitmap: Bitmap = context.contentResolver.loadBitmap(cropBundle.screenshot.uri)!!
 
-        val enterTransitionCompleted by AutoSwitch(false, switchOn = false)
+        var enterTransitionCompleted: Boolean = false
+        var blockStatusTVDisplay: Boolean = false
 
         val displayScreenshotLive: LiveData<Boolean?> = MutableLiveData(null)
         val showButtonsLive: LiveData<Boolean> = MutableLiveData(false)
@@ -90,13 +91,32 @@ class ComparisonFragment
 
     private fun onEnterTransitionCompleted() {
         launchAfterShortDelay {
+            viewModel.enterTransitionCompleted = true
+            viewModel.blockStatusTVDisplay = true
             viewModel.displayScreenshotLive.postValue(true)
             viewModel.showButtonsLive.postValue(true)
 
-//            if (!globalFlags.comparisonInstructionsShown)
-                launchDelayed(300L) {
+            if (!globalFlags.comparisonInstructionsShown)
+                launchDelayed(resources.getLong(R.integer.delay_small)) {
                     ComparisonInstructionsDialog().show(childFragmentManager)
                 }
+            else
+                unblockStatusTVDisplay()
+        }
+    }
+
+    override fun onInstructionsDialogClosed() {
+        unblockStatusTVDisplay()
+    }
+
+    private fun unblockStatusTVDisplay(){
+        viewModel.blockStatusTVDisplay = false
+
+        // repost current 'displayScreenshotLive' value to trigger display of tv
+        with(viewModel.displayScreenshotLive){
+            value?.let {
+                postValue(it)
+            }
         }
     }
 
@@ -118,8 +138,10 @@ class ComparisonFragment
 
     private fun FragmentComparisonBinding.setOnClickListeners() {
         root.setOnClickListener {
-            with(viewModel.displayScreenshotLive){
-                postValue(!value!!)
+            with(viewModel.displayScreenshotLive) {
+                value?.let {
+                    postValue(!it)
+                }
             }
         }
 
@@ -145,7 +167,8 @@ class ComparisonFragment
                 else
                     crossVisualize(binding.screenshotIv, binding.cropIv)
 
-                binding.ivStatusTv.setTextAndShow(it)
+                if (!viewModel.blockStatusTVDisplay)
+                    binding.ivStatusTv.setTextAndShow(it)
             }
         }
         showButtonsLive.observe(viewLifecycleOwner) {
@@ -178,7 +201,11 @@ class ComparisonInstructionsDialog : UncancelableDialogFragment() {
                 setTitle("Comparison Screen")
                 setIcon(context.getColoredIcon(R.drawable.ic_image_search_24, R.color.magenta_saturated))
                 setMessage("Tap screen to toggle between the screenshot and the crop \uD83D\uDC47")
-                setPositiveButton("Got it!") { _, _ -> }
+                setPositiveButton("Got it!") { _, _ -> (parentFragment as Listener).onInstructionsDialogClosed() }
             }
             .create()
+
+    interface Listener {
+        fun onInstructionsDialogClosed()
+    }
 }
