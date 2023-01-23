@@ -25,7 +25,7 @@ import com.w2sv.autocrop.preferences.CropSaveDirPreferences
 import com.w2sv.autocrop.preferences.getConnectedSwitch
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.utils.extensions.playStoreLink
-import com.w2sv.autocrop.utils.extensions.snackyBuilder
+import com.w2sv.autocrop.utils.extensions.showToast
 import com.w2sv.permissionhandler.requestPermissions
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -132,10 +132,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                         )
                     }
                     catch (e: ActivityNotFoundException) {
-                        activity
-                            .snackyBuilder("Seems like you're not signed into the Play Store \uD83E\uDD14")
-                            .build()
-                            .show()
+                        context.showToast("Seems like you're not signed into the Play Store \uD83E\uDD14")
                     }
                 }
 

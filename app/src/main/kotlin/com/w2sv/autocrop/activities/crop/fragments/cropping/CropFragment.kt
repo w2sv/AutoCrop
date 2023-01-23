@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,6 +21,7 @@ import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropResults
 import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailedFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
+import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.Screenshot
@@ -29,7 +29,7 @@ import com.w2sv.autocrop.cropbundle.cropping.cropEdgesCandidates
 import com.w2sv.autocrop.cropbundle.cropping.maxHeightEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentCropBinding
-import com.w2sv.autocrop.utils.extensions.snackyBuilder
+import com.w2sv.autocrop.utils.extensions.showToast
 import com.w2sv.autocrop.utils.getMediaUri
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,9 +47,7 @@ class CropFragment
 
     companion object {
         fun getInstance(screenshotUris: List<Uri>): CropFragment =
-            CropFragment().apply {
-                arguments = bundleOf(MainActivity.EXTRA_SELECTED_IMAGE_URIS to screenshotUris)
-            }
+            getFragment(CropFragment::class.java, MainActivity.EXTRA_SELECTED_IMAGE_URIS to screenshotUris)
     }
 
     @HiltViewModel
@@ -185,10 +183,7 @@ class CropFragment
     fun onBackPress() {
         viewModel.backPressListener(
             {
-                requireActivity()
-                    .snackyBuilder("Tap again to cancel")
-                    .build()
-                    .show()
+                requireContext().showToast("Tap again to cancel")
             },
             {
                 MainActivity.start(requireActivity())

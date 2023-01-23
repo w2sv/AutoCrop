@@ -6,7 +6,6 @@ import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.viewModelScope
-import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppActivity
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropResults
@@ -23,7 +22,7 @@ import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
 import com.w2sv.autocrop.preferences.BooleanPreferences
 import com.w2sv.autocrop.preferences.GlobalFlags
 import com.w2sv.autocrop.utils.extensions.getParcelableExtraCompat
-import com.w2sv.autocrop.utils.extensions.snackyBuilder
+import com.w2sv.autocrop.utils.extensions.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -154,11 +153,7 @@ class ExaminationActivity : AppActivity() {
             when (it) {
                 is ComparisonFragment -> it.popFromFragmentManager(supportFragmentManager)
                 is CropAdjustmentFragment -> supportFragmentManager.popBackStack()
-                is SaveAllFragment -> snackyBuilder("Wait until crops have been saved")
-                    .setIcon(R.drawable.ic_front_hand_24)
-                    .build()
-                    .show()
-
+                is SaveAllFragment -> showToast("Wait until crops have been saved")
                 is CropPagerFragment -> it.onBackPress()
                 else -> Unit
             }

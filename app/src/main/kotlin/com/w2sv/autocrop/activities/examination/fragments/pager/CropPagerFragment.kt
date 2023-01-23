@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
+import android.widget.Toast
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
@@ -17,7 +18,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.viewpager2.widget.ViewPager2
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.BackPressListener
-import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getHtmlText
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.hide
@@ -49,6 +49,7 @@ import com.w2sv.autocrop.ui.currentViewHolder
 import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.ui.scrollPeriodically
 import com.w2sv.autocrop.utils.extensions.onHalfwayShown
+import com.w2sv.autocrop.utils.extensions.showToast
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.kotlinutils.extensions.numericallyInflected
@@ -295,7 +296,7 @@ class CropPagerFragment :
             viewModel.doAutoScrollLive.postValue(false)
         }
         discardCropButton.setOnClickListener {
-            removeView(viewModel.dataSet.livePosition.value!!)
+            removeView(viewModel.dataSet.livePosition.value!!, ViewRemovalTrigger.DiscardEvent)
         }
         saveCropButton.setOnClickListener {
             viewModel.getSaveCropDialog(false)
@@ -347,10 +348,7 @@ class CropPagerFragment :
         )
 
         launchAfterShortDelay {
-            repelledSnackyBuilder("Adjusted crop")
-                .setIcon(requireContext().getColoredIcon(R.drawable.ic_check_24, R.color.success))
-                .build()
-                .show()
+            requireContext().showToast("Adjusted crop", Toast.LENGTH_LONG)
         }
     }
 
@@ -366,18 +364,32 @@ class CropPagerFragment :
             dataSetPosition,
             requireContext().applicationContext
         )
-        removeView(dataSetPosition)
+        removeView(dataSetPosition, ViewRemovalTrigger.SaveEvent)
     }
 
     override fun onDiscardCrop(dataSetPosition: Int) {
-        removeView(dataSetPosition)
+        removeView(dataSetPosition, ViewRemovalTrigger.DiscardEvent)
     }
 
-    private fun removeView(dataSetPosition: Int) {
-        if (viewModel.singleCropRemaining)
+    private enum class ViewRemovalTrigger {
+        DiscardEvent,
+        SaveEvent
+    }
+
+    private fun removeView(dataSetPosition: Int, trigger: ViewRemovalTrigger) {
+        if (viewModel.singleCropRemaining) {
             castActivity<ExaminationActivity>().invokeSubsequentController(this)
-        else
-            cropPager.scrollToNextViewAndRemoveCurrent(dataSetPosition)
+            return
+        }
+
+        cropPager.scrollToNextViewAndRemoveCurrent(dataSetPosition)
+        requireContext().showToast(
+            when (trigger) {
+                ViewRemovalTrigger.DiscardEvent -> "Discarded crop"
+                ViewRemovalTrigger.SaveEvent -> "Saved crop"
+            },
+            Toast.LENGTH_SHORT
+        )
     }
 
     override fun onSaveAllCrops() {
@@ -401,9 +413,7 @@ class CropPagerFragment :
     fun onBackPress() {
         viewModel.backPressHandler(
             {
-                repelledSnackyBuilder("Tap again to return to main screen")
-                    .build()
-                    .show()
+                requireContext().showToast("Tap again to return to main screen", Toast.LENGTH_SHORT)
             },
             {
                 castActivity<ExaminationActivity>().startMainActivity()

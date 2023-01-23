@@ -9,6 +9,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
+import android.widget.Toast
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.fragment.app.Fragment
@@ -52,6 +53,7 @@ import com.w2sv.autocrop.ui.fadeInAnimationComposer
 import com.w2sv.autocrop.ui.fadeOut
 import com.w2sv.autocrop.ui.onHalfwayFinished
 import com.w2sv.autocrop.utils.extensions.onHalfwayShown
+import com.w2sv.autocrop.utils.extensions.showToast
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.kotlinutils.extensions.numericallyInflected
@@ -346,23 +348,18 @@ class FlowFieldFragment :
     val openDocumentTreeContractHandler by lazy {
         OpenDocumentTreeContractHandler(requireActivity()) {
             it?.let { treeUri ->
-                if (cropSaveDirPreferences.setNewUri(treeUri, requireContext().contentResolver)) {
+                val text = if (cropSaveDirPreferences.setNewUri(treeUri, requireContext().contentResolver)) {
                     viewModel.liveCropSaveDirIdentifier.postValue(cropSaveDirPreferences.pathIdentifier)
-
-                    repelledSnackyBuilder(
-                        SpannableStringBuilder()
-                            .append("Crops will be saved to ")
-                            .color(requireContext().getColor(R.color.success)) {
-                                append(viewModel.liveCropSaveDirIdentifier.value!!)
-                            }
-                    )
-                        .build()
-                        .show()
+                    SpannableStringBuilder()
+                        .append("Crops will be saved to ")
+                        .color(requireContext().getColor(R.color.success)) {
+                            append(viewModel.liveCropSaveDirIdentifier.value!!)
+                        }
                 }
                 else
-                    repelledSnackyBuilder("Reselected preset directory")
-                        .build()
-                        .show()
+                    "Reselected preset directory"
+
+                requireContext().showToast(text, Toast.LENGTH_LONG)
             }
         }
     }
@@ -374,9 +371,7 @@ class FlowFieldFragment :
             else
                 viewModel.backPressHandler(
                     {
-                        repelledSnackyBuilder("Tap again to exit")
-                            .build()
-                            .show()
+                        requireContext().showToast("Tap again to exit")
                     },
                     {
                         requireActivity().finishAffinity()
