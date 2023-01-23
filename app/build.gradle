@@ -62,9 +62,6 @@ android {
     testOptions {
         animationsDisabled = true
     }
-//    packagingOptions {
-//        resources.excludes.add("META-INF/*")  // fixes build error
-//    }
     buildFeatures {
         viewBinding true
     }
@@ -78,7 +75,6 @@ dependencies {
     implementation libs.androidx.viewmodel
     implementation libs.androidx.viewpager2
     implementation libs.androidx.fragment
-    implementation libs.androidx.activity
     implementation libs.androidx.splashscreen
 
     // google

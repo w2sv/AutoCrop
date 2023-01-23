@@ -201,7 +201,7 @@ class ComparisonInstructionsDialog : UncancelableDialogFragment() {
             .apply {
                 setTitle("Comparison Screen")
                 setIcon(context.getColoredIcon(R.drawable.ic_image_search_24, R.color.magenta_saturated))
-                setMessage("Tap screen to toggle between the screenshot and the crop \uD83D\uDC47")
+                setMessage("Tap screen to toggle between the original screenshot and the crop \uD83D\uDC47")
                 setPositiveButton("Got it!") { _, _ -> (parentFragment as Listener).onInstructionsDialogClosed() }
             }
             .create()
