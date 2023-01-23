@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
-import android.widget.Toast
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
@@ -347,7 +346,7 @@ class CropPagerFragment :
         )
 
         launchAfterShortDelay {
-            requireContext().showToast("Adjusted crop", Toast.LENGTH_LONG)
+            requireContext().showToast("Adjusted crop")
         }
     }
 
@@ -386,8 +385,7 @@ class CropPagerFragment :
             when (cropProcedure) {
                 CropProcedure.Discard -> "Discarded crop"
                 CropProcedure.Save -> "Saved crop"
-            },
-            Toast.LENGTH_SHORT
+            }
         )
     }
 
@@ -410,7 +408,7 @@ class CropPagerFragment :
     fun onBackPress() {
         viewModel.backPressHandler(
             {
-                requireContext().showToast("Tap again to return to main screen", Toast.LENGTH_SHORT)
+                requireContext().showToast("Tap again to return to main screen")
             },
             {
                 castActivity<ExaminationActivity>().startMainActivity()

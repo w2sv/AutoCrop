@@ -10,7 +10,7 @@ import javax.inject.Inject
 abstract class CropSavingDialog : DialogFragment() {
 
     companion object {
-        const val EXTRA_SHOW_DISMISS_BUTTON = "com.w2sv.autocrop.extra.SHOW_DISMISS_BUTTON"
+        const val EXTRA_SHOW_DISCARD_BUTTON = "com.w2sv.autocrop.extra.SHOW_DISMISS_BUTTON"
     }
 
     @Inject

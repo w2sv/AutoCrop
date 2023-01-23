@@ -49,7 +49,11 @@ abstract class AppFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
     protected fun getSnackyBuilder(text: CharSequence, duration: Int = Snackbar.LENGTH_LONG): Snacky.Builder =
         requireActivity()
             .snackyBuilder(text, duration)
-            .setView(snackbarAnchorView)
+            .apply {
+                snackbarAnchorView?.let {
+                    setView(it)
+                }
+            }
 
     protected open val snackbarAnchorView: View? get() = null
 

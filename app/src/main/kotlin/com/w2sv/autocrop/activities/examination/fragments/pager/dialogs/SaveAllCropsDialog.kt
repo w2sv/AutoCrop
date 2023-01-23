@@ -16,7 +16,7 @@ class SaveAllCropsDialog : CropSavingDialog() {
             getFragment(
                 SaveAllCropsDialog::class.java,
                 EXTRA_N_CROPS to nCrops,
-                EXTRA_SHOW_DISMISS_BUTTON to showDismissButton
+                EXTRA_SHOW_DISCARD_BUTTON to showDismissButton
             )
     }
 
@@ -37,8 +37,8 @@ class SaveAllCropsDialog : CropSavingDialog() {
                     (parentFragment as ResultListener)
                         .onSaveAllCrops()
                 }
-                if (requireArguments().getBoolean(EXTRA_SHOW_DISMISS_BUTTON))
-                    setNeutralButton("No, dismiss all") { _, _ ->
+                if (requireArguments().getBoolean(EXTRA_SHOW_DISCARD_BUTTON))
+                    setNeutralButton("No, discard all") { _, _ ->
                         (parentFragment as ResultListener)
                             .onDiscardAllCrops()
                     }
