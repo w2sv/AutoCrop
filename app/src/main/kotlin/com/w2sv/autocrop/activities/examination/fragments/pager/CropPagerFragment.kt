@@ -295,7 +295,7 @@ class CropPagerFragment :
             viewModel.doAutoScrollLive.postValue(false)
         }
         discardCropButton.setOnClickListener {
-            removeView(viewModel.dataSet.livePosition.value!!, ViewRemovalTrigger.DiscardEvent)
+            removeView(viewModel.dataSet.livePosition.value!!, CropProcedure.Discard)
         }
         saveCropButton.setOnClickListener {
             viewModel.getSaveCropDialog(false)
@@ -363,19 +363,19 @@ class CropPagerFragment :
             dataSetPosition,
             requireContext().applicationContext
         )
-        removeView(dataSetPosition, ViewRemovalTrigger.SaveEvent)
+        removeView(dataSetPosition, CropProcedure.Save)
     }
 
     override fun onDiscardCrop(dataSetPosition: Int) {
-        removeView(dataSetPosition, ViewRemovalTrigger.DiscardEvent)
+        removeView(dataSetPosition, CropProcedure.Discard)
     }
 
-    private enum class ViewRemovalTrigger {
-        DiscardEvent,
-        SaveEvent
+    private enum class CropProcedure {
+        Discard,
+        Save
     }
 
-    private fun removeView(dataSetPosition: Int, trigger: ViewRemovalTrigger) {
+    private fun removeView(dataSetPosition: Int, cropProcedure: CropProcedure) {
         if (viewModel.singleCropRemaining) {
             castActivity<ExaminationActivity>().invokeSubsequentController(this)
             return
@@ -383,9 +383,9 @@ class CropPagerFragment :
 
         cropPager.scrollToNextViewAndRemoveCurrent(dataSetPosition)
         requireContext().showToast(
-            when (trigger) {
-                ViewRemovalTrigger.DiscardEvent -> "Discarded crop"
-                ViewRemovalTrigger.SaveEvent -> "Saved crop"
+            when (cropProcedure) {
+                CropProcedure.Discard -> "Discarded crop"
+                CropProcedure.Save -> "Saved crop"
             },
             Toast.LENGTH_SHORT
         )
