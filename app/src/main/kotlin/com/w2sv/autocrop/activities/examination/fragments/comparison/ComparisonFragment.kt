@@ -20,10 +20,10 @@ import androidx.transition.TransitionListenerAdapter
 import com.w2sv.androidutils.extensions.crossVisualize
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
+import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.remove
 import com.w2sv.androidutils.extensions.show
-import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.androidutils.ui.UncancelableDialogFragment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
@@ -62,7 +62,7 @@ class ComparisonFragment
 
         val enterTransitionCompleted by AutoSwitch(false, switchOn = false)
 
-        val displayScreenshotLive: LiveData<Boolean> = MutableLiveData(false)
+        val displayScreenshotLive: LiveData<Boolean?> = MutableLiveData(null)
         val showButtonsLive: LiveData<Boolean> = MutableLiveData(false)
         val screenshotImageViewMatrixLive: LiveData<Matrix> = MutableLiveData(null)
     }
@@ -82,39 +82,45 @@ class ComparisonFragment
                         super.onTransitionEnd(transition)
 
                         if (!viewModel.enterTransitionCompleted)
-                            onEnterTransition()
+                            onEnterTransitionCompleted()
                     }
                 }
             )
     }
 
-    private fun onEnterTransition() {
+    private fun onEnterTransitionCompleted() {
         launchAfterShortDelay {
             viewModel.displayScreenshotLive.postValue(true)
-
-            if (!globalFlags.comparisonInstructionsShown)
-                ComparisonInstructionsDialog().show(childFragmentManager)
-
             viewModel.showButtonsLive.postValue(true)
+
+//            if (!globalFlags.comparisonInstructionsShown)
+                launchDelayed(300L) {
+                    ComparisonInstructionsDialog().show(childFragmentManager)
+                }
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding.cropIv) {
-            ViewCompat.setTransitionName(this, viewModel.cropBundle.identifier())
-            setImageBitmap(viewModel.cropBundle.crop.bitmap)
-        }
-        binding.screenshotIv.setImageBitmap(viewModel.screenshotBitmap)
-
+        binding.populate()
         binding.setOnClickListeners()
         viewModel.setLiveDataObservers()
     }
 
+    private fun FragmentComparisonBinding.populate() {
+        with(cropIv) {
+            transitionName = viewModel.cropBundle.identifier()
+            setImageBitmap(viewModel.cropBundle.crop.bitmap)
+        }
+        screenshotIv.setImageBitmap(viewModel.screenshotBitmap)
+    }
+
     private fun FragmentComparisonBinding.setOnClickListeners() {
         root.setOnClickListener {
-            viewModel.displayScreenshotLive.toggle()
+            with(viewModel.displayScreenshotLive){
+                postValue(!value!!)
+            }
         }
 
         backButton.setOnClickListener {
@@ -132,16 +138,18 @@ class ComparisonFragment
                 }
             }
         }
-        displayScreenshotLive.observe(viewLifecycleOwner) {
-            if (it)
-                crossVisualize(binding.cropIv, binding.screenshotIv)
-            else
-                crossVisualize(binding.screenshotIv, binding.cropIv)
+        displayScreenshotLive.observe(viewLifecycleOwner) { optional ->
+            optional?.let {
+                if (it)
+                    crossVisualize(binding.cropIv, binding.screenshotIv)
+                else
+                    crossVisualize(binding.screenshotIv, binding.cropIv)
 
-            binding.ivStatusTv.setTextAndShow(it)
+                binding.ivStatusTv.setTextAndShow(it)
+            }
         }
         showButtonsLive.observe(viewLifecycleOwner) {
-            with(binding.buttonLayout) {
+            with(binding.backButton) {
                 if (it)
                     show()
                 else
