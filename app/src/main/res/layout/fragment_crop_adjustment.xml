@@ -19,43 +19,43 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/height_tv"
-                android:layout_width="@dimen/width_button"
-                android:layout_height="@dimen/height_button"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_manual_crop_fragment_top_button"
+                android:layout_width="@dimen/crop_adjustment_screen_width_toolbar_buttons"
+                android:layout_height="@dimen/height_button_row"
+                android:layout_marginHorizontal="@dimen/crop_adjustment_screen_horizontal_margin_top_buttons"
                 android:background="@drawable/shape_rounded_rectangle_w_button_background"
                 android:gravity="center"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/percentage_tv"
-                android:layout_width="@dimen/width_button"
-                android:layout_height="@dimen/height_button"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_manual_crop_fragment_top_button"
+                android:layout_width="@dimen/crop_adjustment_screen_width_toolbar_buttons"
+                android:layout_height="@dimen/height_button_row"
+                android:layout_marginHorizontal="@dimen/crop_adjustment_screen_horizontal_margin_top_buttons"
                 android:background="@drawable/shape_rounded_rectangle_w_button_background"
                 android:gravity="center"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/y1_tv"
-                android:layout_width="@dimen/width_button"
-                android:layout_height="@dimen/height_button"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_manual_crop_fragment_top_button"
+                android:layout_width="@dimen/crop_adjustment_screen_width_toolbar_buttons"
+                android:layout_height="@dimen/height_button_row"
+                android:layout_marginHorizontal="@dimen/crop_adjustment_screen_horizontal_margin_top_buttons"
                 android:background="@drawable/shape_rounded_rectangle_w_button_background"
                 android:gravity="center"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/y2_tv"
-                android:layout_width="@dimen/width_button"
-                android:layout_height="@dimen/height_button"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_manual_crop_fragment_top_button"
+                android:layout_width="@dimen/crop_adjustment_screen_width_toolbar_buttons"
+                android:layout_height="@dimen/height_button_row"
+                android:layout_marginHorizontal="@dimen/crop_adjustment_screen_horizontal_margin_top_buttons"
                 android:background="@drawable/shape_rounded_rectangle_w_button_background"
                 android:gravity="center"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
-        <com.w2sv.autocrop.activities.examination.fragments.manualcrop.view.ManualCropView
+        <com.w2sv.autocrop.activities.examination.fragments.adjustment.view.CropAdjustmentView
             android:id="@+id/crop_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

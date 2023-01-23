@@ -24,27 +24,27 @@
         android:textStyle="italic" />
 
     <ImageView
-        android:layout_width="@dimen/error_icon_cropping_failure_screen"
+        android:layout_width="@dimen/crop_failure_screen_size_error_icon"
 
-        android:layout_height="@dimen/error_icon_cropping_failure_screen"
+        android:layout_height="@dimen/crop_failure_screen_size_error_icon"
         android:layout_alignStart="@+id/cropping_unsuccessful_text_view"
 
         android:layout_alignBottom="@+id/cropping_unsuccessful_text_view"
-        android:layout_marginStart="@dimen/error_icon_cropping_failure_horizontal_margin"
-        android:layout_marginBottom="@dimen/error_icon_cropping_failure_vertical_margin"
+        android:layout_marginStart="@dimen/crop_failure_screen_horizontal_margin_error_icon"
+        android:layout_marginBottom="@dimen/crop_failure_screen_vertical_margin_error_icon"
         android:contentDescription="@null"
 
         android:src="@drawable/ic_error_24" />
 
     <ImageView
-        android:layout_width="@dimen/error_icon_cropping_failure_screen"
+        android:layout_width="@dimen/crop_failure_screen_size_error_icon"
 
-        android:layout_height="@dimen/error_icon_cropping_failure_screen"
+        android:layout_height="@dimen/crop_failure_screen_size_error_icon"
         android:layout_alignEnd="@+id/cropping_unsuccessful_text_view"
 
         android:layout_alignBottom="@+id/cropping_unsuccessful_text_view"
-        android:layout_marginEnd="@dimen/error_icon_cropping_failure_horizontal_margin"
-        android:layout_marginBottom="@dimen/error_icon_cropping_failure_vertical_margin"
+        android:layout_marginEnd="@dimen/crop_failure_screen_horizontal_margin_error_icon"
+        android:layout_marginBottom="@dimen/crop_failure_screen_vertical_margin_error_icon"
         android:contentDescription="@null"
 
         android:src="@drawable/ic_error_24" />

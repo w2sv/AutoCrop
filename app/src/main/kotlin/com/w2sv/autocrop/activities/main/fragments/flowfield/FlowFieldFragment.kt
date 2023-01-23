@@ -27,7 +27,6 @@ import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.androidutils.BackPressListener
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.getThemedColor
 import com.w2sv.androidutils.extensions.hide
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
@@ -112,7 +111,7 @@ class FlowFieldFragment :
                         append(
                             "Saved ${it.nSavedCrops} ${"crop".numericallyInflected(it.nSavedCrops)} to "
                         )
-                        color(context.getThemedColor(R.color.success)) {
+                        color(context.getColor(R.color.success)) {
                             append(cropSaveDirPreferences.pathIdentifier)
                         }
                         if (it.nDeletedScreenshots != 0)
@@ -353,7 +352,7 @@ class FlowFieldFragment :
                     repelledSnackyBuilder(
                         SpannableStringBuilder()
                             .append("Crops will be saved to ")
-                            .color(requireContext().getThemedColor(R.color.success)) {
+                            .color(requireContext().getColor(R.color.success)) {
                                 append(viewModel.liveCropSaveDirIdentifier.value!!)
                             }
                     )

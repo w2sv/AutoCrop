@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.examination.fragments.manualcrop.view
+package com.w2sv.autocrop.activities.examination.fragments.adjustment.view
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,50 +14,37 @@ import android.view.MotionEvent.ACTION_MOVE
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.ManualCropFragment
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.extensions.animateToMatrix
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.extensions.clone
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.extensions.getCornerTouch
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.extensions.getEdgeTouch
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.extensions.maxRectFFrom
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.extensions.minRectFFrom
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.extensions.withinRectangle
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.AnimatableRectF
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.Corner
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.Corner.BOTTOM_LEFT
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.Corner.BOTTOM_RIGHT
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.Corner.TOP_LEFT
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.Corner.TOP_RIGHT
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.DraggingState
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.DraggingState.DraggingCorner
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.DraggingState.DraggingEdge
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.Edge
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.Edge.BOTTOM
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.Edge.LEFT
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.Edge.RIGHT
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.Edge.TOP
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.animateToMatrix
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.clone
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getCornerTouch
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getEdgeTouch
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maxRectFFrom
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.minRectFFrom
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.withinRectangle
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.AnimatableRectF
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Corner
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Corner.BOTTOM_LEFT
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Corner.BOTTOM_RIGHT
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Corner.TOP_LEFT
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Corner.TOP_RIGHT
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.DraggingState
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.DraggingState.DraggingCorner
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.DraggingState.DraggingEdge
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.BOTTOM
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.LEFT
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.RIGHT
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.TOP
 import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-class ManualCropView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr),
-    DefaultLifecycleObserver {
-
-    /**
-     * Touch threshold for corners and edges
-     */
-    private val touchThreshold = resources.getDimensionPixelSize(R.dimen.touch_threshold).toFloat()
+class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     /**
      * Main rect which is drawn to canvas.
@@ -125,77 +112,51 @@ class ManualCropView @JvmOverloads constructor(
     private val bitmapMatrix: Matrix = Matrix()
 
     /**
-     * Empty paint to draw something on canvas.
-     */
-    private val emptyPaint = Paint().apply {
-        isAntiAlias = true
-    }
-
-    /**
-     * Default margin for cropRect.
-     */
-    private val marginInPixelSize =
-        resources.getDimensionPixelSize(R.dimen.margin_max_crop_rect).toFloat()
-
-    /**
      * User can drag crop rect from Corner, Edge or Bitmap
      */
     private var draggingState: DraggingState = DraggingState.Idle
 
-    /**
-     * Crop rect grid line width
-     */
-    private val gridLineWidthPixel = resources.getDimension(R.dimen.grid_line_width)
-
-    /**
-     * Corner toggle line width
-     */
-    private val cornerWidthInPixel = resources.getDimension(R.dimen.corner_toggle_width)
-
-    /**
-     * Corner toggle line length
-     */
-    private val cornerEdgeLengthInPixel = resources.getDimension(R.dimen.corner_toggle_length)
-
     private val bitmapBorderRect = RectF()
 
     companion object {
-        /**
-         * Maximum scale for given bitmap
-         */
-        private const val MAX_SCALE = 15f
+        private const val BITMAP_MAX_SCALE = 15f
+
+        private const val TOUCH_THRESHOLD: Float = 16f
+
+        private const val CROP_RECT_MARGIN: Float = 24f
+
+        private const val GRID_LINE_WIDTH: Float = 1f
+
+        private const val CORNER_WIDTH: Float = 3f
+
+        private const val CORNER_EDGE_LENGTH: Int = 16
+
+        private const val MIN_RECT_SIZE: Float = 56f
     }
 
-    private val viewModel by viewModel<ManualCropFragment.ViewModel>()
-
-    init {
-        setWillNotDraw(false)
-    }
+    private val viewModel by viewModel<CropAdjustmentFragment.ViewModel>()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        if (!isInEditMode)
-            findViewTreeLifecycleOwner()!!.lifecycle.addObserver(this)
-    }
+        if (!isInEditMode) {
+            setWillNotDraw(false)
 
-    override fun onCreate(owner: LifecycleOwner) {
-        super.onCreate(owner)
-
-        bitmapRect.set(
-            0f,
-            0f,
-            viewModel.bitmap.width.toFloat(),
-            viewModel.bitmap.height.toFloat(),
-        )
+            bitmapRect.set(
+                0f,
+                0f,
+                viewModel.bitmap.width.toFloat(),
+                viewModel.bitmap.height.toFloat(),
+            )
+        }
     }
 
     private fun initializeView() {
-        val bitmapMinRectSize = max(bitmapRect.width(), bitmapRect.height()) / MAX_SCALE
+        val bitmapMinRectSize = max(bitmapRect.width(), bitmapRect.height()) / BITMAP_MAX_SCALE
         bitmapMinRect.set(0f, 0f, bitmapMinRectSize, bitmapMinRectSize)
 
-        viewWidth = measuredWidth.toFloat() - (marginInPixelSize * 2)
-        viewHeight = measuredHeight.toFloat() - (marginInPixelSize * 2)
+        viewWidth = measuredWidth.toFloat() - (CROP_RECT_MARGIN * 2)
+        viewHeight = measuredHeight.toFloat() - (CROP_RECT_MARGIN * 2)
 
         viewRect.set(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
 
@@ -295,8 +256,8 @@ class ManualCropView @JvmOverloads constructor(
     }
 
     private fun setDraggingState(event: MotionEvent) {
-        val corner by lazy { cropRect.getCornerTouch(event, touchThreshold) }
-        val edge by lazy { cropRect.getEdgeTouch(event, touchThreshold) }
+        val corner by lazy { cropRect.getCornerTouch(event, TOUCH_THRESHOLD) }
+        val edge by lazy { cropRect.getEdgeTouch(event, TOUCH_THRESHOLD) }
 
         draggingState = when {
             corner != Corner.NONE -> DraggingCorner(corner)
@@ -323,6 +284,10 @@ class ManualCropView @JvmOverloads constructor(
             drawGrid()
             drawCorners()
         }
+    }
+
+    private val emptyPaint = Paint().apply {
+        isAntiAlias = true
     }
 
     //    private fun Canvas.drawCropEdgePairCandidates(){
@@ -440,18 +405,18 @@ class ManualCropView @JvmOverloads constructor(
          * Top left
          */
         drawLine(
-            cropRect.left - gridLineWidthPixel,
-            cropRect.top + cornerWidthInPixel / 2f - gridLineWidthPixel,
-            cropRect.left + cornerEdgeLengthInPixel,
-            cropRect.top + cornerWidthInPixel / 2f - gridLineWidthPixel,
+            cropRect.left - GRID_LINE_WIDTH,
+            cropRect.top + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
+            cropRect.left + CORNER_EDGE_LENGTH,
+            cropRect.top + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
             cornerPaint
         )
 
         drawLine(
-            cropRect.left + cornerWidthInPixel / 2f - gridLineWidthPixel,
-            cropRect.top - gridLineWidthPixel,
-            cropRect.left + cornerWidthInPixel / 2f - gridLineWidthPixel,
-            cropRect.top + cornerEdgeLengthInPixel,
+            cropRect.left + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
+            cropRect.top - GRID_LINE_WIDTH,
+            cropRect.left + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
+            cropRect.top + CORNER_EDGE_LENGTH,
             cornerPaint
         )
 
@@ -460,18 +425,18 @@ class ManualCropView @JvmOverloads constructor(
          */
 
         drawLine(
-            cropRect.right - cornerEdgeLengthInPixel,
-            cropRect.top + cornerWidthInPixel / 2f - gridLineWidthPixel,
-            cropRect.right + gridLineWidthPixel,
-            cropRect.top + cornerWidthInPixel / 2f - gridLineWidthPixel,
+            cropRect.right - CORNER_EDGE_LENGTH,
+            cropRect.top + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
+            cropRect.right + GRID_LINE_WIDTH,
+            cropRect.top + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
             cornerPaint
         )
 
         drawLine(
-            cropRect.right - cornerWidthInPixel / 2f + gridLineWidthPixel,
-            cropRect.top - gridLineWidthPixel,
-            cropRect.right - cornerWidthInPixel / 2f + gridLineWidthPixel,
-            cropRect.top + cornerEdgeLengthInPixel,
+            cropRect.right - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
+            cropRect.top - GRID_LINE_WIDTH,
+            cropRect.right - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
+            cropRect.top + CORNER_EDGE_LENGTH,
             cornerPaint
         )
 
@@ -480,18 +445,18 @@ class ManualCropView @JvmOverloads constructor(
          */
 
         drawLine(
-            cropRect.left - gridLineWidthPixel,
-            cropRect.bottom - cornerWidthInPixel / 2f + gridLineWidthPixel,
-            cropRect.left + cornerEdgeLengthInPixel,
-            cropRect.bottom - cornerWidthInPixel / 2f + gridLineWidthPixel,
+            cropRect.left - GRID_LINE_WIDTH,
+            cropRect.bottom - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
+            cropRect.left + CORNER_EDGE_LENGTH,
+            cropRect.bottom - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
             cornerPaint
         )
 
         drawLine(
-            cropRect.left + cornerWidthInPixel / 2f - gridLineWidthPixel,
-            cropRect.bottom + gridLineWidthPixel,
-            cropRect.left + cornerWidthInPixel / 2f - gridLineWidthPixel,
-            cropRect.bottom - cornerEdgeLengthInPixel,
+            cropRect.left + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
+            cropRect.bottom + GRID_LINE_WIDTH,
+            cropRect.left + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
+            cropRect.bottom - CORNER_EDGE_LENGTH,
             cornerPaint
         )
 
@@ -499,25 +464,25 @@ class ManualCropView @JvmOverloads constructor(
          * Bottom Right
          */
         drawLine(
-            cropRect.right - cornerEdgeLengthInPixel,
-            cropRect.bottom - cornerWidthInPixel / 2f + gridLineWidthPixel,
-            cropRect.right + gridLineWidthPixel,
-            cropRect.bottom - cornerWidthInPixel / 2f + gridLineWidthPixel,
+            cropRect.right - CORNER_EDGE_LENGTH,
+            cropRect.bottom - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
+            cropRect.right + GRID_LINE_WIDTH,
+            cropRect.bottom - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
             cornerPaint
         )
 
         drawLine(
-            cropRect.right - cornerWidthInPixel / 2f + gridLineWidthPixel,
-            cropRect.bottom + gridLineWidthPixel,
-            cropRect.right - cornerWidthInPixel / 2f + gridLineWidthPixel,
-            cropRect.bottom - cornerEdgeLengthInPixel,
+            cropRect.right - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
+            cropRect.bottom + GRID_LINE_WIDTH,
+            cropRect.right - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
+            cropRect.bottom - CORNER_EDGE_LENGTH,
             cornerPaint
         )
     }
 
     private val gridPaint = Paint().apply {
         color = Color.WHITE
-        strokeWidth = gridLineWidthPixel
+        strokeWidth = GRID_LINE_WIDTH
         style = Paint.Style.STROKE
     }
 
@@ -541,8 +506,8 @@ class ManualCropView @JvmOverloads constructor(
         val scale = min(viewWidth / bitmapRect.width(), viewHeight / bitmapRect.height())
         bitmapMatrix.setScale(scale, scale)
 
-        val translateX = (viewWidth - bitmapRect.width() * scale) / 2f + marginInPixelSize
-        val translateY = (viewHeight - bitmapRect.height() * scale) / 2f + marginInPixelSize
+        val translateX = (viewWidth - bitmapRect.width() * scale) / 2f + CROP_RECT_MARGIN
+        val translateY = (viewHeight - bitmapRect.height() * scale) / 2f + CROP_RECT_MARGIN
         bitmapMatrix.postTranslate(translateX, translateY)
 
         setBitmapBorderRect()
@@ -592,11 +557,12 @@ class ManualCropView @JvmOverloads constructor(
      * cropRect
      */
     private fun calculateMinRect() {
-        val mappedBitmapMinRectSize = RectF()
-            .apply { bitmapMatrix.mapRect(this, bitmapMinRect) }
-            .width()
-
-        val minSize = max(mappedBitmapMinRectSize, resources.getDimension(R.dimen.min_rect))
+        val minSize = max(
+            RectF()
+                .apply { bitmapMatrix.mapRect(this, bitmapMinRect) }
+                .width(),
+            MIN_RECT_SIZE
+        )
 
         when (val state = draggingState) {
             is DraggingEdge -> {
@@ -629,7 +595,7 @@ class ManualCropView @JvmOverloads constructor(
                         cropRect.top + minSize
                     )
 
-                    else -> {}
+                    else -> Unit
                 }
             }
 
@@ -663,11 +629,11 @@ class ManualCropView @JvmOverloads constructor(
                         cropRect.top + minSize
                     )
 
-                    else -> {}
+                    else -> Unit
                 }
             }
 
-            else -> {}
+            else -> Unit
         }
     }
 
@@ -775,8 +741,8 @@ class ManualCropView @JvmOverloads constructor(
         val targetRectWidth = cropRect.width() * scale
         val targetRectHeight = cropRect.height() * scale
 
-        val targetRectLeft = (viewWidth - targetRectWidth) / 2f + marginInPixelSize
-        val targetRectTop = (viewHeight - targetRectHeight) / 2f + marginInPixelSize
+        val targetRectLeft = (viewWidth - targetRectWidth) / 2f + CROP_RECT_MARGIN
+        val targetRectTop = (viewHeight - targetRectHeight) / 2f + CROP_RECT_MARGIN
         val targetRectRight = targetRectLeft + targetRectWidth
         val targetRectBottom = targetRectTop + targetRectHeight
 

@@ -1,9 +1,9 @@
-package com.w2sv.autocrop.activities.examination.fragments.manualcrop.extensions
+package com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions
 
 import android.graphics.RectF
 import android.view.MotionEvent
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.Corner
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.model.Edge
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Corner
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge
 import java.lang.Float.min
 import kotlin.math.max
 

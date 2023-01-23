@@ -8,7 +8,6 @@ import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.extensions.crossVisualize
 import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.getThemedColor
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.main.MainActivity
@@ -42,11 +41,11 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                 addAll(screenshotListeningPermissionHandlers)
                 add(globalFlags)
             }
-        ){
+        ) {
             finishAffinity()
         }
 
-        setFabColor(getThemedColor(R.color.low_alpha_gray))
+        setFabColor(getColor(R.color.low_alpha_gray))
     }
 
     private val screenshotListeningPermissionHandlers by lazy {

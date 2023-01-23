@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.examination.fragments.croppager
+package com.w2sv.autocrop.activities.examination.fragments.pager
 
 import android.content.Context
 import android.os.Bundle
@@ -19,7 +19,6 @@ import com.w2sv.androidutils.BackPressListener
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getHtmlText
 import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.getThemedColor
 import com.w2sv.androidutils.extensions.hide
 import com.w2sv.androidutils.extensions.hideSystemBars
 import com.w2sv.androidutils.extensions.postValue
@@ -30,9 +29,9 @@ import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropResults
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
-import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.SaveAllCropsDialog
-import com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs.SaveCropDialog
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.ManualCropFragment
+import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveAllCropsDialog
+import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveCropDialog
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.cropbundle.Crop
@@ -65,7 +64,7 @@ class CropPagerFragment :
     AppFragment<FragmentCroppagerBinding>(FragmentCroppagerBinding::class.java),
     SaveCropDialog.ResultListener,
     SaveAllCropsDialog.ResultListener,
-    ManualCropFragment.ResultListener {
+    CropAdjustmentFragment.ResultListener {
 
     companion object {
         fun getInstance(cropResults: CropResults): CropPagerFragment =
@@ -145,7 +144,7 @@ class CropPagerFragment :
                     if (cropResults.nNotCroppableImages != 0) {
                         append("Couldn't find crop bounds for")
                         bold {
-                            color(context.getThemedColor(R.color.highlight)) {
+                            color(context.getColor(R.color.highlight)) {
                                 append(" ${cropResults.nNotCroppableImages}")
                             }
                         }
@@ -298,7 +297,7 @@ class CropPagerFragment :
         }
         manualCropButton.setOnClickListener {
             requireViewBoundFragmentActivity().fragmentReplacementTransaction(
-                ManualCropFragment.getInstance(
+                CropAdjustmentFragment.getInstance(
                     viewModel.dataSet.liveElement
                 ),
                 true
@@ -327,7 +326,7 @@ class CropPagerFragment :
         }
     }
 
-    override fun onManualCropResult(cropEdges: CropEdges) {
+    override fun onCropAdjustment(cropEdges: CropEdges) {
         viewModel.dataSet.liveElement.let {
             it.crop = Crop.fromScreenshot(
                 requireContext().contentResolver.loadBitmap(it.screenshot.uri)!!,

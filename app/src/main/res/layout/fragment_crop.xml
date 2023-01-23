@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/cropping_progress_bar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_crop_progress_bar"
+        android:layout_marginTop="@dimen/vertical_margin_crop_progress_bar"
 
         android:text="@string/cropping"
         android:textColor="@color/highlight"
@@ -35,7 +35,7 @@
 
         android:layout_alignBottom="@+id/cropping_progress_bar"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/margin_crop_progress_bar"
+        android:layout_marginBottom="@dimen/vertical_margin_crop_progress_bar"
 
         android:text="@string/fraction"
         android:textSize="17sp" />

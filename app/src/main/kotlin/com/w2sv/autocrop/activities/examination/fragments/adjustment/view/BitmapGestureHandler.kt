@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.examination.fragments.manualcrop.view
+package com.w2sv.autocrop.activities.examination.fragments.adjustment.view
 
 import android.content.Context
 import android.view.GestureDetector

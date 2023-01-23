@@ -51,7 +51,7 @@
                 android:id="@+id/discard_all_button"
                 android:layout_width="@dimen/size_image_button"
                 android:layout_height="@dimen/size_image_button"
-                android:layout_marginEnd="@dimen/margin_inter_buttons_in_row"
+                android:layout_marginEnd="@dimen/margin_buttons_within_row"
 
                 android:background="@drawable/ic_cancel_24"
                 android:backgroundTint="@color/higher_light"
@@ -157,7 +157,7 @@
                             android:id="@+id/discard_crop_button"
                             android:layout_width="@dimen/size_image_button"
                             android:layout_height="@dimen/size_image_button"
-                            android:layout_marginEnd="@dimen/margin_inter_buttons_in_row"
+                            android:layout_marginEnd="@dimen/margin_buttons_within_row"
 
                             android:background="@drawable/ic_cancel_24"
                             android:backgroundTint="@color/highlight"
@@ -168,7 +168,7 @@
                             android:id="@+id/save_crop_button"
                             android:layout_width="@dimen/size_image_button"
                             android:layout_height="@dimen/size_image_button"
-                            android:layout_marginEnd="@dimen/margin_inter_buttons_in_row"
+                            android:layout_marginEnd="@dimen/margin_buttons_within_row"
 
                             android:background="@drawable/ic_save_24"
                             android:backgroundTint="@color/highlight"
@@ -179,7 +179,7 @@
                             android:id="@+id/manual_crop_button"
                             android:layout_width="@dimen/size_image_button"
                             android:layout_height="@dimen/size_image_button"
-                            android:layout_marginEnd="@dimen/margin_inter_buttons_in_row"
+                            android:layout_marginEnd="@dimen/margin_buttons_within_row"
 
                             android:background="@drawable/ic_crop_24"
                             android:backgroundTint="@color/highlight"

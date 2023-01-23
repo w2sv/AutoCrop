@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.examination.fragments.croppager
+package com.w2sv.autocrop.activities.examination.fragments.pager
 
 import android.view.LayoutInflater
 import android.view.View

@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.examination.fragments.manualcrop
+package com.w2sv.autocrop.activities.examination.fragments.adjustment
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -14,12 +14,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.extensions.maintainedPercentage
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maintainedPercentage
 import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.cropbundle.CropBundle
 import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
-import com.w2sv.autocrop.databinding.FragmentManualCropBinding
+import com.w2sv.autocrop.databinding.FragmentCropAdjustmentBinding
 import com.w2sv.kotlinutils.extensions.rounded
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,12 +29,12 @@ import kotlin.math.max
 import kotlin.math.min
 
 @AndroidEntryPoint
-class ManualCropFragment
-    : AppFragment<FragmentManualCropBinding>(FragmentManualCropBinding::class.java) {
+class CropAdjustmentFragment
+    : AppFragment<FragmentCropAdjustmentBinding>(FragmentCropAdjustmentBinding::class.java) {
 
     companion object {
-        fun getInstance(cropBundle: CropBundle): ManualCropFragment =
-            getFragment(ManualCropFragment::class.java, CropBundle.EXTRA to cropBundle)
+        fun getInstance(cropBundle: CropBundle): CropAdjustmentFragment =
+            getFragment(CropAdjustmentFragment::class.java, CropBundle.EXTRA to cropBundle)
     }
 
     @HiltViewModel
@@ -72,7 +72,7 @@ class ManualCropFragment
             }
     }
 
-    private fun FragmentManualCropBinding.onCropEdgesChanged(cropEdges: CropEdges) {
+    private fun FragmentCropAdjustmentBinding.onCropEdgesChanged(cropEdges: CropEdges) {
         heightTv.text = styledUnitSpannableString("H", min(cropEdges.height, viewModel.bitmap.height))
         percentageTv.text =
             styledUnitSpannableString(
@@ -115,7 +115,7 @@ class ManualCropFragment
                 append(" $value")
             }
 
-    private fun FragmentManualCropBinding.setOnClickListeners() {
+    private fun FragmentCropAdjustmentBinding.setOnClickListeners() {
         resetButton.setOnClickListener {
             cropView.reset()
         }
@@ -127,11 +127,11 @@ class ManualCropFragment
 
             // notify ResultListener
             (requireViewBoundFragmentActivity().getCurrentFragment() as ResultListener)
-                .onManualCropResult(viewModel.cropEdges.value!!)
+                .onCropAdjustment(viewModel.cropEdges.value!!)
         }
     }
 
     interface ResultListener {
-        fun onManualCropResult(cropEdges: CropEdges)
+        fun onCropAdjustment(cropEdges: CropEdges)
     }
 }

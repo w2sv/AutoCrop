@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.examination.fragments.croppager.dialogs
+package com.w2sv.autocrop.activities.examination.fragments.pager.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog

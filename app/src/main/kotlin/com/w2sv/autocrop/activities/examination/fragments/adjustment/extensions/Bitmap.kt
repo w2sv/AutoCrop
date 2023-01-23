@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.examination.fragments.manualcrop.extensions
+package com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions
 
 import android.graphics.Bitmap
 

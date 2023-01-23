@@ -12,9 +12,9 @@ import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropResults
 import com.w2sv.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
-import com.w2sv.autocrop.activities.examination.fragments.croppager.CropPagerFragment
+import com.w2sv.autocrop.activities.examination.fragments.pager.CropPagerFragment
 import com.w2sv.autocrop.activities.examination.fragments.deleterequest.DeleteRequestFragment
-import com.w2sv.autocrop.activities.examination.fragments.manualcrop.ManualCropFragment
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.cropbundle.CropBundle
@@ -154,7 +154,7 @@ class ExaminationActivity : AppActivity<ActivityExaminationBinding>(ActivityExam
         getCurrentFragment().let {
             when (it) {
                 is ComparisonFragment -> it.popFromFragmentManager(supportFragmentManager)
-                is ManualCropFragment -> supportFragmentManager.popBackStack()
+                is CropAdjustmentFragment -> supportFragmentManager.popBackStack()
                 is SaveAllFragment -> snackyBuilder("Wait until crops have been saved")
                     .setIcon(R.drawable.ic_front_hand_24)
                     .build()
