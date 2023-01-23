@@ -10,18 +10,18 @@ plugins {
 android {
     def PACKAGE_NAME = "com.w2sv.autocrop"
 
-    compileSdk rootProject.ext.compileSdkVersion
+    compileSdk rootProject.ext.compileSdk
     namespace PACKAGE_NAME
 
     defaultConfig {
         applicationId PACKAGE_NAME
 
-        minSdk rootProject.ext.minSdkVersion
-        targetSdk rootProject.ext.compileSdkVersion
+        minSdk rootProject.ext.minSdk
+        targetSdk rootProject.ext.compileSdk
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
 
-        versionCode 39
-        versionName '3.2.12'
+        versionCode 40
+        versionName '3.2.13'
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'

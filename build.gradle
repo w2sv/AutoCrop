@@ -1,12 +1,11 @@
 buildscript {
-    ext.compileSdkVersion = 33
-    ext.minSdkVersion = 26
+    ext.compileSdk = 33
+    ext.minSdk = 26
 }
 
 plugins {
-    id 'com.android.application' version '8.1.0-alpha01' apply false
+    id 'com.android.application' version '8.0.0-beta01' apply false
     id 'org.jetbrains.kotlin.android' version libs.versions.kotlin apply false
     id 'com.google.dagger.hilt.android' version libs.versions.hilt apply false
     id 'de.mannodermaus.android-junit5' version '1.8.2.1' apply false
-//    id 'com.autonomousapps.dependency-analysis' version '1.16.0'
 }
