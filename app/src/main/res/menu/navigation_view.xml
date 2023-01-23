@@ -13,7 +13,7 @@
     <!--  Crop Saving  -->
 
     <group>
-        <item android:title="@string/menu_item_divider_crop_saving">
+        <item android:title="@string/menu_item_divider_saving">
 
             <menu>
                 <item
