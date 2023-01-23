@@ -119,19 +119,19 @@ class CropPagerFragment :
             dataSet.size - dataSet.livePosition.value!!
 
         /**
-         * Other
+         * Crop Results Snackbar
          */
 
         fun showCropResultsSnackbarIfApplicable(
             coroutineScope: CoroutineScope,
             getSnackyBuilder: (CharSequence) -> Snacky.Builder
         ) {
-            if (uncroppedScreenshotsSnackbarText != null && !showedSnackbar)
+            if (uncroppedScreenshotsSnackbarText != null && !showedCropResultsSnackbar)
                 getSnackyBuilder(uncroppedScreenshotsSnackbarText)
                     .setIcon(com.w2sv.permissionhandler.R.drawable.ic_error_24)
                     .build()
                     .onHalfwayShown(coroutineScope) {
-                        showedSnackbar = true
+                        showedCropResultsSnackbar = true
                     }
                     .show()
         }
@@ -163,7 +163,11 @@ class CropPagerFragment :
                     ifEmpty { null }
                 }
 
-        private var showedSnackbar: Boolean = false
+        private var showedCropResultsSnackbar: Boolean = false
+
+        /**
+         * Other
+         */
 
         val backPressHandler = BackPressListener(
             viewModelScope,
