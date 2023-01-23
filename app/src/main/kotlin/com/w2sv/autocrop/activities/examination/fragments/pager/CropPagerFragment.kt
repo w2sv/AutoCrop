@@ -41,7 +41,6 @@ import com.w2sv.autocrop.cropbundle.cropping.CropEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
 import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.preferences.GlobalFlags
 import com.w2sv.autocrop.ui.Click
 import com.w2sv.autocrop.ui.CubeOutPageTransformer
 import com.w2sv.autocrop.ui.animate
@@ -196,9 +195,6 @@ class CropPagerFragment :
 
         var lastCropProcedureToast: Toast? = null
     }
-
-    @Inject
-    lateinit var globalFlags: GlobalFlags
 
     private val viewModel by viewModels<ViewModel>()
 
