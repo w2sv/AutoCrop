@@ -61,7 +61,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                     isChecked = context.serviceRunning<ScreenshotListener>()
                     setOnCheckedChangeListener { _, value ->
                         when {
-                            viewModel.screenshotListenerCancelledFromNotification.value == true -> viewModel.screenshotListenerCancelledFromNotification.toggle()
+                            viewModel.screenshotListenerCancelledFromNotificationLive.value == true -> viewModel.screenshotListenerCancelledFromNotificationLive.toggle()
 
                             value -> findFragment<FlowFieldFragment>()
                                 .screenshotListeningPermissionHandlers
@@ -78,7 +78,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                         }
                     }
 
-                    viewModel.screenshotListenerCancelledFromNotification.observe(this@FlowFieldNavigationView.findViewTreeLifecycleOwner()!!) { isCancelled ->
+                    viewModel.screenshotListenerCancelledFromNotificationLive.observe(this@FlowFieldNavigationView.findViewTreeLifecycleOwner()!!) { isCancelled ->
                         if (isCancelled)
                             isChecked = false
                     }
@@ -86,7 +86,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         }
 
     private fun setCurrentCropDirIdentifier() {
-        viewModel.liveCropSaveDirIdentifier.observe(findViewTreeLifecycleOwner()!!) { cropSaveDirIdentifier ->
+        viewModel.cropSaveDirIdentifierLive.observe(findViewTreeLifecycleOwner()!!) { cropSaveDirIdentifier ->
             menu.configureItem(R.id.main_menu_item_current_crop_dir) { item ->
                 item.title = cropSaveDirIdentifier
             }

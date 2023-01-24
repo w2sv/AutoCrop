@@ -2,7 +2,6 @@ package com.w2sv.autocrop.activities.main.fragments.flowfield
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -12,9 +11,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -22,7 +19,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.androidutils.BackPressListener
@@ -51,9 +47,11 @@ import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.ui.fadeInAnimationComposer
 import com.w2sv.autocrop.ui.fadeOut
 import com.w2sv.autocrop.ui.onHalfwayFinished
+import com.w2sv.autocrop.utils.SelfManagingBroadcastReceiver
 import com.w2sv.autocrop.utils.extensions.onHalfwayShown
 import com.w2sv.autocrop.utils.extensions.showToast
 import com.w2sv.autocrop.utils.getMediaUri
+import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.permissionhandler.PermissionHandler
 import dagger.hilt.android.AndroidEntryPoint
@@ -72,9 +70,6 @@ class FlowFieldFragment :
             getFragment(FlowFieldFragment::class.java, AccumulatedIOResults.EXTRA to accumulatedIoResults)
     }
 
-    @Inject
-    lateinit var cropSaveDirPreferences: CropSaveDirPreferences
-
     @HiltViewModel
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
@@ -83,6 +78,12 @@ class FlowFieldFragment :
     ) : androidx.lifecycle.ViewModel() {
 
         val accumulatedIoResults: AccumulatedIOResults? = savedStateHandle[AccumulatedIOResults.EXTRA]
+
+        var fadedInButtonsOnEntry = AutoSwitch(false, switchOn = false)
+
+        /**
+         * IO Results Snackbar
+         */
 
         fun showIOResultsSnackbarIfApplicable(
             coroutineScope: CoroutineScope,
@@ -127,70 +128,66 @@ class FlowFieldFragment :
 
         private var showedSnackbar: Boolean = false
 
-        var fadedInButtonsOnCreate: Boolean = false
+        /**
+         * Button hiding
+         */
 
-        val liveCropSaveDirIdentifier: LiveData<String> = MutableLiveData(cropSaveDirPreferences.pathIdentifier)
-
-        val hideButtonsLive: LiveData<Boolean> = MutableLiveData(false)
+        val hideButtonsLive: LiveData<Boolean> by lazy {
+            MutableLiveData(false)
+        }
         var buttonFadeAnimation: YoYo.YoYoString? = null
+
+        /**
+         * Other LiveData
+         */
+
+        val cropSaveDirIdentifierLive: LiveData<String> by lazy {
+            MutableLiveData(cropSaveDirPreferences.pathIdentifier)
+        }
+        val screenshotListenerCancelledFromNotificationLive: LiveData<Boolean> by lazy {
+            MutableLiveData(false)
+        }
+
+        /**
+         * BackPressListener
+         */
 
         val backPressHandler = BackPressListener(
             viewModelScope,
             context.resources.getLong(R.integer.duration_backpress_confirmation_window)
         )
-
-        val screenshotListenerCancelledFromNotification: LiveData<Boolean> by lazy {
-            MutableLiveData(false)
-        }
     }
-
-    private val viewModel by viewModels<ViewModel>()
 
     class CancelledSSLFromNotificationListener(
         lifecycleOwner: LifecycleOwner,
         private val onReceiveListener: () -> Unit
-    ) : BroadcastReceiver(),
-        DefaultLifecycleObserver {
-
-        init {
-            lifecycleOwner.lifecycle.addObserver(this)
-
-            LocalBroadcastManager
-                .getInstance(lifecycleOwner.requireContext())
-                .registerReceiver(
-                    this,
-                    IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
-                )
-        }
+    ) : SelfManagingBroadcastReceiver(
+        lifecycleOwner,
+        IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
+    ) {
 
         override fun onReceive(context: Context?, intent: Intent?) {
             onReceiveListener()
         }
-
-        override fun onDestroy(owner: LifecycleOwner) {
-            super.onDestroy(owner)
-
-            LocalBroadcastManager
-                .getInstance(owner.requireContext())
-                .unregisterReceiver(this)
-        }
-
-        private fun LifecycleOwner.requireContext(): Context =
-            (this as Fragment).requireContext()
     }
 
-    private lateinit var cancelledSSLFromNotificationListener: CancelledSSLFromNotificationListener
+    @Inject
+    lateinit var cropSaveDirPreferences: CropSaveDirPreferences
+
+    private val viewModel by viewModels<ViewModel>()
+
+    private val cancelledSSLFromNotificationListener: CancelledSSLFromNotificationListener by lazy {
+        CancelledSSLFromNotificationListener(this) {
+            viewModel.screenshotListenerCancelledFromNotificationLive.postValue(true)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        cancelledSSLFromNotificationListener =
-            CancelledSSLFromNotificationListener(this) {
-                viewModel.screenshotListenerCancelledFromNotification.postValue(true)
-            }
-
         registerLifecycleObservers(
             buildList {
+                add(cancelledSSLFromNotificationListener)
                 add(selectImagesContractHandler)
                 add(openDocumentTreeContractHandler)
                 add(writeExternalStoragePermissionHandler)
@@ -230,7 +227,7 @@ class FlowFieldFragment :
         val savedAnyCrops: Boolean = viewModel.accumulatedIoResults?.let { it.nSavedCrops != 0 }
             ?: false
 
-        if (!viewModel.fadedInButtonsOnCreate) {
+        if (!viewModel.fadedInButtonsOnEntry.getWithPossibleAutoSwitch()) {
             foregroundLayout
                 .fadeInAnimationComposer(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
                 .onHalfwayFinished(lifecycleScope) {
@@ -243,8 +240,6 @@ class FlowFieldFragment :
                         }
                 }
                 .play()
-
-            viewModel.fadedInButtonsOnCreate = true
         }
         else if (savedAnyCrops)
             shareCropsButton.show()
@@ -282,9 +277,9 @@ class FlowFieldFragment :
         }
     }
 
-    // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    // ActivityCallContractAdministrators
-    // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    /**
+     * ActivityCallContractAdministrators
+     */
 
     private val writeExternalStoragePermissionHandler by lazy {
         PermissionHandler(
@@ -343,11 +338,11 @@ class FlowFieldFragment :
         OpenDocumentTreeContractHandler(requireActivity()) {
             it?.let { treeUri ->
                 val text = if (cropSaveDirPreferences.setNewUri(treeUri, requireContext().contentResolver)) {
-                    viewModel.liveCropSaveDirIdentifier.postValue(cropSaveDirPreferences.pathIdentifier)
+                    viewModel.cropSaveDirIdentifierLive.postValue(cropSaveDirPreferences.pathIdentifier)
                     SpannableStringBuilder()
                         .append("Crops will be saved to ")
                         .color(requireContext().getColor(R.color.success)) {
-                            append(viewModel.liveCropSaveDirIdentifier.value!!)
+                            append(viewModel.cropSaveDirIdentifierLive.value!!)
                         }
                 }
                 else
