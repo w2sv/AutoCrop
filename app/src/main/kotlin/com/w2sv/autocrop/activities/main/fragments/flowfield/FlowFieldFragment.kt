@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
@@ -204,25 +205,6 @@ class FlowFieldFragment :
         viewModel.setLiveDataObservers()
     }
 
-    private fun ViewModel.setLiveDataObservers() {
-        hideButtonsLive.observe(viewLifecycleOwner) { hideForeground ->
-            binding.highAlphaForegroundLayout.let {
-                if (hideForeground) {
-                    if (lifecycle.currentState == Lifecycle.State.STARTED)
-                        it.hide()
-                    else {
-                        buttonFadeAnimation?.stop()
-                        buttonFadeAnimation = it.fadeOut()
-                    }
-                }
-                else {
-                    buttonFadeAnimation?.stop()
-                    buttonFadeAnimation = it.fadeIn()
-                }
-            }
-        }
-    }
-
     private fun FragmentFlowfieldBinding.showLayoutElements() {
         val savedAnyCrops: Boolean = viewModel.accumulatedIoResults?.let { it.nSavedCrops != 0 }
             ?: false
@@ -269,6 +251,27 @@ class FlowFieldFragment :
         }
         foregroundToggleButton.setOnClickListener {
             viewModel.hideButtonsLive.toggle()
+        }
+    }
+
+    private fun ViewModel.setLiveDataObservers() {
+        hideButtonsLive.observe(viewLifecycleOwner) { hideForeground ->
+            if (hideForeground) {
+                binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+
+                if (lifecycle.currentState == Lifecycle.State.STARTED)
+                    binding.highAlphaForegroundLayout.hide()
+                else {
+                    buttonFadeAnimation?.stop()
+                    buttonFadeAnimation = binding.highAlphaForegroundLayout.fadeOut()
+                }
+            }
+            else {
+                binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+
+                buttonFadeAnimation?.stop()
+                buttonFadeAnimation = binding.highAlphaForegroundLayout.fadeIn()
+            }
         }
     }
 
