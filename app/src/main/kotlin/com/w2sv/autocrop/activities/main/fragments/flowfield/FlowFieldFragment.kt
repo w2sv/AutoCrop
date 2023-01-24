@@ -44,7 +44,6 @@ import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.Se
 import com.w2sv.autocrop.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 import com.w2sv.autocrop.preferences.CropSaveDirPreferences
-import com.w2sv.autocrop.preferences.GlobalFlags
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.ui.SnackbarData
 import com.w2sv.autocrop.ui.animate
@@ -72,9 +71,6 @@ class FlowFieldFragment :
         fun getInstance(accumulatedIoResults: AccumulatedIOResults?): FlowFieldFragment =
             getFragment(FlowFieldFragment::class.java, AccumulatedIOResults.EXTRA to accumulatedIoResults)
     }
-
-    @Inject
-    lateinit var globalFlags: GlobalFlags
 
     @Inject
     lateinit var cropSaveDirPreferences: CropSaveDirPreferences
