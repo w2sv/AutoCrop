@@ -13,12 +13,12 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.androidutils.BackPressListener
@@ -159,10 +159,10 @@ class FlowFieldFragment :
     }
 
     class CancelledSSLFromNotificationListener(
-        lifecycleOwner: LifecycleOwner,
+        broadcastManager: LocalBroadcastManager,
         private val onReceiveListener: () -> Unit
     ) : SelfManagingBroadcastReceiver(
-        lifecycleOwner,
+        broadcastManager,
         IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
     ) {
 
@@ -177,7 +177,7 @@ class FlowFieldFragment :
     private val viewModel by viewModels<ViewModel>()
 
     private val cancelledSSLFromNotificationListener: CancelledSSLFromNotificationListener by lazy {
-        CancelledSSLFromNotificationListener(this) {
+        CancelledSSLFromNotificationListener(LocalBroadcastManager.getInstance(requireContext())) {
             viewModel.screenshotListenerCancelledFromNotificationLive.postValue(true)
         }
     }
