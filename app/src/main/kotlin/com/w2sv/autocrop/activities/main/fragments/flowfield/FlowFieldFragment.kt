@@ -247,12 +247,7 @@ class FlowFieldFragment :
 
     private fun FragmentFlowfieldBinding.setOnClickListeners() {
         navigationViewToggleButton.setOnClickListener {
-            with(drawerLayout) {
-                if (isOpen)
-                    closeDrawer()
-                else
-                    openDrawer()
-            }
+            drawerLayout.onToggleButtonClick()
         }
         imageSelectionButton.setOnClickListener {
             writeExternalStoragePermissionHandler.requestPermission(

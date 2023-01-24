@@ -10,26 +10,32 @@ import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
 
 class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : DrawerLayout(context, attributeSet) {
+
+    private val binding: FragmentFlowfieldBinding by lazy { findFragment<FlowFieldFragment>().binding }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
         if (!isInEditMode) {
             addDrawerListener(
                 object : SimpleDrawerListener() {
-
-                    private val binding: FragmentFlowfieldBinding = findFragment<FlowFieldFragment>().binding
-
                     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                        binding.navigationViewToggleButton.progress = slideOffset
-
-                        val alphaOverlaidButtons = 1 - slideOffset
-                        binding.imageSelectionButton.alpha = alphaOverlaidButtons
-                        binding.shareCropsButton.alpha = alphaOverlaidButtons
-                        binding.foregroundToggleButton.alpha = alphaOverlaidButtons
+                        binding.affectAssociatedViewsOnDrawerSlide(slideOffset)
                     }
                 }
             )
+            if (isOpen)
+                binding.affectAssociatedViewsOnDrawerSlide(1f)
         }
+    }
+
+    fun FragmentFlowfieldBinding.affectAssociatedViewsOnDrawerSlide(slideOffset: Float) {
+        navigationViewToggleButton.progress = slideOffset
+
+        val associatedButtonAlpha = 1 - slideOffset
+        imageSelectionButton.alpha = associatedButtonAlpha
+        shareCropsButton.alpha = associatedButtonAlpha
+        foregroundToggleButton.alpha = associatedButtonAlpha
     }
 
     fun openDrawer() {
@@ -38,5 +44,12 @@ class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : Draw
 
     fun closeDrawer() {
         closeDrawer(GravityCompat.START)
+    }
+
+    fun onToggleButtonClick(){
+        if (isOpen)
+            closeDrawer()
+        else
+            openDrawer()
     }
 }
