@@ -17,8 +17,10 @@
 
     <dimen name="padding_image_button_w_background">11dp</dimen>
 
-    <dimen name="onboarding_text_size_description">18sp</dimen>
-    <dimen name="onboarding_size_page_indicator_dot">12dp</dimen>
+    <!-- override -->
+    <dimen name="onboarding_description_text_size">18sp</dimen>
+    <!-- override -->
+    <dimen name="onboarding_page_indicator_dot_size">12dp</dimen>
 
     <dimen name="crop_adjustment_screen_horizontal_margin_top_buttons">4dp</dimen>
     <dimen name="crop_adjustment_screen_width_toolbar_buttons">70dp</dimen>
