@@ -46,7 +46,7 @@ class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : Draw
         closeDrawer(GravityCompat.START)
     }
 
-    fun onToggleButtonClick(){
+    fun onToggleButtonClick() {
         if (isOpen)
             closeDrawer()
         else

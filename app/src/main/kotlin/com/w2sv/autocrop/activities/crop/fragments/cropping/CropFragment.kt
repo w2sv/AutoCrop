@@ -13,9 +13,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
-import com.w2sv.androidutils.BackPressListener
+import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.increment
+import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropResults
@@ -29,7 +30,6 @@ import com.w2sv.autocrop.cropbundle.cropping.cropEdgesCandidates
 import com.w2sv.autocrop.cropbundle.cropping.maxHeightEdges
 import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentCropBinding
-import com.w2sv.autocrop.utils.extensions.showToast
 import com.w2sv.autocrop.utils.getMediaUri
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,7 +56,7 @@ class CropFragment
         @ApplicationContext context: Context
     ) : androidx.lifecycle.ViewModel() {
 
-        val backPressListener = BackPressListener(
+        val backPressListener = BackPressHandler(
             viewModelScope,
             context.resources.getLong(R.integer.duration_backpress_confirmation_window)
         )

@@ -14,6 +14,7 @@ import com.w2sv.androidutils.ActivityRetriever
 import com.w2sv.androidutils.extensions.configureItem
 import com.w2sv.androidutils.extensions.goToWebpage
 import com.w2sv.androidutils.extensions.serviceRunning
+import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
@@ -25,7 +26,6 @@ import com.w2sv.autocrop.preferences.CropSaveDirPreferences
 import com.w2sv.autocrop.preferences.getConnectedSwitch
 import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
 import com.w2sv.autocrop.utils.extensions.playStoreLink
-import com.w2sv.autocrop.utils.extensions.showToast
 import com.w2sv.permissionhandler.requestPermissions
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

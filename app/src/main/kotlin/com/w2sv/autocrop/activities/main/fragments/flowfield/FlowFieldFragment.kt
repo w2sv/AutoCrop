@@ -22,12 +22,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
-import com.w2sv.androidutils.BackPressListener
+import com.w2sv.androidutils.BackPressHandler
+import com.w2sv.androidutils.SelfManagingBroadcastReceiver
 import com.w2sv.androidutils.extensions.getColoredIcon
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.hide
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
+import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.androidutils.extensions.uris
 import com.w2sv.autocrop.R
@@ -48,9 +50,7 @@ import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.ui.fadeInAnimationComposer
 import com.w2sv.autocrop.ui.fadeOut
 import com.w2sv.autocrop.ui.onHalfwayFinished
-import com.w2sv.autocrop.utils.SelfManagingBroadcastReceiver
 import com.w2sv.autocrop.utils.extensions.onHalfwayShown
-import com.w2sv.autocrop.utils.extensions.showToast
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.numericallyInflected
@@ -153,7 +153,7 @@ class FlowFieldFragment :
          * BackPressListener
          */
 
-        val backPressHandler = BackPressListener(
+        val backPressHandler = BackPressHandler(
             viewModelScope,
             context.resources.getLong(R.integer.duration_backpress_confirmation_window)
         )
@@ -209,7 +209,7 @@ class FlowFieldFragment :
         val savedAnyCrops: Boolean = viewModel.accumulatedIoResults?.let { it.nSavedCrops != 0 }
             ?: false
 
-        if (!viewModel.fadedInButtonsOnEntry.getWithPossibleAutoSwitch()) {
+        if (!viewModel.fadedInButtonsOnEntry.getWithEventualSwitch()) {
             foregroundLayout
                 .fadeInAnimationComposer(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
                 .onHalfwayFinished(lifecycleScope) {

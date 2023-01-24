@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.provider.DocumentsContract
-import com.w2sv.androidutils.extensions.uriPermissionGranted
+import com.w2sv.androidutils.extensions.hasPermission
 import com.w2sv.autocrop.cropbundle.io.utils.systemPicturesDirectory
 import com.w2sv.autocrop.utils.documentUriPathIdentifier
 import com.w2sv.typedpreferences.descendants.UriPreferences
@@ -63,7 +63,7 @@ class CropSaveDirPreferences @Inject constructor(appPreferences: SharedPreferenc
      */
     fun validDocumentUriOrNull(context: Context): Uri? =
         documentUri?.let {
-            if (context.uriPermissionGranted(it, Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
+            if (it.hasPermission(context, Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
                 it
             else
                 null

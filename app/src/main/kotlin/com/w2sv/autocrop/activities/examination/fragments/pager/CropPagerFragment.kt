@@ -17,13 +17,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.viewpager2.widget.ViewPager2
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.androidutils.BackPressListener
+import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.extensions.getHtmlText
 import com.w2sv.androidutils.extensions.getLong
+import com.w2sv.androidutils.extensions.getToast
 import com.w2sv.androidutils.extensions.hide
 import com.w2sv.androidutils.extensions.hideSystemBars
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
+import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
@@ -47,9 +49,7 @@ import com.w2sv.autocrop.ui.animate
 import com.w2sv.autocrop.ui.currentViewHolder
 import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.ui.scrollPeriodically
-import com.w2sv.autocrop.utils.extensions.getToast
 import com.w2sv.autocrop.utils.extensions.onHalfwayShown
-import com.w2sv.autocrop.utils.extensions.showToast
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
@@ -188,7 +188,7 @@ class CropPagerFragment :
          * Other
          */
 
-        val backPressHandler = BackPressListener(
+        val backPressHandler = BackPressHandler(
             viewModelScope,
             context.resources.getLong(R.integer.duration_backpress_confirmation_window)
         )
