@@ -33,10 +33,10 @@ import com.w2sv.autocrop.screenshotlistening.notifications.AppNotificationChanne
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.notifications.setChannelAndGetNotificationBuilder
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
+import com.w2sv.autocrop.utils.PermissionHandler
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
 import com.w2sv.kotlinutils.timeDelta
 import com.w2sv.kotlinutils.tripleFromIterable
-import com.w2sv.permissionhandler.PermissionHandler
 import slimber.log.i
 import java.io.File
 import java.io.FileNotFoundException

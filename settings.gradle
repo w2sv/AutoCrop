@@ -17,4 +17,3 @@ dependencyResolutionManagement {
 rootProject.name = 'AutoCrop'
 include ':app'
 include ':bidirectionalviewpager'
-include ':permissionhandler'

@@ -140,7 +140,7 @@ class CropPagerFragment :
         ) {
             if (uncroppedScreenshotsSnackbarText != null && !showedCropResultsSnackbar)
                 getSnackyBuilder(uncroppedScreenshotsSnackbarText)
-                    .setIcon(com.w2sv.permissionhandler.R.drawable.ic_error_24)
+                    .setIcon(R.drawable.ic_error_24)
                     .build()
                     .onHalfwayShown(coroutineScope) {
                         showedCropResultsSnackbar = true

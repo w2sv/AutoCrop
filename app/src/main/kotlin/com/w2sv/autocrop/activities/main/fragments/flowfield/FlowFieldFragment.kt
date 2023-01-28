@@ -50,11 +50,11 @@ import com.w2sv.autocrop.ui.fadeIn
 import com.w2sv.autocrop.ui.fadeInAnimationComposer
 import com.w2sv.autocrop.ui.fadeOut
 import com.w2sv.autocrop.ui.onHalfwayFinished
+import com.w2sv.autocrop.utils.PermissionHandler
 import com.w2sv.autocrop.utils.extensions.onHalfwayShown
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.numericallyInflected
-import com.w2sv.permissionhandler.PermissionHandler
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

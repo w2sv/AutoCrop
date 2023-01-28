@@ -1,7 +1,6 @@
 package com.w2sv.autocrop
 
 import android.app.Application
-import com.w2sv.permissionhandler.PermissionHandler
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -13,7 +12,5 @@ class Application : Application() {
 
         if (BuildConfig.DEBUG)
             Timber.plant(Timber.DebugTree())
-
-        PermissionHandler.setRequiredPermissions(this)
     }
 }

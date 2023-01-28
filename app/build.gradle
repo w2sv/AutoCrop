@@ -85,13 +85,13 @@ dependencies {
 
     // owned
     implementation project(path: ':bidirectionalviewpager')
-    implementation project(path: ':permissionhandler')
     implementation libs.kotlinutils
     implementation libs.viewboundcontroller
     implementation libs.androidutils
     implementation libs.typedpreferences
     implementation libs.viewanimations
     implementation libs.onboarder
+    implementation libs.permissionhandler
 
     // other
     implementation files('libs/processing-core-4.3.0.jar')

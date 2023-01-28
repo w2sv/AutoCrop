@@ -10,7 +10,7 @@ import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.kotlinutils.delegates.Consumable
 import slimber.log.i
 
-open class ServiceBindingAdministrator<T : BoundService>(
+open class ServiceBindingHandler<T : BoundService>(
     context: Context,
     private val serviceClass: Class<T>
 ) : ContextWrapper(context) {

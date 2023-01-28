@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.w2sv.androidutils.extensions.notificationManager
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
-import com.w2sv.autocrop.screenshotlistening.services.ServiceBindingAdministrator
+import com.w2sv.autocrop.screenshotlistening.services.ServiceBindingHandler
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.UnboundService
 import com.w2sv.autocrop.utils.extensions.getInt
@@ -23,12 +23,12 @@ abstract class PendingIntentAssociatedResourcesCleanupService<T>(private val cli
     interface Client {
 
         /**
-         * [ServiceBindingAdministrator] which manages a [BoundService] that also implements [Client]
+         * [ServiceBindingHandler] which manages a [BoundService] that also implements [Client]
          */
-        class BindingAdministrator<T>(
+        class BindingHandler<T>(
             context: Context,
             serviceClass: Class<T>
-        ) : ServiceBindingAdministrator<T>(context, serviceClass)
+        ) : ServiceBindingHandler<T>(context, serviceClass)
                 where T : BoundService,
                       T : Client
 
@@ -67,7 +67,7 @@ abstract class PendingIntentAssociatedResourcesCleanupService<T>(private val cli
                 .also { i { "Cancelled notification $notificationId" } }
         }
 
-        Client.BindingAdministrator(this, clientClass)
+        Client.BindingHandler(this, clientClass)
             .apply {
                 callOnBoundService {
                     it.doCleanup(intent)
