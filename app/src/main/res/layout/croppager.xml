@@ -107,7 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
-        <com.w2sv.autocrop.ui.views.SnackbarLayoutRepelledLayout
+        <com.w2sv.autocrop.ui.views.SnackbarRepelledLayout
             android:id="@+id/snackbar_repelled_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -202,6 +202,6 @@
 
             </FrameLayout>
 
-        </com.w2sv.autocrop.ui.views.SnackbarLayoutRepelledLayout>
+        </com.w2sv.autocrop.ui.views.SnackbarRepelledLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </RelativeLayout>

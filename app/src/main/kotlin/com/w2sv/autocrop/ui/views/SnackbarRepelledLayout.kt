@@ -7,7 +7,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.w2sv.androidutils.ui.RepelledLayout
 
 @SuppressLint("RestrictedApi")
-class SnackbarLayoutRepelledLayout(context: Context, attributeSet: AttributeSet) : RepelledLayout<Snackbar.SnackbarLayout>(
+class SnackbarRepelledLayout(context: Context, attributeSet: AttributeSet) : RepelledLayout<Snackbar.SnackbarLayout>(
     context,
     attributeSet,
     Snackbar.SnackbarLayout::class
