@@ -3,7 +3,7 @@ package com.w2sv.screenshotlistening
 import android.content.Context
 import android.content.Intent
 import com.w2sv.androidutils.extensions.getNotificationManager
-import com.w2sv.common.utils.extensions.getInt
+import com.w2sv.common.extensions.getInt
 import com.w2sv.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.screenshotlistening.services.ServiceBindingHandler
 import com.w2sv.screenshotlistening.services.abstrct.BoundService

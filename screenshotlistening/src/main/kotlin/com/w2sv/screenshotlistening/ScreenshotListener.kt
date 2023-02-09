@@ -20,7 +20,7 @@ import androidx.activity.ComponentActivity
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.common.collect.EvictingQueue
-import com.w2sv.common.utils.PermissionHandler
+import com.w2sv.common.PermissionHandler
 import com.w2sv.cropbundle.Screenshot
 import com.w2sv.cropbundle.cropping.cropEdges
 import com.w2sv.cropbundle.cropping.cropped

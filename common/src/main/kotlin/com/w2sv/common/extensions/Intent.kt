@@ -1,4 +1,4 @@
-package com.w2sv.common.utils.extensions
+package com.w2sv.common.extensions
 
 import android.content.Intent
 import android.os.Parcelable

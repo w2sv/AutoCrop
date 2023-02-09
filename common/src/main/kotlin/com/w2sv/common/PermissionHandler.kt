@@ -1,11 +1,10 @@
-package com.w2sv.common.utils
+package com.w2sv.common
 
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.activity.ComponentActivity
-import com.w2sv.common.R
-import com.w2sv.common.utils.extensions.snackyBuilder
+import com.w2sv.common.extensions.snackyBuilder
 import com.w2sv.permissionhandler.SinglePermissionHandler
 import de.mateware.snacky.Snacky
 

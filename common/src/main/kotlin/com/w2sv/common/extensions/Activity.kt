@@ -1,4 +1,4 @@
-package com.w2sv.common.utils.extensions
+package com.w2sv.common.extensions
 
 import android.app.Activity
 import de.mateware.snacky.Snacky

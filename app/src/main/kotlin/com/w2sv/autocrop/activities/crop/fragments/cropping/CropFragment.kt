@@ -27,7 +27,7 @@ import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.databinding.CropBinding
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.Screenshot
-import com.w2sv.common.utils.getMediaUri
+import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.cropbundle.cropping.cropEdgesCandidates
 import com.w2sv.cropbundle.cropping.maxHeightEdges
 import com.w2sv.cropbundle.io.extensions.loadBitmap

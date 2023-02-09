@@ -6,7 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import com.w2sv.common.utils.extensions.getParcelableExtraCompat
+import com.w2sv.common.extensions.getParcelableExtraCompat
 
 @RequiresApi(Build.VERSION_CODES.R)
 class ScreenshotDeleteRequestActivity : ComponentActivity(com.w2sv.common.R.layout.delete_request) {

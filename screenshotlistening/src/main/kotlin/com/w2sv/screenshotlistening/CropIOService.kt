@@ -3,7 +3,7 @@ package com.w2sv.screenshotlistening
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.widget.Toast
-import com.w2sv.common.utils.extensions.getParcelableExtraCompat
+import com.w2sv.common.extensions.getParcelableExtraCompat
 import com.w2sv.cropbundle.io.CropBundleIOResult
 import com.w2sv.cropbundle.io.CropBundleIORunner
 import com.w2sv.screenshotlistening.services.abstrct.UnboundService

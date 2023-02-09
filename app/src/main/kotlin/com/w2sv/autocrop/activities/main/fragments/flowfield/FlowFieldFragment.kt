@@ -50,11 +50,10 @@ import com.w2sv.autocrop.ui.views.fadeInAnimationComposer
 import com.w2sv.autocrop.ui.views.fadeOut
 import com.w2sv.autocrop.ui.views.onHalfwayFinished
 import com.w2sv.autocrop.utils.extensions.onHalfwayShown
-import com.w2sv.common.utils.PermissionHandler
-import com.w2sv.common.utils.documentUriPathIdentifier
-import com.w2sv.common.utils.getMediaUri
+import com.w2sv.common.PermissionHandler
+import com.w2sv.autocrop.utils.getMediaUri
+import com.w2sv.autocrop.utils.pathIdentifier
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
-import com.w2sv.cropbundle.io.utils.systemPicturesDirectory
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.preferences.CropSaveDirPreferences
@@ -374,7 +373,3 @@ class FlowFieldFragment :
         }
     }
 }
-
-private val CropSaveDirPreferences.pathIdentifier: String
-    get() = documentUri?.let { documentUriPathIdentifier(it) }
-        ?: systemPicturesDirectory().path

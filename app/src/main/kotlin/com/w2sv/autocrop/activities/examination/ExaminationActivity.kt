@@ -17,7 +17,7 @@ import com.w2sv.autocrop.activities.examination.fragments.deleterequest.DeleteRe
 import com.w2sv.autocrop.activities.examination.fragments.pager.CropPagerFragment
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
-import com.w2sv.common.utils.extensions.getParcelableExtraCompat
+import com.w2sv.common.extensions.getParcelableExtraCompat
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.io.CropBundleIORunner
 import com.w2sv.cropbundle.io.getDeleteRequestUri
