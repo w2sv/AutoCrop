@@ -69,7 +69,7 @@ class SaveAllFragment :
                     }
                 }
 
-                fragment.castActivity<ExaminationActivity>().invokeExitFragment()
+                fragment.requireCastActivity<ExaminationActivity>().invokeExitFragment()
             }
         }
     }

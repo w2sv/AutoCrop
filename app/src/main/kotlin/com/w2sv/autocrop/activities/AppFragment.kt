@@ -62,12 +62,12 @@ abstract class AppFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
      */
 
     @Suppress("UNCHECKED_CAST")
-    fun <A : Activity> castActivity(): A =
+    fun <A : Activity> requireCastActivity(): A =
         requireActivity() as A
 
     fun requireViewBoundFragmentActivity(): ViewBoundFragmentActivity =
-        castActivity()
+        requireCastActivity()
 
     fun requireAppActivity(): AppActivity =
-        castActivity()
+        requireCastActivity()
 }

@@ -300,7 +300,7 @@ class CropPagerFragment :
 
     private fun CroppagerBinding.setOnClickListeners() {
         discardAllButton.setOnClickListener {
-            castActivity<ExaminationActivity>().invokeExitFragment()
+            requireCastActivity<ExaminationActivity>().invokeExitFragment()
         }
         saveAllButton.setOnClickListener {
             viewModel.getSaveAllCropsDialog(false)
@@ -390,7 +390,7 @@ class CropPagerFragment :
 
     private fun removeView(dataSetPosition: Int, cropProcedure: CropProcedure) {
         if (viewModel.singleCropRemaining) {
-            return castActivity<ExaminationActivity>().invokeExitFragment()
+            return requireCastActivity<ExaminationActivity>().invokeExitFragment()
         }
 
         cropPager.scrollToNextViewAndRemoveCurrent(dataSetPosition)
@@ -418,7 +418,7 @@ class CropPagerFragment :
     }
 
     override fun onDiscardAllCrops() {
-        castActivity<ExaminationActivity>().invokeExitFragment()
+        requireCastActivity<ExaminationActivity>().invokeExitFragment()
     }
 
     override val snackbarAnchorView: View
@@ -430,7 +430,7 @@ class CropPagerFragment :
                 requireContext().showToast("Tap again to return to main screen")
             },
             {
-                castActivity<ExaminationActivity>().startMainActivity()
+                requireCastActivity<ExaminationActivity>().startMainActivity()
             }
         )
     }

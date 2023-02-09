@@ -90,7 +90,7 @@ class ExitFragment :
             )
                 .onEnd {
                     activityViewModel.cropProcessingCoroutine.invokeOnCompletion {
-                        castActivity<ExaminationActivity>().startMainActivity()
+                        requireCastActivity<ExaminationActivity>().startMainActivity()
                     }
                 }
                 .play()
