@@ -7,6 +7,7 @@
     <color name="crop_mask">#AB1C1C1E</color>
     <color name="button_background">#80262629</color>
     <color name="image_selection_button">@android:color/white</color>
-    <color name="enable_ssl_button">#FF00c233</color>
     <color name="onboarding_description">@color/light_gray</color>
+    <color name="enable_ssl_button">#FF00c233</color>
+    <color name="crop_pager_text">@color/light_gray</color>
 </resources>

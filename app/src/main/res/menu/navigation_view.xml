@@ -65,7 +65,7 @@
                 <item
                     android:id="@+id/main_menu_item_rate_the_app"
                     android:icon="@drawable/ic_sharp_star_rate_24"
-                    android:title="@string/menu_item_rate_the_app" />
+                    android:title="@string/menu_item_rate" />
             </menu>
         </item>
     </group>

@@ -5,7 +5,7 @@
     <string name="menu_item_divider_saving">Saving</string>
     <string name="menu_item_divider_other">Other</string>
     <string name="menu_item_auto_scroll">Do AutoScroll</string>
-    <string name="menu_item_rate_the_app">Rate the app</string>
+    <string name="menu_item_rate">Rate</string>
     <string name="menu_item_about">About</string>
     <string name="menu_item_change_directory">Target Directory</string>
     <string name="cropping">Cropping…</string>

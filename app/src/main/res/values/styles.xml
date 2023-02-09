@@ -24,16 +24,16 @@
 
     </style>
 
+    <style name="ButtonRowLabel">
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingHorizontal">2dp</item>
+    </style>
+
     <style name="Shadow">
         <item name="android:shadowColor">@android:color/black</item>
         <item name="android:shadowDx">5</item>
         <item name="android:shadowDy">5</item>
         <item name="android:shadowRadius">2</item>
-    </style>
-
-    <style name="ButtonRowLabel" parent="Shadow">
-        <item name="android:textSize">15sp</item>
-        <item name="android:paddingHorizontal">2dp</item>
     </style>
 
     <!--    App Title TextView-->
