@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.w2sv.androidutils.extensions.increment
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
-import com.w2sv.autocrop.databinding.FragmentSaveallBinding
+import com.w2sv.autocrop.databinding.SaveallBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SaveAllFragment :
-    AppFragment<FragmentSaveallBinding>(FragmentSaveallBinding::class.java) {
+    AppFragment<SaveallBinding>(SaveallBinding::class.java) {
 
     companion object {
         private const val EXTRA_CROP_BUNDLE_INDICES = "com.w2sv.autocrop.extra.CROP_BUNDLE_INDICES"

@@ -42,7 +42,7 @@ import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.OpenDocumentTreeContractHandler
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.SelectImagesContractHandlerCompat
-import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
+import com.w2sv.autocrop.databinding.FlowfieldBinding
 import com.w2sv.autocrop.ui.model.SnackbarData
 import com.w2sv.autocrop.ui.views.animate
 import com.w2sv.autocrop.ui.views.fadeIn
@@ -68,7 +68,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class FlowFieldFragment :
-    AppFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java) {
+    AppFragment<FlowfieldBinding>(FlowfieldBinding::class.java) {
 
     companion object {
         fun getInstance(accumulatedIoResults: AccumulatedIOResults?): FlowFieldFragment =
@@ -209,7 +209,7 @@ class FlowFieldFragment :
         viewModel.setLiveDataObservers()
     }
 
-    private fun FragmentFlowfieldBinding.showLayoutElements() {
+    private fun FlowfieldBinding.showLayoutElements() {
         val savedAnyCrops: Boolean = viewModel.accumulatedIoResults?.let { it.nSavedCrops != 0 }
             ?: false
 
@@ -231,7 +231,7 @@ class FlowFieldFragment :
             shareCropsButton.show()
     }
 
-    private fun FragmentFlowfieldBinding.setOnClickListeners() {
+    private fun FlowfieldBinding.setOnClickListeners() {
         navigationViewToggleButton.setOnClickListener {
             drawerLayout.onToggleButtonClick()
         }

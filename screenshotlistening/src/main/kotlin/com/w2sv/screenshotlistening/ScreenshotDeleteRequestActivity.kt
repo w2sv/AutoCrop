@@ -9,7 +9,7 @@ import androidx.annotation.RequiresApi
 import com.w2sv.common.utils.extensions.getParcelableExtraCompat
 
 @RequiresApi(Build.VERSION_CODES.R)
-class ScreenshotDeleteRequestActivity : ComponentActivity(com.w2sv.common.R.layout.fragment_delete_request) {
+class ScreenshotDeleteRequestActivity : ComponentActivity(com.w2sv.common.R.layout.delete_request) {
     companion object {
         const val EXTRA_CONFIRMED_DELETION = "com.w2sv.autocrop.extra.CONFIRMED_DELETION"
     }

@@ -7,11 +7,11 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
+import com.w2sv.autocrop.databinding.FlowfieldBinding
 
 class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : DrawerLayout(context, attributeSet) {
 
-    private val binding: FragmentFlowfieldBinding by lazy { findFragment<FlowFieldFragment>().binding }
+    private val binding: FlowfieldBinding by lazy { findFragment<FlowFieldFragment>().binding }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -29,7 +29,7 @@ class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : Draw
         }
     }
 
-    fun FragmentFlowfieldBinding.affectAssociatedViewsOnDrawerSlide(slideOffset: Float) {
+    fun FlowfieldBinding.affectAssociatedViewsOnDrawerSlide(slideOffset: Float) {
         navigationViewToggleButton.progress = slideOffset
 
         val associatedButtonAlpha = 1 - slideOffset

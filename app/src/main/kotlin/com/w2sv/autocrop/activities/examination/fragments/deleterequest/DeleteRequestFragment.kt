@@ -19,10 +19,10 @@ import com.w2sv.androidutils.ActivityCallContractHandler
 import com.w2sv.androidutils.ui.SimpleAnimationListener
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
-import com.w2sv.common.databinding.FragmentDeleteRequestBinding
+import com.w2sv.common.databinding.DeleteRequestBinding
 
 class DeleteRequestFragment :
-    AppFragment<FragmentDeleteRequestBinding>(FragmentDeleteRequestBinding::class.java) {
+    AppFragment<DeleteRequestBinding>(DeleteRequestBinding::class.java) {
 
     private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
 

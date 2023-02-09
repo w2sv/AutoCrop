@@ -29,7 +29,7 @@ import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getScaleY
 import com.w2sv.autocrop.activities.getFragment
-import com.w2sv.autocrop.databinding.FragmentComparisonBinding
+import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.preferences.GlobalFlags
@@ -40,7 +40,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ComparisonFragment
-    : AppFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java),
+    : AppFragment<ComparisonBinding>(ComparisonBinding::class.java),
       ComparisonInstructionsDialog.Listener {
 
     companion object {
@@ -129,7 +129,7 @@ class ComparisonFragment
         viewModel.setLiveDataObservers()
     }
 
-    private fun FragmentComparisonBinding.populate() {
+    private fun ComparisonBinding.populate() {
         with(cropIv) {
             transitionName = viewModel.cropBundle.identifier()
             setImageBitmap(viewModel.cropBundle.crop.bitmap)
@@ -137,7 +137,7 @@ class ComparisonFragment
         screenshotIv.setImageBitmap(viewModel.screenshotBitmap)
     }
 
-    private fun FragmentComparisonBinding.setOnClickListeners() {
+    private fun ComparisonBinding.setOnClickListeners() {
         root.setOnClickListener {
             with(viewModel.displayScreenshotLive) {
                 value?.let {

@@ -17,7 +17,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maintainedPercentage
 import com.w2sv.autocrop.activities.getFragment
-import com.w2sv.autocrop.databinding.FragmentCropAdjustmentBinding
+import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.cropbundle.cropping.CropEdges
 import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.kotlinutils.extensions.rounded
@@ -30,7 +30,7 @@ import kotlin.math.min
 
 @AndroidEntryPoint
 class CropAdjustmentFragment
-    : AppFragment<FragmentCropAdjustmentBinding>(FragmentCropAdjustmentBinding::class.java) {
+    : AppFragment<CropAdjustmentBinding>(CropAdjustmentBinding::class.java) {
 
     companion object {
         private const val EXTRA_SCREENSHOT_URI = "com.w2sv.autocrop.extra.SCREENSHOT_URI"
@@ -71,7 +71,7 @@ class CropAdjustmentFragment
             }
     }
 
-    private fun FragmentCropAdjustmentBinding.onCropEdgesChanged(cropEdges: CropEdges) {
+    private fun CropAdjustmentBinding.onCropEdgesChanged(cropEdges: CropEdges) {
         heightTv.text = styledUnitSpannableString("H", min(cropEdges.height, viewModel.bitmap.height))
         percentageTv.text =
             styledUnitSpannableString(
@@ -114,7 +114,7 @@ class CropAdjustmentFragment
                 append(" $value")
             }
 
-    private fun FragmentCropAdjustmentBinding.setOnClickListeners() {
+    private fun CropAdjustmentBinding.setOnClickListeners() {
         resetButton.setOnClickListener {
             cropView.reset()
         }
