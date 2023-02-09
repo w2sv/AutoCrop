@@ -23,8 +23,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.androidutils.BackPressHandler
-import com.w2sv.androidutils.SelfManagingBroadcastReceiver
-import com.w2sv.androidutils.extensions.getColoredIcon
+import com.w2sv.androidutils.SelfManagingLocalBroadcastReceiver
+import com.w2sv.androidutils.extensions.getColoredDrawable
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.hide
 import com.w2sv.androidutils.extensions.postValue
@@ -123,7 +123,7 @@ class FlowFieldFragment :
                                 } ${"screenshot".numericallyInflected(it.nDeletedScreenshots)}"
                             )
                     },
-                    context.getColoredIcon(R.drawable.ic_check_24, R.color.success)
+                    context.getColoredDrawable(R.drawable.ic_check_24, R.color.success)
                 )
         }
 
@@ -162,7 +162,7 @@ class FlowFieldFragment :
     class CancelledSSLFromNotificationListener(
         broadcastManager: LocalBroadcastManager,
         private val onReceiveListener: () -> Unit
-    ) : SelfManagingBroadcastReceiver(
+    ) : SelfManagingLocalBroadcastReceiver(
         broadcastManager,
         IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
     ) {
@@ -232,8 +232,8 @@ class FlowFieldFragment :
             drawerLayout.onToggleButtonClick()
         }
         imageSelectionButton.setOnClickListener {
-            writeExternalStoragePermissionHandler.requestPermission(
-                onPermissionGranted = selectImagesContractHandler::selectImages
+            writeExternalStoragePermissionHandler.requestPermissionIfRequired(
+                onGranted = selectImagesContractHandler::selectImages
             )
         }
         shareCropsButton.setOnClickListener {

@@ -82,7 +82,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                                         ScreenshotListener.startService(activity)
                                         viewModel.enabledScreenshotListening = true
                                     },
-                                    onDialogClosed = {
+                                    onRequestDismissed = {
                                         it
                                             .animationComposer(Techniques.ZoomOut, 750L)
                                             .onEnd {

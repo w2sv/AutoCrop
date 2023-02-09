@@ -3,7 +3,7 @@ package com.w2sv.autocrop.screenshotlistening.notifications
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.core.app.NotificationCompat
-import com.w2sv.androidutils.extensions.notificationManager
+import com.w2sv.androidutils.extensions.getNotificationManager
 import com.w2sv.androidutils.extensions.showNotification
 import slimber.log.i
 
@@ -54,6 +54,6 @@ class NotificationGroup(
         i { "Removed request codes $associatedRequestCodes" }
 
         if (childrenIds.isEmpty())
-            notificationManager().cancel(notificationChannel.childIdSeed)
+            getNotificationManager().cancel(notificationChannel.childIdSeed)
     }
 }

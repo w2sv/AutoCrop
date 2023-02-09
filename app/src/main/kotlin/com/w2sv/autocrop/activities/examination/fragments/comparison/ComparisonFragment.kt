@@ -17,7 +17,7 @@ import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
 import com.w2sv.androidutils.extensions.crossVisualize
-import com.w2sv.androidutils.extensions.getColoredIcon
+import com.w2sv.androidutils.extensions.getColoredDrawable
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.androidutils.extensions.postValue
@@ -200,7 +200,7 @@ class ComparisonInstructionsDialog : UncancelableDialogFragment() {
         builder()
             .apply {
                 setTitle("Comparison Screen")
-                setIcon(context.getColoredIcon(R.drawable.ic_image_search_24, R.color.magenta_saturated))
+                setIcon(context.getColoredDrawable(R.drawable.ic_image_search_24, R.color.magenta_saturated))
                 setMessage("Tap screen to toggle between the original screenshot and the crop \uD83D\uDC47")
                 setPositiveButton("Got it!") { _, _ -> (parentFragment as Listener).onInstructionsDialogClosed() }
             }

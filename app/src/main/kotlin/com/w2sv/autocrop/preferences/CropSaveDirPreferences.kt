@@ -9,7 +9,7 @@ import android.provider.DocumentsContract
 import com.w2sv.androidutils.extensions.hasPermission
 import com.w2sv.autocrop.cropbundle.io.utils.systemPicturesDirectory
 import com.w2sv.autocrop.utils.documentUriPathIdentifier
-import com.w2sv.typedpreferences.descendants.UriPreferences
+import com.w2sv.typedpreferences.UriPreferences
 import slimber.log.i
 import javax.inject.Inject
 import javax.inject.Singleton

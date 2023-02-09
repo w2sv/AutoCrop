@@ -2,7 +2,7 @@ package com.w2sv.autocrop.screenshotlistening
 
 import android.content.Context
 import android.content.Intent
-import com.w2sv.androidutils.extensions.notificationManager
+import com.w2sv.androidutils.extensions.getNotificationManager
 import com.w2sv.autocrop.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.autocrop.screenshotlistening.services.ServiceBindingHandler
 import com.w2sv.autocrop.screenshotlistening.services.abstrct.BoundService
@@ -62,7 +62,7 @@ abstract class PendingIntentAssociatedResourcesCleanupService<T>(private val cli
         if (intent!!.getBooleanExtra(EXTRA_CANCEL_NOTIFICATION, false)) {
             val notificationId = intent.getInt(EXTRA_ASSOCIATED_NOTIFICATION_ID)
 
-            notificationManager()
+            getNotificationManager()
                 .cancel(notificationId)
                 .also { i { "Cancelled notification $notificationId" } }
         }

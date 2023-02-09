@@ -15,7 +15,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import com.w2sv.androidutils.ActivityCallContractAdministrator
+import com.w2sv.androidutils.ActivityCallContractHandler
 import com.w2sv.androidutils.ui.SimpleAnimationListener
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
@@ -66,13 +66,13 @@ class DeleteRequestFragment :
 
 private class DeleteRequestIntentContractAdministrator(
     activity: ComponentActivity,
-    override val activityResultCallback: (ActivityResult) -> Unit
-) : ActivityCallContractAdministrator.Impl<IntentSenderRequest, ActivityResult>(
+    override val resultCallback: (ActivityResult) -> Unit
+) : ActivityCallContractHandler.Impl<IntentSenderRequest, ActivityResult>(
     activity,
     ActivityResultContracts.StartIntentSenderForResult()
 ) {
     fun emitDeleteRequest(contentResolver: ContentResolver, deletionInquiryUris: ArrayList<Uri>) {
-        activityResultLauncher.launch(
+        resultLauncher.launch(
             IntentSenderRequest.Builder(
                 MediaStore.createDeleteRequest(
                     contentResolver,

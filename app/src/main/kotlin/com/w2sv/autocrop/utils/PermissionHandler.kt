@@ -6,7 +6,7 @@ import android.provider.Settings
 import androidx.activity.ComponentActivity
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.utils.extensions.snackyBuilder
-import com.w2sv.permissionhandler.PermissionHandler
+import com.w2sv.permissionhandler.SinglePermissionHandler
 import de.mateware.snacky.Snacky
 
 class PermissionHandler(
@@ -14,12 +14,23 @@ class PermissionHandler(
     permission: String,
     private val permissionDeniedMessage: String,
     private val permissionRationalSuppressedMessage: String
-) : PermissionHandler(activity, permission) {
+) : SinglePermissionHandler(activity, permission, "PermissionHandler") {
 
-    override fun onPermissionDenied() {
-        getSnackyBuilder(permissionDeniedMessage)
-            .build()
-            .show()
+    override fun requestPermissionIfRequired(
+        onGranted: () -> Unit,
+        onDenied: (() -> Unit)?,
+        onRequestDismissed: (() -> Unit)?
+    ): Boolean {
+        return super.requestPermissionIfRequired(
+            onGranted,
+            {
+                getSnackyBuilder(permissionDeniedMessage)
+                    .build()
+                    .show()
+                onDenied?.invoke()
+            },
+            onRequestDismissed
+        )
     }
 
     override fun onPermissionRationalSuppressed() {

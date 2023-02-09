@@ -12,7 +12,7 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.androidutils.ActivityRetriever
 import com.w2sv.androidutils.extensions.configureItem
-import com.w2sv.androidutils.extensions.goToWebpage
+import com.w2sv.androidutils.extensions.openUrl
 import com.w2sv.androidutils.extensions.serviceRunning
 import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.androidutils.extensions.toggle
@@ -33,7 +33,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     NavigationView(context, attributeSet),
-    ActivityRetriever by ActivityRetriever.Implementation(context) {
+    ActivityRetriever by ActivityRetriever.Impl(context) {
 
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
@@ -118,7 +118,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
 
                 R.id.main_menu_item_go_to_github -> {
                     context
-                        .goToWebpage("https://github.com/w2sv/autocrop")
+                        .openUrl("https://github.com/w2sv/autocrop")
                 }
 
                 R.id.main_menu_item_rate_the_app -> {

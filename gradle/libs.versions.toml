@@ -3,31 +3,34 @@ minSdk = '26'
 compileSdk = '33'
 
 kotlin = '1.8.0'
-agp = '8.1.0-alpha03'
+agp = '8.0.0-beta02'
 hilt = '2.44.2'
+
 junit = '5.9.2'
 mannodermaus = '1.3.0'
 espresso = '3.5.1'
+lifecycle = '2.5.1'
 
 [libraries]
 
 # owned
-kotlinutils = 'com.github.w2sv:KotlinUtils:0.0.6-rc2'
-viewboundcontroller = 'com.github.w2sv:ViewboundController:0.0.7-rc1'
-androidutils = 'com.github.w2sv:AndroidUtils:0.0.13'
-typedpreferences = 'com.github.w2sv:TypedPreferences:1.0.0'
-viewanimations = 'com.github.w2sv:AndroidViewAnimations:3.0.2-rc2'
-onboarder = 'com.github.w2sv:AndroidOnboarder:0.0.2-rc3'
+androidutils = 'com.github.w2sv:AndroidUtils:0.0.16-rc6'
+typedpreferences = 'com.github.w2sv:TypedPreferences:1.0.1-rc2'
 permissionhandler = 'com.github.w2sv:PermissionHandler:1.0.0-rc5'
 
+kotlinutils = 'com.github.w2sv:KotlinUtils:0.0.6-rc2'
+viewboundcontroller = 'com.github.w2sv:ViewboundController:0.0.7-rc1'
+viewanimations = 'com.github.w2sv:AndroidViewAnimations:3.0.2-rc2'
+onboarder = 'com.github.w2sv:AndroidOnboarder:0.0.2-rc3'
+
 # androidx
-androidx-appcompat = 'androidx.appcompat:appcompat:1.7.0-alpha02'
-androidx-core = 'androidx.core:core-ktx:1.10.0-alpha02'
+androidx-appcompat = 'androidx.appcompat:appcompat:1.6.1'
+androidx-core = 'androidx.core:core-ktx:1.9.0'
 androidx-viewpager2 = 'androidx.viewpager2:viewpager2:1.1.0-beta01'
-androidx-viewmodel = 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-beta01'  # alpha04 causing buggy AS error notifications
-androidx-fragment = 'androidx.fragment:fragment-ktx:1.6.0-alpha05'
-androidx-activity = 'androidx.activity:activity-ktx:1.8.0-alpha01'
-androidx-lifecycle-livedata-core-ktx = "androidx.lifecycle:lifecycle-livedata-core-ktx:2.5.1"
+androidx-viewmodel = { module = 'androidx.lifecycle:lifecycle-viewmodel-ktx', version.ref = 'lifecycle' }
+androidx-lifecycle-livedata-core-ktx = { module = 'androidx.lifecycle:lifecycle-livedata-core-ktx', version.ref = 'lifecycle' }
+androidx-fragment = 'androidx.fragment:fragment-ktx:1.5.5'
+androidx-activity = 'androidx.activity:activity-ktx:1.6.1'
 androidx-splashscreen = 'androidx.core:core-splashscreen:1.0.0'
 
 # google
@@ -42,11 +45,11 @@ snacky = 'com.github.matecode:Snacky:1.1.5'
 animatoo = 'com.github.mohammadatif:Animatoo:master'
 lottie = 'com.airbnb.android:lottie:5.2.0'
 
-## unitTest
+# unitTest
 junit5 = { module = 'org.junit.jupiter:junit-jupiter', version.ref = 'junit' }
 androidx-junit = 'androidx.test.ext:junit:1.1.5'
 
-## androidTest
+# androidTest
 androidx-testrunner = 'androidx.test:runner:1.5.2'
 junit5-api = { module = 'org.junit.jupiter:junit-jupiter-api', version.ref = 'junit' }
 junit5-params = { module = 'org.junit.jupiter:junit-jupiter-params', version.ref = 'junit' }
@@ -66,4 +69,4 @@ application = { id = 'com.android.application', version.ref = 'agp' }
 library = { id = 'com.android.library', version.ref = 'agp' }
 kotlin = { id = 'org.jetbrains.kotlin.android', version.ref = 'kotlin' }
 hilt = { id = 'com.google.dagger.hilt.android', version.ref = 'hilt' }
-junit5 = { id = 'de.mannodermaus.android-junit5', version = '1.8.2.1'}
+junit5 = { id = 'de.mannodermaus.android-junit5', version = '1.8.2.1' }

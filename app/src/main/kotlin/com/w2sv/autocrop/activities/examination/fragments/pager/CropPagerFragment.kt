@@ -20,7 +20,7 @@ import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.extensions.getHtmlText
 import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.getToast
+import com.w2sv.androidutils.extensions.makeToast
 import com.w2sv.androidutils.extensions.hide
 import com.w2sv.androidutils.extensions.hideSystemBars
 import com.w2sv.androidutils.extensions.postValue
@@ -401,7 +401,7 @@ class CropPagerFragment :
         cropPager.scrollToNextViewAndRemoveCurrent(dataSetPosition)
 
         viewModel.lastCropProcedureToast?.cancel()
-        viewModel.lastCropProcedureToast = requireContext().getToast(
+        viewModel.lastCropProcedureToast = requireContext().makeToast(
             when (cropProcedure) {
                 CropProcedure.Discard -> "Discarded crop"
                 CropProcedure.Save -> "Saved crop"

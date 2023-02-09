@@ -2,7 +2,7 @@ package com.w2sv.autocrop.preferences
 
 import android.content.SharedPreferences
 import com.w2sv.kotlinutils.delegates.AutoSwitch
-import com.w2sv.typedpreferences.descendants.BooleanPreferences
+import com.w2sv.typedpreferences.BooleanPreferences
 import javax.inject.Inject
 import javax.inject.Singleton
 

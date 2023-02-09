@@ -5,12 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
-import com.w2sv.androidutils.ActivityCallContractAdministrator
+import com.w2sv.androidutils.ActivityCallContractHandler
 
 class OpenDocumentTreeContractHandler(
     activity: ComponentActivity,
-    override val activityResultCallback: (Uri?) -> Unit
-) : ActivityCallContractAdministrator.Impl<Uri?, Uri?>(
+    override val resultCallback: (Uri?) -> Unit
+) : ActivityCallContractHandler.Impl<Uri?, Uri?>(
     activity,
     object : ActivityResultContracts.OpenDocumentTree() {
         override fun createIntent(context: Context, input: Uri?): Intent =
@@ -24,6 +24,6 @@ class OpenDocumentTreeContractHandler(
     }
 ) {
     fun selectDocument(treeUri: Uri?) {
-        activityResultLauncher.launch(treeUri)
+        resultLauncher.launch(treeUri)
     }
 }

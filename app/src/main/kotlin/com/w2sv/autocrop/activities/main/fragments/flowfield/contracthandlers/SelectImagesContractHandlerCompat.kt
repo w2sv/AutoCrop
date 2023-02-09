@@ -6,10 +6,10 @@ import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import com.w2sv.androidutils.ActivityCallContractAdministrator
+import com.w2sv.androidutils.ActivityCallContractHandler
 import com.w2sv.autocrop.cropbundle.io.IMAGE_MIME_TYPE
 
-interface SelectImagesContractHandlerCompat<I, O> : ActivityCallContractAdministrator<I, O> {
+interface SelectImagesContractHandlerCompat<I, O> : ActivityCallContractHandler<I, O> {
 
     companion object {
         fun getInstance(
@@ -27,15 +27,15 @@ interface SelectImagesContractHandlerCompat<I, O> : ActivityCallContractAdminist
 
     class LowerThanQ(
         activity: ComponentActivity,
-        override val activityResultCallback: (ActivityResult) -> Unit
-    ) : ActivityCallContractAdministrator.Impl<Intent, ActivityResult>(
+        override val resultCallback: (ActivityResult) -> Unit
+    ) : ActivityCallContractHandler.Impl<Intent, ActivityResult>(
         activity,
         ActivityResultContracts.StartActivityForResult()
     ),
         SelectImagesContractHandlerCompat<Intent, ActivityResult> {
 
         override fun selectImages() {
-            activityResultLauncher.launch(
+            resultLauncher.launch(
                 Intent(Intent.ACTION_PICK).apply {
                     type = IMAGE_MIME_TYPE
                     putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
@@ -46,15 +46,15 @@ interface SelectImagesContractHandlerCompat<I, O> : ActivityCallContractAdminist
 
     class FromQ(
         activity: ComponentActivity,
-        override val activityResultCallback: (List<Uri>) -> Unit
-    ) : ActivityCallContractAdministrator.Impl<String, List<Uri>>(
+        override val resultCallback: (List<Uri>) -> Unit
+    ) : ActivityCallContractHandler.Impl<String, List<Uri>>(
         activity,
         ActivityResultContracts.GetMultipleContents()
     ),
         SelectImagesContractHandlerCompat<String, List<Uri>> {
 
         override fun selectImages() {
-            activityResultLauncher.launch(IMAGE_MIME_TYPE)
+            resultLauncher.launch(IMAGE_MIME_TYPE)
         }
     }
 }

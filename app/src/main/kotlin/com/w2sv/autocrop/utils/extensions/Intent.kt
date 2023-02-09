@@ -2,7 +2,6 @@ package com.w2sv.autocrop.utils.extensions
 
 import android.content.Intent
 import android.os.Parcelable
-import androidx.core.content.IntentCompat
 
 /**
  * Convenience function to be used as long as no Compat function available for
@@ -13,11 +12,13 @@ import androidx.core.content.IntentCompat
  *      https://issuetracker.google.com/issues/242048899 == more current
  *      https://issuetracker.google.com/issues/240585930
  */
+@Suppress("DEPRECATION")
 inline fun <reified T : Parcelable> Intent.getParcelableExtraCompat(name: String): T? =
-    IntentCompat.getParcelableExtra(this, name, T::class.java)
+    getParcelableExtra(name) as? T
 
+@Suppress("DEPRECATION")
 inline fun <reified T : Parcelable> Intent.getParcelableArrayListExtraCompat(name: String): ArrayList<T>? =
-    IntentCompat.getParcelableArrayListExtra(this, name, T::class.java)
+    getParcelableArrayListExtra(name)
 
 fun Intent.getInt(name: String, defaultValue: Int = -1): Int =
     getIntExtra(name, defaultValue)

@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.androidutils.extensions.goToWebpage
+import com.w2sv.androidutils.extensions.openUrl
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.LifecycleAwareAnimation
 import com.w2sv.autocrop.ui.animationComposer
@@ -24,7 +24,7 @@ class CopyrightTextView(context: Context, attr: AttributeSet) :
         animation = LifecycleAwareAnimation(
             animationComposer(Techniques.ZoomOutRight)
                 .onEnd {
-                    context.goToWebpage("https://github.com/w2sv/AutoCrop/blob/master/LICENSE")
+                    context.openUrl("https://github.com/w2sv/AutoCrop/blob/master/LICENSE")
                 },
             findViewTreeLifecycleOwner()!!
         )

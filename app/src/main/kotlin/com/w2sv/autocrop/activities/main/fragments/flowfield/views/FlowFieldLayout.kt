@@ -15,7 +15,7 @@ import processing.android.PFragment
 
 class FlowFieldLayout(context: Context, attr: AttributeSet) :
     FrameLayout(context, attr),
-    ActivityRetriever by ActivityRetriever.Implementation(context) {
+    ActivityRetriever by ActivityRetriever.Impl(context) {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -28,7 +28,7 @@ class FlowFieldLayout(context: Context, attr: AttributeSet) :
                         it.y
                     )
                 )
-                    .setViewAllowingStateLoss(this, fragmentActivity)
+                    .setViewAllowingStateLoss(this, activity as FragmentActivity)
             }
         }
     }

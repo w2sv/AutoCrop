@@ -4,14 +4,14 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import androidx.core.app.NotificationCompat
-import com.w2sv.androidutils.extensions.notificationManager
+import com.w2sv.androidutils.extensions.getNotificationManager
 import com.w2sv.autocrop.R
 
 fun Context.setChannelAndGetNotificationBuilder(
     channel: AppNotificationChannel,
     contentTitle: String? = null
 ): NotificationCompat.Builder {
-    notificationManager().createNotificationChannel(
+    getNotificationManager().createNotificationChannel(
         NotificationChannel(
             channel.id,
             channel.title,

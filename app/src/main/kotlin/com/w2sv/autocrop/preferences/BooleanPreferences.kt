@@ -3,7 +3,7 @@ package com.w2sv.autocrop.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Switch
-import com.w2sv.typedpreferences.descendants.BooleanPreferences
+import com.w2sv.typedpreferences.BooleanPreferences
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.reflect.KMutableProperty0
