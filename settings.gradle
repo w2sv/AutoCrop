@@ -17,3 +17,7 @@ dependencyResolutionManagement {
 rootProject.name = 'AutoCrop'
 include ':app'
 include ':bidirectionalviewpager'
+include ':preferences'
+include ':cropbundle'
+include ':screenshotlistening'
+include ':common'

@@ -12,11 +12,11 @@ import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.registerObservers
-import com.w2sv.autocrop.preferences.GlobalFlags
-import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
-import com.w2sv.autocrop.ui.animationComposer
+import com.w2sv.autocrop.ui.views.animationComposer
 import com.w2sv.onboarding.OnboardingPage
 import com.w2sv.permissionhandler.requestPermissions
+import com.w2sv.preferences.GlobalFlags
+import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -45,7 +45,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
             finishAffinity()
         }
 
-        setFabColor(getColor(R.color.low_alpha_gray))
+        setFabColor(getColor(com.w2sv.common.R.color.low_alpha_gray))
     }
 
     private val screenshotListeningPermissionHandlers by lazy {
@@ -56,8 +56,8 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
         listOf(
             OnboardingPage(
                 titleTextRes = R.string.onboarding_page_1_title,
-                backgroundColorRes = R.color.magenta_saturated,
-                emblemDrawableRes = R.drawable.logo_nobackground,
+                backgroundColorRes = com.w2sv.common.R.color.magenta_saturated,
+                emblemDrawableRes = com.w2sv.common.R.drawable.logo_nobackground,
                 descriptionText = getString(R.string.onboarding_page_1_description)
             ),
             OnboardingPage(
@@ -108,9 +108,9 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
             ),
             OnboardingPage(
                 titleTextRes = R.string.onboarding_page_2_title,
-                emblemDrawableRes = R.drawable.ic_scissors_24,
+                emblemDrawableRes = com.w2sv.common.R.drawable.ic_scissors_24,
                 descriptionTextRes = R.string.onboarding_page_2_description,
-                backgroundColorRes = R.color.ocean_blue
+                backgroundColorRes = com.w2sv.common.R.color.ocean_blue
             )
         )
 

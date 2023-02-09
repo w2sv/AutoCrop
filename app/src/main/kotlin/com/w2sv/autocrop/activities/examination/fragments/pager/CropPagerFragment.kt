@@ -38,20 +38,20 @@ import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveAllC
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveCropDialog
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.getFragment
-import com.w2sv.autocrop.cropbundle.Crop
-import com.w2sv.autocrop.cropbundle.cropping.CropEdges
-import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
+import com.w2sv.cropbundle.Crop
 import com.w2sv.autocrop.databinding.FragmentCroppagerBinding
-import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.ui.Click
-import com.w2sv.autocrop.ui.CubeOutPageTransformer
-import com.w2sv.autocrop.ui.animate
-import com.w2sv.autocrop.ui.currentViewHolder
-import com.w2sv.autocrop.ui.fadeIn
-import com.w2sv.autocrop.ui.scrollPeriodically
+import com.w2sv.autocrop.ui.model.Click
+import com.w2sv.autocrop.ui.views.CubeOutPageTransformer
+import com.w2sv.autocrop.ui.views.animate
+import com.w2sv.autocrop.ui.views.currentViewHolder
+import com.w2sv.autocrop.ui.views.fadeIn
+import com.w2sv.autocrop.ui.views.scrollPeriodically
 import com.w2sv.autocrop.utils.extensions.onHalfwayShown
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
+import com.w2sv.cropbundle.cropping.CropEdges
+import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.kotlinutils.extensions.numericallyInflected
+import com.w2sv.preferences.BooleanPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -140,7 +140,7 @@ class CropPagerFragment :
         ) {
             if (uncroppedScreenshotsSnackbarText != null && !showedCropResultsSnackbar)
                 getSnackyBuilder(uncroppedScreenshotsSnackbarText)
-                    .setIcon(R.drawable.ic_error_24)
+                    .setIcon(com.w2sv.common.R.drawable.ic_error_24)
                     .build()
                     .onHalfwayShown(coroutineScope) {
                         showedCropResultsSnackbar = true

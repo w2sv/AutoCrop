@@ -39,7 +39,7 @@ import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.LEFT
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.RIGHT
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.TOP
-import com.w2sv.autocrop.cropbundle.cropping.CropEdges
+import com.w2sv.cropbundle.cropping.CropEdges
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -488,7 +488,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
     private val accentPaint: Paint by lazy {
         Paint().apply {
-            color = context.getColor(R.color.magenta_saturated)
+            color = context.getColor(com.w2sv.common.R.color.magenta_saturated)
             strokeWidth = 3F
             style = Paint.Style.FILL
         }
@@ -496,7 +496,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
     private val cornerPaint: Paint by lazy {
         Paint().apply {
-            color = context.getColor(R.color.magenta_saturated)
+            color = context.getColor(com.w2sv.common.R.color.magenta_saturated)
             strokeWidth = 6F
             style = Paint.Style.FILL
         }

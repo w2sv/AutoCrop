@@ -7,7 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import com.w2sv.androidutils.ActivityCallContractHandler
-import com.w2sv.autocrop.cropbundle.io.IMAGE_MIME_TYPE
+import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
 
 interface SelectImagesContractHandlerCompat<I, O> : ActivityCallContractHandler<I, O> {
 

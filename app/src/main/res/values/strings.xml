@@ -37,8 +37,6 @@
     <string name="crop">Crop</string>
     <string name="apply_adjusted_crop_edges">Apply adjusted crop edges</string>
     <string name="discard_changes">Discard changes</string>
-    <string name="app_logo_content_description">App logo</string>
-    <string name="detected_n_croppable_screenshots">Detected %1$d croppable screenshots</string>
     <string name="onboarding_page_1_title">🎉 Welcome to AutoCrop 🎉</string>
     <string name="onboarding_page_1_description">Let\'s get you set up for your AutoCropping experience!</string>
     <string name="screenshot_listener_description">Screenshot Listening lets you create and save crops through notifications, i.e., without having to open the app.\n\n

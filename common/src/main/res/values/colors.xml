@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dark_gray">#FF656565</color>
+    <color name="low_alpha_gray">#809B9B9B</color>
+    <color name="low_alpha_white">#08FFFEFE</color>
+    <color name="light_gray">#CECECE</color>
+
+    <color name="pseudo_black">#1C1C1E</color>
+    <color name="magenta_bright">#FFBC275E</color>
+    <color name="magenta_saturated">#FF911945</color>
+    <color name="magenta_dark">#FF7F1F3F</color>
+    <color name="red">#FFB00020</color>
+    <color name="purple">#FF6B13B5</color>
+    <color name="ocean_blue">#ff1a0ac7</color>
+</resources>

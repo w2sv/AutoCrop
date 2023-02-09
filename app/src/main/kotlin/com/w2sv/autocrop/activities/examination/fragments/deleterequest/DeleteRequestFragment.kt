@@ -19,7 +19,7 @@ import com.w2sv.androidutils.ActivityCallContractHandler
 import com.w2sv.androidutils.ui.SimpleAnimationListener
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
-import com.w2sv.autocrop.databinding.FragmentDeleteRequestBinding
+import com.w2sv.common.databinding.FragmentDeleteRequestBinding
 
 class DeleteRequestFragment :
     AppFragment<FragmentDeleteRequestBinding>(FragmentDeleteRequestBinding::class.java) {

@@ -11,10 +11,10 @@ import com.w2sv.autocrop.activities.AppActivity
 import com.w2sv.autocrop.activities.examination.AccumulatedIOResults
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.preferences.CropSaveDirPreferences
-import com.w2sv.autocrop.preferences.GlobalFlags
-import com.w2sv.autocrop.utils.extensions.getParcelableExtraCompat
+import com.w2sv.common.utils.extensions.getParcelableExtraCompat
+import com.w2sv.preferences.BooleanPreferences
+import com.w2sv.preferences.CropSaveDirPreferences
+import com.w2sv.preferences.GlobalFlags
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

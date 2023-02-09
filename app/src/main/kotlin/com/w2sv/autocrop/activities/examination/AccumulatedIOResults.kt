@@ -2,7 +2,7 @@ package com.w2sv.autocrop.activities.examination
 
 import android.net.Uri
 import android.os.Parcelable
-import com.w2sv.autocrop.cropbundle.io.CropBundleIOResult
+import com.w2sv.cropbundle.io.CropBundleIOResult
 import com.w2sv.kotlinutils.extensions.toInt
 import kotlinx.parcelize.Parcelize
 

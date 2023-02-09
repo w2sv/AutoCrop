@@ -30,7 +30,7 @@
 
         android:indeterminateDrawable="@drawable/shape_progress_bar_save_all" />
 
-    <com.w2sv.autocrop.ui.FractionTextView
+    <com.w2sv.autocrop.ui.views.FractionTextView
         android:id="@+id/progress_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -7,7 +7,7 @@ import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.fadeOut
+import com.w2sv.autocrop.ui.views.fadeOut
 
 class DisplayStatusTextView(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
 

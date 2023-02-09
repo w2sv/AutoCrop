@@ -9,8 +9,8 @@ import com.w2sv.androidutils.ui.SimpleAnimationListener
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.databinding.FragmentAboutBinding
-import com.w2sv.autocrop.preferences.GlobalFlags
-import com.w2sv.autocrop.ui.animate
+import com.w2sv.autocrop.ui.views.animate
+import com.w2sv.preferences.GlobalFlags
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

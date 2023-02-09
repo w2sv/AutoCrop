@@ -1,0 +1,28 @@
+plugins{
+    alias libs.plugins.kotlin
+    alias libs.plugins.library
+    alias libs.plugins.hilt
+    id 'kotlin-kapt'
+}
+
+apply from: '../modulebase.gradle'
+
+android {
+    namespace 'com.w2sv.screenshotlistening'
+}
+
+dependencies {
+    implementation project(path: ':preferences')
+    implementation project(path: ':cropbundle')
+    implementation project(path: ':common')
+
+    implementation libs.androidx.core
+    implementation libs.slimber
+    implementation libs.androidutils
+    implementation libs.kotlinutils
+    implementation libs.google.guava
+    implementation libs.androidx.localbroadcastmanager
+
+    implementation libs.google.hilt
+    kapt libs.google.hilt.kapt
+}

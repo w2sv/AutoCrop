@@ -91,6 +91,11 @@ dependencies {
 
     // owned
     implementation project(path: ':bidirectionalviewpager')
+    implementation project(path: ':preferences')
+    implementation project(path: ':cropbundle')
+    implementation project(path: ':screenshotlistening')
+    implementation project(path: ':common')
+
     implementation libs.kotlinutils
     implementation libs.viewboundcontroller
     implementation libs.androidutils

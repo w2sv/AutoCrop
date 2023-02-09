@@ -1,0 +1,27 @@
+plugins{
+    alias libs.plugins.kotlin
+    alias libs.plugins.library
+    alias libs.plugins.hilt
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+}
+
+apply from: '../modulebase.gradle'
+
+android {
+    namespace 'com.w2sv.cropbundle'
+}
+
+dependencies {
+    implementation project(path: ':preferences')
+
+    implementation libs.androidx.core
+    implementation libs.kotlinutils
+    implementation libs.slimber
+
+    implementation libs.google.hilt
+    kapt libs.google.hilt.kapt
+
+    // unitTest
+    testImplementation libs.bundles.unitTest
+}

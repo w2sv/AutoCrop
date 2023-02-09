@@ -2,7 +2,7 @@ package com.w2sv.autocrop.activities.examination.fragments.pager.dialogs
 
 import android.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import com.w2sv.autocrop.preferences.BooleanPreferences
+import com.w2sv.preferences.BooleanPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

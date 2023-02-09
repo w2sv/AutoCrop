@@ -14,7 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.utils.extensions.snackyBuilder
+import com.w2sv.common.utils.extensions.snackyBuilder
 import com.w2sv.viewboundcontroller.ViewBoundFragment
 import de.mateware.snacky.Snacky
 import kotlinx.coroutines.CoroutineScope

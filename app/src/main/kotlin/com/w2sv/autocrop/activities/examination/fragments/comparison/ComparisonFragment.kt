@@ -29,10 +29,10 @@ import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getScaleY
 import com.w2sv.autocrop.activities.getFragment
-import com.w2sv.autocrop.cropbundle.CropBundle
-import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
 import com.w2sv.autocrop.databinding.FragmentComparisonBinding
-import com.w2sv.autocrop.preferences.GlobalFlags
+import com.w2sv.cropbundle.CropBundle
+import com.w2sv.cropbundle.io.extensions.loadBitmap
+import com.w2sv.preferences.GlobalFlags
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -200,7 +200,12 @@ class ComparisonInstructionsDialog : UncancelableDialogFragment() {
         builder()
             .apply {
                 setTitle("Comparison Screen")
-                setIcon(context.getColoredDrawable(R.drawable.ic_image_search_24, R.color.magenta_saturated))
+                setIcon(
+                    context.getColoredDrawable(
+                        R.drawable.ic_image_search_24,
+                        com.w2sv.common.R.color.magenta_saturated
+                    )
+                )
                 setMessage("Tap screen to toggle between the original screenshot and the crop \uD83D\uDC47")
                 setPositiveButton("Got it!") { _, _ -> (parentFragment as Listener).onInstructionsDialogClosed() }
             }
