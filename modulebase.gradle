@@ -2,9 +2,9 @@ apply plugin: 'com.android.library'
 apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
-    compileSdk rootProject.ext.compileSdk
+    compileSdk libs.versions.compileSdk.get().toInteger()
     defaultConfig {
-        minSdk rootProject.ext.minSdk  // really 24
+        minSdk libs.versions.minSdk.get().toInteger()  // really 24
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {

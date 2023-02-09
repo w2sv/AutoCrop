@@ -1,11 +1,7 @@
-buildscript {
-    ext.compileSdk = 33
-    ext.minSdk = 26
-}
-
 plugins {
-    id 'com.android.application' version '8.0.0-beta01' apply false
-    id 'org.jetbrains.kotlin.android' version libs.versions.kotlin apply false
-    id 'com.google.dagger.hilt.android' version libs.versions.hilt apply false
-    id 'de.mannodermaus.android-junit5' version '1.8.2.1' apply false
+    alias libs.plugins.kotlin apply false
+    alias libs.plugins.application apply false
+    alias libs.plugins.library apply false
+    alias libs.plugins.junit5 apply false
+    alias libs.plugins.hilt apply false
 }

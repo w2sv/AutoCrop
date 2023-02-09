@@ -1,4 +1,4 @@
-apply from: '../module.gradle'
+apply from: '../modulebase.gradle'
 
 android {
     namespace 'com.w2sv.bidirectionalviewpager'
@@ -6,7 +6,7 @@ android {
 
 dependencies {
     implementation libs.androidx.viewpager2
-    implementation 'androidx.lifecycle:lifecycle-livedata-core-ktx:2.5.1'
+    implementation libs.androidx.lifecycle.livedata.core.ktx
     implementation libs.kotlinutils
 
     // unitTest

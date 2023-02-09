@@ -1,27 +1,29 @@
 plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
+    alias libs.plugins.kotlin
+    alias libs.plugins.application
+    alias libs.plugins.junit5
+    alias libs.plugins.hilt
     id 'kotlin-parcelize'
-    id 'de.mannodermaus.android-junit5'
-    id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
 }
 
 android {
     def PACKAGE_NAME = "com.w2sv.autocrop"
 
-    compileSdk rootProject.ext.compileSdk
+    compileSdk libs.versions.compileSdk.get().toInteger()
     namespace PACKAGE_NAME
 
     defaultConfig {
         applicationId PACKAGE_NAME
 
-        minSdk rootProject.ext.minSdk
-        targetSdk rootProject.ext.compileSdk
-        buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
+        minSdk libs.versions.minSdk.get().toInteger()
+        targetSdk libs.versions.compileSdk.get().toInteger()
 
         versionCode 41
         versionName '3.2.14'
+
+        buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
+        setProperty('archivesBaseName', versionName)  // Stores built aab's as "{versionName}-{buildFlavor}.apk"
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'
@@ -65,10 +67,14 @@ android {
     buildFeatures {
         viewBinding true
     }
+    // Store built apk's as "{versionName}.apk"
+    applicationVariants.configureEach { variant ->
+        variant.outputs.all {
+            outputFileName = "${variant.versionName}.apk"
+        }
+    }
 }
 dependencies {
-    implementation libs.jetbrains.kotlin
-
     // androidx
     implementation libs.androidx.appcompat
     implementation libs.androidx.core
