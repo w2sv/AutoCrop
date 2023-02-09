@@ -1,11 +1,10 @@
-//apply plugin: 'com.android.library'
-//apply plugin: 'org.jetbrains.kotlin.android'
-
 android {
     compileSdk libs.versions.compileSdk.get().toInteger()
     defaultConfig {
-        minSdk libs.versions.minSdk.get().toInteger()  // really 24
+        minSdk libs.versions.minSdk.get().toInteger()
+
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'
     }
     buildTypes {
         release {
@@ -18,5 +17,8 @@ android {
     }
     kotlinOptions {
         jvmTarget = '17'
+    }
+    testOptions {
+        animationsDisabled = true
     }
 }

@@ -39,7 +39,7 @@
 //import org.junit.jupiter.api.extension.RegisterExtension
 //import utils.espresso.SLOW_TIMEOUT
 //import utils.espresso.check
-//import utils.espresso.intentTester
+//import utils.intentTester
 //import utils.espresso.isDisplayed
 //import utils.espresso.retryFlakyAction
 //

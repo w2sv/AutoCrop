@@ -1,4 +1,4 @@
-package utils.espresso
+package utils
 
 import androidx.test.espresso.intent.Intents
 

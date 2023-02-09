@@ -1,16 +1,16 @@
-package com.w2sv.autocrop.activities.cropping
+package com.w2sv.cropbundle
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.w2sv.autocrop.cropbundle.cropping.CropEdges
-import com.w2sv.autocrop.cropbundle.cropping.cropEdgesCandidates
-import com.w2sv.autocrop.cropbundle.cropping.maxHeightEdges
+import com.w2sv.cropbundle.cropping.CropEdges
+import com.w2sv.cropbundle.cropping.cropEdgesCandidates
+import com.w2sv.cropbundle.cropping.maxHeightEdges
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
-import utils.streamAssetFile
+import com.w2sv.cropbundle.utils.assetFileStream
 import java.io.File
 import java.util.stream.Stream
 
@@ -158,6 +158,6 @@ class CroppingTest {
 
     private fun loadTestScreenshot(imageFileName: String, subDirName: String): Bitmap =
         BitmapFactory.decodeStream(
-            streamAssetFile(File(subDirName, imageFileName).path)
+            assetFileStream(File(subDirName, imageFileName).path)
         )
 }

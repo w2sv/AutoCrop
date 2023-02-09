@@ -1,8 +1,9 @@
-package com.w2sv.autocrop.cropbundle.io.utils
+package com.w2sv.cropbundle
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import com.w2sv.cropbundle.io.utils.extensionLessFileName
 
 internal class PathKtTest {
 

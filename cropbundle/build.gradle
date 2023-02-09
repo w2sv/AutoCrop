@@ -2,6 +2,7 @@ plugins{
     alias libs.plugins.kotlin
     alias libs.plugins.library
     alias libs.plugins.hilt
+    alias libs.plugins.junit5
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
 }
@@ -22,6 +23,12 @@ dependencies {
     implementation libs.google.hilt
     kapt libs.google.hilt.kapt
 
+    // ---------------
     // unitTest
     testImplementation libs.bundles.unitTest
+
+    // ---------------
+    // androidTest
+    androidTestImplementation libs.bundles.androidTest
+    androidTestRuntimeOnly libs.junit5.mannodermaus.runner
 }
