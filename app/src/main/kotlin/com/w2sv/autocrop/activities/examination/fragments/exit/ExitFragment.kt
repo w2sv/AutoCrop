@@ -1,6 +1,6 @@
 @file:SuppressLint("NewApi")
 
-package com.w2sv.autocrop.activities.examination.fragments.deleterequest
+package com.w2sv.autocrop.activities.examination.fragments.exit
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -15,13 +15,18 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.ActivityCallContractHandler
+import com.w2sv.androidutils.extensions.invokeOnCompletion
 import com.w2sv.androidutils.ui.SimpleAnimationListener
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
+import com.w2sv.autocrop.ui.views.animationComposer
 import com.w2sv.common.databinding.DeleteRequestBinding
+import kotlinx.coroutines.launch
 
-class DeleteRequestFragment :
+class ExitFragment :
     AppFragment<DeleteRequestBinding>(DeleteRequestBinding::class.java) {
 
     private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
@@ -34,7 +39,7 @@ class DeleteRequestFragment :
                 activityViewModel.onDeleteRequestUrisDeleted()
 
             launchAfterShortDelay {  // necessary for showing of transition animation, which otherwise is just skipped
-                castActivity<ExaminationActivity>().invokeSubsequentController(this@DeleteRequestFragment)
+                exitAsSoonAsIOProcessingFinished()
             }
         }
     }
@@ -42,7 +47,8 @@ class DeleteRequestFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycle.addObserver(deleteRequestIntentContractAdministrator)
+        if (activityViewModel.deleteRequestUrisPresent)
+            lifecycle.addObserver(deleteRequestIntentContractAdministrator)
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? =
@@ -52,16 +58,44 @@ class DeleteRequestFragment :
                     setAnimationListener(
                         object : SimpleAnimationListener() {
                             override fun onAnimationEnd(animation: Animation?) {
-                                deleteRequestIntentContractAdministrator.emitDeleteRequest(
-                                    requireContext().contentResolver,
-                                    activityViewModel.deleteRequestUris
-                                )
+                                emitDeleteRequestOrExit()
                             }
                         }
                     )
                 }
         else
             super.onCreateAnimation(transit, false, nextAnim)
+
+    private fun emitDeleteRequestOrExit() {
+        when (activityViewModel.deleteRequestUrisPresent) {
+            false -> exitAsSoonAsIOProcessingFinished()
+            true -> {
+                deleteRequestIntentContractAdministrator.emitDeleteRequest(
+                    requireContext().contentResolver,
+                    activityViewModel.deleteRequestUris
+                )
+            }
+        }
+    }
+
+    private fun exitAsSoonAsIOProcessingFinished() {
+        lifecycleScope.launch {
+            binding.appLogoIv.animationComposer(
+                listOf(
+                    Techniques.Wobble,
+                    Techniques.Wave,
+                    Techniques.Tada
+                )
+                    .random()
+            )
+                .onEnd {
+                    activityViewModel.cropProcessingCoroutine.invokeOnCompletion {
+                        castActivity<ExaminationActivity>().startMainActivity()
+                    }
+                }
+                .play()
+        }
+    }
 }
 
 private class DeleteRequestIntentContractAdministrator(

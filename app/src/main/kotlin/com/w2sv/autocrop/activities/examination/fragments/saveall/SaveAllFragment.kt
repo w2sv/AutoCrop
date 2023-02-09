@@ -69,7 +69,7 @@ class SaveAllFragment :
                     }
                 }
 
-                fragment.castActivity<ExaminationActivity>().invokeSubsequentController(fragment)
+                fragment.castActivity<ExaminationActivity>().invokeExitFragment()
             }
         }
     }

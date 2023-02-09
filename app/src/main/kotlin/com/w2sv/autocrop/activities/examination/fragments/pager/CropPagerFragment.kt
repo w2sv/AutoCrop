@@ -20,9 +20,9 @@ import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.extensions.getHtmlText
 import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.makeToast
 import com.w2sv.androidutils.extensions.hide
 import com.w2sv.androidutils.extensions.hideSystemBars
+import com.w2sv.androidutils.extensions.makeToast
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.showToast
@@ -38,16 +38,16 @@ import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveAllC
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveCropDialog
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.getFragment
-import com.w2sv.cropbundle.Crop
 import com.w2sv.autocrop.databinding.CroppagerBinding
 import com.w2sv.autocrop.ui.model.Click
 import com.w2sv.autocrop.ui.views.CubeOutPageTransformer
+import com.w2sv.autocrop.ui.views.VisualizationType
 import com.w2sv.autocrop.ui.views.animate
 import com.w2sv.autocrop.ui.views.currentViewHolder
-import com.w2sv.autocrop.ui.views.fadeIn
 import com.w2sv.autocrop.ui.views.scrollPeriodically
-import com.w2sv.autocrop.utils.extensions.onHalfwayShown
+import com.w2sv.autocrop.ui.views.visualize
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
+import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.cropping.CropEdges
 import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.kotlinutils.extensions.numericallyInflected
@@ -62,6 +62,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import slimber.log.i
 import javax.inject.Inject
+
+private enum class CropProcedure {
+    Discard,
+    Save
+}
 
 @AndroidEntryPoint
 class CropPagerFragment :
@@ -134,18 +139,14 @@ class CropPagerFragment :
          * Crop Results Snackbar
          */
 
-        fun showCropResultsSnackbarIfApplicable(
-            coroutineScope: CoroutineScope,
-            getSnackyBuilder: (CharSequence) -> Snacky.Builder
-        ) {
-            if (uncroppedScreenshotsSnackbarText != null && !showedCropResultsSnackbar)
+        fun showCropResultsSnackbarIfApplicable(getSnackyBuilder: (CharSequence) -> Snacky.Builder) {
+            if (uncroppedScreenshotsSnackbarText != null && !showedCropResultsSnackbar) {
                 getSnackyBuilder(uncroppedScreenshotsSnackbarText)
                     .setIcon(com.w2sv.common.R.drawable.ic_error_24)
                     .build()
-                    .onHalfwayShown(coroutineScope) {
-                        showedCropResultsSnackbar = true
-                    }
                     .show()
+                showedCropResultsSnackbar = true
+            }
         }
 
         private val uncroppedScreenshotsSnackbarText: SpannableStringBuilder? =
@@ -273,33 +274,33 @@ class CropPagerFragment :
             )
         }
         else {
+            val cancelledScrolling = viewModel.autoScrollCoroutine?.let {
+                it.cancel()
+                true
+            }
+                ?: false
+
+            buildList<View> {
+                add(snackbarRepelledLayout)
+                if (!viewModel.singleCropRemaining)
+                    add(allCropsButtonsWLabel)
+            }
+                .visualize(
+                    if (cancelledScrolling) VisualizationType.FadeIn else VisualizationType.Instant
+                )
+
+            launchAfterShortDelay {
+                viewModel.showCropResultsSnackbarIfApplicable(::getSnackyBuilder)
+            }
+
             viewPager.setPageTransformer(CubeOutPageTransformer())
             cancelAutoScrollButton.hide()
-
-            // fade in/show views
-            viewModel.autoScrollCoroutine?.let {
-                it.cancel()
-                snackbarRepelledLayout.fadeIn()
-                if (!viewModel.singleCropRemaining)
-                    allCropsButtonsWLabel.fadeIn()
-
-                viewModel.showCropResultsSnackbarIfApplicable(lifecycleScope, ::getSnackyBuilder)
-            }
-                ?: run {
-                    snackbarRepelledLayout.show()
-                    if (!viewModel.singleCropRemaining)
-                        allCropsButtonsWLabel.show()
-
-                    launchAfterShortDelay {
-                        viewModel.showCropResultsSnackbarIfApplicable(this, ::getSnackyBuilder)
-                    }
-                }
         }
     }
 
     private fun CroppagerBinding.setOnClickListeners() {
         discardAllButton.setOnClickListener {
-            castActivity<ExaminationActivity>().invokeSubsequentController(this@CropPagerFragment)
+            castActivity<ExaminationActivity>().invokeExitFragment()
         }
         saveAllButton.setOnClickListener {
             viewModel.getSaveAllCropsDialog(false)
@@ -387,28 +388,23 @@ class CropPagerFragment :
         removeView(dataSetPosition, CropProcedure.Discard)
     }
 
-    private enum class CropProcedure {
-        Discard,
-        Save
-    }
-
     private fun removeView(dataSetPosition: Int, cropProcedure: CropProcedure) {
         if (viewModel.singleCropRemaining) {
-            castActivity<ExaminationActivity>().invokeSubsequentController(this)
-            return
+            return castActivity<ExaminationActivity>().invokeExitFragment()
         }
 
         cropPager.scrollToNextViewAndRemoveCurrent(dataSetPosition)
 
         viewModel.lastCropProcedureToast?.cancel()
-        viewModel.lastCropProcedureToast = requireContext().makeToast(
-            when (cropProcedure) {
-                CropProcedure.Discard -> "Discarded crop"
-                CropProcedure.Save -> "Saved crop"
-            }
-        )
-            .apply {
-                show()
+        viewModel.lastCropProcedureToast = requireContext()
+            .makeToast(
+                when (cropProcedure) {
+                    CropProcedure.Discard -> "Discarded crop"
+                    CropProcedure.Save -> "Saved crop"
+                }
+            )
+            .also {
+                it.show()
             }
     }
 
@@ -422,7 +418,7 @@ class CropPagerFragment :
     }
 
     override fun onDiscardAllCrops() {
-        castActivity<ExaminationActivity>().invokeSubsequentController(this)
+        castActivity<ExaminationActivity>().invokeExitFragment()
     }
 
     override val snackbarAnchorView: View

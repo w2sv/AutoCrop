@@ -6,6 +6,7 @@
     android:background="@drawable/gradient_blue_magenta_top_to_bottom">
 
     <ImageView
+        android:id="@+id/app_logo_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
