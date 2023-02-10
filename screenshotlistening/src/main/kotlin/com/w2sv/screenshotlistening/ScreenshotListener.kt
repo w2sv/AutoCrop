@@ -218,12 +218,23 @@ class ScreenshotListener : BoundService(),
                 val temporaryCropFilePath = saveCropToTempFile(cropBitmap, screenshotMediaStoreData.id)
 
                 showCroppableScreenshotDetectedNotification(
-                    uri,
-                    screenshotMediaStoreData,
                     cropBitmap,
-                    deleteRequestUri,
-                    temporaryCropFilePath
-                )
+                    deleteRequestUri
+                ) { clazz, isSaveIntent, notificationId, actionRequestCodes, putCancelNotificationExtra ->
+                    Intent(this, clazz)
+                        .putExtra(EXTRA_TEMPORARY_CROP_FILE_PATH, temporaryCropFilePath)
+                        .putCleanupExtras(
+                            notificationId,
+                            actionRequestCodes,
+                            putCancelNotificationExtra
+                        )
+                        .apply {
+                            if (isSaveIntent) {
+                                data = uri
+                                putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
+                            }
+                        }
+                }
             }
             true
         }
@@ -252,29 +263,21 @@ class ScreenshotListener : BoundService(),
      */
 
     private fun showCroppableScreenshotDetectedNotification(
-        uri: Uri,
-        screenshotMediaStoreData: Screenshot.MediaStoreData,
         cropBitmap: Bitmap,
         deleteRequestUri: Uri?,
-        temporaryCropFilePath: String
+        getActionIntentTemplate: (Class<*>, Boolean, Int, ArrayList<Int>, Boolean) -> Intent
     ) {
         val notificationId = notificationGroup.childrenIds.getNewId()
         val actionRequestCodes = notificationGroup.requestCodes.getAndAddMultipleNewIds(4)
 
-        fun getActionIntent(cls: Class<*>, isSaveIntent: Boolean, putCancelNotificationExtra: Boolean = true): Intent =
-            Intent(this, cls)
-                .putExtra(EXTRA_TEMPORARY_CROP_FILE_PATH, temporaryCropFilePath)
-                .putCleanupExtras(
-                    notificationId,
-                    actionRequestCodes,
-                    putCancelNotificationExtra
-                )
-                .apply {
-                    if (isSaveIntent) {
-                        data = uri
-                        putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
-                    }
-                }
+        fun getActionIntent(clazz: Class<*>, isSaveIntent: Boolean, cancelNotificationExtra: Boolean): Intent =
+            getActionIntentTemplate(
+                clazz,
+                isSaveIntent,
+                notificationId,
+                actionRequestCodes,
+                cancelNotificationExtra
+            )
 
         notificationGroup.addChild(notificationId) {
             setContentTitle("Crafted a new AutoCrop")
@@ -285,7 +288,7 @@ class ScreenshotListener : BoundService(),
                     PendingIntent.getService(
                         this@ScreenshotListener,
                         actionRequestCodes[0],
-                        getActionIntent(CropIOService::class.java, true),
+                        getActionIntent(CropIOService::class.java, isSaveIntent = true, cancelNotificationExtra = true),
                         REPLACE_CURRENT_PENDING_INTENT_FLAGS
                     )
                 )
@@ -298,7 +301,11 @@ class ScreenshotListener : BoundService(),
                         PendingIntent.getActivity(
                             this@ScreenshotListener,
                             actionRequestCodes[1],
-                            getActionIntent(ScreenshotDeleteRequestActivity::class.java, true)
+                            getActionIntent(
+                                ScreenshotDeleteRequestActivity::class.java,
+                                isSaveIntent = true,
+                                cancelNotificationExtra = true
+                            )
                                 .putExtra(EXTRA_DELETE_REQUEST_URI, deleteRequestUri),
                             REPLACE_CURRENT_PENDING_INTENT_FLAGS
                         )
@@ -306,7 +313,11 @@ class ScreenshotListener : BoundService(),
                         PendingIntent.getService(
                             this@ScreenshotListener,
                             actionRequestCodes[1],
-                            getActionIntent(CropIOService::class.java, true)
+                            getActionIntent(
+                                CropIOService::class.java,
+                                isSaveIntent = true,
+                                cancelNotificationExtra = true
+                            )
                                 .putExtra(EXTRA_ATTEMPT_SCREENSHOT_DELETION, true),
                             REPLACE_CURRENT_PENDING_INTENT_FLAGS
                         )
@@ -319,7 +330,11 @@ class ScreenshotListener : BoundService(),
                     PendingIntent.getService(
                         this@ScreenshotListener,
                         actionRequestCodes[2],
-                        getActionIntent(CleanupService::class.java, false),
+                        getActionIntent(
+                            CleanupService::class.java,
+                            isSaveIntent = false,
+                            cancelNotificationExtra = true
+                        ),
                         REPLACE_CURRENT_PENDING_INTENT_FLAGS
                     )
                 )
@@ -335,7 +350,7 @@ class ScreenshotListener : BoundService(),
                     getActionIntent(
                         CleanupService::class.java,
                         isSaveIntent = false,
-                        putCancelNotificationExtra = false
+                        cancelNotificationExtra = false
                     ),
                     REPLACE_CURRENT_PENDING_INTENT_FLAGS
                 )

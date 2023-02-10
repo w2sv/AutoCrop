@@ -48,10 +48,10 @@ class CropBundleIORunner @Inject constructor() {
         CropBundleIOResult(
             context.contentResolver.saveBitmap(
                 cropBitmap,
-                screenshotMediaStoreData.parsedMimeType,
+                screenshotMediaStoreData.mimeType,
                 cropFileName(
                     screenshotMediaStoreData.fileName,
-                    screenshotMediaStoreData.parsedMimeType
+                    screenshotMediaStoreData.mimeType
                 ),
                 cropSaveDirPreferences.validDocumentUriOrNull(context)
             ),

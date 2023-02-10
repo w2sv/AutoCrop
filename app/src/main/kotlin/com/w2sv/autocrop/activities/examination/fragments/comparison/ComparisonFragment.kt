@@ -1,6 +1,7 @@
 package com.w2sv.autocrop.activities.examination.fragments.comparison
 
 import android.app.Dialog
+import android.content.ContentResolver
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
@@ -31,11 +32,9 @@ import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.
 import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.cropbundle.CropBundle
-import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.preferences.GlobalFlags
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -54,12 +53,12 @@ class ComparisonFragment
     @HiltViewModel
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
-        @ApplicationContext context: Context
+        contentResolver: ContentResolver
     ) : androidx.lifecycle.ViewModel() {
 
         val cropBundle: CropBundle =
             ExaminationActivity.ViewModel.cropBundles[savedStateHandle[CropBundle.EXTRA_POSITION]!!]
-        val screenshotBitmap: Bitmap = context.contentResolver.loadBitmap(cropBundle.screenshot.uri)!!
+        val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
 
         var enterTransitionCompleted: Boolean = false
         var blockStatusTVDisplay: Boolean = false

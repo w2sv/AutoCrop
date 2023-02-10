@@ -25,12 +25,8 @@ import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.databinding.CropBinding
-import com.w2sv.cropbundle.CropBundle
-import com.w2sv.cropbundle.Screenshot
 import com.w2sv.autocrop.utils.getMediaUri
-import com.w2sv.cropbundle.cropping.cropEdgesCandidates
-import com.w2sv.cropbundle.cropping.maxHeightEdges
-import com.w2sv.cropbundle.io.extensions.loadBitmap
+import com.w2sv.cropbundle.CropBundle
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -93,35 +89,30 @@ class CropFragment
             }
 
         private fun getCropBundle(screenshotUri: Uri, context: Context): CropBundle? {
-            i { "getCropBundle $screenshotUri" }
+            i { "getCropBundle; screenshotUri=$screenshotUri" }
 
-            val mediaUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                getMediaUri(context, screenshotUri)!!
-            else
-                screenshotUri
-
-            context.contentResolver.loadBitmap(mediaUri)?.let { screenshotBitmap ->
-                screenshotBitmap.cropEdgesCandidates()?.let { candidates ->
-                    return CropBundle.assemble(
-                        Screenshot(
-                            mediaUri,
-                            screenshotBitmap.height,
-                            candidates,
-                            Screenshot.MediaStoreData.query(context.contentResolver, mediaUri)
-                        ),
-                        screenshotBitmap,
-                        candidates.maxHeightEdges()
-                    )
-                }
-                    ?: run {
-                        cropResults.nNotCroppableImages += 1
-                        return null
+            return CropBundle.attemptCreation(
+                screenshotMediaUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                    getMediaUri(context, screenshotUri)!!
+                else
+                    screenshotUri,
+                contentResolver = context.contentResolver
+            ).run {
+                when {
+                    first != null -> first
+                    second == CropBundle.CreationFailureReason.BitmapLoadingFailure -> {
+                        cropResults.nNotOpenableImages += 1
+                        null
                     }
-            }
-                ?: run {
-                    cropResults.nNotOpenableImages += 1
-                    return null
+
+                    second == CropBundle.CreationFailureReason.NoCropEdgesFound -> {
+                        cropResults.nNotCroppableImages += 1
+                        null
+                    }
+
+                    else -> throw Exception()
                 }
+            }
         }
     }
 

@@ -6,8 +6,11 @@ import android.net.Uri
 import android.os.Parcelable
 import android.provider.MediaStore
 import com.w2sv.cropbundle.cropping.CropEdges
+import com.w2sv.cropbundle.cropping.cropEdgesCandidates
 import com.w2sv.cropbundle.cropping.cropped
+import com.w2sv.cropbundle.cropping.maxHeightEdges
 import com.w2sv.cropbundle.io.ImageMimeType
+import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.cropbundle.io.extensions.queryMediaStoreData
 import com.w2sv.kotlinutils.extensions.rounded
 import kotlinx.parcelize.IgnoredOnParcel
@@ -17,18 +20,42 @@ import kotlin.math.roundToInt
 @Parcelize
 data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
 
+    enum class CreationFailureReason {
+        BitmapLoadingFailure,
+        NoCropEdgesFound
+    }
+
     companion object {
         const val EXTRA_POSITION = "com.w2sv.autocrop.extra.CROP_BUNDLE_POSITION"
 
-        fun assemble(screenshot: Screenshot, screenshotBitmap: Bitmap, edges: CropEdges): CropBundle =
-            CropBundle(
-                screenshot,
-                Crop.fromScreenshot(
-                    screenshotBitmap,
-                    screenshot.mediaStoreData.diskUsage,
-                    edges
-                )
-            )
+        fun attemptCreation(
+            screenshotMediaUri: Uri,
+            contentResolver: ContentResolver
+        ): Pair<CropBundle?, CreationFailureReason?> =
+            contentResolver.loadBitmap(screenshotMediaUri)?.let { screenshotBitmap ->
+                screenshotBitmap.cropEdgesCandidates()?.let { candidates ->
+                    val screenshot = Screenshot(
+                        screenshotMediaUri,
+                        screenshotBitmap.height,
+                        candidates,
+                        Screenshot.MediaStoreData.query(contentResolver, screenshotMediaUri)
+                    )
+
+                    Pair(
+                        CropBundle(
+                            screenshot = screenshot,
+                            crop = Crop.fromScreenshot(
+                                screenshotBitmap,
+                                screenshot.mediaStoreData.diskUsage,
+                                candidates.maxHeightEdges()
+                            )
+                        ),
+                        null
+                    )
+                }
+                    ?: Pair(null, CreationFailureReason.NoCropEdgesFound)
+            }
+                ?: Pair(null, CreationFailureReason.BitmapLoadingFailure)
     }
 
     fun identifier(): String =
@@ -47,7 +74,7 @@ data class Screenshot(
     data class MediaStoreData(
         val diskUsage: Long,
         val fileName: String,
-        val parsedMimeType: ImageMimeType,
+        val mimeType: ImageMimeType,
         val id: Long
     ) : Parcelable {
 
@@ -72,6 +99,9 @@ data class Screenshot(
                     }
         }
     }
+
+    fun getBitmap(contentResolver: ContentResolver): Bitmap =
+        contentResolver.loadBitmap(uri)!!
 }
 
 // TODO: write tests

@@ -49,7 +49,6 @@ import com.w2sv.autocrop.ui.views.visualize
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.cropping.CropEdges
-import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.preferences.BooleanPreferences
 import dagger.hilt.android.AndroidEntryPoint
@@ -353,7 +352,7 @@ class CropPagerFragment :
     override fun onCropAdjustment(cropEdges: CropEdges) {
         viewModel.dataSet.liveElement.let {
             it.crop = Crop.fromScreenshot(
-                requireContext().contentResolver.loadBitmap(it.screenshot.uri)!!,
+                it.screenshot.getBitmap(requireContext().contentResolver),
                 it.screenshot.mediaStoreData.diskUsage,
                 cropEdges
             )
