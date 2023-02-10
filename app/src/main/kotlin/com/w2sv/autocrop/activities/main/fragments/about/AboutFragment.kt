@@ -8,15 +8,15 @@ import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.ui.SimpleAnimationListener
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
-import com.w2sv.autocrop.databinding.FragmentAboutBinding
-import com.w2sv.autocrop.preferences.GlobalFlags
-import com.w2sv.autocrop.ui.animate
+import com.w2sv.autocrop.databinding.AboutBinding
+import com.w2sv.autocrop.ui.views.animate
+import com.w2sv.preferences.GlobalFlags
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class AboutFragment :
-    AppFragment<FragmentAboutBinding>(FragmentAboutBinding::class.java) {
+    AppFragment<AboutBinding>(AboutBinding::class.java) {
 
     @Inject
     lateinit var globalFlags: GlobalFlags
@@ -55,7 +55,7 @@ class AboutFragment :
         binding.setOnClickListeners()
     }
 
-    private fun FragmentAboutBinding.setOnClickListeners() {
+    private fun AboutBinding.setOnClickListeners() {
         appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
         logoIv.setOnClickListener { it.animate(Techniques.Tada) }
         versionTv.setOnClickListener { it.animate(Techniques.RubberBand) }

@@ -91,6 +91,11 @@ dependencies {
 
     // owned
     implementation project(path: ':bidirectionalviewpager')
+    implementation project(path: ':preferences')
+    implementation project(path: ':cropbundle')
+    implementation project(path: ':screenshotlistening')
+    implementation project(path: ':common')
+
     implementation libs.kotlinutils
     implementation libs.viewboundcontroller
     implementation libs.androidutils
@@ -108,15 +113,12 @@ dependencies {
 
     // ---------------
     // unitTest
-    testImplementation libs.junit5
-    testImplementation libs.androidx.junit
+    testImplementation libs.bundles.unitTest
 
     // ---------------
     // androidTest
-    androidTestImplementation libs.junit5.api
-    androidTestImplementation libs.junit5.mannodermaus.core
+    androidTestImplementation libs.bundles.androidTest
     androidTestRuntimeOnly libs.junit5.mannodermaus.runner
-    androidTestImplementation libs.junit5.params
 
     // espresso
     androidTestImplementation libs.androidx.espresso.core

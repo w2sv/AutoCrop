@@ -24,13 +24,13 @@ import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailed
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.activities.main.MainActivity
-import com.w2sv.autocrop.cropbundle.CropBundle
-import com.w2sv.autocrop.cropbundle.Screenshot
-import com.w2sv.autocrop.cropbundle.cropping.cropEdgesCandidates
-import com.w2sv.autocrop.cropbundle.cropping.maxHeightEdges
-import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
-import com.w2sv.autocrop.databinding.FragmentCropBinding
+import com.w2sv.autocrop.databinding.CropBinding
+import com.w2sv.cropbundle.CropBundle
+import com.w2sv.cropbundle.Screenshot
 import com.w2sv.autocrop.utils.getMediaUri
+import com.w2sv.cropbundle.cropping.cropEdgesCandidates
+import com.w2sv.cropbundle.cropping.maxHeightEdges
+import com.w2sv.cropbundle.io.extensions.loadBitmap
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -43,7 +43,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class CropFragment
-    : AppFragment<FragmentCropBinding>(FragmentCropBinding::class.java) {
+    : AppFragment<CropBinding>(CropBinding::class.java) {
 
     companion object {
         fun getInstance(screenshotUris: List<Uri>): CropFragment =
@@ -133,7 +133,7 @@ class CropFragment
         binding.populate()
     }
 
-    private fun FragmentCropBinding.populate() {
+    private fun CropBinding.populate() {
         croppingProgressBar.max = viewModel.nScreenshots
         progressTv.max = viewModel.nScreenshots
 

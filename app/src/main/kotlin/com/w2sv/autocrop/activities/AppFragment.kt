@@ -14,7 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.utils.extensions.snackyBuilder
+import com.w2sv.common.extensions.snackyBuilder
 import com.w2sv.viewboundcontroller.ViewBoundFragment
 import de.mateware.snacky.Snacky
 import kotlinx.coroutines.CoroutineScope
@@ -62,12 +62,12 @@ abstract class AppFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
      */
 
     @Suppress("UNCHECKED_CAST")
-    fun <A : Activity> castActivity(): A =
+    fun <A : Activity> requireCastActivity(): A =
         requireActivity() as A
 
     fun requireViewBoundFragmentActivity(): ViewBoundFragmentActivity =
-        castActivity()
+        requireCastActivity()
 
     fun requireAppActivity(): AppActivity =
-        castActivity()
+        requireCastActivity()
 }

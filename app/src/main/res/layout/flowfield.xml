@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldLayout
+        android:id="@+id/flowfield_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldDrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/foreground_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/foreground_toggle_button"
+
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="26dp"
+                android:layout_marginBottom="56dp"
+                android:background="@drawable/ic_eye_24"
+                android:backgroundTint="@color/low_alpha_gray" />
+
+            <RelativeLayout
+                android:id="@+id/high_alpha_foreground_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/navigation_view_toggle_button"
+
+                    android:layout_width="@dimen/size_lottie_button"
+                    android:layout_height="@dimen/size_lottie_button"
+                    android:layout_marginStart="@dimen/margin_horizontal"
+                    android:layout_marginTop="@dimen/margin_top_portrait_mode"
+
+                    android:contentDescription="@string/main_menu_toggle"
+
+                    app:lottie_rawRes="@raw/hamburger_to_backarrow" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/image_selection_button"
+
+                    android:layout_width="143dp"
+                    android:layout_height="143dp"
+                    android:layout_centerInParent="true"
+
+                    android:background="@drawable/shape_button_screenshotselection"
+
+                    android:lineSpacingExtra="10dp"
+                    android:text="@string/select_images"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/image_selection_button" />
+
+                <androidx.coordinatorlayout.widget.CoordinatorLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true">
+
+                    <com.w2sv.autocrop.ui.views.SnackbarRepelledLayout
+                        android:id="@+id/snackbar_repelled_layout"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal">
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/share_crops_button"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_marginBottom="70dp"
+                            android:background="@drawable/ic_share_24"
+                            android:visibility="invisible" />
+
+                    </com.w2sv.autocrop.ui.views.SnackbarRepelledLayout>
+
+                </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldNavigationView
+            android:id="@+id/navigation_view"
+
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/navigation_drawer_button_burger"
+            android:layout_gravity="start"
+            android:layout_marginTop="92dp"
+
+            android:background="@android:color/transparent"
+
+            app:headerLayout="@layout/navigation_view_header"
+            app:itemIconTint="@color/highlight"
+            app:menu="@menu/navigation_view" />
+
+    </com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldDrawerLayout>
+
+</RelativeLayout>

@@ -13,6 +13,7 @@ import com.google.android.material.navigation.NavigationView
 import com.w2sv.androidutils.ActivityRetriever
 import com.w2sv.androidutils.extensions.configureItem
 import com.w2sv.androidutils.extensions.openUrl
+import com.w2sv.androidutils.extensions.playStoreUrl
 import com.w2sv.androidutils.extensions.serviceRunning
 import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.androidutils.extensions.toggle
@@ -21,12 +22,11 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.preferences.CropSaveDirPreferences
-import com.w2sv.autocrop.preferences.getConnectedSwitch
-import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
-import com.w2sv.autocrop.utils.extensions.playStoreLink
 import com.w2sv.permissionhandler.requestPermissions
+import com.w2sv.preferences.BooleanPreferences
+import com.w2sv.preferences.CropSaveDirPreferences
+import com.w2sv.preferences.getConnectedSwitch
+import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -126,7 +126,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                         context.startActivity(
                             Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse(activity.playStoreLink)
+                                Uri.parse(activity.playStoreUrl)
                             )
                                 .setPackage("com.android.vending")
                         )
@@ -139,8 +139,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 R.id.main_menu_item_share -> {
                     ShareCompat.IntentBuilder(context)
                         .setType("text/plain")
-                        .setText("Check out AutoCrop @ ${activity.playStoreLink}")
-                        .setChooserTitle("Choose an app")
+                        .setText("Check out AutoCrop!\n${context.playStoreUrl}")
                         .startChooser()
                 }
             }

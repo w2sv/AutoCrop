@@ -29,10 +29,10 @@ import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getScaleY
 import com.w2sv.autocrop.activities.getFragment
-import com.w2sv.autocrop.cropbundle.CropBundle
-import com.w2sv.autocrop.cropbundle.io.extensions.loadBitmap
-import com.w2sv.autocrop.databinding.FragmentComparisonBinding
-import com.w2sv.autocrop.preferences.GlobalFlags
+import com.w2sv.autocrop.databinding.ComparisonBinding
+import com.w2sv.cropbundle.CropBundle
+import com.w2sv.cropbundle.io.extensions.loadBitmap
+import com.w2sv.preferences.GlobalFlags
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -40,7 +40,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ComparisonFragment
-    : AppFragment<FragmentComparisonBinding>(FragmentComparisonBinding::class.java),
+    : AppFragment<ComparisonBinding>(ComparisonBinding::class.java),
       ComparisonInstructionsDialog.Listener {
 
     companion object {
@@ -129,7 +129,7 @@ class ComparisonFragment
         viewModel.setLiveDataObservers()
     }
 
-    private fun FragmentComparisonBinding.populate() {
+    private fun ComparisonBinding.populate() {
         with(cropIv) {
             transitionName = viewModel.cropBundle.identifier()
             setImageBitmap(viewModel.cropBundle.crop.bitmap)
@@ -137,7 +137,7 @@ class ComparisonFragment
         screenshotIv.setImageBitmap(viewModel.screenshotBitmap)
     }
 
-    private fun FragmentComparisonBinding.setOnClickListeners() {
+    private fun ComparisonBinding.setOnClickListeners() {
         root.setOnClickListener {
             with(viewModel.displayScreenshotLive) {
                 value?.let {
@@ -200,7 +200,12 @@ class ComparisonInstructionsDialog : UncancelableDialogFragment() {
         builder()
             .apply {
                 setTitle("Comparison Screen")
-                setIcon(context.getColoredDrawable(R.drawable.ic_image_search_24, R.color.magenta_saturated))
+                setIcon(
+                    context.getColoredDrawable(
+                        R.drawable.ic_image_search_24,
+                        com.w2sv.common.R.color.magenta_saturated
+                    )
+                )
                 setMessage("Tap screen to toggle between the original screenshot and the crop \uD83D\uDC47")
                 setPositiveButton("Got it!") { _, _ -> (parentFragment as Listener).onInstructionsDialogClosed() }
             }

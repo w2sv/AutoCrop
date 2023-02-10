@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.blogspot.atifsoftwares.animatoolib.R
-import com.w2sv.autocrop.databinding.ActivityBlankBinding
+import com.w2sv.autocrop.databinding.BlankBinding
 import com.w2sv.viewboundcontroller.ViewBoundActivity
 
-abstract class ViewBoundFragmentActivity : ViewBoundActivity<ActivityBlankBinding>(ActivityBlankBinding::class.java) {
+abstract class ViewBoundFragmentActivity : ViewBoundActivity<BlankBinding>(BlankBinding::class.java) {
 
     private val layoutId: Int get() = binding.root.id
 

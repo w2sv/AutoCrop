@@ -1,3 +1,5 @@
+@file: Suppress("DEPRECATION")
+
 package com.w2sv.autocrop.activities.main.fragments.flowfield
 
 import android.Manifest
@@ -40,21 +42,22 @@ import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.OpenDocumentTreeContractHandler
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.SelectImagesContractHandlerCompat
-import com.w2sv.autocrop.cropbundle.io.IMAGE_MIME_TYPE
-import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
-import com.w2sv.autocrop.preferences.CropSaveDirPreferences
-import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
-import com.w2sv.autocrop.ui.SnackbarData
-import com.w2sv.autocrop.ui.animate
-import com.w2sv.autocrop.ui.fadeIn
-import com.w2sv.autocrop.ui.fadeInAnimationComposer
-import com.w2sv.autocrop.ui.fadeOut
-import com.w2sv.autocrop.ui.onHalfwayFinished
-import com.w2sv.autocrop.utils.PermissionHandler
+import com.w2sv.autocrop.databinding.FlowfieldBinding
+import com.w2sv.autocrop.ui.model.SnackbarData
+import com.w2sv.autocrop.ui.views.animate
+import com.w2sv.autocrop.ui.views.fadeIn
+import com.w2sv.autocrop.ui.views.fadeInAnimationComposer
+import com.w2sv.autocrop.ui.views.fadeOut
+import com.w2sv.autocrop.ui.views.onHalfwayFinished
 import com.w2sv.autocrop.utils.extensions.onHalfwayShown
+import com.w2sv.common.PermissionHandler
 import com.w2sv.autocrop.utils.getMediaUri
+import com.w2sv.autocrop.utils.pathIdentifier
+import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.numericallyInflected
+import com.w2sv.preferences.CropSaveDirPreferences
+import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -64,7 +67,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class FlowFieldFragment :
-    AppFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java) {
+    AppFragment<FlowfieldBinding>(FlowfieldBinding::class.java) {
 
     companion object {
         fun getInstance(accumulatedIoResults: AccumulatedIOResults?): FlowFieldFragment =
@@ -205,7 +208,7 @@ class FlowFieldFragment :
         viewModel.setLiveDataObservers()
     }
 
-    private fun FragmentFlowfieldBinding.showLayoutElements() {
+    private fun FlowfieldBinding.showLayoutElements() {
         val savedAnyCrops: Boolean = viewModel.accumulatedIoResults?.let { it.nSavedCrops != 0 }
             ?: false
 
@@ -227,7 +230,7 @@ class FlowFieldFragment :
             shareCropsButton.show()
     }
 
-    private fun FragmentFlowfieldBinding.setOnClickListeners() {
+    private fun FlowfieldBinding.setOnClickListeners() {
         navigationViewToggleButton.setOnClickListener {
             drawerLayout.onToggleButtonClick()
         }

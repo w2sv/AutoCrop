@@ -8,21 +8,19 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.autocrop.activities.AppActivity
-import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropResults
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
-import com.w2sv.autocrop.activities.examination.fragments.apptitle.AppTitleFragment
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
-import com.w2sv.autocrop.activities.examination.fragments.deleterequest.DeleteRequestFragment
+import com.w2sv.autocrop.activities.examination.fragments.exit.ExitFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.CropPagerFragment
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
-import com.w2sv.autocrop.cropbundle.CropBundle
-import com.w2sv.autocrop.cropbundle.io.CropBundleIORunner
-import com.w2sv.autocrop.cropbundle.io.getDeleteRequestUri
-import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.preferences.GlobalFlags
-import com.w2sv.autocrop.utils.extensions.getParcelableExtraCompat
+import com.w2sv.common.extensions.getParcelableExtraCompat
+import com.w2sv.cropbundle.CropBundle
+import com.w2sv.cropbundle.io.CropBundleIORunner
+import com.w2sv.cropbundle.io.getDeleteRequestUri
+import com.w2sv.preferences.BooleanPreferences
+import com.w2sv.preferences.GlobalFlags
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +51,8 @@ class ExaminationActivity : AppActivity() {
 
         val accumulatedIoResults = AccumulatedIOResults()
         val deleteRequestUris = arrayListOf<Uri>()
+
+        val deleteRequestUrisPresent: Boolean get() = deleteRequestUris.isNotEmpty()
 
         fun onDeleteRequestUrisDeleted() {
             accumulatedIoResults.nDeletedScreenshots += deleteRequestUris.size
@@ -126,23 +126,9 @@ class ExaminationActivity : AppActivity() {
     override val lifecycleObservers: List<LifecycleObserver>
         get() = listOf(globalFlags, booleanPreferences)
 
-    fun invokeSubsequentController(exitingFragment: AppFragment<*>) {
-        val subsequentFragment = when (exitingFragment) {
-            is DeleteRequestFragment -> AppTitleFragment()
-            is CropPagerFragment, is SaveAllFragment -> {
-                if (viewModel.deleteRequestUris.isNotEmpty())
-                    DeleteRequestFragment()
-                else
-                    AppTitleFragment()
-            }
-
-            else -> {  // AppTitleFragment
-                startMainActivity()
-                return
-            }
-        }
+    fun invokeExitFragment() {
         fragmentReplacementTransaction(
-            subsequentFragment,
+            ExitFragment(),
             true
         )
             .commit()
