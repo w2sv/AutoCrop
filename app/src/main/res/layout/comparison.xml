@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_magenta">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/crop_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:scaleType="matrix" />
+
+    <com.w2sv.autocrop.activities.examination.fragments.comparison.views.ScreenshotImageView
+        android:id="@+id/screenshot_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:contentDescription="@string/compare_crop_with_original_screenshot"
+        android:scaleType="fitCenter"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true">
+
+        <com.w2sv.autocrop.activities.examination.fragments.comparison.views.DisplayStatusTextView
+            android:id="@+id/iv_status_tv"
+
+            android:layout_width="95dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="50dp"
+
+            android:background="@drawable/shape_rounded_rectangle_w_button_background"
+            android:gravity="center"
+
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/back_button"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="@dimen/margin_horizontal"
+            android:layout_marginBottom="62dp"
+
+            android:background="@drawable/shape_oval_w_button_background"
+
+            android:contentDescription="@string/go_back_to_crop_pager"
+            android:padding="@dimen/padding_image_button_w_background"
+
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_arrow_back_24" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

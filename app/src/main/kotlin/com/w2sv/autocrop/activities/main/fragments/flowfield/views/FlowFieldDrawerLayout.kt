@@ -7,40 +7,49 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
+import com.w2sv.autocrop.databinding.FlowfieldBinding
 
 class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : DrawerLayout(context, attributeSet) {
+
+    private val binding: FlowfieldBinding by lazy { findFragment<FlowFieldFragment>().binding }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
         if (!isInEditMode) {
-            findFragment<FlowFieldFragment>()
-                .binding
-                .setAssociatedButtons()
+            addDrawerListener(
+                object : SimpleDrawerListener() {
+                    override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                        binding.affectAssociatedViewsOnDrawerSlide(slideOffset)
+                    }
+                }
+            )
+            if (isOpen)
+                binding.affectAssociatedViewsOnDrawerSlide(1f)
         }
     }
 
-    private fun FragmentFlowfieldBinding.setAssociatedButtons() {
-        addDrawerListener(object : DrawerListener {
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                val fadeOutOnDrawerOpenAlpha = 1 - slideOffset
+    fun FlowfieldBinding.affectAssociatedViewsOnDrawerSlide(slideOffset: Float) {
+        navigationViewToggleButton.progress = slideOffset
 
-                navigationDrawerButtonBurger.alpha = fadeOutOnDrawerOpenAlpha
-                navigationDrawerButtonArrow.alpha = slideOffset
+        val associatedButtonAlpha = 1 - slideOffset
+        imageSelectionButton.alpha = associatedButtonAlpha
+        shareCropsButton.alpha = associatedButtonAlpha
+        foregroundToggleButton.alpha = associatedButtonAlpha
+    }
 
-                imageSelectionButton.alpha = fadeOutOnDrawerOpenAlpha
-            }
+    fun openDrawer() {
+        openDrawer(GravityCompat.START)
+    }
 
-            override fun onDrawerOpened(drawerView: View) {}
-            override fun onDrawerClosed(drawerView: View) {}
-            override fun onDrawerStateChanged(newState: Int) {}
-        })
+    fun closeDrawer() {
+        closeDrawer(GravityCompat.START)
+    }
 
-        navigationDrawerButtonArrow.setOnClickListener {
-            if (isOpen)
-                closeDrawer(GravityCompat.START)
-            else
-                openDrawer(GravityCompat.START)
-        }
+    fun onToggleButtonClick() {
+        if (isOpen)
+            closeDrawer()
+        else
+            openDrawer()
     }
 }

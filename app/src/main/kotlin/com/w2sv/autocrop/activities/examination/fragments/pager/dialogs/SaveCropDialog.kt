@@ -1,0 +1,47 @@
+package com.w2sv.autocrop.activities.examination.fragments.pager.dialogs
+
+import android.app.AlertDialog
+import android.app.Dialog
+import android.os.Bundle
+import com.w2sv.autocrop.activities.getFragment
+
+class SaveCropDialog : CropSavingDialog() {
+
+    companion object {
+        private const val EXTRA_DATA_SET_POSITION = "com.w2sv.autocrop.extra.DATA_SET_POSITION"
+
+        fun getInstance(dataSetPosition: Int, showDismissButton: Boolean): SaveCropDialog =
+            getFragment(
+                SaveCropDialog::class.java,
+                EXTRA_DATA_SET_POSITION to dataSetPosition,
+                EXTRA_SHOW_DISCARD_BUTTON to showDismissButton
+            )
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        AlertDialog.Builder(requireContext())
+            .run {
+                setTitle("Save crop?")
+                setDeleteCorrespondingScreenshotsOption("Delete corresponding screenshot")
+                setNegativeButton("No") { _, _ -> }
+                setPositiveButton("Yes") { _, _ ->
+                    (requireParentFragment() as ResultListener)
+                        .onSaveCrop(
+                            requireArguments().getInt(EXTRA_DATA_SET_POSITION)
+                        )
+                }
+                if (requireArguments().getBoolean(EXTRA_SHOW_DISCARD_BUTTON))
+                    setNeutralButton("No, discard crop") { _, _ ->
+                        (parentFragment as ResultListener)
+                            .onDiscardCrop(
+                                requireArguments().getInt(EXTRA_DATA_SET_POSITION)
+                            )
+                    }
+                create()
+            }
+
+    interface ResultListener {
+        fun onSaveCrop(dataSetPosition: Int)
+        fun onDiscardCrop(dataSetPosition: Int)
+    }
+}

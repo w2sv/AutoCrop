@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <item
+        android:id="@+id/main_menu_item_listen_to_screen_captures"
+        android:icon="@drawable/ic_hearing_24"
+        android:title="@string/screenshot_listener" />
+
+
+    <!--  Crop Saving  -->
+
+    <group>
+        <item android:title="@string/menu_item_divider_saving">
+
+            <menu>
+                <item
+                    android:id="@+id/main_menu_item_change_crop_dir"
+                    android:icon="@drawable/ic_folder_24"
+                    android:title="@string/menu_item_change_directory" />
+                <item
+                    android:id="@+id/main_menu_item_current_crop_dir"
+                    android:enabled="false"
+                    tools:ignore="MenuTitle" />
+            </menu>
+        </item>
+    </group>
+
+    <!--  Crop Examination  -->
+
+    <group>
+        <item android:title="@string/menu_item_divider_examination">
+
+            <menu>
+                <item
+                    android:id="@+id/main_menu_item_auto_scroll"
+                    android:icon="@drawable/ic_autoscroll_24"
+                    android:title="@string/menu_item_auto_scroll" />
+            </menu>
+        </item>
+    </group>
+
+    <!--  Other  -->
+
+    <group>
+        <item android:title="@string/menu_item_divider_other">
+            <menu>
+                <item
+                    android:id="@+id/main_menu_item_about"
+                    android:icon="@drawable/ic_info_24"
+                    android:title="@string/menu_item_about" />
+
+                <item
+                    android:id="@+id/main_menu_item_go_to_github"
+                    android:icon="@drawable/ic_github_24"
+                    android:title="@string/source" />
+
+                <item
+                    android:id="@+id/main_menu_item_share"
+                    android:icon="@drawable/ic_share_24"
+                    android:title="@string/share" />
+
+                <item
+                    android:id="@+id/main_menu_item_rate_the_app"
+                    android:icon="@drawable/ic_sharp_star_rate_24"
+                    android:title="@string/menu_item_rate" />
+            </menu>
+        </item>
+    </group>
+</menu>

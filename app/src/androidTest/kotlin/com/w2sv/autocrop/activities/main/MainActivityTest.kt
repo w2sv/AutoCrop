@@ -26,7 +26,7 @@
 //import com.w2sv.autocrop.R
 //import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 //import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-//import com.w2sv.autocrop.preferences.BooleanPreferences
+//import BooleanPreferences
 //import com.w2sv.autocrop.utils.android.IMAGE_MIME_TYPE
 //import de.mannodermaus.junit5.ActivityScenarioExtension
 //import org.hamcrest.CoreMatchers.allOf
@@ -39,7 +39,7 @@
 //import org.junit.jupiter.api.extension.RegisterExtension
 //import utils.espresso.SLOW_TIMEOUT
 //import utils.espresso.check
-//import utils.espresso.intentTester
+//import utils.intentTester
 //import utils.espresso.isDisplayed
 //import utils.espresso.retryFlakyAction
 //

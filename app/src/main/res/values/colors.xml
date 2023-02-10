@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="dark_gray">#656565</color>
-    <color name="pseudo_black">#1C1C1E</color>
-    <color name="magenta_bright">#BC275E</color>
-    <color name="magenta_saturated">#911945</color>
-    <color name="wine_red">#B00020</color>
-    <color name="ocean_blue">#1a0ac7</color>
-    <color name="turquoise_greenish">#008577</color>
-
     <color name="highlight">@color/magenta_bright</color>
-    <color name="highest_light">@android:color/holo_purple</color>
-    <color name="success">@color/turquoise_greenish</color>
+    <color name="higher_light">@android:color/holo_purple</color>
+    <color name="success">#FF008577</color>
     <color name="neutral_background">#000000</color>
     <color name="crop_mask">#AB1C1C1E</color>
-    <color name="button_background">#80303033</color>
+    <color name="button_background">#80262629</color>
+    <color name="image_selection_button">@android:color/white</color>
+    <color name="onboarding_description">@color/light_gray</color>
+    <color name="enable_ssl_button">#FF00c233</color>
+    <color name="crop_pager_text">@color/light_gray</color>
 </resources>

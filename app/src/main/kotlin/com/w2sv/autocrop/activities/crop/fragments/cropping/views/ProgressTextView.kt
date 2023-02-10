@@ -2,7 +2,7 @@ package com.w2sv.autocrop.activities.crop.fragments.cropping.views
 
 import android.content.Context
 import android.util.AttributeSet
-import com.w2sv.autocrop.ui.FractionTextView
+import com.w2sv.autocrop.ui.views.FractionTextView
 import kotlin.properties.Delegates
 
 class ProgressTextView(context: Context, attr: AttributeSet) :

@@ -1,0 +1,22 @@
+plugins{
+    alias libs.plugins.kotlin
+    alias libs.plugins.library
+    alias libs.plugins.hilt
+    id 'kotlin-kapt'
+}
+
+apply from: '../modulebase.gradle'
+
+android {
+    namespace 'com.w2sv.preferences'
+}
+
+dependencies {
+    implementation libs.kotlinutils
+    implementation libs.androidutils
+    api libs.typedpreferences
+    implementation libs.slimber
+
+    implementation libs.google.hilt
+    kapt libs.google.hilt.kapt
+}

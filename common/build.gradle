@@ -1,0 +1,23 @@
+plugins{
+    alias libs.plugins.kotlin
+    alias libs.plugins.library
+}
+
+apply from: '../modulebase.gradle'
+
+android {
+    namespace 'com.w2sv.common'
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation libs.androidx.core
+    implementation libs.androidx.activity
+    implementation libs.google.material
+    implementation libs.snacky
+    implementation libs.slimber
+    implementation libs.permissionhandler
+}

@@ -1,25 +1,29 @@
 plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
+    alias libs.plugins.kotlin
+    alias libs.plugins.application
+    alias libs.plugins.junit5
+    alias libs.plugins.hilt
     id 'kotlin-parcelize'
-    id 'de.mannodermaus.android-junit5'
-    id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    namespace rootProject.ext.packageName
+    def PACKAGE_NAME = "com.w2sv.autocrop"
+
+    compileSdk libs.versions.compileSdk.get().toInteger()
+    namespace PACKAGE_NAME
 
     defaultConfig {
-        applicationId rootProject.ext.packageName
+        applicationId PACKAGE_NAME
 
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.compileSdkVersion
+        minSdk libs.versions.minSdk.get().toInteger()
+        targetSdk libs.versions.compileSdk.get().toInteger()
+
+        versionCode 42
+        versionName '3.2.15'
+
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
-
-        versionCode 34
-        versionName '3.2.7'
+        setProperty('archivesBaseName', versionName)  // Stores built aab's as "{versionName}-{buildFlavor}.apk"
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'
@@ -51,32 +55,32 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '17'
     }
     testOptions {
         animationsDisabled = true
     }
-    packagingOptions {
-        resources.excludes.add("META-INF/*")  // fixes build error
-    }
     buildFeatures {
         viewBinding true
     }
+    // Store built apk's as "{versionName}.apk"
+    applicationVariants.configureEach { variant ->
+        variant.outputs.all {
+            outputFileName = "${variant.versionName}.apk"
+        }
+    }
 }
 dependencies {
-    implementation libs.jetbrains.kotlin
-
     // androidx
     implementation libs.androidx.appcompat
     implementation libs.androidx.core
     implementation libs.androidx.viewmodel
     implementation libs.androidx.viewpager2
     implementation libs.androidx.fragment
-    implementation libs.androidx.activity
     implementation libs.androidx.splashscreen
 
     // google
@@ -87,33 +91,36 @@ dependencies {
 
     // owned
     implementation project(path: ':bidirectionalviewpager')
-    implementation project(path: ':permissionhandler')
+    implementation project(path: ':preferences')
+    implementation project(path: ':cropbundle')
+    implementation project(path: ':screenshotlistening')
+    implementation project(path: ':common')
+
     implementation libs.kotlinutils
     implementation libs.viewboundcontroller
     implementation libs.androidutils
     implementation libs.typedpreferences
+    implementation libs.viewanimations
+    implementation libs.onboarder
+    implementation libs.permissionhandler
 
     // other
     implementation files('libs/processing-core-4.3.0.jar')
     implementation libs.slimber
     implementation libs.snacky
     implementation libs.animatoo
-    implementation libs.viewanimations
+    implementation libs.lottie
 
     // ---------------
     // unitTest
-    testImplementation libs.junit5
-    testImplementation libs.androidx.junit
+    testImplementation libs.bundles.unitTest
 
     // ---------------
     // androidTest
-    androidTestImplementation libs.junit5.api
-    androidTestImplementation libs.junit5.mannodermaus.core
+    androidTestImplementation libs.bundles.androidTest
     androidTestRuntimeOnly libs.junit5.mannodermaus.runner
-    androidTestImplementation libs.junit5.params
 
     // espresso
     androidTestImplementation libs.androidx.espresso.core
     androidTestImplementation libs.androidx.espresso.intents
 }
-

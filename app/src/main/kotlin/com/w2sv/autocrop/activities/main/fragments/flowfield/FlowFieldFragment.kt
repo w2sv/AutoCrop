@@ -1,182 +1,305 @@
+@file: Suppress("DEPRECATION")
+
 package com.w2sv.autocrop.activities.main.fragments.flowfield
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
+import android.content.IntentFilter
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Toast
+import androidx.core.text.buildSpannedString
 import androidx.core.text.color
-import androidx.fragment.app.activityViewModels
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
-import com.w2sv.androidutils.extensions.getColoredIcon
+import androidx.lifecycle.viewModelScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
+import com.w2sv.androidutils.BackPressHandler
+import com.w2sv.androidutils.SelfManagingLocalBroadcastReceiver
+import com.w2sv.androidutils.extensions.getColoredDrawable
 import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.getThemedColor
-import com.w2sv.androidutils.extensions.launchDelayed
+import com.w2sv.androidutils.extensions.hide
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
+import com.w2sv.androidutils.extensions.showToast
+import com.w2sv.androidutils.extensions.toggle
+import com.w2sv.androidutils.extensions.uris
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.ApplicationFragment
+import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
-import com.w2sv.autocrop.activities.cropexamination.CropExaminationActivity
+import com.w2sv.autocrop.activities.examination.AccumulatedIOResults
+import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.activities.main.MainActivity
-import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.ScreenshotListenerDialog
-import com.w2sv.autocrop.activities.main.fragments.flowfield.dialogs.WelcomeDialog
-import com.w2sv.autocrop.databinding.FragmentFlowfieldBinding
-import com.w2sv.autocrop.preferences.BooleanPreferences
-import com.w2sv.autocrop.preferences.UriPreferences
-import com.w2sv.autocrop.screenshotlistening.ScreenshotListener
-import com.w2sv.autocrop.ui.fadeIn
-import com.w2sv.autocrop.utils.documentUriPathIdentifier
-import com.w2sv.autocrop.utils.extensions.snackyBuilder
+import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.OpenDocumentTreeContractHandler
+import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.SelectImagesContractHandlerCompat
+import com.w2sv.autocrop.databinding.FlowfieldBinding
+import com.w2sv.autocrop.ui.model.SnackbarData
+import com.w2sv.autocrop.ui.views.animate
+import com.w2sv.autocrop.ui.views.fadeIn
+import com.w2sv.autocrop.ui.views.fadeInAnimationComposer
+import com.w2sv.autocrop.ui.views.fadeOut
+import com.w2sv.autocrop.ui.views.onHalfwayFinished
+import com.w2sv.autocrop.utils.extensions.onHalfwayShown
+import com.w2sv.common.PermissionHandler
+import com.w2sv.autocrop.utils.getMediaUri
+import com.w2sv.autocrop.utils.pathIdentifier
+import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
+import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.numericallyInflected
-import com.w2sv.permissionhandler.PermissionHandler
-import com.w2sv.permissionhandler.requestPermissions
+import com.w2sv.preferences.CropSaveDirPreferences
+import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import de.mateware.snacky.Snacky
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class FlowFieldFragment :
-    ApplicationFragment<FragmentFlowfieldBinding>(FragmentFlowfieldBinding::class.java),
-    WelcomeDialog.OnProceedListener,
-    ScreenshotListenerDialog.OnConfirmedListener {
+    AppFragment<FlowfieldBinding>(FlowfieldBinding::class.java) {
+
+    companion object {
+        fun getInstance(accumulatedIoResults: AccumulatedIOResults?): FlowFieldFragment =
+            getFragment(FlowFieldFragment::class.java, AccumulatedIOResults.EXTRA to accumulatedIoResults)
+    }
+
+    @HiltViewModel
+    class ViewModel @Inject constructor(
+        savedStateHandle: SavedStateHandle,
+        cropSaveDirPreferences: CropSaveDirPreferences,
+        @ApplicationContext context: Context
+    ) : androidx.lifecycle.ViewModel() {
+
+        val accumulatedIoResults: AccumulatedIOResults? = savedStateHandle[AccumulatedIOResults.EXTRA]
+
+        var fadedInButtonsOnEntry = AutoSwitch(false, switchOn = false)
+
+        /**
+         * IO Results Snackbar
+         */
+
+        fun showIOResultsSnackbarIfApplicable(
+            coroutineScope: CoroutineScope,
+            getSnackyBuilder: (CharSequence) -> Snacky.Builder
+        ) {
+            if (ioResultsSnackbarData != null && !showedSnackbar) {
+                getSnackyBuilder(ioResultsSnackbarData.text)
+                    .setIcon(ioResultsSnackbarData.icon)
+                    .build()
+                    .onHalfwayShown(coroutineScope) {
+                        showedSnackbar = true
+                    }
+                    .show()
+            }
+        }
+
+        private val ioResultsSnackbarData: SnackbarData? = accumulatedIoResults?.let {
+            if (it.nSavedCrops == 0)
+                SnackbarData("Discarded all crops")
+            else
+                SnackbarData(
+                    buildSpannedString {
+                        append(
+                            "Saved ${it.nSavedCrops} ${"crop".numericallyInflected(it.nSavedCrops)} to "
+                        )
+                        color(context.getColor(R.color.success)) {
+                            append(cropSaveDirPreferences.pathIdentifier)
+                        }
+                        if (it.nDeletedScreenshots != 0)
+                            append(
+                                " and deleted ${
+                                    if (it.nDeletedScreenshots == it.nSavedCrops)
+                                        "corresponding"
+                                    else
+                                        it.nDeletedScreenshots
+                                } ${"screenshot".numericallyInflected(it.nDeletedScreenshots)}"
+                            )
+                    },
+                    context.getColoredDrawable(R.drawable.ic_check_24, R.color.success)
+                )
+        }
+
+        private var showedSnackbar: Boolean = false
+
+        /**
+         * Button hiding
+         */
+
+        val hideButtonsLive: LiveData<Boolean> by lazy {
+            MutableLiveData(false)
+        }
+        var buttonFadeAnimation: YoYo.YoYoString? = null
+
+        /**
+         * Other LiveData
+         */
+
+        val cropSaveDirIdentifierLive: LiveData<String> by lazy {
+            MutableLiveData(cropSaveDirPreferences.pathIdentifier)
+        }
+        val screenshotListenerCancelledFromNotificationLive: LiveData<Boolean> by lazy {
+            MutableLiveData(false)
+        }
+
+        /**
+         * BackPressListener
+         */
+
+        val backPressHandler = BackPressHandler(
+            viewModelScope,
+            context.resources.getLong(R.integer.duration_backpress_confirmation_window)
+        )
+    }
+
+    class CancelledSSLFromNotificationListener(
+        broadcastManager: LocalBroadcastManager,
+        private val onReceiveListener: () -> Unit
+    ) : SelfManagingLocalBroadcastReceiver(
+        broadcastManager,
+        IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
+    ) {
+
+        override fun onReceive(context: Context?, intent: Intent?) {
+            onReceiveListener()
+        }
+    }
 
     @Inject
-    lateinit var booleanPreferences: BooleanPreferences
+    lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
-    @Inject
-    lateinit var uriPreferences: UriPreferences
+    private val viewModel by viewModels<ViewModel>()
 
-    class ViewModel : androidx.lifecycle.ViewModel() {
-        var enteredFragment = false
+    private val cancelledSSLFromNotificationListener: CancelledSSLFromNotificationListener by lazy {
+        CancelledSSLFromNotificationListener(LocalBroadcastManager.getInstance(requireContext())) {
+            viewModel.screenshotListenerCancelledFromNotificationLive.postValue(true)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycle.addObserver(writeExternalStoragePermissionHandler)
-        screenshotListeningPermissions.forEach {
-            it?.let {
-                lifecycle.addObserver(it)
+        registerLifecycleObservers(
+            buildList {
+                add(cancelledSSLFromNotificationListener)
+                add(selectImagesContractHandler)
+                add(openDocumentTreeContractHandler)
+                add(writeExternalStoragePermissionHandler)
+                addAll(screenshotListeningPermissionHandlers)
             }
-        }
+        )
     }
-
-    private val viewModel by viewModels<ViewModel>()
-    private val activityViewModel by activityViewModels<MainActivity.ViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!viewModel.enteredFragment) {
-            binding.buttonsLayout.fadeIn(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
-
-            if (!booleanPreferences.welcomeDialogsShown)
-                lifecycleScope.launchDelayed(resources.getLong(R.integer.delay_large)) {
-                    WelcomeDialog().show(childFragmentManager)
-
-                    viewModel.enteredFragment = true
-                }
-            else
-                activityViewModel.ioResults?.let {
-                    lifecycleScope.launchDelayed(resources.getLong(R.integer.duration_flowfield_buttons_fade_in_halve)) {
-                        showIOSynopsisSnackbar(it)
-
-                        viewModel.enteredFragment = true
-                    }
-                }
-                    ?: run { viewModel.enteredFragment = true }
-        }
-        else
-            binding.buttonsLayout.show()
+        binding.showLayoutElements()
+        binding.setOnClickListeners()
+        viewModel.setLiveDataObservers()
     }
 
-    val writeExternalStoragePermissionHandler by lazy {
+    private fun FlowfieldBinding.showLayoutElements() {
+        val savedAnyCrops: Boolean = viewModel.accumulatedIoResults?.let { it.nSavedCrops != 0 }
+            ?: false
+
+        if (!viewModel.fadedInButtonsOnEntry.getWithEventualSwitch()) {
+            foregroundLayout
+                .fadeInAnimationComposer(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
+                .onHalfwayFinished(lifecycleScope) {
+                    viewModel.showIOResultsSnackbarIfApplicable(this, ::getSnackyBuilder)
+
+                    if (savedAnyCrops)
+                        with(shareCropsButton) {
+                            show()
+                            animate(Techniques.RotateInUpLeft)
+                        }
+                }
+                .play()
+        }
+        else if (savedAnyCrops)
+            shareCropsButton.show()
+    }
+
+    private fun FlowfieldBinding.setOnClickListeners() {
+        navigationViewToggleButton.setOnClickListener {
+            drawerLayout.onToggleButtonClick()
+        }
+        imageSelectionButton.setOnClickListener {
+            writeExternalStoragePermissionHandler.requestPermissionIfRequired(
+                onGranted = selectImagesContractHandler::selectImages
+            )
+        }
+        shareCropsButton.setOnClickListener {
+            startActivity(
+                Intent.createChooser(
+                    Intent(Intent.ACTION_SEND_MULTIPLE)
+                        .putExtra(
+                            Intent.EXTRA_STREAM,
+                            viewModel.accumulatedIoResults!!.cropUris
+                        )
+                        .setType(IMAGE_MIME_TYPE),
+                    "Share Crops"
+                )
+            )
+        }
+        foregroundToggleButton.setOnClickListener {
+            viewModel.hideButtonsLive.toggle()
+        }
+    }
+
+    private fun ViewModel.setLiveDataObservers() {
+        hideButtonsLive.observe(viewLifecycleOwner) { hideForeground ->
+            if (hideForeground) {
+                binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+
+                if (lifecycle.currentState == Lifecycle.State.STARTED)
+                    binding.highAlphaForegroundLayout.hide()
+                else {
+                    buttonFadeAnimation?.stop()
+                    buttonFadeAnimation = binding.highAlphaForegroundLayout.fadeOut()
+                }
+            }
+            else {
+                binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+
+                buttonFadeAnimation?.stop()
+                buttonFadeAnimation = binding.highAlphaForegroundLayout.fadeIn()
+            }
+        }
+    }
+
+    /**
+     * ActivityCallContractAdministrators
+     */
+
+    private val writeExternalStoragePermissionHandler by lazy {
         PermissionHandler(
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             requireActivity(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             "Media file writing required for saving crops",
             "Go to app settings and grant media file writing in order for the app to work"
         )
     }
 
-    val screenshotListeningPermissions by lazy {
-        listOf(
-            PermissionHandler(
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                    Manifest.permission.READ_MEDIA_IMAGES
-                else
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                requireActivity(),
-                "Media file access required for listening to screen captures",
-                "Go to app settings and grant media file access for screen capture listening to work"
-            ),
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                PermissionHandler(
-                    Manifest.permission.POST_NOTIFICATIONS,
-                    requireActivity(),
-                    "If you don't allow for the posting of notifications AutoCrop can't inform you about croppable screenshots",
-                    "Go to app settings and enable notification posting for screen capture listening to work"
-                )
-            else
-                null
-        )
+    val screenshotListeningPermissionHandlers by lazy {
+        ScreenshotListener.permissionHandlers(requireActivity())
     }
 
-    override fun onProceed() {
-        ScreenshotListenerDialog().show(childFragmentManager)
-    }
-
-    override fun onConfirmed() {
-        screenshotListeningPermissions
-            .iterator()
-            .requestPermissions(
-                onGranted = {
-                    ScreenshotListener.startService(requireContext())
-                    activityViewModel.liveScreenshotListenerRunning.postValue(true)
-                }
-            )
-    }
-
-    private fun showIOSynopsisSnackbar(ioResults: CropExaminationActivity.Results) {
-        ioResults.let {
-            with(requireActivity()) {
-                if (it.nSavedCrops == 0)
-                    snackyBuilder("Discarded all crops")
-                else
-                    snackyBuilder(
-                        SpannableStringBuilder()
-                            .apply {
-                                append("Saved ${it.nSavedCrops} ${"crop".numericallyInflected(it.nSavedCrops)} to ")
-                                color(getThemedColor(R.color.success)) {
-                                    append(it.saveDirName)
-                                }
-                                if (it.nDeletedScreenshots != 0)
-                                    append(
-                                        " and deleted ${
-                                            if (it.nDeletedScreenshots == it.nSavedCrops)
-                                                "corresponding"
-                                            else
-                                                it.nDeletedScreenshots
-                                        } ${"screenshot".numericallyInflected(it.nDeletedScreenshots)}"
-                                    )
-                            }
-                    )
-                        .setIcon(getColoredIcon(R.drawable.ic_check_24, R.color.success))
-            }
-        }
-            .build()
-            .show()
-    }
-
-    val imageSelectionIntentLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-            activityResult.data?.let { intent ->
-                intent.clipData?.let { clipData ->
+    private val selectImagesContractHandler: SelectImagesContractHandlerCompat<*, *> by lazy {
+        SelectImagesContractHandlerCompat.getInstance(
+            requireActivity(),
+            callbackLowerThanQ = {
+                it.uris?.let { uris ->
                     startActivity(
                         Intent(
                             requireActivity(),
@@ -184,46 +307,69 @@ class FlowFieldFragment :
                         )
                             .putParcelableArrayListExtra(
                                 MainActivity.EXTRA_SELECTED_IMAGE_URIS,
-                                ArrayList((0 until clipData.itemCount)
-                                    .map { clipData.getItemAt(it).uri })
+                                ArrayList(uris)
                             )
                     )
                 }
-            }
-        }
-
-    val saveDestinationSelectionIntentLauncher =
-        registerForActivityResult(object : ActivityResultContracts.OpenDocumentTree() {
-            override fun createIntent(context: Context, input: Uri?): Intent =
-                super.createIntent(context, input)
-                    .setFlags(
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
-                                Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
-                                Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
-                    )
-        }) {
-            it?.let { treeUri ->
-                if (uriPreferences.treeUri != treeUri) {
-                    uriPreferences.treeUri = treeUri
-
-                    requireContext()
-                        .contentResolver
-                        .takePersistableUriPermission(
-                            treeUri,
-                            Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            },
+            callbackFromQ = @SuppressLint("NewApi") { imageUris ->
+                if (imageUris.isNotEmpty()) {
+                    if (getMediaUri(requireContext(), imageUris.first()) == null)
+                        requireContext().showToast(
+                            "Content provider not supported. Please use a different one",
+                            Toast.LENGTH_LONG
                         )
-                    requireActivity()
-                        .snackyBuilder(
-                            SpannableStringBuilder()
-                                .append("Crops will be saved to ")
-                                .color(requireContext().getThemedColor(R.color.success)) {
-                                    append(documentUriPathIdentifier(uriPreferences.documentUri!!))
-                                }
+                    else
+                        requireActivity().startActivity(
+                            Intent(
+                                activity,
+                                CropActivity::class.java
+                            )
+                                .putParcelableArrayListExtra(
+                                    MainActivity.EXTRA_SELECTED_IMAGE_URIS,
+                                    ArrayList(imageUris)
+                                )
                         )
-                        .build()
-                        .show()
                 }
             }
+        )
+    }
+
+    val openDocumentTreeContractHandler by lazy {
+        OpenDocumentTreeContractHandler(requireActivity()) {
+            it?.let { treeUri ->
+                val text = if (cropSaveDirPreferences.setNewUri(treeUri, requireContext().contentResolver)) {
+                    viewModel.cropSaveDirIdentifierLive.postValue(cropSaveDirPreferences.pathIdentifier)
+                    SpannableStringBuilder()
+                        .append("Crops will be saved to ")
+                        .color(requireContext().getColor(R.color.success)) {
+                            append(viewModel.cropSaveDirIdentifierLive.value!!)
+                        }
+                }
+                else
+                    "Reselected preset directory"
+
+                requireContext().showToast(text, Toast.LENGTH_LONG)
+            }
         }
+    }
+
+    override val snackbarAnchorView: View
+        get() = binding.snackbarRepelledLayout.parent as View
+
+    fun onBackPress() {
+        binding.drawerLayout.run {
+            if (isOpen)
+                closeDrawer()
+            else
+                viewModel.backPressHandler(
+                    {
+                        requireContext().showToast("Tap again to exit")
+                    },
+                    {
+                        requireActivity().finishAffinity()
+                    }
+                )
+        }
+    }
 }

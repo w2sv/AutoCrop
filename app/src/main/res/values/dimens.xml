@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="error_icon_cropping_failure_screen">28dip</dimen>
-    <dimen name="error_icon_cropping_failure_horizontal_margin">-42dip</dimen>
-    <dimen name="error_icon_cropping_failure_vertical_margin">-1dip</dimen>
+    <dimen name="crop_failure_screen_size_error_icon">28dip</dimen>
+    <dimen name="crop_failure_screen_horizontal_margin_error_icon">-42dip</dimen>
+    <dimen name="crop_failure_screen_vertical_margin_error_icon">-1dip</dimen>
 
-    <dimen name="margin_top_left_image_button">35dp</dimen>
-    <dimen name="size_image_button">28dp</dimen>
+    <dimen name="margin_horizontal">35dp</dimen>
+    <dimen name="margin_top_portrait_mode">46dp</dimen>
+    <dimen name="vertical_margin_crop_progress_bar">-80dp</dimen>
+    <dimen name="margin_buttons_within_row">14dp</dimen>
+
+    <dimen name="size_lottie_button">46dp</dimen>
+    <dimen name="size_image_button">30dp</dimen>
+
+    <dimen name="height_button_row">40dp</dimen>
+    <dimen name="height_button_row_w_label">60dp</dimen>
+
     <dimen name="padding_image_button_w_background">11dp</dimen>
-    <dimen name="margin_crop_progress_bar">-80dp</dimen>
 
-    <!-- Manual Crop Fragment -->
-    <dimen name="margin_top_button">4dp</dimen>
+    <!-- override -->
+    <dimen name="onboarding_description_text_size">18sp</dimen>
+    <!-- override -->
+    <dimen name="onboarding_page_indicator_dot_size">12dp</dimen>
 
-    <!-- Crop overlay view-->
-    <dimen name="margin_max_crop_rect">24dp</dimen>
-    <dimen name="min_rect">56dp</dimen>
-
-    <dimen name="corner_toggle_width">3dp</dimen>
-    <dimen name="corner_toggle_length">16dp</dimen>
-    <dimen name="grid_line_width">1dp</dimen>
-    <dimen name="touch_threshold">16dp</dimen>
-
-    <!-- Toolbar size icons -->
-    <dimen name="height_button">40dp</dimen>
-    <dimen name="width_button">70dp</dimen>
+    <dimen name="crop_adjustment_screen_horizontal_margin_top_buttons">4dp</dimen>
+    <dimen name="crop_adjustment_screen_width_toolbar_buttons">70dp</dimen>
 </resources>

@@ -2,7 +2,7 @@ package com.w2sv.bidirectionalviewpager.recyclerview
 
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class BidirectionalRecyclerViewAdapter<DS: Collection<Any>, VH : RecyclerView.ViewHolder>(
+abstract class BidirectionalRecyclerViewAdapter<DS : Collection<Any>, VH : RecyclerView.ViewHolder>(
     val dataSet: DS,
     offscreenPageLimit: Int
 ) : ExtendedRecyclerViewAdapter<VH>(offscreenPageLimit) {

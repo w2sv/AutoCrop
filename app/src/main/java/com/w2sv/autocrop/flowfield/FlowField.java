@@ -2,43 +2,45 @@ package com.w2sv.autocrop.flowfield;
 
 import android.util.Pair;
 
-import androidx.annotation.NonNull;
-
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import processing.core.PApplet;
 import processing.core.PVector;
 
-class FlowField extends PApplet {
-    final static private int FLOW_FIELD_RESOLUTION = 200;
-    private static final Map<Pair<Integer, Integer>, Float> xOffCache = new HashMap<>();
+class FlowField {
+    private final Map<Pair<Integer, Integer>, Float> xOffCache = new HashMap<>();
     private float zOff = 0;
 
-    void update(ArrayList<Particle> particles) {
-        var pos2Noise = new HashMap<Pair<Integer, Integer>, PVector>();
+    void updateAndApplyTo(Iterator<Particle> particles, PApplet parent) {
+        HashMap<Pair<Integer, Integer>, PVector> forceCash = new HashMap<>();
 
-        for (int i = 0; i < particles.size(); i++) {
-            var pos = new Pair<>(
-                    floor(particles.get(i).pos.x / FLOW_FIELD_RESOLUTION) + 1,
-                    floor(particles.get(i).pos.y / FLOW_FIELD_RESOLUTION) + 1
-            );
+        particles.forEachRemaining((particle -> particle.applyForceVector(
+                getForceVector(
+                        Pair.create(
+                                PApplet.floor(particle.pos.x / Sketch.Config.FLOW_FIELD_GRANULARITY) + 1,
+                                PApplet.floor(particle.pos.y / Sketch.Config.FLOW_FIELD_GRANULARITY) + 1
+                        ),
+                        forceCash,
+                        parent
+                )
+        )));
 
-            if (pos2Noise.containsKey(pos))
-                particles.get(i).applyFlowFieldVector(pos2Noise.get(pos));
-            else {
-                PVector v = PVector.fromAngle(noise(xOff(pos), 0, zOff) * 25.132742f).normalize();
-                particles.get(i).applyFlowFieldVector(v);
-                pos2Noise.put(pos, v);
-            }
-        }
-
-        zOff += 0.004;
+        zOff += Sketch.Config.FLOW_FIELD_Z_OFF_INCREMENT;
     }
 
-    private float xOff(@NonNull Pair<Integer, Integer> pos) {
+    private PVector getForceVector(Pair<Integer, Integer> pos, HashMap<Pair<Integer, Integer>, PVector> forceCash, PApplet parent) {
+        if (forceCash.containsKey(pos))
+            return forceCash.get(pos);
+        PVector v = PVector.fromAngle(parent.noise(getXOff(pos), 0, zOff) * 25.132742f).normalize();
+        forceCash.put(pos, v);
+        return v;
+    }
+
+    private float getXOff(Pair<Integer, Integer> pos) {
         if (xOffCache.containsKey(pos))
+            //noinspection ConstantConditions
             return xOffCache.get(pos);
         float xOff = pos.first * pos.second * 0.1f;
         xOffCache.put(pos, xOff);

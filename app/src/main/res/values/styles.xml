@@ -10,24 +10,23 @@
 
     <style name="Theme.App.Main" parent="Theme.AppCompat.NoActionBar">
 
-        <item name="android:windowBackground">@color/neutral_background</item>
-
         <!-- disable all caps -->
-
         <item name="textAllCaps">false</item>
         <item name="android:textAllCaps">false</item>
-
-        <!-- enable fullscreen mode -->
-
+        <!-- enable translucent mode -->
         <item name="windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowFullscreen">false</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">true</item>
-
         <!-- color -->
+        <item name="android:windowBackground">@color/neutral_background</item>
+        <item name="colorAccent">@color/higher_light</item>
 
-        <item name="colorAccent">@color/highest_light</item>
+    </style>
 
+    <style name="ButtonRowLabel">
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingHorizontal">2dp</item>
     </style>
 
     <style name="Shadow">
@@ -37,14 +36,10 @@
         <item name="android:shadowRadius">2</item>
     </style>
 
-    <style name="ItalicText">
-        <item name="android:textStyle">italic</item>
-    </style>
-
     <!--    App Title TextView-->
 
     <style name="AutoCropTV" parent="Shadow">
-        <item name="android:text">@string/app_title</item>
+        <item name="android:text">@string/auto_crop</item>
         <item name="android:textColor">@color/magenta_saturated</item>
         <item name="android:fontFamily">@font/london</item>
     </style>
