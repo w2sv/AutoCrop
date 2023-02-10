@@ -23,11 +23,11 @@ import com.w2sv.androidutils.ui.SimpleAnimationListener
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.ui.views.animationComposer
-import com.w2sv.common.databinding.DeleteRequestBinding
+import com.w2sv.autocrop.databinding.ExitBinding
 import kotlinx.coroutines.launch
 
 class ExitFragment :
-    AppFragment<DeleteRequestBinding>(DeleteRequestBinding::class.java) {
+    AppFragment<ExitBinding>(ExitBinding::class.java) {
 
     private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
 
@@ -80,7 +80,7 @@ class ExitFragment :
 
     private fun exitAsSoonAsIOProcessingFinished() {
         lifecycleScope.launch {
-            binding.appLogoIv.animationComposer(
+            binding.deleteRequestLayout.appLogoIv.animationComposer(
                 listOf(
                     Techniques.Wobble,
                     Techniques.Wave,
