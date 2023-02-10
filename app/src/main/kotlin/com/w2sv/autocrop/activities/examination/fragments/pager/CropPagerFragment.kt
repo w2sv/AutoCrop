@@ -252,7 +252,7 @@ class CropPagerFragment :
             discardingStatisticsTv.text = resources.getHtmlText(
                 R.string.discarding_statistics,
                 "$discardedPercentage%",
-                discardedFileSizeString
+                discardedFileSizeFormatted
             )
         }
 

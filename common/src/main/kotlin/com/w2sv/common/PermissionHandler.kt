@@ -5,7 +5,7 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import com.w2sv.common.extensions.snackyBuilder
-import com.w2sv.permissionhandler.SinglePermissionHandler
+import com.w2sv.permissionhandler.SingularPermissionHandler
 import de.mateware.snacky.Snacky
 
 class PermissionHandler(
@@ -13,7 +13,7 @@ class PermissionHandler(
     permission: String,
     private val permissionDeniedMessage: String,
     private val permissionRationalSuppressedMessage: String
-) : SinglePermissionHandler(activity, permission, "PermissionHandler") {
+) : SingularPermissionHandler(activity, permission, "PermissionHandler") {
 
     override fun requestPermissionIfRequired(
         onGranted: () -> Unit,

@@ -84,7 +84,7 @@ data class Crop(
 ) : Parcelable {
 
     @IgnoredOnParcel
-    val discardedFileSizeString: String by lazy {
+    val discardedFileSizeFormatted: String by lazy {
         if (discardedKB >= 1000)
             "${(discardedKB.toFloat() / 1000).rounded(1)}mb"
         else
