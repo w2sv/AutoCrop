@@ -6,9 +6,8 @@ import android.net.Uri
 import android.os.Parcelable
 import android.provider.MediaStore
 import com.w2sv.cropbundle.cropping.CropEdges
-import com.w2sv.cropbundle.cropping.cropEdgesCandidates
 import com.w2sv.cropbundle.cropping.cropped
-import com.w2sv.cropbundle.cropping.maxHeightEdges
+import com.w2sv.cropbundle.cropping.getCropEdges
 import com.w2sv.cropbundle.io.ImageMimeType
 import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.cropbundle.io.extensions.queryMediaStoreData
@@ -33,11 +32,10 @@ data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
             contentResolver: ContentResolver
         ): Pair<CropBundle?, CreationFailureReason?> =
             contentResolver.loadBitmap(screenshotMediaUri)?.let { screenshotBitmap ->
-                screenshotBitmap.cropEdgesCandidates()?.let { candidates ->
+                screenshotBitmap.getCropEdges()?.let { cropEdges ->
                     val screenshot = Screenshot(
                         screenshotMediaUri,
                         screenshotBitmap.height,
-                        candidates,
                         Screenshot.MediaStoreData.query(contentResolver, screenshotMediaUri)
                     )
 
@@ -47,7 +45,7 @@ data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
                             crop = Crop.fromScreenshot(
                                 screenshotBitmap,
                                 screenshot.mediaStoreData.diskUsage,
-                                candidates.maxHeightEdges()
+                                cropEdges
                             )
                         ),
                         null
@@ -66,7 +64,7 @@ data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
 data class Screenshot(
     val uri: Uri,
     val height: Int,
-    val cropEdgesCandidates: List<CropEdges>,
+    //    val cropEdgesCandidates: List<CropEdges>,
     val mediaStoreData: MediaStoreData
 ) : Parcelable {
 

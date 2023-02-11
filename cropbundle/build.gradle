@@ -19,6 +19,7 @@ dependencies {
     implementation libs.androidx.core
     implementation libs.kotlinutils
     implementation libs.slimber
+    implementation libs.cv2
 
     implementation libs.google.hilt
     kapt libs.google.hilt.kapt
@@ -31,4 +32,5 @@ dependencies {
     // androidTest
     androidTestImplementation libs.bundles.androidTest
     androidTestRuntimeOnly libs.junit5.mannodermaus.runner
+    androidTestImplementation 'androidx.test:monitor:1.6.1'
 }

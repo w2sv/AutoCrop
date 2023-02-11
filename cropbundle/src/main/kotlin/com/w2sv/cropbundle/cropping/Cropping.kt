@@ -1,53 +1,62 @@
 package com.w2sv.cropbundle.cropping
 
-import android.graphics.Bitmap
+import org.opencv.core.CvType
+import org.opencv.core.Mat
+import org.opencv.imgproc.Imgproc
+import slimber.log.d
 
-fun Bitmap.cropped(edges: CropEdges): Bitmap =
-    Bitmap.createBitmap(
-        this,
-        0,
-        edges.top,
-        width,
-        edges.height
-    )
+internal fun getEdgeCandidates(matRGBA: Mat): List<Int>? {
+    val matGrayScale = Mat()
+    Imgproc.cvtColor(matRGBA, matGrayScale, Imgproc.COLOR_RGBA2GRAY)
 
-fun Bitmap.cropEdges(): CropEdges? =
-    cropEdgesCandidates()
-        ?.maxHeightEdges()
+    val matCanny = Mat()
+    Imgproc.Canny(matGrayScale, matCanny, 100.0, 200.0)
 
-fun Bitmap.cropEdgesCandidates(): List<CropEdges>? =
-    rawCropEdgesCandidates()
-        //        .verticalFluctuationComprisingEdges(this)
-        .run {
-            ifEmpty { null }
-        }
+    //    matCanny.logInfo("Canny")
 
-fun List<CropEdges>.maxHeightEdges(): CropEdges =
-    maxByOrNull { it.height }!!.run {
-        val excludeMargin = 1  // TODO Uhm...
-        CropEdges(top + excludeMargin to bottom - excludeMargin)
+    return measured("getCandidates") {
+        getCandidates(matCanny, 150.0).ifEmpty { null }
+    }
+}
+
+@Suppress("SameParameterValue")
+private fun getCandidates(matCanny: Mat, threshold: Double): List<Int> {
+    return (0 until matCanny.rows()).filter { i ->
+        matCanny.row(i).singleChannelMean() > threshold
+    }
+}
+
+internal fun getMaxScoreCropEdges(matRGBA: Mat, incompleteCandidates: List<Int>): CropEdges {
+    d { "Candidates: $incompleteCandidates" }
+
+    val candidates = listOf(0) + incompleteCandidates + listOf(matRGBA.rows())
+
+    val matSobel = Mat()
+    measured("Sobel Computation") {
+        Imgproc.Sobel(matRGBA, matSobel, CvType.CV_16U, 2, 2, 5)
     }
 
-//private fun List<CropEdges>.verticalFluctuationComprisingEdges(
-//    image: Bitmap,
-//    bilateralWidthOffsetPercentage: Float = 0.4f,
-//    pixelComparisonsBetweenCropEdges: Int = 4
-//): List<CropEdges> {
-//    val horizontalOffsetPixels: Int by lazy {
-//        (image.width * bilateralWidthOffsetPercentage).toInt()
-//    }
-//
-//    return filter { edges ->
-//        val columnTraversalStep = edges.height / pixelComparisonsBetweenCropEdges  // TODO
-//        columnTraversalStep < 1 || (horizontalOffsetPixels..image.width - horizontalOffsetPixels)
-//            .all { x ->
-//                image.cropEdgesDelimitedColumnNotMonochromatic(x, edges, columnTraversalStep)
-//            }
-//    }
-//}
-//
-//private fun Bitmap.cropEdgesDelimitedColumnNotMonochromatic(x: Int, edges: CropEdges, step: Int): Boolean =
-//    (edges.top + step..edges.bottom step step)
-//        .any { y ->
-//            getPixel(x, y - step) != getPixel(x, y)
-//        }
+    //    matSobel.logInfo("Sobel")
+
+    var maxScore = 0f
+    var maxScoreEdges: CropEdges? = null
+
+    measured("MaxScoreCropEdges Computation") {
+        candidates.windowed(2)
+            .map { CropEdges(it) }
+            .forEach { edges ->
+                val cropAreaMean: Float = matSobel.cropArea(edges).multiChannelMean().toFloat()
+//                    .also { d { "cropAreaMean=$it" } }
+                val heightPortion: Float = edges.height.toFloat() / matSobel.rows().toFloat()
+                val score: Float = cropAreaMean * heightPortion
+//                    .also { d { "score=$it" } }
+
+                if (score > maxScore) {
+                    maxScore = score
+                    maxScoreEdges = edges
+                }
+            }
+    }
+
+    return maxScoreEdges!!
+}

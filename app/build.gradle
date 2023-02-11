@@ -110,6 +110,7 @@ dependencies {
     implementation libs.snacky
     implementation libs.animatoo
     implementation libs.lottie
+    implementation libs.cv2
 
     // ---------------
     // unitTest
