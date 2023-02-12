@@ -84,7 +84,6 @@ dependencies {
     implementation libs.androidx.splashscreen
 
     // google
-    implementation libs.google.guava
     implementation libs.google.material
     implementation libs.google.hilt
     kapt libs.google.hilt.kapt

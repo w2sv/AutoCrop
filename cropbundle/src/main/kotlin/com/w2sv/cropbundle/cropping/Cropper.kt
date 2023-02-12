@@ -14,7 +14,7 @@ class Cropper @Inject constructor(private val intPreferences: IntPreferences) {
     @InstallIn(SingletonComponent::class)
     @EntryPoint
     interface CropperEntryPoint {
-        fun getInstance(): Cropper
+        fun getCropper(): Cropper
     }
 
     companion object {
@@ -23,7 +23,7 @@ class Cropper @Inject constructor(private val intPreferences: IntPreferences) {
                 context,
                 CropperEntryPoint::class.java
             )
-                .getInstance()
+                .getCropper()
 
         fun getCropEdges(src: Bitmap, context: Context): CropEdges? =
             getInstance(context).getCropEdges(src)

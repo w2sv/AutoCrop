@@ -18,7 +18,7 @@ class CropBundleIORunner @Inject constructor(
     @InstallIn(SingletonComponent::class)
     @EntryPoint
     interface CropBundleIOProcessorEntryPoint {
-        fun getInstance(): CropBundleIORunner
+        fun getCropBundleIOProcessor(): CropBundleIORunner
     }
 
     companion object {
@@ -27,7 +27,7 @@ class CropBundleIORunner @Inject constructor(
                 context,
                 CropBundleIOProcessorEntryPoint::class.java
             )
-                .getInstance()
+                .getCropBundleIOProcessor()
 
         fun invoke(context: Context, cropBundle: CropBundle, deleteScreenshot: Boolean): CropBundleIOResult =
             invoke(
