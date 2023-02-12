@@ -8,7 +8,7 @@
     <string name="menu_item_rate">Rate</string>
     <string name="menu_item_about">About</string>
     <string name="menu_item_change_directory">Target Directory</string>
-    <string name="cropping">Cropping…</string>
+    <string name="cropping_dot_dot_dot">Cropping…</string>
     <string name="fraction">%1$d/%2$d</string>
     <string name="processing_crops">Processing crops…</string>
     <string name="cropping_failure">No cropping borders found</string>
@@ -53,4 +53,8 @@
     <string name="save_all_crops">Save all crops</string>
     <string name="all">All</string>
     <string name="current">Current</string>
+    <string name="configure_settings">Configure Settings</string>
+    <string name="cropping">Cropping</string>
+    <string name="threshold">Threshold</string>
+    <string name="configure_crop_settings">Configure Crop Settings</string>
 </resources>

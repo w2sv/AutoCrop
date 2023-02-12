@@ -149,14 +149,14 @@ class CroppingTest {
             )
     }
 
-        @ParameterizedTest
-        @MethodSource
-        fun validScreenshotCropEdges(fileName: String, expected: CropEdges) {
-            assertEquals(
-                expected,
-                loadTestScreenshot(fileName, "valid").getCropEdges()
-            )
-        }
+    @ParameterizedTest
+    @MethodSource
+    fun validScreenshotCropEdges(fileName: String, expected: CropEdges) {
+        assertEquals(
+            expected,
+            loadTestScreenshot(fileName, "valid").getCropEdges()
+        )
+    }
 
     @ParameterizedTest
     @MethodSource

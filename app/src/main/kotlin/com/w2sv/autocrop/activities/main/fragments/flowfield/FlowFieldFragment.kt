@@ -50,13 +50,14 @@ import com.w2sv.autocrop.ui.views.fadeInAnimationComposer
 import com.w2sv.autocrop.ui.views.fadeOut
 import com.w2sv.autocrop.ui.views.onHalfwayFinished
 import com.w2sv.autocrop.utils.extensions.onHalfwayShown
-import com.w2sv.common.PermissionHandler
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.autocrop.utils.pathIdentifier
+import com.w2sv.common.PermissionHandler
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.preferences.CropSaveDirPreferences
+import com.w2sv.preferences.IntPreferences
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -76,9 +77,10 @@ class FlowFieldFragment :
 
     @HiltViewModel
     class ViewModel @Inject constructor(
+        @ApplicationContext context: Context,
         savedStateHandle: SavedStateHandle,
         cropSaveDirPreferences: CropSaveDirPreferences,
-        @ApplicationContext context: Context
+        private val intPreferences: IntPreferences
     ) : androidx.lifecycle.ViewModel() {
 
         val accumulatedIoResults: AccumulatedIOResults? = savedStateHandle[AccumulatedIOResults.EXTRA]
@@ -150,6 +152,27 @@ class FlowFieldFragment :
         }
         val screenshotListenerCancelledFromNotificationLive: LiveData<Boolean> by lazy {
             MutableLiveData(false)
+        }
+
+        /**
+         * Crop Settings
+         */
+
+        fun syncCropSettings() {
+            intPreferences.cropEdgeCandidateThreshold = cropEdgeCandidateThresholdLive.value!!
+        }
+
+        val cropSettingsRequiringSyncLive: LiveData<Boolean> by lazy {
+            MutableLiveData(false)
+        }
+
+        fun onCropSettingsInputChanged(){
+            if (cropEdgeCandidateThresholdLive.value != intPreferences.cropEdgeCandidateThreshold)
+                cropSettingsRequiringSyncLive.postValue(true)
+        }
+
+        val cropEdgeCandidateThresholdLive: LiveData<Int> by lazy {
+            MutableLiveData(intPreferences.cropEdgeCandidateThreshold)
         }
 
         /**

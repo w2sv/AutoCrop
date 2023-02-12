@@ -15,6 +15,7 @@ import com.w2sv.common.extensions.getParcelableExtraCompat
 import com.w2sv.preferences.BooleanPreferences
 import com.w2sv.preferences.CropSaveDirPreferences
 import com.w2sv.preferences.GlobalFlags
+import com.w2sv.preferences.IntPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -59,8 +60,11 @@ class MainActivity : AppActivity() {
     @Inject
     lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
+    @Inject
+    lateinit var intPreferences: IntPreferences
+
     override val lifecycleObservers: List<LifecycleObserver>
-        get() = listOf(globalFlags, booleanPreferences, cropSaveDirPreferences)
+        get() = listOf(globalFlags, booleanPreferences, cropSaveDirPreferences, intPreferences)
 
     override fun getRootFragment(): Fragment =
         FlowFieldFragment.getInstance(intent.getParcelableExtraCompat(AccumulatedIOResults.EXTRA))

@@ -12,7 +12,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/vertical_margin_crop_progress_bar"
 
-        android:text="@string/cropping"
+        android:text="@string/cropping_dot_dot_dot"
         android:textColor="@color/highlight"
         android:textSize="22sp" />
 

@@ -96,7 +96,7 @@ class CropFragment
                     getMediaUri(context, screenshotUri)!!
                 else
                     screenshotUri,
-                contentResolver = context.contentResolver
+                context = context
             ).run {
                 when {
                     first != null -> first

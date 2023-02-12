@@ -1,11 +1,12 @@
 package com.w2sv.cropbundle.cropping
 
+import com.w2sv.androidutils.utils.measured
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
 import slimber.log.d
 
-internal fun getEdgeCandidates(matRGBA: Mat): List<Int>? {
+internal fun getEdgeCandidates(matRGBA: Mat, threshold: Double): List<Int>? {
     val matGrayScale = Mat()
     Imgproc.cvtColor(matRGBA, matGrayScale, Imgproc.COLOR_RGBA2GRAY)
 
@@ -14,17 +15,16 @@ internal fun getEdgeCandidates(matRGBA: Mat): List<Int>? {
 
     //    matCanny.logInfo("Canny")
 
-    return measured("getCandidates") {
-        getCandidates(matCanny, 150.0).ifEmpty { null }
+    return measured(methodLabel = "getCandidates") {
+        getCandidates(matCanny, threshold).ifEmpty { null }
     }
 }
 
 @Suppress("SameParameterValue")
-private fun getCandidates(matCanny: Mat, threshold: Double): List<Int> {
-    return (0 until matCanny.rows()).filter { i ->
+private fun getCandidates(matCanny: Mat, threshold: Double): List<Int> =
+    (0 until matCanny.rows()).filter { i ->
         matCanny.row(i).singleChannelMean() > threshold
     }
-}
 
 internal fun getMaxScoreCropEdges(matRGBA: Mat, incompleteCandidates: List<Int>): CropEdges {
     d { "Candidates: $incompleteCandidates" }
@@ -32,7 +32,7 @@ internal fun getMaxScoreCropEdges(matRGBA: Mat, incompleteCandidates: List<Int>)
     val candidates = listOf(0) + incompleteCandidates + listOf(matRGBA.rows())
 
     val matSobel = Mat()
-    measured("Sobel Computation") {
+    measured(methodLabel = "Sobel Computation") {
         Imgproc.Sobel(matRGBA, matSobel, CvType.CV_16U, 2, 2, 5)
     }
 
@@ -41,15 +41,13 @@ internal fun getMaxScoreCropEdges(matRGBA: Mat, incompleteCandidates: List<Int>)
     var maxScore = 0f
     var maxScoreEdges: CropEdges? = null
 
-    measured("MaxScoreCropEdges Computation") {
+    measured(methodLabel = "MaxScoreCropEdges Computation") {
         candidates.windowed(2)
             .map { CropEdges(it) }
             .forEach { edges ->
-                val cropAreaMean: Float = matSobel.cropArea(edges).multiChannelMean().toFloat()
-//                    .also { d { "cropAreaMean=$it" } }
+                val cropAreaMean: Float = matSobel.getCrop(edges).multiChannelMean().toFloat()
                 val heightPortion: Float = edges.height.toFloat() / matSobel.rows().toFloat()
                 val score: Float = cropAreaMean * heightPortion
-//                    .also { d { "score=$it" } }
 
                 if (score > maxScore) {
                     maxScore = score

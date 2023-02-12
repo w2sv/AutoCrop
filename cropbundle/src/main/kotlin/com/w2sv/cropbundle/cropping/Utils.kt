@@ -3,21 +3,9 @@ package com.w2sv.cropbundle.cropping
 import android.graphics.Bitmap
 import org.opencv.android.Utils
 import org.opencv.core.Core
-import org.opencv.core.CvException
 import org.opencv.core.Mat
 import org.opencv.core.MatOfDouble
 import slimber.log.d
-import kotlin.system.measureTimeMillis
-
-// Note: Range.s included, Range.e excluded
-internal fun Mat.cropArea(edges: CropEdges): Mat =
-    rowRange(edges.top, edges.bottom)
-
-internal fun Mat.multiChannelMean(): Double =
-    Core.mean(this).`val`.average()
-
-internal fun Mat.singleChannelMean(): Double =
-    Core.mean(this).`val`.first()
 
 internal fun Bitmap.getMat(): Mat {
     val mat = Mat()
@@ -25,41 +13,58 @@ internal fun Bitmap.getMat(): Mat {
     return mat
 }
 
-internal fun Mat.logInfo(matrixName: String) {
-    d { "Cropping | ${matrixName}.nRows=${rows()} | nCols=${cols()}" }
+// Note: Range.s included, Range.e excluded
+internal fun Mat.getCrop(edges: CropEdges): Mat =
+    rowRange(edges.top, edges.bottom)
 
-    d { "Cropping | ${matrixName}.element=${get(0, 0).toList()}; ${channels()} channels" }
+/**
+ * Mean
+ */
 
+internal fun Mat.multiChannelMean(): Double =
+    Core.mean(this).`val`.average()
+
+internal fun Mat.singleChannelMean(): Double =
+    Core.mean(this).`val`.first()
+
+/**
+ * Mean & StdDev
+ */
+
+internal fun Mat.getMeanStdDevMats(): Pair<MatOfDouble, MatOfDouble> {
     val mean = MatOfDouble()
     val stdDev = MatOfDouble()
     Core.meanStdDev(this, mean, stdDev)
 
-    d { "Cropping | ${matrixName}.multiChannelMean=${mean.toList()}" }
-    d { "Cropping | ${matrixName}.std=${stdDev.toList()}" }
-
-    try {
-        val minMaxLoc = Core.minMaxLoc(this)
-        d { "Cropping | ${matrixName}.min=${minMaxLoc.minVal}" }
-        d { "Cropping | ${matrixName}.max=${minMaxLoc.maxVal}" }
-    }
-    catch (e: CvException) {
-        val minMax = getMinMaxColorValues()
-        d { "Cropping | ${matrixName}.min=${minMax.first}" }
-        d { "Cropping | ${matrixName}.max=${minMax.second}" }
-    }
+    return mean to stdDev
 }
 
-private fun Mat.getMinMaxColorValues(): Pair<Double, Double> {
+/**
+ * MinMax
+ */
+
+internal fun Mat.getMinMaxElements(): Pair<Double, Double> =
+    when (channels()) {
+        1 -> getSingleChannelMinMaxElements()
+        else -> getMultiChannelMinMaxElements()
+    }
+
+internal fun Mat.getSingleChannelMinMaxElements(): Pair<Double, Double> =
+    Core.minMaxLoc(this).run {
+        minVal to maxVal
+    }
+
+internal fun Mat.getMultiChannelMinMaxElements(): Pair<Double, Double> {
     var min = Double.POSITIVE_INFINITY
     var max = Double.NEGATIVE_INFINITY
 
     (0 until rows()).forEach { i ->
         (0 until cols()).forEach { j ->
-            get(i, j).forEach { color ->
-                if (color < min)
-                    min = color
-                if (color > max)
-                    max = color
+            get(i, j).forEach { element ->
+                if (element < min)
+                    min = element
+                if (element > max)
+                    max = element
             }
         }
     }
@@ -67,16 +72,17 @@ private fun Mat.getMinMaxColorValues(): Pair<Double, Double> {
     return min to max
 }
 
-internal inline fun <T> measured(methodLabel: String, f: () -> T): T {
-    var result: T
-    measureTimeMillis {
-        result = f()
-    }
-        .also {
-            d {
-                "$methodLabel completed in ${it}ms"
-            }
-        }
+/**
+ * Logging
+ */
 
-    return result
+internal fun Mat.logInfo(matrixName: String) {
+    val (min, max) = getMinMaxElements()
+    val (meanMat, stdDevMat) = getMeanStdDevMats()
+
+    d {
+        "$matrixName: ${rows()}X${cols()}X${channels()} \n\t" +
+                "μ=${meanMat.toList()} σ=${stdDevMat.toList()} \n\t" +
+                "min=$min max=$max"
+    }
 }

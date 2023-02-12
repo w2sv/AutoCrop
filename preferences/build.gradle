@@ -12,6 +12,8 @@ android {
 }
 
 dependencies {
+    implementation project(path: ':common')
+
     implementation libs.kotlinutils
     implementation libs.androidutils
     api libs.typedpreferences

@@ -9,6 +9,16 @@
         android:icon="@drawable/ic_hearing_24"
         android:title="@string/screenshot_listener" />
 
+    <group>
+        <item android:title="@string/cropping">
+            <menu>
+                <item
+                    android:id="@+id/main_menu_item_configure_cropping_settings"
+                    android:icon="@drawable/ic_settings_24"
+                    android:title="@string/configure_settings" />
+            </menu>
+        </item>
+    </group>
 
     <!--  Crop Saving  -->
 

@@ -87,7 +87,8 @@ class ExaminationActivity : AppActivity() {
             context: Context
         ) {
             accumulatedIoResults.addFrom(
-                CropBundleIORunner.getInstance(context).invoke(
+                CropBundleIORunner.invoke(
+                    context,
                     cropBundle,
                     deleteScreenshot
                 )

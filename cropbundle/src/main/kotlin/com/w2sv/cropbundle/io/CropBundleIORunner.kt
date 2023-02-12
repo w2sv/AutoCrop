@@ -8,39 +8,51 @@ import com.w2sv.preferences.CropSaveDirPreferences
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
-class CropBundleIORunner @Inject constructor() {
+class CropBundleIORunner @Inject constructor(
+    private val cropSaveDirPreferences: CropSaveDirPreferences
+) {
 
     @InstallIn(SingletonComponent::class)
     @EntryPoint
     interface CropBundleIOProcessorEntryPoint {
-        fun cropBundleIOProcessor(): CropBundleIORunner
+        fun getInstance(): CropBundleIORunner
     }
 
     companion object {
-        fun getInstance(context: Context): CropBundleIORunner {
-            val hiltEntryPoint = EntryPointAccessors.fromApplication(
+        fun getInstance(context: Context): CropBundleIORunner =
+            EntryPointAccessors.fromApplication(
                 context,
                 CropBundleIOProcessorEntryPoint::class.java
             )
-            return hiltEntryPoint.cropBundleIOProcessor()
-        }
+                .getInstance()
+
+        fun invoke(context: Context, cropBundle: CropBundle, deleteScreenshot: Boolean): CropBundleIOResult =
+            invoke(
+                context,
+                cropBundle.crop.bitmap,
+                cropBundle.screenshot.mediaStoreData,
+                deleteScreenshot
+            )
+
+        fun invoke(
+            context: Context,
+            cropBitmap: Bitmap,
+            screenshotMediaStoreData: Screenshot.MediaStoreData,
+            deleteScreenshot: Boolean
+        ): CropBundleIOResult =
+            getInstance(context).invoke(
+                context,
+                cropBitmap,
+                screenshotMediaStoreData,
+                deleteScreenshot
+            )
     }
 
-    @Inject
-    lateinit var cropSaveDirPreferences: CropSaveDirPreferences
-
-    @Inject
-    @ApplicationContext
-    lateinit var context: Context
-
-    fun invoke(cropBundle: CropBundle, deleteScreenshot: Boolean): CropBundleIOResult =
-        invoke(cropBundle.crop.bitmap, cropBundle.screenshot.mediaStoreData, deleteScreenshot)
-
-    fun invoke(
+    private fun invoke(
+        context: Context,
         cropBitmap: Bitmap,
         screenshotMediaStoreData: Screenshot.MediaStoreData,
         deleteScreenshot: Boolean

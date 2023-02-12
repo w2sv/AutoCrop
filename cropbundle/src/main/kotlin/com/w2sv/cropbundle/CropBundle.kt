@@ -1,13 +1,14 @@
 package com.w2sv.cropbundle
 
 import android.content.ContentResolver
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Parcelable
 import android.provider.MediaStore
 import com.w2sv.cropbundle.cropping.CropEdges
+import com.w2sv.cropbundle.cropping.Cropper
 import com.w2sv.cropbundle.cropping.cropped
-import com.w2sv.cropbundle.cropping.getCropEdges
 import com.w2sv.cropbundle.io.ImageMimeType
 import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.cropbundle.io.extensions.queryMediaStoreData
@@ -29,14 +30,14 @@ data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
 
         fun attemptCreation(
             screenshotMediaUri: Uri,
-            contentResolver: ContentResolver
+            context: Context
         ): Pair<CropBundle?, CreationFailureReason?> =
-            contentResolver.loadBitmap(screenshotMediaUri)?.let { screenshotBitmap ->
-                screenshotBitmap.getCropEdges()?.let { cropEdges ->
+            context.contentResolver.loadBitmap(screenshotMediaUri)?.let { screenshotBitmap ->
+                Cropper.getCropEdges(screenshotBitmap, context)?.let { cropEdges ->
                     val screenshot = Screenshot(
                         screenshotMediaUri,
                         screenshotBitmap.height,
-                        Screenshot.MediaStoreData.query(contentResolver, screenshotMediaUri)
+                        Screenshot.MediaStoreData.query(context.contentResolver, screenshotMediaUri)
                     )
 
                     Pair(

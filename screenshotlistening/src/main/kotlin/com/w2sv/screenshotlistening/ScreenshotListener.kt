@@ -22,8 +22,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.common.collect.EvictingQueue
 import com.w2sv.common.PermissionHandler
 import com.w2sv.cropbundle.Screenshot
+import com.w2sv.cropbundle.cropping.Cropper
 import com.w2sv.cropbundle.cropping.cropped
-import com.w2sv.cropbundle.cropping.getCropEdges
 import com.w2sv.cropbundle.io.CROP_FILE_ADDENDUM
 import com.w2sv.cropbundle.io.extensions.compressToAndCloseStream
 import com.w2sv.cropbundle.io.extensions.loadBitmap
@@ -211,7 +211,7 @@ class ScreenshotListener : BoundService(),
     private fun onNewScreenshotUri(uri: Uri): Boolean =
         try {
             val screenshotBitmap = contentResolver.loadBitmap(uri)!!
-            screenshotBitmap.getCropEdges()?.let { cropEdges ->
+            Cropper.getCropEdges(screenshotBitmap, applicationContext)?.let { cropEdges ->
                 val screenshotMediaStoreData = Screenshot.MediaStoreData.query(contentResolver, uri)
                 val deleteRequestUri = getDeleteRequestUri(screenshotMediaStoreData.id)
                 val cropBitmap = screenshotBitmap.cropped(cropEdges)
