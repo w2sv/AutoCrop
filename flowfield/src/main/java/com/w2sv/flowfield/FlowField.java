@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.flowfield;
+package com.w2sv.flowfield;
 
 import android.util.Pair;
 

@@ -45,7 +45,7 @@ slimber = 'com.github.PaulWoitaschek:Slimber:2.0.0'
 snacky = 'com.github.matecode:Snacky:1.1.5'
 animatoo = 'com.github.mohammadatif:Animatoo:master'
 lottie = 'com.airbnb.android:lottie:5.2.0'
-cv2 = 'com.quickbirdstudios:opencv:3.4.15'
+opencv = 'com.quickbirdstudios:opencv:3.4.15'
 
 # unitTest
 junit5 = { module = 'org.junit.jupiter:junit-jupiter', version.ref = 'junit' }

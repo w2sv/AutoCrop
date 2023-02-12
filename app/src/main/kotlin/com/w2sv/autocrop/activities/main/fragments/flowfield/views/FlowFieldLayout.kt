@@ -5,12 +5,11 @@ import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
 import android.view.Display
-import android.view.View
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import com.w2sv.androidutils.ActivityRetriever
-import com.w2sv.autocrop.flowfield.Sketch
 import com.w2sv.autocrop.utils.extensions.resolution
+import com.w2sv.flowfield.Sketch
 import processing.android.PFragment
 
 class FlowFieldLayout(context: Context, attr: AttributeSet) :
@@ -22,26 +21,21 @@ class FlowFieldLayout(context: Context, attr: AttributeSet) :
 
         if (!isInEditMode) {
             activity.getDisplayCompat().resolution().let {
-                PFragment(
-                    Sketch(
-                        it.x,
-                        it.y
+                (activity as FragmentActivity).supportFragmentManager
+                    .beginTransaction()
+                    .add(
+                        id,
+                        PFragment(
+                            Sketch(
+                                it.x,
+                                it.y
+                            )
+                        )
                     )
-                )
-                    .setViewAllowingStateLoss(this, activity as FragmentActivity)
+                    .commitAllowingStateLoss()  // Fixes Exception java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
             }
         }
     }
-}
-
-/**
- * Fixes Exception java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
- */
-private fun PFragment.setViewAllowingStateLoss(view: View, fragmentActivity: FragmentActivity) {
-    fragmentActivity.supportFragmentManager
-        .beginTransaction()
-        .add(view.id, this)
-        .commitAllowingStateLoss()
 }
 
 private fun Activity.getDisplayCompat(): Display =

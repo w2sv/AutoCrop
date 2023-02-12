@@ -1,6 +1,6 @@
 package com.w2sv.autocrop.utils
 
-import com.w2sv.autocrop.flowfield.Random
+import com.w2sv.flowfield.Random
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

@@ -2,7 +2,7 @@
  * Core graphical algorithm by Daniel Shiffman @ https://thecodingtrain.com/CodingChallenges/024-perlinnoiseflowfield.html
  */
 
-package com.w2sv.autocrop.flowfield;
+package com.w2sv.flowfield;
 
 import com.google.common.collect.Sets;
 

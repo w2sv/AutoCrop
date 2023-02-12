@@ -20,7 +20,7 @@ dependencies {
     implementation libs.androidx.core
     implementation libs.kotlinutils
     implementation libs.slimber
-    implementation libs.cv2
+    implementation libs.opencv
     implementation libs.androidutils
 
     implementation libs.google.hilt

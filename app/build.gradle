@@ -95,6 +95,7 @@ dependencies {
     implementation project(path: ':cropbundle')
     implementation project(path: ':screenshotlistening')
     implementation project(path: ':common')
+    implementation project(path: ':flowfield')
 
     implementation libs.kotlinutils
     implementation libs.viewboundcontroller
@@ -105,12 +106,11 @@ dependencies {
     implementation libs.permissionhandler
 
     // other
-    implementation files('libs/processing-core-4.3.0.jar')
     implementation libs.slimber
     implementation libs.snacky
     implementation libs.animatoo
     implementation libs.lottie
-    implementation libs.cv2
+    implementation libs.opencv
 
     // ---------------
     // unitTest
