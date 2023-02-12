@@ -4,7 +4,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.daimajia.androidanimations.library.YoYo
 
-class LifecycleAwareAnimation(
+class SelfResettingAnimation(
     private val animationComposer: YoYo.AnimationComposer,
     lifecycleOwner: LifecycleOwner
 ) : DefaultLifecycleObserver {

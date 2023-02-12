@@ -40,11 +40,9 @@ import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragmen
 import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.databinding.CroppagerBinding
 import com.w2sv.autocrop.ui.model.Click
-import com.w2sv.autocrop.ui.views.CubeOutPageTransformer
 import com.w2sv.autocrop.ui.views.VisualizationType
 import com.w2sv.autocrop.ui.views.animate
 import com.w2sv.autocrop.ui.views.currentViewHolder
-import com.w2sv.autocrop.ui.views.scrollPeriodically
 import com.w2sv.autocrop.ui.views.visualize
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.cropbundle.Crop
@@ -56,6 +54,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.mateware.snacky.Snacky
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -432,5 +431,30 @@ class CropPagerFragment :
                 requireCastActivity<ExaminationActivity>().startMainActivity()
             }
         )
+    }
+}
+
+private fun ViewPager2.scrollPeriodically(
+    coroutineScope: CoroutineScope,
+    maxScrolls: Int,
+    period: Long,
+    onFinishedListener: () -> Unit
+): Job =
+    coroutineScope.launch(Dispatchers.Main) {
+        (0 until maxScrolls).forEach {
+            setCurrentItem(currentItem + 1, true)
+            if (it != maxScrolls - 1)
+                delay(period)
+        }
+        onFinishedListener()
+    }
+
+private class CubeOutPageTransformer : ViewPager2.PageTransformer {
+    override fun transformPage(page: View, position: Float) {
+        with(page) {
+            pivotX = (if (position < 0) width else 0).toFloat()
+            pivotY = height * 0.5f
+            rotationY = 90f * position
+        }
     }
 }
