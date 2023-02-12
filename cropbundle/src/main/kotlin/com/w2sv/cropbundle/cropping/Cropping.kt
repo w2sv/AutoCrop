@@ -13,30 +13,26 @@ internal fun getEdgeCandidates(matRGBA: Mat, threshold: Double): List<Int>? {
     val matCanny = Mat()
     Imgproc.Canny(matGrayScale, matCanny, 100.0, 200.0)
 
-    //    matCanny.logInfo("Canny")
-
     return measured(methodLabel = "getCandidates") {
-        getCandidates(matCanny, threshold).ifEmpty { null }
+        (0 until matCanny.rows()).filter { i ->
+            matCanny.row(i).singleChannelMean() > threshold
+        }
+            .run {
+                if (isEmpty())
+                    null
+                else
+                    listOf(0) + this + listOf(matCanny.rows())
+            }
     }
 }
 
-@Suppress("SameParameterValue")
-private fun getCandidates(matCanny: Mat, threshold: Double): List<Int> =
-    (0 until matCanny.rows()).filter { i ->
-        matCanny.row(i).singleChannelMean() > threshold
-    }
-
-internal fun getMaxScoreCropEdges(matRGBA: Mat, incompleteCandidates: List<Int>): CropEdges {
-    d { "Candidates: $incompleteCandidates" }
-
-    val candidates = listOf(0) + incompleteCandidates + listOf(matRGBA.rows())
+internal fun getMaxScoreCropEdges(candidates: List<Int>, matRGBA: Mat): CropEdges {
+    d { "Candidates: $candidates" }
 
     val matSobel = Mat()
     measured(methodLabel = "Sobel Computation") {
         Imgproc.Sobel(matRGBA, matSobel, CvType.CV_16U, 2, 2, 5)
     }
-
-    //    matSobel.logInfo("Sobel")
 
     var maxScore = 0f
     var maxScoreEdges: CropEdges? = null

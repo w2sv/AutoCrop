@@ -3,7 +3,7 @@ package com.w2sv.cropbundle
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.w2sv.cropbundle.cropping.CropEdges
-import com.w2sv.cropbundle.cropping.getCropEdges
+import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.cropbundle.utils.assetFileStream
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
@@ -154,7 +154,7 @@ class CroppingTest {
     fun validScreenshotCropEdges(fileName: String, expected: CropEdges) {
         assertEquals(
             expected,
-            loadTestScreenshot(fileName, "valid").getCropEdges()
+            loadTestScreenshot(fileName, "valid").crop()?.first
         )
     }
 
@@ -163,7 +163,7 @@ class CroppingTest {
     fun defectiveScreenshotCropEdges(fileName: String, expected: CropEdges) {
         d { "------------------------\nCroppingKt: $fileName" }
         val delta = 1f
-        val edges = loadTestScreenshot(fileName, "defective").getCropEdges()!!
+        val (edges, _) = loadTestScreenshot(fileName, "defective").crop()!!
 
         assertEquals(expected.top.toFloat(), edges.top.toFloat(), delta)
         assertEquals(expected.bottom.toFloat(), edges.bottom.toFloat(), delta)
@@ -185,7 +185,7 @@ class CroppingTest {
     //                fileName,
     //                "invalid"
     //            )
-    //                .getCropEdges()
+    //                .crop()
     //        )
     //    }
 }

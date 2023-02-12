@@ -211,7 +211,7 @@ class ScreenshotListener : BoundService(),
     private fun onNewScreenshotUri(uri: Uri): Boolean =
         try {
             val screenshotBitmap = contentResolver.loadBitmap(uri)!!
-            Cropper.getCropEdges(screenshotBitmap, applicationContext)?.let { cropEdges ->
+            Cropper.invoke(screenshotBitmap, applicationContext)?.let { (cropEdges, _) ->
                 val screenshotMediaStoreData = Screenshot.MediaStoreData.query(contentResolver, uri)
                 val deleteRequestUri = getDeleteRequestUri(screenshotMediaStoreData.id)
                 val cropBitmap = screenshotBitmap.cropped(cropEdges)

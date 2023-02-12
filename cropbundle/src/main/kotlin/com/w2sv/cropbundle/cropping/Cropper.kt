@@ -25,10 +25,10 @@ class Cropper @Inject constructor(private val intPreferences: IntPreferences) {
             )
                 .getCropper()
 
-        fun getCropEdges(src: Bitmap, context: Context): CropEdges? =
-            getInstance(context).getCropEdges(src)
+        fun invoke(src: Bitmap, context: Context): CropResult? =
+            getInstance(context).invoke(src)
     }
 
-    fun getCropEdges(src: Bitmap): CropEdges? =
-        src.getCropEdges(intPreferences.cropEdgeCandidateThreshold.toDouble())
+    private fun invoke(src: Bitmap): CropResult? =
+        src.crop(intPreferences.cropEdgeCandidateThresholdDouble)
 }

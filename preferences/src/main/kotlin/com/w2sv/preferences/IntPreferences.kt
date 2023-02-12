@@ -12,4 +12,6 @@ class IntPreferences @Inject constructor(appPreferences: SharedPreferences) : In
     sharedPreferences = appPreferences
 ) {
     var cropEdgeCandidateThreshold by this
+
+    val cropEdgeCandidateThresholdDouble: Double get() = cropEdgeCandidateThreshold.toDouble()
 }

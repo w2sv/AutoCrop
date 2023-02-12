@@ -33,10 +33,11 @@ data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
             context: Context
         ): Pair<CropBundle?, CreationFailureReason?> =
             context.contentResolver.loadBitmap(screenshotMediaUri)?.let { screenshotBitmap ->
-                Cropper.getCropEdges(screenshotBitmap, context)?.let { cropEdges ->
+                Cropper.invoke(screenshotBitmap, context)?.let { (edges, candidates) ->
                     val screenshot = Screenshot(
                         screenshotMediaUri,
                         screenshotBitmap.height,
+                        candidates,
                         Screenshot.MediaStoreData.query(context.contentResolver, screenshotMediaUri)
                     )
 
@@ -46,7 +47,7 @@ data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
                             crop = Crop.fromScreenshot(
                                 screenshotBitmap,
                                 screenshot.mediaStoreData.diskUsage,
-                                cropEdges
+                                edges
                             )
                         ),
                         null
@@ -65,7 +66,7 @@ data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
 data class Screenshot(
     val uri: Uri,
     val height: Int,
-    //    val cropEdgesCandidates: List<CropEdges>,
+    val cropEdgeCandidates: List<Int>,
     val mediaStoreData: MediaStoreData
 ) : Parcelable {
 
