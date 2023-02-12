@@ -16,8 +16,8 @@ import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maintainedPercentage
-import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
+import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.cropbundle.cropping.CropEdges
 import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.kotlinutils.extensions.rounded

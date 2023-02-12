@@ -80,9 +80,9 @@
         android:layout_marginEnd="26dp"
 
         android:text="@string/fraction"
+        android:textColor="@color/crop_pager_text"
         android:textSize="15sp"
         android:textStyle="italic"
-        android:textColor="@color/crop_pager_text"
 
         tools:ignore="RelativeOverlap" />
 
@@ -126,8 +126,8 @@
                     android:layout_marginTop="30dp"
 
                     android:text="@string/discarding_statistics"
-                    android:textSize="13sp"
-                    android:textColor="@color/crop_pager_text"/>
+                    android:textColor="@color/crop_pager_text"
+                    android:textSize="13sp" />
 
                 <!--Current Crop Button Row w Label-->
 

@@ -3,7 +3,7 @@ package com.w2sv.autocrop.activities.examination.fragments.pager.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import com.w2sv.autocrop.activities.getFragment
+import com.w2sv.autocrop.utils.getFragment
 
 class SaveCropDialog : CropSavingDialog() {
 

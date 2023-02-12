@@ -5,13 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.viewpager2.widget.ViewPager2
-import com.w2sv.cropbundle.CropBundle
 import com.w2sv.autocrop.databinding.ImageviewCropBinding
 import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
 import com.w2sv.bidirectionalviewpager.ViewRemovableBidirectionalViewPager2
 import com.w2sv.bidirectionalviewpager.livedata.UpdateBlockableLiveData
 import com.w2sv.bidirectionalviewpager.recyclerview.BidirectionalRecyclerViewAdapter
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
+import com.w2sv.cropbundle.CropBundle
 
 /**
  * Proxy for non extendable [viewPager2]

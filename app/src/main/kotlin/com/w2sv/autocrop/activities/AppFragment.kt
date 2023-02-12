@@ -4,9 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
@@ -18,12 +16,6 @@ import com.w2sv.common.extensions.snackyBuilder
 import com.w2sv.viewboundcontroller.ViewBoundFragment
 import de.mateware.snacky.Snacky
 import kotlinx.coroutines.CoroutineScope
-
-fun <F : Fragment> getFragment(clazz: Class<F>, vararg bundlePairs: Pair<String, Any?>): F =
-    clazz.newInstance()
-        .apply {
-            arguments = bundleOf(*bundlePairs)
-        }
 
 abstract class AppFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
     ViewBoundFragment<VB>(bindingClass) {

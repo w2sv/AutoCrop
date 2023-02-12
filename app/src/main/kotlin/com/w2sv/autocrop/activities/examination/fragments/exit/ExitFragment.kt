@@ -22,8 +22,8 @@ import com.w2sv.androidutils.extensions.invokeOnCompletion
 import com.w2sv.androidutils.ui.SimpleAnimationListener
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
-import com.w2sv.autocrop.ui.views.animationComposer
 import com.w2sv.autocrop.databinding.ExitBinding
+import com.w2sv.autocrop.ui.views.animationComposer
 import kotlinx.coroutines.launch
 
 class ExitFragment :

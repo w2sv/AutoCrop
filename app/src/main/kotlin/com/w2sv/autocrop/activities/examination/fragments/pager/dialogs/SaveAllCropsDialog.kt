@@ -5,7 +5,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.core.text.italic
-import com.w2sv.autocrop.activities.getFragment
+import com.w2sv.autocrop.utils.getFragment
 
 class SaveAllCropsDialog : CropSavingDialog() {
 

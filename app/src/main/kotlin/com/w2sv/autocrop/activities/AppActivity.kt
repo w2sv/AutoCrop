@@ -1,16 +1,19 @@
 package com.w2sv.autocrop.activities
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.LifecycleObserver
+import com.w2sv.autocrop.utils.extensions.registerOnBackPressedListener
 
 abstract class AppActivity : ViewBoundFragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        registerObservers(lifecycleObservers, ::handleOnBackPressed)
+        lifecycleObservers?.forEach {
+            lifecycle.addObserver(it)
+        }
+
+        registerOnBackPressedListener(::handleOnBackPressed)
 
         if (savedInstanceState == null)
             launchRootFragment()
@@ -20,21 +23,4 @@ abstract class AppActivity : ViewBoundFragmentActivity() {
         get() = null
 
     protected abstract fun handleOnBackPressed()
-}
-
-fun ComponentActivity.registerObservers(
-    lifecycleObservers: Iterable<LifecycleObserver>?,
-    handleOnBackPressed: () -> Unit
-) {
-    lifecycleObservers?.forEach {
-        lifecycle.addObserver(it)
-    }
-    onBackPressedDispatcher.addCallback(
-        this,
-        object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                handleOnBackPressed()
-            }
-        }
-    )
 }

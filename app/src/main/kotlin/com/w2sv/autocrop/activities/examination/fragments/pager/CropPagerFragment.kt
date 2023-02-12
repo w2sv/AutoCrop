@@ -37,13 +37,13 @@ import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.CropSavi
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveAllCropsDialog
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveCropDialog
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
-import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.databinding.CroppagerBinding
 import com.w2sv.autocrop.ui.model.Click
 import com.w2sv.autocrop.ui.views.VisualizationType
 import com.w2sv.autocrop.ui.views.animate
 import com.w2sv.autocrop.ui.views.currentViewHolder
 import com.w2sv.autocrop.ui.views.visualize
+import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.cropping.CropEdges

@@ -38,7 +38,6 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
 import com.w2sv.autocrop.activities.examination.AccumulatedIOResults
-import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.OpenDocumentTreeContractHandler
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.SelectImagesContractHandlerCompat
@@ -50,6 +49,7 @@ import com.w2sv.autocrop.ui.views.fadeInAnimationComposer
 import com.w2sv.autocrop.ui.views.fadeOut
 import com.w2sv.autocrop.ui.views.onHalfwayFinished
 import com.w2sv.autocrop.utils.extensions.onHalfwayShown
+import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.autocrop.utils.pathIdentifier
 import com.w2sv.common.PermissionHandler
@@ -166,7 +166,7 @@ class FlowFieldFragment :
             MutableLiveData(false)
         }
 
-        fun onCropSettingsInputChanged(){
+        fun onCropSettingsInputChanged() {
             if (cropEdgeCandidateThresholdLive.value != intPreferences.cropEdgeCandidateThreshold)
                 cropSettingsRequiringSyncLive.postValue(true)
         }

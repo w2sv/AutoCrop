@@ -11,8 +11,8 @@ import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.main.MainActivity
-import com.w2sv.autocrop.activities.registerObservers
 import com.w2sv.autocrop.ui.views.animationComposer
+import com.w2sv.autocrop.utils.extensions.registerOnBackPressedListener
 import com.w2sv.onboarding.OnboardingPage
 import com.w2sv.permissionhandler.requestPermissions
 import com.w2sv.preferences.GlobalFlags
@@ -36,12 +36,15 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        registerObservers(
-            buildList {
-                addAll(screenshotListeningPermissionHandlers)
-                add(globalFlags)
+        buildList {
+            addAll(screenshotListeningPermissionHandlers)
+            add(globalFlags)
+        }
+            .forEach {
+                lifecycle.addObserver(it)
             }
-        ) {
+
+        registerOnBackPressedListener {
             finishAffinity()
         }
 

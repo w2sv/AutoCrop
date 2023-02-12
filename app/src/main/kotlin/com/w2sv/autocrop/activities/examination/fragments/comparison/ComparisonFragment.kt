@@ -29,8 +29,8 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getScaleY
-import com.w2sv.autocrop.activities.getFragment
 import com.w2sv.autocrop.databinding.ComparisonBinding
+import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.preferences.GlobalFlags
 import dagger.hilt.android.AndroidEntryPoint
