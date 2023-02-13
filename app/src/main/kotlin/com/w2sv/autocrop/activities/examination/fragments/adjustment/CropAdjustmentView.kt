@@ -31,8 +31,6 @@ import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Dragg
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.DraggingState.DraggingEdge
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.BOTTOM
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.LEFT
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.RIGHT
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.TOP
 import com.w2sv.cropbundle.cropping.CropEdges
 import kotlin.math.max
@@ -166,7 +164,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event == null || viewModel.drawMode != CropAdjustmentMode.Manual)
+        if (event == null || viewModel.drawMode == null)
             return false
 
         when (event.action) {
@@ -221,7 +219,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         when (edge) {
             TOP -> cropRect.top = motionEvent.y
             BOTTOM -> cropRect.bottom = motionEvent.y
-            else -> return
         }
     }
 
@@ -444,24 +441,10 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         when (val state = draggingState) {
             is DraggingEdge -> {
                 when (state.edge) {
-                    LEFT -> minCropRectF.set(
-                        cropRect.right - minSize,
-                        cropRect.top,
-                        cropRect.right,
-                        cropRect.bottom
-                    )
-
                     TOP -> minCropRectF.set(
                         cropRect.left,
                         cropRect.bottom - minSize,
                         cropRect.right,
-                        cropRect.bottom
-                    )
-
-                    RIGHT -> minCropRectF.set(
-                        cropRect.left,
-                        cropRect.top,
-                        cropRect.left + minSize,
                         cropRect.bottom
                     )
 
@@ -484,24 +467,10 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         when (val state = draggingState) {
             is DraggingEdge -> {
                 when (state.edge) {
-                    LEFT -> maxCropRectF.set(
-                        borderRect.left,
-                        cropRect.top,
-                        cropRect.right,
-                        cropRect.bottom
-                    )
-
                     TOP -> maxCropRectF.set(
                         cropRect.left,
                         borderRect.top,
                         cropRect.right,
-                        cropRect.bottom
-                    )
-
-                    RIGHT -> maxCropRectF.set(
-                        cropRect.left,
-                        cropRect.top,
-                        borderRect.right,
                         cropRect.bottom
                     )
 
