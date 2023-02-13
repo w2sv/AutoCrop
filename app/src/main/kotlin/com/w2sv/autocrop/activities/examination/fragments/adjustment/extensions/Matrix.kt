@@ -5,15 +5,15 @@ import android.animation.ValueAnimator
 import android.graphics.Matrix
 import android.view.animation.AccelerateDecelerateInterpolator
 
-fun Matrix.animateToMatrix(
-    targetMatrix: Matrix,
+fun Matrix.setToTargetAnimatedly(
+    dst: Matrix,
     onUpdate: () -> Unit = {}
 ) {
-    val scaleAnimator = ValueAnimator.ofFloat(this.getScaleX(), targetMatrix.getScaleX())
+    val scaleAnimator = ValueAnimator.ofFloat(this.getScaleX(), dst.getScaleX())
     val translateXAnimator =
-        ValueAnimator.ofFloat(this.getTranslateX(), targetMatrix.getTranslateX())
+        ValueAnimator.ofFloat(this.getTranslateX(), dst.getTranslateX())
     val translateYAnimator =
-        ValueAnimator.ofFloat(this.getTranslateY(), targetMatrix.getTranslateY())
+        ValueAnimator.ofFloat(this.getTranslateY(), dst.getTranslateY())
 
     translateYAnimator.addUpdateListener {
         reset()
@@ -25,7 +25,7 @@ fun Matrix.animateToMatrix(
             translateXAnimator.animatedValue as Float,
             translateYAnimator.animatedValue as Float
         )
-        onUpdate.invoke()
+        onUpdate()
     }
 
     AnimatorSet()
@@ -57,6 +57,12 @@ fun Matrix.clone(): Matrix =
     Matrix().apply {
         set(this@clone)
     }
+
+fun Matrix.getInverse(): Matrix {
+    val inverse = Matrix()
+    invert(inverse)
+    return inverse
+}
 
 private fun Matrix.values(): FloatArray =
     FloatArray(9).apply {

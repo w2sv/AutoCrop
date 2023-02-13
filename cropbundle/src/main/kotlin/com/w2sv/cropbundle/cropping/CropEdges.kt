@@ -13,8 +13,8 @@ data class CropEdges(val top: Int, val bottom: Int) : Parcelable {
     constructor(edges: List<Int>)
             : this(edges.first(), edges.last())
 
-    fun asRectF(cropWidth: Int): RectF =
-        RectF(0F, top.toFloat(), cropWidth.toFloat(), bottom.toFloat())
+    fun asRectF(imageWidth: Int): RectF =
+        RectF(0F, top.toFloat(), imageWidth.toFloat(), bottom.toFloat())
 
     val height: Int get() = bottom - top
 }

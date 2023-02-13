@@ -316,12 +316,9 @@ class CropPagerFragment :
         }
         manualCropButton.setOnClickListener {
             requireViewBoundFragmentActivity().fragmentReplacementTransaction(
-                viewModel.dataSet.liveElement.run {
-                    CropAdjustmentFragment.getInstance(
-                        screenshot.uri,
-                        crop.edges
-                    )
-                },
+                CropAdjustmentFragment.getInstance(
+                    viewModel.dataSet.livePosition.value!!
+                ),
                 true
             )
                 .addToBackStack(null)

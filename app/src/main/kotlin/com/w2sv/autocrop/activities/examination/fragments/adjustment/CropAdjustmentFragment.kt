@@ -1,8 +1,7 @@
 package com.w2sv.autocrop.activities.examination.fragments.adjustment
 
-import android.content.Context
+import android.content.ContentResolver
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
@@ -15,15 +14,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
+import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maintainedPercentage
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.utils.getFragment
+import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
-import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.kotlinutils.extensions.rounded
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
@@ -33,25 +32,24 @@ class CropAdjustmentFragment
     : AppFragment<CropAdjustmentBinding>(CropAdjustmentBinding::class.java) {
 
     companion object {
-        private const val EXTRA_SCREENSHOT_URI = "com.w2sv.autocrop.extra.SCREENSHOT_URI"
-        private const val EXTRA_CROP_EDGES = "com.w2sv.autocrop.extra.CROP_EDGES"
-
-        fun getInstance(screenshotUri: Uri, cropEdges: CropEdges): CropAdjustmentFragment =
+        fun getInstance(cropBundlePosition: Int): CropAdjustmentFragment =
             getFragment(
                 CropAdjustmentFragment::class.java,
-                EXTRA_SCREENSHOT_URI to screenshotUri,
-                EXTRA_CROP_EDGES to cropEdges
+                CropBundle.EXTRA_POSITION to cropBundlePosition
             )
     }
 
     @HiltViewModel
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
-        @ApplicationContext context: Context
+        contentResolver: ContentResolver
     ) : androidx.lifecycle.ViewModel() {
 
-        val bitmap: Bitmap = context.contentResolver.loadBitmap(savedStateHandle[EXTRA_SCREENSHOT_URI]!!)!!
-        val initialCropEdges: CropEdges = savedStateHandle[EXTRA_CROP_EDGES]!!
+        val cropBundle: CropBundle =
+            ExaminationActivity.ViewModel.cropBundles[savedStateHandle[CropBundle.EXTRA_POSITION]!!]
+        val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
+
+        val initialCropEdges: CropEdges by cropBundle.crop::edges
 
         val cropEdges: LiveData<CropEdges> by lazy {
             MutableLiveData(initialCropEdges)
@@ -72,11 +70,11 @@ class CropAdjustmentFragment
     }
 
     private fun CropAdjustmentBinding.onCropEdgesChanged(cropEdges: CropEdges) {
-        heightTv.text = styledUnitSpannableString("H", min(cropEdges.height, viewModel.bitmap.height))
+        heightTv.text = styledUnitSpannableString("H", min(cropEdges.height, viewModel.screenshotBitmap.height))
         percentageTv.text =
             styledUnitSpannableString(
                 "%",
-                (viewModel.bitmap.maintainedPercentage(cropEdges.height.toFloat()) * 100).rounded(1)
+                (viewModel.screenshotBitmap.maintainedPercentage(cropEdges.height.toFloat()) * 100).rounded(1)
             )
 
         y1Tv.text = styledUnitSpannableString(
@@ -86,7 +84,7 @@ class CropAdjustmentFragment
         )
         y2Tv.text = styledUnitSpannableString(
             "Y",
-            min(cropEdges.bottom, viewModel.bitmap.height),
+            min(cropEdges.bottom, viewModel.screenshotBitmap.height),
             2
         )
 

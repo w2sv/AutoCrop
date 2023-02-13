@@ -18,10 +18,11 @@ import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.animateToMatrix
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.setToTargetAnimatedly
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.clone
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getCornerTouch
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getEdgeTouch
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getInverse
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maxRectFFrom
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.minRectFFrom
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.withinRectangle
@@ -43,6 +44,7 @@ import com.w2sv.cropbundle.cropping.CropEdges
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
+import kotlin.properties.Delegates
 
 class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
@@ -87,24 +89,22 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
      * Bitmap rect value. Holds original bitmap width
      * and height rectangle.
      */
-    private val bitmapRect = RectF()
+    private val bitmapRect: RectF by lazy{
+        RectF(
+            0f,
+            0f,
+            viewModel.screenshotBitmap.width.toFloat(),
+            viewModel.screenshotBitmap.height.toFloat(),
+        )
+    }
 
     /**
      * CropView rectangle. Holds view borders.
      */
     private val viewRect = RectF()
 
-    /**
-     * This value is hold view width minus margin between screen sides.
-     * So it will be measuredWidth - dimen(R.dimen.default_crop_margin)
-     */
-    private var viewWidth = 0f
-
-    /**
-     * This value is hold view height minus margin between screen sides.
-     * So it will be measuredWidth - dimen(R.dimen.default_crop_margin)
-     */
-    private var viewHeight = 0f
+    private var viewWidth by Delegates.notNull<Float>()
+    private var viewHeight by Delegates.notNull<Float>()
 
     /**
      * Bitmap matrix to draw bitmap on canvas
@@ -141,13 +141,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         if (!isInEditMode) {
             setWillNotDraw(false)
-
-            bitmapRect.set(
-                0f,
-                0f,
-                viewModel.bitmap.width.toFloat(),
-                viewModel.bitmap.height.toFloat(),
-            )
         }
     }
 
@@ -237,7 +230,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 maxRect.setEmpty()
                 when (draggingState) {
                     is DraggingEdge, is DraggingState.DraggingCropRect -> {
-                        calculateCenterTarget()
+                        setTargetRect()
 
                         animateBitmapToCenterTarget()
                         animateCropRectToCenterTarget()
@@ -274,13 +267,13 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         super.onDraw(canvas)
 
         canvas?.apply {
-            drawBitmap(viewModel.bitmap, bitmapMatrix, emptyPaint)
+            drawBitmap(viewModel.screenshotBitmap, bitmapMatrix, emptyPaint)
             save()
             clipRect(cropRect)
             drawColor(ContextCompat.getColor(context, R.color.crop_mask))
             restore()
 
-            //            drawCropEdgePairCandidates()
+            drawCropEdgeCandidates()
             drawGrid()
             drawCorners()
         }
@@ -290,37 +283,15 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         isAntiAlias = true
     }
 
-    //    private fun Canvas.drawCropEdgePairCandidates(){
-    //        rescaledCropEdgeRectFs.forEach {
-    //            drawLine(
-    //                it.left,
-    //                it.top,
-    //                it.right,
-    //                it.top,
-    //                topEdgePaint
-    //            )
-    //
-    //            drawLine(
-    //                it.left,
-    //                it.bottom,
-    //                it.right,
-    //                it.bottom,
-    //                bottomEdgePaint
-    //            )
-    //        }
-    //    }
+    private fun Canvas.drawCropEdgeCandidates() {
+        drawLines(scaledEdgeCandidatesPoints, edgeCandidatePaint)
+    }
 
-    //    private val topEdgePaint = Paint().apply {
-    //        color = Color.GREEN
-    //        strokeWidth = gridLineWidthPixel
-    //        style = Paint.Style.STROKE
-    //    }
-    //
-    //    private val bottomEdgePaint = Paint().apply {
-    //        color = Color.MAGENTA
-    //        strokeWidth = gridLineWidthPixel
-    //        style = Paint.Style.STROKE
-    //    }
+    private val edgeCandidatePaint = Paint().apply {
+        color = Color.CYAN
+        strokeWidth = 3f
+        style = Paint.Style.STROKE
+    }
 
     /**
      * Draw crop rect as a grid.
@@ -511,30 +482,37 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         bitmapMatrix.postTranslate(translateX, translateY)
 
         setBitmapBorderRect()
-        //        setRescaledCropEdgePairCandidates()
+        setScaledEdgeCandidates()
     }
 
     private fun setBitmapBorderRect() {
         bitmapMatrix.mapRect(bitmapBorderRect, bitmapRect)
     }
 
-    //    private lateinit var rescaledCropEdgeRectFs: List<RectF>
+    private var scaledEdgeCandidatesPoints: FloatArray =
+        FloatArray(viewModel.cropBundle.screenshot.cropEdgeCandidates.size * 4)
 
-    //    private fun setRescaledCropEdgePairCandidates(){
-    //        rescaledCropEdgeRectFs = viewModelImmediate.cropEdgePairCandidates.map {
-    //            it.asRectF(viewModelImmediate.bitmap.width).apply {
-    //                bitmapMatrix.mapRect(this)
-    //            }
-    //        }
-    //    }
+    private val edgeCandidatesPoints: FloatArray by lazy {
+        viewModel.cropBundle.screenshot.cropEdgeCandidates.map {
+            listOf(
+                0f,
+                it.toFloat(),
+                viewModel.screenshotBitmap.width.toFloat(),
+                it.toFloat()
+            )
+        }
+            .flatten()
+            .toFloatArray()
+    }
 
-    /**
-     * Initializes crop rect with bitmap.
-     */
+    private fun setScaledEdgeCandidates() {
+        bitmapMatrix.mapPoints(scaledEdgeCandidatesPoints, edgeCandidatesPoints)
+    }
+
     private fun initializeCropRect() {
         bitmapMatrix.mapRect(
             cropRect,
-            viewModel.initialCropEdges.asRectF(viewModel.bitmap.width)
+            viewModel.initialCropEdges.asRectF(viewModel.screenshotBitmap.width)
         )
     }
 
@@ -733,7 +711,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
      * center target. and also we can animate bitmap matrix
      * to selected cropRect using this target rectangle.
      */
-    private fun calculateCenterTarget() {
+    private fun setTargetRect() {
         val heightScale = viewHeight / cropRect.height()
         val widthScale = viewWidth / cropRect.width()
         val scale = min(heightScale, widthScale)
@@ -767,15 +745,12 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         matrix.postTranslate(translateX, translateY)
         newBitmapMatrix.postConcat(matrix)
 
-        bitmapMatrix.animateToMatrix(newBitmapMatrix) {
-            //            setRescaledCropEdgePairCandidates()
+        bitmapMatrix.setToTargetAnimatedly(newBitmapMatrix) {
+            setScaledEdgeCandidates()
             invalidate()
         }
     }
 
-    /**
-     * Animates current crop rect to the center position
-     */
     private fun animateCropRectToCenterTarget() {
         cropRect.animateTo(targetRect) {
             invalidate()
@@ -784,22 +759,15 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
     private fun onCropRectChanged() {
         viewModel.cropEdges.postValue(
-            getCropRect().run {
+            getImageDomainCropRectF().run {
                 CropEdges(top.roundToInt(), bottom.roundToInt())
             }
         )
     }
 
-    /**
-     * Current crop size depending on original bitmap.
-     * Returns rectangle as pixel values.
-     */
-    private fun getCropRect(): RectF =
-        RectF().apply {
-            val cropRectOnOriginalBitmapMatrix = Matrix()
-                .apply {
-                    bitmapMatrix.invert(this)
-                }
-            cropRectOnOriginalBitmapMatrix.mapRect(this, cropRect)
-        }
+    private fun getImageDomainCropRectF(): RectF =
+        RectF()
+            .apply {
+                bitmapMatrix.getInverse().mapRect(this, cropRect)
+            }
 }
