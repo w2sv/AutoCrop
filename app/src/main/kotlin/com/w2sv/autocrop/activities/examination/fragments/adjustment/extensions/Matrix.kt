@@ -4,15 +4,19 @@ import android.animation.ObjectAnimator
 import android.graphics.Matrix
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.core.animation.doOnEnd
 import com.google.android.material.animation.MatrixEvaluator
 
-fun animateMatrix(view: View, propertyName: String, src: Matrix, dst: Matrix, duration: Long) {
+fun animateMatrix(view: View, propertyName: String, src: Matrix, dst: Matrix, duration: Long, onEnd: (() -> Unit)? = null) {
     ObjectAnimator.ofObject(view, propertyName, MatrixEvaluator(), src, dst)
         .apply {
             interpolator = AccelerateDecelerateInterpolator()
             this.duration = duration
             addUpdateListener {
                 view.invalidate()
+            }
+            onEnd?.let {
+                doOnEnd { it() }
             }
         }
         .start()

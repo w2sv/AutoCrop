@@ -111,7 +111,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         defaultImageMatrix = imageMatrix.clone()
 
         setImageBorderRectFViewDomain()
-        setViewDomainScaledEdgeCandidatePoints()
         setCropRect()
         defaultCropRectF = RectF(cropRect.toRectF())
 
@@ -139,10 +138,26 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         imageMatrix.mapRect(imageBorderRectFViewDomain, imageRectF)
     }
 
-    fun reset() {
-        animateImageTo(defaultImageMatrix)
-        animateCropRectTo(defaultCropRectF)
-        setImageBorderRectFViewDomain()
+    fun reset(mode: CropAdjustmentMode) {
+        when (mode) {
+            CropAdjustmentMode.Manual -> {
+                viewModel.drawMode = CropAdjustmentMode.Manual
+                animateImageTo(defaultImageMatrix)
+                animateCropRectTo(defaultCropRectF)
+                setImageBorderRectFViewDomain()
+            }
+
+            CropAdjustmentMode.EdgeSelection -> {
+                animateImageTo(defaultImageMatrix) {
+                    setViewDomainScaledEdgeCandidatePoints()
+                    viewModel.drawMode = CropAdjustmentMode.EdgeSelection
+
+                    requestLayout()
+                    invalidate()
+                }
+            }
+        }
+
         viewModel.resetCropEdges()
     }
 
@@ -151,7 +166,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event == null)
+        if (event == null || viewModel.drawMode != CropAdjustmentMode.Manual)
             return false
 
         when (event.action) {
@@ -259,9 +274,10 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         canvas?.apply {
             drawBitmap(viewModel.screenshotBitmap, imageMatrix, null)
 
-            when (viewModel.modeLive) {
+            when (viewModel.drawMode) {
                 CropAdjustmentMode.EdgeSelection -> drawCropEdgeCandidates()
                 CropAdjustmentMode.Manual -> drawCropRect()
+                else -> Unit
             }
         }
     }
@@ -544,12 +560,8 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         animateImageTo(newBitmapMatrix)
     }
 
-    private fun animateImageTo(dst: Matrix) {
-        animateMatrix(this, "imageMatrix", imageMatrix, dst, ANIMATION_DURATION)
-        //        imageMatrix.animateToTarget(dst, ANIMATION_DURATION) {
-        //            setViewDomainScaledEdgeCandidatePoints()
-        //            invalidate()
-        //        }
+    private fun animateImageTo(dst: Matrix, onEnd: (() -> Unit)? = null) {
+        animateMatrix(this, "imageMatrix", imageMatrix, dst, ANIMATION_DURATION, onEnd)
     }
 
     private fun animateCropRectTo(dst: RectF) {

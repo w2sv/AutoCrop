@@ -79,7 +79,11 @@ class CropAdjustmentFragment
          * LiveData
          */
 
-        var modeLive = CropAdjustmentMode.Manual
+        val resetModeLive: LiveData<CropAdjustmentMode> by lazy {
+            MutableLiveData()
+        }
+
+        var drawMode: CropAdjustmentMode? = CropAdjustmentMode.Manual
 
         val cropEdgesLive: LiveData<CropEdges> by lazy {
             MutableLiveData(cropBundle.crop.edges)
@@ -116,44 +120,44 @@ class CropAdjustmentFragment
                     View.GONE
             binding.applyButton.isEnabled = it
         }
+        resetModeLive.observe(viewLifecycleOwner){
+            binding.cropAdjustmentView.reset(it)
+        }
     }
 
     private fun CropAdjustmentBinding.onCropEdgesChanged(cropEdges: CropEdges) {
-        val unitColor = requireContext().getColor(R.color.highlight)
-
         heightTv.text = formattedUnitText(
             "H",
-            unitColor,
+            requireContext().getColor(R.color.highlight),
             min(cropEdges.height, viewModel.screenshotBitmap.height)
         )
         percentageTv.text =
             formattedUnitText(
                 "%",
-                unitColor,
+                requireContext().getColor(R.color.highlight),
                 (viewModel.screenshotBitmap.maintainedPercentage(cropEdges.height.toFloat()) * 100).rounded(1)
             )
     }
 
     private fun CropAdjustmentBinding.setOnClickListeners() {
         resetButton.setOnClickListener {
-            cropAdjustmentView.reset()
+            cropAdjustmentView.reset(viewModel.resetModeLive.value!!)
         }
         modeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.modeLive =
+            viewModel.resetModeLive.postValue(
                 if (isChecked)
                     CropAdjustmentMode.EdgeSelection
                 else
                     CropAdjustmentMode.Manual
-            cropAdjustmentView.invalidate()
-            cropAdjustmentView.requestLayout()
+            )
+            viewModel.drawMode = null
         }
 
         cancelButton.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
         applyButton.setOnClickListener {
-            // TODO
-            parentFragmentManager.popBackStackImmediate()
+            parentFragmentManager.popBackStackImmediate()  // TODO
 
             // notify ResultListener
             (requireViewBoundFragmentActivity().getCurrentFragment() as ResultListener)
