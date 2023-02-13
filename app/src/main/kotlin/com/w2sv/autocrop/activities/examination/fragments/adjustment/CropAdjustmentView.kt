@@ -186,6 +186,11 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                         updateExceedMaxBorders()
                         updateExceedMinBorders()
                         onCropRectChanged()
+                        invalidate()
+                    }
+                    is DraggingState.DraggingCropRect -> {
+                        gestureDetector.onTouchEvent(event)
+                        invalidate()
                     }
 
                     else -> Unit
@@ -201,6 +206,8 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
                         animateImageTo(centerRect)
                         animateCropRectTo(centerRect)
+
+                        invalidate()
                     }
 
                     else -> Unit
@@ -208,10 +215,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             }
         }
 
-        if (draggingState == DraggingState.DraggingCropRect)
-            gestureDetector.onTouchEvent(event)
-
-        invalidate()
         return true
     }
 
@@ -251,7 +254,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                     cropRect.bottom = bottomNew
 
                     onCropRectChanged()
-                    invalidate()
                 }
 
                 return true
