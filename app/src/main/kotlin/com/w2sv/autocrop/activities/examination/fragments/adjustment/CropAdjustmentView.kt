@@ -243,13 +243,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
             when (viewModel.modeLive) {
                 CropAdjustmentMode.EdgeSelection -> drawCropEdgeCandidates()
-                CropAdjustmentMode.Manual -> {
-                    save()
-                    clipRect(cropRect)
-                    drawColor(ContextCompat.getColor(context, R.color.crop_mask))
-                    restore()
-                    drawCropRectGrid()
-                }
+                CropAdjustmentMode.Manual -> drawCropRect()
             }
         }
     }
@@ -280,13 +274,23 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     }
 
     // ----------------------------------
-    // .CropRectGrid
+    // .CropRect
+
+    private fun Canvas.drawCropRect() {
+        save()
+        clipRect(cropRect)
+        drawColor(ContextCompat.getColor(context, R.color.crop_mask))
+        restore()
+
+        drawCropRectGrid()
+    }
 
     private fun Canvas.drawCropRectGrid() {
 
-        /**
-         * Primary, outer rectangle
-         */
+        // -------------
+        // Outer rectangle
+
+        // Vertical edges
 
         drawLine(
             cropRect.left,
@@ -304,12 +308,14 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             gridPaint
         )
 
+        // Horizontal edges
+
         drawLine(
             cropRect.left,
             cropRect.top,
             cropRect.right,
             cropRect.top,
-            accentPaint
+            horizontalCropRectEdgePaint
         )
 
         drawLine(
@@ -317,7 +323,25 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             cropRect.bottom,
             cropRect.right,
             cropRect.bottom,
-            accentPaint
+            horizontalCropRectEdgePaint
+        )
+
+        // Horizontally centered protrusions
+
+        drawLine(
+            cropRect.centerX() - DELTA_CENTER_HORIZONTAL_EDGE_PROTRUSION,
+            cropRect.top,
+            cropRect.centerX() + DELTA_CENTER_HORIZONTAL_EDGE_PROTRUSION,
+            cropRect.top,
+            horizontalProtrusionPaint
+        )
+
+        drawLine(
+            cropRect.centerX() - DELTA_CENTER_HORIZONTAL_EDGE_PROTRUSION,
+            cropRect.bottom,
+            cropRect.centerX() + DELTA_CENTER_HORIZONTAL_EDGE_PROTRUSION,
+            cropRect.bottom,
+            horizontalProtrusionPaint
         )
 
         /**
@@ -363,10 +387,18 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         style = Paint.Style.STROKE
     }
 
-    private val accentPaint: Paint by lazy {
+    private val horizontalCropRectEdgePaint: Paint by lazy {
         Paint().apply {
             color = context.getColor(com.w2sv.common.R.color.magenta_saturated)
             strokeWidth = 3F
+            style = Paint.Style.FILL
+        }
+    }
+
+    private val horizontalProtrusionPaint: Paint by lazy {
+        Paint().apply {
+            color = context.getColor(com.w2sv.common.R.color.magenta_saturated)
+            strokeWidth = 8F
             style = Paint.Style.FILL
         }
     }
@@ -540,5 +572,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         private const val MIN_RECT_SIZE: Float = 56f
 
         private const val ANIMATION_DURATION: Long = 300
+
+        private const val DELTA_CENTER_HORIZONTAL_EDGE_PROTRUSION: Float = 32f
     }
 }
