@@ -1,43 +1,19 @@
 package com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions
 
-import android.animation.AnimatorSet
-import android.animation.ValueAnimator
+import android.animation.ObjectAnimator
 import android.graphics.Matrix
+import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import com.google.android.material.animation.MatrixEvaluator
 
-fun Matrix.animateToTarget(
-    dst: Matrix,
-    duration: Long,
-    onUpdate: () -> Unit
-) {
-    val scaleAnimator = ValueAnimator.ofFloat(this.getScaleX(), dst.getScaleX())
-    val translateXAnimator =
-        ValueAnimator.ofFloat(this.getTranslateX(), dst.getTranslateX())
-    val translateYAnimator =
-        ValueAnimator.ofFloat(this.getTranslateY(), dst.getTranslateY())
-
-    translateYAnimator.addUpdateListener {
-        reset()
-        preScale(
-            scaleAnimator.animatedValue as Float,
-            scaleAnimator.animatedValue as Float
-        )
-        postTranslate(
-            translateXAnimator.animatedValue as Float,
-            translateYAnimator.animatedValue as Float
-        )
-        onUpdate()
-    }
-
-    AnimatorSet()
+fun animateMatrix(view: View, propertyName: String, src: Matrix, dst: Matrix, duration: Long) {
+    ObjectAnimator.ofObject(view, propertyName, MatrixEvaluator(), src, dst)
         .apply {
-            playTogether(
-                scaleAnimator,
-                translateXAnimator,
-                translateYAnimator
-            )
             interpolator = AccelerateDecelerateInterpolator()
             this.duration = duration
+            addUpdateListener {
+                view.invalidate()
+            }
         }
         .start()
 }

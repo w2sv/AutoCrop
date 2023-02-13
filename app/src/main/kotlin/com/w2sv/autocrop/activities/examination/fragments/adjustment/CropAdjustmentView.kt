@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.animateToTarget
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.animateMatrix
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.clone
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getEdgeTouch
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getInverse
@@ -64,7 +64,10 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         viewModel.screenshotBitmap.getRectF()
     }
 
-    private val imageMatrix: Matrix = Matrix()
+    /**
+     * public var required for working of [animateMatrix]
+     */
+    var imageMatrix: Matrix = Matrix()
 
     private lateinit var defaultImageMatrix: Matrix
 
@@ -78,7 +81,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     // ----------------------------------
     // CropRect
 
-    var cropRect: AnimatableRectF =
+    private val cropRect: AnimatableRectF =
         AnimatableRectF()
 
     private lateinit var defaultCropRectF: RectF
@@ -552,10 +555,11 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     }
 
     private fun animateImageTo(dst: Matrix) {
-        imageMatrix.animateToTarget(dst, ANIMATION_DURATION) {
-            setViewDomainScaledEdgeCandidatePoints()
-            invalidate()
-        }
+        animateMatrix(this, "imageMatrix", imageMatrix, dst, ANIMATION_DURATION)
+        //        imageMatrix.animateToTarget(dst, ANIMATION_DURATION) {
+        //            setViewDomainScaledEdgeCandidatePoints()
+        //            invalidate()
+        //        }
     }
 
     private fun animateCropRectTo(dst: RectF) {
