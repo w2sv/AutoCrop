@@ -202,12 +202,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         return true
     }
 
-    /**
-     * Move cropRect on user drag cropRect from edges.
-     * Corner will be move to opposite side of the selected cropRect's
-     * edge. If aspect ratio selected (Not free), then aspect ration shouldn't
-     * be change on cropRect is changed.
-     */
     private fun onEdgePositionChanged(edge: Edge, motionEvent: MotionEvent) {
         when (edge) {
             TOP -> cropRect.top = motionEvent.y
@@ -263,17 +257,13 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         super.onDraw(canvas)
 
         canvas?.apply {
-            drawBitmap(viewModel.screenshotBitmap, imageMatrix, emptyPaint)
+            drawBitmap(viewModel.screenshotBitmap, imageMatrix, null)
 
             when (viewModel.modeLive) {
                 CropAdjustmentMode.EdgeSelection -> drawCropEdgeCandidates()
                 CropAdjustmentMode.Manual -> drawCropRect()
             }
         }
-    }
-
-    private val emptyPaint = Paint().apply {
-        isAntiAlias = true
     }
 
     // ----------------------------------
