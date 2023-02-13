@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.examination.fragments.adjustment.view
+package com.w2sv.autocrop.activities.examination.fragments.adjustment
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,6 +8,7 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_DOWN
 import android.view.MotionEvent.ACTION_MOVE
@@ -17,7 +18,6 @@ import androidx.core.content.ContextCompat
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.animateToTarget
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.clone
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getEdgeTouch
@@ -47,19 +47,15 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         AnimatableRectF()
 
     /**
-     * Temporary rect to animate crop rect to.
-     * This value will be set to zero after using.
-     */
-    private val targetRect: AnimatableRectF =
-        AnimatableRectF()
-
-    /**
      * Minimum scale limitation is dependens on screen
      * and bitmap size. bitmapMinRect is calculated
      * initially. This value holds the miminum rectangle
      * which bitmapMatrix can be.
      */
-    private val bitmapMinRect = RectF()
+    private val bitmapMinRect: RectF by lazy {
+        val bitmapMinRectSize = max(bitmapRect.width(), bitmapRect.height()) / BITMAP_MAX_SCALE
+        RectF(0f, 0f, bitmapMinRectSize, bitmapMinRectSize)
+    }
 
     /**
      * Minimum rectangle for cropRect can be.
@@ -110,6 +106,9 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
     private val viewModel by viewModel<CropAdjustmentFragment.ViewModel>()
 
+    // ----------------------------------
+    // Initialization
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
@@ -119,9 +118,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     }
 
     private fun initialize() {
-        val bitmapMinRectSize = max(bitmapRect.width(), bitmapRect.height()) / BITMAP_MAX_SCALE
-        bitmapMinRect.set(0f, 0f, bitmapMinRectSize, bitmapMinRectSize)
-
         initializeBitmapMatrix()
         initializeCropRect()
 
@@ -129,9 +125,23 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         invalidate()
     }
 
-    fun reset() {
-        initialize()
-        onCropRectChanged()
+    private fun initializeBitmapMatrix() {
+        val scale = min(viewWidth / bitmapRect.width(), viewHeight / bitmapRect.height())
+        bitmapMatrix.setScale(scale, scale)
+
+        val translateX = (viewWidth - bitmapRect.width() * scale) / 2f + CROP_RECT_MARGIN
+        val translateY = (viewHeight - bitmapRect.height() * scale) / 2f + CROP_RECT_MARGIN
+        bitmapMatrix.postTranslate(translateX, translateY)
+
+        setBitmapBorderRect()
+        setViewDomainScaledEdgeCandidatePoints()
+    }
+
+    private fun initializeCropRect() {
+        bitmapMatrix.mapRect(
+            cropRect,
+            viewModel.initialCropRectF
+        )
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -139,6 +149,14 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         initialize()
     }
+
+    fun reset() {
+        initialize()
+        onCropRectChanged()
+    }
+
+    // ----------------------------------
+    // Touch Events
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -175,10 +193,10 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 maxRect.setEmpty()
                 when (draggingState) {
                     is DraggingEdge, is DraggingState.DraggingCropRect -> {
-                        setTargetRect()
+                        val centerRect = getTargetRect()
 
-                        animateBitmapToCenterTarget()
-                        animateCropRectToCenterTarget()
+                        animateBitmapTo(centerRect)
+                        animateCropRectTo(centerRect)
                     }
 
                     else -> Unit
@@ -187,24 +205,23 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         }
 
         if (draggingState == DraggingState.DraggingCropRect)
-            bitmapGestureHandler.onTouchEvent(event)
+            gestureDetector.onTouchEvent(event)
 
         invalidate()
         return true
     }
 
-    private val bitmapGestureHandler = BitmapGestureHandler(
-        context
-    ) { _, distanceY ->
-        val topNew = cropRect.top - distanceY
-        val bottomNew = cropRect.bottom - distanceY
-
-        if (topNew > bitmapBorderRect.top && bottomNew < bitmapBorderRect.bottom) {
-            cropRect.top = topNew
-            cropRect.bottom = bottomNew
-
-            onCropRectChanged()
-            invalidate()
+    /**
+     * Move cropRect on user drag cropRect from edges.
+     * Corner will be move to opposite side of the selected cropRect's
+     * edge. If aspect ratio selected (Not free), then aspect ration shouldn't
+     * be change on cropRect is changed.
+     */
+    private fun onEdgePositionChanged(edge: Edge, motionEvent: MotionEvent) {
+        when (edge) {
+            TOP -> cropRect.top = motionEvent.y
+            BOTTOM -> cropRect.bottom = motionEvent.y
+            else -> return
         }
     }
 
@@ -220,6 +237,34 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         }
     }
 
+    private val gestureDetector = GestureDetector(
+        context,
+        object : GestureDetector.SimpleOnGestureListener() {
+            override fun onScroll(
+                e1: MotionEvent,
+                e2: MotionEvent,
+                distanceX: Float,
+                distanceY: Float
+            ): Boolean {
+                val topNew = cropRect.top - distanceY
+                val bottomNew = cropRect.bottom - distanceY
+
+                if (topNew > bitmapBorderRect.top && bottomNew < bitmapBorderRect.bottom) {
+                    cropRect.top = topNew
+                    cropRect.bottom = bottomNew
+
+                    onCropRectChanged()
+                    invalidate()
+                }
+
+                return true
+            }
+        }
+    )
+
+    // ----------------------------------
+    // Drawing
+
     /**
      * Draw bitmap, cropRect, overlay
      */
@@ -234,8 +279,8 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             restore()
 
             drawCropEdgeCandidates()
-            drawGrid()
-            drawCorners()
+            drawCropRectGrid()
+            drawCropRectCorners()
         }
     }
 
@@ -243,8 +288,19 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         isAntiAlias = true
     }
 
+    // ----------------------------------
+    // .EdgeCandidates
+
     private fun Canvas.drawCropEdgeCandidates() {
         drawLines(viewDomainScaledEdgeCandidatePoints, edgeCandidatePaint)
+    }
+
+    private val viewDomainScaledEdgeCandidatePoints: FloatArray by lazy {
+        FloatArray(viewModel.cropBundle.screenshot.cropEdgeCandidates.size * 4)
+    }
+
+    private fun setViewDomainScaledEdgeCandidatePoints() {
+        bitmapMatrix.mapPoints(viewDomainScaledEdgeCandidatePoints, viewModel.edgeCandidatePoints)
     }
 
     private val edgeCandidatePaint = Paint().apply {
@@ -253,10 +309,10 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         style = Paint.Style.STROKE
     }
 
-    /**
-     * Draw crop rect as a grid.
-     */
-    private fun Canvas.drawGrid() {
+    // ----------------------------------
+    // .CropRectGrid
+
+    private fun Canvas.drawCropRectGrid() {
 
         /**
          * Primary, outer rectangle
@@ -331,7 +387,24 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         )
     }
 
-    private fun Canvas.drawCorners() {
+    private val gridPaint = Paint().apply {
+        color = Color.WHITE
+        strokeWidth = GRID_LINE_WIDTH
+        style = Paint.Style.STROKE
+    }
+
+    private val accentPaint: Paint by lazy {
+        Paint().apply {
+            color = context.getColor(com.w2sv.common.R.color.magenta_saturated)
+            strokeWidth = 3F
+            style = Paint.Style.FILL
+        }
+    }
+
+    // ----------------------------------
+    // .CropRectCorners
+
+    private fun Canvas.drawCropRectCorners() {
         /**
          * Top left
          */
@@ -411,20 +484,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         )
     }
 
-    private val gridPaint = Paint().apply {
-        color = Color.WHITE
-        strokeWidth = GRID_LINE_WIDTH
-        style = Paint.Style.STROKE
-    }
-
-    private val accentPaint: Paint by lazy {
-        Paint().apply {
-            color = context.getColor(com.w2sv.common.R.color.magenta_saturated)
-            strokeWidth = 3F
-            style = Paint.Style.FILL
-        }
-    }
-
     private val cornerPaint: Paint by lazy {
         Paint().apply {
             color = context.getColor(com.w2sv.common.R.color.magenta_saturated)
@@ -433,49 +492,8 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         }
     }
 
-    private fun initializeBitmapMatrix() {
-        val scale = min(viewWidth / bitmapRect.width(), viewHeight / bitmapRect.height())
-        bitmapMatrix.setScale(scale, scale)
-
-        val translateX = (viewWidth - bitmapRect.width() * scale) / 2f + CROP_RECT_MARGIN
-        val translateY = (viewHeight - bitmapRect.height() * scale) / 2f + CROP_RECT_MARGIN
-        bitmapMatrix.postTranslate(translateX, translateY)
-
-        setBitmapBorderRect()
-        setViewDomainScaledEdgeCandidatePoints()
-    }
-
     private fun setBitmapBorderRect() {
         bitmapMatrix.mapRect(bitmapBorderRect, bitmapRect)
-    }
-
-    private val viewDomainScaledEdgeCandidatePoints: FloatArray by lazy {
-        FloatArray(viewModel.cropBundle.screenshot.cropEdgeCandidates.size * 4)
-    }
-
-    private fun setViewDomainScaledEdgeCandidatePoints() {
-        bitmapMatrix.mapPoints(viewDomainScaledEdgeCandidatePoints, viewModel.edgeCandidatePoints)
-    }
-
-    private fun initializeCropRect() {
-        bitmapMatrix.mapRect(
-            cropRect,
-            viewModel.initialCropRectF
-        )
-    }
-
-    /**
-     * Move cropRect on user drag cropRect from edges.
-     * Corner will be move to opposite side of the selected cropRect's
-     * edge. If aspect ratio selected (Not free), then aspect ration shouldn't
-     * be change on cropRect is changed.
-     */
-    private fun onEdgePositionChanged(edge: Edge, motionEvent: MotionEvent) {
-        when (edge) {
-            TOP -> cropRect.top = motionEvent.y
-            BOTTOM -> cropRect.bottom = motionEvent.y
-            else -> return
-        }
     }
 
     /**
@@ -579,15 +597,10 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         cropRect.set(minRectFFrom(cropRect, minRect))
     }
 
-    /**
-     * If user minimizes the crop rect, we need to
-     * calculate target centered rectangle according to
-     * current cropRect aspect ratio and size. With this
-     * target rectangle, we can animate crop rect to
-     * center target. and also we can animate bitmap matrix
-     * to selected cropRect using this target rectangle.
-     */
-    private fun setTargetRect() {
+    // ----------------------------------
+    // CropRect Animation
+
+    private fun getTargetRect(): AnimatableRectF {
         val heightScale = viewHeight / cropRect.height()
         val widthScale = viewWidth / cropRect.width()
         val scale = min(heightScale, widthScale)
@@ -600,21 +613,15 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         val targetRectRight = targetRectLeft + targetRectWidth
         val targetRectBottom = targetRectTop + targetRectHeight
 
-        targetRect.set(targetRectLeft, targetRectTop, targetRectRight, targetRectBottom)
+        return AnimatableRectF(targetRectLeft, targetRectTop, targetRectRight, targetRectBottom)
     }
 
-    /**
-     * When user changes cropRect size by dragging it, cropRect
-     * should be animated to center without changing aspect ratio,
-     * meanwhile bitmap matrix should be take selected crop rect to
-     * the center. This methods take selected crop rect to the cennter.
-     */
-    private fun animateBitmapToCenterTarget() {
+    private fun animateBitmapTo(dst: AnimatableRectF) {
         val newBitmapMatrix = bitmapMatrix.clone()
 
-        val scale = targetRect.width() / cropRect.width()
-        val translateX = targetRect.centerX() - cropRect.centerX()
-        val translateY = targetRect.centerY() - cropRect.centerY()
+        val scale = dst.width() / cropRect.width()
+        val translateX = dst.centerX() - cropRect.centerX()
+        val translateY = dst.centerY() - cropRect.centerY()
 
         val matrix = Matrix()
         matrix.setScale(scale, scale, cropRect.centerX(), cropRect.centerY())
@@ -627,11 +634,14 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         }
     }
 
-    private fun animateCropRectToCenterTarget() {
-        cropRect.animateTo(targetRect, ANIMATION_DURATION) {
+    private fun animateCropRectTo(dst: AnimatableRectF) {
+        cropRect.animateTo(dst, ANIMATION_DURATION) {
             invalidate()
         }
     }
+
+    // ----------------------------------
+    // Value Exposition
 
     private fun onCropRectChanged() {
         viewModel.cropEdgesLive.postValue(

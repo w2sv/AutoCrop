@@ -7,7 +7,9 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.annotation.Keep
 import androidx.core.animation.doOnEnd
 
-class AnimatableRectF : RectF() {
+class AnimatableRectF(left: Float, top: Float, right: Float, bottom: Float) : RectF(left, top, right, bottom) {
+
+    constructor() : this(0f, 0f, 0f, 0f)
 
     fun animateTo(target: AnimatableRectF, duration: Long, onUpdate: (RectF) -> Unit) {
         val animateLeft = ObjectAnimator.ofFloat(this, "left", left, target.left)
@@ -25,9 +27,7 @@ class AnimatableRectF : RectF() {
             .start()
     }
 
-    /**
-     * Keeping of setters required for [animateTo]
-     */
+     // NOTE: Keeping of setters required for [animateTo]
 
     @Keep
     fun setTop(top: Float) {
