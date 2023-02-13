@@ -7,7 +7,7 @@ import com.w2sv.cropbundle.cropping.CropEdges
 import java.lang.Float.min
 import kotlin.math.max
 
-fun maxRectFFrom(a: RectF, b: RectF): RectF =
+fun maxRectOf(a: RectF, b: RectF): RectF =
     RectF(
         max(a.left, b.left),
         max(a.top, b.top),
@@ -15,7 +15,7 @@ fun maxRectFFrom(a: RectF, b: RectF): RectF =
         min(a.bottom, b.bottom)
     )
 
-fun minRectFFrom(a: RectF, b: RectF) =
+fun minRectOf(a: RectF, b: RectF) =
     RectF(
         min(a.left, b.left),
         min(a.top, b.top),

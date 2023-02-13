@@ -22,10 +22,10 @@ import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.clone
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getEdgeTouch
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getInverse
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.isWithinRectangle
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maxRectFFrom
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.minRectFFrom
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getRectF
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.isWithinRectangle
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maxRectOf
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.minRectOf
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.AnimatableRectF
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.DraggingState
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.DraggingState.DraggingEdge
@@ -137,8 +137,8 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 if (draggingState !is DraggingState.Idle) {
                     setBitmapBorderRect()
 
-                    calculateMinRect()
-                    calculateMaxRect()
+                    setMinCropRectF()
+                    setMaxCropRectF()
                 }
             }
 
@@ -240,14 +240,17 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         canvas?.apply {
             drawBitmap(viewModel.screenshotBitmap, imageMatrix, emptyPaint)
-            save()
-            clipRect(cropRect)
-            drawColor(ContextCompat.getColor(context, R.color.crop_mask))
-            restore()
 
-            drawCropEdgeCandidates()
-            drawCropRectGrid()
-            drawCropRectCorners()
+            when (viewModel.modeLive) {
+                CropAdjustmentMode.EdgeSelection -> drawCropEdgeCandidates()
+                CropAdjustmentMode.Manual -> {
+                    save()
+                    clipRect(cropRect)
+                    drawColor(ContextCompat.getColor(context, R.color.crop_mask))
+                    restore()
+                    drawCropRectGrid()
+                }
+            }
         }
     }
 
@@ -368,106 +371,11 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         }
     }
 
-    // ----------------------------------
-    // .CropRectCorners
-
-    private fun Canvas.drawCropRectCorners() {
-        /**
-         * Top left
-         */
-        drawLine(
-            cropRect.left - GRID_LINE_WIDTH,
-            cropRect.top + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
-            cropRect.left + CORNER_EDGE_LENGTH,
-            cropRect.top + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
-            cornerPaint
-        )
-
-        drawLine(
-            cropRect.left + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
-            cropRect.top - GRID_LINE_WIDTH,
-            cropRect.left + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
-            cropRect.top + CORNER_EDGE_LENGTH,
-            cornerPaint
-        )
-
-        /**
-         * Top Right
-         */
-
-        drawLine(
-            cropRect.right - CORNER_EDGE_LENGTH,
-            cropRect.top + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
-            cropRect.right + GRID_LINE_WIDTH,
-            cropRect.top + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
-            cornerPaint
-        )
-
-        drawLine(
-            cropRect.right - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
-            cropRect.top - GRID_LINE_WIDTH,
-            cropRect.right - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
-            cropRect.top + CORNER_EDGE_LENGTH,
-            cornerPaint
-        )
-
-        /**
-         * Bottom Left
-         */
-
-        drawLine(
-            cropRect.left - GRID_LINE_WIDTH,
-            cropRect.bottom - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
-            cropRect.left + CORNER_EDGE_LENGTH,
-            cropRect.bottom - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
-            cornerPaint
-        )
-
-        drawLine(
-            cropRect.left + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
-            cropRect.bottom + GRID_LINE_WIDTH,
-            cropRect.left + CORNER_WIDTH / 2f - GRID_LINE_WIDTH,
-            cropRect.bottom - CORNER_EDGE_LENGTH,
-            cornerPaint
-        )
-
-        /**
-         * Bottom Right
-         */
-        drawLine(
-            cropRect.right - CORNER_EDGE_LENGTH,
-            cropRect.bottom - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
-            cropRect.right + GRID_LINE_WIDTH,
-            cropRect.bottom - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
-            cornerPaint
-        )
-
-        drawLine(
-            cropRect.right - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
-            cropRect.bottom + GRID_LINE_WIDTH,
-            cropRect.right - CORNER_WIDTH / 2f + GRID_LINE_WIDTH,
-            cropRect.bottom - CORNER_EDGE_LENGTH,
-            cornerPaint
-        )
-    }
-
-    private val cornerPaint: Paint by lazy {
-        Paint().apply {
-            color = context.getColor(com.w2sv.common.R.color.magenta_saturated)
-            strokeWidth = 6F
-            style = Paint.Style.FILL
-        }
-    }
-
     private fun setBitmapBorderRect() {
         imageMatrix.mapRect(imageBorderRectViewDomain, imageRectF)
     }
 
-    /**
-     * Calculates minimum possible rectangle that user can drag
-     * cropRect
-     */
-    private fun calculateMinRect() {
+    private fun setMinCropRectF() {
         val minSize = max(
             RectF()
                 .apply { imageMatrix.mapRect(this, imageMinRectF) }
@@ -512,12 +420,8 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         }
     }
 
-    /**
-     * Calculates maximum possible rectangle that user can
-     * drag cropRect
-     */
-    private fun calculateMaxRect() {
-        val borderRect = maxRectFFrom(imageBorderRectViewDomain, viewRectF)
+    private fun setMaxCropRectF() {
+        val borderRect = maxRectOf(imageBorderRectViewDomain, viewRectF)
 
         when (val state = draggingState) {
             is DraggingEdge -> {
@@ -557,11 +461,11 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     }
 
     private fun updateExceedMaxBorders() {
-        cropRect.set(maxRectFFrom(cropRect, maxCropRectF))
+        cropRect.set(maxRectOf(cropRect, maxCropRectF))
     }
 
     private fun updateExceedMinBorders() {
-        cropRect.set(minRectFFrom(cropRect, minCropRectF))
+        cropRect.set(minRectOf(cropRect, minCropRectF))
     }
 
     // ----------------------------------
@@ -632,10 +536,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         private const val CROP_RECT_MARGIN: Float = 24f
 
         private const val GRID_LINE_WIDTH: Float = 1f
-
-        private const val CORNER_WIDTH: Float = 3f
-
-        private const val CORNER_EDGE_LENGTH: Int = 16
 
         private const val MIN_RECT_SIZE: Float = 56f
 

@@ -9,7 +9,6 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.text.color
 import androidx.core.text.italic
-import androidx.core.text.subscript
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -28,7 +27,6 @@ import com.w2sv.kotlinutils.extensions.rounded
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlin.math.max
 import kotlin.math.min
 
 @AndroidEntryPoint
@@ -81,6 +79,8 @@ class CropAdjustmentFragment
          * LiveData
          */
 
+        var modeLive = CropAdjustmentMode.Manual
+
         val cropEdgesLive: LiveData<CropEdges> by lazy {
             MutableLiveData(cropBundle.crop.edges)
         }
@@ -114,6 +114,7 @@ class CropAdjustmentFragment
                     View.VISIBLE
                 else
                     View.GONE
+            binding.applyButton.isEnabled = it
         }
     }
 
@@ -131,24 +132,22 @@ class CropAdjustmentFragment
                 unitColor,
                 (viewModel.screenshotBitmap.maintainedPercentage(cropEdges.height.toFloat()) * 100).rounded(1)
             )
-        y1Tv.text = formattedUnitText(
-            "Y",
-            unitColor,
-            max(cropEdges.top, 0),
-            1
-        )
-        y2Tv.text = formattedUnitText(
-            "Y",
-            unitColor,
-            min(cropEdges.bottom, viewModel.screenshotBitmap.height),
-            2
-        )
     }
 
     private fun CropAdjustmentBinding.setOnClickListeners() {
         resetButton.setOnClickListener {
-            cropView.reset()
+            cropAdjustmentView.reset()
         }
+        modeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.modeLive =
+                if (isChecked)
+                    CropAdjustmentMode.EdgeSelection
+                else
+                    CropAdjustmentMode.Manual
+            cropAdjustmentView.invalidate()
+            cropAdjustmentView.requestLayout()
+        }
+
         cancelButton.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
@@ -170,17 +169,11 @@ class CropAdjustmentFragment
 private fun formattedUnitText(
     label: CharSequence,
     @ColorInt labelColor: Int,
-    value: Any,
-    unitSubscript: Any? = null
+    value: Any
 ): SpannableStringBuilder =
     SpannableStringBuilder()
         .color(labelColor) {
             append(label)
-            unitSubscript?.let {
-                subscript {
-                    append(it.toString())
-                }
-            }
         }
         .italic {
             append(" $value")

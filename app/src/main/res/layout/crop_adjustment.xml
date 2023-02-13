@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
@@ -22,18 +21,16 @@
             android:id="@+id/percentage_tv"
             style="@style/CropAdjustmentButton" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/y1_tv"
-            style="@style/CropAdjustmentButton" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/y2_tv"
-            style="@style/CropAdjustmentButton" />
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/mode_switch"
+            android:layout_marginStart="@dimen/crop_adjustment_screen_horizontal_margin_top_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
     <com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentView
-        android:id="@+id/crop_view"
+        android:id="@+id/crop_adjustment_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
@@ -69,33 +66,28 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <androidx.appcompat.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/cancel_button"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_marginHorizontal="18dp"
 
-            android:background="@drawable/shape_oval_w_button_background"
-            android:contentDescription="@string/discard_changes"
-            android:padding="@dimen/padding_image_button_w_background"
+            android:text="@string/cancel"
+            android:background="@drawable/shape_rounded_rectangle_w_button_background"
+            android:padding="6dp" />
 
-            app:srcCompat="@drawable/ic_cancel_24" />
-
-        <androidx.appcompat.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/apply_button"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_marginHorizontal="18dp"
 
-            android:background="@drawable/shape_oval_w_button_background"
-            android:contentDescription="@string/apply_adjusted_crop_edges"
+            android:text="@string/apply"
+            android:background="@drawable/shape_rounded_rectangle_w_button_background"
 
-            android:padding="@dimen/padding_image_button_w_background"
-            app:srcCompat="@drawable/ic_check_24" />
+            android:padding="6dp" />
 
     </LinearLayout>
 
