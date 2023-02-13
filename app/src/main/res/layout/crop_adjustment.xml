@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_magenta">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,47 +23,28 @@
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/mode_switch"
-            android:layout_marginStart="@dimen/crop_adjustment_screen_horizontal_margin_top_buttons"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/crop_adjustment_screen_horizontal_margin_top_buttons" />
 
     </LinearLayout>
 
     <com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentView
         android:id="@+id/crop_adjustment_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+
+        android:layout_margin="16dp"
 
         android:layerType="hardware" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/reset_button"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/current_crop_buttons_w_label"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="-30dp"
-        android:layout_marginEnd="10dp"
-
-        android:background="@drawable/shape_button_reset_crop_adjustment"
-        android:text="@string/reset"
-        android:textColor="@color/highlight"
-        android:textSize="15sp"
-        android:textStyle="italic"
-        tools:ignore="RelativeOverlap" />
 
     <LinearLayout
         android:id="@+id/current_crop_buttons_w_label"
 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="?actionBarSize"
-
-        android:gravity="center"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
@@ -71,25 +52,33 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="18dp"
 
-            android:text="@string/cancel"
             android:background="@drawable/shape_rounded_rectangle_w_button_background"
-            android:padding="6dp" />
+            android:text="@string/cancel" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/apply_button"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="18dp"
 
-            android:text="@string/apply"
             android:background="@drawable/shape_rounded_rectangle_w_button_background"
 
-            android:padding="6dp" />
+            android:text="@string/apply" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/reset_button"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:background="@drawable/shape_rounded_rectangle_w_button_background"
+
+            android:text="@string/reset"
+            android:textStyle="italic"
+            tools:ignore="RelativeOverlap" />
 
     </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>
