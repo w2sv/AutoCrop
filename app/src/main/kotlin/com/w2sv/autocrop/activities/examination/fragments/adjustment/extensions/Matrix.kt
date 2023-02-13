@@ -7,6 +7,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 
 fun Matrix.animateToTarget(
     dst: Matrix,
+    duration: Long,
     onUpdate: () -> Unit
 ) {
     val scaleAnimator = ValueAnimator.ofFloat(this.getScaleX(), dst.getScaleX())
@@ -36,7 +37,7 @@ fun Matrix.animateToTarget(
                 translateYAnimator
             )
             interpolator = AccelerateDecelerateInterpolator()
-            duration = 300
+            this.duration = duration
         }
         .start()
 }
