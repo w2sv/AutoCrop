@@ -36,6 +36,17 @@
         <item name="android:shadowRadius">2</item>
     </style>
 
+    <style name="CropAdjustmentButton">
+        <item name="android:layout_width">@dimen/crop_adjustment_screen_width_toolbar_buttons</item>
+        <item name="android:layout_height">@dimen/height_button_row</item>
+        <item name="android:layout_marginHorizontal">
+            @dimen/crop_adjustment_screen_horizontal_margin_top_buttons
+        </item>
+        <item name="android:background">@drawable/shape_rounded_rectangle_w_button_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <!--    App Title TextView-->
 
     <style name="AutoCropTV" parent="Shadow">
