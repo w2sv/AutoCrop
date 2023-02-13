@@ -8,7 +8,8 @@ import androidx.annotation.Keep
 import androidx.core.animation.doOnEnd
 
 class AnimatableRectF : RectF() {
-    fun animateTo(target: AnimatableRectF, onUpdate: (RectF) -> Unit = {}) {
+
+    fun animateTo(target: AnimatableRectF, duration: Long, onUpdate: (RectF) -> Unit) {
         val animateLeft = ObjectAnimator.ofFloat(this, "left", left, target.left)
         val animateRight = ObjectAnimator.ofFloat(this, "right", right, target.right)
         val animateTop = ObjectAnimator.ofFloat(this, "top", top, target.top)
@@ -18,7 +19,7 @@ class AnimatableRectF : RectF() {
             .apply {
                 playTogether(animateLeft, animateRight, animateTop, animateBottom)
                 interpolator = AccelerateDecelerateInterpolator()
-                duration = 300
+                this.duration = duration
                 doOnEnd { onUpdate(this@AnimatableRectF) }
             }
             .start()

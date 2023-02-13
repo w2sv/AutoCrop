@@ -2,8 +2,8 @@ package com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions
 
 import android.graphics.RectF
 import android.view.MotionEvent
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Corner
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge
+import com.w2sv.cropbundle.cropping.CropEdges
 import java.lang.Float.min
 import kotlin.math.max
 
@@ -23,7 +23,7 @@ fun minRectFFrom(a: RectF, b: RectF) =
         max(a.bottom, b.bottom)
     )
 
-fun RectF.getEdgeTouch(touchEvent: MotionEvent, touchThreshold: Float = 50f): Edge {
+fun RectF.getEdgeTouch(touchEvent: MotionEvent, touchThreshold: Float): Edge? {
     val isLeft = touchEvent.x < left + touchThreshold &&
             touchEvent.x > left - touchThreshold &&
             touchEvent.y > top &&
@@ -49,40 +49,13 @@ fun RectF.getEdgeTouch(touchEvent: MotionEvent, touchThreshold: Float = 50f): Ed
         isRight -> Edge.RIGHT
         isTop -> Edge.TOP
         isBottom -> Edge.BOTTOM
-        else -> Edge.NONE
+        else -> null
     }
 }
 
-fun RectF.getCornerTouch(touchEvent: MotionEvent, touchThreshold: Float = 50f): Corner {
-    val isTopLeft =
-        touchEvent.y < top + touchThreshold &&
-                touchEvent.y > top - touchThreshold &&
-                touchEvent.x < left + touchThreshold &&
-                touchEvent.x > left - touchThreshold
-
-    val isTopRight = touchEvent.y < top + touchThreshold &&
-            touchEvent.y > top - touchThreshold &&
-            touchEvent.x < right + touchThreshold &&
-            touchEvent.x > right - touchThreshold
-
-    val isBottomLeft = touchEvent.y < bottom + touchThreshold &&
-            touchEvent.y > bottom - touchThreshold &&
-            touchEvent.x < left + touchThreshold &&
-            touchEvent.x > left - touchThreshold
-
-    val isBottomRight = touchEvent.y < bottom + touchThreshold &&
-            touchEvent.y > bottom - touchThreshold &&
-            touchEvent.x < right + touchThreshold &&
-            touchEvent.x > right - touchThreshold
-
-    return when {
-        isTopLeft -> Corner.TOP_LEFT
-        isTopRight -> Corner.TOP_RIGHT
-        isBottomLeft -> Corner.BOTTOM_LEFT
-        isBottomRight -> Corner.BOTTOM_RIGHT
-        else -> Corner.NONE
-    }
-}
-
-fun MotionEvent.withinRectangle(rectF: RectF): Boolean =
+fun MotionEvent.isWithinRectangle(rectF: RectF): Boolean =
     rectF.contains(x, y)
+
+
+fun CropEdges.asRectF(width: Int): RectF =
+    RectF(0F, top.toFloat(), width.toFloat(), bottom.toFloat())

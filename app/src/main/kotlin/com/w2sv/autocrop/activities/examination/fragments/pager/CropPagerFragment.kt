@@ -345,7 +345,7 @@ class CropPagerFragment :
         }
     }
 
-    override fun onCropAdjustment(cropEdges: CropEdges) {
+    override fun onApplyAdjustedCropEdges(cropEdges: CropEdges) {
         viewModel.dataSet.liveElement.let {
             it.crop = Crop.fromScreenshot(
                 it.screenshot.getBitmap(requireContext().contentResolver),

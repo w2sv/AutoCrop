@@ -6,25 +6,24 @@ import android.view.MotionEvent
 
 class BitmapGestureHandler(
     context: Context,
-    private val bitmapGestureListener: BitmapGestureListener
+    private val onScroll: (distanceX: Float, distanceY: Float) -> Unit
 ) {
 
-    interface BitmapGestureListener {
-        fun onScroll(distanceX: Float, distanceY: Float)
-    }
-
-    private val scrollDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
-        override fun onScroll(
-            e1: MotionEvent,
-            e2: MotionEvent,
-            distanceX: Float,
-            distanceY: Float
-        ): Boolean {
-            bitmapGestureListener.onScroll(distanceX, distanceY)
-            return true
-        }
-    })
-
     fun onTouchEvent(motionEvent: MotionEvent): Boolean =
-        scrollDetector.onTouchEvent(motionEvent)
+        gestureDetector.onTouchEvent(motionEvent)
+
+    private val gestureDetector = GestureDetector(
+        context,
+        object : GestureDetector.SimpleOnGestureListener() {
+            override fun onScroll(
+                e1: MotionEvent,
+                e2: MotionEvent,
+                distanceX: Float,
+                distanceY: Float
+            ): Boolean {
+                onScroll(distanceX, distanceY)
+                return true
+            }
+        }
+    )
 }

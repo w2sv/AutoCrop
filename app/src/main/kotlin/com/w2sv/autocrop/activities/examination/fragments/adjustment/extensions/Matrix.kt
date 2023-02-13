@@ -5,9 +5,9 @@ import android.animation.ValueAnimator
 import android.graphics.Matrix
 import android.view.animation.AccelerateDecelerateInterpolator
 
-fun Matrix.setToTargetAnimatedly(
+fun Matrix.animateToTarget(
     dst: Matrix,
-    onUpdate: () -> Unit = {}
+    onUpdate: () -> Unit
 ) {
     val scaleAnimator = ValueAnimator.ofFloat(this.getScaleX(), dst.getScaleX())
     val translateXAnimator =
@@ -35,23 +35,23 @@ fun Matrix.setToTargetAnimatedly(
                 translateXAnimator,
                 translateYAnimator
             )
+            interpolator = AccelerateDecelerateInterpolator()
+            duration = 300
         }
-        .apply { interpolator = AccelerateDecelerateInterpolator() }
-        .apply { duration = 300 }
         .start()
 }
 
 fun Matrix.getScaleX(): Float =
-    values()[Matrix.MSCALE_X]
+    getValues()[Matrix.MSCALE_X]
 
 fun Matrix.getScaleY(): Float =
-    values()[Matrix.MSCALE_Y]
+    getValues()[Matrix.MSCALE_Y]
 
 fun Matrix.getTranslateX(): Float =
-    values()[Matrix.MTRANS_X]
+    getValues()[Matrix.MTRANS_X]
 
 fun Matrix.getTranslateY(): Float =
-    values()[Matrix.MTRANS_Y]
+    getValues()[Matrix.MTRANS_Y]
 
 fun Matrix.clone(): Matrix =
     Matrix().apply {
@@ -64,7 +64,7 @@ fun Matrix.getInverse(): Matrix {
     return inverse
 }
 
-private fun Matrix.values(): FloatArray =
+private fun Matrix.getValues(): FloatArray =
     FloatArray(9).apply {
         getValues(this)
     }

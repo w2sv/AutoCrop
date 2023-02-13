@@ -2,9 +2,11 @@ package com.w2sv.autocrop.activities.examination.fragments.adjustment
 
 import android.content.ContentResolver
 import android.graphics.Bitmap
+import android.graphics.RectF
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.core.text.color
 import androidx.core.text.italic
 import androidx.core.text.subscript
@@ -12,9 +14,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.asRectF
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maintainedPercentage
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.utils.getFragment
@@ -45,14 +49,43 @@ class CropAdjustmentFragment
         contentResolver: ContentResolver
     ) : androidx.lifecycle.ViewModel() {
 
+        /**
+         * Retrieved
+         */
+
         val cropBundle: CropBundle =
             ExaminationActivity.ViewModel.cropBundles[savedStateHandle[CropBundle.EXTRA_POSITION]!!]
         val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
 
-        val initialCropEdges: CropEdges by cropBundle.crop::edges
+        /**
+         * Transformed CropAdjustmentView dependencies
+         */
 
-        val cropEdges: LiveData<CropEdges> by lazy {
-            MutableLiveData(initialCropEdges)
+        val edgeCandidatePoints: FloatArray by lazy {
+            cropBundle.screenshot.cropEdgeCandidates.map {
+                listOf(
+                    0f,
+                    it.toFloat(),
+                    screenshotBitmap.width.toFloat(),
+                    it.toFloat()
+                )
+            }
+                .flatten()
+                .toFloatArray()
+        }
+        val initialCropRectF: RectF by lazy {
+            cropBundle.crop.edges.asRectF(screenshotBitmap.width)
+        }
+
+        /**
+         * LiveData
+         */
+
+        val cropEdgesLive: LiveData<CropEdges> by lazy {
+            MutableLiveData(cropBundle.crop.edges)
+        }
+        val cropEdgesChangedLive: LiveData<Boolean> by lazy {
+            MutableLiveData(false)
         }
     }
 
@@ -61,56 +94,51 @@ class CropAdjustmentFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.setLiveDataObservers()
         binding.setOnClickListeners()
+    }
 
-        viewModel.cropEdges
-            .observe(viewLifecycleOwner) { edges ->
-                binding.onCropEdgesChanged(edges)
-            }
+    private fun ViewModel.setLiveDataObservers() {
+        cropEdgesLive.observe(viewLifecycleOwner) { edges ->
+            binding.onCropEdgesChanged(edges)
+            cropEdgesChangedLive.postValue(edges != cropBundle.crop.edges)
+        }
+        cropEdgesChangedLive.observe(viewLifecycleOwner) {
+            binding.resetButton.visibility =
+                if (it)
+                    View.VISIBLE
+                else
+                    View.GONE
+        }
     }
 
     private fun CropAdjustmentBinding.onCropEdgesChanged(cropEdges: CropEdges) {
-        heightTv.text = styledUnitSpannableString("H", min(cropEdges.height, viewModel.screenshotBitmap.height))
+        val unitColor = requireContext().getColor(R.color.highlight)
+
+        heightTv.text = formattedUnitText(
+            "H",
+            unitColor,
+            min(cropEdges.height, viewModel.screenshotBitmap.height)
+        )
         percentageTv.text =
-            styledUnitSpannableString(
+            formattedUnitText(
                 "%",
+                unitColor,
                 (viewModel.screenshotBitmap.maintainedPercentage(cropEdges.height.toFloat()) * 100).rounded(1)
             )
-
-        y1Tv.text = styledUnitSpannableString(
+        y1Tv.text = formattedUnitText(
             "Y",
+            unitColor,
             max(cropEdges.top, 0),
             1
         )
-        y2Tv.text = styledUnitSpannableString(
+        y2Tv.text = formattedUnitText(
             "Y",
+            unitColor,
             min(cropEdges.bottom, viewModel.screenshotBitmap.height),
             2
         )
-
-        resetButton.visibility = if (cropEdges != viewModel.initialCropEdges)
-            View.VISIBLE
-        else
-            View.GONE
     }
-
-    private fun styledUnitSpannableString(
-        unit: CharSequence,
-        value: Any,
-        unitSubscript: Any? = null
-    ): SpannableStringBuilder =
-        SpannableStringBuilder()
-            .color(requireContext().getColor(R.color.highlight)) {
-                append(unit)
-                unitSubscript?.let {
-                    subscript {
-                        append(it.toString())
-                    }
-                }
-            }
-            .italic {
-                append(" $value")
-            }
 
     private fun CropAdjustmentBinding.setOnClickListeners() {
         resetButton.setOnClickListener {
@@ -120,15 +148,35 @@ class CropAdjustmentFragment
             parentFragmentManager.popBackStack()
         }
         applyButton.setOnClickListener {
+            // TODO
             parentFragmentManager.popBackStackImmediate()
 
             // notify ResultListener
             (requireViewBoundFragmentActivity().getCurrentFragment() as ResultListener)
-                .onCropAdjustment(viewModel.cropEdges.value!!)
+                .onApplyAdjustedCropEdges(viewModel.cropEdgesLive.value!!)
         }
     }
 
     interface ResultListener {
-        fun onCropAdjustment(cropEdges: CropEdges)
+        fun onApplyAdjustedCropEdges(cropEdges: CropEdges)
     }
 }
+
+private fun formattedUnitText(
+    label: CharSequence,
+    @ColorInt labelColor: Int,
+    value: Any,
+    unitSubscript: Any? = null
+): SpannableStringBuilder =
+    SpannableStringBuilder()
+        .color(labelColor) {
+            append(label)
+            unitSubscript?.let {
+                subscript {
+                    append(it.toString())
+                }
+            }
+        }
+        .italic {
+            append(" $value")
+        }
