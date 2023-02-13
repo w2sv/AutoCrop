@@ -25,6 +25,7 @@ import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.isWithinRectangle
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maxRectFFrom
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.minRectFFrom
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getRectF
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.AnimatableRectF
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.DraggingState
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.DraggingState.DraggingEdge
@@ -40,53 +41,9 @@ import kotlin.math.roundToInt
 
 class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
-    /**
-     * Main rect which is drawn to canvas.
-     */
-    private var cropRect: AnimatableRectF =
-        AnimatableRectF()
+    private val viewModel by viewModel<CropAdjustmentFragment.ViewModel>()
 
-    /**
-     * Minimum scale limitation is dependens on screen
-     * and bitmap size. bitmapMinRect is calculated
-     * initially. This value holds the miminum rectangle
-     * which bitmapMatrix can be.
-     */
-    private val bitmapMinRect: RectF by lazy {
-        val bitmapMinRectSize = max(bitmapRect.width(), bitmapRect.height()) / BITMAP_MAX_SCALE
-        RectF(0f, 0f, bitmapMinRectSize, bitmapMinRectSize)
-    }
-
-    /**
-     * Minimum rectangle for cropRect can be.
-     * This value will be only calculated on ACTION_DOWN.
-     * Then will be check the crop rect value ACTION_MOVE and
-     * override cropRect if it exceed its limit.
-     */
-    private val minRect = RectF()
-
-    /**
-     * Maximum rectangle for cropRect can be.
-     * This value will be only calculated on ACTION_DOWN.
-     * Then will be check the crop rect value ACTION_MOVE and
-     * override cropRect if it exceed its limit.
-     */
-    private val maxRect = RectF()
-
-    /**
-     * Bitmap rect value. Holds original bitmap width
-     * and height rectangle.
-     */
-    private val bitmapRect: RectF by lazy {
-        RectF(
-            0f,
-            0f,
-            viewModel.screenshotBitmap.width.toFloat(),
-            viewModel.screenshotBitmap.height.toFloat(),
-        )
-    }
-
-    private val viewRect by lazy {
+    private val viewRectF by lazy {
         RectF(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
     }
 
@@ -97,14 +54,24 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         measuredHeight.toFloat() - (CROP_RECT_MARGIN * 2)
     }
 
-    /**
-     * Bitmap matrix to draw bitmap on canvas
-     */
-    private val bitmapMatrix: Matrix = Matrix()
+    private val imageRectF: RectF by lazy {
+        viewModel.screenshotBitmap.getRectF()
+    }
 
-    private val bitmapBorderRect = RectF()
+    private val imageMatrix: Matrix = Matrix()
 
-    private val viewModel by viewModel<CropAdjustmentFragment.ViewModel>()
+    private val imageBorderRectViewDomain = RectF()
+
+    private val imageMinRectF: RectF by lazy {
+        val bitmapMinRectSize = max(imageRectF.width(), imageRectF.height()) / BITMAP_MAX_SCALE
+        RectF(0f, 0f, bitmapMinRectSize, bitmapMinRectSize)
+    }
+
+    private var cropRect: AnimatableRectF =
+        AnimatableRectF()
+
+    private val minCropRectF = RectF()
+    private val maxCropRectF = RectF()
 
     // ----------------------------------
     // Initialization
@@ -117,42 +84,42 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         }
     }
 
-    private fun initialize() {
-        initializeBitmapMatrix()
-        initializeCropRect()
-
-        requestLayout()
-        invalidate()
-    }
-
-    private fun initializeBitmapMatrix() {
-        val scale = min(viewWidth / bitmapRect.width(), viewHeight / bitmapRect.height())
-        bitmapMatrix.setScale(scale, scale)
-
-        val translateX = (viewWidth - bitmapRect.width() * scale) / 2f + CROP_RECT_MARGIN
-        val translateY = (viewHeight - bitmapRect.height() * scale) / 2f + CROP_RECT_MARGIN
-        bitmapMatrix.postTranslate(translateX, translateY)
-
-        setBitmapBorderRect()
-        setViewDomainScaledEdgeCandidatePoints()
-    }
-
-    private fun initializeCropRect() {
-        bitmapMatrix.mapRect(
-            cropRect,
-            viewModel.initialCropRectF
-        )
-    }
-
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
         initialize()
     }
 
+    private fun initialize() {
+        setImageMatrix()
+        setCropRect()
+
+        requestLayout()
+        invalidate()
+    }
+
+    private fun setImageMatrix() {
+        val scale = min(viewWidth / imageRectF.width(), viewHeight / imageRectF.height())
+        imageMatrix.setScale(scale, scale)
+
+        val translateX = (viewWidth - imageRectF.width() * scale) / 2f + CROP_RECT_MARGIN
+        val translateY = (viewHeight - imageRectF.height() * scale) / 2f + CROP_RECT_MARGIN
+        imageMatrix.postTranslate(translateX, translateY)
+
+        setBitmapBorderRect()
+        setViewDomainScaledEdgeCandidatePoints()
+    }
+
+    private fun setCropRect() {
+        imageMatrix.mapRect(
+            cropRect,
+            viewModel.initialCropRectF
+        )
+    }
+
     fun reset() {
         initialize()
-        onCropRectChanged()
+        viewModel.resetCropEdges()
     }
 
     // ----------------------------------
@@ -189,8 +156,8 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             }
 
             ACTION_UP -> {
-                minRect.setEmpty()
-                maxRect.setEmpty()
+                minCropRectF.setEmpty()
+                maxCropRectF.setEmpty()
                 when (draggingState) {
                     is DraggingEdge, is DraggingState.DraggingCropRect -> {
                         val centerRect = getTargetRect()
@@ -249,7 +216,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 val topNew = cropRect.top - distanceY
                 val bottomNew = cropRect.bottom - distanceY
 
-                if (topNew > bitmapBorderRect.top && bottomNew < bitmapBorderRect.bottom) {
+                if (topNew > imageBorderRectViewDomain.top && bottomNew < imageBorderRectViewDomain.bottom) {
                     cropRect.top = topNew
                     cropRect.bottom = bottomNew
 
@@ -272,7 +239,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         super.onDraw(canvas)
 
         canvas?.apply {
-            drawBitmap(viewModel.screenshotBitmap, bitmapMatrix, emptyPaint)
+            drawBitmap(viewModel.screenshotBitmap, imageMatrix, emptyPaint)
             save()
             clipRect(cropRect)
             drawColor(ContextCompat.getColor(context, R.color.crop_mask))
@@ -300,7 +267,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     }
 
     private fun setViewDomainScaledEdgeCandidatePoints() {
-        bitmapMatrix.mapPoints(viewDomainScaledEdgeCandidatePoints, viewModel.edgeCandidatePoints)
+        imageMatrix.mapPoints(viewDomainScaledEdgeCandidatePoints, viewModel.edgeCandidatePoints)
     }
 
     private val edgeCandidatePaint = Paint().apply {
@@ -493,7 +460,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     }
 
     private fun setBitmapBorderRect() {
-        bitmapMatrix.mapRect(bitmapBorderRect, bitmapRect)
+        imageMatrix.mapRect(imageBorderRectViewDomain, imageRectF)
     }
 
     /**
@@ -503,7 +470,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     private fun calculateMinRect() {
         val minSize = max(
             RectF()
-                .apply { bitmapMatrix.mapRect(this, bitmapMinRect) }
+                .apply { imageMatrix.mapRect(this, imageMinRectF) }
                 .width(),
             MIN_RECT_SIZE
         )
@@ -511,28 +478,28 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         when (val state = draggingState) {
             is DraggingEdge -> {
                 when (state.edge) {
-                    LEFT -> minRect.set(
+                    LEFT -> minCropRectF.set(
                         cropRect.right - minSize,
                         cropRect.top,
                         cropRect.right,
                         cropRect.bottom
                     )
 
-                    TOP -> minRect.set(
+                    TOP -> minCropRectF.set(
                         cropRect.left,
                         cropRect.bottom - minSize,
                         cropRect.right,
                         cropRect.bottom
                     )
 
-                    RIGHT -> minRect.set(
+                    RIGHT -> minCropRectF.set(
                         cropRect.left,
                         cropRect.top,
                         cropRect.left + minSize,
                         cropRect.bottom
                     )
 
-                    BOTTOM -> minRect.set(
+                    BOTTOM -> minCropRectF.set(
                         cropRect.left,
                         cropRect.top,
                         cropRect.right,
@@ -550,33 +517,33 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
      * drag cropRect
      */
     private fun calculateMaxRect() {
-        val borderRect = maxRectFFrom(bitmapBorderRect, viewRect)
+        val borderRect = maxRectFFrom(imageBorderRectViewDomain, viewRectF)
 
         when (val state = draggingState) {
             is DraggingEdge -> {
                 when (state.edge) {
-                    LEFT -> maxRect.set(
+                    LEFT -> maxCropRectF.set(
                         borderRect.left,
                         cropRect.top,
                         cropRect.right,
                         cropRect.bottom
                     )
 
-                    TOP -> maxRect.set(
+                    TOP -> maxCropRectF.set(
                         cropRect.left,
                         borderRect.top,
                         cropRect.right,
                         cropRect.bottom
                     )
 
-                    RIGHT -> maxRect.set(
+                    RIGHT -> maxCropRectF.set(
                         cropRect.left,
                         cropRect.top,
                         borderRect.right,
                         cropRect.bottom
                     )
 
-                    BOTTOM -> maxRect.set(
+                    BOTTOM -> maxCropRectF.set(
                         cropRect.left,
                         cropRect.top,
                         cropRect.right,
@@ -590,11 +557,11 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     }
 
     private fun updateExceedMaxBorders() {
-        cropRect.set(maxRectFFrom(cropRect, maxRect))
+        cropRect.set(maxRectFFrom(cropRect, maxCropRectF))
     }
 
     private fun updateExceedMinBorders() {
-        cropRect.set(minRectFFrom(cropRect, minRect))
+        cropRect.set(minRectFFrom(cropRect, minCropRectF))
     }
 
     // ----------------------------------
@@ -617,7 +584,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     }
 
     private fun animateBitmapTo(dst: AnimatableRectF) {
-        val newBitmapMatrix = bitmapMatrix.clone()
+        val newBitmapMatrix = imageMatrix.clone()
 
         val scale = dst.width() / cropRect.width()
         val translateX = dst.centerX() - cropRect.centerX()
@@ -628,7 +595,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         matrix.postTranslate(translateX, translateY)
         newBitmapMatrix.postConcat(matrix)
 
-        bitmapMatrix.animateToTarget(newBitmapMatrix) {
+        imageMatrix.animateToTarget(newBitmapMatrix) {
             setViewDomainScaledEdgeCandidatePoints()
             invalidate()
         }
@@ -654,7 +621,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     private fun getImageDomainCropRectF(): RectF =
         RectF()
             .apply {
-                bitmapMatrix.getInverse().mapRect(this, cropRect)
+                imageMatrix.getInverse().mapRect(this, cropRect)
             }
 
     companion object {

@@ -87,6 +87,11 @@ class CropAdjustmentFragment
         val cropEdgesChangedLive: LiveData<Boolean> by lazy {
             MutableLiveData(false)
         }
+
+        fun resetCropEdges() {
+            cropEdgesLive.postValue(cropBundle.crop.edges)
+            cropEdgesChangedLive.postValue(false)
+        }
     }
 
     private val viewModel by viewModels<ViewModel>()
