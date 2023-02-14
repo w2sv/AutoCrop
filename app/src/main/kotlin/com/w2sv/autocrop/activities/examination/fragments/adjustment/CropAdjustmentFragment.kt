@@ -88,27 +88,22 @@ class CropAdjustmentFragment
          * CropEdges
          */
 
-        val cropEdgesLive: LiveData<CropEdges> by lazy {
+        val cropEdgesLive: LiveData<CropEdges?> by lazy {
             MutableLiveData(cropBundle.crop.edges)
         }
         val cropEdgesChangedLive: LiveData<Boolean> by lazy {
             MutableLiveData(false)
         }
 
-        fun resetCropEdgesLive() {
+        fun resetCropEdges() {
             cropEdgesLive.postValue(cropBundle.crop.edges)
-            cropEdgesChangedLive.postValue(false)
         }
 
         /**
          * Selected Edges
          */
 
-        val selectedStartEdgeIndex: LiveData<Int> by lazy {
-            MutableLiveData()
-        }
-
-        val selectedEndEdgeIndex: LiveData<Int> by lazy {
+        val selectedEdgeCandidateIndices: LiveData<Pair<Int, Int?>> by lazy {
             MutableLiveData()
         }
     }
@@ -125,11 +120,11 @@ class CropAdjustmentFragment
     private fun ViewModel.setLiveDataObservers() {
         cropEdgesLive.observe(viewLifecycleOwner) { edges ->
             binding.onCropEdgesChanged(edges)
-            cropEdgesChangedLive.postValue(edges != cropBundle.crop.edges)
+            cropEdgesChangedLive.postValue(edges != null && edges != cropBundle.crop.edges)
         }
         cropEdgesChangedLive.observe(viewLifecycleOwner) {
             binding.resetButton.visibility =
-                if (it)
+                if (it && modeLive.value?.equals(CropAdjustmentMode.Manual) == true)
                     View.VISIBLE
                 else
                     View.GONE
@@ -137,23 +132,31 @@ class CropAdjustmentFragment
         }
     }
 
-    private fun CropAdjustmentBinding.onCropEdgesChanged(cropEdges: CropEdges) {
+    private fun CropAdjustmentBinding.onCropEdgesChanged(cropEdges: CropEdges?) {
+        val noCropEdgesPlaceholder = "-"
+
         heightTv.text = formattedUnitText(
             "H",
             requireContext().getColor(R.color.highlight),
-            min(cropEdges.height, viewModel.screenshotBitmap.height)
+            cropEdges?.let {
+                min(it.height, viewModel.screenshotBitmap.height)
+            }
+                ?: noCropEdgesPlaceholder
         )
         percentageTv.text =
             formattedUnitText(
                 "%",
                 requireContext().getColor(R.color.highlight),
-                (viewModel.screenshotBitmap.maintainedPercentage(cropEdges.height.toFloat()) * 100).rounded(1)
+                cropEdges?.let {
+                    (viewModel.screenshotBitmap.maintainedPercentage(it.height.toFloat()) * 100).rounded(1)
+                }
+                    ?: noCropEdgesPlaceholder
             )
     }
 
     private fun CropAdjustmentBinding.setOnClickListeners() {
         resetButton.setOnClickListener {
-            viewModel.resetCropEdgesLive()
+            viewModel.resetCropEdges()
             cropAdjustmentView.reset()
         }
         modeSwitch.setOnCheckedChangeListener { _, isChecked ->

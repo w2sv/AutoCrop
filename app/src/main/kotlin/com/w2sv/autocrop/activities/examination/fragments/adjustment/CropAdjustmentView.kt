@@ -17,7 +17,6 @@ import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.viewModel
@@ -48,7 +47,7 @@ private interface ModeConfig {
     fun setUp(onViewCreation: Boolean)
     fun reset() {}
     fun onTouchEvent(event: MotionEvent): Boolean
-    fun draw(canvas: Canvas)
+    fun onDraw(canvas: Canvas)
 }
 
 class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, attrs) {
@@ -182,7 +181,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         canvas?.apply {
             drawBitmap(viewModel.screenshotBitmap, imageMatrix, null)
 
-            modeConfig.draw(this)
+            modeConfig.onDraw(this)
         }
     }
 
@@ -209,8 +208,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     // ----------------------------------
     // Value Exposition
 
-    // TODO: optimize
-
     private fun onCropRectChanged() {
         viewModel.cropEdgesLive.postValue(
             getCropRectImageDomain().run {
@@ -233,8 +230,10 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         private val maxCropRectViewDomain = RectF()
 
         override fun setUp(onViewCreation: Boolean) {
-            if (onViewCreation)
-                resetImageBorderRectViewDomain()
+            when(onViewCreation){
+                true -> resetImageBorderRectViewDomain()
+                false -> invalidate()
+            }
         }
 
         override fun reset() {
@@ -336,7 +335,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             }
         )
 
-        override fun draw(canvas: Canvas) {
+        override fun onDraw(canvas: Canvas) {
             canvas.drawCropMask()
             canvas.drawCropRectGrid()
         }
@@ -544,42 +543,47 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         private var isSetUp: Boolean = false
 
         init {
-            viewModel.setLiveDataObservers(findViewTreeLifecycleOwner()!!)
+            viewModel.selectedEdgeCandidateIndices.observe(findViewTreeLifecycleOwner()!!) { indices ->
+                if (indices?.second != null){
+                    setSelectedCropEdges(indices.first, indices.second!!)
+                    onCropRectChanged()
+                }
+                else
+                    viewModel.cropEdgesLive.postValue(null)
+
+                invalidate()
+            }
         }
 
-        private fun CropAdjustmentFragment.ViewModel.setLiveDataObservers(owner: LifecycleOwner) {
-            selectedStartEdgeIndex.observe(owner) {
-                invalidate()
-            }
-            selectedEndEdgeIndex.observe(owner) {
-                if (it != null) {
-                    val sortedVerticalEdges = listOf(
-                        edgeCandidateYsViewDomain[it],
-                        edgeCandidateYsViewDomain[selectedStartEdgeIndex.value!!]
-                    )
-                        .sorted()
-
-                    cropRectViewDomain.setVerticalEdges(
-                        sortedVerticalEdges[0],
-                        sortedVerticalEdges[1]
-                    )
+        private fun setSelectedCropEdges(indexFirst: Int, indexSecond: Int) {
+            val sortedVerticalEdges = mutableListOf(
+                edgeCandidateYsViewDomain[indexFirst],
+                edgeCandidateYsViewDomain[indexSecond]
+            )
+                .apply {
+                    sort()
                 }
 
-                invalidate()
-            }
+            cropRectViewDomain.setVerticalEdges(
+                sortedVerticalEdges[0],
+                sortedVerticalEdges[1]
+            )
         }
 
         override fun setUp(onViewCreation: Boolean) {
+            viewModel.selectedEdgeCandidateIndices.postValue(null)
+            isSetUp = false
+
             when (onViewCreation) {
-                true -> animateImageTo(defaultImageMatrix) {
-                    onSetImage()
+                false -> animateImageTo(defaultImageMatrix) {
+                    onImageSet()
                 }
 
-                false -> onSetImage()
+                true -> onImageSet()
             }
         }
 
-        private fun onSetImage() {
+        private fun onImageSet() {
             resetImageBorderRectViewDomain()
 
             isSetUp = true
@@ -593,18 +597,12 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 true -> {
                     edgeCandidateYsViewDomain.forEachIndexed { selectedEdgeCandidateIndex, y ->
                         if (event.onHorizontalLine(y, TOUCH_THRESHOLD)) {
-                            when (viewModel.selectedStartEdgeIndex.value) {
-                                null -> {
-                                    viewModel.selectedStartEdgeIndex.postValue(selectedEdgeCandidateIndex)
-                                    viewModel.selectedEndEdgeIndex.postValue(null)
+                            with(viewModel.selectedEdgeCandidateIndices) {
+                                when {
+                                    value == null || value!!.second != null -> postValue(selectedEdgeCandidateIndex to null)
+                                    value?.first == selectedEdgeCandidateIndex -> postValue(null)
+                                    else -> postValue(value!!.first to selectedEdgeCandidateIndex)
                                 }
-
-                                selectedEdgeCandidateIndex -> {
-                                    viewModel.selectedStartEdgeIndex.postValue(null)
-                                    viewModel.selectedEndEdgeIndex.postValue(null)
-                                }
-
-                                else -> viewModel.selectedEndEdgeIndex.postValue(selectedEdgeCandidateIndex)
                             }
                         }
                     }
@@ -614,21 +612,18 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 false -> false
             }
 
-        override fun draw(canvas: Canvas) {
+        override fun onDraw(canvas: Canvas) {
             if (!isSetUp)
                 return
 
             with(canvas) {
                 drawLines(edgeCandidatePointsViewDomain, edgeCandidatePaint)
 
-                with(viewModel) {
-                    selectedStartEdgeIndex.value?.let {
-                        drawSelectedEdgeHighlighting(it)
-                    }
-                    selectedEndEdgeIndex.value?.let {
-                        drawSelectedEdgeHighlighting(it)
-                    }
-                    if (selectedStartEdgeIndex.value != null && selectedEndEdgeIndex.value != null) {
+                viewModel.selectedEdgeCandidateIndices.value?.let {
+                    drawSelectedEdgeHighlighting(it.first)
+
+                    if (it.second != null) {
+                        drawSelectedEdgeHighlighting(it.second!!)
                         drawCropMask()
                     }
                 }
