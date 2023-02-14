@@ -23,39 +23,29 @@ fun minRectOf(a: RectF, b: RectF) =
         max(a.bottom, b.bottom)
     )
 
-fun RectF.getEdgeTouch(touchEvent: MotionEvent, touchThreshold: Float): Edge? {
-    val isLeft = touchEvent.x < left + touchThreshold &&
-            touchEvent.x > left - touchThreshold &&
-            touchEvent.y > top &&
-            touchEvent.y < bottom
+fun RectF.getEdgeTouch(touchEvent: MotionEvent, touchThreshold: Float): Edge? =
+    when {
+        touchEvent.x > right || touchEvent.x < left -> null
 
-    val isRight = touchEvent.x < right + touchThreshold &&
-            touchEvent.x > right - touchThreshold &&
-            touchEvent.y > top &&
-            touchEvent.y < bottom
+        touchEvent.y < top + touchThreshold &&
+                touchEvent.y > top - touchThreshold -> Edge.TOP
 
-    val isTop = touchEvent.x < right &&
-            touchEvent.x > left &&
-            touchEvent.y < top + touchThreshold &&
-            touchEvent.y > top - touchThreshold
+        touchEvent.y < bottom + touchThreshold &&
+                touchEvent.y > bottom - touchThreshold -> Edge.BOTTOM
 
-    val isBottom = touchEvent.x < right &&
-            touchEvent.x > left &&
-            touchEvent.y < bottom + touchThreshold &&
-            touchEvent.y > bottom - touchThreshold
-
-    return when {
-        isLeft -> Edge.LEFT
-        isRight -> Edge.RIGHT
-        isTop -> Edge.TOP
-        isBottom -> Edge.BOTTOM
         else -> null
     }
+
+fun RectF.contains(event: MotionEvent): Boolean =
+    contains(event.x, event.y)
+
+fun RectF.containsVerticalEdges(y1: Float, y2: Float): Boolean =
+    y1 > top && y2 < bottom
+
+fun RectF.setVerticalEdges(y1: Float, y2: Float){
+    top = y1
+    bottom = y2
 }
-
-fun MotionEvent.isWithinRectangle(rectF: RectF): Boolean =
-    rectF.contains(x, y)
-
 
 fun CropEdges.asRectF(width: Int): RectF =
     RectF(0F, top.toFloat(), width.toFloat(), bottom.toFloat())

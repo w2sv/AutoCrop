@@ -47,10 +47,6 @@ class CropAdjustmentFragment
         contentResolver: ContentResolver
     ) : androidx.lifecycle.ViewModel() {
 
-        /**
-         * Retrieved
-         */
-
         val cropBundle: CropBundle =
             ExaminationActivity.ViewModel.cropBundles[savedStateHandle[CropBundle.EXTRA_POSITION]!!]
         val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
@@ -78,6 +74,14 @@ class CropAdjustmentFragment
         /**
          * LiveData
          */
+
+        val selectedStartEdgeIndex: LiveData<Int> by lazy {
+            MutableLiveData()
+        }
+
+        val selectedEndEdgeIndex: LiveData<Int> by lazy {
+            MutableLiveData()
+        }
 
         val resetModeLive: LiveData<CropAdjustmentMode> by lazy {
             MutableLiveData()
@@ -119,9 +123,6 @@ class CropAdjustmentFragment
                 else
                     View.GONE
             binding.applyButton.isEnabled = it
-        }
-        resetModeLive.observe(viewLifecycleOwner){
-            binding.cropAdjustmentView.reset(it)
         }
     }
 
