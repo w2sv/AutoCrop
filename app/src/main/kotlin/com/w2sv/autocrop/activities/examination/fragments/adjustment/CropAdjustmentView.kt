@@ -541,15 +541,19 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         private var isSetUp: Boolean = false
 
         init {
-            viewModel.selectedEdgeCandidateIndices.observe(findViewTreeLifecycleOwner()!!) { indices ->
-                if (indices?.second != null) {
-                    setSelectedCropEdges(indices.first, indices.second!!)
-                    onCropRectChanged()
-                }
-                else
-                    viewModel.cropEdgesLive.postValue(null)
+            viewModel.selectedEdgeCandidateIndices.observe(findViewTreeLifecycleOwner()!!) {
+                it?.let { (first, second) ->
+                    when {
+                        first != null && second != null -> {
+                            setSelectedCropEdges(first, second)
+                            onCropRectChanged()
+                        }
 
-                invalidate()
+                        else -> viewModel.cropEdgesLive.postValue(null)
+                    }
+
+                    invalidate()
+                }
             }
         }
 
@@ -586,8 +590,8 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                         if (event.onHorizontalLine(y, TOUCH_THRESHOLD)) {
                             with(viewModel.selectedEdgeCandidateIndices) {
                                 when {
-                                    value == null || value!!.second != null -> postValue(selectedEdgeCandidateIndex to null)
-                                    value?.first == selectedEdgeCandidateIndex -> postValue(null)
+                                    value == null || (value!!.first != null && value!!.second != null) -> postValue(selectedEdgeCandidateIndex to null)
+                                    value?.first == selectedEdgeCandidateIndex -> postValue(null to null)
                                     else -> postValue(value!!.first to selectedEdgeCandidateIndex)
                                 }
                             }
@@ -600,19 +604,16 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             }
 
         override fun onDraw(canvas: Canvas) {
-            if (!isSetUp)
-                return
+            if (isSetUp){
+                canvas.drawLines(edgeCandidatePointsViewDomain, edgeCandidatePaint)
 
-            with(canvas) {
-                drawLines(edgeCandidatePointsViewDomain, edgeCandidatePaint)
-
-                viewModel.selectedEdgeCandidateIndices.value?.let {
-                    drawSelectedEdgeHighlighting(it.first)
-
-                    if (it.second != null) {
-                        drawSelectedEdgeHighlighting(it.second!!)
-                        drawCropMask()
-                    }
+                viewModel.selectedEdgeCandidateIndices.value?.let { (first, second) ->
+                    if (first != null)
+                        canvas.drawSelectedEdgeHighlighting(first)
+                    if (second != null)
+                        canvas.drawSelectedEdgeHighlighting(second)
+                    if (first != null && second != null)
+                        canvas.drawCropMask()
                 }
             }
         }
@@ -627,7 +628,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         }
 
         private val selectedEdgeCandidatePaint = Paint().apply {
-            color = Color.CYAN
+            color = Color.MAGENTA
             strokeWidth = 9f
             style = Paint.Style.STROKE
             maskFilter = BlurMaskFilter(8f, BlurMaskFilter.Blur.NORMAL)
@@ -635,7 +636,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         private val edgeCandidatePaint = Paint().apply {
             color = Color.CYAN
-            strokeWidth = 3f
+            strokeWidth = 5f
             style = Paint.Style.STROKE
         }
 

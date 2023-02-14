@@ -103,7 +103,7 @@ class CropAdjustmentFragment
          * Selected Edges
          */
 
-        val selectedEdgeCandidateIndices: LiveData<Pair<Int, Int?>> by lazy {
+        val selectedEdgeCandidateIndices: LiveData<Pair<Int?, Int?>?> by lazy {
             MutableLiveData()
         }
     }
