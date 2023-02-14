@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.GestureDetector
@@ -16,6 +17,7 @@ import android.view.MotionEvent.ACTION_MOVE
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.viewModel
@@ -540,8 +542,16 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         private var isSetUp: Boolean = false
 
+        private val xEdgeIndicationTriangles by lazy {
+            cropRectViewDomain.right + 12
+        }
+
         init {
-            viewModel.selectedEdgeCandidateIndices.observe(findViewTreeLifecycleOwner()!!) {
+            viewModel.setLifeDataObservers(findViewTreeLifecycleOwner()!!)
+        }
+
+        private fun CropAdjustmentFragment.ViewModel.setLifeDataObservers(lifecycleOwner: LifecycleOwner) {
+            selectedEdgeCandidateIndices.observe(lifecycleOwner) {
                 it?.let { (first, second) ->
                     when {
                         first != null && second != null -> {
@@ -554,6 +564,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
                     invalidate()
                 }
+                resetSelectedEdgeCandidateIndicesSet(it)
             }
         }
 
@@ -589,11 +600,16 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                     edgeCandidateYsViewDomain.forEachIndexed { selectedEdgeCandidateIndex, y ->
                         if (event.onHorizontalLine(y, TOUCH_THRESHOLD)) {
                             with(viewModel.selectedEdgeCandidateIndices) {
-                                when {
-                                    value == null || (value!!.first != null && value!!.second != null) -> postValue(selectedEdgeCandidateIndex to null)
-                                    value?.first == selectedEdgeCandidateIndex -> postValue(null to null)
-                                    else -> postValue(value!!.first to selectedEdgeCandidateIndex)
-                                }
+                                postValue(
+                                    when {
+                                        value == null || (value!!.first != null && value!!.second != null) || (value!!.first == null && value!!.second == null) ->
+                                            selectedEdgeCandidateIndex to null
+
+                                        value?.first == selectedEdgeCandidateIndex -> null to null
+
+                                        else -> value!!.first to selectedEdgeCandidateIndex
+                                    }
+                                )
                             }
                         }
                     }
@@ -604,54 +620,102 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             }
 
         override fun onDraw(canvas: Canvas) {
-            if (isSetUp){
-                canvas.drawLines(edgeCandidatePointsViewDomain, edgeCandidatePaint)
+            if (isSetUp) {
+                canvas.drawEdgeCandidates()
+                canvas.drawEdgeIndicationTriangles()
 
                 viewModel.selectedEdgeCandidateIndices.value?.let { (first, second) ->
-                    if (first != null)
-                        canvas.drawSelectedEdgeHighlighting(first)
-                    if (second != null)
-                        canvas.drawSelectedEdgeHighlighting(second)
                     if (first != null && second != null)
                         canvas.drawCropMask()
                 }
             }
         }
 
-        private fun Canvas.drawSelectedEdgeHighlighting(selectedEdgeIndex: Int) {
-            drawLines(
-                edgeCandidatePointsViewDomain,
-                selectedEdgeIndex * COORDINATES_PER_LINE,
-                COORDINATES_PER_LINE,
-                selectedEdgeCandidatePaint
-            )
+        private fun Canvas.drawEdgeCandidates() {
+            edgeCandidatePointsViewDomain.forEachIndexed { index, floats ->
+                drawLine(
+                    floats[0],
+                    floats[1],
+                    floats[2],
+                    floats[3],
+                    if (viewModel.selectedEdgeCandidateIndicesSet.contains(index))
+                        selectedEdgeCandidatePaint
+                    else
+                        unselectedEdgeCandidatePaint
+                )
+            }
         }
 
-        private val selectedEdgeCandidatePaint = Paint().apply {
-            color = Color.MAGENTA
-            strokeWidth = 9f
-            style = Paint.Style.STROKE
-            maskFilter = BlurMaskFilter(8f, BlurMaskFilter.Blur.NORMAL)
+        private fun Canvas.drawEdgeIndicationTriangles() {
+            edgeCandidateYsViewDomain.forEachIndexed { i, y ->
+                drawPath(
+                    getTrianglePath(
+                        xEdgeIndicationTriangles,
+                        y
+                    ),
+                    if (viewModel.selectedEdgeCandidateIndicesSet.contains(i))
+                        selectedTrianglePaint
+                    else
+                        unselectedTrianglePaint
+                )
+            }
         }
 
-        private val edgeCandidatePaint = Paint().apply {
-            color = Color.CYAN
-            strokeWidth = 5f
-            style = Paint.Style.STROKE
-        }
+        private val unselectedTrianglePaint = Paint()
+            .apply {
+                style = Paint.Style.FILL
+                isAntiAlias = true
+                color = UNSELECTED_EDGE_CANDIDATE_COLOR
+            }
 
-        private val edgeCandidatePointsViewDomain: FloatArray by lazy {
+        private val selectedTrianglePaint = Paint()
+            .apply {
+                style = Paint.Style.FILL
+                isAntiAlias = true
+                color = SELECTED_EDGE_CANDIDATE_COLOR
+            }
+
+        private fun getTrianglePath(x: Float, y: Float): Path =
+            Path()
+                .apply {
+                    moveTo(x, y) // Left
+                    lineTo(
+                        x + EDGE_INDICATION_TRIANGLE_EDGE_LENGTH,
+                        y + EDGE_INDICATION_TRIANGLE_EDGE_LENGTH_HALVE
+                    ) // Right bottom
+                    lineTo(
+                        x + EDGE_INDICATION_TRIANGLE_EDGE_LENGTH,
+                        y - EDGE_INDICATION_TRIANGLE_EDGE_LENGTH_HALVE
+                    ) // Right top
+                    lineTo(x, y) // Back to left
+                    close()
+                }
+
+        private val selectedEdgeCandidatePaint = Paint()
+            .apply {
+                color = SELECTED_EDGE_CANDIDATE_COLOR
+                strokeWidth = 9f
+                style = Paint.Style.STROKE
+                maskFilter = BlurMaskFilter(8f, BlurMaskFilter.Blur.NORMAL)
+            }
+
+        private val unselectedEdgeCandidatePaint = Paint()
+            .apply {
+                color = UNSELECTED_EDGE_CANDIDATE_COLOR
+                strokeWidth = 5f
+                style = Paint.Style.STROKE
+            }
+
+        private val edgeCandidatePointsViewDomain: List<List<Float>> by lazy {
             FloatArray(viewModel.cropBundle.screenshot.cropEdgeCandidates.size * COORDINATES_PER_LINE).apply {
                 imageMatrix.mapPoints(this, viewModel.edgeCandidatePoints)
             }
+                .toList()
+                .windowed(4, 4)
         }
 
         private val edgeCandidateYsViewDomain: List<Float> by lazy {
-            mutableListOf<Float>().apply {
-                (1 until edgeCandidatePointsViewDomain.size step COORDINATES_PER_LINE).forEach {
-                    add(edgeCandidatePointsViewDomain[it])
-                }
-            }
+            edgeCandidatePointsViewDomain.map { it[1] }
         }
     }
 
@@ -667,6 +731,13 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         private const val ANIMATION_DURATION: Long = 300
 
         private const val DELTA_CENTER_HORIZONTAL_EDGE_PROTRUSION: Float = 32f
+
+        private const val UNSELECTED_EDGE_CANDIDATE_COLOR = Color.CYAN
+
+        private const val SELECTED_EDGE_CANDIDATE_COLOR = Color.MAGENTA
+
+        private const val EDGE_INDICATION_TRIANGLE_EDGE_LENGTH = 28f
+        private const val EDGE_INDICATION_TRIANGLE_EDGE_LENGTH_HALVE = 14f
     }
 }
 

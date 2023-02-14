@@ -68,6 +68,7 @@ class CropAdjustmentFragment
                 .flatten()
                 .toFloatArray()
         }
+
         val initialCropRectF: RectF by lazy {
             cropBundle.crop.edges.asRectF(screenshotBitmap.width)
         }
@@ -105,6 +106,17 @@ class CropAdjustmentFragment
 
         val selectedEdgeCandidateIndices: LiveData<Pair<Int?, Int?>?> by lazy {
             MutableLiveData()
+        }
+
+        val selectedEdgeCandidateIndicesSet: MutableSet<Int?> = mutableSetOf()
+
+        fun resetSelectedEdgeCandidateIndicesSet(indexPair: Pair<Int?, Int?>?) {
+            with(selectedEdgeCandidateIndicesSet) {
+                clear()
+                indexPair?.let {
+                    addAll(it.toList())
+                }
+            }
         }
     }
 
