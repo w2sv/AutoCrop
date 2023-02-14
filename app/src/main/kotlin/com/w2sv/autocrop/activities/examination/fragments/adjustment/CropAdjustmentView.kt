@@ -16,6 +16,7 @@ import android.view.MotionEvent.ACTION_MOVE
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.w2sv.androidutils.extensions.postValue
@@ -44,7 +45,7 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 
 private interface ModeConfig {
-    fun setUp()
+    fun setUp(onViewCreation: Boolean)
     fun reset() {}
     fun onTouchEvent(event: MotionEvent): Boolean
     fun draw(canvas: Canvas)
@@ -129,7 +130,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             CropAdjustmentMode.EdgeSelection -> edgeSelectionModeConfig
         }
             .apply {
-                setUp()
+                setUp(onViewCreation = !findViewTreeLifecycleOwner()!!.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED))
             }
     }
 
@@ -231,8 +232,9 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         private val minCropRectViewDomain = RectF()
         private val maxCropRectViewDomain = RectF()
 
-        override fun setUp() {
-            resetImageBorderRectViewDomain()
+        override fun setUp(onViewCreation: Boolean) {
+            if (onViewCreation)
+                resetImageBorderRectViewDomain()
         }
 
         override fun reset() {
@@ -567,18 +569,23 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             }
         }
 
-        override fun setUp() {
-            animateImageTo(defaultImageMatrix) {
-                resetImageBorderRectViewDomain()
+        override fun setUp(onViewCreation: Boolean) {
+            when (onViewCreation) {
+                true -> animateImageTo(defaultImageMatrix) {
+                    onSetImage()
+                }
 
-                ::edgeCandidatePointsViewDomain.get()
-                ::edgeCandidateYsViewDomain.get()
-
-                isSetUp = true
-
-                requestLayout()
-                invalidate()
+                false -> onSetImage()
             }
+        }
+
+        private fun onSetImage() {
+            resetImageBorderRectViewDomain()
+
+            isSetUp = true
+
+            requestLayout()
+            invalidate()
         }
 
         override fun onTouchEvent(event: MotionEvent): Boolean =
