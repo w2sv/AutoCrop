@@ -38,6 +38,7 @@ import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Dragg
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.BOTTOM
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.TOP
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.EdgeSelectionState
 import com.w2sv.cropbundle.cropping.CropEdges
 import kotlin.math.max
 import kotlin.math.min
@@ -551,41 +552,26 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         }
 
         private fun CropAdjustmentFragment.ViewModel.setLifeDataObservers(lifecycleOwner: LifecycleOwner) {
-            selectedEdgeCandidateIndices.observe(lifecycleOwner) {
-                it?.let { (first, second) ->
-                    when {
-                        first != null && second != null -> {
-                            setSelectedCropEdges(first, second)
-                            onCropRectChanged()
-                        }
-
-                        else -> viewModel.cropEdgesLive.postValue(null)
+            edgeCandidatesSelectionState.observe(lifecycleOwner) {
+                when (it) {
+                    is EdgeSelectionState.SelectedBoth -> {
+                        cropRectViewDomain.setVerticalEdges(
+                            edgeCandidateYsViewDomain[it.indexTopEdge],
+                            edgeCandidateYsViewDomain[it.indexBottomEdge]
+                        )
+                        onCropRectChanged()
                     }
 
-                    invalidate()
+                    else -> viewModel.cropEdgesLive.postValue(null)
                 }
-                resetSelectedEdgeCandidateIndicesSet(it)
+
+                invalidate()
             }
-        }
-
-        private fun setSelectedCropEdges(indexFirst: Int, indexSecond: Int) {
-            val sortedVerticalEdges = mutableListOf(
-                edgeCandidateYsViewDomain[indexFirst],
-                edgeCandidateYsViewDomain[indexSecond]
-            )
-                .apply {
-                    sort()
-                }
-
-            cropRectViewDomain.setVerticalEdges(
-                sortedVerticalEdges[0],
-                sortedVerticalEdges[1]
-            )
         }
 
         override fun setUp() {
             isSetUp = false
-            viewModel.selectedEdgeCandidateIndices.postValue(null)
+            viewModel.edgeCandidatesSelectionState.postValue(EdgeSelectionState.Unselected)
 
             animateImageTo(defaultImageMatrix) {
                 resetImageBorderRectViewDomain()
@@ -599,15 +585,20 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 true -> {
                     edgeCandidateYsViewDomain.forEachIndexed { selectedEdgeCandidateIndex, y ->
                         if (event.onHorizontalLine(y, TOUCH_THRESHOLD)) {
-                            with(viewModel.selectedEdgeCandidateIndices) {
+                            with(viewModel.edgeCandidatesSelectionState) {
                                 postValue(
-                                    when {
-                                        value == null || (value!!.first != null && value!!.second != null) || (value!!.first == null && value!!.second == null) ->
-                                            selectedEdgeCandidateIndex to null
+                                    when (val state = value!!) {
+                                        is EdgeSelectionState.Unselected, is EdgeSelectionState.SelectedBoth ->
+                                            EdgeSelectionState.SelectedFirst(selectedEdgeCandidateIndex)
 
-                                        value?.first == selectedEdgeCandidateIndex -> null to null
-
-                                        else -> value!!.first to selectedEdgeCandidateIndex
+                                        is EdgeSelectionState.SelectedFirst -> {
+                                            if (state.index == selectedEdgeCandidateIndex)
+                                                EdgeSelectionState.Unselected
+                                            else
+                                                listOf(state.index, selectedEdgeCandidateIndex).sorted().run {
+                                                    EdgeSelectionState.SelectedBoth(get(0), get(1))
+                                                }
+                                        }
                                     }
                                 )
                             }
@@ -624,9 +615,8 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 canvas.drawEdgeCandidates()
                 canvas.drawEdgeIndicationTriangles()
 
-                viewModel.selectedEdgeCandidateIndices.value?.let { (first, second) ->
-                    if (first != null && second != null)
-                        canvas.drawCropMask()
+                if (viewModel.edgeCandidatesSelectionState.value is EdgeSelectionState.SelectedBoth) {
+                    canvas.drawCropMask()
                 }
             }
         }
@@ -638,7 +628,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                     floats[1],
                     floats[2],
                     floats[3],
-                    if (viewModel.selectedEdgeCandidateIndicesSet.contains(index))
+                    if (viewModel.edgeCandidatesSelectionState.value!!.indices.contains(index))
                         selectedEdgeCandidatePaint
                     else
                         unselectedEdgeCandidatePaint
@@ -653,7 +643,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                         xEdgeIndicationTriangles,
                         y
                     ),
-                    if (viewModel.selectedEdgeCandidateIndicesSet.contains(i))
+                    if (viewModel.edgeCandidatesSelectionState.value!!.indices.contains(i))
                         selectedTrianglePaint
                     else
                         unselectedTrianglePaint
@@ -737,6 +727,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         private const val SELECTED_EDGE_CANDIDATE_COLOR = Color.MAGENTA
 
         private const val EDGE_INDICATION_TRIANGLE_EDGE_LENGTH = 28f
+
         private const val EDGE_INDICATION_TRIANGLE_EDGE_LENGTH_HALVE = 14f
     }
 }

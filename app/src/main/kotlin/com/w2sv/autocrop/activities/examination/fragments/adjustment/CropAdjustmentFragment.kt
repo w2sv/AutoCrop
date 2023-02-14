@@ -20,6 +20,7 @@ import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.asRectF
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getRectF
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maintainedPercentage
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.EdgeSelectionState
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.cropbundle.CropBundle
@@ -104,19 +105,8 @@ class CropAdjustmentFragment
          * Selected Edges
          */
 
-        val selectedEdgeCandidateIndices: LiveData<Pair<Int?, Int?>?> by lazy {
-            MutableLiveData()
-        }
-
-        val selectedEdgeCandidateIndicesSet: MutableSet<Int?> = mutableSetOf()
-
-        fun resetSelectedEdgeCandidateIndicesSet(indexPair: Pair<Int?, Int?>?) {
-            with(selectedEdgeCandidateIndicesSet) {
-                clear()
-                indexPair?.let {
-                    addAll(it.toList())
-                }
-            }
+        val edgeCandidatesSelectionState: LiveData<EdgeSelectionState> by lazy {
+            MutableLiveData(EdgeSelectionState.Unselected)
         }
     }
 
