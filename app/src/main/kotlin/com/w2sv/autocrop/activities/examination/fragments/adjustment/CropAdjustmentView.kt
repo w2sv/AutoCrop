@@ -16,7 +16,6 @@ import android.view.MotionEvent.ACTION_MOVE
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.viewModel
@@ -38,13 +37,12 @@ import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.BOTTOM
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.TOP
 import com.w2sv.cropbundle.cropping.CropEdges
-import slimber.log.i
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
 private interface ModeConfig {
-    fun setUp(onViewCreation: Boolean)
+    fun setUp()
     fun reset() {}
     fun onTouchEvent(event: MotionEvent): Boolean
     fun onDraw(canvas: Canvas)
@@ -118,7 +116,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         defaultCropRectViewDomain = cropRectViewDomain.getCopy()
 
         viewModel.modeLive.observe(findViewTreeLifecycleOwner()!!) {
-            i { "Setting modeConfig to ${it.name}" }
             setModeConfig(it)
         }
     }
@@ -129,7 +126,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             CropAdjustmentMode.EdgeSelection -> edgeSelectionModeConfig
         }
             .apply {
-                setUp(onViewCreation = !findViewTreeLifecycleOwner()!!.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED))
+                setUp()
             }
     }
 
@@ -229,17 +226,18 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         private val minCropRectViewDomain = RectF()
         private val maxCropRectViewDomain = RectF()
 
-        override fun setUp(onViewCreation: Boolean) {
-            when(onViewCreation){
-                true -> resetImageBorderRectViewDomain()
-                false -> invalidate()
-            }
+        override fun setUp() {
+            resetImageBorderRectViewDomain()
+            cropRectViewDomain.set(defaultCropRectViewDomain)
+            invalidate()
+            viewModel.resetCropEdges()
         }
 
         override fun reset() {
             animateImageTo(defaultImageMatrix)
             animateCropRectTo(defaultCropRectViewDomain)
             resetImageBorderRectViewDomain()
+            viewModel.resetCropEdges()
         }
 
         override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -544,7 +542,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         init {
             viewModel.selectedEdgeCandidateIndices.observe(findViewTreeLifecycleOwner()!!) { indices ->
-                if (indices?.second != null){
+                if (indices?.second != null) {
                     setSelectedCropEdges(indices.first, indices.second!!)
                     onCropRectChanged()
                 }
@@ -570,26 +568,15 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             )
         }
 
-        override fun setUp(onViewCreation: Boolean) {
-            viewModel.selectedEdgeCandidateIndices.postValue(null)
+        override fun setUp() {
             isSetUp = false
+            viewModel.selectedEdgeCandidateIndices.postValue(null)
 
-            when (onViewCreation) {
-                false -> animateImageTo(defaultImageMatrix) {
-                    onImageSet()
-                }
-
-                true -> onImageSet()
+            animateImageTo(defaultImageMatrix) {
+                resetImageBorderRectViewDomain()
+                isSetUp = true
+                invalidate()
             }
-        }
-
-        private fun onImageSet() {
-            resetImageBorderRectViewDomain()
-
-            isSetUp = true
-
-            requestLayout()
-            invalidate()
         }
 
         override fun onTouchEvent(event: MotionEvent): Boolean =

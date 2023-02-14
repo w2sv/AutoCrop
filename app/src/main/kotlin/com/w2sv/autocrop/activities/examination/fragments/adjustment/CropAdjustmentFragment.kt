@@ -156,7 +156,6 @@ class CropAdjustmentFragment
 
     private fun CropAdjustmentBinding.setOnClickListeners() {
         resetButton.setOnClickListener {
-            viewModel.resetCropEdges()
             cropAdjustmentView.reset()
         }
         modeSwitch.setOnCheckedChangeListener { _, isChecked ->
