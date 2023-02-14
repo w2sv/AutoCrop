@@ -18,6 +18,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.asRectF
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getRectF
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maintainedPercentage
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.utils.getFragment
@@ -71,23 +72,21 @@ class CropAdjustmentFragment
             cropBundle.crop.edges.asRectF(screenshotBitmap.width)
         }
 
+        val imageRect: RectF by lazy {
+            screenshotBitmap.getRectF()
+        }
+
         /**
-         * LiveData
+         * CropAdjustmentMode
          */
 
-        val selectedStartEdgeIndex: LiveData<Int> by lazy {
-            MutableLiveData()
+        val modeLive: LiveData<CropAdjustmentMode> by lazy {
+            MutableLiveData(CropAdjustmentMode.Manual)  // TODO
         }
 
-        val selectedEndEdgeIndex: LiveData<Int> by lazy {
-            MutableLiveData()
-        }
-
-        val resetModeLive: LiveData<CropAdjustmentMode> by lazy {
-            MutableLiveData()
-        }
-
-        var drawMode: CropAdjustmentMode? = CropAdjustmentMode.Manual
+        /**
+         * CropEdges
+         */
 
         val cropEdgesLive: LiveData<CropEdges> by lazy {
             MutableLiveData(cropBundle.crop.edges)
@@ -96,9 +95,21 @@ class CropAdjustmentFragment
             MutableLiveData(false)
         }
 
-        fun resetCropEdges() {
+        fun resetCropEdgesLive() {
             cropEdgesLive.postValue(cropBundle.crop.edges)
             cropEdgesChangedLive.postValue(false)
+        }
+
+        /**
+         * Selected Edges
+         */
+
+        val selectedStartEdgeIndex: LiveData<Int> by lazy {
+            MutableLiveData()
+        }
+
+        val selectedEndEdgeIndex: LiveData<Int> by lazy {
+            MutableLiveData()
         }
     }
 
@@ -142,16 +153,16 @@ class CropAdjustmentFragment
 
     private fun CropAdjustmentBinding.setOnClickListeners() {
         resetButton.setOnClickListener {
-            cropAdjustmentView.reset(viewModel.resetModeLive.value!!)
+            viewModel.resetCropEdgesLive()
+            cropAdjustmentView.reset()
         }
         modeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.resetModeLive.postValue(
+            viewModel.modeLive.postValue(
                 if (isChecked)
                     CropAdjustmentMode.EdgeSelection
                 else
                     CropAdjustmentMode.Manual
             )
-            viewModel.drawMode = null
         }
 
         cancelButton.setOnClickListener {

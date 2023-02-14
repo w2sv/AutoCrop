@@ -1,5 +1,6 @@
 package com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions
 
+import android.graphics.Matrix
 import android.graphics.RectF
 import android.view.MotionEvent
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge
@@ -42,9 +43,19 @@ fun RectF.contains(event: MotionEvent): Boolean =
 fun RectF.containsVerticalEdges(y1: Float, y2: Float): Boolean =
     y1 > top && y2 < bottom
 
-fun RectF.setVerticalEdges(y1: Float, y2: Float){
+fun RectF.setVerticalEdges(y1: Float, y2: Float) {
     top = y1
     bottom = y2
+}
+
+fun RectF.getCopy(): RectF =
+    RectF(this)
+
+fun RectF.setAsMappedFrom(src: RectF, mapMatrix: Matrix) {
+    mapMatrix.mapRect(
+        this,
+        src
+    )
 }
 
 fun CropEdges.asRectF(width: Int): RectF =

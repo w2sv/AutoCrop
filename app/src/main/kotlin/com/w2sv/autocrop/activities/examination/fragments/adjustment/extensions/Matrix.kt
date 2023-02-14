@@ -34,9 +34,9 @@ fun Matrix.getTranslateX(): Float =
 fun Matrix.getTranslateY(): Float =
     getValues()[Matrix.MTRANS_Y]
 
-fun Matrix.clone(): Matrix =
+fun Matrix.getCopy(): Matrix =
     Matrix().apply {
-        set(this@clone)
+        set(this@getCopy)
     }
 
 fun Matrix.getInverse(): Matrix {
