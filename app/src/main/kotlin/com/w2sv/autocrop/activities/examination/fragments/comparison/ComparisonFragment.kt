@@ -81,13 +81,11 @@ class ComparisonFragment
     }
 
     private fun onEnterTransitionCompleted() {
-        launchAfterShortDelay {
-            viewModel.enterTransitionCompleted = true
+        viewModel.enterTransitionCompleted = true
 
-            if (!viewModel.globalFlags.comparisonInstructionsShown) {
-                launchAfterShortDelay {
-                    ComparisonInstructionDialog().show(childFragmentManager)
-                }
+        if (!viewModel.globalFlags.comparisonInstructionsShown) {
+            launchAfterShortDelay {
+                ComparisonInstructionDialog().show(childFragmentManager)
             }
         }
     }
