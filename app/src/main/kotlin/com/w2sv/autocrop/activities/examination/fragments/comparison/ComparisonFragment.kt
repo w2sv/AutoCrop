@@ -26,6 +26,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getScaleY
+import com.w2sv.autocrop.activities.examination.fragments.comparison.model.DisplayedImage
 import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.cropbundle.CropBundle
@@ -56,7 +57,7 @@ class ComparisonFragment
 
         var enterTransitionCompleted: Boolean = false
 
-        val displayScreenshotLive: LiveData<Boolean> = MutableLiveData()
+        val displayedImageLive: LiveData<DisplayedImage> = MutableLiveData()
         val screenshotViewMatrixLive: LiveData<Matrix> = MutableLiveData()
     }
 
@@ -114,13 +115,13 @@ class ComparisonFragment
         ivLayout.setOnTouchListener { v, event ->
             when (event.action) {
                 ACTION_DOWN -> {
-                    viewModel.displayScreenshotLive.postValue(true)
+                    viewModel.displayedImageLive.postValue(DisplayedImage.Screenshot)
                     v.performClick()
                     true
                 }
 
                 ACTION_UP -> {
-                    viewModel.displayScreenshotLive.postValue(false)
+                    viewModel.displayedImageLive.postValue(DisplayedImage.Crop)
                     true
                 }
 
@@ -137,14 +138,15 @@ class ComparisonFragment
                 postInvalidate()
             }
         }
-        displayScreenshotLive.observe(viewLifecycleOwner) {
-            if (it)
-                crossVisualize(binding.cropIv, binding.screenshotIv)
-            else
-                crossVisualize(binding.screenshotIv, binding.cropIv)
+        displayedImageLive.observe(viewLifecycleOwner) {
+            when (it!!){
+                DisplayedImage.Screenshot -> crossVisualize(binding.cropIv, binding.screenshotIv)
+                DisplayedImage.Crop -> crossVisualize(binding.screenshotIv, binding.cropIv)
+            }
 
-            if (viewModel.enterTransitionCompleted)
+            if (viewModel.enterTransitionCompleted) {
                 binding.displayedImageTv.setTextAndShow(it)
+            }
         }
     }
 
