@@ -17,7 +17,7 @@
     <string name="cropping_failure_instruction_text_view">Make sure the selected screenshots comprise a continuous monochromatic border both above and below the core image area</string>
     <string name="version">Version: %1$s</string>
     <string name="copyright">© 2021-%1$d | Janek Zangenberg</string>
-    <string name="got_it">Got it</string>
+    <string name="got_it">Got it!</string>
     <string name="crop_transition_name">CROP_TRANSITION</string>
     <string name="all_crops">All Crops</string>
     <string name="current_crop">Current Crop</string>
@@ -32,8 +32,8 @@
     <string name="screenshot_listening">Screenshot Listening</string>
     <string name="reset">Reset</string>
     <string name="go_back_to_crop_pager">Go back to crop pager</string>
-    <string name="screenshot">Screenshot</string>
-    <string name="crop">Crop</string>
+    <string name="original">Original</string>
+    <string name="cropped">Cropped</string>
     <string name="apply_adjusted_crop_edges">Apply adjusted crop edges</string>
     <string name="discard_changes">Discard changes</string>
     <string name="onboarding_page_1_title">🎉 Welcome to AutoCrop 🎉</string>
@@ -58,4 +58,5 @@
     <string name="configure_crop_settings">Configure Crop Settings</string>
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
+    <string name="comparison_instruction">Tap on the screen and hold to view the original screenshot 👇⏳</string>
 </resources>

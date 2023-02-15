@@ -15,6 +15,6 @@ class ScreenshotImageView(context: Context, attributeSet: AttributeSet) :
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
 
-        viewModel.screenshotImageViewMatrixLive.postValue(imageMatrix)
+        viewModel.screenshotViewMatrixLive.postValue(imageMatrix)
     }
 }

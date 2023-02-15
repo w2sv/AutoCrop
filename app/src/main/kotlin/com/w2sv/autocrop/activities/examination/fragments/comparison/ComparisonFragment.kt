@@ -1,14 +1,15 @@
 package com.w2sv.autocrop.activities.examination.fragments.comparison
 
-import android.app.Dialog
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.os.Bundle
+import android.view.MotionEvent.ACTION_DOWN
+import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
@@ -18,13 +19,9 @@ import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
 import com.w2sv.androidutils.extensions.crossVisualize
-import com.w2sv.androidutils.extensions.getColoredDrawable
 import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.launchDelayed
 import com.w2sv.androidutils.extensions.postValue
-import com.w2sv.androidutils.extensions.remove
 import com.w2sv.androidutils.extensions.show
-import com.w2sv.androidutils.ui.UncancelableDialogFragment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
@@ -39,21 +36,18 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ComparisonFragment
-    : AppFragment<ComparisonBinding>(ComparisonBinding::class.java),
-      ComparisonInstructionsDialog.Listener {
+    : AppFragment<ComparisonBinding>(ComparisonBinding::class.java) {
 
     companion object {
         fun getInstance(cropBundlePosition: Int): ComparisonFragment =
             getFragment(ComparisonFragment::class.java, CropBundle.EXTRA_POSITION to cropBundlePosition)
     }
 
-    @Inject
-    lateinit var globalFlags: GlobalFlags
-
     @HiltViewModel
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
-        contentResolver: ContentResolver
+        contentResolver: ContentResolver,
+        val globalFlags: GlobalFlags
     ) : androidx.lifecycle.ViewModel() {
 
         val cropBundle: CropBundle =
@@ -61,11 +55,9 @@ class ComparisonFragment
         val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
 
         var enterTransitionCompleted: Boolean = false
-        var blockStatusTVDisplay: Boolean = false
 
-        val displayScreenshotLive: LiveData<Boolean?> = MutableLiveData(null)
-        val showButtonsLive: LiveData<Boolean> = MutableLiveData(false)
-        val screenshotImageViewMatrixLive: LiveData<Matrix> = MutableLiveData(null)
+        val displayScreenshotLive: LiveData<Boolean> = MutableLiveData()
+        val screenshotViewMatrixLive: LiveData<Matrix> = MutableLiveData()
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -92,30 +84,11 @@ class ComparisonFragment
     private fun onEnterTransitionCompleted() {
         launchAfterShortDelay {
             viewModel.enterTransitionCompleted = true
-            viewModel.blockStatusTVDisplay = true
-            viewModel.displayScreenshotLive.postValue(true)
-            viewModel.showButtonsLive.postValue(true)
 
-            if (!globalFlags.comparisonInstructionsShown)
-                launchDelayed(resources.getLong(R.integer.delay_small)) {
-                    ComparisonInstructionsDialog().show(childFragmentManager)
+            if (!viewModel.globalFlags.comparisonInstructionsShown) {
+                launchAfterShortDelay {
+                    ComparisonInstructionDialog().show(childFragmentManager)
                 }
-            else
-                unblockStatusTVDisplay()
-        }
-    }
-
-    override fun onInstructionsDialogClosed() {
-        unblockStatusTVDisplay()
-    }
-
-    private fun unblockStatusTVDisplay() {
-        viewModel.blockStatusTVDisplay = false
-
-        // trigger display of tv
-        with(viewModel.displayScreenshotLive) {
-            value?.let {
-                postValue(it)
             }
         }
     }
@@ -136,81 +109,47 @@ class ComparisonFragment
         screenshotIv.setImageBitmap(viewModel.screenshotBitmap)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun ComparisonBinding.setOnClickListeners() {
-        root.setOnClickListener {
-            with(viewModel.displayScreenshotLive) {
-                value?.let {
-                    postValue(!it)
+        ivLayout.setOnTouchListener { v, event ->
+            when (event.action) {
+                ACTION_DOWN -> {
+                    viewModel.displayScreenshotLive.postValue(true)
+                    v.performClick()
+                    true
                 }
-            }
-        }
 
-        backButton.setOnClickListener {
-            popFromFragmentManager((this@ComparisonFragment as Fragment).parentFragmentManager)  // to resolve AS lint issue
+                ACTION_UP -> {
+                    viewModel.displayScreenshotLive.postValue(false)
+                    true
+                }
+
+                else -> false
+            }
         }
     }
 
     private fun ViewModel.setLiveDataObservers() {
-        screenshotImageViewMatrixLive.observe(viewLifecycleOwner) { optionalMatrix ->
-            optionalMatrix?.let { matrix ->
-                with(binding.cropIv) {
-                    imageMatrix = matrix
-                    translationY = viewModel.cropBundle.crop.edges.top.toFloat() * matrix.getScaleY()
-                    postInvalidate()
-                }
+        screenshotViewMatrixLive.observe(viewLifecycleOwner) {
+            with(binding.cropIv) {
+                imageMatrix = it
+                translationY = viewModel.cropBundle.crop.edges.top.toFloat() * it.getScaleY()
+                postInvalidate()
             }
         }
-        displayScreenshotLive.observe(viewLifecycleOwner) { optional ->
-            optional?.let {
-                if (it)
-                    crossVisualize(binding.cropIv, binding.screenshotIv)
-                else
-                    crossVisualize(binding.screenshotIv, binding.cropIv)
+        displayScreenshotLive.observe(viewLifecycleOwner) {
+            if (it)
+                crossVisualize(binding.cropIv, binding.screenshotIv)
+            else
+                crossVisualize(binding.screenshotIv, binding.cropIv)
 
-                if (!viewModel.blockStatusTVDisplay)
-                    binding.ivStatusTv.setTextAndShow(it)
-            }
-        }
-        showButtonsLive.observe(viewLifecycleOwner) {
-            with(binding.backButton) {
-                if (it)
-                    show()
-                else
-                    remove()
-            }
+            if (viewModel.enterTransitionCompleted)
+                binding.displayedImageTv.setTextAndShow(it)
         }
     }
 
     fun popFromFragmentManager(fragmentManager: FragmentManager) {
-        onPreRemove()
+        binding.cropIv.show()
         fragmentManager.popBackStack()
-    }
-
-    private fun onPreRemove() {
-        with(viewModel) {
-            showButtonsLive.postValue(false)
-            binding.cropIv.show()
-        }
-    }
-}
-
-class ComparisonInstructionsDialog : UncancelableDialogFragment() {
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        builder()
-            .apply {
-                setTitle("Comparison Screen")
-                setIcon(
-                    context.getColoredDrawable(
-                        R.drawable.ic_image_search_24,
-                        com.w2sv.common.R.color.magenta_saturated
-                    )
-                )
-                setMessage("Tap screen to toggle between the original screenshot and the crop \uD83D\uDC47")
-                setPositiveButton("Got it!") { _, _ -> (parentFragment as Listener).onInstructionsDialogClosed() }
-            }
-            .create()
-
-    interface Listener {
-        fun onInstructionsDialogClosed()
     }
 }

@@ -9,16 +9,17 @@ import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.views.fadeOut
 
-class DisplayStatusTextView(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
+class DisplayedImageTextView(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
 
     fun setTextAndShow(displayScreenshot: Boolean) {
         fadeOutAnimation?.stop()
 
-        text = resources.getString(if (displayScreenshot) R.string.screenshot else R.string.crop)
+        text = resources.getString(if (displayScreenshot) R.string.original else R.string.cropped)
         show()
+
         fadeOutAnimation = fadeOut(
             duration = resources.getLong(R.integer.delay_medium),
-            delay = resources.getLong(R.integer.delay_large)
+            delay = resources.getLong(R.integer.delay_medium_large)
         )
     }
 

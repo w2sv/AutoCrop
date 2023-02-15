@@ -14,6 +14,6 @@ class GlobalFlags @Inject constructor(appPreferences: SharedPreferences) : Boole
     sharedPreferences = appPreferences
 ) {
     var onboardingDone by this
-    var comparisonInstructionsShown by AutoSwitch.Mapped(this, false)
+    var comparisonInstructionsShown by this
     var aboutFragmentInstructionsShown by AutoSwitch.Mapped(this, false)
 }
