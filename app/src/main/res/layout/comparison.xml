@@ -8,7 +8,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="16dp">
+        android:layout_margin="@dimen/margin_medium">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/crop_iv"
@@ -30,16 +30,16 @@
         android:id="@+id/displayed_image_tv"
 
         android:layout_width="95dp"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/height_button_row"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="@dimen/margin_medium"
 
         android:background="@drawable/shape_rounded_rectangle_w_button_background"
         android:gravity="center"
 
         android:textColor="@android:color/white"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_size_normal"
         android:visibility="invisible" />
 
 </RelativeLayout>
