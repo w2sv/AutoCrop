@@ -4,6 +4,8 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/approximated_status_bar_height"
+    android:layout_marginBottom="?attr/actionBarSize"
     android:orientation="vertical">
 
     <LinearLayout
@@ -79,6 +81,5 @@
             tools:ignore="RelativeOverlap" />
 
     </LinearLayout>
-
 
 </LinearLayout>

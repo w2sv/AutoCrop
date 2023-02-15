@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_magenta">
+    android:layout_marginBottom="?attr/actionBarSize"
+    android:layout_marginTop="@dimen/approximated_status_bar_height">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/crop_iv"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="16dp">
 
-        android:scaleType="matrix" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/crop_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
-    <com.w2sv.autocrop.activities.examination.fragments.comparison.views.ScreenshotImageView
-        android:id="@+id/screenshot_iv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+            android:scaleType="matrix" />
 
-        android:contentDescription="@string/compare_crop_with_original_screenshot"
-        android:scaleType="fitCenter"
-        android:visibility="invisible" />
+        <com.w2sv.autocrop.activities.examination.fragments.comparison.views.ScreenshotImageView
+            android:id="@+id/screenshot_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:scaleType="fitCenter"
+            android:visibility="invisible" />
+    </FrameLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

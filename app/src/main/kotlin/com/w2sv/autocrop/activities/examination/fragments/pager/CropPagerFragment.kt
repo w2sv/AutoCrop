@@ -21,7 +21,6 @@ import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.extensions.getHtmlText
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.hide
-import com.w2sv.androidutils.extensions.hideSystemBars
 import com.w2sv.androidutils.extensions.makeToast
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
@@ -200,12 +199,6 @@ class CropPagerFragment :
     private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
 
     private lateinit var cropPager: CropPager
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        requireActivity().hideSystemBars()
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

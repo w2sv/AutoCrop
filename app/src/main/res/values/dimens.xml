@@ -24,4 +24,5 @@
 
     <dimen name="crop_adjustment_screen_horizontal_margin_top_buttons">4dp</dimen>
     <dimen name="crop_adjustment_screen_width_toolbar_buttons">70dp</dimen>
+    <dimen name="approximated_status_bar_height">32dp</dimen>
 </resources>
