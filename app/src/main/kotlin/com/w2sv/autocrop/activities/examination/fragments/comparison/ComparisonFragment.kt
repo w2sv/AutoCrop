@@ -31,11 +31,9 @@ import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.preferences.GlobalFlags
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-@AndroidEntryPoint
 class ComparisonFragment
     : AppFragment<ComparisonBinding>(ComparisonBinding::class.java) {
 
@@ -103,16 +101,14 @@ class ComparisonFragment
     }
 
     private fun ComparisonBinding.populate() {
-        with(cropIv) {
-            transitionName = viewModel.cropBundle.identifier()
-            setImageBitmap(viewModel.cropBundle.crop.bitmap)
-        }
+        cropIv.transitionName = viewModel.cropBundle.identifier()
+        cropIv.setImageBitmap(viewModel.cropBundle.crop.bitmap)
         screenshotIv.setImageBitmap(viewModel.screenshotBitmap)
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun ComparisonBinding.setOnClickListeners() {
-        ivLayout.setOnTouchListener { v, event ->
+        root.setOnTouchListener { v, event ->
             when (event.action) {
                 ACTION_DOWN -> {
                     viewModel.displayedImageLive.postValue(DisplayedImage.Screenshot)
@@ -139,7 +135,7 @@ class ComparisonFragment
             }
         }
         displayedImageLive.observe(viewLifecycleOwner) {
-            when (it!!){
+            when (it!!) {
                 DisplayedImage.Screenshot -> crossVisualize(binding.cropIv, binding.screenshotIv)
                 DisplayedImage.Crop -> crossVisualize(binding.screenshotIv, binding.cropIv)
             }
