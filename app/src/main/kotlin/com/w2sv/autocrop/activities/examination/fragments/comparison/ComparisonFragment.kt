@@ -21,6 +21,7 @@ import androidx.transition.TransitionListenerAdapter
 import com.w2sv.androidutils.extensions.crossVisualize
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.postValue
+import com.w2sv.androidutils.extensions.repostValue
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
@@ -54,9 +55,9 @@ class ComparisonFragment
             ExaminationActivity.ViewModel.cropBundles[savedStateHandle[CropBundle.EXTRA_POSITION]!!]
         val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
 
-        var enterTransitionCompleted: Boolean = false
+        var enterTransitionCompleted  = false
 
-        val displayedImageLive: LiveData<DisplayedImage> = MutableLiveData()
+        val displayedImageLive: LiveData<DisplayedImage> = MutableLiveData(DisplayedImage.Crop)
         val screenshotViewImageMatrixLive: LiveData<Matrix> = MutableLiveData()
     }
 
@@ -75,6 +76,7 @@ class ComparisonFragment
                         super.onTransitionEnd(transition)
 
                         if (!viewModel.enterTransitionCompleted) {
+                            viewModel.enterTransitionCompleted = true
                             onEnterTransitionCompleted()
                         }
                     }
@@ -83,12 +85,13 @@ class ComparisonFragment
     }
 
     private fun onEnterTransitionCompleted() {
-        viewModel.enterTransitionCompleted = true
-
-        if (!viewModel.globalFlags.comparisonInstructionsShown) {
-            launchAfterShortDelay {
+        launchAfterShortDelay {
+            if (!viewModel.globalFlags.comparisonInstructionsShown) {
                 ComparisonInstructionDialog().show(childFragmentManager)
             }
+            else
+                // trigger display of displayedImageTv
+                viewModel.displayedImageLive.repostValue()
         }
     }
 

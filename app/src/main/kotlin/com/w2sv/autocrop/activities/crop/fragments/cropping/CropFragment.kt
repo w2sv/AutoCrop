@@ -122,15 +122,18 @@ class CropFragment
         super.onViewCreated(view, savedInstanceState)
 
         binding.populate()
+        viewModel.setObservers()
     }
 
     private fun CropBinding.populate() {
         croppingProgressBar.max = viewModel.nScreenshots
         progressTv.max = viewModel.nScreenshots
+    }
 
-        viewModel.liveProgress.observe(viewLifecycleOwner) {
-            progressTv.update(it)
-            croppingProgressBar.progress = it
+    private fun ViewModel.setObservers() {
+        liveProgress.observe(viewLifecycleOwner) {
+            binding.progressTv.update(it)
+            binding.croppingProgressBar.progress = it
         }
     }
 
@@ -174,7 +177,7 @@ class CropFragment
     fun onBackPress() {
         viewModel.backPressListener(
             {
-                requireContext().showToast("Tap again to cancel")
+                requireContext().showToast(getString(R.string.tap_again_to_cancel))
             },
             {
                 MainActivity.start(requireActivity())

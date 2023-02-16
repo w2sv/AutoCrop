@@ -59,4 +59,5 @@
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
     <string name="comparison_instruction">Tap on the screen and hold to view the original screenshot 👇⏳</string>
+    <string name="tap_again_to_cancel">Tap again to cancel</string>
 </resources>
