@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/margin_medium">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.w2sv.autocrop.activities.examination.fragments.comparison.views.CropImageView
             android:id="@+id/crop_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

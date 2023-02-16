@@ -25,15 +25,16 @@ import com.w2sv.androidutils.extensions.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getScaleY
 import com.w2sv.autocrop.activities.examination.fragments.comparison.model.DisplayedImage
 import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.preferences.GlobalFlags
+import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ComparisonFragment
     : AppFragment<ComparisonBinding>(ComparisonBinding::class.java) {
 
@@ -56,7 +57,7 @@ class ComparisonFragment
         var enterTransitionCompleted: Boolean = false
 
         val displayedImageLive: LiveData<DisplayedImage> = MutableLiveData()
-        val screenshotViewMatrixLive: LiveData<Matrix> = MutableLiveData()
+        val screenshotViewImageMatrixLive: LiveData<Matrix> = MutableLiveData()
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -73,8 +74,9 @@ class ComparisonFragment
                     override fun onTransitionEnd(transition: Transition) {
                         super.onTransitionEnd(transition)
 
-                        if (!viewModel.enterTransitionCompleted)
+                        if (!viewModel.enterTransitionCompleted) {
                             onEnterTransitionCompleted()
+                        }
                     }
                 }
             )
@@ -94,7 +96,7 @@ class ComparisonFragment
         super.onViewCreated(view, savedInstanceState)
 
         binding.populate()
-        binding.setOnClickListeners()
+        binding.setListeners()
         viewModel.setLiveDataObservers()
     }
 
@@ -105,7 +107,7 @@ class ComparisonFragment
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun ComparisonBinding.setOnClickListeners() {
+    private fun ComparisonBinding.setListeners() {
         root.setOnTouchListener { v, event ->
             when (event.action) {
                 ACTION_DOWN -> {
@@ -125,12 +127,8 @@ class ComparisonFragment
     }
 
     private fun ViewModel.setLiveDataObservers() {
-        screenshotViewMatrixLive.observe(viewLifecycleOwner) {
-            with(binding.cropIv) {
-                imageMatrix = it
-                translationY = viewModel.cropBundle.crop.edges.top.toFloat() * it.getScaleY()
-                postInvalidate()
-            }
+        screenshotViewImageMatrixLive.observe(viewLifecycleOwner) {
+            binding.cropIv.alignWithScreenshotImageView(it, viewModel.cropBundle.crop.edges)
         }
         displayedImageLive.observe(viewLifecycleOwner) {
             when (it!!) {
