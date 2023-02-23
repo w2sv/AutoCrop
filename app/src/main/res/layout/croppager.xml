@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/status_bar_height_approximated">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,8 +18,8 @@
 
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.72"
-            android:background="@color/low_alpha_white" />
+            android:layout_weight="0.8"
+            android:background="@color/crop_pager" />
 
     </LinearLayout>
 
@@ -75,8 +76,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="42dp"
-        android:layout_marginEnd="26dp"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_horizontal"
 
         android:text="@string/fraction"
         android:textColor="@color/crop_pager_text"

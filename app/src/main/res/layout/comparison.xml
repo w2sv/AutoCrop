@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/approximated_status_bar_height"
+    android:layout_marginTop="@dimen/status_bar_height_approximated"
     android:layout_marginBottom="?attr/actionBarSize">
 
     <FrameLayout

@@ -2,7 +2,6 @@
 <resources>
     <color name="dark_gray">#FF656565</color>
     <color name="low_alpha_gray">#809B9B9B</color>
-    <color name="low_alpha_white">#08FFFEFE</color>
     <color name="light_gray">#CECECE</color>
 
     <color name="pseudo_black">#1C1C1E</color>

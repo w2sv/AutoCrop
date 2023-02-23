@@ -25,7 +25,7 @@
     </style>
 
     <style name="ButtonRowLabel">
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
         <item name="android:paddingHorizontal">2dp</item>
     </style>
 
