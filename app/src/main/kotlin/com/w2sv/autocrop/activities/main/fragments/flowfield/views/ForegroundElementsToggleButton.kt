@@ -12,11 +12,14 @@ class ForegroundElementsToggleButton(context: Context, attributeSet: AttributeSe
     context,
     attributeSet
 ) {
+
+    private val viewModel by viewModel<FlowFieldFragment.ViewModel>()
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
         setOnClickListener {
-            viewModel<FlowFieldFragment.ViewModel>().value.hideForegroundElementsLive.toggle()
+            viewModel.hideForegroundElementsLive.toggle()
         }
     }
 
