@@ -52,7 +52,6 @@ import com.w2sv.autocrop.utils.pathIdentifier
 import com.w2sv.common.PermissionHandler
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.kotlinutils.extensions.numericallyInflected
-import com.w2sv.preferences.BooleanPreferences
 import com.w2sv.preferences.CropSaveDirPreferences
 import com.w2sv.preferences.IntPreferences
 import com.w2sv.screenshotlistening.ScreenshotListener
@@ -75,7 +74,6 @@ class FlowFieldFragment :
     class ViewModel @Inject constructor(
         @ApplicationContext context: Context,
         savedStateHandle: SavedStateHandle,
-        val booleanPreferences: BooleanPreferences,
         val cropSaveDirPreferences: CropSaveDirPreferences,
         private val intPreferences: IntPreferences
     ) : androidx.lifecycle.ViewModel() {

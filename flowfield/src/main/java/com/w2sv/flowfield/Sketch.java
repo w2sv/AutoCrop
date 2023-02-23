@@ -4,6 +4,8 @@
 
 package com.w2sv.flowfield;
 
+import android.graphics.Point;
+
 import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
@@ -19,9 +21,9 @@ public class Sketch extends PApplet {
     private final AlphaDropper alphaDropper = new AlphaDropper();
     private final ColorHandler colorHandler = new ColorHandler();
 
-    public Sketch(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public Sketch(Point screenResolution) {
+        width = screenResolution.x;
+        height = screenResolution.y;
     }
 
     @Override

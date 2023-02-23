@@ -53,7 +53,7 @@
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="0.2" />
+        android:layout_weight="0.3" />
 
     <com.w2sv.autocrop.activities.main.fragments.about.views.CopyrightTextView
         android:id="@+id/copyright_tv"

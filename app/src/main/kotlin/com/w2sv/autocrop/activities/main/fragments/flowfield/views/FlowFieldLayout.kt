@@ -23,20 +23,13 @@ class FlowFieldLayout(context: Context, attr: AttributeSet) :
         super.onAttachedToWindow()
 
         if (!isInEditMode) {
-            activity.getDisplayCompat().resolution().let {
-                (activity as FragmentActivity).supportFragmentManager
-                    .beginTransaction()
-                    .add(
-                        id,
-                        PFragment(
-                            Sketch(
-                                it.x,
-                                it.y
-                            )
-                        )
-                    )
-                    .commitAllowingStateLoss()  // Fixes java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-            }
+            (activity as FragmentActivity).supportFragmentManager
+                .beginTransaction()
+                .add(
+                    id,
+                    PFragment(Sketch(activity.getDisplayCompat().resolution()))
+                )
+                .commitAllowingStateLoss()  // Fixes java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
         }
     }
 }

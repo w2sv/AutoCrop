@@ -28,7 +28,6 @@ import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.permissionhandler.requestPermissions
-import com.w2sv.preferences.getConnectedSwitch
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,7 +47,6 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         if (!isInEditMode) {
             setListenToScreenCapturesItem()
             setCurrentCropDirIdentifier()
-            setAutoScrollItem()
             setOnClickListeners()
         }
     }
@@ -92,11 +90,6 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         }
     }
 
-    private fun setAutoScrollItem() =
-        menu.configureItem(R.id.main_menu_item_auto_scroll) {
-            it.actionView = viewModel.booleanPreferences::autoScroll.getConnectedSwitch(context)
-        }
-
     private fun setOnClickListeners() {
         setNavigationItemSelectedListener {
             when (it.itemId) {
@@ -121,13 +114,13 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                                     }
                             )
                             setView(R.layout.crop_settings_configuration)
-                            setPositiveButton("Apply") { _, which ->
+                            setPositiveButton(resources.getString(R.string.apply)) { _, which ->
                                 if (which == AlertDialog.BUTTON_POSITIVE) {
                                     viewModel.syncCropSettings()
                                     context.showToast("Synced Crop Settings")
                                 }
                             }
-                            setNegativeButton("Cancel") { _, _ -> }
+                            setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
                         }
                         .create()
                         .apply {
