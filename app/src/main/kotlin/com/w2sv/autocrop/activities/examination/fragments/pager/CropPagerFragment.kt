@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.core.text.bold
 import androidx.core.text.color
@@ -38,9 +39,12 @@ import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveCrop
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.databinding.CroppagerBinding
 import com.w2sv.autocrop.ui.model.Click
+import com.w2sv.autocrop.ui.views.KEEP_MENU_ITEM_OPEN_ON_CLICK
 import com.w2sv.autocrop.ui.views.VisualizationType
 import com.w2sv.autocrop.ui.views.animate
 import com.w2sv.autocrop.ui.views.currentViewHolder
+import com.w2sv.autocrop.ui.views.makeOnClickPersistent
+import com.w2sv.autocrop.ui.views.toggleCheck
 import com.w2sv.autocrop.ui.views.visualize
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
@@ -59,6 +63,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import slimber.log.i
 import javax.inject.Inject
+
 
 private enum class CropProcedure {
     Discard,
@@ -80,7 +85,7 @@ class CropPagerFragment :
     @HiltViewModel
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
-        booleanPreferences: BooleanPreferences,
+        val booleanPreferences: BooleanPreferences,
         @ApplicationContext context: Context
     ) : androidx.lifecycle.ViewModel() {
 
@@ -335,6 +340,36 @@ class CropPagerFragment :
                     )
                 }
                 .commit()
+        }
+        popupMenuButton.setOnClickListener {
+            with(PopupMenu(requireContext(), it)) {
+                menuInflater.inflate(
+                    R.menu.crop_pager,
+                    menu
+                )
+                menu
+                    .apply {
+                        findItem(R.id.crop_pager_item_auto_scroll)
+                            .apply {
+                                isCheckable = true
+                                isChecked = viewModel.booleanPreferences.autoScroll
+                                makeOnClickPersistent(requireContext())
+                            }
+                        setOnMenuItemClickListener { item ->
+                            when (item.itemId) {
+                                R.id.crop_pager_item_auto_scroll -> {
+                                    item.toggleCheck { newValue ->
+                                        viewModel.booleanPreferences.autoScroll = newValue
+                                    }
+
+                                    KEEP_MENU_ITEM_OPEN_ON_CLICK
+                                }
+                                else -> true
+                            }
+                        }
+                    }
+                show()
+            }
         }
     }
 

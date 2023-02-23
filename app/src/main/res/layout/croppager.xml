@@ -4,15 +4,15 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingTop="@dimen/status_bar_height_approximated"
     android:paddingBottom="?attr/actionBarSize"
-    android:orientation="vertical"
     android:weightSum="1">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_horizontal"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="@dimen/margin_medium">
 
         <FrameLayout
@@ -63,24 +63,38 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <com.w2sv.autocrop.ui.views.FractionTextView
             android:id="@+id/page_indication_tv"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="bottom"
 
             android:text="@string/fraction"
             android:textColor="@color/crop_pager_text"
-            android:textSize="@dimen/text_size_medium_small"
+            android:textSize="@dimen/text_size_medium"
             android:textStyle="italic" />
+
+        <Space
+            android:layout_width="@dimen/margin_large"
+            android:layout_height="0dp" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/popup_menu_button"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_gravity="top"
+            android:background="@drawable/ic_dot_menu_24"
+            android:backgroundTint="@color/crop_pager_text"
+            android:contentDescription="@string/open_popup_menu"/>
+
     </LinearLayout>
 
     <Space
         android:layout_width="0dp"
-        android:layout_height="@dimen/margin_medium"/>
+        android:layout_height="@dimen/margin_medium" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
@@ -92,7 +106,7 @@
 
     <Space
         android:layout_width="0dp"
-        android:layout_height="@dimen/margin_medium"/>
+        android:layout_height="@dimen/margin_medium" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"

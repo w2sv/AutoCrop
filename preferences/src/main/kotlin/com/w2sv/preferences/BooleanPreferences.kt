@@ -25,3 +25,4 @@ fun KMutableProperty0<Boolean>.getConnectedSwitch(context: Context): Switch =
             set(isChecked)
         }
     }
+
