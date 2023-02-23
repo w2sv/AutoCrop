@@ -37,7 +37,7 @@ import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.CropSavi
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveAllCropsDialog
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveCropDialog
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
-import com.w2sv.autocrop.databinding.CroppagerBinding
+import com.w2sv.autocrop.databinding.CropPagerBinding
 import com.w2sv.autocrop.ui.model.Click
 import com.w2sv.autocrop.ui.views.KEEP_MENU_ITEM_OPEN_ON_CLICK
 import com.w2sv.autocrop.ui.views.VisualizationType
@@ -72,7 +72,7 @@ private enum class CropProcedure {
 
 @AndroidEntryPoint
 class CropPagerFragment :
-    AppFragment<CroppagerBinding>(CroppagerBinding::class.java),
+    AppFragment<CropPagerBinding>(CropPagerBinding::class.java),
     SaveCropDialog.ResultListener,
     SaveAllCropsDialog.ResultListener,
     CropAdjustmentFragment.ResultListener {
@@ -243,7 +243,7 @@ class CropPagerFragment :
         }
     }
 
-    private fun CroppagerBinding.updateOnDataSetPositionChanged(position: Int) {
+    private fun CropPagerBinding.updateOnDataSetPositionChanged(position: Int) {
         with(viewModel.dataSet[position].crop) {
             discardingStatisticsTv.text = resources.getHtmlText(
                 R.string.discarding_statistics,
@@ -257,7 +257,7 @@ class CropPagerFragment :
         }
     }
 
-    private fun CroppagerBinding.updateOnAutoScrollStatusChanged(doAutoScroll: Boolean) {
+    private fun CropPagerBinding.updateOnAutoScrollStatusChanged(doAutoScroll: Boolean) {
         // en-/disable viewPager input
         viewPager.isUserInputEnabled = !doAutoScroll
 
@@ -294,7 +294,7 @@ class CropPagerFragment :
         }
     }
 
-    private fun CroppagerBinding.setOnClickListeners() {
+    private fun CropPagerBinding.setOnClickListeners() {
         discardAllButton.setOnClickListener {
             requireCastActivity<ExaminationActivity>().invokeExitFragment()
         }

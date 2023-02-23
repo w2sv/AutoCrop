@@ -26,7 +26,7 @@
                 android:layout_height="@dimen/size_image_button"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginEnd="@dimen/margin_horizontal"
+                android:layout_marginEnd="@dimen/margin_horizontal_large"
                 android:layout_marginBottom="?attr/actionBarSize"
                 android:background="@drawable/ic_eye_24"
                 android:backgroundTint="@color/low_alpha_gray"
@@ -42,7 +42,7 @@
 
                     android:layout_width="@dimen/size_lottie_button"
                     android:layout_height="@dimen/size_lottie_button"
-                    android:layout_marginStart="@dimen/margin_horizontal"
+                    android:layout_marginStart="@dimen/margin_horizontal_large"
                     android:layout_marginTop="@dimen/margin_top_portrait_mode"
 
                     android:contentDescription="@string/main_menu_toggle"

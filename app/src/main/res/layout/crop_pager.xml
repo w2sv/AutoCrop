@@ -6,13 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="@dimen/status_bar_height_approximated"
-    android:paddingBottom="?attr/actionBarSize"
     android:weightSum="1">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_small"
         android:layout_marginTop="@dimen/margin_medium">
 
         <FrameLayout
@@ -70,7 +69,7 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_gravity="center_vertical"
 
             android:text="@string/fraction"
             android:textColor="@color/crop_pager_text"
@@ -85,7 +84,7 @@
             android:id="@+id/popup_menu_button"
             android:layout_width="26dp"
             android:layout_height="26dp"
-            android:layout_gravity="top"
+            android:layout_gravity="center_vertical"
             android:background="@drawable/ic_dot_menu_24"
             android:backgroundTint="@color/crop_pager_text"
             android:contentDescription="@string/open_popup_menu"/>
@@ -130,12 +129,13 @@
             android:id="@+id/snackbar_repelled_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="?attr/actionBarSize"
             android:visibility="invisible">
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="20dp">
+                android:layout_marginHorizontal="@dimen/margin_horizontal_small">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/discarding_statistics_tv"
