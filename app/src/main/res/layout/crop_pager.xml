@@ -207,6 +207,17 @@
                             android:contentDescription="@string/manually_adjust_the_crop" />
 
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/recrop_button"
+                            android:layout_width="@dimen/size_image_button"
+                            android:layout_height="@dimen/size_image_button"
+                            android:layout_marginEnd="@dimen/margin_buttons_within_row"
+
+                            android:background="@drawable/ic_redo_24"
+                            android:backgroundTint="@color/highlight"
+
+                            android:contentDescription="@string/manually_adjust_the_crop" />
+
+                        <androidx.appcompat.widget.AppCompatImageButton
                             android:id="@+id/comparison_button"
                             android:layout_width="@dimen/size_image_button"
                             android:layout_height="@dimen/size_image_button"

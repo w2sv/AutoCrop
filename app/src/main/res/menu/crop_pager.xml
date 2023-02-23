@@ -5,6 +5,6 @@
 
     <item
         android:id="@+id/crop_pager_item_auto_scroll"
-        android:icon="@drawable/ic_autoscroll_24"
+        android:icon="@drawable/ic_redo_24"
         android:title="@string/menu_item_auto_scroll" />
 </menu>
