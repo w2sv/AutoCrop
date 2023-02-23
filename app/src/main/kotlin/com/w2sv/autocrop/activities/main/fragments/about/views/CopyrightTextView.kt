@@ -21,16 +21,18 @@ class CopyrightTextView(context: Context, attr: AttributeSet) :
 
         text = resources.getString(R.string.copyright, Calendar.getInstance().get(Calendar.YEAR))
 
-        animation = SelfResettingAnimation(
-            animationComposer(Techniques.ZoomOutRight)
-                .onEnd {
-                    context.openUrl("https://github.com/w2sv/AutoCrop/blob/master/LICENSE")
-                },
-            findViewTreeLifecycleOwner()!!
-        )
+        if (!isInEditMode){
+            animation = SelfResettingAnimation(
+                animationComposer(Techniques.ZoomOutRight)
+                    .onEnd {
+                        context.openUrl("https://github.com/w2sv/AutoCrop/blob/master/LICENSE")
+                    },
+                findViewTreeLifecycleOwner()!!
+            )
 
-        setOnClickListener {
-            animation.play()
+            setOnClickListener {
+                animation.play()
+            }
         }
     }
 }

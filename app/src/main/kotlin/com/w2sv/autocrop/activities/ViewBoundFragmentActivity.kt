@@ -9,7 +9,7 @@ import com.w2sv.viewboundcontroller.ViewBoundActivity
 
 abstract class ViewBoundFragmentActivity : ViewBoundActivity<BlankBinding>(BlankBinding::class.java) {
 
-    private val layoutId: Int get() = binding.root.id
+    private val layoutRootId: Int get() = binding.root.id
 
     /**
      * Fragment transactions
@@ -21,7 +21,7 @@ abstract class ViewBoundFragmentActivity : ViewBoundActivity<BlankBinding>(Blank
             .beginTransaction()
             .setReorderingAllowed(true)
             .add(
-                layoutId,
+                layoutRootId,
                 getRootFragment(),
                 "${this::class.java.name}_ROOT_FRAGMENT"
             )
@@ -42,7 +42,7 @@ abstract class ViewBoundFragmentActivity : ViewBoundActivity<BlankBinding>(Blank
                     )
             }
             .setReorderingAllowed(true)
-            .replace(layoutId, fragment)
+            .replace(layoutRootId, fragment)
 
     /**
      * Fragment retrieval
@@ -51,7 +51,7 @@ abstract class ViewBoundFragmentActivity : ViewBoundActivity<BlankBinding>(Blank
     abstract fun getRootFragment(): Fragment
 
     fun getCurrentFragment(): Fragment? =
-        supportFragmentManager.findFragmentById(layoutId)
+        supportFragmentManager.findFragmentById(layoutRootId)
 
     @Suppress("UNCHECKED_CAST")
     fun <F : Fragment> getCastCurrentFragment(): F? =

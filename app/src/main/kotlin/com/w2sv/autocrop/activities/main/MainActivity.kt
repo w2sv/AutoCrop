@@ -26,14 +26,14 @@ class MainActivity : AppActivity() {
         const val EXTRA_SELECTED_IMAGE_URIS = "com.w2sv.autocrop.extra.SELECTED_IMAGE_URIS"
 
         fun start(
-            activity: Activity,
+            sourceActivity: Activity,
             clearPreviousActivity: Boolean = false,
             animation: ((Context) -> Unit)? = Animatoo::animateSwipeRight,
             configureIntent: (Intent.() -> Intent)? = null
         ) {
-            activity.startActivity(
+            sourceActivity.startActivity(
                 Intent(
-                    activity,
+                    sourceActivity,
                     MainActivity::class.java
                 )
                     .apply {
@@ -43,13 +43,13 @@ class MainActivity : AppActivity() {
                         configureIntent?.invoke(this)
                     }
             )
-            animation?.invoke(activity)
+            animation?.invoke(sourceActivity)
         }
     }
 
-    /**
-     * ApplicationActivity overrides
-     */
+    //////////////////////////////////////
+    //   ApplicationActivity overrides  //
+    //////////////////////////////////////
 
     @Inject
     lateinit var globalFlags: GlobalFlags
@@ -69,9 +69,6 @@ class MainActivity : AppActivity() {
     override fun getRootFragment(): Fragment =
         FlowFieldFragment.getInstance(intent.getParcelableExtraCompat(AccumulatedIOResults.EXTRA))
 
-    /**
-     * invoke [FlowFieldFragment] if [AboutFragment] showing, otherwise exit app
-     */
     override fun handleOnBackPressed() {
         getCurrentFragment().let {
             when (it) {

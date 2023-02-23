@@ -18,6 +18,8 @@ data class AccumulatedIOResults(
 
     val nSavedCrops: Int get() = cropUris.size
 
+    val anyCropsSaved: Boolean get() = cropUris.isNotEmpty()
+
     fun addFrom(ioResult: CropBundleIOResult) {
         ioResult.cropUri?.let {
             cropUris.add(it)

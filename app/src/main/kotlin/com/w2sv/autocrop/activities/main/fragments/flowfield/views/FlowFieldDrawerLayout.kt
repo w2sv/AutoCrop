@@ -24,18 +24,10 @@ class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : Draw
                     }
                 }
             )
-            if (isOpen)
+            if (isOpen) {
                 binding.affectAssociatedViewsOnDrawerSlide(1f)
+            }
         }
-    }
-
-    fun FlowfieldBinding.affectAssociatedViewsOnDrawerSlide(slideOffset: Float) {
-        navigationViewToggleButton.progress = slideOffset
-
-        val associatedButtonAlpha = 1 - slideOffset
-        imageSelectionButton.alpha = associatedButtonAlpha
-        shareCropsButton.alpha = associatedButtonAlpha
-        foregroundToggleButton.alpha = associatedButtonAlpha
     }
 
     fun openDrawer() {
@@ -46,10 +38,19 @@ class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : Draw
         closeDrawer(GravityCompat.START)
     }
 
-    fun onToggleButtonClick() {
+    fun toggleDrawer() {
         if (isOpen)
             closeDrawer()
         else
             openDrawer()
     }
+}
+
+private fun FlowfieldBinding.affectAssociatedViewsOnDrawerSlide(slideOffset: Float) {
+    navigationViewToggleButton.progress = slideOffset
+
+    val associatedButtonAlpha = 1 - slideOffset
+    imageSelectionButton.alpha = associatedButtonAlpha
+    shareCropsButton.alpha = associatedButtonAlpha
+    foregroundElementsToggleButton.alpha = associatedButtonAlpha
 }

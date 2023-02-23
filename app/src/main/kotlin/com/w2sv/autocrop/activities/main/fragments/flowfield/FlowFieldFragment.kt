@@ -23,7 +23,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.daimajia.androidanimations.library.Techniques
-import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.SelfManagingLocalBroadcastReceiver
 import com.w2sv.androidutils.extensions.getColoredDrawable
@@ -32,7 +31,6 @@ import com.w2sv.androidutils.extensions.hide
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.showToast
-import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.androidutils.extensions.uris
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
@@ -48,14 +46,13 @@ import com.w2sv.autocrop.ui.views.fadeIn
 import com.w2sv.autocrop.ui.views.fadeInAnimationComposer
 import com.w2sv.autocrop.ui.views.fadeOut
 import com.w2sv.autocrop.ui.views.onHalfwayFinished
-import com.w2sv.autocrop.utils.extensions.onHalfwayShown
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.autocrop.utils.pathIdentifier
 import com.w2sv.common.PermissionHandler
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
-import com.w2sv.kotlinutils.delegates.AutoSwitch
 import com.w2sv.kotlinutils.extensions.numericallyInflected
+import com.w2sv.preferences.BooleanPreferences
 import com.w2sv.preferences.CropSaveDirPreferences
 import com.w2sv.preferences.IntPreferences
 import com.w2sv.screenshotlistening.ScreenshotListener
@@ -63,7 +60,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.mateware.snacky.Snacky
-import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -79,29 +75,26 @@ class FlowFieldFragment :
     class ViewModel @Inject constructor(
         @ApplicationContext context: Context,
         savedStateHandle: SavedStateHandle,
-        cropSaveDirPreferences: CropSaveDirPreferences,
+        val booleanPreferences: BooleanPreferences,
+        val cropSaveDirPreferences: CropSaveDirPreferences,
         private val intPreferences: IntPreferences
     ) : androidx.lifecycle.ViewModel() {
 
         val accumulatedIoResults: AccumulatedIOResults? = savedStateHandle[AccumulatedIOResults.EXTRA]
 
-        var fadedInButtonsOnEntry = AutoSwitch(false, switchOn = false)
+        var fadedInForegroundOnEntry = false
 
         /**
          * IO Results Snackbar
          */
 
         fun showIOResultsSnackbarIfApplicable(
-            coroutineScope: CoroutineScope,
             getSnackyBuilder: (CharSequence) -> Snacky.Builder
         ) {
-            if (ioResultsSnackbarData != null && !showedSnackbar) {
-                getSnackyBuilder(ioResultsSnackbarData.text)
-                    .setIcon(ioResultsSnackbarData.icon)
+            ioResultsSnackbarData?.let {
+                getSnackyBuilder(it.text)
+                    .setIcon(it.icon)
                     .build()
-                    .onHalfwayShown(coroutineScope) {
-                        showedSnackbar = true
-                    }
                     .show()
             }
         }
@@ -132,20 +125,13 @@ class FlowFieldFragment :
                 )
         }
 
-        private var showedSnackbar: Boolean = false
-
         /**
-         * Button hiding
+         * Misc LiveData
          */
 
-        val hideButtonsLive: LiveData<Boolean> by lazy {
+        val hideForegroundElementsLive: LiveData<Boolean> by lazy {
             MutableLiveData(false)
         }
-        var buttonFadeAnimation: YoYo.YoYoString? = null
-
-        /**
-         * Other LiveData
-         */
 
         val cropSaveDirIdentifierLive: LiveData<String> by lazy {
             MutableLiveData(cropSaveDirPreferences.pathIdentifier)
@@ -160,6 +146,11 @@ class FlowFieldFragment :
 
         fun syncCropSettings() {
             intPreferences.cropEdgeCandidateThreshold = cropEdgeCandidateThresholdLive.value!!
+            cropSettingsRequiringSyncLive.postValue(false)
+        }
+
+        val cropEdgeCandidateThresholdLive: LiveData<Int> by lazy {
+            MutableLiveData(intPreferences.cropEdgeCandidateThreshold)
         }
 
         val cropSettingsRequiringSyncLive: LiveData<Boolean> by lazy {
@@ -167,12 +158,7 @@ class FlowFieldFragment :
         }
 
         fun onCropSettingsInputChanged() {
-            if (cropEdgeCandidateThresholdLive.value != intPreferences.cropEdgeCandidateThreshold)
-                cropSettingsRequiringSyncLive.postValue(true)
-        }
-
-        val cropEdgeCandidateThresholdLive: LiveData<Int> by lazy {
-            MutableLiveData(intPreferences.cropEdgeCandidateThreshold)
+            cropSettingsRequiringSyncLive.postValue(cropEdgeCandidateThresholdLive.value != intPreferences.cropEdgeCandidateThreshold)
         }
 
         /**
@@ -232,30 +218,35 @@ class FlowFieldFragment :
     }
 
     private fun FlowfieldBinding.showLayoutElements() {
-        val savedAnyCrops: Boolean = viewModel.accumulatedIoResults?.let { it.nSavedCrops != 0 }
-            ?: false
+        val anyCropsSaved = viewModel.accumulatedIoResults?.anyCropsSaved == true
 
-        if (!viewModel.fadedInButtonsOnEntry.getWithEventualSwitch()) {
-            foregroundLayout
-                .fadeInAnimationComposer(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
-                .onHalfwayFinished(lifecycleScope) {
-                    viewModel.showIOResultsSnackbarIfApplicable(this, ::getSnackyBuilder)
+        when (viewModel.fadedInForegroundOnEntry) {
+            true -> if (anyCropsSaved) {
+                shareCropsButton.show()
+            }
 
-                    if (savedAnyCrops)
-                        with(shareCropsButton) {
-                            show()
-                            animate(Techniques.RotateInUpLeft)
+            false -> {
+                foregroundLayout
+                    .fadeInAnimationComposer(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
+                    .onHalfwayFinished(lifecycleScope) {
+                        viewModel.fadedInForegroundOnEntry = true
+                        viewModel.showIOResultsSnackbarIfApplicable(::getSnackyBuilder)
+
+                        if (anyCropsSaved) {
+                            with(shareCropsButton) {
+                                show()
+                                animate(Techniques.RotateInUpLeft)
+                            }
                         }
-                }
-                .play()
+                    }
+                    .play()
+            }
         }
-        else if (savedAnyCrops)
-            shareCropsButton.show()
     }
 
     private fun FlowfieldBinding.setOnClickListeners() {
         navigationViewToggleButton.setOnClickListener {
-            drawerLayout.onToggleButtonClick()
+            drawerLayout.toggleDrawer()
         }
         imageSelectionButton.setOnClickListener {
             writeExternalStoragePermissionHandler.requestPermissionIfRequired(
@@ -275,28 +266,28 @@ class FlowFieldFragment :
                 )
             )
         }
-        foregroundToggleButton.setOnClickListener {
-            viewModel.hideButtonsLive.toggle()
-        }
     }
 
     private fun ViewModel.setLiveDataObservers() {
-        hideButtonsLive.observe(viewLifecycleOwner) { hideForeground ->
+        hideForegroundElementsLive.observe(viewLifecycleOwner) { hideForeground ->
             if (hideForeground) {
                 binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
-                if (lifecycle.currentState == Lifecycle.State.STARTED)
+                if (lifecycle.currentState == Lifecycle.State.STARTED) {
                     binding.highAlphaForegroundLayout.hide()
+                }
                 else {
-                    buttonFadeAnimation?.stop()
-                    buttonFadeAnimation = binding.highAlphaForegroundLayout.fadeOut()
+                    binding.foregroundElementsToggleButton.setForegroundElementsFadeAnimation {
+                        binding.highAlphaForegroundLayout.fadeOut()
+                    }
                 }
             }
             else {
                 binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
 
-                buttonFadeAnimation?.stop()
-                buttonFadeAnimation = binding.highAlphaForegroundLayout.fadeIn()
+                binding.foregroundElementsToggleButton.setForegroundElementsFadeAnimation {
+                    binding.highAlphaForegroundLayout.fadeIn()
+                }
             }
         }
     }

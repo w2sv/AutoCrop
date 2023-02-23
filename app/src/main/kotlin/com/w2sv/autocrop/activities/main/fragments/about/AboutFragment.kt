@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.lifecycle.lifecycleScope
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.ui.SimpleAnimationListener
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.databinding.AboutBinding
 import com.w2sv.autocrop.ui.views.animate
+import com.w2sv.autocrop.utils.extensions.onHalfwayShown
 import com.w2sv.preferences.GlobalFlags
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -39,14 +41,18 @@ class AboutFragment :
             super.onCreateAnimation(transit, false, nextAnim)
 
     private fun showInstructionSnackbarIfApplicable() {
-        if (!globalFlags.aboutFragmentInstructionsShown)
+        if (!globalFlags.aboutFragmentInstructionsShown) {
             getSnackyBuilder(
                 "Check out what happens if you click on the different view elements!",
                 duration = resources.getInteger(R.integer.duration_snackbar_long)
             )
                 .setIcon(R.drawable.ic_info_24)
                 .build()
+                .onHalfwayShown(lifecycleScope){
+                    globalFlags.aboutFragmentInstructionsShown = true
+                }
                 .show()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

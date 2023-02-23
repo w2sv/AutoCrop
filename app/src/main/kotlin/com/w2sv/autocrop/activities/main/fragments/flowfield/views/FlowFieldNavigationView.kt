@@ -14,11 +14,11 @@ import androidx.core.app.ShareCompat
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.navigation.NavigationView
-import com.w2sv.androidutils.ActivityRetriever
 import com.w2sv.androidutils.extensions.configureItem
 import com.w2sv.androidutils.extensions.openUrl
 import com.w2sv.androidutils.extensions.playStoreUrl
 import com.w2sv.androidutils.extensions.postValue
+import com.w2sv.androidutils.extensions.requireActivity
 import com.w2sv.androidutils.extensions.serviceRunning
 import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.androidutils.extensions.toggle
@@ -28,25 +28,19 @@ import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.permissionhandler.requestPermissions
-import com.w2sv.preferences.BooleanPreferences
-import com.w2sv.preferences.CropSaveDirPreferences
 import com.w2sv.preferences.getConnectedSwitch
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
-    NavigationView(context, attributeSet),
-    ActivityRetriever by ActivityRetriever.Impl(context) {
-
-    @Inject
-    lateinit var booleanPreferences: BooleanPreferences
-
-    @Inject
-    lateinit var cropSaveDirPreferences: CropSaveDirPreferences
+    NavigationView(context, attributeSet) {
 
     private val viewModel by viewModel<FlowFieldFragment.ViewModel>()
+
+    private val flowFieldFragment by lazy {
+        findFragment<FlowFieldFragment>()
+    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -68,7 +62,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                         when {
                             viewModel.screenshotListenerCancelledFromNotificationLive.value == true -> viewModel.screenshotListenerCancelledFromNotificationLive.toggle()
 
-                            value -> findFragment<FlowFieldFragment>()
+                            value -> flowFieldFragment
                                 .screenshotListeningPermissionHandlers
                                 .requestPermissions(
                                     onGranted = {
@@ -100,16 +94,16 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
 
     private fun setAutoScrollItem() =
         menu.configureItem(R.id.main_menu_item_auto_scroll) {
-            it.actionView = booleanPreferences::autoScroll.getConnectedSwitch(context)
+            it.actionView = viewModel.booleanPreferences::autoScroll.getConnectedSwitch(context)
         }
 
     private fun setOnClickListeners() {
         setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.main_menu_item_change_crop_dir -> {
-                    findFragment<FlowFieldFragment>()
+                    flowFieldFragment
                         .openDocumentTreeContractHandler
-                        .selectDocument(cropSaveDirPreferences.treeUri)
+                        .selectDocument(viewModel.cropSaveDirPreferences.treeUri)
                 }
 
                 R.id.main_menu_item_configure_cropping_settings -> {
@@ -176,9 +170,9 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 }
 
                 R.id.main_menu_item_about -> {
-                    (activity as ViewBoundFragmentActivity).fragmentReplacementTransaction(
+                    (context.requireActivity() as ViewBoundFragmentActivity).fragmentReplacementTransaction(
                         AboutFragment(),
-                        animated = true,
+                        animated = true
                     )
                         .addToBackStack(null)
                         .commit()
@@ -194,7 +188,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                         context.startActivity(
                             Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse(activity.playStoreUrl)
+                                Uri.parse(context.playStoreUrl)
                             )
                                 .setPackage("com.android.vending")
                         )
@@ -212,7 +206,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 }
             }
 
-            findFragment<FlowFieldFragment>().binding.drawerLayout.closeDrawer()
+            flowFieldFragment.binding.drawerLayout.closeDrawer()
             false
         }
     }

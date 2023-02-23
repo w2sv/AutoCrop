@@ -19,15 +19,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/foreground_toggle_button"
+            <com.w2sv.autocrop.activities.main.fragments.flowfield.views.ForegroundElementsToggleButton
+                android:id="@+id/foreground_elements_toggle_button"
 
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="@dimen/size_image_button"
+                android:layout_height="@dimen/size_image_button"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginEnd="26dp"
-                android:layout_marginBottom="56dp"
+                android:layout_marginEnd="@dimen/margin_horizontal"
+                android:layout_marginBottom="?attr/actionBarSize"
                 android:background="@drawable/ic_eye_24"
                 android:backgroundTint="@color/low_alpha_gray" />
 
@@ -76,8 +76,8 @@
 
                         <androidx.appcompat.widget.AppCompatImageButton
                             android:id="@+id/share_crops_button"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
+                            android:layout_width="@dimen/size_image_button"
+                            android:layout_height="@dimen/size_image_button"
                             android:layout_marginBottom="70dp"
                             android:background="@drawable/ic_share_24"
                             android:visibility="invisible" />
