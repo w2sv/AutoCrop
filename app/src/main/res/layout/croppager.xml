@@ -1,111 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/status_bar_height_approximated">
+    android:paddingTop="@dimen/status_bar_height_approximated"
+    android:paddingBottom="?attr/actionBarSize"
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:weightSum="1">
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal"
+        android:layout_marginTop="@dimen/margin_medium">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/view_pager"
+        <FrameLayout
+            android:id="@+id/all_crops_buttons_w_label"
+            android:layout_width="90dp"
+            android:layout_height="@dimen/height_button_row_w_label"
+            android:background="@drawable/shape_rounded_rectangle_w_button_background"
+            android:visibility="invisible">
 
-            android:layout_width="match_parent"
+            <TextView
+                style="@style/ButtonRowLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:text="@string/all"
+                android:textColor="@color/higher_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_button_row"
+                android:layout_gravity="bottom"
+
+                android:gravity="center">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/discard_all_button"
+                    android:layout_width="@dimen/size_image_button"
+                    android:layout_height="@dimen/size_image_button"
+                    android:layout_marginEnd="@dimen/margin_buttons_within_row"
+
+                    android:background="@drawable/ic_cancel_24"
+                    android:backgroundTint="@color/higher_light"
+
+                    android:contentDescription="@string/discard_all_crops" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/save_all_button"
+                    android:layout_width="@dimen/size_image_button"
+                    android:layout_height="@dimen/size_image_button"
+
+                    android:background="@drawable/ic_save_24"
+                    android:backgroundTint="@color/higher_light"
+
+                    android:contentDescription="@string/save_all_crops" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <Space
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="0.8"
-            android:background="@color/crop_pager" />
+            android:layout_weight="1"/>
 
-    </LinearLayout>
+        <com.w2sv.autocrop.ui.views.FractionTextView
+            android:id="@+id/page_indication_tv"
 
-    <FrameLayout
-        android:id="@+id/all_crops_buttons_w_label"
-        android:layout_width="90dp"
-        android:layout_height="@dimen/height_button_row_w_label"
-        android:layout_marginStart="@dimen/margin_horizontal"
-        android:layout_marginTop="@dimen/margin_horizontal"
-        android:background="@drawable/shape_rounded_rectangle_w_button_background"
-        android:visibility="invisible">
-
-        <TextView
-            style="@style/ButtonRowLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|center_horizontal"
-            android:text="@string/all"
-            android:textColor="@color/higher_light" />
+            android:layout_gravity="center_vertical"
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_button_row"
-            android:layout_gravity="bottom"
+            android:text="@string/fraction"
+            android:textColor="@color/crop_pager_text"
+            android:textSize="@dimen/text_size_medium_small"
+            android:textStyle="italic" />
+    </LinearLayout>
 
-            android:gravity="center">
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="@dimen/margin_medium"/>
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/discard_all_button"
-                android:layout_width="@dimen/size_image_button"
-                android:layout_height="@dimen/size_image_button"
-                android:layout_marginEnd="@dimen/margin_buttons_within_row"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
 
-                android:background="@drawable/ic_cancel_24"
-                android:backgroundTint="@color/higher_light"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/surface_on_black_background" />
 
-                android:contentDescription="@string/discard_all_crops" />
-
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/save_all_button"
-                android:layout_width="@dimen/size_image_button"
-                android:layout_height="@dimen/size_image_button"
-
-                android:background="@drawable/ic_save_24"
-                android:backgroundTint="@color/higher_light"
-
-                android:contentDescription="@string/save_all_crops" />
-        </LinearLayout>
-    </FrameLayout>
-
-    <com.w2sv.autocrop.ui.views.FractionTextView
-        android:id="@+id/page_indication_tv"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginEnd="@dimen/margin_horizontal"
-
-        android:text="@string/fraction"
-        android:textColor="@color/crop_pager_text"
-        android:textSize="15sp"
-        android:textStyle="italic"
-
-        tools:ignore="RelativeOverlap" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/cancel_auto_scroll_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"
-
-        android:background="@drawable/shape_rounded_rectangle_w_button_background"
-        android:padding="14dp"
-
-        android:text="@string/cancel_autoscroll"
-        android:textColor="@color/highlight"
-        android:textSize="16sp"
-        android:visibility="invisible" />
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="@dimen/margin_medium"/>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cancel_auto_scroll_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+
+            android:background="@drawable/shape_rounded_rectangle_w_button_background"
+            android:padding="14dp"
+
+            android:text="@string/cancel_autoscroll"
+            android:textColor="@color/highlight"
+            android:textSize="@dimen/text_size_medium"
+            android:visibility="invisible" />
 
         <com.w2sv.autocrop.ui.views.SnackbarRepelledLayout
             android:id="@+id/snackbar_repelled_layout"
@@ -116,18 +121,17 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginBottom="50dp">
+                android:layout_marginHorizontal="20dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/discarding_statistics_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
+                    android:layout_gravity="center_vertical"
 
                     android:text="@string/discarding_statistics"
                     android:textColor="@color/crop_pager_text"
-                    android:textSize="13sp" />
+                    android:textSize="@dimen/text_size_small" />
 
                 <!--Current Crop Button Row w Label-->
 
@@ -204,4 +208,4 @@
 
         </com.w2sv.autocrop.ui.views.SnackbarRepelledLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</RelativeLayout>
+</LinearLayout>
