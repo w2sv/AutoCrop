@@ -697,7 +697,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             }
 
         private val edgeCandidatePointsViewDomain: List<List<Float>> by lazy {
-            FloatArray(viewModel.cropBundle.screenshot.cropEdgeCandidates.size * COORDINATES_PER_LINE).apply {
+            FloatArray(viewModel.cropBundle.edgeCandidates.size * COORDINATES_PER_LINE).apply {
                 imageMatrix.mapPoints(this, viewModel.edgeCandidatePoints)
             }
                 .toList()

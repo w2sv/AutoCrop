@@ -18,7 +18,7 @@ import kotlinx.parcelize.Parcelize
 import kotlin.math.roundToInt
 
 @Parcelize
-data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
+data class CropBundle(val screenshot: Screenshot, var crop: Crop, var edgeCandidates: List<Int>) : Parcelable {
 
     enum class CreationFailureReason {
         BitmapLoadingFailure,
@@ -37,7 +37,6 @@ data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
                     val screenshot = Screenshot(
                         screenshotMediaUri,
                         screenshotBitmap.height,
-                        candidates,
                         Screenshot.MediaStoreData.query(context.contentResolver, screenshotMediaUri)
                     )
 
@@ -48,7 +47,8 @@ data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
                                 screenshotBitmap,
                                 screenshot.mediaStoreData.diskUsage,
                                 edges
-                            )
+                            ),
+                            edgeCandidates = candidates
                         ),
                         null
                     )
@@ -66,7 +66,6 @@ data class CropBundle(val screenshot: Screenshot, var crop: Crop) : Parcelable {
 data class Screenshot(
     val uri: Uri,
     val height: Int,
-    val cropEdgeCandidates: List<Int>,
     val mediaStoreData: MediaStoreData
 ) : Parcelable {
 

@@ -58,7 +58,7 @@ class CropAdjustmentFragment
          */
 
         val edgeCandidatePoints: FloatArray by lazy {
-            cropBundle.screenshot.cropEdgeCandidates.map {
+            cropBundle.edgeCandidates.map {
                 listOf(
                     0f,
                     it.toFloat(),

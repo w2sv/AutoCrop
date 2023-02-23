@@ -24,6 +24,7 @@ import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.hide
 import com.w2sv.androidutils.extensions.makeToast
 import com.w2sv.androidutils.extensions.postValue
+import com.w2sv.androidutils.extensions.remove
 import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.androidutils.extensions.viewModel
@@ -38,18 +39,22 @@ import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveAllC
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveCropDialog
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.databinding.CropPagerBinding
+import com.w2sv.autocrop.ui.RecropDialog
 import com.w2sv.autocrop.ui.model.Click
 import com.w2sv.autocrop.ui.views.KEEP_MENU_ITEM_OPEN_ON_CLICK
 import com.w2sv.autocrop.ui.views.VisualizationType
 import com.w2sv.autocrop.ui.views.animate
 import com.w2sv.autocrop.ui.views.currentViewHolder
 import com.w2sv.autocrop.ui.views.makeOnClickPersistent
+import com.w2sv.autocrop.ui.views.notifyCurrentItemChanged
 import com.w2sv.autocrop.ui.views.toggleCheck
 import com.w2sv.autocrop.ui.views.visualize
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.cropbundle.Crop
+import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
+import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.preferences.BooleanPreferences
 import dagger.hilt.android.AndroidEntryPoint
@@ -75,7 +80,8 @@ class CropPagerFragment :
     AppFragment<CropPagerBinding>(CropPagerBinding::class.java),
     SaveCropDialog.ResultListener,
     SaveAllCropsDialog.ResultListener,
-    CropAdjustmentFragment.ResultListener {
+    CropAdjustmentFragment.ResultListener,
+    RecropDialog.Listener {
 
     companion object {
         fun getInstance(cropResults: CropResults): CropPagerFragment =
@@ -322,6 +328,9 @@ class CropPagerFragment :
                 .addToBackStack(null)
                 .commit()
         }
+        recropButton.setOnClickListener {
+            RecropDialog.getInstance(viewModel.dataSet.livePosition.value!!).show(childFragmentManager)
+        }
         comparisonButton.setOnClickListener {
             requireViewBoundFragmentActivity().fragmentReplacementTransaction(
                 ComparisonFragment.getInstance(viewModel.dataSet.livePosition.value!!)
@@ -364,6 +373,7 @@ class CropPagerFragment :
 
                                     KEEP_MENU_ITEM_OPEN_ON_CLICK
                                 }
+
                                 else -> true
                             }
                         }
@@ -442,6 +452,38 @@ class CropPagerFragment :
 
     override fun onDiscardAllCrops() {
         requireCastActivity<ExaminationActivity>().invokeExitFragment()
+    }
+
+    override fun onDoRecrop(cropBundlePosition: Int, threshold: Double) {
+        cropPager.pager.isEnabled = false
+        binding.recropProgressBar.show()
+
+        requireContext().showToast(
+            when (viewModel.dataSet[cropBundlePosition].recropAndUpdate(threshold)) {
+                false -> "No Crop Edges found for adjusted Settings"
+                true -> {
+                    cropPager.pager.notifyCurrentItemChanged()
+                    "Updated Crop"
+                }
+            }
+        )
+
+        binding.recropProgressBar.remove()
+        cropPager.pager.isEnabled = true
+    }
+
+    private fun CropBundle.recropAndUpdate(threshold: Double): Boolean {
+        val screenshotBitmap = screenshot.getBitmap(requireContext().contentResolver)
+        return screenshotBitmap.crop(threshold)?.let { (edges, candidates) ->
+            crop = Crop.fromScreenshot(
+                screenshotBitmap,
+                screenshot.mediaStoreData.diskUsage,
+                edges
+            )
+            edgeCandidates = candidates
+            true
+        }
+            ?: false
     }
 
     override val snackbarAnchorView: View

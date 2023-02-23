@@ -2,34 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginVertical="32dp"
+    android:gravity="center"
     android:orientation="vertical">
 
-
     <TextView
+        android:id="@+id/threshold_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="2dp"
-        android:text="@string/threshold"
-        android:textSize="16sp"
-        android:textStyle="italic" />
+        android:layout_marginTop="@dimen/margin_medium"
+        android:textSize="@dimen/text_size_medium" />
 
-    <TextView
-        android:id="@+id/threshold_indicator_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-
-        android:textColor="@color/higher_light"
-        android:textSize="16sp"
-        android:textStyle="italic" />
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="@dimen/margin_medium" />
 
     <androidx.appcompat.widget.AppCompatSeekBar
         android:id="@+id/threshold_seekbar"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="40dp"
         android:max="255"
         android:min="50" />

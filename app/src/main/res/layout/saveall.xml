@@ -27,7 +27,6 @@
         android:layout_height="180dp"
 
         android:layout_centerInParent="true"
-
         android:indeterminateDrawable="@drawable/shape_progress_bar_save_all" />
 
     <com.w2sv.autocrop.ui.views.FractionTextView

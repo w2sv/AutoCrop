@@ -14,14 +14,14 @@ import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.cropbundle.CropBundle
 
 /**
- * Proxy for non extendable [viewPager2]
+ * Proxy for non extendable [pager]
  */
 class CropPager(
-    private val viewPager2: ViewPager2,
+    val pager: ViewPager2,
     private val dataSet: DataSet,
     private val onClickListener: (View) -> Unit,
     private val onLongClickListener: (View) -> Boolean,
-) : ViewRemovableBidirectionalViewPager2<CropBundle>(viewPager2, dataSet) {
+) : ViewRemovableBidirectionalViewPager2<CropBundle>(pager, dataSet) {
 
     class DataSet(dataSet: MutableList<CropBundle>) : BidirectionalViewPagerDataSet<CropBundle>(dataSet) {
 
@@ -33,7 +33,7 @@ class CropPager(
     }
 
     init {
-        viewPager2.initialize()
+        pager.initialize()
     }
 
     private fun ViewPager2.initialize() {

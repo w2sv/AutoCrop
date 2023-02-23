@@ -54,12 +54,13 @@
     <string name="current">Current</string>
     <string name="configure_settings">Configure Settings</string>
     <string name="cropping">Cropping</string>
-    <string name="threshold">Threshold</string>
-    <string name="configure_crop_settings">Configure Crop Settings</string>
+    <string name="crop_settings">Crop Settings</string>
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
     <string name="comparison_instruction">Tap on the screen and hold to view the original screenshot 👇⏳</string>
     <string name="tap_again_to_cancel">Tap again to cancel</string>
     <string name="toggle_foreground_elements">Toggle foreground elements</string>
     <string name="open_popup_menu">Open popup menu</string>
+    <string name="recrop_with_different_settings">Recrop with different Settings</string>
+    <string name="recrop">Recrop</string>
 </resources>

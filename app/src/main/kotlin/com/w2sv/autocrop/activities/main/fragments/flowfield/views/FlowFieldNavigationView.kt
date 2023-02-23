@@ -5,11 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.AttributeSet
-import android.view.Gravity
-import android.widget.SeekBar
 import android.widget.Switch
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ShareCompat
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -17,9 +13,9 @@ import com.google.android.material.navigation.NavigationView
 import com.w2sv.androidutils.extensions.configureItem
 import com.w2sv.androidutils.extensions.openUrl
 import com.w2sv.androidutils.extensions.playStoreUrl
-import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.requireActivity
 import com.w2sv.androidutils.extensions.serviceRunning
+import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.androidutils.extensions.viewModel
@@ -27,6 +23,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
+import com.w2sv.autocrop.ui.CropSettingsConfigurationDialog
 import com.w2sv.permissionhandler.requestPermissions
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -100,66 +97,8 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 }
 
                 R.id.main_menu_item_configure_cropping_settings -> {
-                    AlertDialog.Builder(context)
-                        .apply {
-                            setCustomTitle(
-                                TextView(context)
-                                    .apply {
-                                        text = context.getString(R.string.configure_crop_settings)
-                                        val verticalPadding = 10
-                                        setPadding(0, verticalPadding, 0, verticalPadding)
-                                        textSize = 20f
-                                        gravity = Gravity.CENTER_HORIZONTAL
-                                        textAlignment = TEXT_ALIGNMENT_CENTER
-                                    }
-                            )
-                            setView(R.layout.crop_settings_configuration)
-                            setPositiveButton(resources.getString(R.string.apply)) { _, which ->
-                                if (which == AlertDialog.BUTTON_POSITIVE) {
-                                    viewModel.syncCropSettings()
-                                    context.showToast("Synced Crop Settings")
-                                }
-                            }
-                            setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
-                        }
-                        .create()
-                        .apply {
-                            setOnShowListener {
-                                viewModel.cropSettingsRequiringSyncLive.observe(this@FlowFieldNavigationView.findViewTreeLifecycleOwner()!!) { settingsChanged ->
-                                    getButton(AlertDialog.BUTTON_POSITIVE).apply {
-                                        isEnabled = settingsChanged
-                                    }
-                                }
-
-                                viewModel.cropEdgeCandidateThresholdLive.observe(this@FlowFieldNavigationView.findViewTreeLifecycleOwner()!!) { threshold ->
-                                    findViewById<TextView>(R.id.threshold_indicator_tv)!!.text = threshold.toString()
-                                    viewModel.onCropSettingsInputChanged()
-                                }
-
-                                findViewById<SeekBar>(R.id.threshold_seekbar)!!
-                                    .apply {
-                                        progress = viewModel.cropEdgeCandidateThresholdLive.value!!
-
-                                        setOnSeekBarChangeListener(
-                                            object : SeekBar.OnSeekBarChangeListener {
-                                                override fun onProgressChanged(
-                                                    seekBar: SeekBar?,
-                                                    progress: Int,
-                                                    fromUser: Boolean
-                                                ) {
-                                                    if (fromUser) {
-                                                        viewModel.cropEdgeCandidateThresholdLive.postValue(progress)
-                                                    }
-                                                }
-
-                                                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-                                                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-                                            }
-                                        )
-                                    }
-                            }
-                        }
-                        .show()
+                    CropSettingsConfigurationDialog()
+                        .show(flowFieldFragment.childFragmentManager)
                 }
 
                 R.id.main_menu_item_about -> {

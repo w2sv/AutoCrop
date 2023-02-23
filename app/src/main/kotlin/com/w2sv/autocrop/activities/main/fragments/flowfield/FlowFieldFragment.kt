@@ -53,7 +53,6 @@ import com.w2sv.common.PermissionHandler
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.preferences.CropSaveDirPreferences
-import com.w2sv.preferences.IntPreferences
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -75,7 +74,6 @@ class FlowFieldFragment :
         @ApplicationContext context: Context,
         savedStateHandle: SavedStateHandle,
         val cropSaveDirPreferences: CropSaveDirPreferences,
-        private val intPreferences: IntPreferences
     ) : androidx.lifecycle.ViewModel() {
 
         val accumulatedIoResults: AccumulatedIOResults? = savedStateHandle[AccumulatedIOResults.EXTRA]
@@ -139,27 +137,6 @@ class FlowFieldFragment :
         }
 
         /**
-         * Crop Settings
-         */
-
-        fun syncCropSettings() {
-            intPreferences.cropEdgeCandidateThreshold = cropEdgeCandidateThresholdLive.value!!
-            cropSettingsRequiringSyncLive.postValue(false)
-        }
-
-        val cropEdgeCandidateThresholdLive: LiveData<Int> by lazy {
-            MutableLiveData(intPreferences.cropEdgeCandidateThreshold)
-        }
-
-        val cropSettingsRequiringSyncLive: LiveData<Boolean> by lazy {
-            MutableLiveData(false)
-        }
-
-        fun onCropSettingsInputChanged() {
-            cropSettingsRequiringSyncLive.postValue(cropEdgeCandidateThresholdLive.value != intPreferences.cropEdgeCandidateThreshold)
-        }
-
-        /**
          * BackPressListener
          */
 
@@ -181,9 +158,6 @@ class FlowFieldFragment :
             onReceiveListener()
         }
     }
-
-    @Inject
-    lateinit var cropSaveDirPreferences: CropSaveDirPreferences
 
     private val viewModel by viewModels<ViewModel>()
 
@@ -350,8 +324,8 @@ class FlowFieldFragment :
     val openDocumentTreeContractHandler by lazy {
         OpenDocumentTreeContractHandler(requireActivity()) {
             it?.let { treeUri ->
-                val text = if (cropSaveDirPreferences.setNewUri(treeUri, requireContext().contentResolver)) {
-                    viewModel.cropSaveDirIdentifierLive.postValue(cropSaveDirPreferences.pathIdentifier)
+                val text = if (viewModel.cropSaveDirPreferences.setNewUri(treeUri, requireContext().contentResolver)) {
+                    viewModel.cropSaveDirIdentifierLive.postValue(viewModel.cropSaveDirPreferences.pathIdentifier)
                     SpannableStringBuilder()
                         .append("Crops will be saved to ")
                         .color(requireContext().getColor(R.color.success)) {
