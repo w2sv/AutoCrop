@@ -11,7 +11,7 @@ abstract class CropSavingDialog : DialogFragment() {
         const val EXTRA_SHOW_DISCARD_BUTTON = "com.w2sv.autocrop.extra.SHOW_DISMISS_BUTTON"
     }
 
-    private val viewModel by viewModels<CropPagerFragment.ViewModel>()
+    private val viewModel by viewModels<CropPagerFragment.ViewModel>({ requireParentFragment() })
 
     protected fun AlertDialog.Builder.setDeleteCorrespondingScreenshotsOption(text: String) {
         setMultiChoiceItems(

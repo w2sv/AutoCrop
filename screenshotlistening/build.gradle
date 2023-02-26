@@ -25,4 +25,6 @@ dependencies {
 
     implementation libs.google.hilt
     kapt libs.google.hilt.kapt
+
+    testImplementation libs.bundles.unitTest
 }

@@ -61,6 +61,6 @@
     <string name="tap_again_to_cancel">Tap again to cancel</string>
     <string name="toggle_foreground_elements">Toggle foreground elements</string>
     <string name="open_popup_menu">Open popup menu</string>
-    <string name="recrop_with_different_settings">Recrop with different Settings</string>
+    <string name="recrop_with_adjusted_settings">Recrop with adjusted Settings</string>
     <string name="recrop">Recrop</string>
 </resources>

@@ -1,6 +1,6 @@
-package com.w2sv.autocrop.utils.android
+package com.w2sv.cropbundle
 
-import com.w2sv.autocrop.cropbundle.io.ImageMimeType
+import com.w2sv.cropbundle.io.ImageMimeType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource

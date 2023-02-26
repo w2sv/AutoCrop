@@ -22,8 +22,8 @@ import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
+import com.w2sv.autocrop.activities.main.fragments.flowfield.CropSettingsConfigurationDialog
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.ui.CropSettingsConfigurationDialog
 import com.w2sv.permissionhandler.requestPermissions
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint

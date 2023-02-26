@@ -35,11 +35,11 @@ import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.CropSavingDialog
+import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.RecropDialog
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveAllCropsDialog
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveCropDialog
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.databinding.CropPagerBinding
-import com.w2sv.autocrop.ui.RecropDialog
 import com.w2sv.autocrop.ui.model.Click
 import com.w2sv.autocrop.ui.views.KEEP_MENU_ITEM_OPEN_ON_CLICK
 import com.w2sv.autocrop.ui.views.VisualizationType
@@ -57,6 +57,7 @@ import com.w2sv.cropbundle.cropping.CropEdges
 import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.preferences.BooleanPreferences
+import com.w2sv.preferences.IntPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -91,6 +92,7 @@ class CropPagerFragment :
     @HiltViewModel
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
+        private val intPreferences: IntPreferences,
         val booleanPreferences: BooleanPreferences,
         @ApplicationContext context: Context
     ) : androidx.lifecycle.ViewModel() {
@@ -196,6 +198,13 @@ class CropPagerFragment :
         /**
          * Other
          */
+
+        fun getRecropDialog(): RecropDialog =
+            RecropDialog.getInstance(
+                dataSet.livePosition.value!!,
+                dataSet.liveElement.adjustedEdgeThreshold
+                    ?: intPreferences.edgeCandidateThreshold
+            )
 
         val backPressHandler = BackPressHandler(
             viewModelScope,
@@ -329,7 +338,8 @@ class CropPagerFragment :
                 .commit()
         }
         recropButton.setOnClickListener {
-            RecropDialog.getInstance(viewModel.dataSet.livePosition.value!!).show(childFragmentManager)
+            viewModel.getRecropDialog()
+                .show(childFragmentManager)
         }
         comparisonButton.setOnClickListener {
             requireViewBoundFragmentActivity().fragmentReplacementTransaction(
@@ -481,6 +491,7 @@ class CropPagerFragment :
                 edges
             )
             edgeCandidates = candidates
+            adjustedEdgeThreshold = threshold.toInt()
             true
         }
             ?: false
