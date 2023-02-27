@@ -16,11 +16,11 @@ android {
 dependencies {
     implementation project(path: ':preferences')
     implementation project(path: ':common')
+    implementation project(path: ':opencv')
 
     implementation libs.androidx.core
     implementation libs.kotlinutils
     implementation libs.slimber
-    implementation libs.opencv
     implementation libs.androidutils
 
     implementation libs.google.hilt

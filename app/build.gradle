@@ -25,6 +25,14 @@ android {
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
         setProperty('archivesBaseName', versionName)  // Stores built aab's as "{versionName}-{buildFlavor}.apk"
 
+        externalNativeBuild {
+            cmake {
+                cppFlags "-frtti -fexceptions"
+                abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+                arguments "-DOpenCV_DIR=" + "/home/w2sv/Dev/Android/Apps/AutoCrop/opencv/native"
+            }
+        }
+
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'
     }
@@ -52,6 +60,12 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 //            debuggable true
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.24.2"
         }
     }
     compileOptions {
@@ -95,6 +109,7 @@ dependencies {
     implementation project(path: ':screenshotlistening')
     implementation project(path: ':common')
     implementation project(path: ':flowfield')
+    implementation project(path: ':opencv')
 
     implementation libs.kotlinutils
     implementation libs.viewboundcontroller
@@ -109,7 +124,6 @@ dependencies {
     implementation libs.snacky
     implementation libs.animatoo
     implementation libs.lottie
-    implementation libs.opencv
 
     // ---------------
     // unitTest

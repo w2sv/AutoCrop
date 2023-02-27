@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/cropbundle" />
             <option value="$PROJECT_DIR$/flowfield" />
+            <option value="$PROJECT_DIR$/opencv" />
             <option value="$PROJECT_DIR$/preferences" />
             <option value="$PROJECT_DIR$/screenshotlistening" />
           </set>
