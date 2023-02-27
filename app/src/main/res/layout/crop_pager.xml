@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,33 +13,32 @@
         android:layout_marginHorizontal="@dimen/margin_horizontal_small"
         android:layout_marginTop="@dimen/margin_medium">
 
-        <FrameLayout
+        <LinearLayout
             android:id="@+id/all_crops_buttons_w_label"
-            android:layout_width="90dp"
-            android:layout_height="@dimen/height_button_row_w_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/shape_rounded_rectangle_w_button_background"
-            android:visibility="invisible">
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/margin_small"
+            android:visibility="visible">
 
             <TextView
                 style="@style/ButtonRowLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top|center_horizontal"
+                android:layout_gravity="center_horizontal"
                 android:text="@string/all"
                 android:textColor="@color/higher_light" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_button_row"
-                android:layout_gravity="bottom"
-
-                android:gravity="center">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
                 <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/discard_all_button"
                     android:layout_width="@dimen/size_image_button"
                     android:layout_height="@dimen/size_image_button"
-                    android:layout_marginEnd="@dimen/margin_buttons_within_row"
+                    android:layout_marginHorizontal="@dimen/margin_button_row"
 
                     android:background="@drawable/ic_cancel_24"
                     android:backgroundTint="@color/higher_light"
@@ -51,13 +49,14 @@
                     android:id="@+id/save_all_button"
                     android:layout_width="@dimen/size_image_button"
                     android:layout_height="@dimen/size_image_button"
+                    android:layout_marginHorizontal="@dimen/margin_button_row"
 
                     android:background="@drawable/ic_save_24"
                     android:backgroundTint="@color/higher_light"
 
                     android:contentDescription="@string/save_all_crops" />
             </LinearLayout>
-        </FrameLayout>
+        </LinearLayout>
 
         <Space
             android:layout_width="0dp"
@@ -162,35 +161,34 @@
 
                 <!--Current Crop Button Row w Label-->
 
-                <FrameLayout
+                <LinearLayout
                     android:id="@+id/current_crop_buttons_w_label"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/height_button_row_w_label"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
-                    android:background="@drawable/shape_rounded_rectangle_w_button_background">
+                    android:background="@drawable/shape_rounded_rectangle_w_button_background"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/margin_small">
 
                     <TextView
                         style="@style/ButtonRowLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|top"
+                        android:layout_gravity="center_horizontal"
                         android:text="@string/current"
                         android:textColor="@color/highlight" />
 
                     <!--Button Row-->
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/height_button_row"
-                        android:layout_gravity="bottom"
-                        android:gravity="center"
-                        tools:ignore="UselessParent">
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
                         <androidx.appcompat.widget.AppCompatImageButton
                             android:id="@+id/discard_crop_button"
                             android:layout_width="@dimen/size_image_button"
                             android:layout_height="@dimen/size_image_button"
-                            android:layout_marginEnd="@dimen/margin_buttons_within_row"
+                            android:layout_marginHorizontal="@dimen/margin_button_row"
 
                             android:background="@drawable/ic_cancel_24"
                             android:backgroundTint="@color/highlight"
@@ -201,7 +199,7 @@
                             android:id="@+id/save_crop_button"
                             android:layout_width="@dimen/size_image_button"
                             android:layout_height="@dimen/size_image_button"
-                            android:layout_marginEnd="@dimen/margin_buttons_within_row"
+                            android:layout_marginHorizontal="@dimen/margin_button_row"
 
                             android:background="@drawable/ic_save_24"
                             android:backgroundTint="@color/highlight"
@@ -212,7 +210,7 @@
                             android:id="@+id/recrop_button"
                             android:layout_width="@dimen/size_image_button"
                             android:layout_height="@dimen/size_image_button"
-                            android:layout_marginEnd="@dimen/margin_buttons_within_row"
+                            android:layout_marginHorizontal="@dimen/margin_button_row"
 
                             android:background="@drawable/ic_redo_24"
                             android:backgroundTint="@color/highlight"
@@ -223,7 +221,7 @@
                             android:id="@+id/manual_crop_button"
                             android:layout_width="@dimen/size_image_button"
                             android:layout_height="@dimen/size_image_button"
-                            android:layout_marginEnd="@dimen/margin_buttons_within_row"
+                            android:layout_marginHorizontal="@dimen/margin_button_row"
 
                             android:background="@drawable/ic_crop_24"
                             android:backgroundTint="@color/highlight"
@@ -234,13 +232,14 @@
                             android:id="@+id/comparison_button"
                             android:layout_width="@dimen/size_image_button"
                             android:layout_height="@dimen/size_image_button"
+                            android:layout_marginHorizontal="@dimen/margin_button_row"
 
                             android:background="@drawable/ic_image_search_24"
                             android:backgroundTint="@color/highlight"
 
                             android:contentDescription="@string/compare_crop_and_original_screenshot" />
                     </LinearLayout>
-                </FrameLayout>
+                </LinearLayout>
 
             </FrameLayout>
 

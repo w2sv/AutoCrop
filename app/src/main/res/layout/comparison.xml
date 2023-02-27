@@ -30,7 +30,7 @@
         android:id="@+id/displayed_image_tv"
 
         android:layout_width="95dp"
-        android:layout_height="@dimen/height_button_row"
+        android:layout_height="@dimen/height_button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/margin_medium"

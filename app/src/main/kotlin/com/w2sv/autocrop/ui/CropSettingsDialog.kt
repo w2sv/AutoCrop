@@ -3,12 +3,12 @@ package com.w2sv.autocrop.ui
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.widget.SeekBar
 import androidx.annotation.IntRange
 import androidx.annotation.StringRes
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.material.slider.Slider
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.model.CROP_SENSITIVITY_MAX
@@ -55,7 +55,7 @@ abstract class CropSettingsDialog(
             .apply {
                 setOnShowListener {
                     viewModel.setLiveDataObservers(this)
-                    findViewById<SeekBar>(R.id.sensitivity_seekbar)!!.set()
+                    findViewById<Slider>(R.id.sensitivity_slider)!!.set()
                 }
             }
 
@@ -70,26 +70,16 @@ abstract class CropSettingsDialog(
         }
     }
 
-    private fun SeekBar.set() {
-        progress = viewModel.cropSensitivityLive.value!!
-        min = 0
-        max = CROP_SENSITIVITY_MAX
+    private fun Slider.set() {
+        valueFrom = 0f
+        valueTo = CROP_SENSITIVITY_MAX.toFloat()
+        stepSize = 1f
+        value = viewModel.cropSensitivityLive.value!!.toFloat()
 
-        setOnSeekBarChangeListener(
-            object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(
-                    seekBar: SeekBar?,
-                    progress: Int,
-                    fromUser: Boolean
-                ) {
-                    if (fromUser) {
-                        viewModel.cropSensitivityLive.postValue(progress)
-                    }
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                viewModel.cropSensitivityLive.postValue(value.toInt())
             }
-        )
+        }
     }
 }

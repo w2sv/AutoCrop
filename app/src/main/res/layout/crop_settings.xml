@@ -13,44 +13,20 @@
         android:text="@string/sensitivity"
         android:textSize="@dimen/text_size_medium" />
 
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="@dimen/margin_medium" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="40dp"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatSeekBar
-            android:id="@+id/sensitivity_seekbar"
+        <com.google.android.material.slider.Slider
+            android:id="@+id/sensitivity_slider"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/low"
-                android:textColor="@color/higher_light"
-                android:textSize="@dimen/text_size_small" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/high"
-                android:textColor="@color/higher_light"
-                android:textSize="@dimen/text_size_small" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/slider_to_select_the_crop_sensitivity"
+            android:stepSize="1.0"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+            android:valueFrom="0.0" />
 
     </LinearLayout>
 
