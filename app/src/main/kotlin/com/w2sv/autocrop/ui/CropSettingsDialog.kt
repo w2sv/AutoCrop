@@ -4,11 +4,8 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.widget.SeekBar
-import android.widget.TextView
 import androidx.annotation.IntRange
 import androidx.annotation.StringRes
-import androidx.core.text.buildSpannedString
-import androidx.core.text.italic
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -24,7 +21,8 @@ abstract class CropSettingsDialog(
 ) : DialogFragment() {
 
     abstract class ViewModel(initialEdgeCandidateThreshold: Int) : androidx.lifecycle.ViewModel() {
-        @IntRange(from=0, to=20) private val initialCropSensitivity: Int = cropSensitivity(initialEdgeCandidateThreshold)
+        @IntRange(from = 0, to = 20)
+        private val initialCropSensitivity: Int = cropSensitivity(initialEdgeCandidateThreshold)
 
         val cropSensitivityLive: LiveData<Int> by lazy {
             MutableLiveData(initialCropSensitivity)
@@ -48,7 +46,7 @@ abstract class CropSettingsDialog(
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(requireContext())
             .setTitle(resources.getString(title))
-            .setView(R.layout.crop_settings_configuration)
+            .setView(R.layout.crop_settings)
             .setPositiveButton(positiveButtonText) { _, _ ->
                 onPositiveButtonClicked()
             }
@@ -62,13 +60,7 @@ abstract class CropSettingsDialog(
             }
 
     private fun ViewModel.setLiveDataObservers(dialog: AlertDialog) {
-        cropSensitivityLive.observe(requireParentFragment().viewLifecycleOwner) { threshold ->
-            dialog.findViewById<TextView>(R.id.threshold_tv)!!.text = buildSpannedString {
-                append("Sensitivity: ")
-                italic {
-                    append(threshold.toString())
-                }
-            }
+        cropSensitivityLive.observe(requireParentFragment().viewLifecycleOwner) {
             onSettingsInput()
         }
         settingsDissimilarLive.observe(requireParentFragment().viewLifecycleOwner) { settingsChanged ->

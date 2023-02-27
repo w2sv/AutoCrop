@@ -52,7 +52,7 @@
     <string name="save_all_crops">Save all crops</string>
     <string name="all">All</string>
     <string name="current">Current</string>
-    <string name="configure_settings">Configure Settings</string>
+    <string name="settings">Settings</string>
     <string name="cropping">Cropping</string>
     <string name="crop_settings">Crop Settings</string>
     <string name="apply">Apply</string>
@@ -63,4 +63,7 @@
     <string name="open_popup_menu">Open popup menu</string>
     <string name="recrop_with_adjusted_settings">Recrop with adjusted Settings</string>
     <string name="recrop">Recrop</string>
+    <string name="sensitivity">Sensitivity</string>
+    <string name="low">Low</string>
+    <string name="high">High</string>
 </resources>
