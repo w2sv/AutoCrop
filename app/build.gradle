@@ -20,7 +20,7 @@ android {
         targetSdk libs.versions.compileSdk.get().toInteger()
 
         versionCode 42
-        versionName '3.2.15'
+        versionName '4.0.0'
 
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
         setProperty('archivesBaseName', versionName)  // Stores built aab's as "{versionName}-{buildFlavor}.apk"
@@ -29,7 +29,7 @@ android {
             cmake {
                 cppFlags "-frtti -fexceptions"
                 abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
-                arguments "-DOpenCV_DIR=" + "/home/w2sv/Dev/Android/Apps/AutoCrop/opencv/native"
+                arguments "-DOpenCV_DIR=${rootProject.projectDir.toString()}/opencv/native"
             }
         }
 
@@ -65,7 +65,7 @@ android {
     externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
-            version "3.24.2"
+//            version "3.24.2"
         }
     }
     compileOptions {

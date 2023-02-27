@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUnsignedTypes::class)
+
 package org.opencv.core
 
 import org.opencv.core.Mat.*
