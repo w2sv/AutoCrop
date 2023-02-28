@@ -13,6 +13,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
@@ -20,14 +22,19 @@ import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.asRectF
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getRectF
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maintainedPercentage
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.CropAdjustmentMode
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.EdgeSelectionState
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
+import com.w2sv.kotlinutils.extensions.getByOrdinal
 import com.w2sv.kotlinutils.extensions.rounded
+import com.w2sv.preferences.EnumOrdinals
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.min
 
@@ -46,7 +53,8 @@ class CropAdjustmentFragment
     @HiltViewModel
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
-        contentResolver: ContentResolver
+        contentResolver: ContentResolver,
+        private val enumOrdinals: EnumOrdinals
     ) : androidx.lifecycle.ViewModel() {
 
         val cropBundle: CropBundle =
@@ -54,7 +62,7 @@ class CropAdjustmentFragment
         val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
 
         /**
-         * Transformed CropAdjustmentView dependencies
+         * CropAdjustmentView dependencies
          */
 
         val edgeCandidatePoints: FloatArray by lazy {
@@ -82,8 +90,15 @@ class CropAdjustmentFragment
          * CropAdjustmentMode
          */
 
-        val modeLive: LiveData<CropAdjustmentMode> by lazy {
-            MutableLiveData(CropAdjustmentMode.Manual)  // TODO
+        val modeLive: MutableStateFlow<CropAdjustmentMode> by lazy {
+            MutableStateFlow(getByOrdinal<CropAdjustmentMode>(enumOrdinals.cropAdjustmentMode))
+                .apply {
+                    viewModelScope.launch {
+                        collect {
+                            enumOrdinals.cropAdjustmentMode = it.ordinal
+                        }
+                    }
+                }
         }
 
         /**
@@ -115,6 +130,10 @@ class CropAdjustmentFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.modeSwitch.isChecked = when (viewModel.modeLive.value) {
+            CropAdjustmentMode.Manual -> false
+            CropAdjustmentMode.EdgeSelection -> true
+        }
         viewModel.setLiveDataObservers()
         binding.setOnClickListeners()
     }
@@ -125,12 +144,21 @@ class CropAdjustmentFragment
             cropEdgesChangedLive.postValue(edges != null && edges != cropBundle.crop.edges)
         }
         cropEdgesChangedLive.observe(viewLifecycleOwner) {
-            binding.resetButton.visibility =
-                if (it && modeLive.value?.equals(CropAdjustmentMode.Manual) == true)
-                    View.VISIBLE
-                else
-                    View.GONE
+            binding.resetButton.isEnabled = it
             binding.applyButton.isEnabled = it
+        }
+        lifecycleScope.launch {
+            modeLive.collect {
+                binding.cropAdjustmentView.setModeConfig(it)
+                binding.modeLabelTv.text = when (it) {
+                    CropAdjustmentMode.EdgeSelection -> "Edge Selection"
+                    CropAdjustmentMode.Manual -> "Manual"
+                }
+                binding.resetButton.visibility = when (it) {
+                    CropAdjustmentMode.EdgeSelection -> View.GONE
+                    CropAdjustmentMode.Manual -> View.VISIBLE
+                }
+            }
         }
     }
 
@@ -161,12 +189,11 @@ class CropAdjustmentFragment
             cropAdjustmentView.reset()
         }
         modeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.modeLive.postValue(
+            viewModel.modeLive.value =
                 if (isChecked)
                     CropAdjustmentMode.EdgeSelection
                 else
                     CropAdjustmentMode.Manual
-            )
         }
 
         cancelButton.setOnClickListener {

@@ -17,8 +17,7 @@ lifecycle = '2.5.1'
 androidutils = 'com.github.w2sv:AndroidUtils:0.0.17-rc1'
 typedpreferences = 'com.github.w2sv:TypedPreferences:1.0.1-rc2'
 permissionhandler = 'com.github.w2sv:PermissionHandler:1.0.0-rc6'
-
-kotlinutils = 'com.github.w2sv:KotlinUtils:0.0.6-rc2'
+kotlinutils = 'com.github.w2sv:KotlinUtils:0.0.6-rc3'
 viewboundcontroller = 'com.github.w2sv:ViewboundController:0.0.7-rc1'
 viewanimations = 'com.github.w2sv:AndroidViewAnimations:3.0.2-rc2'
 onboarder = 'com.github.w2sv:AndroidOnboarder:0.0.2-rc3'
@@ -45,7 +44,6 @@ slimber = 'com.github.PaulWoitaschek:Slimber:2.0.0'
 snacky = 'com.github.matecode:Snacky:1.1.5'
 animatoo = 'com.github.mohammadatif:Animatoo:master'
 lottie = 'com.airbnb.android:lottie:5.2.0'
-#opencv = 'com.quickbirdstudios:opencv:3.4.15'
 
 # unitTest
 junit5 = { module = 'org.junit.jupiter:junit-jupiter', version.ref = 'junit' }

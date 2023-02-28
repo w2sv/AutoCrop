@@ -17,12 +17,12 @@ import android.view.MotionEvent.ACTION_MOVE
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.animateMatrix
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.asMappedFrom
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.contains
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.containsVerticalEdges
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getCopy
@@ -31,9 +31,9 @@ import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maxRectOf
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.minRectOf
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.onHorizontalLine
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.setAsMappedFrom
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.setVerticalEdges
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.AnimatableRectF
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.CropAdjustmentMode
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.DraggingState
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.BOTTOM
@@ -113,38 +113,30 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
     private fun postLayoutInit() {
         imageMatrix = computeImageMatrix()
-        defaultImageMatrix = imageMatrix.getCopy()
-
-        cropRectViewDomain.setAsMappedFrom(viewModel.initialCropRectF, imageMatrix)
-        defaultCropRectViewDomain = cropRectViewDomain.getCopy()
-
-        viewModel.modeLive.observe(findViewTreeLifecycleOwner()!!) {
-            setModeConfig(it)
-        }
-    }
-
-    private fun setModeConfig(mode: CropAdjustmentMode) {
-        modeConfig = when (mode) {
-            CropAdjustmentMode.Manual -> manualModeConfig
-            CropAdjustmentMode.EdgeSelection -> edgeSelectionModeConfig
-        }
-            .apply {
-                setUp()
+            .also {
+                defaultImageMatrix = it.getCopy()
             }
-    }
 
-    fun reset() {
-        modeConfig.reset()
+        cropRectViewDomain.asMappedFrom(viewModel.initialCropRectF, imageMatrix)
+            .also {
+                defaultCropRectViewDomain = it.getCopy()
+            }
     }
 
     private lateinit var modeConfig: ModeConfig
 
-    private val manualModeConfig by lazy {
-        ManualModeConfig()
+    fun setModeConfig(mode: CropAdjustmentMode) {
+        modeConfig = when (mode) {
+            CropAdjustmentMode.Manual -> ManualModeConfig()
+            CropAdjustmentMode.EdgeSelection -> EdgeSelectionModeConfig()
+        }
+        post {
+            modeConfig.setUp()
+        }
     }
 
-    private val edgeSelectionModeConfig by lazy {
-        EdgeSelectionModeConfig()
+    fun reset() {
+        modeConfig.reset()
     }
 
     private fun computeImageMatrix(): Matrix =
@@ -159,7 +151,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             }
 
     private fun resetImageBorderRectViewDomain() {
-        imageBorderRectViewDomain.setAsMappedFrom(viewModel.imageRect, imageMatrix)
+        imageBorderRectViewDomain.asMappedFrom(viewModel.imageRect, imageMatrix)
     }
 
     // ----------------------------------
@@ -219,7 +211,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     private fun getCropRectImageDomain(): RectF =
         RectF()
             .apply {
-                setAsMappedFrom(cropRectViewDomain, imageMatrix.getInverse())
+                asMappedFrom(cropRectViewDomain, imageMatrix.getInverse())
             }
 
     // ----------------------------------
@@ -463,7 +455,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             val minSize = max(
                 RectF()
                     .apply {
-                        setAsMappedFrom(imageMinRectViewDomain, imageMatrix)
+                        asMappedFrom(imageMinRectViewDomain, imageMatrix)
                     }
                     .width(),
                 MIN_RECT_SIZE
@@ -541,41 +533,40 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
     private inner class EdgeSelectionModeConfig : ModeConfig {
 
-        private var isSetUp: Boolean = false
+        private var drawCandidates: Boolean = false
 
         private val xEdgeIndicationTriangles by lazy {
             cropRectViewDomain.right + 12
         }
 
         init {
-            viewModel.setLifeDataObservers(findViewTreeLifecycleOwner()!!)
-        }
-
-        private fun CropAdjustmentFragment.ViewModel.setLifeDataObservers(lifecycleOwner: LifecycleOwner) {
-            edgeCandidatesSelectionState.observe(lifecycleOwner) {
-                when (it) {
-                    is EdgeSelectionState.SelectedBoth -> {
-                        cropRectViewDomain.setVerticalEdges(
-                            edgeCandidateYsViewDomain[it.indexTopEdge],
-                            edgeCandidateYsViewDomain[it.indexBottomEdge]
-                        )
-                        onCropRectChanged()
-                    }
-
-                    else -> viewModel.cropEdgesLive.postValue(null)
-                }
-
-                invalidate()
+            viewModel.edgeCandidatesSelectionState.observe(findViewTreeLifecycleOwner()!!) {
+                onEdgeCandidatesSelectionStateChanged(it)
             }
         }
 
+        private fun onEdgeCandidatesSelectionStateChanged(state: EdgeSelectionState) {
+            when (state) {
+                is EdgeSelectionState.SelectedBoth -> {
+                    cropRectViewDomain.setVerticalEdges(
+                        edgeCandidateYsViewDomain[state.indexTopEdge],
+                        edgeCandidateYsViewDomain[state.indexBottomEdge]
+                    )
+                    onCropRectChanged()
+                }
+
+                else -> viewModel.cropEdgesLive.postValue(null)
+            }
+
+            invalidate()
+        }
+
         override fun setUp() {
-            isSetUp = false
             viewModel.edgeCandidatesSelectionState.postValue(EdgeSelectionState.Unselected)
 
             animateImageTo(defaultImageMatrix) {
                 resetImageBorderRectViewDomain()
-                isSetUp = true
+                drawCandidates = true
                 invalidate()
             }
         }
@@ -611,7 +602,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             }
 
         override fun onDraw(canvas: Canvas) {
-            if (isSetUp) {
+            if (drawCandidates) {
                 canvas.drawEdgeCandidates()
                 canvas.drawEdgeIndicationTriangles()
 

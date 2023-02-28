@@ -22,9 +22,6 @@ class AnimatableRectF(left: Float, top: Float, right: Float, bottom: Float) : Re
 
     constructor() : this(0f, 0f, 0f, 0f)
 
-    fun toRectF(): RectF =
-        this
-
     fun animateTo(target: RectF, duration: Long, onUpdate: () -> Unit) {
         val animateLeft = ObjectAnimator.ofFloat(this, "left", left, target.left)
         val animateRight = ObjectAnimator.ofFloat(this, "right", right, target.right)

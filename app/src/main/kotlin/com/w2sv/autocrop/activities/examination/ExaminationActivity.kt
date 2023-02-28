@@ -20,6 +20,7 @@ import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.io.CropBundleIORunner
 import com.w2sv.cropbundle.io.getDeleteRequestUri
 import com.w2sv.preferences.BooleanPreferences
+import com.w2sv.preferences.EnumOrdinals
 import com.w2sv.preferences.GlobalFlags
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -124,8 +125,11 @@ class ExaminationActivity : AppActivity() {
     @Inject
     lateinit var booleanPreferences: BooleanPreferences
 
+    @Inject
+    lateinit var enumOrdinals: EnumOrdinals
+
     override val lifecycleObservers: List<LifecycleObserver>
-        get() = listOf(globalFlags, booleanPreferences)
+        get() = listOf(globalFlags, booleanPreferences, enumOrdinals)
 
     fun invokeExitFragment() {
         fragmentReplacementTransaction(

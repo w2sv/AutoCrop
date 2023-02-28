@@ -51,12 +51,13 @@ fun RectF.setVerticalEdges(y1: Float, y2: Float) {
 fun RectF.getCopy(): RectF =
     RectF(this)
 
-fun RectF.setAsMappedFrom(src: RectF, mapMatrix: Matrix) {
-    mapMatrix.mapRect(
-        this,
-        src
-    )
-}
+fun RectF.asMappedFrom(src: RectF, mapMatrix: Matrix): RectF =
+    apply {
+        mapMatrix.mapRect(
+            this,
+            src
+        )
+    }
 
 fun CropEdges.asRectF(width: Int): RectF =
     RectF(0F, top.toFloat(), width.toFloat(), bottom.toFloat())
