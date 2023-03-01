@@ -37,8 +37,17 @@ fun RectF.getEdgeTouch(touchEvent: MotionEvent, touchThreshold: Float): Edge? =
         else -> null
     }
 
-fun RectF.contains(event: MotionEvent): Boolean =
-    contains(event.x, event.y)
+fun RectF.containsWOEmptyCheck(event: MotionEvent): Boolean =
+    containsWOEmptyCheck(event.x, event.y)
+
+fun RectF.containsWOEmptyCheck(x: Float, y: Float): Boolean =
+    x >= left && x < right && y >= top && y < bottom;
+
+fun RectF.contains(event: MotionEvent, toleranceMargin: Float): Boolean =
+    contains(event.x, event.y, toleranceMargin)
+
+fun RectF.contains(x: Float, y: Float, toleranceMargin: Float): Boolean =
+    x >= left - toleranceMargin && x < right + toleranceMargin && y >= top - toleranceMargin && y < bottom + toleranceMargin
 
 fun RectF.containsVerticalEdges(y1: Float, y2: Float): Boolean =
     y1 > top && y2 < bottom

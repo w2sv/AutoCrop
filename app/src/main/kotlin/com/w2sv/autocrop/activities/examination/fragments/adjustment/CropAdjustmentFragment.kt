@@ -2,6 +2,7 @@ package com.w2sv.autocrop.activities.examination.fragments.adjustment
 
 import android.content.ContentResolver
 import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.graphics.RectF
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -9,6 +10,7 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.text.color
 import androidx.core.text.italic
+import androidx.core.util.lruCache
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,11 +21,14 @@ import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.asMappedFrom
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.asRectF
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getRectF
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maintainedPercentage
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.CropAdjustmentMode
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.EdgeSelectionState
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Line
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.N_SCREEN_ORIENTATIONS
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.cropbundle.CropBundle
@@ -65,7 +70,7 @@ class CropAdjustmentFragment
          * CropAdjustmentView dependencies
          */
 
-        val edgeCandidatePoints: FloatArray by lazy {
+        private val edgeCandidatePoints: FloatArray by lazy {
             cropBundle.edgeCandidates.map {
                 listOf(
                     0f,
@@ -85,6 +90,22 @@ class CropAdjustmentFragment
         val imageRect: RectF by lazy {
             screenshotBitmap.getRectF()
         }
+
+        val edgeCandidateLinesViewDomainCache = lruCache<Matrix, List<Line>>(
+            N_SCREEN_ORIENTATIONS,
+            create = { matrix ->
+                FloatArray(edgeCandidatePoints.size)
+                    .asMappedFrom(edgeCandidatePoints, matrix)
+                    .toList()
+                    .windowed(4, 4)
+            }
+        )
+
+        val edgeCandidateYsViewDomainCache =
+            lruCache<Matrix, List<Float>>(
+                N_SCREEN_ORIENTATIONS,
+                create = { matrix -> edgeCandidateLinesViewDomainCache.get(matrix).map { it[1] } }
+            )
 
         /**
          * CropAdjustmentMode
@@ -163,15 +184,12 @@ class CropAdjustmentFragment
     }
 
     private fun CropAdjustmentBinding.onCropEdgesChanged(cropEdges: CropEdges?) {
-        val noCropEdgesPlaceholder = "-"
-
         heightTv.text = formattedUnitText(
             "H",
             requireContext().getColor(R.color.highlight),
             cropEdges?.let {
                 min(it.height, viewModel.screenshotBitmap.height)
             }
-                ?: noCropEdgesPlaceholder
         )
         percentageTv.text =
             formattedUnitText(
@@ -180,7 +198,6 @@ class CropAdjustmentFragment
                 cropEdges?.let {
                     (viewModel.screenshotBitmap.maintainedPercentage(it.height.toFloat()) * 100).rounded(1)
                 }
-                    ?: noCropEdgesPlaceholder
             )
     }
 
@@ -216,12 +233,12 @@ class CropAdjustmentFragment
 private fun formattedUnitText(
     label: CharSequence,
     @ColorInt labelColor: Int,
-    value: Any
+    value: Any?
 ): SpannableStringBuilder =
     SpannableStringBuilder()
         .color(labelColor) {
             append(label)
         }
         .italic {
-            append(" $value")
+            append(" ${value ?: "-"}")
         }

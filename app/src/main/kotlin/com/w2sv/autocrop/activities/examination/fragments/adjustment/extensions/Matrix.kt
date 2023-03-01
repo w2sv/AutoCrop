@@ -10,7 +10,7 @@ import com.google.android.material.animation.MatrixEvaluator
 fun animateMatrix(view: View, propertyName: String, src: Matrix, dst: Matrix, duration: Long, onEnd: (() -> Unit)? = null) {
     ObjectAnimator.ofObject(view, propertyName, MatrixEvaluator(), src, dst)
         .apply {
-            interpolator = AccelerateDecelerateInterpolator()
+            this.interpolator = AccelerateDecelerateInterpolator()
             this.duration = duration
             addUpdateListener {
                 view.invalidate()

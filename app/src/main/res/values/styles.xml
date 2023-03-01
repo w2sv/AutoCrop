@@ -1,5 +1,7 @@
 <resources>
 
+    <!-- Splash Theme -->
+
     <style name="Theme.App.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/magenta_saturated</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo_nobackground_splash</item>
@@ -24,10 +26,7 @@
 
     </style>
 
-    <style name="ButtonRowLabel">
-        <item name="android:textSize">@dimen/text_size_medium_small</item>
-        <item name="android:paddingHorizontal">2dp</item>
-    </style>
+    <!--App Title TextView-->
 
     <style name="Shadow">
         <item name="android:shadowColor">@android:color/black</item>
@@ -35,16 +34,6 @@
         <item name="android:shadowDy">5</item>
         <item name="android:shadowRadius">2</item>
     </style>
-
-    <style name="CropAdjustmentButton">
-        <item name="android:layout_width">@dimen/toolbar_button_width</item>
-        <item name="android:layout_height">@dimen/height_button</item>
-        <item name="android:background">@drawable/shape_rounded_rectangle_w_button_background</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <!--    App Title TextView-->
 
     <style name="AutoCropTV" parent="Shadow">
         <item name="android:text">@string/auto_crop</item>
@@ -54,6 +43,21 @@
 
     <style name="AutoCropTVBig" parent="AutoCropTV">
         <item name="android:textSize">52sp</item>
+    </style>
+
+    <!--Misc-->
+
+    <style name="ButtonRowLabel">
+        <item name="android:textSize">@dimen/text_size_medium_small</item>
+        <item name="android:paddingHorizontal">2dp</item>
+    </style>
+
+    <style name="CropAdjustmentButton">
+        <item name="android:layout_width">@dimen/toolbar_button_width</item>
+        <item name="android:layout_height">@dimen/height_button</item>
+        <item name="android:background">@drawable/shape_rounded_rectangle_w_button_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

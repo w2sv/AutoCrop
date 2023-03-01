@@ -24,13 +24,14 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.animateMatrix
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.asMappedFrom
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.contains
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.containsWOEmptyCheck
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.containsVerticalEdges
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getCopy
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getEdgeTouch
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getInverse
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.isOnHorizontalLine
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.maxRectOf
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.minRectOf
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.onHorizontalLine
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.setVerticalEdges
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.AnimatableRectF
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.CropAdjustmentMode
@@ -39,6 +40,7 @@ import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.BOTTOM
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Edge.TOP
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.EdgeSelectionState
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Line
 import com.w2sv.cropbundle.cropping.CropEdges
 import kotlin.math.max
 import kotlin.math.min
@@ -81,6 +83,10 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
     private val imageBorderRectViewDomain = RectF()
 
+    private fun resetImageBorderRectViewDomain() {
+        imageBorderRectViewDomain.asMappedFrom(viewModel.imageRect, imageMatrix)
+    }
+
     private val imageMinRectViewDomain: RectF by lazy {
         val bitmapMinRectSize = max(viewModel.imageRect.width(), viewModel.imageRect.height()) / BITMAP_MAX_SCALE
         RectF(0f, 0f, bitmapMinRectSize, bitmapMinRectSize)
@@ -93,6 +99,11 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         AnimatableRectF()
 
     private lateinit var defaultCropRectViewDomain: RectF
+
+    // ----------------------------------
+    // ModeConfig
+
+    private lateinit var modeConfig: ModeConfig
 
     // ----------------------------------
     // Initialization
@@ -123,7 +134,19 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             }
     }
 
-    private lateinit var modeConfig: ModeConfig
+    private fun computeImageMatrix(): Matrix =
+        Matrix()
+            .apply {
+                val scale = min(viewWidth / viewModel.imageRect.width(), viewHeight / viewModel.imageRect.height())
+                setScale(scale, scale)
+
+                val translateX = (viewWidth - viewModel.imageRect.width() * scale) / 2f + CROP_RECT_MARGIN
+                val translateY = (viewHeight - viewModel.imageRect.height() * scale) / 2f + CROP_RECT_MARGIN
+                postTranslate(translateX, translateY)
+            }
+
+    // ----------------------------------
+    // Interface
 
     fun setModeConfig(mode: CropAdjustmentMode) {
         modeConfig = when (mode) {
@@ -137,21 +160,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
     fun reset() {
         modeConfig.reset()
-    }
-
-    private fun computeImageMatrix(): Matrix =
-        Matrix()
-            .apply {
-                val scale = min(viewWidth / viewModel.imageRect.width(), viewHeight / viewModel.imageRect.height())
-                setScale(scale, scale)
-
-                val translateX = (viewWidth - viewModel.imageRect.width() * scale) / 2f + CROP_RECT_MARGIN
-                val translateY = (viewHeight - viewModel.imageRect.height() * scale) / 2f + CROP_RECT_MARGIN
-                postTranslate(translateX, translateY)
-            }
-
-    private fun resetImageBorderRectViewDomain() {
-        imageBorderRectViewDomain.asMappedFrom(viewModel.imageRect, imageMatrix)
     }
 
     // ----------------------------------
@@ -202,17 +210,21 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
     private fun onCropRectChanged() {
         viewModel.cropEdgesLive.postValue(
-            getCropRectImageDomain().run {
+            resetCropRectImageDomain().run {
                 CropEdges(top.roundToInt(), bottom.roundToInt())
             }
         )
     }
 
-    private fun getCropRectImageDomain(): RectF =
-        RectF()
+    private fun resetCropRectImageDomain(): RectF =
+        cropRectImageDomain
             .apply {
                 asMappedFrom(cropRectViewDomain, imageMatrix.getInverse())
             }
+
+    private val cropRectImageDomain: RectF by lazy {
+        RectF()
+    }
 
     // ----------------------------------
     // ModeConfigs
@@ -297,11 +309,11 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         private var draggingState: DraggingState = DraggingState.Idle
 
         private fun setDraggingState(event: MotionEvent) {
-            val edge = cropRectViewDomain.getEdgeTouch(event, TOUCH_THRESHOLD)
+            val edge = cropRectViewDomain.getEdgeTouch(event, TOUCH_TOLERANCE_MARGIN)
 
             draggingState = when {
                 edge != null -> DraggingState.DraggingEdge(edge)
-                cropRectViewDomain.contains(event) -> DraggingState.DraggingCropRect
+                cropRectViewDomain.containsWOEmptyCheck(event) -> DraggingState.DraggingCropRect
                 else -> DraggingState.Idle
             }
         }
@@ -535,16 +547,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         private var drawCandidates: Boolean = false
 
-        private val xEdgeIndicationTriangles by lazy {
-            cropRectViewDomain.right + 12
-        }
-
-        init {
-            viewModel.edgeCandidatesSelectionState.observe(findViewTreeLifecycleOwner()!!) {
-                onEdgeCandidatesSelectionStateChanged(it)
-            }
-        }
-
         private fun onEdgeCandidatesSelectionStateChanged(state: EdgeSelectionState) {
             when (state) {
                 is EdgeSelectionState.SelectedBoth -> {
@@ -568,34 +570,37 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 resetImageBorderRectViewDomain()
                 drawCandidates = true
                 invalidate()
+
+                viewModel.edgeCandidatesSelectionState.observe(findViewTreeLifecycleOwner()!!) {
+                    onEdgeCandidatesSelectionStateChanged(it)
+                }
             }
         }
 
         override fun onTouchEvent(event: MotionEvent): Boolean =
-            when (event.action == ACTION_DOWN && imageBorderRectViewDomain.contains(event)) {
+            when (event.action == ACTION_DOWN && imageBorderRectViewDomain.contains(event, TOUCH_TOLERANCE_MARGIN)) {
                 true -> {
                     edgeCandidateYsViewDomain.forEachIndexed { selectedEdgeCandidateIndex, y ->
-                        if (event.onHorizontalLine(y, TOUCH_THRESHOLD)) {
-                            with(viewModel.edgeCandidatesSelectionState) {
-                                postValue(
-                                    when (val state = value!!) {
-                                        is EdgeSelectionState.Unselected, is EdgeSelectionState.SelectedBoth ->
-                                            EdgeSelectionState.SelectedFirst(selectedEdgeCandidateIndex)
+                        if (event.isOnHorizontalLine(y, TOUCH_TOLERANCE_MARGIN)) {
+                            viewModel.edgeCandidatesSelectionState.postValue(
+                                when (val state = viewModel.edgeCandidatesSelectionState.value!!) {
+                                    is EdgeSelectionState.Unselected, is EdgeSelectionState.SelectedBoth ->
+                                        EdgeSelectionState.SelectedFirst(selectedEdgeCandidateIndex)
 
-                                        is EdgeSelectionState.SelectedFirst -> {
-                                            if (state.index == selectedEdgeCandidateIndex)
-                                                EdgeSelectionState.Unselected
-                                            else
-                                                listOf(state.index, selectedEdgeCandidateIndex).sorted().run {
-                                                    EdgeSelectionState.SelectedBoth(get(0), get(1))
-                                                }
-                                        }
+                                    is EdgeSelectionState.SelectedFirst -> {
+                                        if (state.index == selectedEdgeCandidateIndex)
+                                            EdgeSelectionState.Unselected
+                                        else
+                                            listOf(state.index, selectedEdgeCandidateIndex).sorted().run {
+                                                EdgeSelectionState.SelectedBoth(get(0), get(1))
+                                            }
                                     }
-                                )
-                            }
+                                }
+                            )
+                            return true
                         }
                     }
-                    true
+                    false
                 }
 
                 false -> false
@@ -613,13 +618,13 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         }
 
         private fun Canvas.drawEdgeCandidates() {
-            edgeCandidatePointsViewDomain.forEachIndexed { index, floats ->
+            edgeCandidateLinesViewDomain.forEachIndexed { i, floats ->
                 drawLine(
                     floats[0],
                     floats[1],
                     floats[2],
                     floats[3],
-                    if (viewModel.edgeCandidatesSelectionState.value!!.indices.contains(index))
+                    if (viewModel.edgeCandidatesSelectionState.value!!.isSelected(i))
                         selectedEdgeCandidatePaint
                     else
                         unselectedEdgeCandidatePaint
@@ -629,37 +634,54 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         private fun Canvas.drawEdgeIndicationTriangles() {
             edgeCandidateYsViewDomain.forEachIndexed { i, y ->
+                val paint = if (viewModel.edgeCandidatesSelectionState.value!!.isSelected(i))
+                    selectedTrianglePaint
+                else
+                    unselectedTrianglePaint
+
                 drawPath(
-                    getTrianglePath(
-                        xEdgeIndicationTriangles,
+                    pathTriangleWTipLeft(
+                        xEdgeIndicationTriangleWTipLeft,
                         y
                     ),
-                    if (viewModel.edgeCandidatesSelectionState.value!!.indices.contains(i))
-                        selectedTrianglePaint
-                    else
-                        unselectedTrianglePaint
+                    paint
+                )
+
+                drawPath(
+                    pathTriangleWTipRight(
+                        xEdgeIndicationTriangleWTipRight,
+                        y
+                    ),
+                    paint
                 )
             }
+        }
+
+        private val xEdgeIndicationTriangleWTipLeft: Float by lazy {
+            cropRectViewDomain.right + HORIZONTAL_OFFSET_EDGE_INDICATION_TRIANGLE
+        }
+        private val xEdgeIndicationTriangleWTipRight: Float by lazy {
+            cropRectViewDomain.left - HORIZONTAL_OFFSET_EDGE_INDICATION_TRIANGLE
         }
 
         private val unselectedTrianglePaint = Paint()
             .apply {
                 style = Paint.Style.FILL
                 isAntiAlias = true
-                color = UNSELECTED_EDGE_CANDIDATE_COLOR
+                color = context.getColor(UNSELECTED_EDGE_CANDIDATE_COLOR)
             }
 
         private val selectedTrianglePaint = Paint()
             .apply {
                 style = Paint.Style.FILL
                 isAntiAlias = true
-                color = SELECTED_EDGE_CANDIDATE_COLOR
+                color = context.getColor(SELECTED_EDGE_CANDIDATE_COLOR)
             }
 
-        private fun getTrianglePath(x: Float, y: Float): Path =
+        private fun pathTriangleWTipLeft(x: Float, y: Float): Path =
             Path()
                 .apply {
-                    moveTo(x, y) // Left
+                    moveTo(x, y) // Tip
                     lineTo(
                         x + EDGE_INDICATION_TRIANGLE_EDGE_LENGTH,
                         y + EDGE_INDICATION_TRIANGLE_EDGE_LENGTH_HALVE
@@ -668,13 +690,29 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                         x + EDGE_INDICATION_TRIANGLE_EDGE_LENGTH,
                         y - EDGE_INDICATION_TRIANGLE_EDGE_LENGTH_HALVE
                     ) // Right top
-                    lineTo(x, y) // Back to left
+                    lineTo(x, y) // Back to tip
+                    close()
+                }
+
+        private fun pathTriangleWTipRight(x: Float, y: Float): Path =
+            Path()
+                .apply {
+                    moveTo(x, y) // Tip
+                    lineTo(
+                        x - EDGE_INDICATION_TRIANGLE_EDGE_LENGTH,
+                        y + EDGE_INDICATION_TRIANGLE_EDGE_LENGTH_HALVE
+                    ) // Left bottom
+                    lineTo(
+                        x - EDGE_INDICATION_TRIANGLE_EDGE_LENGTH,
+                        y - EDGE_INDICATION_TRIANGLE_EDGE_LENGTH_HALVE
+                    ) // Left top
+                    lineTo(x, y) // Back to tip
                     close()
                 }
 
         private val selectedEdgeCandidatePaint = Paint()
             .apply {
-                color = SELECTED_EDGE_CANDIDATE_COLOR
+                color = context.getColor(SELECTED_EDGE_CANDIDATE_COLOR)
                 strokeWidth = 9f
                 style = Paint.Style.STROKE
                 maskFilter = BlurMaskFilter(8f, BlurMaskFilter.Blur.NORMAL)
@@ -682,28 +720,24 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         private val unselectedEdgeCandidatePaint = Paint()
             .apply {
-                color = UNSELECTED_EDGE_CANDIDATE_COLOR
+                color = context.getColor(UNSELECTED_EDGE_CANDIDATE_COLOR)
                 strokeWidth = 5f
                 style = Paint.Style.STROKE
             }
 
-        private val edgeCandidatePointsViewDomain: List<List<Float>> by lazy {
-            FloatArray(viewModel.cropBundle.edgeCandidates.size * COORDINATES_PER_LINE).apply {
-                imageMatrix.mapPoints(this, viewModel.edgeCandidatePoints)
-            }
-                .toList()
-                .windowed(4, 4)
+        private val edgeCandidateLinesViewDomain: List<Line> by lazy {
+            viewModel.edgeCandidateLinesViewDomainCache.get(imageMatrix)
         }
 
         private val edgeCandidateYsViewDomain: List<Float> by lazy {
-            edgeCandidatePointsViewDomain.map { it[1] }
+            viewModel.edgeCandidateYsViewDomainCache.get(imageMatrix)
         }
     }
 
     companion object {
         private const val BITMAP_MAX_SCALE = 15f
 
-        private const val TOUCH_THRESHOLD: Float = 32f
+        private const val TOUCH_TOLERANCE_MARGIN: Float = 32f
 
         private const val CROP_RECT_MARGIN: Float = 32f
 
@@ -713,14 +747,14 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         private const val DELTA_CENTER_HORIZONTAL_EDGE_PROTRUSION: Float = 32f
 
-        private const val UNSELECTED_EDGE_CANDIDATE_COLOR = Color.CYAN
+        private val UNSELECTED_EDGE_CANDIDATE_COLOR = com.w2sv.common.R.color.light_gray
 
-        private const val SELECTED_EDGE_CANDIDATE_COLOR = Color.MAGENTA
+        private val SELECTED_EDGE_CANDIDATE_COLOR = R.color.highlight
 
         private const val EDGE_INDICATION_TRIANGLE_EDGE_LENGTH = 28f
+
+        private const val HORIZONTAL_OFFSET_EDGE_INDICATION_TRIANGLE = 12
 
         private const val EDGE_INDICATION_TRIANGLE_EDGE_LENGTH_HALVE = 14f
     }
 }
-
-private const val COORDINATES_PER_LINE = 4
