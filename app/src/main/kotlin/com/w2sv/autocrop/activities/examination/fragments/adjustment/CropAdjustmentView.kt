@@ -2,9 +2,9 @@ package com.w2sv.autocrop.activities.examination.fragments.adjustment
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.BlurMaskFilter
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.DashPathEffect
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
@@ -24,8 +24,8 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.animateMatrix
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.asMappedFrom
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.contains
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.containsWOEmptyCheck
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.containsVerticalEdges
+import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.containsWOEmptyCheck
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getCopy
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getEdgeTouch
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getInverse
@@ -713,9 +713,8 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         private val selectedEdgeCandidatePaint = Paint()
             .apply {
                 color = context.getColor(SELECTED_EDGE_CANDIDATE_COLOR)
-                strokeWidth = 9f
+                strokeWidth = 5f
                 style = Paint.Style.STROKE
-                maskFilter = BlurMaskFilter(8f, BlurMaskFilter.Blur.NORMAL)
             }
 
         private val unselectedEdgeCandidatePaint = Paint()
@@ -723,6 +722,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 color = context.getColor(UNSELECTED_EDGE_CANDIDATE_COLOR)
                 strokeWidth = 5f
                 style = Paint.Style.STROKE
+                pathEffect = DashPathEffect(floatArrayOf(20f, 10f), 0f)
             }
 
         private val edgeCandidateLinesViewDomain: List<Line> by lazy {
@@ -751,10 +751,10 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         private val SELECTED_EDGE_CANDIDATE_COLOR = R.color.highlight
 
-        private const val EDGE_INDICATION_TRIANGLE_EDGE_LENGTH = 28f
+        private const val EDGE_INDICATION_TRIANGLE_EDGE_LENGTH = 34f
+
+        private const val EDGE_INDICATION_TRIANGLE_EDGE_LENGTH_HALVE = 17f
 
         private const val HORIZONTAL_OFFSET_EDGE_INDICATION_TRIANGLE = 12
-
-        private const val EDGE_INDICATION_TRIANGLE_EDGE_LENGTH_HALVE = 14f
     }
 }
