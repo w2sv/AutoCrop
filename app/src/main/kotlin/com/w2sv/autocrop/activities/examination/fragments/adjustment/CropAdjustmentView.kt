@@ -208,15 +208,15 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     // ----------------------------------
     // Value Exposition
 
-    private fun onCropRectChanged() {
-        viewModel.cropEdgesLive.postValue(
-            resetCropRectImageDomain().run {
+    private fun CropAdjustmentFragment.ViewModel.postCropEdges() {
+        cropEdgesLive.postValue(
+            cropRectImageDomain().run {
                 CropEdges(top.roundToInt(), bottom.roundToInt())
             }
         )
     }
 
-    private fun resetCropRectImageDomain(): RectF =
+    private fun cropRectImageDomain(): RectF =
         cropRectImageDomain
             .apply {
                 asMappedFrom(cropRectViewDomain, imageMatrix.getInverse())
@@ -271,7 +271,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                             }
                             cropRectViewDomain.set(maxRectOf(cropRectViewDomain, maxCropRectViewDomain))
                             cropRectViewDomain.set(minRectOf(cropRectViewDomain, minCropRectViewDomain))
-                            onCropRectChanged()
+                            viewModel.postCropEdges()
                             invalidate()
                         }
 
@@ -332,7 +332,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
                     if (imageBorderRectViewDomain.containsVerticalEdges(y1, y2)) {
                         cropRectViewDomain.setVerticalEdges(y1, y2)
-                        onCropRectChanged()
+                        viewModel.postCropEdges()
                         return true
                     }
                     return false
@@ -554,7 +554,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                         edgeCandidateYsViewDomain[state.indexTopEdge],
                         edgeCandidateYsViewDomain[state.indexBottomEdge]
                     )
-                    onCropRectChanged()
+                    viewModel.postCropEdges()
                 }
 
                 else -> viewModel.cropEdgesLive.postValue(null)
@@ -571,8 +571,11 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 drawCandidates = true
                 invalidate()
 
-                viewModel.edgeCandidatesSelectionState.observe(findViewTreeLifecycleOwner()!!) {
-                    onEdgeCandidatesSelectionStateChanged(it)
+                with(viewModel.edgeCandidatesSelectionState) {
+                    observe(findViewTreeLifecycleOwner()!!) {
+                        onEdgeCandidatesSelectionStateChanged(it)
+                    }
+                    //                    postValue(EdgeSelectionState.Unselected)
                 }
             }
         }
@@ -658,10 +661,10 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         }
 
         private val xEdgeIndicationTriangleWTipLeft: Float by lazy {
-            cropRectViewDomain.right + HORIZONTAL_OFFSET_EDGE_INDICATION_TRIANGLE
+            imageBorderRectViewDomain.right + HORIZONTAL_OFFSET_EDGE_INDICATION_TRIANGLE
         }
         private val xEdgeIndicationTriangleWTipRight: Float by lazy {
-            cropRectViewDomain.left - HORIZONTAL_OFFSET_EDGE_INDICATION_TRIANGLE
+            imageBorderRectViewDomain.left - HORIZONTAL_OFFSET_EDGE_INDICATION_TRIANGLE
         }
 
         private val unselectedTrianglePaint = Paint()
