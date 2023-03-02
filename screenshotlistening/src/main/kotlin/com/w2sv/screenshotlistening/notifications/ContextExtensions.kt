@@ -25,6 +25,6 @@ private fun Context.notificationBuilder(
     title: String?,
 ): NotificationCompat.Builder =
     NotificationCompat.Builder(this, channelId)
-        .setSmallIcon(com.w2sv.common.R.drawable.ic_scissors_24)
+        .setSmallIcon(com.w2sv.common.R.drawable.ic_hearing_24)
         .setContentTitle(title)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)

@@ -220,7 +220,7 @@
                             android:layout_height="@dimen/size_image_button"
                             android:layout_marginHorizontal="@dimen/margin_button_row"
 
-                            android:background="@drawable/ic_image_search_24"
+                            android:background="@drawable/ic_crop_original_24"
                             android:backgroundTint="@color/highlight"
 
                             android:contentDescription="@string/compare_crop_and_original_screenshot" />
@@ -238,7 +238,7 @@
                             android:layout_height="@dimen/size_image_button"
                             android:layout_marginHorizontal="@dimen/margin_button_row"
 
-                            android:background="@drawable/ic_redo_24"
+                            android:background="@drawable/ic_autorenew_24"
                             android:backgroundTint="@color/highlight"
 
                             android:contentDescription="@string/manually_adjust_the_crop" />
@@ -249,7 +249,7 @@
                             android:layout_height="@dimen/size_image_button"
                             android:layout_marginHorizontal="@dimen/margin_button_row"
 
-                            android:background="@drawable/ic_crop_24"
+                            android:background="@drawable/ic_crop_free_24"
                             android:backgroundTint="@color/highlight"
 
                             android:contentDescription="@string/manually_adjust_the_crop" />

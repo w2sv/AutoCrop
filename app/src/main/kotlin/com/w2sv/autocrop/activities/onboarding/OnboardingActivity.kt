@@ -67,7 +67,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                 titleTextRes = R.string.screenshot_listening,
                 descriptionTextRes = R.string.screenshot_listener_description,
                 backgroundColorRes = android.R.color.holo_purple,
-                emblemDrawableRes = R.drawable.ic_hearing_24,
+                emblemDrawableRes = com.w2sv.common.R.drawable.ic_hearing_24,
                 actionLayoutRes = R.layout.action_layout_screenshotlistener_onboardingpage,
                 onViewCreatedListener = { view, activity ->
                     val enableButton = view.findViewById<AppCompatButton>(R.id.enable_button)
@@ -111,7 +111,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
             ),
             OnboardingPage(
                 titleTextRes = R.string.onboarding_page_2_title,
-                emblemDrawableRes = com.w2sv.common.R.drawable.ic_scissors_24,
+                emblemDrawableRes = R.drawable.ic_check_24,
                 descriptionTextRes = R.string.onboarding_page_2_description,
                 backgroundColorRes = com.w2sv.common.R.color.ocean_blue
             )

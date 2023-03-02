@@ -21,7 +21,7 @@ internal class ComparisonInstructionDialog : UncancelableDialogFragment() {
                 setTitle("Comparison Screen")
                 setIcon(
                     context.getColoredDrawable(
-                        R.drawable.ic_image_search_24,
+                        R.drawable.ic_crop_original_24,
                         com.w2sv.common.R.color.magenta_saturated
                     )
                 )

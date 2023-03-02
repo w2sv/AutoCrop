@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="crop_failure_screen_size_error_icon">28dip</dimen>
     <dimen name="crop_failure_screen_horizontal_margin_error_icon">-42dip</dimen>
     <dimen name="crop_failure_screen_vertical_margin_error_icon">-1dip</dimen>
@@ -30,6 +30,8 @@
     <dimen name="onboarding_description_text_size">18sp</dimen>
     <!-- override -->
     <dimen name="onboarding_page_indicator_dot_size">12dp</dimen>
+
+    <dimen name="mtrl_slider_widget_height" tools:ignore="MissingDefaultResource,PrivateResource">20dp</dimen>
 
     <dimen name="toolbar_button_width">70dp</dimen>
     <dimen name="status_bar_height_approximated">32dp</dimen>

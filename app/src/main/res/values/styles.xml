@@ -23,6 +23,8 @@
         <!-- color -->
         <item name="android:windowBackground">@color/neutral_background</item>
         <item name="colorAccent">@color/higher_light</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorPrimary">@color/higher_light</item>
 
     </style>
 
@@ -58,6 +60,16 @@
         <item name="android:background">@drawable/shape_rounded_rectangle_w_button_background</item>
         <item name="android:gravity">center</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Tooltip" parent="Widget.MaterialComponents.Tooltip">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="backgroundTint">@color/higher_light</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:minWidth">28dp</item>
+        <item name="android:minHeight">28dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Tooltip</item>
     </style>
 
 </resources>

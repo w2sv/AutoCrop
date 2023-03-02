@@ -25,7 +25,6 @@ import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.asMappedFrom
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.contains
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.containsVerticalEdges
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.containsWOEmptyCheck
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getCopy
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getEdgeTouch
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.getInverse
@@ -317,7 +316,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
             draggingState = when {
                 edge != null -> DraggingState.DraggingEdge(edge)
-                cropRectViewDomain.containsWOEmptyCheck(event) -> DraggingState.DraggingCropRect
+                cropRectViewDomain.contains(event) -> DraggingState.DraggingCropRect
                 else -> DraggingState.Idle
             }
         }

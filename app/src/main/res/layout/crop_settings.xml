@@ -1,17 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/threshold_tv"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:text="@string/sensitivity"
-        android:textSize="@dimen/text_size_medium" />
+        android:gravity="center_vertical"
+        android:weightSum="1">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"/>
+
+        <ImageView
+            android:layout_width="@dimen/size_image_button"
+            android:layout_height="@dimen/size_image_button"
+            android:background="@drawable/ic_signal_24"
+            android:contentDescription="@string/decorative"
+            android:backgroundTint="@color/low_alpha_gray"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.15"/>
+
+        <TextView
+            android:id="@+id/threshold_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_medium"
+            android:text="@string/sensitivity"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_medium" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +53,35 @@
             android:contentDescription="@string/slider_to_select_the_crop_sensitivity"
             android:stepSize="1.0"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
-            android:valueFrom="0.0" />
+            android:valueFrom="0.0"
+            app:labelStyle="@style/Tooltip"
+            app:thumbColor="@color/higher_light"
+            app:tickColorActive="@color/low_alpha_gray"
+            app:trackColorActive="@color/higher_light" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/low"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_small" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/high"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_small" />
+        </LinearLayout>
 
     </LinearLayout>
 
