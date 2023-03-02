@@ -1,7 +1,6 @@
 <resources>
     <string name="auto_crop">AutoCrop</string>
-    <string name="select_images">SELECT SCREENSHOTS</string>
-    <string name="menu_item_divider_examination">Examination</string>
+    <string name="select_screenshots">SELECT SCREENSHOTS</string>
     <string name="menu_item_divider_saving">Saving</string>
     <string name="menu_item_divider_other">Other</string>
     <string name="menu_item_auto_scroll">AutoScroll on Entry</string>
@@ -13,7 +12,7 @@
     <string name="processing_crops">Processing crops…</string>
     <string name="cropping_failure">No Crop Borders found</string>
     <string name="cancel_autoscroll">Cancel Scroll</string>
-    <string name="discarding_statistics"><![CDATA[Removed <b>%s</b>=<b>%s</b>]]></string>
+    <string name="discarding_statistics"><![CDATA[Removed <b>%1$s</b>=<b>%2$s</b>]]></string>
     <string name="cropping_failure_instruction_text_view">Make sure the selected screenshots comprise sudden color gradient changes across their vertical axis and/or try a different crop sensitivity!</string>
     <string name="version">Version: %1$s</string>
     <string name="copyright">© 2021-%1$d | Janek Zangenberg</string>
@@ -31,7 +30,6 @@
     <string name="screenshot_listener">Screenshot Listener</string>
     <string name="screenshot_listening">Screenshot Listening</string>
     <string name="reset">Reset</string>
-    <string name="go_back_to_crop_pager">Go back to crop pager</string>
     <string name="original">Original</string>
     <string name="cropped">Cropped</string>
     <string name="apply_adjusted_crop_edges">Apply adjusted crop edges</string>

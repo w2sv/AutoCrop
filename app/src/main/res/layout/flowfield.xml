@@ -59,7 +59,7 @@
                     android:background="@drawable/shape_button_screenshotselection"
 
                     android:lineSpacingExtra="10dp"
-                    android:text="@string/select_images"
+                    android:text="@string/select_screenshots"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/image_selection_button" />
 
