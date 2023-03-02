@@ -100,6 +100,10 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
     private lateinit var defaultCropRectViewDomain: RectF
 
+    private fun resetCropRectViewDomain() {
+        cropRectViewDomain.set(defaultCropRectViewDomain)
+    }
+
     // ----------------------------------
     // ModeConfig
 
@@ -235,7 +239,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         override fun setUp() {
             resetImageBorderRectViewDomain()
-            cropRectViewDomain.set(defaultCropRectViewDomain)
+            resetCropRectViewDomain()
             invalidate()
             viewModel.resetCropEdges()
         }
@@ -565,17 +569,15 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         override fun setUp() {
             viewModel.edgeCandidatesSelectionState.postValue(EdgeSelectionState.Unselected)
+            resetCropRectViewDomain()
 
             animateImageTo(defaultImageMatrix) {
                 resetImageBorderRectViewDomain()
                 drawCandidates = true
                 invalidate()
 
-                with(viewModel.edgeCandidatesSelectionState) {
-                    observe(findViewTreeLifecycleOwner()!!) {
-                        onEdgeCandidatesSelectionStateChanged(it)
-                    }
-                    //                    postValue(EdgeSelectionState.Unselected)
+                viewModel.edgeCandidatesSelectionState.observe(findViewTreeLifecycleOwner()!!) {
+                    onEdgeCandidatesSelectionStateChanged(it)
                 }
             }
         }

@@ -41,7 +41,7 @@ fun RectF.containsWOEmptyCheck(event: MotionEvent): Boolean =
     containsWOEmptyCheck(event.x, event.y)
 
 fun RectF.containsWOEmptyCheck(x: Float, y: Float): Boolean =
-    x >= left && x < right && y >= top && y < bottom;
+    x >= left && x < right && y >= top && y < bottom
 
 fun RectF.contains(event: MotionEvent, toleranceMargin: Float): Boolean =
     contains(event.x, event.y, toleranceMargin)
