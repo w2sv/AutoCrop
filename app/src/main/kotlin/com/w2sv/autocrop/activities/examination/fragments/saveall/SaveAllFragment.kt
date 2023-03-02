@@ -3,7 +3,6 @@ package com.w2sv.autocrop.activities.examination.fragments.saveall
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
@@ -13,7 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import com.w2sv.androidutils.extensions.increment
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
-import com.w2sv.autocrop.databinding.SaveallBinding
+import com.w2sv.autocrop.databinding.SaveAllBinding
+import com.w2sv.autocrop.utils.getFragment
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,18 +24,13 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SaveAllFragment :
-    AppFragment<SaveallBinding>(SaveallBinding::class.java) {
+    AppFragment<SaveAllBinding>(SaveAllBinding::class.java) {
 
     companion object {
         private const val EXTRA_CROP_BUNDLE_INDICES = "com.w2sv.autocrop.extra.CROP_BUNDLE_INDICES"
 
         fun getInstance(cropBundleIndices: ArrayList<Int>): SaveAllFragment =
-            SaveAllFragment()
-                .apply {
-                    arguments = bundleOf(
-                        EXTRA_CROP_BUNDLE_INDICES to cropBundleIndices
-                    )
-                }
+            getFragment(SaveAllFragment::class.java, EXTRA_CROP_BUNDLE_INDICES to cropBundleIndices)
     }
 
     @HiltViewModel

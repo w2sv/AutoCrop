@@ -11,10 +11,10 @@
     <string name="cropping_dot_dot_dot">Cropping…</string>
     <string name="fraction">%1$d/%2$d</string>
     <string name="processing_crops">Processing crops…</string>
-    <string name="cropping_failure">No cropping borders found</string>
+    <string name="cropping_failure">No Crop Borders found</string>
     <string name="cancel_autoscroll">Cancel Scroll</string>
     <string name="discarding_statistics"><![CDATA[Removed <b>%s</b>=<b>%s</b>]]></string>
-    <string name="cropping_failure_instruction_text_view">Make sure the selected screenshots comprise a continuous monochromatic border both above and below the core image area</string>
+    <string name="cropping_failure_instruction_text_view">Make sure the selected screenshots comprise sudden color gradient changes across their vertical axis and/or try a different crop sensitivity!</string>
     <string name="version">Version: %1$s</string>
     <string name="copyright">© 2021-%1$d | Janek Zangenberg</string>
     <string name="got_it">Got it!</string>
@@ -67,5 +67,4 @@
     <string name="low">Low</string>
     <string name="high">High</string>
     <string name="slider_to_select_the_crop_sensitivity">Slider to select the crop sensitivity</string>
-    <string name="decorative">decorative</string>
 </resources>

@@ -104,7 +104,7 @@
 
             app:headerLayout="@layout/navigation_view_header"
             app:itemIconTint="@color/highlight"
-            app:menu="@menu/navigation_view" />
+            app:menu="@menu/flowfield" />
 
     </com.w2sv.autocrop.activities.main.fragments.flowfield.views.FlowFieldDrawerLayout>
 

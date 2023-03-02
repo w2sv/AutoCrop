@@ -1,5 +1,3 @@
-@file:SuppressLint("NewApi")
-
 package com.w2sv.autocrop.activities.examination.fragments.exit
 
 import android.annotation.SuppressLint
@@ -22,12 +20,13 @@ import com.w2sv.androidutils.extensions.invokeOnCompletion
 import com.w2sv.androidutils.ui.SimpleAnimationListener
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
-import com.w2sv.autocrop.databinding.ExitBinding
+import com.w2sv.autocrop.databinding.CropPagerExitBinding
 import com.w2sv.autocrop.ui.views.animationComposer
 import kotlinx.coroutines.launch
 
+@SuppressLint("NewApi")
 class ExitFragment :
-    AppFragment<ExitBinding>(ExitBinding::class.java) {
+    AppFragment<CropPagerExitBinding>(CropPagerExitBinding::class.java) {
 
     private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
 
@@ -98,6 +97,7 @@ class ExitFragment :
     }
 }
 
+@SuppressLint("NewApi")
 private class DeleteRequestIntentContractAdministrator(
     activity: ComponentActivity,
     override val resultCallback: (ActivityResult) -> Unit

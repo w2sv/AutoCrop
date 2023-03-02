@@ -21,7 +21,7 @@
             android:layout_width="@dimen/size_image_button"
             android:layout_height="@dimen/size_image_button"
             android:background="@drawable/ic_signal_24"
-            android:contentDescription="@string/decorative"
+            android:contentDescription="@null"
             android:backgroundTint="@color/low_alpha_gray"/>
 
         <Space

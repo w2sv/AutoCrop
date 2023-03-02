@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.viewpager2.widget.ViewPager2
-import com.w2sv.autocrop.databinding.ImageviewCropBinding
+import com.w2sv.autocrop.databinding.CropImageViewBinding
 import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
 import com.w2sv.bidirectionalviewpager.ViewRemovableBidirectionalViewPager2
 import com.w2sv.bidirectionalviewpager.livedata.UpdateBlockableLiveData
@@ -43,7 +43,7 @@ class CropPager(
         ) {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder =
                 ImageViewHolder(
-                    ImageviewCropBinding.inflate(
+                    CropImageViewBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
