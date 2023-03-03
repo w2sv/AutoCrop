@@ -19,8 +19,8 @@ android {
         minSdk libs.versions.minSdk.get().toInteger()
         targetSdk libs.versions.compileSdk.get().toInteger()
 
-        versionCode 43
-        versionName '4.0.0'
+        versionCode 44
+        versionName '4.0.1'
 
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
         setProperty('archivesBaseName', versionName)  // Stores built aab's as "{versionName}-{buildFlavor}.apk"
