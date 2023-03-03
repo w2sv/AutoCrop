@@ -9,10 +9,8 @@ import javax.inject.Singleton
 class GlobalFlags @Inject constructor(appPreferences: SharedPreferences) : BooleanPreferences(
     "onboardingDone" to false,
     "comparisonInstructionsShown" to false,
-    "aboutFragmentInstructionsShown" to false,
     sharedPreferences = appPreferences
 ) {
     var onboardingDone by this
     var comparisonInstructionsShown by this
-    var aboutFragmentInstructionsShown by this
 }

@@ -19,7 +19,7 @@ abstract class AppActivity : ViewBoundFragmentActivity() {
             launchRootFragment()
     }
 
-    protected open val lifecycleObservers: List<LifecycleObserver>?
+    protected open val lifecycleObservers: Iterable<LifecycleObserver>?
         get() = null
 
     protected abstract fun handleOnBackPressed()

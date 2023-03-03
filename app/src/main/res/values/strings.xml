@@ -55,7 +55,7 @@
     <string name="crop_settings">Crop Settings</string>
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
-    <string name="comparison_instruction">Tap on the screen and hold to view the original screenshot 👇⏳</string>
+    <string name="comparison_instruction">Tap &amp; hold to view the original screenshot, release to view the cropped image</string>
     <string name="tap_again_to_cancel">Tap again to cancel</string>
     <string name="toggle_foreground_elements">Toggle foreground elements</string>
     <string name="open_popup_menu">Open popup menu</string>

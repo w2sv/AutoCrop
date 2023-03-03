@@ -30,7 +30,7 @@ import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
-import com.w2sv.autocrop.activities.crop.CropResults
+import com.w2sv.autocrop.activities.crop.domain.CropResults
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
@@ -38,6 +38,7 @@ import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.CropSavi
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.RecropDialog
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveAllCropsDialog
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveCropDialog
+import com.w2sv.autocrop.activities.examination.fragments.pager.model.CropProcedure
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.databinding.CropPagerBinding
 import com.w2sv.autocrop.ui.model.Click
@@ -70,12 +71,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import slimber.log.i
 import javax.inject.Inject
-
-
-private enum class CropProcedure {
-    Discard,
-    Save
-}
 
 @AndroidEntryPoint
 class CropPagerFragment :
@@ -266,7 +261,7 @@ class CropPagerFragment :
         }
 
         viewModel.dataSet.pageIndex(position).let { pageIndex ->
-            pageIndicationTv.update(pageIndex + 1, viewModel.dataSet.size)
+            pageIndicationTv.updateText(pageIndex + 1, viewModel.dataSet.size)
         }
     }
 
@@ -289,7 +284,7 @@ class CropPagerFragment :
             }
                 ?: false
 
-            buildList<View> {
+            buildList {
                 add(snackbarRepelledLayout)
                 add(popupMenuButton)
                 if (!viewModel.dataSet.holdingSingularElement)

@@ -19,7 +19,7 @@ import com.w2sv.androidutils.extensions.increment
 import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
-import com.w2sv.autocrop.activities.crop.CropResults
+import com.w2sv.autocrop.activities.crop.domain.CropResults
 import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailedFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.main.MainActivity
@@ -127,12 +127,11 @@ class CropFragment
 
     private fun CropBinding.populate() {
         croppingProgressBar.max = viewModel.nScreenshots
-        progressTv.max = viewModel.nScreenshots
     }
 
     private fun ViewModel.setObservers() {
         liveProgress.observe(viewLifecycleOwner) {
-            binding.progressTv.update(it)
+            binding.progressTv.updateText(it, nScreenshots)
             binding.croppingProgressBar.progress = it
         }
     }

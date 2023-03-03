@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.examination
+package com.w2sv.autocrop.domain
 
 import android.net.Uri
 import android.os.Parcelable

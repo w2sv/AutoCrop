@@ -8,13 +8,14 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.autocrop.activities.AppActivity
-import com.w2sv.autocrop.activities.crop.CropResults
+import com.w2sv.autocrop.activities.crop.domain.CropResults
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.examination.fragments.exit.ExitFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.CropPagerFragment
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
+import com.w2sv.autocrop.domain.AccumulatedIOResults
 import com.w2sv.common.extensions.getParcelableExtraCompat
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.io.CropBundleIORunner
@@ -34,7 +35,9 @@ class ExaminationActivity : AppActivity() {
 
     @HiltViewModel
     class ViewModel @Inject constructor(
-        private val booleanPreferences: BooleanPreferences
+        private val booleanPreferences: BooleanPreferences,
+        globalFlags: GlobalFlags,
+        enumOrdinals: EnumOrdinals
     ) : androidx.lifecycle.ViewModel() {
 
         companion object {
@@ -49,6 +52,8 @@ class ExaminationActivity : AppActivity() {
 
             cropBundles.clear()
         }
+
+        val lifecycleObservers: List<LifecycleObserver> = listOf(booleanPreferences, globalFlags, enumOrdinals)
 
         val accumulatedIoResults = AccumulatedIOResults()
         val deleteRequestUris = arrayListOf<Uri>()
@@ -119,17 +124,7 @@ class ExaminationActivity : AppActivity() {
 
     private val viewModel: ViewModel by viewModels()
 
-    @Inject
-    lateinit var globalFlags: GlobalFlags
-
-    @Inject
-    lateinit var booleanPreferences: BooleanPreferences
-
-    @Inject
-    lateinit var enumOrdinals: EnumOrdinals
-
-    override val lifecycleObservers: List<LifecycleObserver>
-        get() = listOf(globalFlags, booleanPreferences, enumOrdinals)
+    override val lifecycleObservers: List<LifecycleObserver> by viewModel::lifecycleObservers
 
     fun invokeExitFragment() {
         fragmentReplacementTransaction(

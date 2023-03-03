@@ -24,21 +24,19 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
 
-    @Inject
-    lateinit var globalFlags: GlobalFlags
-
     @HiltViewModel
-    class ViewModel @Inject constructor() : androidx.lifecycle.ViewModel() {
-
+    class ViewModel @Inject constructor(val globalFlags: GlobalFlags) : androidx.lifecycle.ViewModel() {
         var enabledScreenshotListening: Boolean = false
     }
+
+    val viewModel by viewModels<ViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         buildList {
             addAll(screenshotListeningPermissionHandlers)
-            add(globalFlags)
+            add(viewModel.globalFlags)
         }
             .forEach {
                 lifecycle.addObserver(it)
@@ -70,20 +68,19 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                 emblemDrawableRes = com.w2sv.common.R.drawable.ic_hearing_24,
                 actionLayoutRes = R.layout.action_layout_screenshotlistener_onboardingpage,
                 onViewCreatedListener = { view, activity ->
+                    activity as OnboardingActivity
                     val enableButton = view.findViewById<AppCompatButton>(R.id.enable_button)
                     val doneAnimation = view.findViewById<LottieAnimationView>(R.id.done_animation)
 
-                    val viewModel by activity.viewModels<ViewModel>()
-
-                    if (viewModel.enabledScreenshotListening)
+                    if (activity.viewModel.enabledScreenshotListening)
                         crossVisualize(enableButton, doneAnimation)
                     else
                         enableButton.setOnClickListener {
-                            (activity as OnboardingActivity).screenshotListeningPermissionHandlers
+                            activity.screenshotListeningPermissionHandlers
                                 .requestPermissions(
                                     onGranted = {
                                         ScreenshotListener.startService(activity)
-                                        viewModel.enabledScreenshotListening = true
+                                        activity.viewModel.enabledScreenshotListening = true
                                     },
                                     onRequestDismissed = {
                                         it
@@ -118,7 +115,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
         )
 
     override fun onOnboardingFinished() {
-        globalFlags.onboardingDone = true
+        viewModel.globalFlags.onboardingDone = true
         MainActivity.start(this, true, Animatoo::animateSwipeLeft)
     }
 }

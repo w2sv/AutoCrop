@@ -29,7 +29,7 @@
         <!-- Activities -->
 
         <activity
-            android:name="com.w2sv.autocrop.activities.launch.LauncherActivity"
+            android:name="com.w2sv.autocrop.activities.launch.LaunchActivity"
             android:exported="true"
             android:noHistory="true"
             android:theme="@style/Theme.App.Splash">

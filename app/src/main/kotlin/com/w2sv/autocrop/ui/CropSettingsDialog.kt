@@ -45,6 +45,7 @@ abstract class CropSettingsDialog(
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(requireContext())
+            .setIcon(R.drawable.ic_settings_24)
             .setTitle(resources.getString(title))
             .setView(R.layout.crop_settings)
             .setPositiveButton(positiveButtonText) { _, _ ->

@@ -75,7 +75,7 @@ class SaveAllFragment :
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.progressLive.observe(viewLifecycleOwner) {
-            binding.progressTv.update(
+            binding.progressTv.updateText(
                 minOf(it + 1, viewModel.nUnprocessedCrops),
                 viewModel.nUnprocessedCrops
             )

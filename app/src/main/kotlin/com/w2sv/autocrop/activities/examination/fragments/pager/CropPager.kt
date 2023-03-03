@@ -14,7 +14,7 @@ import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.cropbundle.CropBundle
 
 /**
- * Proxy for non extendable [pager]
+ * Proxy for non extendable [ViewPager2]
  */
 class CropPager(
     val pager: ViewPager2,
@@ -24,12 +24,8 @@ class CropPager(
 ) : ViewRemovableBidirectionalViewPager2<CropBundle>(pager, dataSet) {
 
     class DataSet(dataSet: MutableList<CropBundle>) : BidirectionalViewPagerDataSet<CropBundle>(dataSet) {
-
         val livePosition: UpdateBlockableLiveData<Int> = UpdateBlockableLiveData(0, ::getCorrespondingPosition)
         val liveElement get() = get(livePosition.value!!)
-
-        fun initialViewPosition(): Int =
-            initialViewPosition(livePosition.value!!)
     }
 
     init {
@@ -72,7 +68,7 @@ class CropPager(
             }
         })
         setCurrentItem(
-            dataSet.initialViewPosition(),
+            dataSet.livePosition.value!!,
             false
         )
     }

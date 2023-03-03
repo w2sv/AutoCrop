@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.crop
+package com.w2sv.autocrop.activities.crop.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

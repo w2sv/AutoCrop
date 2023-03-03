@@ -2,18 +2,20 @@ package com.w2sv.autocrop.activities.examination.fragments.comparison
 
 import android.app.Dialog
 import android.os.Bundle
+import androidx.fragment.app.viewModels
 import com.w2sv.androidutils.extensions.getColoredDrawable
 import com.w2sv.androidutils.ui.UncancelableDialogFragment
 import com.w2sv.autocrop.R
 import com.w2sv.preferences.GlobalFlags
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
 internal class ComparisonInstructionDialog : UncancelableDialogFragment() {
 
-    @Inject
-    lateinit var globalFlags: GlobalFlags
+    @HiltViewModel
+    class ViewModel @Inject constructor(val globalFlags: GlobalFlags) : androidx.lifecycle.ViewModel()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         builder()
@@ -27,7 +29,7 @@ internal class ComparisonInstructionDialog : UncancelableDialogFragment() {
                 )
                 setMessage(getString(R.string.comparison_instruction))
                 setPositiveButton(resources.getString(R.string.got_it)) { _, _ ->
-                    globalFlags.comparisonInstructionsShown = true
+                    viewModels<ViewModel>().value.globalFlags.comparisonInstructionsShown = true
                 }
             }
             .create()
