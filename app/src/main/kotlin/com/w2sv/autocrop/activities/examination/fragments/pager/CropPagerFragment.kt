@@ -35,9 +35,9 @@ import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.AbstractCropSavingDialogFragment
+import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.CropSavingDialogFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.RecropDialogFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveAllCropsDialogFragment
-import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.CropSavingDialogFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.model.CropProcedure
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.databinding.CropPagerBinding
@@ -63,13 +63,11 @@ import com.w2sv.preferences.IntPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import de.mateware.snacky.Snacky
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import slimber.log.i
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -139,16 +137,13 @@ class CropPagerFragment :
             dataSet.size - dataSet.livePosition.value!!
 
         /**
-         * Crop Results Snackbar
+         * Crop Results Notification
          */
 
-        fun showCropResultsSnackbarIfApplicable(getSnackyBuilder: (CharSequence) -> Snacky.Builder) {
-            if (uncroppedScreenshotsSnackbarText != null && !showedCropResultsSnackbar) {
-                getSnackyBuilder(uncroppedScreenshotsSnackbarText)
-                    .setIcon(com.w2sv.common.R.drawable.ic_error_24)
-                    .build()
-                    .show()
-                showedCropResultsSnackbar = true
+        fun showCropResultsToastIfApplicable(context: Context) {
+            if (uncroppedScreenshotsSnackbarText != null && !showedCropResultsNotification) {
+                context.showToast(uncroppedScreenshotsSnackbarText, duration = Toast.LENGTH_LONG)
+                showedCropResultsNotification = true
             }
         }
 
@@ -156,7 +151,6 @@ class CropPagerFragment :
             SpannableStringBuilder()
                 .run {
                     val cropResults = savedStateHandle.get<CropResults>(CropResults.EXTRA)!!
-                    i { "$cropResults" }
 
                     if (cropResults.nNotCroppableImages != 0) {
                         append("Couldn't find crop bounds for")
@@ -167,26 +161,10 @@ class CropPagerFragment :
                         }
                         append(" ${"screenshot".numericallyInflected(cropResults.nNotCroppableImages)}")
                     }
-
-                    if (cropResults.nNotOpenableImages != 0) {
-                        append(
-                            if (isEmpty())
-                                "Couldn't"
-                            else
-                                " & couldn't"
-                        )
-                        append(" open")
-                        bold {
-                            color(context.getColor(R.color.highlight)) {
-                                append(" ${cropResults.nNotOpenableImages}")
-                            }
-                        }
-                        append(" ${"image".numericallyInflected(cropResults.nNotOpenableImages)}")
-                    }
                     ifEmpty { null }
                 }
 
-        private var showedCropResultsSnackbar: Boolean = false
+        private var showedCropResultsNotification: Boolean = false
 
         /**
          * Other
@@ -285,7 +263,7 @@ class CropPagerFragment :
                 ?: false
 
             buildList {
-                add(snackbarRepelledLayout)
+                add(currentCropLayout)
                 add(popupMenuButton)
                 if (!viewModel.dataSet.holdingSingularElement)
                     add(allCropsButtonsWLabel)
@@ -295,7 +273,7 @@ class CropPagerFragment :
                 )
 
             launchAfterShortDelay {
-                viewModel.showCropResultsSnackbarIfApplicable(::getSnackyBuilder)
+                viewModel.showCropResultsToastIfApplicable(requireContext())
             }
 
             viewPager.setPageTransformer(CubeOutPageTransformer())
@@ -490,9 +468,6 @@ class CropPagerFragment :
         }
             ?: false
     }
-
-    override val snackbarAnchorView: View
-        get() = binding.snackbarRepelledLayout.parent as View
 
     fun onBackPress() {
         viewModel.backPressHandler(

@@ -121,7 +121,6 @@ dependencies {
 
     // other
     implementation libs.slimber
-    implementation libs.snacky
     implementation libs.animatoo
     implementation libs.lottie
 

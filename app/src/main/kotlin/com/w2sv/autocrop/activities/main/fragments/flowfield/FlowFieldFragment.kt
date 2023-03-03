@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.Toast
-import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.viewModels
@@ -25,7 +24,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.SelfManagingLocalBroadcastReceiver
-import com.w2sv.androidutils.extensions.getColoredDrawable
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.hide
 import com.w2sv.androidutils.extensions.postValue
@@ -35,12 +33,11 @@ import com.w2sv.androidutils.extensions.uris
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
-import com.w2sv.autocrop.domain.AccumulatedIOResults
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.OpenDocumentTreeContractHandler
 import com.w2sv.autocrop.activities.main.fragments.flowfield.contracthandlers.SelectImagesContractHandlerCompat
 import com.w2sv.autocrop.databinding.FlowfieldBinding
-import com.w2sv.autocrop.ui.model.SnackbarData
+import com.w2sv.autocrop.domain.AccumulatedIOResults
 import com.w2sv.autocrop.ui.views.animate
 import com.w2sv.autocrop.ui.views.fadeIn
 import com.w2sv.autocrop.ui.views.fadeInAnimationComposer
@@ -51,13 +48,11 @@ import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.autocrop.utils.pathIdentifier
 import com.w2sv.common.PermissionHandler
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
-import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.preferences.CropSaveDirPreferences
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import de.mateware.snacky.Snacky
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -81,44 +76,15 @@ class FlowFieldFragment :
         var fadedInForegroundOnEntry = false
 
         /**
-         * IO Results Snackbar
+         * IO Results Notification
          */
 
-        fun showIOResultsSnackbarIfApplicable(
-            getSnackyBuilder: (CharSequence) -> Snacky.Builder
+        fun showIOResultsNotificationIfApplicable(
+            context: Context
         ) {
-            ioResultsSnackbarData?.let {
-                getSnackyBuilder(it.text)
-                    .setIcon(it.icon)
-                    .build()
-                    .show()
+            accumulatedIoResults?.let {
+                context.showToast(it.getNotificationText())
             }
-        }
-
-        private val ioResultsSnackbarData: SnackbarData? = accumulatedIoResults?.let {
-            if (it.nSavedCrops == 0)
-                SnackbarData("Discarded all crops")
-            else
-                SnackbarData(
-                    buildSpannedString {
-                        append(
-                            "Saved ${it.nSavedCrops} ${"crop".numericallyInflected(it.nSavedCrops)} to "
-                        )
-                        color(context.getColor(R.color.success)) {
-                            append(cropSaveDirPreferences.pathIdentifier)
-                        }
-                        if (it.nDeletedScreenshots != 0)
-                            append(
-                                " and deleted ${
-                                    if (it.nDeletedScreenshots == it.nSavedCrops)
-                                        "corresponding"
-                                    else
-                                        it.nDeletedScreenshots
-                                } ${"screenshot".numericallyInflected(it.nDeletedScreenshots)}"
-                            )
-                    },
-                    context.getColoredDrawable(R.drawable.ic_check_24, R.color.success)
-                )
         }
 
         /**
@@ -202,7 +168,7 @@ class FlowFieldFragment :
                     .fadeInAnimationComposer(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
                     .onHalfwayFinished(lifecycleScope) {
                         viewModel.fadedInForegroundOnEntry = true
-                        viewModel.showIOResultsSnackbarIfApplicable(::getSnackyBuilder)
+                        viewModel.showIOResultsNotificationIfApplicable(requireContext())
 
                         if (anyCropsSaved) {
                             with(shareCropsButton) {
@@ -339,9 +305,6 @@ class FlowFieldFragment :
             }
         }
     }
-
-    override val snackbarAnchorView: View
-        get() = binding.snackbarRepelledLayout.parent as View
 
     fun onBackPress() {
         binding.drawerLayout.run {

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="@dimen/status_bar_height_approximated"
+    android:paddingBottom="?attr/actionBarSize"
     android:weightSum="1">
 
     <LinearLayout
@@ -88,7 +88,7 @@
             android:background="@drawable/ic_dot_menu_24"
             android:backgroundTint="@color/crop_pager_text"
             android:contentDescription="@string/open_popup_menu"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
     </LinearLayout>
 
@@ -121,9 +121,10 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/margin_medium" />
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_small">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/cancel_auto_scroll_button"
@@ -139,127 +140,122 @@
             android:textSize="@dimen/text_size_medium"
             android:visibility="invisible" />
 
-        <com.w2sv.autocrop.ui.views.SnackbarRepelledLayout
-            android:id="@+id/snackbar_repelled_layout"
+        <LinearLayout
+            android:id="@+id/current_crop_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="?attr/actionBarSize"
+            android:gravity="center_vertical"
             android:visibility="invisible">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_small">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/discarding_statistics_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/discarding_statistics_tv"
+                android:text="@string/discarding_statistics"
+                android:textColor="@color/crop_pager_text"
+                android:textSize="@dimen/text_size_small" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!--Current Crop Button Row w Label-->
+
+            <LinearLayout
+                android:id="@+id/current_crop_buttons_w_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_rounded_rectangle_w_button_background"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/margin_small">
+
+                <TextView
+                    style="@style/ButtonRowLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/current"
+                    android:textColor="@color/highlight" />
 
-                    android:text="@string/discarding_statistics"
-                    android:textColor="@color/crop_pager_text"
-                    android:textSize="@dimen/text_size_small" />
-
-                <!--Current Crop Button Row w Label-->
+                <!--Button Row-->
 
                 <LinearLayout
-                    android:id="@+id/current_crop_buttons_w_label"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|center_vertical"
-                    android:background="@drawable/shape_rounded_rectangle_w_button_background"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/margin_small">
+                    android:layout_height="wrap_content">
 
-                    <TextView
-                        style="@style/ButtonRowLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/current"
-                        android:textColor="@color/highlight" />
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/discard_crop_button"
+                        android:layout_width="@dimen/size_image_button"
+                        android:layout_height="@dimen/size_image_button"
+                        android:layout_marginHorizontal="@dimen/margin_button_row"
 
-                    <!--Button Row-->
+                        android:background="@drawable/ic_cancel_24"
+                        android:backgroundTint="@color/highlight"
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:contentDescription="@string/discard_crop" />
 
-                        <androidx.appcompat.widget.AppCompatImageButton
-                            android:id="@+id/discard_crop_button"
-                            android:layout_width="@dimen/size_image_button"
-                            android:layout_height="@dimen/size_image_button"
-                            android:layout_marginHorizontal="@dimen/margin_button_row"
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/save_crop_button"
+                        android:layout_width="@dimen/size_image_button"
+                        android:layout_height="@dimen/size_image_button"
+                        android:layout_marginHorizontal="@dimen/margin_button_row"
 
-                            android:background="@drawable/ic_cancel_24"
-                            android:backgroundTint="@color/highlight"
+                        android:background="@drawable/ic_save_24"
+                        android:backgroundTint="@color/highlight"
 
-                            android:contentDescription="@string/discard_crop" />
+                        android:contentDescription="@string/save_crop" />
 
-                        <androidx.appcompat.widget.AppCompatImageButton
-                            android:id="@+id/save_crop_button"
-                            android:layout_width="@dimen/size_image_button"
-                            android:layout_height="@dimen/size_image_button"
-                            android:layout_marginHorizontal="@dimen/margin_button_row"
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="2dp"
+                        android:layout_marginVertical="2dp"
+                        app:dividerColor="@color/low_alpha_gray" />
 
-                            android:background="@drawable/ic_save_24"
-                            android:backgroundTint="@color/highlight"
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/comparison_button"
+                        android:layout_width="@dimen/size_image_button"
+                        android:layout_height="@dimen/size_image_button"
+                        android:layout_marginHorizontal="@dimen/margin_button_row"
 
-                            android:contentDescription="@string/save_crop" />
+                        android:background="@drawable/ic_crop_original_24"
+                        android:backgroundTint="@color/highlight"
 
-                        <com.google.android.material.divider.MaterialDivider
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginHorizontal="2dp"
-                            android:layout_marginVertical="2dp"
-                            app:dividerColor="@color/low_alpha_gray" />
+                        android:contentDescription="@string/compare_crop_and_original_screenshot" />
 
-                        <androidx.appcompat.widget.AppCompatImageButton
-                            android:id="@+id/comparison_button"
-                            android:layout_width="@dimen/size_image_button"
-                            android:layout_height="@dimen/size_image_button"
-                            android:layout_marginHorizontal="@dimen/margin_button_row"
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="2dp"
+                        android:layout_marginVertical="2dp"
+                        app:dividerColor="@color/low_alpha_gray" />
 
-                            android:background="@drawable/ic_crop_original_24"
-                            android:backgroundTint="@color/highlight"
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/recrop_button"
+                        android:layout_width="@dimen/size_image_button"
+                        android:layout_height="@dimen/size_image_button"
+                        android:layout_marginHorizontal="@dimen/margin_button_row"
 
-                            android:contentDescription="@string/compare_crop_and_original_screenshot" />
+                        android:background="@drawable/ic_autorenew_24"
+                        android:backgroundTint="@color/highlight"
 
-                        <com.google.android.material.divider.MaterialDivider
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginHorizontal="2dp"
-                            android:layout_marginVertical="2dp"
-                            app:dividerColor="@color/low_alpha_gray" />
+                        android:contentDescription="@string/manually_adjust_the_crop" />
 
-                        <androidx.appcompat.widget.AppCompatImageButton
-                            android:id="@+id/recrop_button"
-                            android:layout_width="@dimen/size_image_button"
-                            android:layout_height="@dimen/size_image_button"
-                            android:layout_marginHorizontal="@dimen/margin_button_row"
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/manual_crop_button"
+                        android:layout_width="@dimen/size_image_button"
+                        android:layout_height="@dimen/size_image_button"
+                        android:layout_marginHorizontal="@dimen/margin_button_row"
 
-                            android:background="@drawable/ic_autorenew_24"
-                            android:backgroundTint="@color/highlight"
+                        android:background="@drawable/ic_crop_free_24"
+                        android:backgroundTint="@color/highlight"
 
-                            android:contentDescription="@string/manually_adjust_the_crop" />
+                        android:contentDescription="@string/manually_adjust_the_crop" />
 
-                        <androidx.appcompat.widget.AppCompatImageButton
-                            android:id="@+id/manual_crop_button"
-                            android:layout_width="@dimen/size_image_button"
-                            android:layout_height="@dimen/size_image_button"
-                            android:layout_marginHorizontal="@dimen/margin_button_row"
-
-                            android:background="@drawable/ic_crop_free_24"
-                            android:backgroundTint="@color/highlight"
-
-                            android:contentDescription="@string/manually_adjust_the_crop" />
-
-                    </LinearLayout>
                 </LinearLayout>
-
-            </FrameLayout>
-
-        </com.w2sv.autocrop.ui.views.SnackbarRepelledLayout>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

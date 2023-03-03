@@ -2,7 +2,9 @@ package com.w2sv.autocrop.domain
 
 import android.net.Uri
 import android.os.Parcelable
+import androidx.core.text.buildSpannedString
 import com.w2sv.cropbundle.io.CropBundleIOResult
+import com.w2sv.kotlinutils.extensions.numericallyInflected
 import com.w2sv.kotlinutils.extensions.toInt
 import kotlinx.parcelize.Parcelize
 
@@ -28,4 +30,23 @@ data class AccumulatedIOResults(
             nDeletedScreenshots += it.toInt()
         }
     }
+
+    fun getNotificationText(): CharSequence =
+        if (nSavedCrops == 0)
+            "Discarded all crops"
+        else
+            buildSpannedString {
+                append(
+                    "Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)}"
+                )
+                if (nDeletedScreenshots != 0)
+                    append(
+                        " and deleted ${
+                            if (nDeletedScreenshots == nSavedCrops)
+                                "corresponding"
+                            else
+                                nDeletedScreenshots
+                        } ${"screenshot".numericallyInflected(nDeletedScreenshots)}"
+                    )
+            }
 }

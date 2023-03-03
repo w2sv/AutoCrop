@@ -30,7 +30,7 @@
                 android:layout_marginBottom="?attr/actionBarSize"
                 android:background="@drawable/ic_eye_24"
                 android:backgroundTint="@color/low_alpha_gray"
-                android:contentDescription="@string/toggle_foreground_elements"/>
+                android:contentDescription="@string/toggle_foreground_elements" />
 
             <RelativeLayout
                 android:id="@+id/high_alpha_foreground_layout"
@@ -63,29 +63,15 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/image_selection_button" />
 
-                <androidx.coordinatorlayout.widget.CoordinatorLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true">
-
-                    <com.w2sv.autocrop.ui.views.SnackbarRepelledLayout
-                        android:id="@+id/snackbar_repelled_layout"
-
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_horizontal">
-
-                        <androidx.appcompat.widget.AppCompatImageButton
-                            android:id="@+id/share_crops_button"
-                            android:layout_width="@dimen/size_image_button"
-                            android:layout_height="@dimen/size_image_button"
-                            android:layout_marginBottom="70dp"
-                            android:background="@drawable/ic_share_24"
-                            android:visibility="invisible" />
-
-                    </com.w2sv.autocrop.ui.views.SnackbarRepelledLayout>
-
-                </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/share_crops_button"
+                    android:layout_width="@dimen/size_image_button"
+                    android:layout_height="@dimen/size_image_button"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="70dp"
+                    android:background="@drawable/ic_share_24"
+                    android:visibility="invisible" />
 
             </RelativeLayout>
 
