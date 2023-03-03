@@ -87,7 +87,7 @@ class ComparisonFragment
     private fun onEnterTransitionCompleted() {
         launchAfterShortDelay {
             if (!viewModel.globalFlags.comparisonInstructionsShown) {
-                ComparisonInstructionDialog().show(childFragmentManager)
+                ComparisonScreenInstructionDialogFragment().show(childFragmentManager)
             }
             else
                 // trigger display of displayedImageTv

@@ -34,10 +34,10 @@ import com.w2sv.autocrop.activities.crop.domain.CropResults
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
-import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.CropSavingDialog
-import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.RecropDialog
-import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveAllCropsDialog
-import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveCropDialog
+import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.AbstractCropSavingDialogFragment
+import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.RecropDialogFragment
+import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveAllCropsDialogFragment
+import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.CropSavingDialogFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.model.CropProcedure
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.databinding.CropPagerBinding
@@ -75,10 +75,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CropPagerFragment :
     AppFragment<CropPagerBinding>(CropPagerBinding::class.java),
-    SaveCropDialog.ResultListener,
-    SaveAllCropsDialog.ResultListener,
+    CropSavingDialogFragment.ResultListener,
+    SaveAllCropsDialogFragment.ResultListener,
     CropAdjustmentFragment.ResultListener,
-    RecropDialog.Listener {
+    RecropDialogFragment.Listener {
 
     companion object {
         fun getInstance(cropResults: CropResults): CropPagerFragment =
@@ -99,18 +99,18 @@ class CropPagerFragment :
          * CropSavingDialogs
          */
 
-        fun getCropSavingDialogOnClick(click: Click): CropSavingDialog? =
+        fun getCropSavingDialogOnClick(click: Click): AbstractCropSavingDialogFragment? =
             when {
                 doAutoScrollLive.value == true -> null
                 click == Click.Single || dataSet.holdingSingularElement -> getSaveCropDialog(true)
                 else -> getSaveAllCropsDialog(true)
             }
 
-        fun getSaveCropDialog(showDismissButton: Boolean): SaveCropDialog =
-            SaveCropDialog.getInstance(dataSet.livePosition.value!!, showDismissButton)
+        fun getSaveCropDialog(showDismissButton: Boolean): CropSavingDialogFragment =
+            CropSavingDialogFragment.getInstance(dataSet.livePosition.value!!, showDismissButton)
 
-        fun getSaveAllCropsDialog(showDismissButton: Boolean): SaveAllCropsDialog =
-            SaveAllCropsDialog.getInstance(dataSet.size, showDismissButton)
+        fun getSaveAllCropsDialog(showDismissButton: Boolean): SaveAllCropsDialogFragment =
+            SaveAllCropsDialogFragment.getInstance(dataSet.size, showDismissButton)
 
         /**
          * AutoScroll
@@ -192,8 +192,8 @@ class CropPagerFragment :
          * Other
          */
 
-        fun getRecropDialog(): RecropDialog =
-            RecropDialog.getInstance(
+        fun getRecropDialog(): RecropDialogFragment =
+            RecropDialogFragment.getInstance(
                 dataSet.livePosition.value!!,
                 dataSet.liveElement.adjustedEdgeThreshold
                     ?: intPreferences.edgeCandidateThreshold

@@ -65,7 +65,7 @@ class MainActivity : AppActivity() {
     //   ApplicationActivity overrides  //
     //////////////////////////////////////
 
-    override val lifecycleObservers: List<LifecycleObserver> by viewModels<ViewModel>().value::lifecycleObservers
+    override val lifecycleObservers: List<LifecycleObserver> get() = viewModels<ViewModel>().value.lifecycleObservers
 
     override fun getRootFragment(): Fragment =
         FlowFieldFragment.getInstance(intent.getParcelableExtraCompat(AccumulatedIOResults.EXTRA))

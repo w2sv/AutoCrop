@@ -9,7 +9,7 @@
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="0.35"/>
+        android:layout_weight="0.4"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,7 +22,7 @@
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="0.15"/>
+        android:layout_weight="0.1"/>
 
     <ProgressBar
         android:id="@+id/cropping_progress_bar"
@@ -38,7 +38,7 @@
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="0.15"/>
+        android:layout_weight="0.1"/>
 
     <com.w2sv.autocrop.ui.views.FractionTextView
         android:id="@+id/progress_tv"
@@ -51,6 +51,6 @@
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="0.35"/>
+        android:layout_weight="0.4"/>
 
 </LinearLayout>

@@ -119,12 +119,12 @@ class ExaminationActivity : AppActivity() {
 
     override fun getRootFragment(): Fragment =
         CropPagerFragment.getInstance(
-            intent.getParcelableExtraCompat(CropResults.EXTRA)!!,
+            intent.getParcelableExtraCompat(CropResults.EXTRA)!!
         )
 
     private val viewModel: ViewModel by viewModels()
 
-    override val lifecycleObservers: List<LifecycleObserver> by viewModel::lifecycleObservers
+    override val lifecycleObservers: List<LifecycleObserver> get() = viewModel.lifecycleObservers
 
     fun invokeExitFragment() {
         fragmentReplacementTransaction(

@@ -65,4 +65,6 @@
     <string name="low">Low</string>
     <string name="high">High</string>
     <string name="slider_to_select_the_crop_sensitivity">Slider to select the crop sensitivity</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 </resources>

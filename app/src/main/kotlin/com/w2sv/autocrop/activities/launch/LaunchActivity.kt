@@ -18,7 +18,7 @@ import javax.inject.Inject
 class LaunchActivity : AppCompatActivity() {
 
     @HiltViewModel
-    private class ViewModel @Inject constructor(val globalFlags: GlobalFlags) : androidx.lifecycle.ViewModel()
+    class ViewModel @Inject constructor(val globalFlags: GlobalFlags) : androidx.lifecycle.ViewModel()
 
     private val viewModel by viewModels<ViewModel>()
 

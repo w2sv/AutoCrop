@@ -22,7 +22,7 @@ import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
-import com.w2sv.autocrop.activities.main.fragments.flowfield.CropSettingsConfigurationDialog
+import com.w2sv.autocrop.activities.main.fragments.flowfield.CropSettingsDialogFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.permissionhandler.requestPermissions
 import com.w2sv.screenshotlistening.ScreenshotListener
@@ -97,7 +97,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 }
 
                 R.id.main_menu_item_configure_cropping_settings -> {
-                    CropSettingsConfigurationDialog()
+                    CropSettingsDialogFragment()
                         .show(flowFieldFragment.childFragmentManager)
                 }
 

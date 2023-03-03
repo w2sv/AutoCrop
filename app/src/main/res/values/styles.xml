@@ -10,7 +10,7 @@
 
     <!-- App Theme -->
 
-    <style name="Theme.App.Main" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.App.Main" parent="Theme.AppCompat.DayNight.NoActionBar">
 
         <!-- disable all caps -->
         <item name="textAllCaps">false</item>
@@ -71,5 +71,15 @@
         <item name="android:minHeight">28dp</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Tooltip</item>
     </style>
+
+    <style name="MaterialAlertDialogRounded" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="shapeAppearanceOverlay">@style/DialogCorners</item>
+    </style>
+
+    <style name="DialogCorners">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
 
 </resources>

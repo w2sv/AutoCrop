@@ -3,7 +3,7 @@ package com.w2sv.autocrop.activities.examination.fragments.pager.dialogs
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.CropSettingsDialog
+import com.w2sv.autocrop.ui.AbstractCropSettingsDialogFragment
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.cropbundle.CropBundle
 import dagger.hilt.android.AndroidEntryPoint
@@ -11,21 +11,25 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class RecropDialog : CropSettingsDialog(R.string.recrop_with_adjusted_settings, R.string.recrop) {
+class RecropDialogFragment : AbstractCropSettingsDialogFragment(
+    R.string.recrop_with_adjusted_settings,
+    R.drawable.ic_autorenew_24,
+    R.string.recrop
+) {
 
     companion object {
         private const val EXTRA_INITIAL_THRESHOLD = "com.w2sv.autocrop.extra.INITIAL_THRESHOLD"
 
-        fun getInstance(cropBundlePosition: Int, initialThreshold: Int): RecropDialog =
+        fun getInstance(cropBundlePosition: Int, initialThreshold: Int): RecropDialogFragment =
             getFragment(
-                RecropDialog::class.java,
+                RecropDialogFragment::class.java,
                 CropBundle.EXTRA_POSITION to cropBundlePosition,
                 EXTRA_INITIAL_THRESHOLD to initialThreshold
             )
     }
 
     @HiltViewModel
-    class ViewModel @Inject constructor(savedStateHandle: SavedStateHandle) : CropSettingsDialog.ViewModel(
+    class ViewModel @Inject constructor(savedStateHandle: SavedStateHandle) : AbstractCropSettingsDialogFragment.ViewModel(
         savedStateHandle[EXTRA_INITIAL_THRESHOLD]!!
     ) {
         val cropBundlePosition: Int = savedStateHandle[CropBundle.EXTRA_POSITION]!!

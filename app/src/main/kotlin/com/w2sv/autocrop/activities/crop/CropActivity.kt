@@ -6,7 +6,9 @@ import com.w2sv.autocrop.activities.crop.fragments.cropping.CropFragment
 import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailedFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.common.extensions.getParcelableArrayListExtraCompat
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint  // java.lang.IllegalStateException: Hilt Fragments must be attached to an @AndroidEntryPoint Activity
 class CropActivity : AppActivity() {
 
     override fun getRootFragment(): Fragment =
