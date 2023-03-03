@@ -21,7 +21,7 @@
             android:background="@drawable/shape_rounded_rectangle_w_button_background"
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_small"
-            android:visibility="visible">
+            android:visibility="invisible">
 
             <TextView
                 style="@style/ButtonRowLabel"
@@ -87,7 +87,8 @@
             android:layout_gravity="center_vertical"
             android:background="@drawable/ic_dot_menu_24"
             android:backgroundTint="@color/crop_pager_text"
-            android:contentDescription="@string/open_popup_menu" />
+            android:contentDescription="@string/open_popup_menu"
+            android:visibility="invisible"/>
 
     </LinearLayout>
 
@@ -143,7 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="?attr/actionBarSize"
-            android:visibility="visible">
+            android:visibility="invisible">
 
             <FrameLayout
                 android:layout_width="match_parent"

@@ -49,6 +49,7 @@ import com.w2sv.autocrop.ui.views.makeOnClickPersistent
 import com.w2sv.autocrop.ui.views.notifyCurrentItemChanged
 import com.w2sv.autocrop.ui.views.toggleCheck
 import com.w2sv.autocrop.ui.views.visualize
+import com.w2sv.autocrop.utils.extensions.holdingSingularElement
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.cropbundle.Crop
@@ -99,9 +100,6 @@ class CropPagerFragment :
 
         val dataSet = CropPager.DataSet(ExaminationActivity.ViewModel.cropBundles)
 
-        val singleCropRemaining: Boolean
-            get() = dataSet.size == 1
-
         /**
          * CropSavingDialogs
          */
@@ -109,7 +107,7 @@ class CropPagerFragment :
         fun getCropSavingDialogOnClick(click: Click): CropSavingDialog? =
             when {
                 doAutoScrollLive.value == true -> null
-                click == Click.Single || singleCropRemaining -> getSaveCropDialog(true)
+                click == Click.Single || dataSet.holdingSingularElement -> getSaveCropDialog(true)
                 else -> getSaveAllCropsDialog(true)
             }
 
@@ -253,7 +251,7 @@ class CropPagerFragment :
         }
 
         dataSet.observe(viewLifecycleOwner) {
-            if (singleCropRemaining && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED))
+            if (it.holdingSingularElement && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED))
                 binding.allCropsButtonsWLabel.animate(Techniques.ZoomOut)
         }
     }
@@ -293,7 +291,8 @@ class CropPagerFragment :
 
             buildList<View> {
                 add(snackbarRepelledLayout)
-                if (!viewModel.singleCropRemaining)
+                add(popupMenuButton)
+                if (!viewModel.dataSet.holdingSingularElement)
                     add(allCropsButtonsWLabel)
             }
                 .visualize(
@@ -432,7 +431,7 @@ class CropPagerFragment :
     }
 
     private fun removeView(dataSetPosition: Int, cropProcedure: CropProcedure) {
-        if (viewModel.singleCropRemaining) {
+        if (viewModel.dataSet.holdingSingularElement) {
             return requireCastActivity<ExaminationActivity>().invokeExitFragment()
         }
 
