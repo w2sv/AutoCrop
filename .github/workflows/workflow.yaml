@@ -8,7 +8,7 @@ on: [ push, pull_request ]
 
 env:
   ARCH: x86_64
-  JAVA_VERSION: 11
+  JAVA_VERSION: 17
   DEVICE: Nexus 6
 
 jobs:
