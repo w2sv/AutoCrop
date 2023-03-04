@@ -7,6 +7,8 @@ import com.daimajia.androidanimations.library.YoYo.YoYoString
 import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
+import com.w2sv.autocrop.ui.views.increaseTouchArea
+
 
 class ForegroundElementsToggleButton(context: Context, attributeSet: AttributeSet) : AppCompatImageButton(
     context,
@@ -17,6 +19,8 @@ class ForegroundElementsToggleButton(context: Context, attributeSet: AttributeSe
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+
+        increaseTouchArea(40)
 
         setOnClickListener {
             viewModel.hideForegroundElementsLive.toggle()

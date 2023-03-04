@@ -21,7 +21,6 @@
 
             <com.w2sv.autocrop.activities.main.fragments.flowfield.views.ForegroundElementsToggleButton
                 android:id="@+id/foreground_elements_toggle_button"
-
                 android:layout_width="@dimen/size_image_button"
                 android:layout_height="@dimen/size_image_button"
                 android:layout_alignParentEnd="true"
