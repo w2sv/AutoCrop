@@ -239,6 +239,4 @@ private fun formattedUnitText(
         .color(labelColor) {
             append(label)
         }
-        .italic {
-            append(" ${value ?: "-"}")
-        }
+        .append(" ${value ?: "-"}")

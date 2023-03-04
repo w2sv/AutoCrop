@@ -26,6 +26,8 @@
         <item name="colorOnPrimary">@android:color/white</item>
         <item name="colorPrimary">@color/higher_light</item>
 
+        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="fontFamily">@font/montserrat</item>
     </style>
 
     <!--App Title TextView-->
@@ -40,7 +42,7 @@
     <style name="AutoCropTV" parent="Shadow">
         <item name="android:text">@string/auto_crop</item>
         <item name="android:textColor">@color/magenta_saturated</item>
-        <item name="android:fontFamily">@font/london</item>
+        <item name="fontFamily">@font/tiltprism</item>
     </style>
 
     <style name="AutoCropTVBig" parent="AutoCropTV">

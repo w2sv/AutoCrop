@@ -73,7 +73,7 @@ class MainActivity : AppActivity() {
     override fun handleOnBackPressed() {
         getCurrentFragment().let {
             when (it) {
-                is AboutFragment -> supportFragmentManager.popBackStack()
+                is AboutFragment -> supportFragmentManager.popBackStackImmediate()
                 is FlowFieldFragment -> it.onBackPress()
                 else -> Unit
             }

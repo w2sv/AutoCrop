@@ -73,8 +73,7 @@
 
             android:text="@string/fraction"
             android:textColor="@color/crop_pager_text"
-            android:textSize="@dimen/text_size_medium"
-            android:textStyle="italic" />
+            android:textSize="@dimen/text_size_medium" />
 
         <Space
             android:layout_width="@dimen/margin_large"

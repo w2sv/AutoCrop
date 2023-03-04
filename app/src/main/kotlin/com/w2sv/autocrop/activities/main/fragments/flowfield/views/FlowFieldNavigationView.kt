@@ -28,7 +28,6 @@ import com.w2sv.permissionhandler.requestPermissions
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     NavigationView(context, attributeSet) {
 
@@ -139,7 +138,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
             }
 
             flowFieldFragment.binding.drawerLayout.closeDrawer()
-            false
+            true
         }
     }
 }
