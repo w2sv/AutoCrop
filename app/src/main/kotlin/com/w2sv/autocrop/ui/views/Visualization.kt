@@ -3,13 +3,11 @@ package com.w2sv.autocrop.ui.views
 import android.view.View
 import com.w2sv.onboarding.extensions.show
 
-fun Iterable<View?>.visualize(type: VisualizationType) {
+fun Iterable<View>.visualize(type: VisualizationType) {
     forEach {
-        it?.let {
-            when (type) {
-                VisualizationType.Instant -> it.show()
-                VisualizationType.FadeIn -> it.fadeIn()
-            }
+        when (type) {
+            VisualizationType.Instant -> it.show()
+            VisualizationType.FadeIn -> it.fadeIn()
         }
     }
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -15,19 +14,19 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="0.3"/>
+            android:layout_weight="0.3" />
 
         <ImageView
             android:layout_width="@dimen/size_image_button"
             android:layout_height="@dimen/size_image_button"
             android:background="@drawable/ic_signal_24"
-            android:contentDescription="@null"
-            android:backgroundTint="@color/low_alpha_gray"/>
+            android:backgroundTint="@color/low_alpha_gray"
+            android:contentDescription="@null" />
 
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="0.15"/>
+            android:layout_weight="0.15" />
 
         <TextView
             android:id="@+id/threshold_tv"
@@ -50,12 +49,9 @@
             android:id="@+id/sensitivity_slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/slider_to_select_the_crop_sensitivity"
-            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
-            app:labelStyle="@style/Tooltip"
-            app:thumbColor="@color/higher_light"
-            app:tickColorActive="@color/low_alpha_gray"
-            app:trackColorActive="@color/higher_light" />
+            android:contentDescription="@string/slide_to_select_the_crop_sensitivity"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:labelBehavior="gone"/>
 
         <LinearLayout
             android:layout_width="match_parent"

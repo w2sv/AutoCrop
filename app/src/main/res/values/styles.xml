@@ -10,7 +10,7 @@
 
     <!-- App Theme -->
 
-    <style name="Theme.App.Main" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme.App.Main" parent="Theme.Material3.DayNight.NoActionBar">
 
         <!-- disable all caps -->
         <item name="textAllCaps">false</item>
@@ -62,16 +62,6 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Tooltip" parent="Widget.MaterialComponents.Tooltip">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">@dimen/text_size_small</item>
-        <item name="backgroundTint">@color/higher_light</item>
-        <item name="android:padding">4dp</item>
-        <item name="android:minWidth">28dp</item>
-        <item name="android:minHeight">28dp</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Tooltip</item>
-    </style>
-
     <style name="MaterialAlertDialogRounded" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="shapeAppearanceOverlay">@style/DialogCorners</item>
     </style>
@@ -80,6 +70,5 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>
     </style>
-
 
 </resources>
