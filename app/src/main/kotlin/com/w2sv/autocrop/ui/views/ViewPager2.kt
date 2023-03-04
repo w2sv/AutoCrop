@@ -10,6 +10,6 @@ fun <VH : RecyclerView.ViewHolder> ViewPager2.currentViewHolder(): VH? =
 val ViewPager2.recyclerView: RecyclerView
     get() = getChildAt(0) as RecyclerView
 
-fun ViewPager2.notifyCurrentItemChanged(){
+fun ViewPager2.notifyCurrentItemChanged() {
     adapter!!.notifyItemChanged(currentItem)
 }

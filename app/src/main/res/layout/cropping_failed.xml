@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:weightSum="1"
-    android:gravity="center_horizontal">
+    android:weightSum="1">
 
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="0.35"/>
+        android:layout_weight="0.35" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="0.1"/>
+            android:layout_weight="0.1" />
 
         <ImageView
             android:layout_width="@dimen/size_image_button"
@@ -31,7 +31,7 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="0.05"/>
+            android:layout_weight="0.05" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,12 +41,12 @@
             android:text="@string/cropping_failure"
             android:textAlignment="center"
             android:textSize="@dimen/text_size_medium_large"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="0.05"/>
+            android:layout_weight="0.05" />
 
         <ImageView
             android:layout_width="@dimen/size_image_button"
@@ -58,13 +58,13 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="0.1"/>
+            android:layout_weight="0.1" />
     </LinearLayout>
 
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="0.2"/>
+        android:layout_weight="0.2" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -79,7 +79,7 @@
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="0.2"/>
+        android:layout_weight="0.2" />
 
     <Button
         android:id="@+id/got_it_button"

@@ -18,7 +18,7 @@
         android:id="@+id/app_title_text_view"
         style="@style/AutoCropTVBig"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <Space
         android:layout_width="0dp"

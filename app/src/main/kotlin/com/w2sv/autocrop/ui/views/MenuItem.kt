@@ -16,7 +16,7 @@ fun MenuItem.makeOnClickPersistent(context: Context) {
     })
 }
 
-fun MenuItem.toggleCheck(listener: (Boolean) -> Unit){
+fun MenuItem.toggleCheck(listener: (Boolean) -> Unit) {
     val newValue = !isChecked
     isChecked = newValue
     listener(newValue)

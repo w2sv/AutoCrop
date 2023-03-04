@@ -19,7 +19,7 @@ class AboutFragment :
         binding.populate()
     }
 
-    private fun AboutBinding.populate(){
+    private fun AboutBinding.populate() {
         copyrightTv.text = resources.getString(R.string.copyright, Calendar.getInstance().get(Calendar.YEAR))
         versionTv.text = resources.getString(R.string.version, BuildConfig.VERSION_NAME)
 

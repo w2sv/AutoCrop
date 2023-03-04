@@ -9,7 +9,6 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.text.color
-import androidx.core.text.italic
 import androidx.core.util.lruCache
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData

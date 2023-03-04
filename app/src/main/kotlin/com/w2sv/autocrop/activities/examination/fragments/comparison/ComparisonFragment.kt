@@ -55,7 +55,7 @@ class ComparisonFragment
             ExaminationActivity.ViewModel.cropBundles[savedStateHandle[CropBundle.EXTRA_POSITION]!!]
         val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
 
-        var enterTransitionCompleted  = false
+        var enterTransitionCompleted = false
 
         val displayedImageLive: LiveData<DisplayedImage> = MutableLiveData(DisplayedImage.Crop)
         val screenshotViewImageMatrixLive: LiveData<Matrix> = MutableLiveData()
@@ -90,7 +90,7 @@ class ComparisonFragment
                 ComparisonScreenInstructionDialogFragment().show(childFragmentManager)
             }
             else
-                // trigger display of displayedImageTv
+            // trigger display of displayedImageTv
                 viewModel.displayedImageLive.repostValue()
         }
     }

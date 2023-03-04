@@ -2,7 +2,6 @@ package com.w2sv.autocrop.activities.examination.fragments.adjustment.model
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.graphics.Rect
 import android.graphics.RectF
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.annotation.Keep

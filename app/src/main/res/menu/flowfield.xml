@@ -38,17 +38,17 @@
         </item>
     </group>
 
-<!--    <group>-->
-<!--        <item android:title="@string/menu_item_divider_examination">-->
+    <!--    <group>-->
+    <!--        <item android:title="@string/menu_item_divider_examination">-->
 
-<!--            <menu>-->
-<!--                <item-->
-<!--                    android:id="@+id/main_menu_item_auto_scroll"-->
-<!--                    android:icon="@drawable/ic_autoscroll_24"-->
-<!--                    android:title="@string/menu_item_auto_scroll" />-->
-<!--            </menu>-->
-<!--        </item>-->
-<!--    </group>-->
+    <!--            <menu>-->
+    <!--                <item-->
+    <!--                    android:id="@+id/main_menu_item_auto_scroll"-->
+    <!--                    android:icon="@drawable/ic_autoscroll_24"-->
+    <!--                    android:title="@string/menu_item_auto_scroll" />-->
+    <!--            </menu>-->
+    <!--        </item>-->
+    <!--    </group>-->
 
     <!--  Other  -->
 
