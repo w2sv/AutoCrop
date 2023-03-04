@@ -19,8 +19,8 @@ android {
         minSdk libs.versions.minSdk.get().toInteger()
         targetSdk libs.versions.compileSdk.get().toInteger()
 
-        versionCode 44
-        versionName '4.0.1'
+        versionCode 45
+        versionName '4.0.2'
 
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
         setProperty('archivesBaseName', versionName)

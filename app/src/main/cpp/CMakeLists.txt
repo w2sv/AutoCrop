@@ -4,6 +4,7 @@
 # Sets the minimum version of CMake required to build the native library.
 
 cmake_minimum_required(VERSION 3.4.1)
+project(Project)
 
 include_directories(${OpenCV_DIR}/jni/include)
 add_library(lib_opencv SHARED IMPORTED)

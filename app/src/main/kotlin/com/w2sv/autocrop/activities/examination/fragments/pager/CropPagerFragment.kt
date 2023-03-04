@@ -6,9 +6,6 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
-import androidx.core.app.BundleCompat
-import androidx.core.content.IntentCompat
-import androidx.core.os.ParcelableCompat
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
@@ -198,7 +195,7 @@ class CropPagerFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setFragmentResultListener(CropAdjustmentFragment.REQUEST_KEY){ _, bundle ->
+        setFragmentResultListener(CropAdjustmentFragment.REQUEST_KEY) { _, bundle ->
             applyAdjustedCropEdges(bundle.getParcelableCompat(CropEdges.EXTRA)!!)
         }
     }
