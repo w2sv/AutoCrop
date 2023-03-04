@@ -30,6 +30,11 @@
         <item name="fontFamily">@font/montserrat</item>
     </style>
 
+    <style name="NavigationView">
+        <item name="android:listDivider">@color/low_alpha_gray</item>
+    </style>
+
+
     <!--App Title TextView-->
 
     <style name="ShadowVisible">

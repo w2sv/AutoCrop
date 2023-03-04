@@ -1,8 +1,6 @@
 package com.w2sv.autocrop.activities.examination.fragments.pager.dialogs
 
-import android.text.SpannableStringBuilder
 import androidx.appcompat.app.AlertDialog
-import androidx.core.text.italic
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.utils.getFragment
 
@@ -21,14 +19,7 @@ class SaveAllCropsDialogFragment : AbstractCropSavingDialogFragment() {
 
     override fun AlertDialog.Builder.build(): AlertDialog.Builder =
         apply {
-            setTitle(
-                SpannableStringBuilder()
-                    .append("Save ")
-                    .italic {
-                        append("${requireArguments().getInt(EXTRA_N_CROPS)} ")
-                    }
-                    .append("crops?")
-            )
+            setTitle("Save ${requireArguments().getInt(EXTRA_N_CROPS)} crops?")
             setIcon(R.drawable.ic_save_24)
             setDeleteCorrespondingScreenshotsOption("Delete corresponding screenshots")
             setNegativeButton(getString(R.string.no)) { _, _ -> }
