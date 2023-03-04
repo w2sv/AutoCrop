@@ -87,9 +87,6 @@
         android:layout_width="120dp"
         android:layout_height="50dp"
 
-        android:background="@drawable/shape_button_oval_magenta_dark"
-
         android:text="@string/got_it"
-        android:textSize="@dimen/text_size_medium"
-        android:textStyle="italic" />
+        android:textSize="@dimen/text_size_medium" />
 </LinearLayout>

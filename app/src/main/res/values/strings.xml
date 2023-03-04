@@ -40,7 +40,7 @@
         If enabled, you will receive a notification whenever AutoCrop detects a newly taken, croppable screenshot, the saving/discarding of which you may then determine.\n\n
         To register new screenshots, Screenshot Listening requires the <i>media file read</i> permission.
     </string>
-    <string name="onboarding_page_2_title">Your\'re all set!</string>
+    <string name="onboarding_page_2_title">You\'re all set!</string>
     <string name="onboarding_page_2_description">Now go ahead select some screenshots, let the cropping magic happen and save your first AutoCrops!</string>
     <string name="enable">Enable</string>
     <string name="share">Share</string>
