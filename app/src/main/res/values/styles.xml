@@ -32,17 +32,26 @@
 
     <!--App Title TextView-->
 
-    <style name="Shadow">
+    <style name="ShadowVisible">
+        <item name="android:shadowColor">@android:color/black</item>
+        <item name="android:shadowDx">10</item>
+        <item name="android:shadowDy">10</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+
+    <style name="ShadowMarginal">
         <item name="android:shadowColor">@android:color/black</item>
         <item name="android:shadowDx">5</item>
         <item name="android:shadowDy">5</item>
         <item name="android:shadowRadius">2</item>
     </style>
 
-    <style name="AutoCropTV" parent="Shadow">
+    <style name="AutoCropTV" parent="ShadowVisible">
         <item name="android:text">@string/auto_crop</item>
         <item name="android:textColor">@color/magenta_saturated</item>
         <item name="fontFamily">@font/tiltprism</item>
+        <item name="android:paddingHorizontal">4dp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="AutoCropTVBig" parent="AutoCropTV">

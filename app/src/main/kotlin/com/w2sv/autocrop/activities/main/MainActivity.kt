@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleObserver
@@ -49,6 +50,16 @@ class MainActivity : AppActivity() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            when (val fragment = getCurrentFragment()) {
+                is FlowFieldFragment -> fragment.binding.navigationViewToggleButton.progress = 0f
+            }
+        }
+    }
+
     @HiltViewModel
     class ViewModel @Inject constructor(
         globalFlags: GlobalFlags,
@@ -73,7 +84,7 @@ class MainActivity : AppActivity() {
     override fun handleOnBackPressed() {
         getCurrentFragment().let {
             when (it) {
-                is AboutFragment -> supportFragmentManager.popBackStackImmediate()
+                is AboutFragment -> supportFragmentManager.popBackStack()
                 is FlowFieldFragment -> it.onBackPress()
                 else -> Unit
             }

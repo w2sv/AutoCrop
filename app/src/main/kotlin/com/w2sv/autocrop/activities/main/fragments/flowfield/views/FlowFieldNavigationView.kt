@@ -26,7 +26,6 @@ import com.w2sv.autocrop.activities.main.fragments.flowfield.CropSettingsDialogF
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.permissionhandler.requestPermissions
 import com.w2sv.screenshotlistening.ScreenshotListener
-import dagger.hilt.android.AndroidEntryPoint
 
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     NavigationView(context, attributeSet) {
