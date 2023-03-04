@@ -6,9 +6,13 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.core.app.BundleCompat
+import androidx.core.content.IntentCompat
+import androidx.core.os.ParcelableCompat
 import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
@@ -53,6 +57,7 @@ import com.w2sv.autocrop.ui.views.visualize
 import com.w2sv.autocrop.utils.extensions.holdingSingularElement
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
+import com.w2sv.common.extensions.getParcelableCompat
 import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
@@ -75,7 +80,6 @@ class CropPagerFragment :
     AppFragment<CropPagerBinding>(CropPagerBinding::class.java),
     CropSavingDialogFragment.ResultListener,
     SaveAllCropsDialogFragment.ResultListener,
-    CropAdjustmentFragment.ResultListener,
     RecropDialogFragment.Listener {
 
     companion object {
@@ -190,6 +194,14 @@ class CropPagerFragment :
     private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
 
     private lateinit var cropPager: CropPager
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setFragmentResultListener(CropAdjustmentFragment.REQUEST_KEY){ _, bundle ->
+            applyAdjustedCropEdges(bundle.getParcelableCompat(CropEdges.EXTRA)!!)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -365,7 +377,7 @@ class CropPagerFragment :
         }
     }
 
-    override fun onApplyAdjustedCropEdges(cropEdges: CropEdges) {
+    private fun applyAdjustedCropEdges(cropEdges: CropEdges) {
         viewModel.dataSet.liveElement.let {
             it.crop = Crop.fromScreenshot(
                 it.screenshot.getBitmap(requireContext().contentResolver),

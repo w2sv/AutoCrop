@@ -8,8 +8,10 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.annotation.ColorInt
+import androidx.core.os.bundleOf
 import androidx.core.text.color
 import androidx.core.util.lruCache
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -47,6 +49,8 @@ class CropAdjustmentFragment
     : AppFragment<CropAdjustmentBinding>(CropAdjustmentBinding::class.java) {
 
     companion object {
+        const val REQUEST_KEY = "com.w2sv.autocrop.request_key.CROP_ADJUSTMENT_FRAGMENT_RESULT"
+
         fun getInstance(cropBundlePosition: Int): CropAdjustmentFragment =
             getFragment(
                 CropAdjustmentFragment::class.java,
@@ -213,19 +217,12 @@ class CropAdjustmentFragment
         }
 
         cancelButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            requireActivity().supportFragmentManager.popBackStack()
         }
         applyButton.setOnClickListener {
-            parentFragmentManager.popBackStackImmediate()  // TODO
-
-            // notify ResultListener
-            (requireViewBoundFragmentActivity().getCurrentFragment() as ResultListener)
-                .onApplyAdjustedCropEdges(viewModel.cropEdgesLive.value!!)
+            setFragmentResult(REQUEST_KEY, bundleOf(CropEdges.EXTRA to viewModel.cropEdgesLive.value))
+            requireActivity().supportFragmentManager.popBackStack()
         }
-    }
-
-    interface ResultListener {
-        fun onApplyAdjustedCropEdges(cropEdges: CropEdges)
     }
 }
 
