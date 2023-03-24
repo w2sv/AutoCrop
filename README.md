@@ -37,11 +37,10 @@
 
 <h2 align="center">Screenshots</h2>
 
-| ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/1.jpg)   | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/2.jpg)   | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/3.jpg)   |
-|--------------------------------------------------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------|
-| ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/4.jpg)   | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/5.jpg)   | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/6.jpg)   |
-| ------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
-  |                                                                          | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/7.jpg)   |                                                                          |
+| ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/1.jpg)       | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/2.jpg)     | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/3.jpg)     |
+|------------------------------------------------------------------------------|----------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/4.jpg)       | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/5.jpg)     | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/6.jpg)     |
+|                                                                              | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/7.jpg)     |                                                                            |
 
 <h2 align="center">Donations</h2>
 <br>
