@@ -42,6 +42,7 @@ captures/
 # Keystore files
 keystore.properties
 /keys.jks
+/service-account-key.json
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
@@ -75,4 +76,3 @@ lint/reports/
 
 # Android Profiling
 *.hprof
-/service-account-key.json
