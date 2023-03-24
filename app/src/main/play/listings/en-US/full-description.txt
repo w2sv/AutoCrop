@@ -1,0 +1,18 @@
+Crop as many screenshots residing on your phone as you wish in a single go, examine the results in an image slider, decide which crops ought to be directly saved and - if you wish - have their respective screenshot deleted, or might still need a bit of manual adjustment beforehand, which you can conveniently provide inside the app.
+
+In addition, you can switch on the revolutionary <i>Screenshot Listening</i> function, through which you'll receive a notification when you take a croppable screenshot, whose crafted crop you can then save as you go without even having to open the app.
+
+<b>Additional features:</b>
+* Selection of the crop save directory in your file system
+* Convenient comparison of the crop and its respective screenshot
+* Sharing of crops post-saving 
+* Extra juicy animations and overall UI experience
+
+Bug reports, feature requests, general enhancement propositions or other sorts of feedback are always highly appreciated! 
+The underlying code is open-source and available under the GPL-3.0 license at https://github.com/w2sv/AutoCrop.
+
+Built by a single passionate & self-taught developer.
+
+<i>Credits:</i>
+- App Icon by https://www.instagram.com/datsenpic/
+- Mockup template by https://previewed.app

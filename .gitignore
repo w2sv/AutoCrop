@@ -75,3 +75,4 @@ lint/reports/
 
 # Android Profiling
 *.hprof
+/service-account-key.json
