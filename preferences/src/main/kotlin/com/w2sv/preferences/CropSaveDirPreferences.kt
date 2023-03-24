@@ -7,7 +7,7 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.provider.DocumentsContract
 import com.w2sv.androidutils.extensions.hasPermission
-import com.w2sv.typedpreferences.UriPreferences
+import com.w2sv.androidutils.typedpreferences.UriPreferences
 import slimber.log.i
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -16,7 +16,6 @@ dependencies {
 
     implementation libs.kotlinutils
     implementation libs.androidutils
-    api libs.typedpreferences
     implementation libs.slimber
 
     implementation libs.google.hilt

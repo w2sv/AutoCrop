@@ -19,5 +19,6 @@ dependencies {
     implementation libs.google.material
     implementation libs.snacky
     implementation libs.slimber
-    implementation libs.permissionhandler
+
+    implementation libs.androidutils
 }

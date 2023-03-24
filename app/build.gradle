@@ -115,10 +115,8 @@ dependencies {
     implementation libs.kotlinutils
     implementation libs.viewboundcontroller
     implementation libs.androidutils
-    implementation libs.typedpreferences
     implementation libs.viewanimations
     implementation libs.onboarder
-    implementation libs.permissionhandler
 
     // other
     implementation libs.slimber
