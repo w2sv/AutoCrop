@@ -6,10 +6,6 @@
 <p align="center">
   <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/w2sv/AutoCrop?include_prereleases"/>
   <img src="https://img.shields.io/endpoint?color=green&logo=google-play&logoColor=green&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.w2sv.autocrop%26l%3DPlay%2520Store%26m%3D%24version"/>
-
-  <br>
-
-  <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/w2sv/AutoCrop/total">
   <img src="https://img.shields.io/endpoint?color=green&logo=google-play&logoColor=green&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.w2sv.autocrop%26l%3DDownloads%26m%3D%24totalinstalls"/>
 
   <br>
@@ -37,11 +33,10 @@
 
 <h2 align="center">Screenshots</h2>
 
-| ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/1.jpg)   | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/2.jpg)   | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/3.jpg)   |
-|--------------------------------------------------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------|
-| ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/4.jpg)   | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/5.jpg)   | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/6.jpg)   |
-| ------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
-  |                                                                          | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/7.jpg)   |                                                                          |
+| ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/1.jpg)       | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/2.jpg)     | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/3.jpg)     |
+|------------------------------------------------------------------------------|----------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/4.jpg)       | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/5.jpg)     | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/6.jpg)     |
+|                                                                              | ![](app/src/main/play/listings/en-US/graphics/phone-screenshots/7.jpg)     |                                                                            |
 
 <h2 align="center">Donations</h2>
 <br>
