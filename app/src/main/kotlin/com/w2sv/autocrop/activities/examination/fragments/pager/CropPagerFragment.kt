@@ -37,6 +37,7 @@ import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustm
 import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.AbstractCropSavingDialogFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.CropSavingDialogFragment
+import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.RecropAllDialogFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.RecropDialogFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.dialogs.SaveAllCropsDialogFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.model.CropProcedure
@@ -77,7 +78,8 @@ class CropPagerFragment :
     AppFragment<CropPagerBinding>(CropPagerBinding::class.java),
     CropSavingDialogFragment.ResultListener,
     SaveAllCropsDialogFragment.ResultListener,
-    RecropDialogFragment.Listener {
+    RecropDialogFragment.Listener,
+    RecropAllDialogFragment.Listener {
 
     companion object {
         fun getInstance(cropResults: CropResults): CropPagerFragment =
@@ -298,6 +300,9 @@ class CropPagerFragment :
             viewModel.getSaveAllCropsDialog(false)
                 .show(childFragmentManager)
         }
+        recropAllButton.setOnClickListener {
+            RecropAllDialogFragment().show(childFragmentManager)
+        }
         cancelAutoScrollButton.setOnClickListener {
             viewModel.doAutoScrollLive.postValue(false)
         }
@@ -445,19 +450,36 @@ class CropPagerFragment :
         requireCastActivity<ExaminationActivity>().invokeExitFragment()
     }
 
-    override fun onDoRecrop(cropBundlePosition: Int, threshold: Double) {
+    override fun onRecrop(cropBundlePosition: Int, threshold: Double) =
+        onRecropWrapper {
+            requireContext().showToast(
+                when (viewModel.dataSet[cropBundlePosition].recropAndUpdate(threshold)) {
+                    false -> "No Crop Edges found for adjusted Settings"
+                    true -> {
+                        cropPager.pager.notifyCurrentItemChanged()
+                        "Updated Crop"
+                    }
+                }
+            )
+        }
+
+    override fun onRecropAll(threshold: Double) =
+        onRecropWrapper {
+            requireContext().showToast(
+                viewModel.dataSet.map { it.recropAndUpdate(threshold) }.groupingBy { it }.eachCount().let {
+                    when (it.getOrDefault(false, 0)) {
+                        viewModel.dataSet.size -> "No Crop Edges found for adjusted Settings"
+                        else -> "Updated ${it.getValue(true)} crops"
+                    }
+                }
+            )
+        }
+
+    private inline fun onRecropWrapper(f: () -> Unit) {
         cropPager.pager.isEnabled = false
         binding.recropProgressBar.show()
 
-        requireContext().showToast(
-            when (viewModel.dataSet[cropBundlePosition].recropAndUpdate(threshold)) {
-                false -> "No Crop Edges found for adjusted Settings"
-                true -> {
-                    cropPager.pager.notifyCurrentItemChanged()
-                    "Updated Crop"
-                }
-            }
-        )
+        f()
 
         binding.recropProgressBar.remove()
         cropPager.pager.isEnabled = true

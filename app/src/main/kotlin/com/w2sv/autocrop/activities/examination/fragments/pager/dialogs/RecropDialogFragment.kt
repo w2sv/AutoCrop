@@ -6,6 +6,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.AbstractCropSettingsDialogFragment
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.cropbundle.CropBundle
+import com.w2sv.preferences.IntPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -38,13 +39,36 @@ class RecropDialogFragment : AbstractCropSettingsDialogFragment(
     override val viewModel by viewModels<ViewModel>()
 
     override fun onPositiveButtonClicked() {
-        (requireParentFragment() as Listener).onDoRecrop(
+        (requireParentFragment() as Listener).onRecrop(
             viewModel.cropBundlePosition,
             viewModel.edgeCandidateThreshold.toDouble()
         )
     }
 
     interface Listener {
-        fun onDoRecrop(cropBundlePosition: Int, threshold: Double)
+        fun onRecrop(cropBundlePosition: Int, threshold: Double)
+    }
+}
+
+@AndroidEntryPoint
+class RecropAllDialogFragment : AbstractCropSettingsDialogFragment(
+    R.string.recrop_all_with_adjusted_settings,
+    R.drawable.ic_autorenew_24,
+    R.string.recrop
+) {
+
+    @HiltViewModel
+    class ViewModel @Inject constructor(intPreferences: IntPreferences) : AbstractCropSettingsDialogFragment.ViewModel(
+        intPreferences.edgeCandidateThreshold
+    )
+
+    override val viewModel by viewModels<ViewModel>()
+
+    override fun onPositiveButtonClicked() {
+        (requireParentFragment() as Listener).onRecropAll(viewModel.edgeCandidateThreshold.toDouble())
+    }
+
+    interface Listener {
+        fun onRecropAll(threshold: Double)
     }
 }

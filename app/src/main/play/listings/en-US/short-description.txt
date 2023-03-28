@@ -1,1 +1,1 @@
-Automagical batch & live screenshot cropping
+Automatic screenshot cropping

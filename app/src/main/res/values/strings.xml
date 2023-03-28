@@ -60,6 +60,7 @@
     <string name="toggle_foreground_elements">Toggle foreground elements</string>
     <string name="open_popup_menu">Open popup menu</string>
     <string name="recrop_with_adjusted_settings">Recrop with adjusted Settings</string>
+    <string name="recrop_all_with_adjusted_settings">Recrop all with adjusted Settings</string>
     <string name="recrop">Recrop</string>
     <string name="sensitivity">Sensitivity</string>
     <string name="low">Low</string>
