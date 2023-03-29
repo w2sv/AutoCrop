@@ -57,23 +57,23 @@
 
                     android:contentDescription="@string/save_all_crops" />
 
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="2dp"
-                    android:layout_marginVertical="2dp"
-                    app:dividerColor="@color/low_alpha_gray" />
+<!--                <com.google.android.material.divider.MaterialDivider-->
+<!--                    android:layout_width="1dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_marginHorizontal="2dp"-->
+<!--                    android:layout_marginVertical="2dp"-->
+<!--                    app:dividerColor="@color/low_alpha_gray" />-->
 
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/recrop_all_button"
-                    android:layout_width="@dimen/size_image_button"
-                    android:layout_height="@dimen/size_image_button"
-                    android:layout_marginHorizontal="@dimen/margin_button_row"
+<!--                <androidx.appcompat.widget.AppCompatImageButton-->
+<!--                    android:id="@+id/recrop_all_button"-->
+<!--                    android:layout_width="@dimen/size_image_button"-->
+<!--                    android:layout_height="@dimen/size_image_button"-->
+<!--                    android:layout_marginHorizontal="@dimen/margin_button_row"-->
 
-                    android:background="@drawable/ic_autorenew_24"
-                    android:backgroundTint="@color/higher_light"
+<!--                    android:background="@drawable/ic_autorenew_24"-->
+<!--                    android:backgroundTint="@color/higher_light"-->
 
-                    android:contentDescription="@string/manually_adjust_the_crop" />
+<!--                    android:contentDescription="@string/manually_adjust_the_crop" />-->
             </LinearLayout>
         </LinearLayout>
 

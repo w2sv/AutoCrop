@@ -18,7 +18,7 @@ androidutils = 'com.github.w2sv:AndroidUtils:0.1.0'
 kotlinutils = 'com.github.w2sv:KotlinUtils:0.0.6-rc3'
 viewboundcontroller = 'com.github.w2sv:ViewboundController:0.0.7-rc1'
 viewanimations = 'com.github.w2sv:AndroidViewAnimations:3.0.2-rc2'
-onboarder = 'com.github.w2sv:AndroidOnboarder:0.0.2-rc3'
+onboarder = 'com.github.w2sv:AndroidOnboarder:0.0.3-rc2'
 
 # androidx
 androidx-appcompat = 'androidx.appcompat:appcompat:1.6.1'

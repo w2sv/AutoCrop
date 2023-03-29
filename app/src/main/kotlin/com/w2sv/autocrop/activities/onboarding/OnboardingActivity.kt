@@ -1,7 +1,6 @@
 package com.w2sv.autocrop.activities.onboarding
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
 import com.airbnb.lottie.LottieAnimationView
@@ -31,7 +30,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
         var screenshotListeningEnabled: Boolean = false
     }
 
-    val viewModel by viewModels<ViewModel>()
+    private val viewModel by viewModels<ViewModel>()
 
     private val screenshotListeningPermissionHandlers by lazy {
         ScreenshotListener.permissionHandlers(this)
@@ -64,21 +63,21 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                 emblemDrawableRes = com.w2sv.common.R.drawable.ic_hearing_24,
                 actionLayoutRes = R.layout.action_layout_screenshotlistener_onboardingpage,
                 onViewCreatedListener = { view, activity ->
-                    activity as OnboardingActivity
-
                     val doneAnimation = view.findViewById<LottieAnimationView>(R.id.done_animation)
-                    val enableButton = view.getEnableButton()
+                    val enableButton = view.findViewById<AppCompatButton>(R.id.enable_button)
 
-                    when (activity.viewModel.screenshotListeningEnabled) {
+                    val viewModel by activity.viewModels<ViewModel>()
+
+                    when (viewModel.screenshotListeningEnabled) {
                         true -> crossVisualize(enableButton, doneAnimation)
                         false -> enableButton
                             .setOnClickListener {
-                                activity
+                                (activity as OnboardingActivity)
                                     .screenshotListeningPermissionHandlers
                                     .requestPermissions(
                                         onGranted = {
                                             ScreenshotListener.startService(activity)
-                                            activity.viewModel.screenshotListeningEnabled = true
+                                            viewModel.screenshotListeningEnabled = true
                                         },
                                         onRequestDismissed = {
                                             it
@@ -96,11 +95,9 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                     }
                 },
                 onPageFullyVisibleListener = { view, activity ->
-                    activity as OnboardingActivity
-
-                    if (view != null && !activity.viewModel.screenshotListeningEnabled) {
+                    if (view != null && !activity.viewModels<ViewModel>().value.screenshotListeningEnabled) {
                         view
-                            .getEnableButton()
+                            .findViewById<AppCompatButton>(R.id.enable_button)
                             .animationComposer(Techniques.Tada)
                             .delay(resources.getLong(R.integer.delay_small))
                             .play()
@@ -114,9 +111,6 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                 backgroundColorRes = com.w2sv.common.R.color.ocean_blue
             )
         )
-
-    private fun View.getEnableButton(): AppCompatButton =
-        findViewById(R.id.enable_button)
 
     override fun onOnboardingFinished() {
         viewModel.globalFlags.onboardingDone = true

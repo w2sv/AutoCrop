@@ -10,7 +10,7 @@
 
     <!-- App Theme -->
 
-    <style name="Theme.App.Main" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.App.Main" parent="Theme.Material3.Dark.NoActionBar">
 
         <!-- disable all caps -->
         <item name="textAllCaps">false</item>

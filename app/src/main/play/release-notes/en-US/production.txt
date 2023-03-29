@@ -1,7 +1,4 @@
 [Improved]
-- Crop Algorithm
-- UI in various regards including the migration to MaterialTheme'd dialogs, as well as a fresh new font
-[Introduced]
-- Crop Sensibility Selection
-- Recropping with alternate sensibility
-- Crop Edge Candidate Selection
+- App stability
+[Fixed]
+- Coloring in light mode
