@@ -52,7 +52,7 @@ import com.w2sv.autocrop.ui.views.makeOnClickPersistent
 import com.w2sv.autocrop.ui.views.notifyCurrentItemChanged
 import com.w2sv.autocrop.ui.views.toggleCheck
 import com.w2sv.autocrop.ui.views.visualize
-import com.w2sv.autocrop.utils.extensions.holdingSingularElement
+import com.w2sv.autocrop.utils.extensions.isHoldingSingularElement
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.common.extensions.getParcelableCompat
@@ -103,7 +103,7 @@ class CropPagerFragment :
         fun getCropSavingDialogOnClick(click: Click): AbstractCropSavingDialogFragment? =
             when {
                 doAutoScrollLive.value == true -> null
-                click == Click.Single || dataSet.holdingSingularElement -> getSaveCropDialog(true)
+                click == Click.Single || dataSet.isHoldingSingularElement -> getSaveCropDialog(true)
                 else -> getSaveAllCropsDialog(true)
             }
 
@@ -235,7 +235,7 @@ class CropPagerFragment :
         }
 
         dataSet.observe(viewLifecycleOwner) {
-            if (it.holdingSingularElement && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED))
+            if (it.isHoldingSingularElement && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED))
                 binding.allCropsButtonsWLabel.animate(Techniques.ZoomOut)
         }
     }
@@ -276,7 +276,7 @@ class CropPagerFragment :
             buildList {
                 add(currentCropLayout)
                 add(popupMenuButton)
-                if (!viewModel.dataSet.holdingSingularElement)
+                if (!viewModel.dataSet.isHoldingSingularElement)
                     add(allCropsButtonsWLabel)
             }
                 .visualize(
@@ -418,7 +418,7 @@ class CropPagerFragment :
     }
 
     private fun removeView(dataSetPosition: Int, cropProcedure: CropProcedure) {
-        if (viewModel.dataSet.holdingSingularElement) {
+        if (viewModel.dataSet.isHoldingSingularElement) {
             return requireCastActivity<ExaminationActivity>().invokeExitFragment()
         }
 

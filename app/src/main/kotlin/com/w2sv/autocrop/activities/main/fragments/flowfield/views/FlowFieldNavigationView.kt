@@ -11,7 +11,6 @@ import androidx.fragment.app.findFragment
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.androidutils.extensions.configureItem
-import com.w2sv.androidutils.extensions.openUrl
 import com.w2sv.androidutils.extensions.playStoreUrl
 import com.w2sv.androidutils.extensions.requireActivity
 import com.w2sv.androidutils.extensions.serviceRunning
@@ -19,12 +18,13 @@ import com.w2sv.androidutils.extensions.show
 import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.androidutils.extensions.toggle
 import com.w2sv.androidutils.extensions.viewModel
+import com.w2sv.androidutils.permissionhandler.requestPermissions
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.CropSettingsDialogFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.permissionhandler.requestPermissions
+import com.w2sv.autocrop.utils.extensions.openUrlWithActivityNotFoundHandling
 import com.w2sv.screenshotlistening.ScreenshotListener
 
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
@@ -71,8 +71,9 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                     }
 
                     viewModel.screenshotListenerCancelledFromNotificationLive.observe(this@FlowFieldNavigationView.findViewTreeLifecycleOwner()!!) { isCancelled ->
-                        if (isCancelled)
+                        if (isCancelled) {
                             isChecked = false
+                        }
                     }
                 }
         }
@@ -109,8 +110,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 }
 
                 R.id.main_menu_item_go_to_github -> {
-                    context
-                        .openUrl("https://github.com/w2sv/autocrop")
+                    context.openUrlWithActivityNotFoundHandling("https://github.com/w2sv/autocrop")
                 }
 
                 R.id.main_menu_item_rate_the_app -> {

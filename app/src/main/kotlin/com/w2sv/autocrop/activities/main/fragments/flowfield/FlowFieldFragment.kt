@@ -43,16 +43,19 @@ import com.w2sv.autocrop.ui.views.fadeIn
 import com.w2sv.autocrop.ui.views.fadeInAnimationComposer
 import com.w2sv.autocrop.ui.views.fadeOut
 import com.w2sv.autocrop.ui.views.onHalfwayFinished
+import com.w2sv.autocrop.utils.extensions.resolution
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.autocrop.utils.pathIdentifier
 import com.w2sv.common.PermissionHandler
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
+import com.w2sv.flowfield.Sketch
 import com.w2sv.preferences.CropSaveDirPreferences
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import processing.android.PFragment
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -114,21 +117,17 @@ class FlowFieldFragment :
 
     class CancelledSSLFromNotificationListener(
         broadcastManager: LocalBroadcastManager,
-        private val onReceiveListener: () -> Unit
-    ) : SelfManagingLocalBroadcastReceiver(
+        callback: (Context?, Intent?) -> Unit
+    ) : SelfManagingLocalBroadcastReceiver.Impl(
         broadcastManager,
-        IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
-    ) {
-
-        override fun onReceive(context: Context?, intent: Intent?) {
-            onReceiveListener()
-        }
-    }
+        IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS),
+        callback
+    )
 
     private val viewModel by viewModels<ViewModel>()
 
     private val cancelledSSLFromNotificationListener: CancelledSSLFromNotificationListener by lazy {
-        CancelledSSLFromNotificationListener(LocalBroadcastManager.getInstance(requireContext())) {
+        CancelledSSLFromNotificationListener(LocalBroadcastManager.getInstance(requireContext())) { _, _ ->
             viewModel.screenshotListenerCancelledFromNotificationLive.postValue(true)
         }
     }
@@ -137,18 +136,26 @@ class FlowFieldFragment :
         super.onCreate(savedInstanceState)
 
         registerLifecycleObservers(
-            buildList {
-                add(cancelledSSLFromNotificationListener)
-                add(selectImagesContractHandler)
-                add(openDocumentTreeContractHandler)
-                add(writeExternalStoragePermissionHandler)
-                addAll(screenshotListeningPermissionHandlers)
-            }
+            listOf(
+                cancelledSSLFromNotificationListener,
+                selectImagesContractHandler,
+                openDocumentTreeContractHandler,
+                writeExternalStoragePermissionHandler
+            ) + screenshotListeningPermissionHandlers
+
         )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        childFragmentManager
+            .beginTransaction()
+            .add(
+                binding.flowfieldLayout.id,
+                PFragment(Sketch(requireActivity().windowManager.resolution))
+            )
+            .commitAllowingStateLoss()  // Fixes java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
 
         binding.showLayoutElements()
         binding.setOnClickListeners()
@@ -268,7 +275,7 @@ class FlowFieldFragment :
                 if (imageUris.isNotEmpty()) {
                     if (getMediaUri(requireContext(), imageUris.first()) == null)
                         requireContext().showToast(
-                            "Content provider not supported. Please use a different one",
+                            "Content provider not supported. Please select a different one",
                             Toast.LENGTH_LONG
                         )
                     else
@@ -299,7 +306,7 @@ class FlowFieldFragment :
                         }
                 }
                 else
-                    "Reselected preset directory"
+                    "Directory didn't change"
 
                 requireContext().showToast(text, Toast.LENGTH_LONG)
             }

@@ -18,7 +18,12 @@ import javax.inject.Inject
 class LaunchActivity : AppCompatActivity() {
 
     @HiltViewModel
-    class ViewModel @Inject constructor(val globalFlags: GlobalFlags) : androidx.lifecycle.ViewModel()
+    class ViewModel @Inject constructor(globalFlags: GlobalFlags) : androidx.lifecycle.ViewModel() {
+        val destinationActivity = when (globalFlags.onboardingDone) {
+            true -> MainActivity::class.java
+            false -> OnboardingActivity::class.java
+        }
+    }
 
     private val viewModel by viewModels<ViewModel>()
 
@@ -30,10 +35,7 @@ class LaunchActivity : AppCompatActivity() {
         startActivity(
             Intent(
                 this,
-                if (viewModel.globalFlags.onboardingDone)
-                    MainActivity::class.java
-                else
-                    OnboardingActivity::class.java
+                viewModel.destinationActivity
             )
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         )

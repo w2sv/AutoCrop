@@ -2,6 +2,7 @@ package com.w2sv.autocrop.activities
 
 import android.os.Bundle
 import androidx.lifecycle.LifecycleObserver
+import com.w2sv.autocrop.utils.extensions.addLifecycleObservers
 import com.w2sv.autocrop.utils.extensions.registerOnBackPressedListener
 
 abstract class AppActivity : ViewBoundFragmentActivity() {
@@ -9,8 +10,8 @@ abstract class AppActivity : ViewBoundFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleObservers?.forEach {
-            lifecycle.addObserver(it)
+        lifecycleObservers?.let {
+            addLifecycleObservers(it)
         }
 
         registerOnBackPressedListener(::handleOnBackPressed)
