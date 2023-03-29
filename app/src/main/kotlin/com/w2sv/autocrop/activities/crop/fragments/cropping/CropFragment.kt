@@ -13,7 +13,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
-import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.increment
 import com.w2sv.androidutils.extensions.showToast
@@ -26,6 +25,7 @@ import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.databinding.CropBinding
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
+import com.w2sv.common.BackPressHandler
 import com.w2sv.cropbundle.CropBundle
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel

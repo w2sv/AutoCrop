@@ -22,7 +22,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.SelfManagingLocalBroadcastReceiver
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.hide
@@ -47,6 +46,7 @@ import com.w2sv.autocrop.utils.extensions.resolution
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.autocrop.utils.pathIdentifier
+import com.w2sv.common.BackPressHandler
 import com.w2sv.common.PermissionHandler
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.flowfield.Sketch

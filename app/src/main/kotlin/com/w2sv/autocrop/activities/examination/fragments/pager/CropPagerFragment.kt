@@ -19,7 +19,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.viewpager2.widget.ViewPager2
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.extensions.getHtmlText
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.hide
@@ -54,6 +53,7 @@ import com.w2sv.autocrop.ui.views.visualize
 import com.w2sv.autocrop.utils.extensions.isHoldingSingularElement
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
+import com.w2sv.common.BackPressHandler
 import com.w2sv.common.extensions.getParcelableCompat
 import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.CropBundle
