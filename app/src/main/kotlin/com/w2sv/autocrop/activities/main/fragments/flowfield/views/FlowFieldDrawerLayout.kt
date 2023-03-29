@@ -11,12 +11,12 @@ import com.w2sv.autocrop.databinding.FlowfieldBinding
 
 class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : DrawerLayout(context, attributeSet) {
 
-    private val binding: FlowfieldBinding by lazy { findFragment<FlowFieldFragment>().binding }
-
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
         if (!isInEditMode) {
+            val binding: FlowfieldBinding by lazy { findFragment<FlowFieldFragment>().binding }
+
             addDrawerListener(
                 object : SimpleDrawerListener() {
                     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
