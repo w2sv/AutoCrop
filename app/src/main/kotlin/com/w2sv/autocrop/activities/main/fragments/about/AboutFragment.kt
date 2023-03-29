@@ -16,20 +16,14 @@ class AboutFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.populate()
-    }
+        with(binding) {
+            copyrightTv.text = resources.getString(R.string.copyright, Calendar.getInstance().get(Calendar.YEAR))
+            versionTv.text = resources.getString(R.string.version, BuildConfig.VERSION_NAME)
 
-    private fun AboutBinding.populate() {
-        copyrightTv.text = resources.getString(R.string.copyright, Calendar.getInstance().get(Calendar.YEAR))
-        versionTv.text = resources.getString(R.string.version, BuildConfig.VERSION_NAME)
-
-        setOnClickListeners()
-    }
-
-    private fun AboutBinding.setOnClickListeners() {
-        appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
-        logoIv.setOnClickListener { it.animate(Techniques.Tada) }
-        versionTv.setOnClickListener { it.animate(Techniques.RubberBand) }
-        copyrightTv.setOnClickListener { it.animate(Techniques.Wave) }
+            appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
+            logoIv.setOnClickListener { it.animate(Techniques.Tada) }
+            versionTv.setOnClickListener { it.animate(Techniques.RubberBand) }
+            copyrightTv.setOnClickListener { it.animate(Techniques.Wave) }
+        }
     }
 }
