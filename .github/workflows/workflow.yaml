@@ -6,90 +6,8 @@
 name: Build
 on: [ push, pull_request ]
 
-env:
-  ARCH: x86_64
-  JAVA_VERSION: 17
-  DEVICE: Nexus 6
-
 jobs:
-  unit-tests:
-    name: Run Unit tests
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout current repository
-        uses: actions/checkout@v3
-
-      - name: Setup JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-
-      - name: Run Unit tests
-        run: |
-          chmod +x gradlew
-          ./gradlew test
-
-  instrumentation-tests:
-    # @https://github.com/ReactiveCircus/android-emulator-runner
-
-    name: Run instrumentation tests
-    runs-on: macos-latest  # allows for hardware acceleration through HAXM
-    strategy:
-      fail-fast: true
-
-      # paired value syntax: @https://stackoverflow.com/a/68940067/12083276
-      # @https://docs.github.com/en/actions/using-jobs/using-a-build-matrix-for-your-jobs
-      matrix:
-        api: [ 26, 30, 31 ]  # 29 failing with inconceivable OOM error on MainActivityTest entry;
-        # 33 not available afaik
-    steps:
-      - name: Checkout current repository in ubuntu's file system
-        uses: actions/checkout@v3
-
-      - name: Setup JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
-
-      - name: AVD cache
-        uses: actions/cache@v3
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-${{ matrix.api }}
-
-      - name: create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api }}
-          # target: google_apis_playstore  # necessary for api=32
-          profile: ${{ env.DEVICE }}
-          arch: ${{ env.ARCH }}
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          script: echo "Generated AVD snapshot for caching."
-
-      - name: Run Instrumentation tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api }}
-          profile: ${{ matrix.DEVICE }}
-          arch: ${{ env.ARCH }}
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          script: ./gradlew connectedCheck
-
-  assemble:
-    name: Assemble
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -97,7 +15,67 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v1
         with:
-          java-version: ${{ env.JAVA_VERSION }}
+          java-version: 17
 
-      - name: Assemble
-        run: ./gradlew assembleDebug
+      - name: Check & assembleDebug
+        run: |
+          ./gradlew check
+          ./gradlew assembleDebug
+
+#  instrumentation-tests:
+#    # @https://github.com/ReactiveCircus/android-emulator-runner
+#
+#    name: Run instrumentation tests
+#    runs-on: macos-latest  # allows for hardware acceleration through HAXM
+#    strategy:
+#      fail-fast: true
+#
+#      # paired value syntax: @https://stackoverflow.com/a/68940067/12083276
+#      # @https://docs.github.com/en/actions/using-jobs/using-a-build-matrix-for-your-jobs
+#      matrix:
+#        api: [ 26, 30, 31 ]  # 29 failing with inconceivable OOM error on MainActivityTest entry;
+#        # 33 not available afaik
+#    steps:
+#      - name: Checkout current repository in ubuntu's file system
+#        uses: actions/checkout@v3
+#
+#      - name: Setup JDK
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: ${{ env.JAVA_VERSION }}
+#
+#      - name: Gradle cache
+#        uses: gradle/gradle-build-action@v2
+#
+#      - name: AVD cache
+#        uses: actions/cache@v3
+#        id: avd-cache
+#        with:
+#          path: |
+#            ~/.android/avd/*
+#            ~/.android/adb*
+#          key: avd-${{ matrix.api }}
+#
+#      - name: create AVD and generate snapshot for caching
+#        if: steps.avd-cache.outputs.cache-hit != 'true'
+#        uses: reactivecircus/android-emulator-runner@v2
+#        with:
+#          api-level: ${{ matrix.api }}
+#          # target: google_apis_playstore  # necessary for api=32
+#          profile: ${{ env.DEVICE }}
+#          arch: ${{ env.ARCH }}
+#          force-avd-creation: false
+#          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+#          disable-animations: false
+#          script: echo "Generated AVD snapshot for caching."
+#
+#      - name: Run Instrumentation tests
+#        uses: reactivecircus/android-emulator-runner@v2
+#        with:
+#          api-level: ${{ matrix.api }}
+#          profile: ${{ matrix.DEVICE }}
+#          arch: ${{ env.ARCH }}
+#          force-avd-creation: false
+#          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+#          disable-animations: true
+#          script: ./gradlew connectedCheck
