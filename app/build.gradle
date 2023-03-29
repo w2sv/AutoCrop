@@ -112,7 +112,6 @@ dependencies {
     kapt libs.google.hilt.kapt
 
     // owned
-    implementation project(path: ':bidirectionalviewpager')
     implementation project(path: ':preferences')
     implementation project(path: ':cropbundle')
     implementation project(path: ':screenshotlistening')
@@ -125,6 +124,7 @@ dependencies {
     implementation libs.androidutils
     implementation libs.viewanimations
     implementation libs.onboarder
+    implementation libs.bidirectionalviewpager
 
     // other
     implementation libs.slimber
