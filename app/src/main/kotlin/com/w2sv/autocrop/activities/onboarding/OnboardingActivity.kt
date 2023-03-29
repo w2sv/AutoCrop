@@ -16,7 +16,7 @@ import com.w2sv.autocrop.ui.views.animationComposer
 import com.w2sv.autocrop.utils.extensions.addLifecycleObservers
 import com.w2sv.autocrop.utils.extensions.registerOnBackPressedListener
 import com.w2sv.onboarding.OnboardingPage
-import com.w2sv.preferences.GlobalFlags
+import com.w2sv.common.preferences.GlobalFlags
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel

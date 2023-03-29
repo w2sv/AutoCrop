@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.Screenshot
-import com.w2sv.preferences.CropSaveDirPreferences
+import com.w2sv.common.preferences.CropSaveDirPreferences
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors

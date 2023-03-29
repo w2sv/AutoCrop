@@ -60,8 +60,8 @@ import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
 import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.kotlinutils.extensions.numericallyInflected
-import com.w2sv.preferences.BooleanPreferences
-import com.w2sv.preferences.IntPreferences
+import com.w2sv.common.preferences.BooleanPreferences
+import com.w2sv.common.preferences.IntPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

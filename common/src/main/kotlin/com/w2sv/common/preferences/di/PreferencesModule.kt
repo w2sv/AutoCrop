@@ -1,4 +1,4 @@
-package com.w2sv.preferences.di
+package com.w2sv.common.preferences.di
 
 import android.content.Context
 import android.content.SharedPreferences

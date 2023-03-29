@@ -8,7 +8,7 @@ import android.provider.DocumentsContract
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import com.w2sv.cropbundle.io.utils.systemPicturesDirectory
-import com.w2sv.preferences.CropSaveDirPreferences
+import com.w2sv.common.preferences.CropSaveDirPreferences
 import slimber.log.i
 
 @RequiresApi(Build.VERSION_CODES.Q)

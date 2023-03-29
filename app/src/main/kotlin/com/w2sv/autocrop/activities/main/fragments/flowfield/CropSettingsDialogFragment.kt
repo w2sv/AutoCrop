@@ -5,7 +5,7 @@ import com.w2sv.androidutils.extensions.postValue
 import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.AbstractCropSettingsDialogFragment
-import com.w2sv.preferences.IntPreferences
+import com.w2sv.common.preferences.IntPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

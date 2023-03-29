@@ -36,7 +36,7 @@ import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
 import com.w2sv.kotlinutils.extensions.getByOrdinal
 import com.w2sv.kotlinutils.extensions.rounded
-import com.w2sv.preferences.EnumOrdinals
+import com.w2sv.common.preferences.EnumOrdinals
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

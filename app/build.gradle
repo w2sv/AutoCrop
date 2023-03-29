@@ -112,7 +112,6 @@ dependencies {
     kapt libs.google.hilt.kapt
 
     // owned
-    implementation project(path: ':preferences')
     implementation project(path: ':cropbundle')
     implementation project(path: ':screenshotlistening')
     implementation project(path: ':common')

@@ -50,7 +50,7 @@ import com.w2sv.common.BackPressHandler
 import com.w2sv.common.PermissionHandler
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.flowfield.Sketch
-import com.w2sv.preferences.CropSaveDirPreferences
+import com.w2sv.common.preferences.CropSaveDirPreferences
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel

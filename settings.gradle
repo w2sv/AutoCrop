@@ -16,7 +16,6 @@ dependencyResolutionManagement {
 
 rootProject.name = 'AutoCrop'
 include ':app'
-include ':preferences'
 include ':cropbundle'
 include ':screenshotlistening'
 include ':common'

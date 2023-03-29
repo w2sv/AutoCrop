@@ -14,10 +14,10 @@ import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.domain.AccumulatedIOResults
 import com.w2sv.common.extensions.getParcelableExtraCompat
-import com.w2sv.preferences.BooleanPreferences
-import com.w2sv.preferences.CropSaveDirPreferences
-import com.w2sv.preferences.GlobalFlags
-import com.w2sv.preferences.IntPreferences
+import com.w2sv.common.preferences.BooleanPreferences
+import com.w2sv.common.preferences.CropSaveDirPreferences
+import com.w2sv.common.preferences.GlobalFlags
+import com.w2sv.common.preferences.IntPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

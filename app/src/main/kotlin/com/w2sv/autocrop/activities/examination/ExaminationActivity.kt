@@ -20,9 +20,9 @@ import com.w2sv.common.extensions.getParcelableExtraCompat
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.io.CropBundleIORunner
 import com.w2sv.cropbundle.io.getDeleteRequestUri
-import com.w2sv.preferences.BooleanPreferences
-import com.w2sv.preferences.EnumOrdinals
-import com.w2sv.preferences.GlobalFlags
+import com.w2sv.common.preferences.BooleanPreferences
+import com.w2sv.common.preferences.EnumOrdinals
+import com.w2sv.common.preferences.GlobalFlags
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

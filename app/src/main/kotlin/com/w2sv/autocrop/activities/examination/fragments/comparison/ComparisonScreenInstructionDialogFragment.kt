@@ -5,7 +5,7 @@ import androidx.fragment.app.viewModels
 import com.w2sv.androidutils.extensions.getColoredDrawable
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.views.RoundedDialogFragment
-import com.w2sv.preferences.GlobalFlags
+import com.w2sv.common.preferences.GlobalFlags
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
