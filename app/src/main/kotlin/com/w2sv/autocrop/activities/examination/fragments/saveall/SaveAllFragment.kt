@@ -14,6 +14,7 @@ import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.databinding.SaveAllBinding
 import com.w2sv.autocrop.utils.getFragment
+import com.w2sv.autocrop.utils.requireCastActivity
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

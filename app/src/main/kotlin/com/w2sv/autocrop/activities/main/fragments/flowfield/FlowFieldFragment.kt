@@ -42,15 +42,16 @@ import com.w2sv.autocrop.ui.views.fadeIn
 import com.w2sv.autocrop.ui.views.fadeInAnimationComposer
 import com.w2sv.autocrop.ui.views.fadeOut
 import com.w2sv.autocrop.ui.views.onHalfwayFinished
+import com.w2sv.autocrop.utils.extensions.addObservers
 import com.w2sv.autocrop.utils.extensions.resolution
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.autocrop.utils.pathIdentifier
 import com.w2sv.common.BackPressHandler
 import com.w2sv.common.PermissionHandler
+import com.w2sv.common.preferences.CropSaveDirPreferences
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.flowfield.Sketch
-import com.w2sv.common.preferences.CropSaveDirPreferences
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -135,7 +136,7 @@ class FlowFieldFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        registerLifecycleObservers(
+        addObservers(
             listOf(
                 cancelledSSLFromNotificationListener,
                 selectImagesContractHandler,
@@ -320,7 +321,7 @@ class FlowFieldFragment :
             else
                 viewModel.backPressHandler(
                     {
-                        requireContext().showToast("Tap again to exit")
+                        requireContext().showToast(resources.getString(R.string.tap_again_to_exit))
                     },
                     {
                         requireActivity().finishAffinity()

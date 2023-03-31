@@ -28,9 +28,10 @@ import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.comparison.model.DisplayedImage
 import com.w2sv.autocrop.databinding.ComparisonBinding
+import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
-import com.w2sv.cropbundle.CropBundle
 import com.w2sv.common.preferences.GlobalFlags
+import com.w2sv.cropbundle.CropBundle
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

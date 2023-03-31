@@ -1,8 +1,8 @@
 package com.w2sv.common.preferences
 
 import android.content.SharedPreferences
-import com.w2sv.common.DEFAULT_EDGE_CANDIDATE_THRESHOLD
 import com.w2sv.androidutils.typedpreferences.IntPreferences
+import com.w2sv.common.DEFAULT_EDGE_CANDIDATE_THRESHOLD
 import javax.inject.Inject
 import javax.inject.Singleton
 

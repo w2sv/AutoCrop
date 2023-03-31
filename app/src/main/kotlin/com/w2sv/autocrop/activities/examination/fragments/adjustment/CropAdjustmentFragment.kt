@@ -32,11 +32,11 @@ import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Line
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.N_SCREEN_ORIENTATIONS
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.utils.getFragment
+import com.w2sv.common.preferences.EnumOrdinals
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
 import com.w2sv.kotlinutils.extensions.getByOrdinal
 import com.w2sv.kotlinutils.extensions.rounded
-import com.w2sv.common.preferences.EnumOrdinals
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

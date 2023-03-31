@@ -22,6 +22,8 @@ import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.databinding.CropPagerExitBinding
 import com.w2sv.autocrop.ui.views.animationComposer
+import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
+import com.w2sv.autocrop.utils.requireCastActivity
 import kotlinx.coroutines.launch
 
 @SuppressLint("NewApi")

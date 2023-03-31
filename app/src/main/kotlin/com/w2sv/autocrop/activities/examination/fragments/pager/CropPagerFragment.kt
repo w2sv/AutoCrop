@@ -30,6 +30,7 @@ import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.androidutils.extensions.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
+import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.crop.domain.CropResults
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
@@ -51,17 +52,19 @@ import com.w2sv.autocrop.ui.views.notifyCurrentItemChanged
 import com.w2sv.autocrop.ui.views.toggleCheck
 import com.w2sv.autocrop.ui.views.visualize
 import com.w2sv.autocrop.utils.extensions.isHoldingSingularElement
+import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
+import com.w2sv.autocrop.utils.requireCastActivity
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.common.BackPressHandler
 import com.w2sv.common.extensions.getParcelableCompat
+import com.w2sv.common.preferences.BooleanPreferences
+import com.w2sv.common.preferences.IntPreferences
 import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
 import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.kotlinutils.extensions.numericallyInflected
-import com.w2sv.common.preferences.BooleanPreferences
-import com.w2sv.common.preferences.IntPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -312,7 +315,7 @@ class CropPagerFragment :
                 .show(childFragmentManager)
         }
         manualCropButton.setOnClickListener {
-            requireViewBoundFragmentActivity().fragmentReplacementTransaction(
+            requireCastActivity<ViewBoundFragmentActivity>().fragmentReplacementTransaction(
                 CropAdjustmentFragment.getInstance(
                     viewModel.dataSet.livePosition.value!!
                 ),
@@ -326,7 +329,7 @@ class CropPagerFragment :
                 .show(childFragmentManager)
         }
         comparisonButton.setOnClickListener {
-            requireViewBoundFragmentActivity().fragmentReplacementTransaction(
+            requireCastActivity<ViewBoundFragmentActivity>().fragmentReplacementTransaction(
                 ComparisonFragment.getInstance(viewModel.dataSet.livePosition.value!!)
             )
                 .addToBackStack(null)
@@ -436,7 +439,7 @@ class CropPagerFragment :
     }
 
     override fun onSaveAllCrops() {
-        requireViewBoundFragmentActivity()
+        requireCastActivity<ViewBoundFragmentActivity>()
             .fragmentReplacementTransaction(
                 SaveAllFragment.getInstance(ArrayList(viewModel.dataSet.indices.toList())),
                 true

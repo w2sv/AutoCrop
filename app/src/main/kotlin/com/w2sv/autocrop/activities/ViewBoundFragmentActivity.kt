@@ -1,30 +1,40 @@
 package com.w2sv.autocrop.activities
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.blogspot.atifsoftwares.animatoolib.R
 import com.w2sv.autocrop.databinding.BlankBinding
+import com.w2sv.autocrop.utils.tagName
 import com.w2sv.viewboundcontroller.ViewBoundActivity
 
 abstract class ViewBoundFragmentActivity : ViewBoundActivity<BlankBinding>(BlankBinding::class.java) {
 
-    private val layoutRootId: Int get() = binding.root.id
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (savedInstanceState == null) {
+            launchRootFragment()
+        }
+    }
 
     /**
      * Fragment transactions
      */
 
-    @SuppressLint("CommitTransaction")
-    protected fun launchRootFragment() {
+    private fun launchRootFragment() {
         supportFragmentManager
             .beginTransaction()
             .setReorderingAllowed(true)
-            .add(
-                layoutRootId,
-                getRootFragment(),
-                "${this::class.java.name}_ROOT_FRAGMENT"
-            )
+            .run {
+                val rootFragment = getRootFragment()
+                add(
+                    binding.root.id,
+                    rootFragment,
+                    rootFragment.tagName
+                )
+            }
             .commit()
     }
 
@@ -42,7 +52,7 @@ abstract class ViewBoundFragmentActivity : ViewBoundActivity<BlankBinding>(Blank
                     )
             }
             .setReorderingAllowed(true)
-            .replace(layoutRootId, fragment)
+            .replace(binding.root.id, fragment)
 
     /**
      * Fragment retrieval
@@ -51,7 +61,7 @@ abstract class ViewBoundFragmentActivity : ViewBoundActivity<BlankBinding>(Blank
     abstract fun getRootFragment(): Fragment
 
     fun getCurrentFragment(): Fragment? =
-        supportFragmentManager.findFragmentById(layoutRootId)
+        supportFragmentManager.findFragmentById(binding.root.id)
 
     @Suppress("UNCHECKED_CAST")
     fun <F : Fragment> getCastCurrentFragment(): F? =

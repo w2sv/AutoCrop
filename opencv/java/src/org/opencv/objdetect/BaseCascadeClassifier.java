@@ -9,19 +9,21 @@ import org.opencv.core.Algorithm;
 
 public class BaseCascadeClassifier extends Algorithm {
 
-    protected BaseCascadeClassifier(long addr) { super(addr); }
+    protected BaseCascadeClassifier(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static BaseCascadeClassifier __fromPtr__(long addr) { return new BaseCascadeClassifier(addr); }
+    public static BaseCascadeClassifier __fromPtr__(long addr) {
+        return new BaseCascadeClassifier(addr);
+    }
+
+    // native support for java finalize()
+    private static native void delete(long nativeObj);
 
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
-
-
-
-    // native support for java finalize()
-    private static native void delete(long nativeObj);
 
 }

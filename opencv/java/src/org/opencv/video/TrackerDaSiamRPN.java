@@ -3,18 +3,18 @@
 //
 package org.opencv.video;
 
-import org.opencv.video.Tracker;
-import org.opencv.video.TrackerDaSiamRPN;
-import org.opencv.video.TrackerDaSiamRPN_Params;
-
 // C++: class TrackerDaSiamRPN
 
 public class TrackerDaSiamRPN extends Tracker {
 
-    protected TrackerDaSiamRPN(long addr) { super(addr); }
+    protected TrackerDaSiamRPN(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static TrackerDaSiamRPN __fromPtr__(long addr) { return new TrackerDaSiamRPN(addr); }
+    public static TrackerDaSiamRPN __fromPtr__(long addr) {
+        return new TrackerDaSiamRPN(addr);
+    }
 
     //
     // C++: static Ptr_TrackerDaSiamRPN cv::TrackerDaSiamRPN::create(TrackerDaSiamRPN_Params parameters = TrackerDaSiamRPN::Params())
@@ -22,7 +22,8 @@ public class TrackerDaSiamRPN extends Tracker {
 
     /**
      * Constructor
-     *     @param parameters DaSiamRPN parameters TrackerDaSiamRPN::Params
+     *
+     * @param parameters DaSiamRPN parameters TrackerDaSiamRPN::Params
      * @return automatically generated
      */
     public static TrackerDaSiamRPN create(TrackerDaSiamRPN_Params parameters) {
@@ -31,6 +32,7 @@ public class TrackerDaSiamRPN extends Tracker {
 
     /**
      * Constructor
+     *
      * @return automatically generated
      */
     public static TrackerDaSiamRPN create() {
@@ -42,24 +44,9 @@ public class TrackerDaSiamRPN extends Tracker {
     // C++:  float cv::TrackerDaSiamRPN::getTrackingScore()
     //
 
-    /**
-     * Return tracking score
-     * @return automatically generated
-     */
-    public float getTrackingScore() {
-        return getTrackingScore_0(nativeObj);
-    }
-
-
-    @Override
-    protected void finalize() throws Throwable {
-        delete(nativeObj);
-    }
-
-
-
     // C++: static Ptr_TrackerDaSiamRPN cv::TrackerDaSiamRPN::create(TrackerDaSiamRPN_Params parameters = TrackerDaSiamRPN::Params())
     private static native long create_0(long parameters_nativeObj);
+
     private static native long create_1();
 
     // C++:  float cv::TrackerDaSiamRPN::getTrackingScore()
@@ -67,5 +54,19 @@ public class TrackerDaSiamRPN extends Tracker {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
+
+    /**
+     * Return tracking score
+     *
+     * @return automatically generated
+     */
+    public float getTrackingScore() {
+        return getTrackingScore_0(nativeObj);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        delete(nativeObj);
+    }
 
 }

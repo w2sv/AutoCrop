@@ -3,19 +3,21 @@
 //
 package org.opencv.features2d;
 
-import org.opencv.features2d.Feature2D;
-import org.opencv.features2d.GFTTDetector;
-
 // C++: class GFTTDetector
+
 /**
  * Wrapping class for feature detection using the goodFeaturesToTrack function. :
  */
 public class GFTTDetector extends Feature2D {
 
-    protected GFTTDetector(long addr) { super(addr); }
+    protected GFTTDetector(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static GFTTDetector __fromPtr__(long addr) { return new GFTTDetector(addr); }
+    public static GFTTDetector __fromPtr__(long addr) {
+        return new GFTTDetector(addr);
+    }
 
     //
     // C++: static Ptr_GFTTDetector cv::GFTTDetector::create(int maxCorners = 1000, double qualityLevel = 0.01, double minDistance = 1, int blockSize = 3, bool useHarrisDetector = false, double k = 0.04)
@@ -71,169 +73,109 @@ public class GFTTDetector extends Feature2D {
     // C++:  void cv::GFTTDetector::setMaxFeatures(int maxFeatures)
     //
 
-    public void setMaxFeatures(int maxFeatures) {
-        setMaxFeatures_0(nativeObj, maxFeatures);
-    }
+    // C++: static Ptr_GFTTDetector cv::GFTTDetector::create(int maxCorners = 1000, double qualityLevel = 0.01, double minDistance = 1, int blockSize = 3, bool useHarrisDetector = false, double k = 0.04)
+    private static native long create_0(int maxCorners, double qualityLevel, double minDistance, int blockSize, boolean useHarrisDetector, double k);
 
 
     //
     // C++:  int cv::GFTTDetector::getMaxFeatures()
     //
 
-    public int getMaxFeatures() {
-        return getMaxFeatures_0(nativeObj);
-    }
+    private static native long create_1(int maxCorners, double qualityLevel, double minDistance, int blockSize, boolean useHarrisDetector);
 
 
     //
     // C++:  void cv::GFTTDetector::setQualityLevel(double qlevel)
     //
 
-    public void setQualityLevel(double qlevel) {
-        setQualityLevel_0(nativeObj, qlevel);
-    }
+    private static native long create_2(int maxCorners, double qualityLevel, double minDistance, int blockSize);
 
 
     //
     // C++:  double cv::GFTTDetector::getQualityLevel()
     //
 
-    public double getQualityLevel() {
-        return getQualityLevel_0(nativeObj);
-    }
+    private static native long create_3(int maxCorners, double qualityLevel, double minDistance);
 
 
     //
     // C++:  void cv::GFTTDetector::setMinDistance(double minDistance)
     //
 
-    public void setMinDistance(double minDistance) {
-        setMinDistance_0(nativeObj, minDistance);
-    }
+    private static native long create_4(int maxCorners, double qualityLevel);
 
 
     //
     // C++:  double cv::GFTTDetector::getMinDistance()
     //
 
-    public double getMinDistance() {
-        return getMinDistance_0(nativeObj);
-    }
+    private static native long create_5(int maxCorners);
 
 
     //
     // C++:  void cv::GFTTDetector::setBlockSize(int blockSize)
     //
 
-    public void setBlockSize(int blockSize) {
-        setBlockSize_0(nativeObj, blockSize);
-    }
+    private static native long create_6();
 
 
     //
     // C++:  int cv::GFTTDetector::getBlockSize()
     //
 
-    public int getBlockSize() {
-        return getBlockSize_0(nativeObj);
-    }
+    // C++: static Ptr_GFTTDetector cv::GFTTDetector::create(int maxCorners, double qualityLevel, double minDistance, int blockSize, int gradiantSize, bool useHarrisDetector = false, double k = 0.04)
+    private static native long create_7(int maxCorners, double qualityLevel, double minDistance, int blockSize, int gradiantSize, boolean useHarrisDetector, double k);
 
 
     //
     // C++:  void cv::GFTTDetector::setGradientSize(int gradientSize_)
     //
 
-    public void setGradientSize(int gradientSize_) {
-        setGradientSize_0(nativeObj, gradientSize_);
-    }
+    private static native long create_8(int maxCorners, double qualityLevel, double minDistance, int blockSize, int gradiantSize, boolean useHarrisDetector);
 
 
     //
     // C++:  int cv::GFTTDetector::getGradientSize()
     //
 
-    public int getGradientSize() {
-        return getGradientSize_0(nativeObj);
-    }
+    private static native long create_9(int maxCorners, double qualityLevel, double minDistance, int blockSize, int gradiantSize);
 
 
     //
     // C++:  void cv::GFTTDetector::setHarrisDetector(bool val)
     //
 
-    public void setHarrisDetector(boolean val) {
-        setHarrisDetector_0(nativeObj, val);
-    }
+    // C++:  void cv::GFTTDetector::setMaxFeatures(int maxFeatures)
+    private static native void setMaxFeatures_0(long nativeObj, int maxFeatures);
 
 
     //
     // C++:  bool cv::GFTTDetector::getHarrisDetector()
     //
 
-    public boolean getHarrisDetector() {
-        return getHarrisDetector_0(nativeObj);
-    }
+    // C++:  int cv::GFTTDetector::getMaxFeatures()
+    private static native int getMaxFeatures_0(long nativeObj);
 
 
     //
     // C++:  void cv::GFTTDetector::setK(double k)
     //
 
-    public void setK(double k) {
-        setK_0(nativeObj, k);
-    }
+    // C++:  void cv::GFTTDetector::setQualityLevel(double qlevel)
+    private static native void setQualityLevel_0(long nativeObj, double qlevel);
 
 
     //
     // C++:  double cv::GFTTDetector::getK()
     //
 
-    public double getK() {
-        return getK_0(nativeObj);
-    }
+    // C++:  double cv::GFTTDetector::getQualityLevel()
+    private static native double getQualityLevel_0(long nativeObj);
 
 
     //
     // C++:  String cv::GFTTDetector::getDefaultName()
     //
-
-    public String getDefaultName() {
-        return getDefaultName_0(nativeObj);
-    }
-
-
-    @Override
-    protected void finalize() throws Throwable {
-        delete(nativeObj);
-    }
-
-
-
-    // C++: static Ptr_GFTTDetector cv::GFTTDetector::create(int maxCorners = 1000, double qualityLevel = 0.01, double minDistance = 1, int blockSize = 3, bool useHarrisDetector = false, double k = 0.04)
-    private static native long create_0(int maxCorners, double qualityLevel, double minDistance, int blockSize, boolean useHarrisDetector, double k);
-    private static native long create_1(int maxCorners, double qualityLevel, double minDistance, int blockSize, boolean useHarrisDetector);
-    private static native long create_2(int maxCorners, double qualityLevel, double minDistance, int blockSize);
-    private static native long create_3(int maxCorners, double qualityLevel, double minDistance);
-    private static native long create_4(int maxCorners, double qualityLevel);
-    private static native long create_5(int maxCorners);
-    private static native long create_6();
-
-    // C++: static Ptr_GFTTDetector cv::GFTTDetector::create(int maxCorners, double qualityLevel, double minDistance, int blockSize, int gradiantSize, bool useHarrisDetector = false, double k = 0.04)
-    private static native long create_7(int maxCorners, double qualityLevel, double minDistance, int blockSize, int gradiantSize, boolean useHarrisDetector, double k);
-    private static native long create_8(int maxCorners, double qualityLevel, double minDistance, int blockSize, int gradiantSize, boolean useHarrisDetector);
-    private static native long create_9(int maxCorners, double qualityLevel, double minDistance, int blockSize, int gradiantSize);
-
-    // C++:  void cv::GFTTDetector::setMaxFeatures(int maxFeatures)
-    private static native void setMaxFeatures_0(long nativeObj, int maxFeatures);
-
-    // C++:  int cv::GFTTDetector::getMaxFeatures()
-    private static native int getMaxFeatures_0(long nativeObj);
-
-    // C++:  void cv::GFTTDetector::setQualityLevel(double qlevel)
-    private static native void setQualityLevel_0(long nativeObj, double qlevel);
-
-    // C++:  double cv::GFTTDetector::getQualityLevel()
-    private static native double getQualityLevel_0(long nativeObj);
 
     // C++:  void cv::GFTTDetector::setMinDistance(double minDistance)
     private static native void setMinDistance_0(long nativeObj, double minDistance);
@@ -270,5 +212,70 @@ public class GFTTDetector extends Feature2D {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
+
+    public int getMaxFeatures() {
+        return getMaxFeatures_0(nativeObj);
+    }
+
+    public void setMaxFeatures(int maxFeatures) {
+        setMaxFeatures_0(nativeObj, maxFeatures);
+    }
+
+    public double getQualityLevel() {
+        return getQualityLevel_0(nativeObj);
+    }
+
+    public void setQualityLevel(double qlevel) {
+        setQualityLevel_0(nativeObj, qlevel);
+    }
+
+    public double getMinDistance() {
+        return getMinDistance_0(nativeObj);
+    }
+
+    public void setMinDistance(double minDistance) {
+        setMinDistance_0(nativeObj, minDistance);
+    }
+
+    public int getBlockSize() {
+        return getBlockSize_0(nativeObj);
+    }
+
+    public void setBlockSize(int blockSize) {
+        setBlockSize_0(nativeObj, blockSize);
+    }
+
+    public int getGradientSize() {
+        return getGradientSize_0(nativeObj);
+    }
+
+    public void setGradientSize(int gradientSize_) {
+        setGradientSize_0(nativeObj, gradientSize_);
+    }
+
+    public boolean getHarrisDetector() {
+        return getHarrisDetector_0(nativeObj);
+    }
+
+    public void setHarrisDetector(boolean val) {
+        setHarrisDetector_0(nativeObj, val);
+    }
+
+    public double getK() {
+        return getK_0(nativeObj);
+    }
+
+    public void setK(double k) {
+        setK_0(nativeObj, k);
+    }
+
+    public String getDefaultName() {
+        return getDefaultName_0(nativeObj);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        delete(nativeObj);
+    }
 
 }

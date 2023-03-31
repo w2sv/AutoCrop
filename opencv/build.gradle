@@ -1,4 +1,4 @@
-plugins{
+plugins {
     alias libs.plugins.kotlin
     alias libs.plugins.library
 }
@@ -46,7 +46,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path (project.projectDir.toString() + '/libcxx_helper/CMakeLists.txt')
+            path(project.projectDir.toString() + '/libcxx_helper/CMakeLists.txt')
         }
     }
 }

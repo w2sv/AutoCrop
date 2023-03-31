@@ -4,20 +4,20 @@ Background
 libjpeg-turbo is a JPEG image codec that uses SIMD instructions to accelerate
 baseline JPEG compression and decompression on x86, x86-64, Arm, PowerPC, and
 MIPS systems, as well as progressive JPEG compression on x86, x86-64, and Arm
-systems.  On such systems, libjpeg-turbo is generally 2-6x as fast as libjpeg,
-all else being equal.  On other types of systems, libjpeg-turbo can still
+systems. On such systems, libjpeg-turbo is generally 2-6x as fast as libjpeg,
+all else being equal. On other types of systems, libjpeg-turbo can still
 outperform libjpeg by a significant amount, by virtue of its highly-optimized
-Huffman coding routines.  In many cases, the performance of libjpeg-turbo
+Huffman coding routines. In many cases, the performance of libjpeg-turbo
 rivals that of proprietary high-speed JPEG codecs.
 
 libjpeg-turbo implements both the traditional libjpeg API as well as the less
-powerful but more straightforward TurboJPEG API.  libjpeg-turbo also features
+powerful but more straightforward TurboJPEG API. libjpeg-turbo also features
 colorspace extensions that allow it to compress from/decompress to 32-bit and
 big-endian pixel buffers (RGBX, XBGR, etc.), as well as a full-featured Java
 interface.
 
 libjpeg-turbo was originally based on libjpeg/SIMD, an MMX-accelerated
-derivative of libjpeg v6b developed by Miyasaka Masaru.  The TigerVNC and
+derivative of libjpeg v6b developed by Miyasaka Masaru. The TigerVNC and
 VirtualGL projects made numerous enhancements to the codec in 2009, and in
 early 2010, libjpeg-turbo spun off into an independent project, with the goal
 of making high-speed JPEG compression/decompression technology available to a
@@ -45,20 +45,20 @@ JPEG images:
 
 - **TurboJPEG API**<br>
   This API provides an easy-to-use interface for compressing and decompressing
-  JPEG images in memory.  It also provides some functionality that would not be
+  JPEG images in memory. It also provides some functionality that would not be
   straightforward to achieve using the underlying libjpeg API, such as
   generating planar YUV images and performing multiple simultaneous lossless
-  transforms on an image.  The Java interface for libjpeg-turbo is written on
-  top of the TurboJPEG API.  The TurboJPEG API is recommended for first-time
-  users of libjpeg-turbo.  Refer to [tjexample.c](tjexample.c) and
+  transforms on an image. The Java interface for libjpeg-turbo is written on
+  top of the TurboJPEG API. The TurboJPEG API is recommended for first-time
+  users of libjpeg-turbo. Refer to [tjexample.c](tjexample.c) and
   [TJExample.java](java/TJExample.java) for examples of its usage and to
   <http://libjpeg-turbo.org/Documentation/Documentation> for API documentation.
 
 - **libjpeg API**<br>
   This is the de facto industry-standard API for compressing and decompressing
-  JPEG images.  It is more difficult to use than the TurboJPEG API but also
-  more powerful.  The libjpeg API implementation in libjpeg-turbo is both
-  API/ABI-compatible and mathematically compatible with libjpeg v6b.  It can
+  JPEG images. It is more difficult to use than the TurboJPEG API but also
+  more powerful. The libjpeg API implementation in libjpeg-turbo is both
+  API/ABI-compatible and mathematically compatible with libjpeg v6b. It can
   also optionally be configured to be API/ABI-compatible with libjpeg v7 and v8
   (see below.)  Refer to [cjpeg.c](cjpeg.c) and [djpeg.c](djpeg.c) for examples
   of its usage and to [libjpeg.txt](libjpeg.txt) for API documentation.
@@ -71,7 +71,7 @@ Colorspace Extensions
 
 libjpeg-turbo includes extensions that allow JPEG images to be compressed
 directly from (and decompressed directly to) buffers that use BGR, BGRX,
-RGBX, XBGR, and XRGB pixel ordering.  This is implemented with ten new
+RGBX, XBGR, and XRGB pixel ordering. This is implemented with ten new
 colorspace constants:
 
     JCS_EXT_RGB   /* red/green/blue */
@@ -102,9 +102,9 @@ available for the colorspace extensions.
 
 When using the RGBX, BGRX, XBGR, and XRGB colorspaces during decompression, the
 X byte is undefined, and in order to ensure the best performance, libjpeg-turbo
-can set that byte to whatever value it wishes.  If an application expects the X
+can set that byte to whatever value it wishes. If an application expects the X
 byte to be used as an alpha channel, then it should specify `JCS_EXT_RGBA`,
-`JCS_EXT_BGRA`, `JCS_EXT_ABGR`, or `JCS_EXT_ARGB`.  When these colorspace
+`JCS_EXT_BGRA`, `JCS_EXT_ABGR`, or `JCS_EXT_ARGB`. When these colorspace
 constants are used, the X byte is guaranteed to be 0xFF, which is interpreted
 as opaque.
 
@@ -121,24 +121,24 @@ libjpeg v7 and v8 API/ABI Emulation
 -----------------------------------
 
 With libjpeg v7 and v8, new features were added that necessitated extending the
-compression and decompression structures.  Unfortunately, due to the exposed
+compression and decompression structures. Unfortunately, due to the exposed
 nature of those structures, extending them also necessitated breaking backward
-ABI compatibility with previous libjpeg releases.  Thus, programs that were
+ABI compatibility with previous libjpeg releases. Thus, programs that were
 built to use libjpeg v7 or v8 did not work with libjpeg-turbo, since it is
-based on the libjpeg v6b code base.  Although libjpeg v7 and v8 are not
+based on the libjpeg v6b code base. Although libjpeg v7 and v8 are not
 as widely used as v6b, enough programs (including a few Linux distros) made
 the switch that there was a demand to emulate the libjpeg v7 and v8 ABIs
-in libjpeg-turbo.  It should be noted, however, that this feature was added
+in libjpeg-turbo. It should be noted, however, that this feature was added
 primarily so that applications that had already been compiled to use libjpeg
 v7+ could take advantage of accelerated baseline JPEG encoding/decoding
-without recompiling.  libjpeg-turbo does not claim to support all of the
+without recompiling. libjpeg-turbo does not claim to support all of the
 libjpeg v7+ features, nor to produce identical output to libjpeg v7+ in all
 cases (see below.)
 
 By passing an argument of `-DWITH_JPEG7=1` or `-DWITH_JPEG8=1` to `cmake`, you
 can build a version of libjpeg-turbo that emulates the libjpeg v7 or v8 ABI, so
 that programs that are built against libjpeg v7 or v8 can be run with
-libjpeg-turbo.  The following section describes which libjpeg v7+ features are
+libjpeg-turbo. The following section describes which libjpeg v7+ features are
 supported and which aren't.
 
 ### Support for libjpeg v7 and v8 Features
@@ -157,7 +157,7 @@ supported and which aren't.
 
 - **cjpeg: Separate quality settings for luminance and chrominance**<br>
   Note that the libpjeg v7+ API was extended to accommodate this feature only
-  for convenience purposes.  It has always been possible to implement this
+  for convenience purposes. It has always been possible to implement this
   feature with libjpeg v6b (see rdswitch.c for an example.)
 
 - **cjpeg: 32-bit BMP support**
@@ -174,12 +174,11 @@ supported and which aren't.
 
 - **rdjpgcom: Locale awareness**
 
-
 #### Not supported
 
 NOTE:  As of this writing, extensive research has been conducted into the
 usefulness of DCT scaling as a means of data reduction and SmartScale as a
-means of quality improvement.  Readers are invited to peruse the research at
+means of quality improvement. Readers are invited to peruse the research at
 <http://www.libjpeg-turbo.org/About/SmartScale> and draw their own conclusions,
 but it is the general belief of our project that these features have not
 demonstrated sufficient usefulness to justify inclusion in libjpeg-turbo.
@@ -194,11 +193,11 @@ demonstrated sufficient usefulness to justify inclusion in libjpeg-turbo.
 - **libjpeg API: SmartScale**<br>
   `cinfo.block_size` is silently ignored.
   SmartScale is an extension to the JPEG format that allows for DCT block
-  sizes other than 8x8.  Providing support for this new format would be
+  sizes other than 8x8. Providing support for this new format would be
   feasible (particularly without full acceleration.)  However, until/unless
   the format becomes either an official industry standard or, at minimum, an
   accepted solution in the community, we are hesitant to implement it, as
-  there is no sense of whether or how it might change in the future.  It is
+  there is no sense of whether or how it might change in the future. It is
   our belief that SmartScale has not demonstrated sufficient usefulness as a
   lossless format nor as a means of quality enhancement, and thus our primary
   interest in providing this feature would be as a means of supporting
@@ -219,15 +218,15 @@ demonstrated sufficient usefulness to justify inclusion in libjpeg-turbo.
 
 libjpeg v9 introduced yet another field to the JPEG compression structure
 (`color_transform`), thus making the ABI backward incompatible with that of
-libjpeg v8.  This new field was introduced solely for the purpose of supporting
-lossless SmartScale encoding.  Furthermore, there was actually no reason to
+libjpeg v8. This new field was introduced solely for the purpose of supporting
+lossless SmartScale encoding. Furthermore, there was actually no reason to
 extend the API in this manner, as the color transform could have just as easily
 been activated by way of a new JPEG colorspace constant, thus preserving
 backward ABI compatibility.
 
 Our research (see link above) has shown that lossless SmartScale does not
 generally accomplish anything that can't already be accomplished better with
-existing, standard lossless formats.  Therefore, at this time it is our belief
+existing, standard lossless formats. Therefore, at this time it is our belief
 that there is not sufficient technical justification for software projects to
 upgrade from libjpeg v8 to libjpeg v9, and thus there is not sufficient
 technical justification for us to emulate the libjpeg v9 ABI.
@@ -240,14 +239,14 @@ By default, libjpeg-turbo 1.3 and later includes the `jpeg_mem_src()` and
 Previously, it was necessary to build libjpeg-turbo from source with libjpeg v8
 API/ABI emulation in order to use the in-memory source/destination managers,
 but several projects requested that those functions be included when emulating
-the libjpeg v6b API/ABI as well.  This allows the use of those functions by
+the libjpeg v6b API/ABI as well. This allows the use of those functions by
 programs that need them, without breaking ABI compatibility for programs that
 don't, and it allows those functions to be provided in the "official"
 libjpeg-turbo binaries.
 
 Those who are concerned about maintaining strict conformance with the libjpeg
 v6b or v7 API can pass an argument of `-DWITH_MEM_SRCDST=0` to `cmake` prior to
-building libjpeg-turbo.  This will restore the pre-1.3 behavior, in which
+building libjpeg-turbo. This will restore the pre-1.3 behavior, in which
 `jpeg_mem_src()` and `jpeg_mem_dest()` are only included when emulating the
 libjpeg v8 API/ABI.
 
@@ -256,17 +255,17 @@ the dynamic library version from 62.2.0 to 62.3.0 if using libjpeg v6b API/ABI
 emulation and from 7.2.0 to 7.3.0 if using libjpeg v7 API/ABI emulation.
 
 Note that, on most Un*x systems, the dynamic linker will not look for a
-function in a library until that function is actually used.  Thus, if a program
+function in a library until that function is actually used. Thus, if a program
 is built against libjpeg-turbo 1.3+ and uses `jpeg_mem_src()` or
 `jpeg_mem_dest()`, that program will not fail if run against an older version
 of libjpeg-turbo or against libjpeg v7- until the program actually tries to
-call `jpeg_mem_src()` or `jpeg_mem_dest()`.  Such is not the case on Windows.
+call `jpeg_mem_src()` or `jpeg_mem_dest()`. Such is not the case on Windows.
 If a program is built against the libjpeg-turbo 1.3+ DLL and uses
 `jpeg_mem_src()` or `jpeg_mem_dest()`, then it must use the libjpeg-turbo 1.3+
 DLL at run time.
 
 Both cjpeg and djpeg have been extended to allow testing the in-memory
-source/destination manager functions.  See their respective man pages for more
+source/destination manager functions. See their respective man pages for more
 details.
 
 
@@ -274,7 +273,7 @@ Mathematical Compatibility
 ==========================
 
 For the most part, libjpeg-turbo should produce identical output to libjpeg
-v6b.  The one exception to this is when using the floating point DCT/IDCT, in
+v6b. The one exception to this is when using the floating point DCT/IDCT, in
 which case the outputs of libjpeg v6b and libjpeg-turbo can differ for the
 following reasons:
 
@@ -285,9 +284,9 @@ following reasons:
 
 - When not using the SIMD extensions, libjpeg-turbo uses the more accurate
   (and slightly faster) floating point IDCT algorithm introduced in libjpeg
-  v8a as opposed to the algorithm used in libjpeg v6b.  It should be noted,
+  v8a as opposed to the algorithm used in libjpeg v6b. It should be noted,
   however, that this algorithm basically brings the accuracy of the floating
-  point IDCT in line with the accuracy of the accurate integer IDCT.  The
+  point IDCT in line with the accuracy of the accurate integer IDCT. The
   floating point DCT/IDCT algorithms are mainly a legacy feature, and they do
   not produce significantly more accuracy than the accurate integer algorithms
   (to put numbers on this, the typical difference in PNSR between the two
@@ -310,14 +309,13 @@ libjpeg v8:
 
 - When using chrominance subsampling, because libjpeg v8 implements this
   with its DCT/IDCT scaling algorithms rather than with a separate
-  downsampling/upsampling algorithm.  In our testing, the subsampled/upsampled
+  downsampling/upsampling algorithm. In our testing, the subsampled/upsampled
   output of libjpeg v8 is less accurate than that of libjpeg v6b for this
   reason.
 
 - When decompressing using a scaling factor > 1 and merged (AKA "non-fancy" or
   "non-smooth") chrominance upsampling, because libjpeg v8 does not support
   merged upsampling with scaling factors > 1.
-
 
 Performance Pitfalls
 ====================
@@ -328,9 +326,9 @@ Restart Markers
 The optimized Huffman decoder in libjpeg-turbo does not handle restart markers
 in a way that makes the rest of the libjpeg infrastructure happy, so it is
 necessary to use the slow Huffman decoder when decompressing a JPEG image that
-has restart markers.  This can cause the decompression performance to drop by
+has restart markers. This can cause the decompression performance to drop by
 as much as 20%, but the performance will still be much greater than that of
-libjpeg.  Many consumer packages, such as Photoshop, use restart markers when
+libjpeg. Many consumer packages, such as Photoshop, use restart markers when
 generating JPEG images, so images generated by those programs will experience
 this issue.
 
@@ -339,8 +337,8 @@ Fast Integer Forward DCT at High Quality Levels
 
 The algorithm used by the SIMD-accelerated quantization function cannot produce
 correct results whenever the fast integer forward DCT is used along with a JPEG
-quality of 98-100.  Thus, libjpeg-turbo must use the non-SIMD quantization
-function in those cases.  This causes performance to drop by as much as 40%.
+quality of 98-100. Thus, libjpeg-turbo must use the non-SIMD quantization
+function in those cases. This causes performance to drop by as much as 40%.
 It is therefore strongly advised that you use the accurate integer forward DCT
 whenever encoding images with a JPEG quality of 98 or higher.
 
@@ -350,7 +348,7 @@ Memory Debugger Pitfalls
 
 Valgrind and Memory Sanitizer (MSan) can generate false positives
 (specifically, incorrect reports of uninitialized memory accesses) when used
-with libjpeg-turbo's SIMD extensions.  It is generally recommended that the
+with libjpeg-turbo's SIMD extensions. It is generally recommended that the
 SIMD extensions be disabled, either by passing an argument of `-DWITH_SIMD=0`
 to `cmake` when configuring the build or by setting the environment variable
 `JSIMD_FORCENONE` to `1` at run time, when testing libjpeg-turbo with Valgrind,

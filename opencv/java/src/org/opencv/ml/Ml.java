@@ -4,7 +4,6 @@
 package org.opencv.ml;
 
 
-
 // C++: class Ml
 
 public class Ml {
@@ -26,8 +25,6 @@ public class Ml {
             VAR_NUMERICAL = 0,
             VAR_ORDERED = 0,
             VAR_CATEGORICAL = 1;
-
-
 
 
 }

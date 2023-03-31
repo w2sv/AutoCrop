@@ -4,7 +4,6 @@
 package org.opencv.videoio;
 
 
-
 // C++: class Videoio
 
 public class Videoio {
@@ -324,24 +323,17 @@ public class Videoio {
             CAP_OBSENSOR_DEPTH_MAP = 0,
             CAP_OBSENSOR_BGR_IMAGE = 1,
             CAP_OBSENSOR_IR_IMAGE = 2;
-
-
-    // C++: enum VideoCaptureOBSensorGenerators (cv.VideoCaptureOBSensorGenerators)
-    public static final int
-            CAP_OBSENSOR_DEPTH_GENERATOR = 1 << 29,
-            CAP_OBSENSOR_IMAGE_GENERATOR = 1 << 28,
-            CAP_OBSENSOR_IR_GENERATOR = 1 << 27,
-            CAP_OBSENSOR_GENERATORS_MASK = CAP_OBSENSOR_DEPTH_GENERATOR + CAP_OBSENSOR_IMAGE_GENERATOR + CAP_OBSENSOR_IR_GENERATOR;
-
-
     // C++: enum VideoCaptureOBSensorProperties (cv.VideoCaptureOBSensorProperties)
     public static final int
             CAP_PROP_OBSENSOR_INTRINSIC_FX = 26001,
             CAP_PROP_OBSENSOR_INTRINSIC_FY = 26002,
             CAP_PROP_OBSENSOR_INTRINSIC_CX = 26003,
-            CAP_PROP_OBSENSOR_INTRINSIC_CY = 26004;
-
-
+            CAP_PROP_OBSENSOR_INTRINSIC_CY = 26004;    // C++: enum VideoCaptureOBSensorGenerators (cv.VideoCaptureOBSensorGenerators)
+    public static final int
+            CAP_OBSENSOR_DEPTH_GENERATOR = 1 << 29,
+            CAP_OBSENSOR_IMAGE_GENERATOR = 1 << 28,
+            CAP_OBSENSOR_IR_GENERATOR = 1 << 27,
+            CAP_OBSENSOR_GENERATORS_MASK = CAP_OBSENSOR_DEPTH_GENERATOR + CAP_OBSENSOR_IMAGE_GENERATOR + CAP_OBSENSOR_IR_GENERATOR;
     // C++: enum VideoCaptureProperties (cv.VideoCaptureProperties)
     public static final int
             CAP_PROP_POS_MSEC = 0,
@@ -414,8 +406,6 @@ public class Videoio {
             CAP_PROP_CODEC_EXTRADATA_INDEX = 68,
             CAP_PROP_FRAME_TYPE = 69,
             CAP_PROP_N_THREADS = 70;
-
-
     // C++: enum VideoWriterProperties (cv.VideoWriterProperties)
     public static final int
             VIDEOWRITER_PROP_QUALITY = 1,
@@ -427,18 +417,29 @@ public class Videoio {
             VIDEOWRITER_PROP_HW_DEVICE = 7,
             VIDEOWRITER_PROP_HW_ACCELERATION_USE_OPENCL = 8;
 
+    /**
+     * Returns backend API name or "UnknownVideoAPI(xxx)"
+     *
+     * @param api backend ID (#VideoCaptureAPIs)
+     * @return automatically generated
+     */
+    public static String getBackendName(int api) {
+        return getBackendName_0(api);
+    }
+
 
     //
     // C++:  String cv::videoio_registry::getBackendName(VideoCaptureAPIs api)
     //
 
     /**
-     * Returns backend API name or "UnknownVideoAPI(xxx)"
-     * @param api backend ID (#VideoCaptureAPIs)
+     * Returns true if backend is available
+     *
+     * @param api automatically generated
      * @return automatically generated
      */
-    public static String getBackendName(int api) {
-        return getBackendName_0(api);
+    public static boolean hasBackend(int api) {
+        return hasBackend_0(api);
     }
 
 
@@ -475,21 +476,8 @@ public class Videoio {
     //
 
     /**
-     * Returns true if backend is available
-     * @param api automatically generated
-     * @return automatically generated
-     */
-    public static boolean hasBackend(int api) {
-        return hasBackend_0(api);
-    }
-
-
-    //
-    // C++:  bool cv::videoio_registry::isBackendBuiltIn(VideoCaptureAPIs api)
-    //
-
-    /**
      * Returns true if backend is built in (false if backend is used as plugin)
+     *
      * @param api automatically generated
      * @return automatically generated
      */
@@ -499,12 +487,13 @@ public class Videoio {
 
 
     //
-    // C++:  string cv::videoio_registry::getCameraBackendPluginVersion(VideoCaptureAPIs api, int& version_ABI, int& version_API)
+    // C++:  bool cv::videoio_registry::isBackendBuiltIn(VideoCaptureAPIs api)
     //
 
     /**
      * Returns description and ABI/API version of videoio plugin's camera interface
-     * @param api automatically generated
+     *
+     * @param api         automatically generated
      * @param version_ABI automatically generated
      * @param version_API automatically generated
      * @return automatically generated
@@ -513,8 +502,30 @@ public class Videoio {
         double[] version_ABI_out = new double[1];
         double[] version_API_out = new double[1];
         String retVal = getCameraBackendPluginVersion_0(api, version_ABI_out, version_API_out);
-        if(version_ABI!=null) version_ABI[0] = (int)version_ABI_out[0];
-        if(version_API!=null) version_API[0] = (int)version_API_out[0];
+        if (version_ABI != null) version_ABI[0] = (int) version_ABI_out[0];
+        if (version_API != null) version_API[0] = (int) version_API_out[0];
+        return retVal;
+    }
+
+
+    //
+    // C++:  string cv::videoio_registry::getCameraBackendPluginVersion(VideoCaptureAPIs api, int& version_ABI, int& version_API)
+    //
+
+    /**
+     * Returns description and ABI/API version of videoio plugin's stream capture interface
+     *
+     * @param api         automatically generated
+     * @param version_ABI automatically generated
+     * @param version_API automatically generated
+     * @return automatically generated
+     */
+    public static String getStreamBackendPluginVersion(int api, int[] version_ABI, int[] version_API) {
+        double[] version_ABI_out = new double[1];
+        double[] version_API_out = new double[1];
+        String retVal = getStreamBackendPluginVersion_0(api, version_ABI_out, version_API_out);
+        if (version_ABI != null) version_ABI[0] = (int) version_ABI_out[0];
+        if (version_API != null) version_API[0] = (int) version_API_out[0];
         return retVal;
     }
 
@@ -524,29 +535,9 @@ public class Videoio {
     //
 
     /**
-     * Returns description and ABI/API version of videoio plugin's stream capture interface
-     * @param api automatically generated
-     * @param version_ABI automatically generated
-     * @param version_API automatically generated
-     * @return automatically generated
-     */
-    public static String getStreamBackendPluginVersion(int api, int[] version_ABI, int[] version_API) {
-        double[] version_ABI_out = new double[1];
-        double[] version_API_out = new double[1];
-        String retVal = getStreamBackendPluginVersion_0(api, version_ABI_out, version_API_out);
-        if(version_ABI!=null) version_ABI[0] = (int)version_ABI_out[0];
-        if(version_API!=null) version_API[0] = (int)version_API_out[0];
-        return retVal;
-    }
-
-
-    //
-    // C++:  string cv::videoio_registry::getWriterBackendPluginVersion(VideoCaptureAPIs api, int& version_ABI, int& version_API)
-    //
-
-    /**
      * Returns description and ABI/API version of videoio plugin's writer interface
-     * @param api automatically generated
+     *
+     * @param api         automatically generated
      * @param version_ABI automatically generated
      * @param version_API automatically generated
      * @return automatically generated
@@ -555,13 +546,15 @@ public class Videoio {
         double[] version_ABI_out = new double[1];
         double[] version_API_out = new double[1];
         String retVal = getWriterBackendPluginVersion_0(api, version_ABI_out, version_API_out);
-        if(version_ABI!=null) version_ABI[0] = (int)version_ABI_out[0];
-        if(version_API!=null) version_API[0] = (int)version_API_out[0];
+        if (version_ABI != null) version_ABI[0] = (int) version_ABI_out[0];
+        if (version_API != null) version_API[0] = (int) version_API_out[0];
         return retVal;
     }
 
 
-
+    //
+    // C++:  string cv::videoio_registry::getWriterBackendPluginVersion(VideoCaptureAPIs api, int& version_ABI, int& version_API)
+    //
 
     // C++:  String cv::videoio_registry::getBackendName(VideoCaptureAPIs api)
     private static native String getBackendName_0(int api);
@@ -580,5 +573,7 @@ public class Videoio {
 
     // C++:  string cv::videoio_registry::getWriterBackendPluginVersion(VideoCaptureAPIs api, int& version_ABI, int& version_API)
     private static native String getWriterBackendPluginVersion_0(int api, double[] version_ABI_out, double[] version_API_out);
+
+
 
 }

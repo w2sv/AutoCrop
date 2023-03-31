@@ -18,13 +18,17 @@ import com.w2sv.androidutils.extensions.increment
 import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
+import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.crop.domain.CropResults
 import com.w2sv.autocrop.activities.crop.fragments.croppingfailed.CroppingFailedFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.databinding.CropBinding
+import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
+import com.w2sv.autocrop.utils.extensions.startMainActivity
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
+import com.w2sv.autocrop.utils.requireCastActivity
 import com.w2sv.common.BackPressHandler
 import com.w2sv.cropbundle.CropBundle
 import dagger.hilt.android.AndroidEntryPoint
@@ -151,7 +155,7 @@ class CropFragment
             launchCropExamination()
         else
             launchAfterShortDelay {  // to assure progress bar having reached 100% before UI change
-                requireViewBoundFragmentActivity()
+                requireCastActivity<ViewBoundFragmentActivity>()
                     .fragmentReplacementTransaction(CroppingFailedFragment())
                     .commit()
             }
@@ -179,7 +183,7 @@ class CropFragment
                 requireContext().showToast(getString(R.string.tap_again_to_cancel))
             },
             {
-                MainActivity.start(requireActivity())
+                requireActivity().startMainActivity()
             }
         )
     }

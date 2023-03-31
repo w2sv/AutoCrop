@@ -3,31 +3,30 @@
 //
 package org.opencv.features2d;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
-import org.opencv.features2d.Feature2D;
-import org.opencv.features2d.SimpleBlobDetector;
-import org.opencv.features2d.SimpleBlobDetector_Params;
 import org.opencv.utils.Converters;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // C++: class SimpleBlobDetector
+
 /**
  * Class for extracting blobs from an image. :
- *
+ * <p>
  * The class implements a simple algorithm for extracting blobs from an image:
- *
+ * <p>
  * 1.  Convert the source image to binary images by applying thresholding with several thresholds from
- *     minThreshold (inclusive) to maxThreshold (exclusive) with distance thresholdStep between
- *     neighboring thresholds.
+ * minThreshold (inclusive) to maxThreshold (exclusive) with distance thresholdStep between
+ * neighboring thresholds.
  * 2.  Extract connected components from every binary image by findContours and calculate their
- *     centers.
+ * centers.
  * 3.  Group centers from several binary images by their coordinates. Close centers form one group that
- *     corresponds to one blob, which is controlled by the minDistBetweenBlobs parameter.
+ * corresponds to one blob, which is controlled by the minDistBetweenBlobs parameter.
  * 4.  From the groups, estimate final centers of blobs and their radiuses and return as locations and
- *     sizes of keypoints.
- *
+ * sizes of keypoints.
+ * <p>
  * This class performs several filtrations of returned blobs. You should set filterBy\* to true/false
  * to turn on/off corresponding filtration. Available filtrations:
  *
@@ -54,15 +53,19 @@ import org.opencv.utils.Converters;
  * minConvexity (inclusive) and maxConvexity (exclusive).
  *   </li>
  * </ul>
- *
+ * <p>
  * Default values of parameters are tuned to extract dark circular blobs.
  */
 public class SimpleBlobDetector extends Feature2D {
 
-    protected SimpleBlobDetector(long addr) { super(addr); }
+    protected SimpleBlobDetector(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static SimpleBlobDetector __fromPtr__(long addr) { return new SimpleBlobDetector(addr); }
+    public static SimpleBlobDetector __fromPtr__(long addr) {
+        return new SimpleBlobDetector(addr);
+    }
 
     //
     // C++: static Ptr_SimpleBlobDetector cv::SimpleBlobDetector::create(SimpleBlobDetector_Params parameters = SimpleBlobDetector::Params())
@@ -81,54 +84,28 @@ public class SimpleBlobDetector extends Feature2D {
     // C++:  void cv::SimpleBlobDetector::setParams(SimpleBlobDetector_Params params)
     //
 
-    public void setParams(SimpleBlobDetector_Params params) {
-        setParams_0(nativeObj, params.nativeObj);
-    }
+    // C++: static Ptr_SimpleBlobDetector cv::SimpleBlobDetector::create(SimpleBlobDetector_Params parameters = SimpleBlobDetector::Params())
+    private static native long create_0(long parameters_nativeObj);
 
 
     //
     // C++:  SimpleBlobDetector_Params cv::SimpleBlobDetector::getParams()
     //
 
-    public SimpleBlobDetector_Params getParams() {
-        return new SimpleBlobDetector_Params(getParams_0(nativeObj));
-    }
+    private static native long create_1();
 
 
     //
     // C++:  String cv::SimpleBlobDetector::getDefaultName()
     //
 
-    public String getDefaultName() {
-        return getDefaultName_0(nativeObj);
-    }
+    // C++:  void cv::SimpleBlobDetector::setParams(SimpleBlobDetector_Params params)
+    private static native void setParams_0(long nativeObj, long params_nativeObj);
 
 
     //
     // C++:  vector_vector_Point cv::SimpleBlobDetector::getBlobContours()
     //
-
-    public List<MatOfPoint> getBlobContours() {
-        List<MatOfPoint> retVal = new ArrayList<MatOfPoint>();
-        Mat retValMat = new Mat(getBlobContours_0(nativeObj));
-        Converters.Mat_to_vector_vector_Point(retValMat, retVal);
-        return retVal;
-    }
-
-
-    @Override
-    protected void finalize() throws Throwable {
-        delete(nativeObj);
-    }
-
-
-
-    // C++: static Ptr_SimpleBlobDetector cv::SimpleBlobDetector::create(SimpleBlobDetector_Params parameters = SimpleBlobDetector::Params())
-    private static native long create_0(long parameters_nativeObj);
-    private static native long create_1();
-
-    // C++:  void cv::SimpleBlobDetector::setParams(SimpleBlobDetector_Params params)
-    private static native void setParams_0(long nativeObj, long params_nativeObj);
 
     // C++:  SimpleBlobDetector_Params cv::SimpleBlobDetector::getParams()
     private static native long getParams_0(long nativeObj);
@@ -141,5 +118,29 @@ public class SimpleBlobDetector extends Feature2D {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
+
+    public SimpleBlobDetector_Params getParams() {
+        return new SimpleBlobDetector_Params(getParams_0(nativeObj));
+    }
+
+    public void setParams(SimpleBlobDetector_Params params) {
+        setParams_0(nativeObj, params.nativeObj);
+    }
+
+    public String getDefaultName() {
+        return getDefaultName_0(nativeObj);
+    }
+
+    public List<MatOfPoint> getBlobContours() {
+        List<MatOfPoint> retVal = new ArrayList<MatOfPoint>();
+        Mat retValMat = new Mat(getBlobContours_0(nativeObj));
+        Converters.Mat_to_vector_vector_Point(retValMat, retVal);
+        return retVal;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        delete(nativeObj);
+    }
 
 }

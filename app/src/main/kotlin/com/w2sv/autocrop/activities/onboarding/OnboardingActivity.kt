@@ -3,20 +3,23 @@ package com.w2sv.autocrop.activities.onboarding
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
+import androidx.lifecycle.viewModelScope
 import com.airbnb.lottie.LottieAnimationView
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.extensions.crossVisualize
 import com.w2sv.androidutils.extensions.getLong
 import com.w2sv.androidutils.extensions.show
+import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.androidutils.permissionhandler.requestPermissions
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.ui.views.animationComposer
-import com.w2sv.autocrop.utils.extensions.addLifecycleObservers
+import com.w2sv.autocrop.utils.extensions.addObservers
 import com.w2sv.autocrop.utils.extensions.registerOnBackPressedListener
-import com.w2sv.onboarding.OnboardingPage
+import com.w2sv.autocrop.utils.extensions.startMainActivity
+import com.w2sv.common.BackPressHandler
 import com.w2sv.common.preferences.GlobalFlags
+import com.w2sv.onboarding.OnboardingPage
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +31,8 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
     @HiltViewModel
     class ViewModel @Inject constructor(val globalFlags: GlobalFlags) : androidx.lifecycle.ViewModel() {
         var screenshotListeningEnabled: Boolean = false
+
+        val backPressHandler = BackPressHandler(viewModelScope, 2500L)
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -39,10 +44,13 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        addLifecycleObservers(screenshotListeningPermissionHandlers + viewModel.globalFlags)
+        addObservers(screenshotListeningPermissionHandlers + viewModel.globalFlags)
 
         registerOnBackPressedListener {
-            finishAffinity()
+            viewModel.backPressHandler(
+                onFirstPress = { showToast(resources.getString(R.string.tap_again_to_exit)) },
+                onSecondPress = { finishAffinity() }
+            )
         }
 
         setFabColor(getColor(com.w2sv.common.R.color.low_alpha_gray))
@@ -114,6 +122,6 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
 
     override fun onOnboardingFinished() {
         viewModel.globalFlags.onboardingDone = true
-        MainActivity.start(this, true, Animatoo::animateSwipeLeft)
+        startMainActivity(true, Animatoo::animateSwipeLeft)
     }
 }

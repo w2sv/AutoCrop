@@ -18,7 +18,12 @@ import kotlinx.parcelize.Parcelize
 import kotlin.math.roundToInt
 
 @Parcelize
-data class CropBundle(val screenshot: Screenshot, var crop: Crop, var edgeCandidates: List<Int>, var adjustedEdgeThreshold: Int? = null) : Parcelable {
+data class CropBundle(
+    val screenshot: Screenshot,
+    var crop: Crop,
+    var edgeCandidates: List<Int>,
+    var adjustedEdgeThreshold: Int? = null
+) : Parcelable {
 
     enum class CreationFailureReason {
         BitmapLoadingFailure,

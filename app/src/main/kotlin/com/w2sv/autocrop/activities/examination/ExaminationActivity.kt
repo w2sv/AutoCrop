@@ -2,6 +2,7 @@ package com.w2sv.autocrop.activities.examination
 
 import android.content.Context
 import android.net.Uri
+import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleObserver
@@ -14,15 +15,16 @@ import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonF
 import com.w2sv.autocrop.activities.examination.fragments.exit.ExitFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.CropPagerFragment
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
-import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.domain.AccumulatedIOResults
+import com.w2sv.autocrop.utils.extensions.addObservers
+import com.w2sv.autocrop.utils.extensions.startMainActivity
 import com.w2sv.common.extensions.getParcelableExtraCompat
-import com.w2sv.cropbundle.CropBundle
-import com.w2sv.cropbundle.io.CropBundleIORunner
-import com.w2sv.cropbundle.io.getDeleteRequestUri
 import com.w2sv.common.preferences.BooleanPreferences
 import com.w2sv.common.preferences.EnumOrdinals
 import com.w2sv.common.preferences.GlobalFlags
+import com.w2sv.cropbundle.CropBundle
+import com.w2sv.cropbundle.io.CropBundleIORunner
+import com.w2sv.cropbundle.io.getDeleteRequestUri
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -117,14 +119,18 @@ class ExaminationActivity : AppActivity() {
             }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        addObservers(viewModel.lifecycleObservers)
+    }
+
     override fun getRootFragment(): Fragment =
         CropPagerFragment.getInstance(
             intent.getParcelableExtraCompat(CropResults.EXTRA)!!
         )
 
     private val viewModel: ViewModel by viewModels()
-
-    override val lifecycleObservers: List<LifecycleObserver> get() = viewModel.lifecycleObservers
 
     fun invokeExitFragment() {
         fragmentReplacementTransaction(
@@ -135,19 +141,17 @@ class ExaminationActivity : AppActivity() {
     }
 
     override fun handleOnBackPressed() {
-        getCurrentFragment().let {
-            when (it) {
-                is ComparisonFragment -> it.popFromFragmentManager(supportFragmentManager)
-                is CropAdjustmentFragment -> supportFragmentManager.popBackStack()
-                is SaveAllFragment -> showToast("Wait until crops have been saved")
-                is CropPagerFragment -> it.onBackPress()
-                else -> Unit
-            }
+        when (val fragment = getCurrentFragment()) {
+            is ComparisonFragment -> fragment.popFromFragmentManager(supportFragmentManager)
+            is CropAdjustmentFragment -> supportFragmentManager.popBackStack()
+            is SaveAllFragment -> showToast("Wait until crops have been saved")
+            is CropPagerFragment -> fragment.onBackPress()
+            else -> Unit
         }
     }
 
     fun startMainActivity() {
-        MainActivity.start(this) {
+        startMainActivity {
             putExtra(AccumulatedIOResults.EXTRA, viewModel.accumulatedIoResults)
         }
     }
