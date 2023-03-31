@@ -45,7 +45,4 @@ abstract class AppFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
 
     fun requireViewBoundFragmentActivity(): ViewBoundFragmentActivity =
         requireCastActivity()
-
-    fun requireAppActivity(): AppActivity =
-        requireCastActivity()
 }
