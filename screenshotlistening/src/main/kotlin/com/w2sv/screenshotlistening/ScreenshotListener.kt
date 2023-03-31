@@ -31,8 +31,8 @@ import com.w2sv.cropbundle.io.extensions.queryMediaStoreData
 import com.w2sv.cropbundle.io.getDeleteRequestUri
 import com.w2sv.cropbundle.io.utils.systemScreenshotsDirectory
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
+import com.w2sv.kotlinutils.extensions.getNextTriple
 import com.w2sv.kotlinutils.timeDelta
-import com.w2sv.kotlinutils.tripleFromIterable
 import com.w2sv.screenshotlistening.ScreenshotListener.OnCancelledFromNotificationListener.Companion.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS
 import com.w2sv.screenshotlistening.notifications.AppNotificationChannel
 import com.w2sv.screenshotlistening.notifications.NotificationGroup
@@ -445,16 +445,16 @@ private class ScreenshotObserver(
 
     private fun Uri.isNewScreenshot(): Boolean? =
         try {
-            val (absolutePath, fileName, dateAdded) = tripleFromIterable(
-                contentResolver.queryMediaStoreData(
-                    this,
-                    arrayOf(
-                        MediaStore.Images.Media.DISPLAY_NAME,
-                        MediaStore.Images.Media.DATA,  // e.g. /storage/emulated/0/Pictures/Screenshots/.pending-1665749333-Screenshot_20221007-140853687.png
-                        MediaStore.Images.Media.DATE_ADDED
-                    )
+            val (absolutePath, fileName, dateAdded) = contentResolver.queryMediaStoreData(
+                this,
+                arrayOf(
+                    MediaStore.Images.Media.DISPLAY_NAME,
+                    MediaStore.Images.Media.DATA,  // e.g. /storage/emulated/0/Pictures/Screenshots/.pending-1665749333-Screenshot_20221007-140853687.png
+                    MediaStore.Images.Media.DATE_ADDED
                 )
             )
+                .iterator()
+                .getNextTriple()
 
             !fileName.contains(CROP_FILE_ADDENDUM) &&  // exclude produced AutoCrop's
                     timeDelta(  // exclude files having already been on the file system and which were only triggered, due to a change of their metadata
