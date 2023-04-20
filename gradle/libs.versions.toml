@@ -40,7 +40,7 @@ google-hilt-kapt = { module = 'com.google.dagger:hilt-android-compiler', version
 
 # other
 slimber = 'com.github.PaulWoitaschek:Slimber:2.0.0'
-snacky = 'com.github.matecode:Snacky:1.1.5'
+snacky = 'com.github.matecode:Snacky:1.1.6'
 animatoo = 'com.github.mohammadatif:Animatoo:master'
 lottie = 'com.airbnb.android:lottie:6.0.0'
 
