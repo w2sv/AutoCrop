@@ -23,13 +23,13 @@ bidirectionalviewpager = 'com.github.w2sv:bidirectionalviewpager:0.0.1-rc1'
 
 # androidx
 androidx-appcompat = 'androidx.appcompat:appcompat:1.6.1'
-androidx-core = 'androidx.core:core-ktx:1.9.0'
+androidx-core = 'androidx.core:core-ktx:1.10.0'
 androidx-viewpager2 = 'androidx.viewpager2:viewpager2:1.1.0-beta01'
 androidx-viewmodel = { module = 'androidx.lifecycle:lifecycle-viewmodel-ktx', version.ref = 'lifecycle' }
 androidx-lifecycle-livedata-core-ktx = { module = 'androidx.lifecycle:lifecycle-livedata-core-ktx', version.ref = 'lifecycle' }
 androidx-fragment = 'androidx.fragment:fragment-ktx:1.5.6'
 androidx-activity = 'androidx.activity:activity-ktx:1.7.0'
-androidx-splashscreen = 'androidx.core:core-splashscreen:1.0.0'
+androidx-splashscreen = 'androidx.core:core-splashscreen:1.0.1'
 androidx-localbroadcastmanager = 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
 
 # google
