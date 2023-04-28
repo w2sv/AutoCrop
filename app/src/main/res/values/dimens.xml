@@ -23,10 +23,6 @@
     <dimen name="toolbar_button_width">70dp</dimen>
 
     <!-- override -->
-    <dimen name="onboarding_description_text_size">18sp</dimen>
-    <!-- override -->
-    <dimen name="onboarding_page_indicator_dot_size">12dp</dimen>
-    <!-- override -->
     <dimen name="mtrl_slider_widget_height" tools:ignore="MissingDefaultResource,PrivateResource">
         20dp
     </dimen>
