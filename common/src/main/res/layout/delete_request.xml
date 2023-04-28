@@ -12,7 +12,7 @@
         android:layout_centerInParent="true"
 
         android:alpha="0.5"
-        android:contentDescription="@string/app_logo_content_description"
+        android:contentDescription="@null"
 
         android:src="@drawable/logo_nobackground" />
 
