@@ -2,6 +2,7 @@ package com.w2sv.autocrop.activities.main
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleObserver
 import com.w2sv.autocrop.activities.AppActivity
@@ -26,6 +27,8 @@ class MainActivity : AppActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+
         super.onCreate(savedInstanceState)
 
         addObservers(viewModels<ViewModel>().value.lifecycleObservers)
