@@ -18,7 +18,7 @@ data class AccumulatedIOResults(
         const val EXTRA = "com.w2sv.autocrop.extra.IO_RESULTS"
     }
 
-    val nSavedCrops: Int get() = cropUris.size
+    private val nSavedCrops: Int get() = cropUris.size
 
     val anyCropsSaved: Boolean get() = cropUris.isNotEmpty()
 

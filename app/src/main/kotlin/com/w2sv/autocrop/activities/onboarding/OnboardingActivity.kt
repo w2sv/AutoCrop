@@ -1,5 +1,6 @@
 package com.w2sv.autocrop.activities.onboarding
 
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
@@ -29,10 +30,17 @@ import javax.inject.Inject
 class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
 
     @HiltViewModel
-    class ViewModel @Inject constructor(val globalFlags: GlobalFlags) : androidx.lifecycle.ViewModel() {
+    class ViewModel @Inject constructor(
+        resources: Resources,
+        val globalFlags: GlobalFlags
+    ) : androidx.lifecycle.ViewModel() {
+
         var screenshotListeningEnabled: Boolean = false
 
-        val backPressHandler = BackPressHandler(viewModelScope, 2500L)
+        val backPressHandler = BackPressHandler(
+            viewModelScope,
+            resources.getLong(R.integer.duration_backpress_confirmation_window)
+        )
     }
 
     private val viewModel by viewModels<ViewModel>()
