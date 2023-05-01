@@ -3,7 +3,7 @@ minSdk = '26'
 compileSdk = '33'
 
 kotlin = '1.8.21'
-agp = "8.0.0"
+agp = "8.0.1"
 hilt = '2.45'
 
 junit = '5.9.3'
