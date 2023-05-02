@@ -60,4 +60,5 @@
     <string name="slide_to_select_the_crop_sensitivity">Slide to select the crop sensitivity</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="wait_until_crops_have_been_saved">Wait until crops have been saved</string>
 </resources>

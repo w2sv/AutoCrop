@@ -10,6 +10,7 @@ abstract class FormattableTextView(
     context: Context,
     attr: AttributeSet
 ) : AppCompatTextView(context, attr) {
+
     fun updateText(vararg formatArgs: Any) {
         text = resources.getString(string, *formatArgs)
     }
