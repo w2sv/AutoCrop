@@ -31,6 +31,6 @@ class CropSettingsDialogFragment : AbstractCropSettingsDialogFragment(
 
     override fun onPositiveButtonClicked() {
         viewModel.syncCropSettings()
-        requireContext().showToast("Updated Crop Settings")
+        requireContext().showToast(getString(R.string.updated_crop_settings))
     }
 }

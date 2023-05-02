@@ -32,7 +32,7 @@
         android:layout_height="200dp"
 
         android:background="@drawable/logo_nobackground"
-        android:contentDescription="@string/app_logo_content_description" />
+        android:contentDescription="@null" />
 
     <Space
         android:layout_width="0dp"
