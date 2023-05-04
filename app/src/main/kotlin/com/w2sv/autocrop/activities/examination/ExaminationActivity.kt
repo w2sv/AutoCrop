@@ -2,10 +2,8 @@ package com.w2sv.autocrop.activities.examination
 
 import android.content.Context
 import android.net.Uri
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.extensions.showToast
 import com.w2sv.autocrop.activities.AppActivity
@@ -16,12 +14,9 @@ import com.w2sv.autocrop.activities.examination.fragments.exit.ExitFragment
 import com.w2sv.autocrop.activities.examination.fragments.pager.CropPagerFragment
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.domain.AccumulatedIOResults
-import com.w2sv.autocrop.utils.extensions.addObservers
 import com.w2sv.autocrop.utils.extensions.startMainActivity
 import com.w2sv.common.extensions.getParcelableExtraCompat
-import com.w2sv.common.preferences.BooleanPreferences
-import com.w2sv.common.preferences.EnumOrdinals
-import com.w2sv.common.preferences.GlobalFlags
+import com.w2sv.common.preferences.DataStoreRepository
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.io.CropBundleIORunner
 import com.w2sv.cropbundle.io.getDeleteRequestUri
@@ -37,9 +32,7 @@ class ExaminationActivity : AppActivity() {
 
     @HiltViewModel
     class ViewModel @Inject constructor(
-        private val booleanPreferences: BooleanPreferences,
-        globalFlags: GlobalFlags,
-        enumOrdinals: EnumOrdinals
+        private val dataStoreRepository: DataStoreRepository
     ) : androidx.lifecycle.ViewModel() {
 
         companion object {
@@ -54,8 +47,6 @@ class ExaminationActivity : AppActivity() {
 
             cropBundles.clear()
         }
-
-        val lifecycleObservers: List<LifecycleObserver> = listOf(booleanPreferences, globalFlags, enumOrdinals)
 
         val accumulatedIoResults = AccumulatedIOResults()
         val deleteRequestUris = arrayListOf<Uri>()
@@ -109,7 +100,7 @@ class ExaminationActivity : AppActivity() {
         private fun addScreenshotDeleteRequestUriIfApplicable(
             screenshotMediaStoreId: Long
         ): Boolean =
-            when (booleanPreferences.deleteScreenshots) {
+            when (dataStoreRepository.deleteScreenshots.value) {
                 false -> false
                 else -> getDeleteRequestUri(screenshotMediaStoreId)?.let {
                     deleteRequestUris.add(it)
@@ -117,12 +108,6 @@ class ExaminationActivity : AppActivity() {
                 }
                     ?: true
             }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        addObservers(viewModel.lifecycleObservers)
     }
 
     override fun getRootFragment(): Fragment =

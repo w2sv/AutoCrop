@@ -2,14 +2,14 @@ package com.w2sv.cropbundle.cropping
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.w2sv.common.preferences.IntPreferences
+import com.w2sv.common.preferences.DataStoreRepository
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
-class Cropper @Inject constructor(private val intPreferences: IntPreferences) {
+class Cropper @Inject constructor(private val dataStoreRepository: DataStoreRepository) {
 
     @InstallIn(SingletonComponent::class)
     @EntryPoint
@@ -30,5 +30,5 @@ class Cropper @Inject constructor(private val intPreferences: IntPreferences) {
     }
 
     private fun invoke(src: Bitmap): CropResult? =
-        src.crop(intPreferences.cropEdgeCandidateThresholdDouble)
+        src.crop(dataStoreRepository.edgeCandidateThreshold.value.toDouble())
 }

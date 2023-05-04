@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.onboarding.OnboardingActivity
-import com.w2sv.common.preferences.GlobalFlags
+import com.w2sv.common.preferences.DataStoreRepository
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -18,8 +18,8 @@ import javax.inject.Inject
 class LaunchActivity : AppCompatActivity() {
 
     @HiltViewModel
-    class ViewModel @Inject constructor(globalFlags: GlobalFlags) : androidx.lifecycle.ViewModel() {
-        val destinationActivity = when (globalFlags.onboardingDone) {
+    class ViewModel @Inject constructor(dataStoreRepository: DataStoreRepository) : androidx.lifecycle.ViewModel() {
+        val destinationActivity = when (dataStoreRepository.onboardingDone.value) {
             true -> MainActivity::class.java
             false -> OnboardingActivity::class.java
         }

@@ -19,7 +19,7 @@ import com.w2sv.autocrop.utils.extensions.addObservers
 import com.w2sv.autocrop.utils.extensions.registerOnBackPressedListener
 import com.w2sv.autocrop.utils.extensions.startMainActivity
 import com.w2sv.common.BackPressHandler
-import com.w2sv.common.preferences.GlobalFlags
+import com.w2sv.common.preferences.DataStoreRepository
 import com.w2sv.onboarding.OnboardingPage
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +32,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
     @HiltViewModel
     class ViewModel @Inject constructor(
         resources: Resources,
-        val globalFlags: GlobalFlags
+        val dataStoreRepository: DataStoreRepository
     ) : androidx.lifecycle.ViewModel() {
 
         var screenshotListeningEnabled: Boolean = false
@@ -52,7 +52,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        addObservers(screenshotListeningPermissionHandlers + viewModel.globalFlags)
+        addObservers(screenshotListeningPermissionHandlers)
 
         registerOnBackPressedListener {
             viewModel.backPressHandler(
@@ -123,7 +123,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
         )
 
     override fun onOnboardingFinished() {
-        viewModel.globalFlags.onboardingDone = true
+        viewModel.dataStoreRepository.onboardingDone.value = true
         startMainActivity(true, Animatoo::animateSwipeLeft)
     }
 }

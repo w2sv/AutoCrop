@@ -31,6 +31,7 @@ androidx-fragment = 'androidx.fragment:fragment-ktx:1.5.7'
 androidx-activity = 'androidx.activity:activity-ktx:1.7.1'
 androidx-splashscreen = 'androidx.core:core-splashscreen:1.0.1'
 androidx-localbroadcastmanager = 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
+androidx-datastore-preferences = 'androidx.datastore:datastore-preferences:1.0.0'
 
 # google
 google-guava = 'com.google.guava:guava:31.1-jre'

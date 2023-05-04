@@ -30,7 +30,7 @@ import com.w2sv.autocrop.activities.examination.fragments.comparison.model.Displ
 import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
-import com.w2sv.common.preferences.GlobalFlags
+import com.w2sv.common.preferences.DataStoreRepository
 import com.w2sv.cropbundle.CropBundle
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,7 +49,7 @@ class ComparisonFragment
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
         contentResolver: ContentResolver,
-        val globalFlags: GlobalFlags
+        val dataStoreRepository: DataStoreRepository
     ) : androidx.lifecycle.ViewModel() {
 
         val cropBundle: CropBundle =
@@ -87,7 +87,7 @@ class ComparisonFragment
 
     private fun onEnterTransitionCompleted() {
         launchAfterShortDelay {
-            if (!viewModel.globalFlags.comparisonInstructionsShown) {
+            if (!viewModel.dataStoreRepository.comparisonInstructionsShown.value) {
                 ComparisonScreenInstructionDialogFragment().show(childFragmentManager)
             }
             else
