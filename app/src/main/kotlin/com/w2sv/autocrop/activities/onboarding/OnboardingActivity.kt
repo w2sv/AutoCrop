@@ -67,15 +67,9 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
     override fun getPages(): List<OnboardingPage> =
         listOf(
             OnboardingPage(
-                titleTextRes = R.string.onboarding_page_1_title,
-                backgroundColorRes = com.w2sv.common.R.color.magenta_saturated,
-                emblemDrawableRes = com.w2sv.common.R.drawable.logo_nobackground,
-                descriptionText = getString(R.string.onboarding_page_1_description)
-            ),
-            OnboardingPage(
                 titleTextRes = R.string.screenshot_listening,
                 descriptionTextRes = R.string.screenshot_listener_description,
-                backgroundColorRes = android.R.color.holo_purple,
+                backgroundColorRes = com.w2sv.common.R.color.magenta_saturated,
                 emblemDrawableRes = com.w2sv.common.R.drawable.ic_hearing_24,
                 actionLayoutRes = R.layout.action_layout_screenshotlistener_onboardingpage,
                 onViewCreatedListener = { view, activity ->
@@ -124,7 +118,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                 titleTextRes = R.string.onboarding_page_2_title,
                 emblemDrawableRes = R.drawable.ic_check_24,
                 descriptionTextRes = R.string.onboarding_page_2_description,
-                backgroundColorRes = com.w2sv.common.R.color.ocean_blue
+                backgroundColorRes = android.R.color.holo_purple
             )
         )
 
