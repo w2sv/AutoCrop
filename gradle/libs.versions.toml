@@ -34,7 +34,7 @@ androidx-localbroadcastmanager = 'androidx.localbroadcastmanager:localbroadcastm
 
 # google
 google-guava = 'com.google.guava:guava:31.1-jre'
-google-material = 'com.google.android.material:material:1.9.0-rc01'
+google-material = 'com.google.android.material:material:1.9.0'
 google-hilt = { module = 'com.google.dagger:hilt-android', version.ref = 'hilt' }
 google-hilt-kapt = { module = 'com.google.dagger:hilt-android-compiler', version.ref = 'hilt' }
 
