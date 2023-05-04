@@ -24,8 +24,7 @@ android {
         versionName version
 
         buildConfigField "int", "MIN_SDK_VERSION", "$minSdkVersion.apiLevel"
-        setProperty('archivesBaseName', versionName)
-        // Stores built aab's as "{versionName}-{buildFlavor}.apk"
+        setProperty('archivesBaseName', versionName)  // Stores built aab's as "{versionName}-{buildFlavor}.apk"
 
         externalNativeBuild {
             cmake {
