@@ -11,6 +11,6 @@ fun Context.openUrlWithActivityNotFoundHandling(url: String) {
         openUrl(url)
     }
     catch (e: ActivityNotFoundException) {
-        showToast("Couldn't find any browser to open the URL with", Toast.LENGTH_LONG)
+        showToast("Couldn't find a browser to open the URL with", Toast.LENGTH_LONG)
     }
 }

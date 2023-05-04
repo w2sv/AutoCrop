@@ -51,6 +51,30 @@ class DataStoreRepository @Inject constructor(
         Preference(intPreferencesKey("cropAdjustmentMode"), 0)
     }
 
+    inner class Preference<T>(private val key: Preferences.Key<T>, defaultValue: T) {
+
+        var value = dataStore.data.map {
+            it[key]
+                ?: defaultValue
+        }
+            .getSynchronously()
+            set(value) {
+                field = value
+
+                scope.launch {
+                    dataStore.edit {
+                        it[key] = value
+                    }
+                }
+            }
+    }
+}
+
+class UriRepository @Inject constructor(
+    private val dataStore: DataStore<Preferences>
+){
+    private val scope = CoroutineScope(Dispatchers.Default)
+
     val treeUri by lazy {
         UriPreference(stringPreferencesKey("treeUri"))
     }
@@ -97,24 +121,6 @@ class DataStoreRepository @Inject constructor(
             else
                 null
         }
-
-    inner class Preference<T>(private val key: Preferences.Key<T>, defaultValue: T) {
-
-        var value = dataStore.data.map {
-            it[key]
-                ?: defaultValue
-        }
-            .getSynchronously()
-            set(value) {
-                field = value
-
-                scope.launch {
-                    dataStore.edit {
-                        it[key] = value
-                    }
-                }
-            }
-    }
 
     inner class UriPreference(private val key: Preferences.Key<String>) {
 

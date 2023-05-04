@@ -66,10 +66,10 @@ fun ContentResolver.queryMediaStoreData(
             .also { close() }
     }
 
-fun ContentResolver.queryMediaStoreDatum(
-    uri: Uri,
-    column: String,
-    selection: String? = null,
-    selectionArgs: Array<String>? = null
-): String =
-    queryMediaStoreData(uri, arrayOf(column), selection, selectionArgs).first()
+//fun ContentResolver.queryMediaStoreDatum(
+//    uri: Uri,
+//    column: String,
+//    selection: String? = null,
+//    selectionArgs: Array<String>? = null
+//): String =
+//    queryMediaStoreData(uri, arrayOf(column), selection, selectionArgs).first()

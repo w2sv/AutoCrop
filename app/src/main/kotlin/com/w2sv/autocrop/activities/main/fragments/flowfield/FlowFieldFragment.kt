@@ -49,7 +49,7 @@ import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.common.BackPressHandler
 import com.w2sv.common.PermissionHandler
-import com.w2sv.common.preferences.DataStoreRepository
+import com.w2sv.common.preferences.UriRepository
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.flowfield.Sketch
 import com.w2sv.screenshotlistening.ScreenshotListener
@@ -72,7 +72,7 @@ class FlowFieldFragment :
     class ViewModel @Inject constructor(
         @ApplicationContext context: Context,
         savedStateHandle: SavedStateHandle,
-        val dataStoreRepository: DataStoreRepository,
+        val uriRepository: UriRepository,
     ) : androidx.lifecycle.ViewModel() {
 
         val accumulatedIoResults: AccumulatedIOResults? = savedStateHandle[AccumulatedIOResults.EXTRA]
@@ -100,7 +100,7 @@ class FlowFieldFragment :
         }
 
         val cropSaveDirIdentifierLive: LiveData<String> by lazy {
-            MutableLiveData(cropSaveDirPathIdentifier(dataStoreRepository.documentUri.value))
+            MutableLiveData(cropSaveDirPathIdentifier(uriRepository.documentUri.value))
         }
         val screenshotListenerCancelledFromNotificationLive: LiveData<Boolean> by lazy {
             MutableLiveData(false)
@@ -298,8 +298,8 @@ class FlowFieldFragment :
     val openDocumentTreeContractHandler by lazy {
         OpenDocumentTreeContractHandler(requireActivity()) {
             it?.let { treeUri ->
-                val text = if (viewModel.dataStoreRepository.setNewUri(treeUri, requireContext().contentResolver)) {
-                    viewModel.cropSaveDirIdentifierLive.postValue(cropSaveDirPathIdentifier(viewModel.dataStoreRepository.documentUri.value))
+                val text = if (viewModel.uriRepository.setNewUri(treeUri, requireContext().contentResolver)) {
+                    viewModel.cropSaveDirIdentifierLive.postValue(cropSaveDirPathIdentifier(viewModel.uriRepository.documentUri.value))
                     SpannableStringBuilder()
                         .append("Crops will be saved to ")
                         .color(requireContext().getColor(R.color.success)) {

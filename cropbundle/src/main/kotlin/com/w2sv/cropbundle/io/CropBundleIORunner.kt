@@ -2,7 +2,7 @@ package com.w2sv.cropbundle.io
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.w2sv.common.preferences.DataStoreRepository
+import com.w2sv.common.preferences.UriRepository
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.Screenshot
 import dagger.hilt.EntryPoint
@@ -12,7 +12,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
 class CropBundleIORunner @Inject constructor(
-    private val dataStoreRepository: DataStoreRepository
+    private val uriRepository: UriRepository
 ) {
 
     @InstallIn(SingletonComponent::class)
@@ -65,7 +65,7 @@ class CropBundleIORunner @Inject constructor(
                     screenshotMediaStoreData.fileName,
                     screenshotMediaStoreData.mimeType
                 ),
-                dataStoreRepository.validDocumentUriOrNull(context)
+                uriRepository.validDocumentUriOrNull(context)
             ),
             context.contentResolver.deleteScreenshotIfApplicable(
                 screenshotMediaStoreData.id,
