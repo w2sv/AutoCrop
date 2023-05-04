@@ -3,8 +3,8 @@ package com.w2sv.autocrop.utils.extensions
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.widget.Toast
-import com.w2sv.androidutils.extensions.openUrl
-import com.w2sv.androidutils.extensions.showToast
+import com.w2sv.androidutils.generic.openUrl
+import com.w2sv.androidutils.notifying.showToast
 
 fun Context.openUrlWithActivityNotFoundHandling(url: String) {
     try {

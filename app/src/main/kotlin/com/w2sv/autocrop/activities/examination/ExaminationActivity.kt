@@ -5,7 +5,7 @@ import android.net.Uri
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
-import com.w2sv.androidutils.extensions.showToast
+import com.w2sv.androidutils.notifying.showToast
 import com.w2sv.autocrop.activities.AppActivity
 import com.w2sv.autocrop.activities.crop.domain.CropResults
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment

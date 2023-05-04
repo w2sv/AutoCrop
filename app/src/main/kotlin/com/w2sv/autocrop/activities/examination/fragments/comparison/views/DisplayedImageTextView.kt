@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import com.daimajia.androidanimations.library.YoYo
-import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.show
+import com.w2sv.androidutils.ui.resources.getLong
+import com.w2sv.androidutils.ui.views.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.examination.fragments.comparison.model.DisplayedImage
 import com.w2sv.autocrop.ui.views.fadeOut

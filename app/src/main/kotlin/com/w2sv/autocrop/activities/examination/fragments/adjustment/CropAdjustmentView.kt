@@ -18,8 +18,8 @@ import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.findViewTreeLifecycleOwner
-import com.w2sv.androidutils.extensions.postValue
-import com.w2sv.androidutils.extensions.viewModel
+import com.w2sv.androidutils.lifecycle.postValue
+import com.w2sv.androidutils.ui.views.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.animateMatrix
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.extensions.asMappedFrom

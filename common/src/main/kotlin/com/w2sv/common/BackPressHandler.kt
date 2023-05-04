@@ -1,6 +1,6 @@
 package com.w2sv.common
 
-import com.w2sv.androidutils.extensions.launchDelayed
+import com.w2sv.androidutils.coroutines.launchDelayed
 import kotlinx.coroutines.CoroutineScope
 
 class BackPressHandler(

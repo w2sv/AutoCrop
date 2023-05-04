@@ -8,11 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.airbnb.lottie.LottieAnimationView
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.androidutils.extensions.crossVisualize
-import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.show
-import com.w2sv.androidutils.extensions.showToast
-import com.w2sv.androidutils.permissionhandler.requestPermissions
+import com.w2sv.androidutils.notifying.showToast
+import com.w2sv.androidutils.permissions.permissionhandler.requestPermissions
+import com.w2sv.androidutils.ui.resources.getLong
+import com.w2sv.androidutils.ui.views.crossVisualize
+import com.w2sv.androidutils.ui.views.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.views.animationComposer
 import com.w2sv.autocrop.utils.extensions.addObservers

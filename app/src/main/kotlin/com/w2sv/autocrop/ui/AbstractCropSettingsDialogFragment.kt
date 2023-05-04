@@ -7,7 +7,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.slider.Slider
-import com.w2sv.androidutils.extensions.postValue
+import com.w2sv.androidutils.lifecycle.postValue
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.model.CROP_SENSITIVITY_MAX
 import com.w2sv.autocrop.ui.model.cropSensitivity

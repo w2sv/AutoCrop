@@ -13,9 +13,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
-import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.increment
-import com.w2sv.androidutils.extensions.showToast
+import com.w2sv.androidutils.lifecycle.increment
+import com.w2sv.androidutils.notifying.showToast
+import com.w2sv.androidutils.ui.resources.getLong
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.ViewBoundFragmentActivity

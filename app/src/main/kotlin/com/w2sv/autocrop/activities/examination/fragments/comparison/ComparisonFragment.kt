@@ -18,11 +18,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
-import com.w2sv.androidutils.extensions.crossVisualize
-import com.w2sv.androidutils.extensions.getLong
-import com.w2sv.androidutils.extensions.postValue
-import com.w2sv.androidutils.extensions.repostValue
-import com.w2sv.androidutils.extensions.show
+import com.w2sv.androidutils.lifecycle.postValue
+import com.w2sv.androidutils.lifecycle.repostValue
+import com.w2sv.androidutils.ui.dialogs.show
+import com.w2sv.androidutils.ui.resources.getLong
+import com.w2sv.androidutils.ui.views.crossVisualize
+import com.w2sv.androidutils.ui.views.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity

@@ -154,7 +154,7 @@ class CroppingTest {
     fun validScreenshotCropEdges(fileName: String, expected: CropEdges) {
         assertEquals(
             expected,
-            loadTestScreenshot(fileName, "valid").crop()?.first
+            loadTestScreenshot(fileName, "valid").crop(150.toDouble())?.first
         )
     }
 
@@ -163,7 +163,7 @@ class CroppingTest {
     fun defectiveScreenshotCropEdges(fileName: String, expected: CropEdges) {
         d { "------------------------\nCroppingKt: $fileName" }
         val delta = 1f
-        val (edges, _) = loadTestScreenshot(fileName, "defective").crop()!!
+        val (edges, _) = loadTestScreenshot(fileName, "defective").crop(150.toDouble())!!
 
         assertEquals(expected.top.toFloat(), edges.top.toFloat(), delta)
         assertEquals(expected.bottom.toFloat(), edges.bottom.toFloat(), delta)

@@ -1,6 +1,6 @@
 package com.w2sv.cropbundle.cropping
 
-import com.w2sv.androidutils.utils.measured
+import com.w2sv.androidutils.generic.measured
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc

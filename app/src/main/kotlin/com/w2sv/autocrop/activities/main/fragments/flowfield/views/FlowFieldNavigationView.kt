@@ -10,15 +10,15 @@ import androidx.core.app.ShareCompat
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.navigation.NavigationView
-import com.w2sv.androidutils.extensions.configureItem
-import com.w2sv.androidutils.extensions.playStoreUrl
-import com.w2sv.androidutils.extensions.requireActivity
-import com.w2sv.androidutils.extensions.serviceRunning
-import com.w2sv.androidutils.extensions.show
-import com.w2sv.androidutils.extensions.showToast
-import com.w2sv.androidutils.extensions.toggle
-import com.w2sv.androidutils.extensions.viewModel
-import com.w2sv.androidutils.permissionhandler.requestPermissions
+import com.w2sv.androidutils.generic.appPlayStoreUrl
+import com.w2sv.androidutils.generic.requireActivity
+import com.w2sv.androidutils.lifecycle.toggle
+import com.w2sv.androidutils.notifying.showToast
+import com.w2sv.androidutils.permissions.permissionhandler.requestPermissions
+import com.w2sv.androidutils.services.isServiceRunning
+import com.w2sv.androidutils.ui.dialogs.show
+import com.w2sv.androidutils.ui.views.configureItem
+import com.w2sv.androidutils.ui.views.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
@@ -50,7 +50,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         menu.configureItem(R.id.main_menu_item_listen_to_screen_captures) {
             it.actionView = Switch(context)
                 .apply {
-                    isChecked = context.serviceRunning<ScreenshotListener>()
+                    isChecked = context.isServiceRunning<ScreenshotListener>()
                     setOnCheckedChangeListener { _, value ->
                         when {
                             viewModel.screenshotListenerCancelledFromNotificationLive.value == true -> viewModel.screenshotListenerCancelledFromNotificationLive.toggle()
@@ -118,7 +118,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                         context.startActivity(
                             Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse(context.playStoreUrl)
+                                Uri.parse(appPlayStoreUrl(context))
                             )
                                 .setPackage("com.android.vending")
                         )
@@ -131,7 +131,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 R.id.main_menu_item_share -> {
                     ShareCompat.IntentBuilder(context)
                         .setType("text/plain")
-                        .setText("Check out AutoCrop!\n${context.playStoreUrl}")
+                        .setText("Check out AutoCrop!\n${appPlayStoreUrl(context)}")
                         .startChooser()
                 }
             }

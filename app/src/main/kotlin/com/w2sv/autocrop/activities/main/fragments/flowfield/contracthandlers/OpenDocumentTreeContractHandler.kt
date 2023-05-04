@@ -5,7 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
-import com.w2sv.androidutils.ActivityCallContractHandler
+import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
 
 class OpenDocumentTreeContractHandler(
     activity: ComponentActivity,

@@ -3,8 +3,8 @@ package com.w2sv.screenshotlistening.notifications
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.core.app.NotificationCompat
-import com.w2sv.androidutils.extensions.getNotificationManager
-import com.w2sv.androidutils.extensions.showNotification
+import com.w2sv.androidutils.notifying.getNotificationManager
+import com.w2sv.androidutils.notifying.showNotification
 import slimber.log.i
 
 class NotificationGroup(

@@ -2,7 +2,7 @@ package com.w2sv.autocrop.activities.examination.fragments.comparison
 
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
-import com.w2sv.androidutils.extensions.getColoredDrawable
+import com.w2sv.androidutils.ui.resources.getColoredDrawable
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.views.RoundedDialogFragment
 import com.w2sv.common.preferences.DataStoreRepository

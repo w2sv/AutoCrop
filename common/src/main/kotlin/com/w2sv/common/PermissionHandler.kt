@@ -4,7 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.activity.ComponentActivity
-import com.w2sv.androidutils.permissionhandler.SingularPermissionHandler
+import com.w2sv.androidutils.permissions.permissionhandler.SingularPermissionHandler
 import com.w2sv.common.extensions.snackyBuilder
 import de.mateware.snacky.Snacky
 
