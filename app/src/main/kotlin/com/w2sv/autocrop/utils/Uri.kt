@@ -7,7 +7,6 @@ import android.os.Build
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import com.w2sv.common.preferences.CropSaveDirPreferences
 import com.w2sv.cropbundle.io.utils.systemPicturesDirectory
 import slimber.log.i
 
@@ -26,8 +25,8 @@ fun getMediaUri(context: Context, uri: Uri): Uri? =
         null
     }
 
-val CropSaveDirPreferences.pathIdentifier: String
-    get() = documentUri?.let { documentUriPathIdentifier(it) }
+fun cropSaveDirPathIdentifier(documentUri: Uri?): String =
+    documentUri?.let { documentUriPathIdentifier(it) }
         ?: systemPicturesDirectory().path
 
 private fun documentUriPathIdentifier(documentUri: Uri): String =

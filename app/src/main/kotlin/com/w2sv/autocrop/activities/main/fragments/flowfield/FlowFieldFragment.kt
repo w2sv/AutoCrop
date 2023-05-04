@@ -42,14 +42,14 @@ import com.w2sv.autocrop.ui.views.fadeIn
 import com.w2sv.autocrop.ui.views.fadeInAnimationComposer
 import com.w2sv.autocrop.ui.views.fadeOut
 import com.w2sv.autocrop.ui.views.onHalfwayFinished
+import com.w2sv.autocrop.utils.cropSaveDirPathIdentifier
 import com.w2sv.autocrop.utils.extensions.addObservers
 import com.w2sv.autocrop.utils.extensions.resolution
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
-import com.w2sv.autocrop.utils.pathIdentifier
 import com.w2sv.common.BackPressHandler
 import com.w2sv.common.PermissionHandler
-import com.w2sv.common.preferences.CropSaveDirPreferences
+import com.w2sv.common.preferences.DataStoreRepository
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
 import com.w2sv.flowfield.Sketch
 import com.w2sv.screenshotlistening.ScreenshotListener
@@ -72,7 +72,7 @@ class FlowFieldFragment :
     class ViewModel @Inject constructor(
         @ApplicationContext context: Context,
         savedStateHandle: SavedStateHandle,
-        val cropSaveDirPreferences: CropSaveDirPreferences,
+        val dataStoreRepository: DataStoreRepository,
     ) : androidx.lifecycle.ViewModel() {
 
         val accumulatedIoResults: AccumulatedIOResults? = savedStateHandle[AccumulatedIOResults.EXTRA]
@@ -100,7 +100,7 @@ class FlowFieldFragment :
         }
 
         val cropSaveDirIdentifierLive: LiveData<String> by lazy {
-            MutableLiveData(cropSaveDirPreferences.pathIdentifier)
+            MutableLiveData(cropSaveDirPathIdentifier(dataStoreRepository.documentUri.value))
         }
         val screenshotListenerCancelledFromNotificationLive: LiveData<Boolean> by lazy {
             MutableLiveData(false)
@@ -298,8 +298,8 @@ class FlowFieldFragment :
     val openDocumentTreeContractHandler by lazy {
         OpenDocumentTreeContractHandler(requireActivity()) {
             it?.let { treeUri ->
-                val text = if (viewModel.cropSaveDirPreferences.setNewUri(treeUri, requireContext().contentResolver)) {
-                    viewModel.cropSaveDirIdentifierLive.postValue(viewModel.cropSaveDirPreferences.pathIdentifier)
+                val text = if (viewModel.dataStoreRepository.setNewUri(treeUri, requireContext().contentResolver)) {
+                    viewModel.cropSaveDirIdentifierLive.postValue(cropSaveDirPathIdentifier(viewModel.dataStoreRepository.documentUri.value))
                     SpannableStringBuilder()
                         .append("Crops will be saved to ")
                         .color(requireContext().getColor(R.color.success)) {
