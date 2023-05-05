@@ -5,7 +5,7 @@ import com.w2sv.androidutils.lifecycle.postValue
 import com.w2sv.androidutils.notifying.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.AbstractCropSettingsDialogFragment
-import com.w2sv.common.datastore.DataStoreRepository
+import com.w2sv.common.datastore.Repository
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -18,11 +18,11 @@ class CropSettingsDialogFragment : AbstractCropSettingsDialogFragment(
 ) {
 
     @HiltViewModel
-    class ViewModel @Inject constructor(private val dataStoreRepository: DataStoreRepository) : AbstractCropSettingsDialogFragment.ViewModel(
-        dataStoreRepository.edgeCandidateThreshold.value
+    class ViewModel @Inject constructor(private val repository: Repository) : AbstractCropSettingsDialogFragment.ViewModel(
+        repository.edgeCandidateThreshold.value
     ) {
         fun syncCropSettings() {
-            dataStoreRepository.edgeCandidateThreshold.value = edgeCandidateThreshold
+            repository.edgeCandidateThreshold.value = edgeCandidateThreshold
             settingsDissimilarLive.postValue(false)
         }
     }

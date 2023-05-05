@@ -36,8 +36,9 @@ class ExitFragment :
         DeleteRequestIntentContractAdministrator(
             requireActivity()
         ) {
-            if (it.resultCode == Activity.RESULT_OK)
-                activityViewModel.onDeleteRequestUrisDeleted()
+            if (it.resultCode == Activity.RESULT_OK) {
+                activityViewModel.accumulateDeleteRequestUris()
+            }
 
             launchAfterShortDelay {  // necessary for showing of transition animation, which otherwise is just skipped
                 exitAsSoonAsIOProcessingFinished()
@@ -48,8 +49,9 @@ class ExitFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (activityViewModel.deleteRequestUrisPresent)
+        if (activityViewModel.deleteRequestUrisPresent) {
             lifecycle.addObserver(deleteRequestIntentContractAdministrator)
+        }
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? =

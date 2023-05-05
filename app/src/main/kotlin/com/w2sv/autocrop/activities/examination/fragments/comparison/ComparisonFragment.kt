@@ -27,11 +27,11 @@ import com.w2sv.androidutils.ui.views.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
-import com.w2sv.autocrop.activities.examination.fragments.comparison.model.DisplayedImage
+import com.w2sv.autocrop.activities.examination.fragments.comparison.model.ImageType
 import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
-import com.w2sv.common.datastore.DataStoreRepository
+import com.w2sv.common.datastore.Repository
 import com.w2sv.cropbundle.CropBundle
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,7 +50,7 @@ class ComparisonFragment
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
         contentResolver: ContentResolver,
-        val dataStoreRepository: DataStoreRepository
+        val repository: Repository
     ) : androidx.lifecycle.ViewModel() {
 
         val cropBundle: CropBundle =
@@ -59,7 +59,7 @@ class ComparisonFragment
 
         var enterTransitionCompleted = false
 
-        val displayedImageLive: LiveData<DisplayedImage> = MutableLiveData(DisplayedImage.Crop)
+        val imageTypeLive: LiveData<ImageType> = MutableLiveData(ImageType.Crop)
         val screenshotViewImageMatrixLive: LiveData<Matrix> = MutableLiveData()
     }
 
@@ -88,12 +88,12 @@ class ComparisonFragment
 
     private fun onEnterTransitionCompleted() {
         launchAfterShortDelay {
-            if (!viewModel.dataStoreRepository.comparisonInstructionsShown.value) {
+            if (!viewModel.repository.comparisonInstructionsShown.value) {
                 ComparisonScreenInstructionDialogFragment().show(childFragmentManager)
             }
             else
             // trigger display of displayedImageTv
-                viewModel.displayedImageLive.repostValue()
+                viewModel.imageTypeLive.repostValue()
         }
     }
 
@@ -116,13 +116,13 @@ class ComparisonFragment
         root.setOnTouchListener { v, event ->
             when (event.action) {
                 ACTION_DOWN -> {
-                    viewModel.displayedImageLive.postValue(DisplayedImage.Screenshot)
+                    viewModel.imageTypeLive.postValue(ImageType.Screenshot)
                     v.performClick()
                     true
                 }
 
                 ACTION_UP -> {
-                    viewModel.displayedImageLive.postValue(DisplayedImage.Crop)
+                    viewModel.imageTypeLive.postValue(ImageType.Crop)
                     true
                 }
 
@@ -135,10 +135,10 @@ class ComparisonFragment
         screenshotViewImageMatrixLive.observe(viewLifecycleOwner) {
             binding.cropIv.alignWithScreenshotImageView(it, viewModel.cropBundle.crop.edges)
         }
-        displayedImageLive.observe(viewLifecycleOwner) {
+        imageTypeLive.observe(viewLifecycleOwner) {
             when (it!!) {
-                DisplayedImage.Screenshot -> crossVisualize(binding.cropIv, binding.screenshotIv)
-                DisplayedImage.Crop -> crossVisualize(binding.screenshotIv, binding.cropIv)
+                ImageType.Screenshot -> crossVisualize(binding.cropIv, binding.screenshotIv)
+                ImageType.Crop -> crossVisualize(binding.screenshotIv, binding.cropIv)
             }
 
             if (viewModel.enterTransitionCompleted) {

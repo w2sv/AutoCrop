@@ -2,14 +2,14 @@ package com.w2sv.cropbundle.cropping
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.w2sv.common.datastore.DataStoreRepository
+import com.w2sv.common.datastore.Repository
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
-class Cropper @Inject constructor(private val dataStoreRepository: DataStoreRepository) {
+class Cropper @Inject constructor(private val repository: Repository) {
 
     @InstallIn(SingletonComponent::class)
     @EntryPoint
@@ -30,5 +30,5 @@ class Cropper @Inject constructor(private val dataStoreRepository: DataStoreRepo
     }
 
     private fun invoke(src: Bitmap): CropResult? =
-        src.crop(dataStoreRepository.edgeCandidateThreshold.value.toDouble())
+        src.crop(repository.edgeCandidateThreshold.value.toDouble())
 }

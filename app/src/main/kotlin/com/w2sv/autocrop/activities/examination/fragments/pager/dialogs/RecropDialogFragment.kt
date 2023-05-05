@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.AbstractCropSettingsDialogFragment
 import com.w2sv.autocrop.utils.getFragment
-import com.w2sv.common.datastore.DataStoreRepository
+import com.w2sv.common.datastore.Repository
 import com.w2sv.cropbundle.CropBundle
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -58,8 +58,8 @@ class RecropAllDialogFragment : AbstractCropSettingsDialogFragment(
 ) {
 
     @HiltViewModel
-    class ViewModel @Inject constructor(dataStoreRepository: DataStoreRepository) : AbstractCropSettingsDialogFragment.ViewModel(
-        dataStoreRepository.edgeCandidateThreshold.value
+    class ViewModel @Inject constructor(repository: Repository) : AbstractCropSettingsDialogFragment.ViewModel(
+        repository.edgeCandidateThreshold.value
     )
 
     override val viewModel by viewModels<ViewModel>()

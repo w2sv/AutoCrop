@@ -17,7 +17,7 @@ import com.w2sv.autocrop.activities.examination.fragments.pager.CropPagerFragmen
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.domain.AccumulatedIOResults
 import com.w2sv.autocrop.utils.extensions.startMainActivity
-import com.w2sv.common.datastore.DataStoreRepository
+import com.w2sv.common.datastore.Repository
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.io.CropBundleIORunner
 import com.w2sv.cropbundle.io.getDeleteRequestUri
@@ -33,7 +33,7 @@ class ExaminationActivity : AppActivity() {
 
     @HiltViewModel
     class ViewModel @Inject constructor(
-        private val dataStoreRepository: DataStoreRepository
+        private val repository: Repository
     ) : androidx.lifecycle.ViewModel() {
 
         companion object {
@@ -54,7 +54,7 @@ class ExaminationActivity : AppActivity() {
 
         val deleteRequestUrisPresent: Boolean get() = deleteRequestUris.isNotEmpty()
 
-        fun onDeleteRequestUrisDeleted() {
+        fun accumulateDeleteRequestUris() {
             accumulatedIoResults.nDeletedScreenshots += deleteRequestUris.size
         }
 
@@ -101,7 +101,7 @@ class ExaminationActivity : AppActivity() {
         private fun addScreenshotDeleteRequestUriIfApplicable(
             screenshotMediaStoreId: Long
         ): Boolean =
-            when (dataStoreRepository.deleteScreenshots.value) {
+            when (repository.deleteScreenshots.value) {
                 false -> false
                 else -> getDeleteRequestUri(screenshotMediaStoreId)?.let {
                     deleteRequestUris.add(it)

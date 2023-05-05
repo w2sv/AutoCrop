@@ -7,20 +7,15 @@ import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.androidutils.ui.resources.getLong
 import com.w2sv.androidutils.ui.views.show
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.examination.fragments.comparison.model.DisplayedImage
+import com.w2sv.autocrop.activities.examination.fragments.comparison.model.ImageType
 import com.w2sv.autocrop.ui.views.fadeOut
 
-class DisplayedImageTextView(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
+class ImageTypeLabelTextView(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
 
-    fun setTextAndShow(displayedImage: DisplayedImage) {
+    fun setTextAndShow(imageType: ImageType) {
         fadeOutAnimation?.stop()
 
-        text = resources.getString(
-            when (displayedImage) {
-                DisplayedImage.Screenshot -> R.string.original
-                DisplayedImage.Crop -> R.string.cropped
-            }
-        )
+        text = resources.getString(imageType.labelRes)
         show()
 
         fadeOutAnimation = fadeOut(

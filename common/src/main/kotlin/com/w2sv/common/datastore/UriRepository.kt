@@ -10,17 +10,14 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.w2sv.androidutils.coroutines.getValueSynchronously
 import com.w2sv.androidutils.generic.hasPermission
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import slimber.log.i
 import javax.inject.Inject
 
 class UriRepository @Inject constructor(
-    private val dataStore: DataStore<Preferences>
-) {
-    private val scope = CoroutineScope(Dispatchers.Default)
+    dataStore: DataStore<Preferences>
+) : DataStoreRepository(dataStore) {
 
     val treeUri by lazy {
         UriPreference(PreferencesKey.TREE_URI)

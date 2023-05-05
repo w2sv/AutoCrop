@@ -5,7 +5,7 @@ import androidx.fragment.app.viewModels
 import com.w2sv.androidutils.ui.resources.getColoredDrawable
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.views.RoundedDialogFragment
-import com.w2sv.common.datastore.DataStoreRepository
+import com.w2sv.common.datastore.Repository
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -14,7 +14,7 @@ import javax.inject.Inject
 internal class ComparisonScreenInstructionDialogFragment : RoundedDialogFragment() {
 
     @HiltViewModel
-    class ViewModel @Inject constructor(val dataStoreRepository: DataStoreRepository) : androidx.lifecycle.ViewModel()
+    class ViewModel @Inject constructor(val repository: Repository) : androidx.lifecycle.ViewModel()
 
     override fun AlertDialog.Builder.build(): AlertDialog.Builder =
         apply {
@@ -29,7 +29,7 @@ internal class ComparisonScreenInstructionDialogFragment : RoundedDialogFragment
             setMessage(getString(R.string.comparison_instruction))
             setPositiveButton(resources.getString(R.string.got_it))
             { _, _ ->
-                viewModels<ViewModel>().value.dataStoreRepository.comparisonInstructionsShown.value = true
+                viewModels<ViewModel>().value.repository.comparisonInstructionsShown.value = true
             }
         }
 }

@@ -58,7 +58,7 @@ import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.requireCastActivity
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
-import com.w2sv.common.datastore.DataStoreRepository
+import com.w2sv.common.datastore.Repository
 import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
@@ -89,7 +89,7 @@ class CropPagerFragment :
     @HiltViewModel
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
-        val dataStoreRepository: DataStoreRepository,
+        val repository: Repository,
         @ApplicationContext context: Context
     ) : androidx.lifecycle.ViewModel() {
 
@@ -134,7 +134,7 @@ class CropPagerFragment :
         var autoScrollCoroutine: Job? = null
 
         val doAutoScrollLive: LiveData<Boolean> =
-            MutableLiveData(dataStoreRepository.autoScroll.value && dataSet.size > 1)
+            MutableLiveData(repository.autoScroll.value && dataSet.size > 1)
 
         private fun maxAutoScrolls(): Int =
             dataSet.size - dataSet.livePosition.value!!
@@ -177,7 +177,7 @@ class CropPagerFragment :
             RecropDialogFragment.getInstance(
                 dataSet.livePosition.value!!,
                 dataSet.liveElement.adjustedEdgeThreshold
-                    ?: dataStoreRepository.edgeCandidateThreshold.value
+                    ?: repository.edgeCandidateThreshold.value
             )
 
         val backPressHandler = BackPressHandler(
@@ -357,14 +357,14 @@ class CropPagerFragment :
                         findItem(R.id.crop_pager_item_auto_scroll)
                             .apply {
                                 isCheckable = true
-                                isChecked = viewModel.dataStoreRepository.autoScroll.value
+                                isChecked = viewModel.repository.autoScroll.value
                                 makeOnClickPersistent(requireContext())
                             }
                         setOnMenuItemClickListener { item ->
                             when (item.itemId) {
                                 R.id.crop_pager_item_auto_scroll -> {
                                     item.toggleCheck { newValue ->
-                                        viewModel.dataStoreRepository.autoScroll.value = newValue
+                                        viewModel.repository.autoScroll.value = newValue
                                     }
 
                                     KEEP_MENU_ITEM_OPEN_ON_CLICK
