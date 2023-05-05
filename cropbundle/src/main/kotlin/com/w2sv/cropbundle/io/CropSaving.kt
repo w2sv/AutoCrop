@@ -61,7 +61,7 @@ private object GetOutputStream {
         DocumentsContract.createDocument(
             contentResolver,
             parentDocumentUri,
-            mimeType.string,
+            mimeType.mediaStoreIdentifier,
             fileName
         )!!.run {
             contentResolver.openOutputStream(this)!! to this
@@ -83,7 +83,7 @@ private object GetOutputStream {
             ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
                 put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-                put(MediaStore.MediaColumns.MIME_TYPE, mimeType.string)
+                put(MediaStore.MediaColumns.MIME_TYPE, mimeType.mediaStoreIdentifier)
             }
         )!!.let { newUri ->
             contentResolver.openOutputStream(newUri)!! to newUri

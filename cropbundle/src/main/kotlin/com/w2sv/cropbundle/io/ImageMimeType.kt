@@ -2,27 +2,23 @@ package com.w2sv.cropbundle.io
 
 import android.graphics.Bitmap
 
-val IMAGE_MIME_TYPE = imageMimeTypeString("*")
+const val IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER = "image/*"
 
-enum class ImageMimeType(val fileExtension: String, val compressFormat: Bitmap.CompressFormat) {
+enum class ImageMimeType(val outFileExtension: String, val compressFormat: Bitmap.CompressFormat) {
     JPG("jpg", Bitmap.CompressFormat.JPEG),
     PNG("png", Bitmap.CompressFormat.PNG),
 
     @Suppress("DEPRECATION")
     WEBP("webp", Bitmap.CompressFormat.WEBP);
 
-    val string = imageMimeTypeString(fileExtension)
+    val mediaStoreIdentifier: String = "image/$outFileExtension"
 
     companion object {
-        fun parse(type: String): ImageMimeType =
-            when (type) {
-                JPG.string, imageMimeTypeString("jpeg") -> JPG
-                PNG.string -> PNG
-                WEBP.string -> WEBP
-                else -> JPG
+        fun parse(mediaStoreIdentifier: String): ImageMimeType =
+            when (mediaStoreIdentifier) {
+                PNG.mediaStoreIdentifier -> PNG
+                WEBP.mediaStoreIdentifier -> WEBP
+                else -> JPG  // may be "image/jpg" OR "image/jpeg"
             }
     }
 }
-
-private fun imageMimeTypeString(suffix: String): String =
-    "image/$suffix"

@@ -7,7 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
-import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
+import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
 
 interface SelectImagesContractHandlerCompat<I, O> : ActivityCallContractHandler<I, O> {
 
@@ -37,7 +37,7 @@ interface SelectImagesContractHandlerCompat<I, O> : ActivityCallContractHandler<
         override fun selectImages() {
             resultLauncher.launch(
                 Intent(Intent.ACTION_PICK).apply {
-                    type = IMAGE_MIME_TYPE
+                    type = IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
                     putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
                 }
             )
@@ -54,7 +54,7 @@ interface SelectImagesContractHandlerCompat<I, O> : ActivityCallContractHandler<
         SelectImagesContractHandlerCompat<String, List<Uri>> {
 
         override fun selectImages() {
-            resultLauncher.launch(IMAGE_MIME_TYPE)
+            resultLauncher.launch(IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER)
         }
     }
 }

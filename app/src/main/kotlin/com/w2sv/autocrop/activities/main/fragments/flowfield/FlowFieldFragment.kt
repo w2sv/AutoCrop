@@ -50,7 +50,7 @@ import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.common.BackPressHandler
 import com.w2sv.common.PermissionHandler
 import com.w2sv.common.preferences.UriRepository
-import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE
+import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
 import com.w2sv.flowfield.Sketch
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -207,7 +207,7 @@ class FlowFieldFragment :
                             Intent.EXTRA_STREAM,
                             viewModel.accumulatedIoResults!!.cropUris
                         )
-                        .setType(IMAGE_MIME_TYPE),
+                        .setType(IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER),
                     null
                 )
             )

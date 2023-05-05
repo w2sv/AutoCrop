@@ -14,7 +14,7 @@ import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.cropbundle.CropBundle
 
 /**
- * Proxy for non extendable [ViewPager2].
+ * Proxy for non-extendable [ViewPager2].
  */
 class CropPager(
     val pager: ViewPager2,
