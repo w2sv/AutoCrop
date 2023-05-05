@@ -17,7 +17,7 @@ import com.w2sv.autocrop.activities.examination.fragments.pager.CropPagerFragmen
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.domain.AccumulatedIOResults
 import com.w2sv.autocrop.utils.extensions.startMainActivity
-import com.w2sv.common.preferences.DataStoreRepository
+import com.w2sv.common.datastore.DataStoreRepository
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.io.CropBundleIORunner
 import com.w2sv.cropbundle.io.getDeleteRequestUri

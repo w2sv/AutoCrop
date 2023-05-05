@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.AbstractCropSettingsDialogFragment
 import com.w2sv.autocrop.utils.getFragment
-import com.w2sv.common.preferences.DataStoreRepository
+import com.w2sv.common.datastore.DataStoreRepository
 import com.w2sv.cropbundle.CropBundle
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel

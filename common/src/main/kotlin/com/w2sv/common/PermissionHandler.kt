@@ -5,7 +5,7 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import com.w2sv.androidutils.permissions.permissionhandler.SingularPermissionHandler
-import com.w2sv.common.extensions.snackyBuilder
+import com.w2sv.common.extensions.getSnackyBuilder
 import de.mateware.snacky.Snacky
 
 class PermissionHandler(
@@ -52,6 +52,6 @@ class PermissionHandler(
     }
 
     private fun getSnackyBuilder(text: String): Snacky.Builder =
-        activity.snackyBuilder(text)
+        activity.getSnackyBuilder(text)
             .setIcon(R.drawable.ic_error_24)
 }

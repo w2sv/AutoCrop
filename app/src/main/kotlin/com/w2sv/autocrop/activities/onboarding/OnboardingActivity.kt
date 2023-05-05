@@ -19,7 +19,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.views.animationComposer
 import com.w2sv.autocrop.utils.extensions.registerOnBackPressedListener
 import com.w2sv.autocrop.utils.extensions.startMainActivity
-import com.w2sv.common.preferences.DataStoreRepository
+import com.w2sv.common.datastore.DataStoreRepository
 import com.w2sv.onboarding.OnboardingPage
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint

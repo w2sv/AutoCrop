@@ -1,10 +1,8 @@
-package com.w2sv.common.preferences
+package com.w2sv.common.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
 import com.w2sv.androidutils.coroutines.getValueSynchronously
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,27 +16,27 @@ class DataStoreRepository @Inject constructor(
     private val scope = CoroutineScope(Dispatchers.Default)
 
     val onboardingDone by lazy {
-        Preference(booleanPreferencesKey("onboardingDone"), false)
+        Preference(PreferencesKey.ONBOARDING_DONE, false)
     }
 
     val comparisonInstructionsShown by lazy {
-        Preference(booleanPreferencesKey("comparisonInstructionsShown"), false)
+        Preference(PreferencesKey.COMPARISON_INSTRUCTIONS_SHOWN, false)
     }
 
     val autoScroll by lazy {
-        Preference(booleanPreferencesKey("autoScroll"), true)
+        Preference(PreferencesKey.AUTO_SCROLL, true)
     }
 
     val deleteScreenshots by lazy {
-        Preference(booleanPreferencesKey("deleteScreenshots"), true)
+        Preference(PreferencesKey.DELETE_SCREENSHOTS, true)
     }
 
     val edgeCandidateThreshold by lazy {
-        Preference(intPreferencesKey("edgeCandidateThreshold"), 150)
+        Preference(PreferencesKey.EDGE_CANDIDATE_THRESHOLD, 150)
     }
 
     val cropAdjustmentModeOrdinal by lazy {
-        Preference(intPreferencesKey("cropAdjustmentMode"), 0)
+        Preference(PreferencesKey.CROP_ADJUSTMENT_MODE, 0)
     }
 
     inner class Preference<T>(private val key: Preferences.Key<T>, defaultValue: T) {

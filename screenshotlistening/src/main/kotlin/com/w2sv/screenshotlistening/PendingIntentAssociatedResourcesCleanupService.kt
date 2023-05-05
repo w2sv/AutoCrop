@@ -3,7 +3,6 @@ package com.w2sv.screenshotlistening
 import android.content.Context
 import android.content.Intent
 import com.w2sv.androidutils.notifying.getNotificationManager
-import com.w2sv.common.extensions.getInt
 import com.w2sv.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.screenshotlistening.services.ServiceBindingHandler
 import com.w2sv.screenshotlistening.services.abstrct.BoundService
@@ -46,7 +45,7 @@ abstract class PendingIntentAssociatedResourcesCleanupService<T>(private val cli
 
         fun doCleanup(intent: Intent) {
             notificationGroup.onNotificationCancelled(
-                intent.getInt(EXTRA_ASSOCIATED_NOTIFICATION_ID),
+                intent.getIntExtra(EXTRA_ASSOCIATED_NOTIFICATION_ID, -1),
                 intent.getIntegerArrayListExtra(EXTRA_ASSOCIATED_PENDING_REQUEST_CODES)!!
             )
             onCleanupFinishedListener(intent)
@@ -60,7 +59,7 @@ abstract class PendingIntentAssociatedResourcesCleanupService<T>(private val cli
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent!!.getBooleanExtra(EXTRA_CANCEL_NOTIFICATION, false)) {
-            val notificationId = intent.getInt(EXTRA_ASSOCIATED_NOTIFICATION_ID)
+            val notificationId = intent.getIntExtra(EXTRA_ASSOCIATED_NOTIFICATION_ID, -1)
 
             getNotificationManager()
                 .cancel(notificationId)

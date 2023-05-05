@@ -49,7 +49,7 @@ import com.w2sv.autocrop.utils.extensions.resolution
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.common.PermissionHandler
-import com.w2sv.common.preferences.UriRepository
+import com.w2sv.common.datastore.UriRepository
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
 import com.w2sv.flowfield.Sketch
 import com.w2sv.screenshotlistening.ScreenshotListener

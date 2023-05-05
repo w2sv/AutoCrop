@@ -2,7 +2,7 @@ package com.w2sv.cropbundle.cropping
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.w2sv.common.preferences.DataStoreRepository
+import com.w2sv.common.datastore.DataStoreRepository
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors

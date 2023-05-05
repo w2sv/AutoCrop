@@ -1,4 +1,4 @@
-package com.w2sv.common.preferences
+package com.w2sv.common.datastore
 
 import android.content.ContentResolver
 import android.content.Context
@@ -8,7 +8,6 @@ import android.provider.DocumentsContract
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import com.w2sv.androidutils.coroutines.getValueSynchronously
 import com.w2sv.androidutils.generic.hasPermission
 import kotlinx.coroutines.CoroutineScope
@@ -24,11 +23,11 @@ class UriRepository @Inject constructor(
     private val scope = CoroutineScope(Dispatchers.Default)
 
     val treeUri by lazy {
-        UriPreference(stringPreferencesKey("treeUri"))
+        UriPreference(PreferencesKey.TREE_URI)
     }
 
     val documentUri by lazy {
-        UriPreference(stringPreferencesKey("documentUri"))
+        UriPreference(PreferencesKey.DOCUMENT_URI)
     }
 
     /**

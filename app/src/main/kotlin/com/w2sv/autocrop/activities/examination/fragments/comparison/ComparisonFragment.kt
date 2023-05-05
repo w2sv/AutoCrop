@@ -31,7 +31,7 @@ import com.w2sv.autocrop.activities.examination.fragments.comparison.model.Displ
 import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
-import com.w2sv.common.preferences.DataStoreRepository
+import com.w2sv.common.datastore.DataStoreRepository
 import com.w2sv.cropbundle.CropBundle
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel

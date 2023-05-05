@@ -32,7 +32,7 @@ import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.Line
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.model.N_SCREEN_ORIENTATIONS
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.utils.getFragment
-import com.w2sv.common.preferences.DataStoreRepository
+import com.w2sv.common.datastore.DataStoreRepository
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
 import com.w2sv.kotlinutils.extensions.getByOrdinal

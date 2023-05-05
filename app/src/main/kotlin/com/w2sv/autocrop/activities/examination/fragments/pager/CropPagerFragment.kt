@@ -58,7 +58,7 @@ import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.requireCastActivity
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
-import com.w2sv.common.preferences.DataStoreRepository
+import com.w2sv.common.datastore.DataStoreRepository
 import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges

@@ -2,7 +2,7 @@ package com.w2sv.cropbundle.io
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.w2sv.common.preferences.UriRepository
+import com.w2sv.common.datastore.UriRepository
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.Screenshot
 import dagger.hilt.EntryPoint
