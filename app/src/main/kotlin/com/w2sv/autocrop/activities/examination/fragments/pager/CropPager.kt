@@ -29,48 +29,48 @@ class CropPager(
     }
 
     init {
-        pager.initialize()
-    }
+        with(pager) {
+            adapter =
+                object : BidirectionalRecyclerViewAdapter<BidirectionalViewPagerDataSet<CropBundle>, ImageViewHolder>(
+                    dataSet,
+                    3
+                ) {
+                    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder =
+                        ImageViewHolder(
+                            CropImageViewBinding.inflate(
+                                LayoutInflater.from(parent.context),
+                                parent,
+                                false
+                            )
+                                .cropIv
+                                .apply {
+                                    setOnClickListener(onClickListener)
+                                    setOnLongClickListener(onLongClickListener)
+                                }
+                        )
 
-    private fun ViewPager2.initialize() {
-        adapter = object : BidirectionalRecyclerViewAdapter<BidirectionalViewPagerDataSet<CropBundle>, ImageViewHolder>(
-            dataSet,
-            3
-        ) {
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder =
-                ImageViewHolder(
-                    CropImageViewBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    )
-                        .cropIv
-                        .apply {
-                            setOnClickListener(onClickListener)
-                            setOnLongClickListener(onLongClickListener)
+                    override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
+                        dataSet.atCorrespondingPosition(position).let { cropBundle ->
+                            with(holder.imageView) {
+                                setImageBitmap(cropBundle.crop.bitmap)
+                                ViewCompat.setTransitionName(this, cropBundle.identifier())
+                            }
                         }
-                )
-
-            override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-                dataSet.atCorrespondingPosition(position).let { cropBundle ->
-                    with(holder.imageView) {
-                        setImageBitmap(cropBundle.crop.bitmap)
-                        ViewCompat.setTransitionName(this, cropBundle.identifier())
                     }
                 }
-            }
-        }
-        registerOnPageChangeCallback(object : OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
+            registerOnPageChangeCallback(object : OnPageChangeCallback() {
 
-                dataSet.livePosition.update(position)
-            }
-        })
-        setCurrentItem(
-            dataSet.livePosition.value!!,
-            false
-        )
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+
+                    dataSet.livePosition.update(position)
+                }
+            })
+            setCurrentItem(
+                dataSet.initialViewPosition(dataSet.livePosition.value!!),
+                false
+            )
+        }
     }
 
     fun scrollToNextViewAndRemoveCurrent(dataSetPosition: Int) {
