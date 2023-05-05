@@ -16,7 +16,7 @@ import com.w2sv.androidutils.ui.resources.getLong
 import com.w2sv.androidutils.ui.views.crossVisualize
 import com.w2sv.androidutils.ui.views.show
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.views.animationComposer
+import com.w2sv.autocrop.ui.views.getAnimationComposer
 import com.w2sv.autocrop.utils.extensions.registerOnBackPressedListener
 import com.w2sv.autocrop.utils.extensions.startMainActivity
 import com.w2sv.common.datastore.Repository
@@ -91,7 +91,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                                         },
                                         onRequestDismissed = {
                                             it
-                                                .animationComposer(Techniques.ZoomOut, 750L)
+                                                .getAnimationComposer(Techniques.ZoomOut, 750L)
                                                 .onEnd {
                                                     with(doneAnimation) {
                                                         show()
@@ -108,7 +108,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                     if (view != null && !activity.viewModels<ViewModel>().value.screenshotListeningEnabled) {
                         view
                             .findViewById<AppCompatButton>(R.id.enable_button)
-                            .animationComposer(Techniques.Tada)
+                            .getAnimationComposer(Techniques.Tada)
                             .delay(resources.getLong(R.integer.delay_small))
                             .play()
                     }

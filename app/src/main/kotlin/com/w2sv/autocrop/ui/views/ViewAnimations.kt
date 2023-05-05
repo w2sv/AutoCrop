@@ -12,10 +12,10 @@ fun View.animate(
     technique: Techniques,
     duration: Long? = null
 ): YoYo.YoYoString =
-    animationComposer(technique, duration)
+    getAnimationComposer(technique, duration)
         .play()
 
-fun View.animationComposer(
+fun View.getAnimationComposer(
     technique: Techniques,
     duration: Long? = null
 ): YoYo.AnimationComposer =
@@ -60,7 +60,7 @@ fun View.fadeIn(duration: Long? = null): YoYo.YoYoString =
 fun View.fadeInAnimationComposer(duration: Long? = null): YoYo.AnimationComposer =
     run {
         show()
-        animationComposer(Techniques.FadeIn, duration)
+        getAnimationComposer(Techniques.FadeIn, duration)
     }
 
 fun View.fadeOut(duration: Long? = null, delay: Long = 0): YoYo.YoYoString =
@@ -68,7 +68,7 @@ fun View.fadeOut(duration: Long? = null, delay: Long = 0): YoYo.YoYoString =
         .play()
 
 fun View.fadeOutAnimationComposer(duration: Long? = null, delay: Long = 0): YoYo.AnimationComposer =
-    animationComposer(Techniques.FadeOut, duration)
+    getAnimationComposer(Techniques.FadeOut, duration)
         .delay(delay)
         .onEnd {
             hide()

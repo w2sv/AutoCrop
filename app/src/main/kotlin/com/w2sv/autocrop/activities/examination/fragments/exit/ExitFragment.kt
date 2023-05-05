@@ -21,7 +21,7 @@ import com.w2sv.androidutils.ui.animations.SimpleAnimationListener
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.databinding.CropPagerExitBinding
-import com.w2sv.autocrop.ui.views.animationComposer
+import com.w2sv.autocrop.ui.views.getAnimationComposer
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.requireCastActivity
 import kotlinx.coroutines.launch
@@ -32,25 +32,26 @@ class ExitFragment :
 
     private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
 
-    private val deleteRequestIntentContractAdministrator by lazy {
-        DeleteRequestIntentContractAdministrator(
-            requireActivity()
-        ) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                activityViewModel.accumulateDeleteRequestUris()
-            }
-
-            launchAfterShortDelay {  // necessary for showing of transition animation, which otherwise is just skipped
-                exitAsSoonAsIOProcessingFinished()
-            }
-        }
-    }
+    private var deleteRequestIntentContractAdministrator: DeleteRequestIntentContractAdministrator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (activityViewModel.deleteRequestUrisPresent) {
-            lifecycle.addObserver(deleteRequestIntentContractAdministrator)
+        if (activityViewModel.deleteRequestUris.isNotEmpty()) {
+            deleteRequestIntentContractAdministrator = DeleteRequestIntentContractAdministrator(
+                requireActivity()
+            ) {
+                if (it.resultCode == Activity.RESULT_OK) {
+                    activityViewModel.accumulateDeleteRequestUris()
+                }
+
+                launchAfterShortDelay {  // required for appearing of transition animation, which otherwise is just skipped
+                    exitWhenIOProcessingFinished()
+                }
+            }
+                .also {
+                    lifecycle.addObserver(it)
+                }
         }
     }
 
@@ -61,7 +62,11 @@ class ExitFragment :
                     setAnimationListener(
                         object : SimpleAnimationListener() {
                             override fun onAnimationEnd(animation: Animation?) {
-                                emitDeleteRequestOrExit()
+                                deleteRequestIntentContractAdministrator?.emitDeleteRequest(
+                                    requireContext().contentResolver,
+                                    activityViewModel.deleteRequestUris
+                                )
+                                    ?: exitWhenIOProcessingFinished()
                             }
                         }
                     )
@@ -69,21 +74,9 @@ class ExitFragment :
         else
             super.onCreateAnimation(transit, false, nextAnim)
 
-    private fun emitDeleteRequestOrExit() {
-        when (activityViewModel.deleteRequestUrisPresent) {
-            false -> exitAsSoonAsIOProcessingFinished()
-            true -> {
-                deleteRequestIntentContractAdministrator.emitDeleteRequest(
-                    requireContext().contentResolver,
-                    activityViewModel.deleteRequestUris
-                )
-            }
-        }
-    }
-
-    private fun exitAsSoonAsIOProcessingFinished() {
+    private fun exitWhenIOProcessingFinished() {
         lifecycleScope.launch {
-            binding.deleteRequestLayout.appLogoIv.animationComposer(
+            binding.deleteRequestLayout.appLogoIv.getAnimationComposer(
                 listOf(
                     Techniques.Wobble,
                     Techniques.Wave,

@@ -52,8 +52,6 @@ class ExaminationActivity : AppActivity() {
         val accumulatedIoResults = AccumulatedIOResults()
         val deleteRequestUris = arrayListOf<Uri>()
 
-        val deleteRequestUrisPresent: Boolean get() = deleteRequestUris.isNotEmpty()
-
         fun accumulateDeleteRequestUris() {
             accumulatedIoResults.nDeletedScreenshots += deleteRequestUris.size
         }
