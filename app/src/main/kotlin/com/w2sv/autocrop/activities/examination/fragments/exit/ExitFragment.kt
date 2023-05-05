@@ -15,9 +15,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.daimajia.androidanimations.library.Techniques
+import com.w2sv.androidutils.coroutines.invokeOnCompletion
 import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
 import com.w2sv.androidutils.ui.animations.SimpleAnimationListener
-import com.w2sv.androidutils.coroutines.invokeOnCompletion
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.databinding.CropPagerExitBinding
