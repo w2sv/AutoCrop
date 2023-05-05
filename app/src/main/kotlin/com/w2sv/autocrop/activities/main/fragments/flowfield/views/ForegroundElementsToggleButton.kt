@@ -5,9 +5,9 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
 import com.daimajia.androidanimations.library.YoYo.YoYoString
 import com.w2sv.androidutils.lifecycle.toggle
+import com.w2sv.androidutils.ui.views.increaseTouchArea
 import com.w2sv.androidutils.ui.views.viewModel
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.ui.views.increaseTouchArea
 
 
 class ForegroundElementsToggleButton(context: Context, attributeSet: AttributeSet) : AppCompatImageButton(

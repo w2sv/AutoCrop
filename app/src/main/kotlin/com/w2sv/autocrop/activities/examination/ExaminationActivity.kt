@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
+import com.w2sv.androidutils.generic.getParcelableCompat
 import com.w2sv.androidutils.notifying.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppActivity
@@ -16,7 +17,6 @@ import com.w2sv.autocrop.activities.examination.fragments.pager.CropPagerFragmen
 import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
 import com.w2sv.autocrop.domain.AccumulatedIOResults
 import com.w2sv.autocrop.utils.extensions.startMainActivity
-import com.w2sv.common.extensions.getParcelableExtraCompat
 import com.w2sv.common.preferences.DataStoreRepository
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.io.CropBundleIORunner
@@ -113,7 +113,7 @@ class ExaminationActivity : AppActivity() {
 
     override fun getRootFragment(): Fragment =
         CropPagerFragment.getInstance(
-            intent.getParcelableExtraCompat(CropResults.EXTRA)!!
+            intent.getParcelableCompat(CropResults.EXTRA)!!
         )
 
     private val viewModel: ViewModel by viewModels()

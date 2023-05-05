@@ -19,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.viewpager2.widget.ViewPager2
 import com.daimajia.androidanimations.library.Techniques
+import com.w2sv.androidutils.generic.getParcelableCompat
 import com.w2sv.androidutils.lifecycle.postValue
 import com.w2sv.androidutils.notifying.makeToast
 import com.w2sv.androidutils.notifying.showToast
@@ -57,7 +58,6 @@ import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.requireCastActivity
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.common.BackPressHandler
-import com.w2sv.common.extensions.getParcelableCompat
 import com.w2sv.common.preferences.DataStoreRepository
 import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.CropBundle

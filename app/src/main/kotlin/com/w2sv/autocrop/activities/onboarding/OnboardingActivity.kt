@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.airbnb.lottie.LottieAnimationView
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.daimajia.androidanimations.library.Techniques
+import com.w2sv.androidutils.lifecycle.addObservers
 import com.w2sv.androidutils.notifying.showToast
 import com.w2sv.androidutils.permissions.permissionhandler.requestPermissions
 import com.w2sv.androidutils.ui.resources.getLong
@@ -15,7 +16,6 @@ import com.w2sv.androidutils.ui.views.crossVisualize
 import com.w2sv.androidutils.ui.views.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.views.animationComposer
-import com.w2sv.autocrop.utils.extensions.addObservers
 import com.w2sv.autocrop.utils.extensions.registerOnBackPressedListener
 import com.w2sv.autocrop.utils.extensions.startMainActivity
 import com.w2sv.common.BackPressHandler

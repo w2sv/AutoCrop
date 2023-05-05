@@ -11,6 +11,7 @@ import androidx.fragment.app.findFragment
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.androidutils.generic.appPlayStoreUrl
+import com.w2sv.androidutils.generic.openUrlWithActivityNotFoundHandling
 import com.w2sv.androidutils.generic.requireActivity
 import com.w2sv.androidutils.lifecycle.toggle
 import com.w2sv.androidutils.notifying.showToast
@@ -24,7 +25,6 @@ import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.CropSettingsDialogFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.utils.extensions.openUrlWithActivityNotFoundHandling
 import com.w2sv.screenshotlistening.ScreenshotListener
 
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :

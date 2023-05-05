@@ -24,6 +24,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.generic.uris
 import com.w2sv.androidutils.lifecycle.SelfManagingLocalBroadcastReceiver
+import com.w2sv.androidutils.lifecycle.addObservers
 import com.w2sv.androidutils.lifecycle.postValue
 import com.w2sv.androidutils.notifying.showToast
 import com.w2sv.androidutils.ui.resources.getLong
@@ -43,7 +44,6 @@ import com.w2sv.autocrop.ui.views.fadeInAnimationComposer
 import com.w2sv.autocrop.ui.views.fadeOut
 import com.w2sv.autocrop.ui.views.onHalfwayFinished
 import com.w2sv.autocrop.utils.cropSaveDirPathIdentifier
-import com.w2sv.autocrop.utils.extensions.addObservers
 import com.w2sv.autocrop.utils.extensions.resolution
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri

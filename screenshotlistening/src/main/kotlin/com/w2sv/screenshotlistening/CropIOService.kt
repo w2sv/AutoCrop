@@ -3,7 +3,7 @@ package com.w2sv.screenshotlistening
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.widget.Toast
-import com.w2sv.common.extensions.getParcelableExtraCompat
+import com.w2sv.androidutils.generic.getParcelableCompat
 import com.w2sv.cropbundle.io.CropBundleIOResult
 import com.w2sv.cropbundle.io.CropBundleIORunner
 import com.w2sv.screenshotlistening.services.abstrct.UnboundService
@@ -29,7 +29,7 @@ class CropIOService : UnboundService() {
         CropBundleIORunner.invoke(
             context = applicationContext,
             cropBitmap = BitmapFactory.decodeFile(intent.getStringExtra(ScreenshotListener.EXTRA_TEMPORARY_CROP_FILE_PATH)),
-            screenshotMediaStoreData = intent.getParcelableExtraCompat(ScreenshotListener.EXTRA_SCREENSHOT_MEDIASTORE_DATA)!!,
+            screenshotMediaStoreData = intent.getParcelableCompat(ScreenshotListener.EXTRA_SCREENSHOT_MEDIASTORE_DATA)!!,
             deleteScreenshot = intent.getBooleanExtra(ScreenshotListener.EXTRA_ATTEMPT_SCREENSHOT_DELETION, false)
         )
             .apply {

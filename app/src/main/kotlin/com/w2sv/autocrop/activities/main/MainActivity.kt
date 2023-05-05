@@ -2,11 +2,11 @@ package com.w2sv.autocrop.activities.main
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.w2sv.androidutils.generic.getParcelableCompat
 import com.w2sv.autocrop.activities.AppActivity
 import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
 import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.domain.AccumulatedIOResults
-import com.w2sv.common.extensions.getParcelableExtraCompat
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,7 +31,7 @@ class MainActivity : AppActivity() {
     //////////////////////////////////////
 
     override fun getRootFragment(): Fragment =
-        FlowFieldFragment.getInstance(intent.getParcelableExtraCompat(AccumulatedIOResults.EXTRA))
+        FlowFieldFragment.getInstance(intent.getParcelableCompat(AccumulatedIOResults.EXTRA))
 
     override fun handleOnBackPressed() {
         when (val fragment = getCurrentFragment()) {
