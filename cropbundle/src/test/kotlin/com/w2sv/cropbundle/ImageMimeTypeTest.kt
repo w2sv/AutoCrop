@@ -14,7 +14,7 @@ internal class ImageMimeTypeTest {
         "image/webp, WEBP",
         "image/jhsadfa, JPG",
     )
-    fun parse(mimeTypeString: String, expectedEnumName: String) {
-        assertEquals(expectedEnumName, ImageMimeType.parse(mimeTypeString).name)
+    fun parse(mediaStoreIdentifier: String, expectedEnumName: String) {
+        assertEquals(expectedEnumName, ImageMimeType.parse(mediaStoreIdentifier).name)
     }
 }
