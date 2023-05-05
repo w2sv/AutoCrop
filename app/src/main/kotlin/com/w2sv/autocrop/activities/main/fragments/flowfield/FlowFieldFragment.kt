@@ -208,7 +208,7 @@ class FlowFieldFragment :
                             viewModel.accumulatedIoResults!!.cropUris
                         )
                         .setType(IMAGE_MIME_TYPE),
-                    "Share Crops"
+                    null
                 )
             )
         }
@@ -246,8 +246,8 @@ class FlowFieldFragment :
         PermissionHandler(
             requireActivity(),
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            "Media file writing required for saving crops",
-            "Go to app settings and grant media file writing in order for the app to work"
+            getString(R.string.media_file_writing_required_for_saving_crops),
+            getString(R.string.go_to_app_settings_and_grant_media_file_writing_in_order_for_the_app_to_work)
         )
     }
 
@@ -276,7 +276,7 @@ class FlowFieldFragment :
                 if (imageUris.isNotEmpty()) {
                     if (getMediaUri(requireContext(), imageUris.first()) == null)
                         requireContext().showToast(
-                            "Content provider not supported. Please select a different one",
+                            R.string.content_provider_not_supported_please_select_a_different_one,
                             Toast.LENGTH_LONG
                         )
                     else
@@ -301,13 +301,13 @@ class FlowFieldFragment :
                 val text = if (viewModel.uriRepository.setNewUri(treeUri, requireContext().contentResolver)) {
                     viewModel.cropSaveDirIdentifierLive.postValue(cropSaveDirPathIdentifier(viewModel.uriRepository.documentUri.value))
                     SpannableStringBuilder()
-                        .append("Crops will be saved to ")
+                        .append(getString(R.string.crops_will_be_saved_to))
                         .color(requireContext().getColor(R.color.success)) {
                             append(viewModel.cropSaveDirIdentifierLive.value!!)
                         }
                 }
                 else
-                    "Directory didn't change"
+                    getString(R.string.directory_didn_t_change)
 
                 requireContext().showToast(text, Toast.LENGTH_LONG)
             }

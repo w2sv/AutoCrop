@@ -95,9 +95,9 @@ class CropPagerFragment :
 
         val dataSet = CropPager.DataSet(ExaminationActivity.ViewModel.cropBundles)
 
-        /**
-         * CropSavingDialogs
-         */
+        // ==================
+        // CropSavingDialogs
+        // ==================
 
         fun getCropSavingDialogOnClick(click: Click): AbstractCropSavingDialogFragment? =
             when {
@@ -112,9 +112,9 @@ class CropPagerFragment :
         fun getSaveAllCropsDialog(showDismissButton: Boolean): SaveAllCropsDialogFragment =
             SaveAllCropsDialogFragment.getInstance(dataSet.size, showDismissButton)
 
-        /**
-         * AutoScroll
-         */
+        // ==================
+        // AutoScroll
+        // ==================
 
         fun launchAutoScrollCoroutine(coroutineScope: CoroutineScope, viewPager: ViewPager2, period: Long) {
             coroutineScope.launch {
@@ -139,9 +139,9 @@ class CropPagerFragment :
         private fun maxAutoScrolls(): Int =
             dataSet.size - dataSet.livePosition.value!!
 
-        /**
-         * Crop Results Notification
-         */
+        // ==================
+        // Crop Results Notification
+        // ==================
 
         fun showCropResultsToastIfApplicable(context: Context) {
             if (uncroppedScreenshotsSnackbarText != null && !showedCropResultsNotification) {
@@ -169,9 +169,9 @@ class CropPagerFragment :
 
         private var showedCropResultsNotification: Boolean = false
 
-        /**
-         * Other
-         */
+        // ==========
+        // Other
+        // ==========
 
         fun getRecropDialog(): RecropDialogFragment =
             RecropDialogFragment.getInstance(
@@ -394,7 +394,7 @@ class CropPagerFragment :
         )
 
         launchAfterShortDelay {
-            requireContext().showToast("Adjusted crop")
+            requireContext().showToast(getString(R.string.adjusted_crop))
         }
     }
 
@@ -503,7 +503,7 @@ class CropPagerFragment :
     fun onBackPress() {
         viewModel.backPressHandler(
             {
-                requireContext().showToast("Tap again to return to main screen")
+                requireContext().showToast(getString(R.string.tap_again_to_return_to_main_screen))
             },
             {
                 requireCastActivity<ExaminationActivity>().startMainActivity()

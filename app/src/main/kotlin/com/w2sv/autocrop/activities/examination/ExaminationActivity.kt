@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.notifying.showToast
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppActivity
 import com.w2sv.autocrop.activities.crop.domain.CropResults
 import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
@@ -40,7 +41,7 @@ class ExaminationActivity : AppActivity() {
         }
 
         /**
-         * Clear [cropBundles]
+         * Clears [cropBundles].
          */
         override fun onCleared() {
             super.onCleared()
@@ -95,7 +96,7 @@ class ExaminationActivity : AppActivity() {
         }
 
         /**
-         * @return bool: indicating whether screenshot to be deleted w/o deletion request
+         * @return bool: whether screenshot to be deleted w/o deletion request.
          */
         private fun addScreenshotDeleteRequestUriIfApplicable(
             screenshotMediaStoreId: Long
@@ -129,7 +130,7 @@ class ExaminationActivity : AppActivity() {
         when (val fragment = getCurrentFragment()) {
             is ComparisonFragment -> fragment.popFromFragmentManager(supportFragmentManager)
             is CropAdjustmentFragment -> supportFragmentManager.popBackStack()
-            is SaveAllFragment -> showToast("Wait until crops have been saved")
+            is SaveAllFragment -> showToast(getString(R.string.wait_until_crops_have_been_saved))
             is CropPagerFragment -> fragment.onBackPress()
             else -> Unit
         }

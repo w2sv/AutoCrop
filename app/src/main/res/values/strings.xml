@@ -67,4 +67,16 @@
     <string name="slide_to_select_the_crop_sensitivity">Slide to select the crop sensitivity</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="couldn_t_find_a_browser_to_open_the_url_with">Couldn\'t find a browser to open the URL with</string>
+    <string name="tap_again_to_return_to_main_screen">Tap again to return to main screen</string>
+    <string name="adjusted_crop">Adjusted crop</string>
+    <string name="wait_until_crops_have_been_saved">Wait until crops have been saved</string>
+    <string name="content_provider_not_supported_please_select_a_different_one">Content provider not supported. Please select a different one</string>
+    <string name="crops_will_be_saved_to">"Crops will be saved to "</string>
+    <string name="directory_didn_t_change">Directory didn\'t change</string>
+    <string name="media_file_writing_required_for_saving_crops">Media file writing required for saving crops</string>
+    <string name="go_to_app_settings_and_grant_media_file_writing_in_order_for_the_app_to_work">Go to app settings and grant media file writing in order for the app to work</string>
+    <string name="comparison_screen">Comparison Screen</string>
+    <string name="manual">Manual</string>
+    <string name="edge_selection">Edge Selection</string>
 </resources>

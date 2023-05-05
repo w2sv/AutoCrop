@@ -19,9 +19,9 @@ abstract class ViewBoundFragmentActivity : ViewBoundActivity<BlankBinding>(Blank
         }
     }
 
-    /**
-     * Fragment transactions
-     */
+    // ==========================
+    // Fragment Transactions
+    // ==========================
 
     private fun launchRootFragment() {
         supportFragmentManager
@@ -54,9 +54,9 @@ abstract class ViewBoundFragmentActivity : ViewBoundActivity<BlankBinding>(Blank
             .setReorderingAllowed(true)
             .replace(binding.root.id, fragment)
 
-    /**
-     * Fragment retrieval
-     */
+    // ======================
+    // Fragment Retrieval
+    // ======================
 
     abstract fun getRootFragment(): Fragment
 

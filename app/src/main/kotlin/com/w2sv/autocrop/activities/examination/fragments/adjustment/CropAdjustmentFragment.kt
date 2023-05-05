@@ -174,10 +174,7 @@ class CropAdjustmentFragment
         lifecycleScope.launch {
             modeLive.collect {
                 binding.cropAdjustmentView.setModeConfig(it)
-                binding.modeLabelTv.text = when (it) {
-                    CropAdjustmentMode.EdgeSelection -> "Edge Selection"
-                    CropAdjustmentMode.Manual -> "Manual"
-                }
+                binding.modeLabelTv.text = getString(it.labelRes)
                 binding.resetButton.visibility = when (it) {
                     CropAdjustmentMode.EdgeSelection -> View.GONE
                     CropAdjustmentMode.Manual -> View.VISIBLE

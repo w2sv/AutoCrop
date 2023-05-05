@@ -19,7 +19,7 @@ internal class ComparisonScreenInstructionDialogFragment : RoundedDialogFragment
     override fun AlertDialog.Builder.build(): AlertDialog.Builder =
         apply {
             setCancelable(false)
-            setTitle("Comparison Screen")
+            setTitle(getString(R.string.comparison_screen))
             setIcon(
                 context.getColoredDrawable(
                     R.drawable.ic_crop_original_24,
