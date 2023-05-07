@@ -18,8 +18,7 @@ class CropIOService : UnboundService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         ScreenshotListener.startCleanupService(this, intent!!)
 
-        val ioResult = runIntentParametrizedCropBundleIO(intent)
-        showIOResultsNotification(ioResult)
+        showIOResultsNotification(runIntentParametrizedCropBundleIO(intent))
 
         stopSelf()
 

@@ -1,10 +1,7 @@
 package com.w2sv.cropbundle.io
 
-import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
 import com.w2sv.cropbundle.io.extensions.deleteImage
 
 sealed class ScreenshotDeletionResult {
@@ -17,7 +14,7 @@ sealed class ScreenshotDeletionResult {
 
         fun get(deleteScreenshot: Boolean, mediaStoreId: Long, context: Context): ScreenshotDeletionResult =
             when (deleteScreenshot) {
-                true -> when (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                true -> when (IMAGE_DELETION_REQUIRING_APPROVAL) {
                     true ->
                         DeletionApprovalRequired(
                             getImageDeleteRequestUri(mediaStoreId)
@@ -33,9 +30,3 @@ sealed class ScreenshotDeletionResult {
             }
     }
 }
-
-fun getImageDeleteRequestUri(mediaStoreId: Long): Uri =
-    ContentUris.withAppendedId(
-        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-        mediaStoreId
-    )

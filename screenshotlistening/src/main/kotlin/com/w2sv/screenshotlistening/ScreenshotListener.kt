@@ -25,6 +25,7 @@ import com.w2sv.cropbundle.Screenshot
 import com.w2sv.cropbundle.cropping.Cropper
 import com.w2sv.cropbundle.cropping.cropped
 import com.w2sv.cropbundle.io.CROP_FILE_ADDENDUM
+import com.w2sv.cropbundle.io.IMAGE_DELETION_REQUIRING_APPROVAL
 import com.w2sv.cropbundle.io.extensions.compressToAndCloseStream
 import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.cropbundle.io.extensions.queryMediaStoreData
@@ -293,7 +294,7 @@ class ScreenshotListener : BoundService(),
                 NotificationCompat.Action(
                     null,
                     getString(R.string.save_delete_screenshot),
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                    if (IMAGE_DELETION_REQUIRING_APPROVAL)
                         PendingIntent.getActivity(
                             this@ScreenshotListener,
                             actionRequestCodes[1],
