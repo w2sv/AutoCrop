@@ -1,3 +1,14 @@
 <resources>
     <string name="detected_n_croppable_screenshots">Detected %1$d croppable screenshots</string>
+    <string name="crafted_a_new_autocrop">Crafted a new AutoCrop</string>
+    <string name="save">Save</string>
+    <string name="save_delete_screenshot"><![CDATA[Save & delete Screenshot]]></string>
+    <string name="dismiss">Dismiss</string>
+    <string name="expand_to_select_actions">Expand to select actions</string>
+    <string name="you_will_receive_a_notification_when_autocrop_detects_a_new_croppable_screenshot">You will receive a notification when AutoCrop detects a new croppable screenshot</string>
+    <string name="stop">Stop</string>
+    <string name="media_file_access_required_for_registering_new_screenshots">Media file access required for registering new screenshots</string>
+    <string name="go_to_app_settings_and_grant_media_file_access_for_screenshot_listening_to_work">Go to app settings and grant media file access for screenshot listening to work</string>
+    <string name="if_you_don_t_allow_notification_posting_autocrop_can_t_inform_you_about_croppable_screenshots">If you don\'t allow notification posting, AutoCrop can\'t inform you about croppable screenshots</string>
+    <string name="go_to_app_settings_and_enable_notification_posting_for_screenshot_listening_to_work">Go to app settings and enable notification posting for screenshot listening to work</string>
 </resources>

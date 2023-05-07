@@ -22,7 +22,7 @@ abstract class PendingIntentAssociatedResourcesCleanupService<T>(private val cli
     interface Client {
 
         /**
-         * [ServiceBindingHandler] which manages a [BoundService] that also implements [Client]
+         * [ServiceBindingHandler] which manages a [BoundService] that also implements [Client].
          */
         class BindingHandler<T>(
             context: Context,

@@ -246,8 +246,8 @@ class FlowFieldFragment :
         PermissionHandler(
             requireActivity(),
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            getString(R.string.media_file_writing_required_for_saving_crops),
-            getString(R.string.go_to_app_settings_and_grant_media_file_writing_in_order_for_the_app_to_work)
+            R.string.media_file_writing_required_for_saving_crops,
+            R.string.go_to_app_settings_and_grant_media_file_writing_in_order_for_the_app_to_work
         )
     }
 

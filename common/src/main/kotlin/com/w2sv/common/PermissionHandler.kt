@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.activity.ComponentActivity
+import androidx.annotation.StringRes
 import com.w2sv.androidutils.permissions.permissionhandler.SingularPermissionHandler
 import com.w2sv.common.extensions.getSnackyBuilder
 import de.mateware.snacky.Snacky
@@ -11,8 +12,8 @@ import de.mateware.snacky.Snacky
 class PermissionHandler(
     activity: ComponentActivity,
     permission: String,
-    private val permissionDeniedMessage: String,
-    private val permissionRationalSuppressedMessage: String
+    @StringRes private val permissionDeniedMessageRes: Int,
+    @StringRes private val permissionRationalSuppressedMessageRes: Int
 ) : SingularPermissionHandler(activity, permission, "PermissionHandler") {
 
     override fun requestPermissionIfRequired(
@@ -23,7 +24,7 @@ class PermissionHandler(
         return super.requestPermissionIfRequired(
             onGranted,
             {
-                getSnackyBuilder(permissionDeniedMessage)
+                getSnackyBuilder(activity.getString(permissionDeniedMessageRes))
                     .build()
                     .show()
                 onDenied?.invoke()
@@ -33,7 +34,7 @@ class PermissionHandler(
     }
 
     override fun onPermissionRationalSuppressed() {
-        getSnackyBuilder(permissionRationalSuppressedMessage)
+        getSnackyBuilder(activity.getString(permissionRationalSuppressedMessageRes))
             .setActionText("Settings")
             .setActionClickListener {
                 activity.startActivity(

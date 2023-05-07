@@ -34,7 +34,7 @@ sealed class ScreenshotDeletionResult {
     }
 }
 
-private fun getImageDeleteRequestUri(mediaStoreId: Long): Uri =
+fun getImageDeleteRequestUri(mediaStoreId: Long): Uri =
     ContentUris.withAppendedId(
         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
         mediaStoreId

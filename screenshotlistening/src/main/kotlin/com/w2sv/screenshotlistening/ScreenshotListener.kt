@@ -28,7 +28,7 @@ import com.w2sv.cropbundle.io.CROP_FILE_ADDENDUM
 import com.w2sv.cropbundle.io.extensions.compressToAndCloseStream
 import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.cropbundle.io.extensions.queryMediaStoreData
-import com.w2sv.cropbundle.io.getDeleteRequestUri
+import com.w2sv.cropbundle.io.getImageDeleteRequestUri
 import com.w2sv.cropbundle.io.utils.systemScreenshotsDirectory
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
 import com.w2sv.kotlinutils.extensions.getNextTriple
@@ -89,19 +89,20 @@ class ScreenshotListener : BoundService(),
                             Manifest.permission.READ_MEDIA_IMAGES
                         else
                             Manifest.permission.READ_EXTERNAL_STORAGE,
-                        "Media file access required for listening to screen captures",
-                        "Go to app settings and grant media file access for screen capture listening to work"
+                        R.string.media_file_access_required_for_registering_new_screenshots,
+                        R.string.go_to_app_settings_and_grant_media_file_access_for_screenshot_listening_to_work
                     )
                 )
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     add(
                         PermissionHandler(
                             componentActivity,
                             Manifest.permission.POST_NOTIFICATIONS,
-                            "If you don't allow for the posting of notifications AutoCrop can't inform you about croppable screenshots",
-                            "Go to app settings and enable notification posting for screen capture listening to work"
+                            R.string.if_you_don_t_allow_notification_posting_autocrop_can_t_inform_you_about_croppable_screenshots,
+                            R.string.go_to_app_settings_and_enable_notification_posting_for_screenshot_listening_to_work
                         )
                     )
+                }
             }
     }
 
@@ -138,9 +139,9 @@ class ScreenshotListener : BoundService(),
         }
     }
 
-    /**
-     * Launching
-     */
+    // =============
+    // Launching
+    // =============
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         emitOnStartCommandLog(intent, flags, startId)
@@ -152,10 +153,6 @@ class ScreenshotListener : BoundService(),
             }
 
             else -> {
-                /**
-                 * Start foreground service with notification and register [screenshotObserver]
-                 */
-
                 startForeground(
                     AppNotificationChannel.STARTED_FOREGROUND_SERVICE.childIdSeed,
                     foregroundServiceNotificationBuilder()
@@ -182,19 +179,19 @@ class ScreenshotListener : BoundService(),
         )
             .setStyle(
                 NotificationCompat.BigTextStyle()
-                    .bigText("You will receive a notification when AutoCrop detects a new croppable screenshot")
+                    .bigText(getString(R.string.you_will_receive_a_notification_when_autocrop_detects_a_new_croppable_screenshot))
             )
             .addAction(
                 NotificationCompat.Action(
                     com.w2sv.common.R.drawable.ic_cancel_24,
-                    "Stop",
+                    getString(R.string.stop),
                     OnCancelledFromNotificationListener.getPendingIntent(this)
                 )
             )
 
-    /**
-     * Observing/croppability determination
-     */
+    // ===========================================
+    // Observing & Croppability determination
+    // ===========================================
 
     private val screenshotObserver by lazy {
         ScreenshotObserver(contentResolver, ::onNewScreenshotUri)
@@ -213,13 +210,12 @@ class ScreenshotListener : BoundService(),
             val screenshotBitmap = contentResolver.loadBitmap(uri)!!
             Cropper.invoke(screenshotBitmap, applicationContext)?.let { (cropEdges, _) ->
                 val screenshotMediaStoreData = Screenshot.MediaStoreData.query(contentResolver, uri)
-                val deleteRequestUri = getDeleteRequestUri(screenshotMediaStoreData.id)
                 val cropBitmap = screenshotBitmap.cropped(cropEdges)
                 val temporaryCropFilePath = saveCropToTempFile(cropBitmap, screenshotMediaStoreData.id)
 
                 showCroppableScreenshotDetectedNotification(
                     cropBitmap,
-                    deleteRequestUri
+                    screenshotMediaStoreData.id
                 ) { clazz, isSaveIntent, notificationId, actionRequestCodes, putCancelNotificationExtra ->
                     Intent(this, clazz)
                         .putExtra(EXTRA_TEMPORARY_CROP_FILE_PATH, temporaryCropFilePath)
@@ -258,13 +254,13 @@ class ScreenshotListener : BoundService(),
         return file.path
     }
 
-    /**
-     * Notifying
-     */
+    // ============
+    // Notifying
+    // ============
 
     private fun showCroppableScreenshotDetectedNotification(
         cropBitmap: Bitmap,
-        deleteRequestUri: Uri?,
+        screenshotMediaStoreId: Long,
         getActionIntentTemplate: (Class<*>, Boolean, Int, ArrayList<Int>, Boolean) -> Intent
     ) {
         val notificationId = notificationGroup.childrenIds.getNewId()
@@ -280,11 +276,11 @@ class ScreenshotListener : BoundService(),
             )
 
         notificationGroup.addChild(notificationId) {
-            setContentTitle("Crafted a new AutoCrop")
+            setContentTitle(getString(R.string.crafted_a_new_autocrop))
             addAction(
                 NotificationCompat.Action(
                     null,
-                    "Save",
+                    getString(R.string.save),
                     PendingIntent.getService(
                         this@ScreenshotListener,
                         actionRequestCodes[0],
@@ -296,8 +292,8 @@ class ScreenshotListener : BoundService(),
             addAction(
                 NotificationCompat.Action(
                     null,
-                    "Save & delete Screenshot",
-                    if (deleteRequestUri is Uri && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                    getString(R.string.save_delete_screenshot),
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                         PendingIntent.getActivity(
                             this@ScreenshotListener,
                             actionRequestCodes[1],
@@ -306,7 +302,7 @@ class ScreenshotListener : BoundService(),
                                 isSaveIntent = true,
                                 cancelNotificationExtra = true
                             )
-                                .putExtra(EXTRA_DELETE_REQUEST_URI, deleteRequestUri),
+                                .putExtra(EXTRA_DELETE_REQUEST_URI, getImageDeleteRequestUri(screenshotMediaStoreId)),
                             REPLACE_CURRENT_PENDING_INTENT_FLAGS
                         )
                     else
@@ -326,7 +322,7 @@ class ScreenshotListener : BoundService(),
             addAction(
                 NotificationCompat.Action(
                     null,
-                    "Dismiss",
+                    getString(R.string.dismiss),
                     PendingIntent.getService(
                         this@ScreenshotListener,
                         actionRequestCodes[2],
@@ -365,14 +361,14 @@ class ScreenshotListener : BoundService(),
             setContentTitle(getString(R.string.detected_n_croppable_screenshots, nChildren))
             setStyle(
                 NotificationCompat.InboxStyle()
-                    .setSummaryText("Expand to select actions")
+                    .setSummaryText(getString(R.string.expand_to_select_actions))
             )
         }
     )
 
-    /**
-     * Clean-up
-     */
+    // ============
+    // Clean-up
+    // ============
 
     override fun onCleanupFinishedListener(intent: Intent) {
         File(intent.getStringExtra(EXTRA_TEMPORARY_CROP_FILE_PATH)!!).delete()
