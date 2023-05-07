@@ -23,7 +23,6 @@ import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.databinding.CropPagerExitBinding
 import com.w2sv.autocrop.ui.views.getAnimationComposer
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
-import com.w2sv.autocrop.utils.requireCastActivity
 import kotlinx.coroutines.launch
 
 @SuppressLint("NewApi")
@@ -85,8 +84,10 @@ class ExitFragment :
                     .random()
             )
                 .onEnd {
-                    activityViewModel.cropProcessingCoroutine.invokeOnCompletion {
-                        requireCastActivity<ExaminationActivity>().startMainActivity()
+                    with(activityViewModel) {
+                        cropProcessingCoroutine.invokeOnCompletion {
+                            startMainActivity(requireActivity())
+                        }
                     }
                 }
                 .play()

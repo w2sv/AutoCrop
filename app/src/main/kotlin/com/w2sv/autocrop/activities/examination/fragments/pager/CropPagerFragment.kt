@@ -46,7 +46,7 @@ import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragmen
 import com.w2sv.autocrop.databinding.CropPagerBinding
 import com.w2sv.autocrop.ui.model.Click
 import com.w2sv.autocrop.ui.views.KEEP_MENU_ITEM_OPEN_ON_CLICK
-import com.w2sv.autocrop.ui.views.VisualizationType
+import com.w2sv.autocrop.ui.views.VisualizationMethod
 import com.w2sv.autocrop.ui.views.animate
 import com.w2sv.autocrop.ui.views.currentViewHolder
 import com.w2sv.autocrop.ui.views.makeOnClickPersistent
@@ -276,11 +276,12 @@ class CropPagerFragment :
             buildList {
                 add(currentCropLayout)
                 add(popupMenuButton)
-                if (!viewModel.dataSet.isHoldingSingularElement)
+                if (!viewModel.dataSet.isHoldingSingularElement) {
                     add(allCropsButtonsWLabel)
+                }
             }
                 .visualize(
-                    if (cancelledScrolling) VisualizationType.FadeIn else VisualizationType.Instant
+                    if (cancelledScrolling) VisualizationMethod.FadeIn else VisualizationMethod.Instantaneous
                 )
 
             launchAfterShortDelay {
@@ -426,12 +427,7 @@ class CropPagerFragment :
 
         viewModel.lastCropProcedureToast?.cancel()
         viewModel.lastCropProcedureToast = requireContext()
-            .makeToast(
-                when (cropProcedure) {
-                    CropProcedure.Discard -> "Discarded crop"
-                    CropProcedure.Save -> "Saved crop"
-                }
-            )
+            .makeToast(cropProcedure.notificationMessageRes)
             .also {
                 it.show()
             }
@@ -454,10 +450,10 @@ class CropPagerFragment :
         onRecropWrapper {
             requireContext().showToast(
                 when (viewModel.dataSet[cropBundlePosition].recropAndUpdate(threshold)) {
-                    false -> "No Crop Edges found for adjusted Settings"
+                    false -> R.string.no_crop_edges_found_for_adjusted_settings
                     true -> {
                         cropPager.pager.notifyCurrentItemChanged()
-                        "Updated Crop"
+                        R.string.updated_crop
                     }
                 }
             )
@@ -506,7 +502,7 @@ class CropPagerFragment :
                 requireContext().showToast(getString(R.string.tap_again_to_return_to_main_screen))
             },
             {
-                requireCastActivity<ExaminationActivity>().startMainActivity()
+                activityViewModel.startMainActivity(requireActivity())
             }
         )
     }

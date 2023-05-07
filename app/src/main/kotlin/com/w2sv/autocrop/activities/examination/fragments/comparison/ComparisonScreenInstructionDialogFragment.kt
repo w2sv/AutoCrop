@@ -14,11 +14,17 @@ import javax.inject.Inject
 internal class ComparisonScreenInstructionDialogFragment : RoundedDialogFragment() {
 
     @HiltViewModel
-    class ViewModel @Inject constructor(val repository: Repository) : androidx.lifecycle.ViewModel()
+    class ViewModel @Inject constructor(val repository: Repository) : androidx.lifecycle.ViewModel() {
+
+        fun onDismissDialog() {
+            repository.comparisonInstructionsShown.value = true
+        }
+    }
+
+    private val viewModel by viewModels<ViewModel>()
 
     override fun AlertDialog.Builder.build(): AlertDialog.Builder =
         apply {
-            setCancelable(false)
             setTitle(getString(R.string.comparison_screen))
             setIcon(
                 context.getColoredDrawable(
@@ -27,9 +33,9 @@ internal class ComparisonScreenInstructionDialogFragment : RoundedDialogFragment
                 )
             )
             setMessage(getString(R.string.comparison_instruction))
-            setPositiveButton(resources.getString(R.string.got_it))
-            { _, _ ->
-                viewModels<ViewModel>().value.repository.comparisonInstructionsShown.value = true
+            setPositiveButton(resources.getString(R.string.got_it)) { _, _ ->
+                viewModel.onDismissDialog()
             }
+            setOnDismissListener { viewModel.onDismissDialog() }  // TODO
         }
 }

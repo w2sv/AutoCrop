@@ -10,9 +10,9 @@ import com.w2sv.cropbundle.cropping.CropEdges
 class CropImageView(context: Context, attributeSet: AttributeSet) :
     AppCompatImageView(context, attributeSet) {
 
-    fun alignWithScreenshotImageView(screenshotImageMatrix: Matrix, cropEdges: CropEdges) {
-        imageMatrix = screenshotImageMatrix
-        translationY = cropEdges.top.toFloat() * screenshotImageMatrix.getScaleY()
+    fun alignWithScreenshotIV(screenshotIVMatrix: Matrix, cropEdges: CropEdges) {
+        imageMatrix = screenshotIVMatrix
+        translationY = cropEdges.top.toFloat() * screenshotIVMatrix.getScaleY()
         postInvalidate()
     }
 }

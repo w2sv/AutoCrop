@@ -1,8 +1,8 @@
 package com.w2sv.autocrop.activities.examination
 
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
-import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.generic.getParcelableCompat
@@ -49,7 +49,7 @@ class ExaminationActivity : AppActivity() {
             cropBundles.clear()
         }
 
-        val accumulatedIoResults = AccumulatedIOResults()
+        private val accumulatedIoResults = AccumulatedIOResults()
         val deleteRequestUris = arrayListOf<Uri>()
 
         fun accumulateDeleteRequestUris() {
@@ -107,14 +107,18 @@ class ExaminationActivity : AppActivity() {
                 }
                     ?: true
             }
+
+        fun startMainActivity(activity: Activity) {
+            activity.startMainActivity {
+                putExtra(AccumulatedIOResults.EXTRA, accumulatedIoResults)
+            }
+        }
     }
 
     override fun getRootFragment(): Fragment =
         CropPagerFragment.getInstance(
             intent.getParcelableCompat(CropResults.EXTRA)!!
         )
-
-    private val viewModel: ViewModel by viewModels()
 
     fun invokeExitFragment() {
         fragmentReplacementTransaction(
@@ -131,12 +135,6 @@ class ExaminationActivity : AppActivity() {
             is SaveAllFragment -> showToast(getString(R.string.wait_until_crops_have_been_saved))
             is CropPagerFragment -> fragment.onBackPress()
             else -> Unit
-        }
-    }
-
-    fun startMainActivity() {
-        startMainActivity {
-            putExtra(AccumulatedIOResults.EXTRA, viewModel.accumulatedIoResults)
         }
     }
 }

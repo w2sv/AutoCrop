@@ -50,8 +50,10 @@ class ComparisonFragment
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
         contentResolver: ContentResolver,
-        val repository: Repository
+        repository: Repository
     ) : androidx.lifecycle.ViewModel() {
+
+        val comparisonInstructionsShown: Repository.Preference<Boolean> = repository.comparisonInstructionsShown
 
         val cropBundle: CropBundle =
             ExaminationActivity.ViewModel.cropBundles[savedStateHandle[CropBundle.EXTRA_POSITION]!!]
@@ -88,12 +90,13 @@ class ComparisonFragment
 
     private fun onEnterTransitionCompleted() {
         launchAfterShortDelay {
-            if (!viewModel.repository.comparisonInstructionsShown.value) {
+            if (!viewModel.comparisonInstructionsShown.value) {
                 ComparisonScreenInstructionDialogFragment().show(childFragmentManager)
             }
-            else
-            // trigger display of displayedImageTv
+            else {
+                // trigger display of displayedImageTv
                 viewModel.imageTypeLive.repostValue()
+            }
         }
     }
 
@@ -133,7 +136,7 @@ class ComparisonFragment
 
     private fun ViewModel.setLiveDataObservers() {
         screenshotViewImageMatrixLive.observe(viewLifecycleOwner) {
-            binding.cropIv.alignWithScreenshotImageView(it, viewModel.cropBundle.crop.edges)
+            binding.cropIv.alignWithScreenshotIV(it, cropBundle.crop.edges)
         }
         imageTypeLive.observe(viewLifecycleOwner) {
             when (it!!) {
@@ -141,7 +144,7 @@ class ComparisonFragment
                 ImageType.Crop -> crossVisualize(binding.screenshotIv, binding.cropIv)
             }
 
-            if (viewModel.enterTransitionCompleted) {
+            if (enterTransitionCompleted) {
                 binding.displayedImageTv.setTextAndShow(it)
             }
         }
