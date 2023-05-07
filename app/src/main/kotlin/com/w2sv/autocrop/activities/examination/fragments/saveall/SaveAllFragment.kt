@@ -1,14 +1,15 @@
 package com.w2sv.autocrop.activities.examination.fragments.saveall
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.w2sv.androidutils.lifecycle.increment
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
@@ -51,13 +52,12 @@ class SaveAllFragment :
                     subList(progressLive.value!!, size)
                 }
 
-        suspend fun cropProcessingCoroutine(processCropBundle: (Int, Context) -> Unit, fragment: AppFragment<*>) {
+        suspend fun saveAllCoroutine(processCropBundle: (Int) -> Unit, onFinishedListener: () -> Unit) {
             coroutineScope {
                 unprocessedCropBundleIndices.forEach { bundleIndex ->
                     withContext(Dispatchers.IO) {
                         processCropBundle(
-                            bundleIndex,
-                            fragment.requireActivity()
+                            bundleIndex
                         )
                     }
                     withContext(Dispatchers.Main) {
@@ -65,7 +65,7 @@ class SaveAllFragment :
                     }
                 }
 
-                fragment.requireCastActivity<ExaminationActivity>().invokeExitFragment()
+                onFinishedListener()
             }
         }
     }
@@ -81,16 +81,16 @@ class SaveAllFragment :
                 viewModel.nUnprocessedCrops
             )
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
+        val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
 
         lifecycleScope.launch {
-            viewModel.cropProcessingCoroutine(
-                activityViewModels<ExaminationActivity.ViewModel>().value::processCropBundle,
-                this@SaveAllFragment
-            )
+            repeatOnLifecycle(Lifecycle.State.RESUMED){
+                viewModel.saveAllCoroutine(
+                    processCropBundle = { activityViewModel.processCropBundle(it, requireContext()) },
+                    onFinishedListener = { requireCastActivity<ExaminationActivity>().invokeExitFragment() }
+                )
+            }
         }
     }
 }
