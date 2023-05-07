@@ -2,8 +2,10 @@ package com.w2sv.autocrop.activities.examination
 
 import android.app.Activity
 import android.content.Context
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
+import com.w2sv.androidutils.coroutines.invokeOnCompletion
 import com.w2sv.androidutils.generic.getParcelableCompat
 import com.w2sv.androidutils.notifying.showToast
 import com.w2sv.autocrop.R
@@ -36,21 +38,20 @@ class ExaminationActivity : AppActivity() {
         @ApplicationContext context: Context
     ) : androidx.lifecycle.ViewModel() {
 
-        val cropBundleIOResults = mutableListOf<CropBundleIOResult>()
+        private val cropBundleIOResults = mutableListOf<CropBundleIOResult>()
 
-        val deleteApprovalRequiringCropBundleIOResults by lazy {  // TODO: Move to ExitFragment ViewModel
+        fun getDeletionApprovalRequiringCropBundleIOResults(): List<CropBundleIOResult> =
             cropBundleIOResults.filter {
-                it.screenshotDeletionResult is ScreenshotDeletionResult.SuccessfullyDeleted
+                it.screenshotDeletionResult is ScreenshotDeletionResult.DeletionApprovalRequired
             }
-        }
 
         fun processCropBundleAsScopedCoroutine(cropBundlePosition: Int, context: Context) {
-            cropProcessingCoroutine = viewModelScope.launch(Dispatchers.IO) {
+            cropProcessingJob = viewModelScope.launch(Dispatchers.IO) {
                 addCropBundleIOResult(cropBundlePosition, context)
             }
         }
 
-        var cropProcessingCoroutine: Job? = null
+        var cropProcessingJob: Job? = null
             private set
 
         fun addCropBundleIOResult(
@@ -96,11 +97,13 @@ class ExaminationActivity : AppActivity() {
         )
 
     fun invokeExitFragment() {
-        fragmentReplacementTransaction(
-            ExitFragment(),
-            true
-        )
-            .commit()
+        viewModels<ViewModel>().value.cropProcessingJob.invokeOnCompletion {
+            fragmentReplacementTransaction(
+                ExitFragment(),
+                true
+            )
+                .commit()
+        }
     }
 
     override fun handleOnBackPressed() {

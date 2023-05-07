@@ -3,6 +3,7 @@ package com.w2sv.cropbundle.io
 import android.content.Context
 import android.net.Uri
 import com.w2sv.cropbundle.io.extensions.deleteImage
+import slimber.log.i
 
 sealed class ScreenshotDeletionResult {
     object None : ScreenshotDeletionResult()
@@ -28,5 +29,8 @@ sealed class ScreenshotDeletionResult {
 
                 false -> None
             }
+                .also {
+                    i{"ScreenshotDeletionResult: $it"}
+                }
     }
 }

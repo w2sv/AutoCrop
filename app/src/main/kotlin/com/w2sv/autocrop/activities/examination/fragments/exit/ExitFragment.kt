@@ -15,7 +15,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.androidutils.coroutines.invokeOnCompletion
 import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
 import com.w2sv.androidutils.ui.animations.SimpleAnimationListener
 import com.w2sv.autocrop.activities.AppFragment
@@ -25,35 +24,45 @@ import com.w2sv.autocrop.ui.views.getAnimationComposer
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.cropbundle.io.ScreenshotDeletionResult
 import kotlinx.coroutines.launch
+import slimber.log.i
 
-@SuppressLint("NewApi")
 class ExitFragment :
     AppFragment<CropPagerExitBinding>(CropPagerExitBinding::class.java) {
 
     private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
 
-    private var deleteRequestIntentContractAdministrator: DeleteRequestIntentContractAdministrator? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        if (activityViewModel.deleteApprovalRequiringCropBundleIOResults.isNotEmpty()) {
-            deleteRequestIntentContractAdministrator = DeleteRequestIntentContractAdministrator(
+    private val deleteRequestIntentContractAdministrator: DeleteRequestIntentContractAdministrator? by lazy {
+        when (deletionApprovalRequiringCropBundleIOResults.isNotEmpty()) {
+            true -> DeleteRequestIntentContractAdministrator(
                 requireActivity()
             ) {
                 if (it.resultCode == Activity.RESULT_OK) {
-                    activityViewModel.deleteApprovalRequiringCropBundleIOResults.forEach { cropBundleIOResult ->
+                    deletionApprovalRequiringCropBundleIOResults.forEach { cropBundleIOResult ->
                         cropBundleIOResult.screenshotDeletionResult = ScreenshotDeletionResult.SuccessfullyDeleted
                     }
                 }
 
                 launchAfterShortDelay {  // required for appearing of transition animation, which otherwise is just skipped
-                    exitWhenIOProcessingFinished()
+                    launchAppIconAnimationAndStartMainActivity()
                 }
             }
-                .also {
-                    lifecycle.addObserver(it)
-                }
+
+            false -> null
+        }
+    }
+
+    private val deletionApprovalRequiringCropBundleIOResults by lazy {
+        activityViewModel.getDeletionApprovalRequiringCropBundleIOResults()
+            .also {
+                i { "deletionApprovalRequiringCropBundleIOResults: $it" }
+            }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        deleteRequestIntentContractAdministrator?.let {
+            lifecycle.addObserver(it)
         }
     }
 
@@ -67,11 +76,11 @@ class ExitFragment :
                             override fun onAnimationEnd(animation: Animation?) {
                                 deleteRequestIntentContractAdministrator?.emitDeleteRequest(
                                     requireContext().contentResolver,
-                                    activityViewModel.deleteApprovalRequiringCropBundleIOResults.map {
+                                    deletionApprovalRequiringCropBundleIOResults.map {
                                         (it.screenshotDeletionResult as ScreenshotDeletionResult.DeletionApprovalRequired).requestUri
                                     }
                                 )
-                                    ?: exitWhenIOProcessingFinished()
+                                    ?: launchAppIconAnimationAndStartMainActivity()
                             }
                         }
                     )
@@ -79,7 +88,7 @@ class ExitFragment :
         else
             super.onCreateAnimation(transit, false, nextAnim)
 
-    private fun exitWhenIOProcessingFinished() {
+    private fun launchAppIconAnimationAndStartMainActivity() {
         lifecycleScope.launch {
             binding.deleteRequestLayout.appLogoIv.getAnimationComposer(
                 listOf(
@@ -90,11 +99,7 @@ class ExitFragment :
                     .random()
             )
                 .onEnd {
-                    with(activityViewModel) {
-                        cropProcessingCoroutine.invokeOnCompletion {
-                            startMainActivity(requireActivity())
-                        }
-                    }
+                    activityViewModel.startMainActivity(requireActivity())
                 }
                 .play()
         }
