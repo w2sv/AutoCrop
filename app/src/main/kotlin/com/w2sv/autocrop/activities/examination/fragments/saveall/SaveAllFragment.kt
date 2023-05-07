@@ -52,7 +52,7 @@ class SaveAllFragment :
                     subList(progressLive.value!!, size)
                 }
 
-        suspend fun saveAllCoroutine(processCropBundle: (Int) -> Unit, onFinishedListener: () -> Unit) {
+        suspend fun saveAllCoroutine(processCropBundle: suspend (Int) -> Unit, onFinishedListener: () -> Unit) {
             coroutineScope {
                 unprocessedCropBundleIndices.forEach { bundleIndex ->
                     withContext(Dispatchers.IO) {
@@ -87,7 +87,7 @@ class SaveAllFragment :
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED){
                 viewModel.saveAllCoroutine(
-                    processCropBundle = { activityViewModel.processCropBundle(it, requireContext()) },
+                    processCropBundle = { activityViewModel.addCropBundleIOResult(it, requireContext()) },
                     onFinishedListener = { requireCastActivity<ExaminationActivity>().invokeExitFragment() }
                 )
             }

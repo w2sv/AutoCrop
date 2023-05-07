@@ -27,10 +27,10 @@ class CropIOService : UnboundService() {
 
     private fun runIntentParametrizedCropBundleIO(intent: Intent): CropBundleIOResult =
         CropBundleIORunner.invoke(
-            context = applicationContext,
             cropBitmap = BitmapFactory.decodeFile(intent.getStringExtra(ScreenshotListener.EXTRA_TEMPORARY_CROP_FILE_PATH)),
             screenshotMediaStoreData = intent.getParcelableCompat(ScreenshotListener.EXTRA_SCREENSHOT_MEDIASTORE_DATA)!!,
-            deleteScreenshot = intent.getBooleanExtra(ScreenshotListener.EXTRA_ATTEMPT_SCREENSHOT_DELETION, false)
+            deleteScreenshot = intent.getBooleanExtra(ScreenshotListener.EXTRA_ATTEMPT_SCREENSHOT_DELETION, false),
+            context = applicationContext
         )
             .apply {
                 if (intent.getBooleanExtra(ScreenshotDeleteRequestActivity.EXTRA_CONFIRMED_DELETION, false))

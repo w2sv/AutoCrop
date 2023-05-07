@@ -23,6 +23,7 @@ import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.databinding.CropPagerExitBinding
 import com.w2sv.autocrop.ui.views.getAnimationComposer
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
+import com.w2sv.cropbundle.io.ScreenshotDeletionResult
 import kotlinx.coroutines.launch
 
 @SuppressLint("NewApi")
@@ -36,12 +37,14 @@ class ExitFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (activityViewModel.deleteRequestUris.isNotEmpty()) {
+        if (activityViewModel.deleteApprovalRequiringCropBundleIOResults.isNotEmpty()) {
             deleteRequestIntentContractAdministrator = DeleteRequestIntentContractAdministrator(
                 requireActivity()
             ) {
                 if (it.resultCode == Activity.RESULT_OK) {
-                    activityViewModel.accumulateDeleteRequestUris()
+                    activityViewModel.deleteApprovalRequiringCropBundleIOResults.forEach { cropBundleIOResult ->
+                        cropBundleIOResult.screenshotDeletionResult = ScreenshotDeletionResult.SuccessfullyDeleted
+                    }
                 }
 
                 launchAfterShortDelay {  // required for appearing of transition animation, which otherwise is just skipped
@@ -60,10 +63,13 @@ class ExitFragment :
                 .apply {
                     setAnimationListener(
                         object : SimpleAnimationListener() {
+
                             override fun onAnimationEnd(animation: Animation?) {
                                 deleteRequestIntentContractAdministrator?.emitDeleteRequest(
                                     requireContext().contentResolver,
-                                    activityViewModel.deleteRequestUris
+                                    activityViewModel.deleteApprovalRequiringCropBundleIOResults.map {
+                                        (it.screenshotDeletionResult as ScreenshotDeletionResult.DeletionApprovalRequired).requestUri
+                                    }
                                 )
                                     ?: exitWhenIOProcessingFinished()
                             }
@@ -103,12 +109,12 @@ private class DeleteRequestIntentContractAdministrator(
     activity,
     ActivityResultContracts.StartIntentSenderForResult()
 ) {
-    fun emitDeleteRequest(contentResolver: ContentResolver, deletionInquiryUris: ArrayList<Uri>) {
+    fun emitDeleteRequest(contentResolver: ContentResolver, deletionRequestUris: Collection<Uri>) {
         resultLauncher.launch(
             IntentSenderRequest.Builder(
                 MediaStore.createDeleteRequest(
                     contentResolver,
-                    deletionInquiryUris
+                    deletionRequestUris
                 )
                     .intentSender
             )

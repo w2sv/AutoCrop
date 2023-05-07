@@ -2,8 +2,8 @@ package com.w2sv.cropbundle.io
 
 import android.content.Context
 import android.graphics.Bitmap
+import com.w2sv.common.datastore.Repository
 import com.w2sv.common.datastore.UriRepository
-import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.Screenshot
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -12,7 +12,8 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
 class CropBundleIORunner @Inject constructor(
-    private val uriRepository: UriRepository
+    private val uriRepository: UriRepository,
+    private val repository: Repository
 ) {
 
     @InstallIn(SingletonComponent::class)
@@ -28,37 +29,16 @@ class CropBundleIORunner @Inject constructor(
                 CropBundleIOProcessorEntryPoint::class.java
             )
                 .getCropBundleIOProcessor()
-
-        fun invoke(context: Context, cropBundle: CropBundle, deleteScreenshot: Boolean): CropBundleIOResult =
-            invoke(
-                context,
-                cropBundle.crop.bitmap,
-                cropBundle.screenshot.mediaStoreData,
-                deleteScreenshot
-            )
-
-        fun invoke(
-            context: Context,
-            cropBitmap: Bitmap,
-            screenshotMediaStoreData: Screenshot.MediaStoreData,
-            deleteScreenshot: Boolean
-        ): CropBundleIOResult =
-            getInstance(context).invoke(
-                context,
-                cropBitmap,
-                screenshotMediaStoreData,
-                deleteScreenshot
-            )
     }
 
-    private fun invoke(
-        context: Context,
+    fun invoke(
         cropBitmap: Bitmap,
         screenshotMediaStoreData: Screenshot.MediaStoreData,
-        deleteScreenshot: Boolean
+        context: Context,
+        deleteScreenshot: Boolean = repository.deleteScreenshots.value
     ): CropBundleIOResult =
         CropBundleIOResult(
-            context.contentResolver.saveBitmap(
+            cropFileUri = context.contentResolver.saveBitmap(
                 cropBitmap,
                 screenshotMediaStoreData.mimeType,
                 cropFileName(
@@ -67,9 +47,10 @@ class CropBundleIORunner @Inject constructor(
                 ),
                 uriRepository.validDocumentUriOrNull(context)
             ),
-            context.contentResolver.deleteScreenshotIfApplicable(
+            screenshotDeletionResult = ScreenshotDeletionResult.get(
+                deleteScreenshot,
                 screenshotMediaStoreData.id,
-                deleteScreenshot
+                context
             )
         )
 }
