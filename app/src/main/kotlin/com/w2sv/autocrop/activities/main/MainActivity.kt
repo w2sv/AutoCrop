@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.w2sv.androidutils.generic.getParcelableCompat
 import com.w2sv.autocrop.activities.AppActivity
-import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
-import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
+import com.w2sv.autocrop.activities.main.about.AboutFragment
+import com.w2sv.autocrop.activities.main.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.domain.AccumulatedIOResults
 import dagger.hilt.android.AndroidEntryPoint
 

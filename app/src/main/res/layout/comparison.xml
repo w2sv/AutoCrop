@@ -10,14 +10,14 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/margin_medium">
 
-        <com.w2sv.autocrop.activities.examination.fragments.comparison.views.CropImageView
+        <com.w2sv.autocrop.activities.examination.comparison.views.CropImageView
             android:id="@+id/crop_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
             android:scaleType="matrix" />
 
-        <com.w2sv.autocrop.activities.examination.fragments.comparison.views.ScreenshotImageView
+        <com.w2sv.autocrop.activities.examination.comparison.views.ScreenshotImageView
             android:id="@+id/screenshot_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -26,7 +26,7 @@
             android:visibility="invisible" />
     </FrameLayout>
 
-    <com.w2sv.autocrop.activities.examination.fragments.comparison.views.ImageTypeLabelTextView
+    <com.w2sv.autocrop.activities.examination.comparison.views.ImageTypeLabelTextView
         android:id="@+id/displayed_image_tv"
 
         android:layout_width="95dp"

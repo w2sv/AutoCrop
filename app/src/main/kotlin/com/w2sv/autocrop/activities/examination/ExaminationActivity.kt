@@ -11,11 +11,11 @@ import com.w2sv.androidutils.notifying.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppActivity
 import com.w2sv.autocrop.activities.crop.domain.CropResults
-import com.w2sv.autocrop.activities.examination.fragments.adjustment.CropAdjustmentFragment
-import com.w2sv.autocrop.activities.examination.fragments.comparison.ComparisonFragment
-import com.w2sv.autocrop.activities.examination.fragments.exit.ExitFragment
-import com.w2sv.autocrop.activities.examination.fragments.pager.CropPagerFragment
-import com.w2sv.autocrop.activities.examination.fragments.saveall.SaveAllFragment
+import com.w2sv.autocrop.activities.examination.adjustment.CropAdjustmentFragment
+import com.w2sv.autocrop.activities.examination.comparison.ComparisonFragment
+import com.w2sv.autocrop.activities.examination.exit.ExitFragment
+import com.w2sv.autocrop.activities.examination.pager.CropPagerFragment
+import com.w2sv.autocrop.activities.examination.saveall.SaveAllFragment
 import com.w2sv.autocrop.domain.AccumulatedIOResults
 import com.w2sv.autocrop.utils.extensions.startMainActivity
 import com.w2sv.cropbundle.CropBundle
