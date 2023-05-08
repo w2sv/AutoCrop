@@ -13,7 +13,7 @@
     <string name="cropping_failure">No Crop Borders found</string>
     <string name="cancel_autoscroll">Cancel Scroll</string>
     <string name="discarding_statistics"><![CDATA[Removed <b>%1$s</b>=<b>%2$s</b>]]></string>
-    <string name="cropping_failure_instruction_text_view">Make sure the selected screenshots comprise sudden color gradient changes across their vertical axis and/or try a different crop sensitivity!</string>
+    <string name="cropping_failure_instruction_text_view">Make sure the selected screenshot(s) comprise sudden color gradient changes across their vertical axis, and/or try a different crop sensitivity!</string>
     <string name="version">Version: %1$s</string>
     <string name="copyright">© 2021-%1$d | Janek Zangenberg</string>
     <string name="got_it">Got it!</string>
