@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.core.text.bold
-import androidx.core.text.color
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -39,8 +38,8 @@ import com.w2sv.autocrop.activities.examination.adjustment.CropAdjustmentFragmen
 import com.w2sv.autocrop.activities.examination.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.examination.pager.dialogs.cropsaving.AbstractCropSavingDialogFragment
 import com.w2sv.autocrop.activities.examination.pager.dialogs.cropsaving.CropSavingDialogFragment
-import com.w2sv.autocrop.activities.examination.pager.dialogs.recrop.RecropDialogFragment
 import com.w2sv.autocrop.activities.examination.pager.dialogs.cropsaving.SaveAllCropsDialogFragment
+import com.w2sv.autocrop.activities.examination.pager.dialogs.recrop.RecropDialogFragment
 import com.w2sv.autocrop.activities.examination.pager.model.CropProcedure
 import com.w2sv.autocrop.activities.examination.saveall.SaveAllFragment
 import com.w2sv.autocrop.databinding.CropPagerBinding
@@ -158,9 +157,7 @@ class CropPagerFragment :
                     if (cropResults.nNotCroppableImages != 0) {
                         append("Couldn't find crop bounds for")
                         bold {
-                            color(context.getColor(R.color.highlight)) {
-                                append(" ${cropResults.nNotCroppableImages}")
-                            }
+                            append(" ${cropResults.nNotCroppableImages}")
                         }
                         append(" ${"screenshot".numericallyInflected(cropResults.nNotCroppableImages)}")
                     }
