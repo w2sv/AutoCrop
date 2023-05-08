@@ -1,4 +1,7 @@
 [Improved]
-- App stability
+- App performance & stability
+- Notification messages
 [Fixed]
-- Coloring in light mode
+- bidirectional CropPager swiping
+[Other Changes]
+- Slimmed down onboarding

@@ -23,12 +23,12 @@ build-and-publish:
 	@echo "Clean"  # Required as 'publishBundle' publishes all .aab's in specified archive dir
 	@./gradlew clean
 
-	@echo "Build APK"
-	@./gradlew assembleRelease --console verbose
+#	@echo "Build APK"
+#	@./gradlew assembleRelease --console verbose
 	@echo "Build AAB"
 	@./gradlew :app:bundleRelease --console verbose
 
 	@echo "Create GitHub Release"
-	@gh release create $(VERSION) app/build/outputs/apk/release/$(VERSION).apk -F app/src/main/play/release-notes/en-US/production.txt
+	@gh release create $(VERSION) -F app/src/main/play/release-notes/en-US/production.txt # app/build/outputs/apk/release/$(VERSION).apk
 	@echo "Publish Bundle"
 	@./gradlew publishBundle --artifact-dir app/build/outputs/bundle/release --console verbose
