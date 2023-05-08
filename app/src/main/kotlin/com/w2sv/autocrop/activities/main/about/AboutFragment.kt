@@ -23,7 +23,7 @@ class AboutFragment :
             appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
             logoIv.setOnClickListener { it.animate(Techniques.Tada) }
             versionTv.setOnClickListener { it.animate(Techniques.RubberBand) }
-            copyrightTv.setOnClickListener { it.animate(Techniques.Wave) }
+            copyrightTv.setOnClickListener { it.animate(Techniques.Shake) }
         }
     }
 }

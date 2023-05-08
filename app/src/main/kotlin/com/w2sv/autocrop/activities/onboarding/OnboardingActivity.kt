@@ -89,7 +89,8 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                                             ScreenshotListener.startService(activity)
                                             viewModel.screenshotListeningEnabled = true
                                         },
-                                        onRequestDismissed = {
+                                        onRequestDismissed = {  // unintentionally only invoked after onGranted, which, however, ain't too bad after all
+                                            // zoom out enableButton and visualize & play doneAnimation
                                             it
                                                 .getAnimationComposer(Techniques.ZoomOut, 750L)
                                                 .onEnd {
@@ -106,6 +107,7 @@ class OnboardingActivity : com.w2sv.onboarding.OnboardingActivity() {
                 },
                 onPageFullyVisibleListener = { view, activity ->
                     if (view != null && !activity.viewModels<ViewModel>().value.screenshotListeningEnabled) {
+                        // play enableButton animation
                         view
                             .findViewById<AppCompatButton>(R.id.enable_button)
                             .getAnimationComposer(Techniques.Tada)
