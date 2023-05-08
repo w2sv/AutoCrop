@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.examination.pager.dialogs
+package com.w2sv.autocrop.activities.examination.pager.dialogs.recrop
 
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.SavedStateHandle

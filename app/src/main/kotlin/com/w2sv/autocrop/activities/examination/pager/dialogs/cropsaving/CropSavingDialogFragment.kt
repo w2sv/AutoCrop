@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.activities.examination.pager.dialogs
+package com.w2sv.autocrop.activities.examination.pager.dialogs.cropsaving
 
 import androidx.appcompat.app.AlertDialog
 import com.w2sv.autocrop.R

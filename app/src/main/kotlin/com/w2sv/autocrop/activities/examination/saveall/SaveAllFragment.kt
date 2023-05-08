@@ -42,14 +42,14 @@ class SaveAllFragment :
 
         val nUnprocessedCrops: Int = cropBundleIndices.size
 
-        val progressLive: LiveData<Int> by lazy {
+        val saveProgressLive: LiveData<Int> by lazy {
             MutableLiveData(0)
         }
 
         private val unprocessedCropBundleIndices: List<Int>
             get() =
                 cropBundleIndices.run {
-                    subList(progressLive.value!!, size)
+                    subList(saveProgressLive.value!!, size)
                 }
 
         suspend fun saveAllCoroutine(processCropBundle: suspend (Int) -> Unit, onFinishedListener: () -> Unit) {
@@ -61,7 +61,7 @@ class SaveAllFragment :
                         )
                     }
                     withContext(Dispatchers.Main) {
-                        progressLive.increment()
+                        saveProgressLive.increment()
                     }
                 }
 
@@ -75,19 +75,22 @@ class SaveAllFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.progressLive.observe(viewLifecycleOwner) {
+        viewModel.saveProgressLive.observe(viewLifecycleOwner) {
             binding.progressTv.updateText(
                 minOf(it + 1, viewModel.nUnprocessedCrops),
                 viewModel.nUnprocessedCrops
             )
         }
 
-        val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
-
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED){
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.saveAllCoroutine(
-                    processCropBundle = { activityViewModel.addCropBundleIOResult(it, requireContext()) },
+                    processCropBundle = {
+                        activityViewModels<ExaminationActivity.ViewModel>().value.addCropBundleIOResult(
+                            it,
+                            requireContext()
+                        )
+                    },
                     onFinishedListener = { requireCastActivity<ExaminationActivity>().invokeExitFragment() }
                 )
             }

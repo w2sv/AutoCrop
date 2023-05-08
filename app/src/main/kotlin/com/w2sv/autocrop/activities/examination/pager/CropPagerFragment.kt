@@ -37,10 +37,10 @@ import com.w2sv.autocrop.activities.crop.domain.CropResults
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.examination.adjustment.CropAdjustmentFragment
 import com.w2sv.autocrop.activities.examination.comparison.ComparisonFragment
-import com.w2sv.autocrop.activities.examination.pager.dialogs.AbstractCropSavingDialogFragment
-import com.w2sv.autocrop.activities.examination.pager.dialogs.CropSavingDialogFragment
-import com.w2sv.autocrop.activities.examination.pager.dialogs.RecropDialogFragment
-import com.w2sv.autocrop.activities.examination.pager.dialogs.SaveAllCropsDialogFragment
+import com.w2sv.autocrop.activities.examination.pager.dialogs.cropsaving.AbstractCropSavingDialogFragment
+import com.w2sv.autocrop.activities.examination.pager.dialogs.cropsaving.CropSavingDialogFragment
+import com.w2sv.autocrop.activities.examination.pager.dialogs.recrop.RecropDialogFragment
+import com.w2sv.autocrop.activities.examination.pager.dialogs.cropsaving.SaveAllCropsDialogFragment
 import com.w2sv.autocrop.activities.examination.pager.model.CropProcedure
 import com.w2sv.autocrop.activities.examination.saveall.SaveAllFragment
 import com.w2sv.autocrop.databinding.CropPagerBinding
