@@ -1,8 +1,11 @@
 package com.w2sv.screenshotlistening
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.w2sv.androidutils.generic.getParcelableCompat
 import com.w2sv.cropbundle.io.CropBundleIOResult
 import com.w2sv.cropbundle.io.CropBundleIORunner
@@ -33,6 +36,7 @@ class CropIOService : UnboundService() {
             context = applicationContext
         )
             .apply {
+                @SuppressLint("NewApi")  // TODO
                 if (intent.getBooleanExtra(ScreenshotDeleteRequestActivity.EXTRA_CONFIRMED_DELETION, false)) {
                     screenshotDeletionResult = ScreenshotDeletionResult.SuccessfullyDeleted
                 }

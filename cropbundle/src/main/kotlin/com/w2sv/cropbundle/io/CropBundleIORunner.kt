@@ -39,18 +39,18 @@ class CropBundleIORunner @Inject constructor(
     ): CropBundleIOResult =
         CropBundleIOResult(
             cropFileUri = context.contentResolver.saveBitmap(
-                cropBitmap,
-                screenshotMediaStoreData.mimeType,
-                cropFileName(
+                bitmap = cropBitmap,
+                mimeType = screenshotMediaStoreData.mimeType,
+                fileName = cropFileName(
                     screenshotMediaStoreData.fileName,
                     screenshotMediaStoreData.mimeType
                 ),
-                uriRepository.validDocumentUriOrNull(context)
+                parentDocumentUri = uriRepository.validDocumentUriOrNull(context)
             ),
             screenshotDeletionResult = ScreenshotDeletionResult.get(
-                deleteScreenshot,
-                screenshotMediaStoreData.id,
-                context
+                deleteScreenshot = deleteScreenshot,
+                mediaStoreId = screenshotMediaStoreData.id,
+                context = context
             )
         )
 }

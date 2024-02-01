@@ -386,7 +386,6 @@ class ScreenshotListener : BoundService(),
 private const val REPLACE_CURRENT_PENDING_INTENT_FLAGS: Int =
     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
 
-@Suppress("UnstableApiUsage")
 private class ScreenshotObserver(
     private val contentResolver: ContentResolver,
     private val onNewScreenshotListener: (Uri) -> Boolean

@@ -10,9 +10,6 @@ import com.w2sv.androidutils.generic.getParcelableCompat
 
 @RequiresApi(Build.VERSION_CODES.R)
 class ScreenshotDeleteRequestActivity : ComponentActivity(com.w2sv.common.R.layout.delete_request) {
-    companion object {
-        const val EXTRA_CONFIRMED_DELETION = "com.w2sv.autocrop.extra.CONFIRMED_DELETION"
-    }
 
     override fun onStart() {
         super.onStart()
@@ -38,4 +35,8 @@ class ScreenshotDeleteRequestActivity : ComponentActivity(com.w2sv.common.R.layo
             )
             finishAffinity()
         }
+
+    companion object {
+        const val EXTRA_CONFIRMED_DELETION = "com.w2sv.autocrop.extra.CONFIRMED_DELETION"
+    }
 }

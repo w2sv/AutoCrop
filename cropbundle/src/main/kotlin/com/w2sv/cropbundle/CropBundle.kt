@@ -15,6 +15,7 @@ import com.w2sv.cropbundle.io.extensions.queryMediaStoreData
 import com.w2sv.kotlinutils.extensions.rounded
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import slimber.log.i
 import kotlin.math.roundToInt
 
 @Parcelize
@@ -40,9 +41,9 @@ data class CropBundle(
             context.contentResolver.loadBitmap(screenshotMediaUri)?.let { screenshotBitmap ->
                 Cropper.invoke(screenshotBitmap, context)?.let { (edges, candidates) ->
                     val screenshot = Screenshot(
-                        screenshotMediaUri,
-                        screenshotBitmap.height,
-                        Screenshot.MediaStoreData.query(context.contentResolver, screenshotMediaUri)
+                        uri = screenshotMediaUri,
+                        height = screenshotBitmap.height,
+                        mediaStoreData = Screenshot.MediaStoreData.query(context.contentResolver, screenshotMediaUri)
                     )
 
                     Pair(
@@ -85,8 +86,8 @@ data class Screenshot(
         companion object {
             fun query(contentResolver: ContentResolver, uri: Uri): MediaStoreData =
                 contentResolver.queryMediaStoreData(
-                    uri,
-                    arrayOf(
+                    uri = uri,
+                    columns = arrayOf(
                         MediaStore.Images.Media.SIZE,
                         MediaStore.Images.Media.DISPLAY_NAME,
                         MediaStore.Images.Media.MIME_TYPE,
@@ -94,11 +95,12 @@ data class Screenshot(
                     )
                 )
                     .run {
+                        i { "Queried media store column values: ${toList()}" }
                         MediaStoreData(
-                            get(0).toLong(),
-                            get(1),
-                            ImageMimeType.parse(get(2)),
-                            get(3).toLong()
+                            diskUsage = get(0).toLong(),
+                            fileName = get(1),
+                            mimeType = ImageMimeType.parse(get(2)),
+                            id = get(3).toLong()
                         )
                     }
         }
@@ -132,10 +134,10 @@ data class Crop(
                 ((screenshotBitmap.height - cropBitmap.height).toFloat() / screenshotBitmap.height.toFloat())
 
             return Crop(
-                cropBitmap,
-                edges,
-                (discardedPercentageF * 100).roundToInt(),
-                (discardedPercentageF * screenshotDiskUsage / 1000).roundToInt().toLong()
+                bitmap = cropBitmap,
+                edges = edges,
+                discardedPercentage = (discardedPercentageF * 100).roundToInt(),
+                discardedKB = (discardedPercentageF * screenshotDiskUsage / 1000).roundToInt().toLong()
             )
         }
     }

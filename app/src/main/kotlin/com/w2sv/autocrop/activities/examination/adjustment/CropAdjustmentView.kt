@@ -178,14 +178,11 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     // ----------------------------------
     // Drawing
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas?.apply {
-            drawBitmap(viewModel.screenshotBitmap, imageMatrix, null)
-
-            modeConfig.onDraw(this)
-        }
+        canvas.drawBitmap(viewModel.screenshotBitmap, imageMatrix, null)
+        modeConfig.onDraw(canvas)
     }
 
     private fun Canvas.drawCropMask() {
@@ -325,7 +322,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
             context,
             object : GestureDetector.SimpleOnGestureListener() {
                 override fun onScroll(
-                    e1: MotionEvent,
+                    e1: MotionEvent?,
                     e2: MotionEvent,
                     distanceX: Float,
                     distanceY: Float
