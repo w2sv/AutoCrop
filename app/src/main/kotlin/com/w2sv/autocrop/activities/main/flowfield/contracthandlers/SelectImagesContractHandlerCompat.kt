@@ -5,11 +5,12 @@ import android.net.Uri
 import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
 
-interface SelectImagesContractHandlerCompat<I, O> : ActivityCallContractHandler<I, O> {
+sealed interface SelectImagesContractHandlerCompat<I, O> : ActivityCallContractHandler<I, O> {
 
     companion object {
         fun getInstance(
@@ -47,14 +48,14 @@ interface SelectImagesContractHandlerCompat<I, O> : ActivityCallContractHandler<
     class FromQ(
         activity: ComponentActivity,
         override val resultCallback: (List<Uri>) -> Unit
-    ) : ActivityCallContractHandler.Impl<String, List<Uri>>(
+    ) : ActivityCallContractHandler.Impl<PickVisualMediaRequest, List<@JvmSuppressWildcards Uri>>(
         activity,
-        ActivityResultContracts.GetMultipleContents()
+        ActivityResultContracts.PickMultipleVisualMedia()
     ),
-        SelectImagesContractHandlerCompat<String, List<Uri>> {
+        SelectImagesContractHandlerCompat<PickVisualMediaRequest, List<@JvmSuppressWildcards Uri>> {
 
         override fun selectImages() {
-            resultLauncher.launch(IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER)
+            resultLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
     }
 }

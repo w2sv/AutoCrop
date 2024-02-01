@@ -16,7 +16,6 @@ import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.androidutils.eventhandling.BackPressHandler
 import com.w2sv.androidutils.lifecycle.increment
 import com.w2sv.androidutils.notifying.showToast
-import com.w2sv.androidutils.ui.resources.getLong
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
@@ -25,16 +24,17 @@ import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.databinding.CropBinding
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
-import com.w2sv.autocrop.utils.extensions.startMainActivity
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.autocrop.utils.requireCastActivity
+import com.w2sv.common.Constants
+import com.w2sv.common.datastore.PreferencesRepository
 import com.w2sv.cropbundle.CropBundle
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import slimber.log.i
@@ -44,20 +44,15 @@ import javax.inject.Inject
 class CropFragment
     : AppFragment<CropBinding>(CropBinding::class.java) {
 
-    companion object {
-        fun getInstance(screenshotUris: List<Uri>): CropFragment =
-            getFragment(CropFragment::class.java, MainActivity.EXTRA_SELECTED_IMAGE_URIS to screenshotUris)
-    }
-
     @HiltViewModel
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
-        @ApplicationContext context: Context
+        preferencesRepository: PreferencesRepository
     ) : androidx.lifecycle.ViewModel() {
 
         val backPressListener = BackPressHandler(
-            viewModelScope,
-            context.resources.getLong(R.integer.duration_backpress_confirmation_window)
+            coroutineScope = viewModelScope,
+            confirmationWindowDuration = Constants.confirmationWindowDuration
         )
 
         private val screenshotUris: List<Uri> = savedStateHandle[MainActivity.EXTRA_SELECTED_IMAGE_URIS]!!
@@ -74,7 +69,7 @@ class CropFragment
             coroutineScope {
                 getImminentUris().forEach { uri ->
                     withContext(Dispatchers.IO) {
-                        getCropBundle(uri, context)?.let {
+                        attemptCropBundleCreation(uri, context)?.let {
                             cropBundles.add(it)
                         }
                     }
@@ -91,32 +86,38 @@ class CropFragment
                 subList(liveProgress.value!!, size)
             }
 
-        private fun getCropBundle(screenshotUri: Uri, context: Context): CropBundle? {
-            i { "getCropBundle; screenshotUri=$screenshotUri" }
+        private fun attemptCropBundleCreation(screenshotUri: Uri, context: Context): CropBundle? {
+            i { "attemptCropBundleCreation; screenshotUri=$screenshotUri" }
 
             return CropBundle.attemptCreation(
                 screenshotMediaUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
                     getMediaUri(context, screenshotUri)!!
                 else
                     screenshotUri,
+                cropThreshold = cropThreshold.value.toDouble(),
                 context = context
-            ).run {
-                when {
-                    first != null -> first
-                    second == CropBundle.CreationFailureReason.BitmapLoadingFailure -> {
-                        cropResults.nNotOpenableImages += 1
-                        null
-                    }
+            )
+                .run {
+                    when (this) {
+                        is CropBundle.CreationResult.Failure.NoCropEdgesFound -> {
+                            cropResults.nNotCroppableImages += 1
+                            null
+                        }
 
-                    second == CropBundle.CreationFailureReason.NoCropEdgesFound -> {
-                        cropResults.nNotCroppableImages += 1
-                        null
-                    }
+                        is CropBundle.CreationResult.Failure.BitmapLoadingFailed -> {
+                            cropResults.nNotOpenableImages += 1
+                            null
+                        }
 
-                    else -> throw Exception()
+                        is CropBundle.CreationResult.Success -> {
+                            cropBundle
+                        }
+                    }
                 }
-            }
         }
+
+        private val cropThreshold =
+            preferencesRepository.edgeCandidateThreshold.stateIn(viewModelScope, SharingStarted.Eagerly)
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -125,14 +126,14 @@ class CropFragment
         super.onViewCreated(view, savedInstanceState)
 
         binding.populate()
-        viewModel.setObservers()
+        viewModel.observeLiveData()
     }
 
     private fun CropBinding.populate() {
         croppingProgressBar.max = viewModel.nScreenshots
     }
 
-    private fun ViewModel.setObservers() {
+    private fun ViewModel.observeLiveData() {
         liveProgress.observe(viewLifecycleOwner) {
             binding.progressTv.updateText(it, nScreenshots)
             binding.croppingProgressBar.progress = it
@@ -182,8 +183,13 @@ class CropFragment
                 requireContext().showToast(getString(R.string.tap_again_to_cancel))
             },
             {
-                requireActivity().startMainActivity()
+                MainActivity.start(requireContext())
             }
         )
+    }
+
+    companion object {
+        fun getInstance(screenshotUris: List<Uri>): CropFragment =
+            getFragment(CropFragment::class.java, MainActivity.EXTRA_SELECTED_IMAGE_URIS to screenshotUris)
     }
 }

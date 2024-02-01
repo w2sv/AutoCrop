@@ -5,7 +5,7 @@ import androidx.fragment.app.viewModels
 import com.w2sv.androidutils.ui.resources.getColoredDrawable
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.views.RoundedDialogFragment
-import com.w2sv.common.datastore.Repository
+import com.w2sv.common.datastore.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -14,10 +14,10 @@ import javax.inject.Inject
 internal class ComparisonScreenInstructionDialogFragment : RoundedDialogFragment() {
 
     @HiltViewModel
-    class ViewModel @Inject constructor(val repository: Repository) : androidx.lifecycle.ViewModel() {
+    class ViewModel @Inject constructor(val preferencesRepository: PreferencesRepository) : androidx.lifecycle.ViewModel() {
 
         fun onDismissDialog() {
-            repository.comparisonInstructionsShown.value = true
+            preferencesRepository.comparisonInstructionsShown.value = true
         }
     }
 

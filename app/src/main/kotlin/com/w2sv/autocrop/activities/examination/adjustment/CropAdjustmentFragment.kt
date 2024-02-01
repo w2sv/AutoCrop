@@ -32,7 +32,7 @@ import com.w2sv.autocrop.activities.examination.adjustment.model.Line
 import com.w2sv.autocrop.activities.examination.adjustment.model.N_SCREEN_ORIENTATIONS
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.utils.getFragment
-import com.w2sv.common.datastore.Repository
+import com.w2sv.common.datastore.PreferencesRepository
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
 import com.w2sv.kotlinutils.extensions.getByOrdinal
@@ -62,7 +62,7 @@ class CropAdjustmentFragment
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
         contentResolver: ContentResolver,
-        private val repository: Repository
+        private val preferencesRepository: PreferencesRepository
     ) : androidx.lifecycle.ViewModel() {
 
         val cropBundle: CropBundle =
@@ -115,11 +115,11 @@ class CropAdjustmentFragment
          */
 
         val modeLive: MutableStateFlow<CropAdjustmentMode> by lazy {
-            MutableStateFlow(getByOrdinal<CropAdjustmentMode>(repository.cropAdjustmentModeOrdinal.value))
+            MutableStateFlow(getByOrdinal<CropAdjustmentMode>(preferencesRepository.cropAdjustmentModeOrdinal.value))
                 .apply {
                     viewModelScope.launch {
                         collect {
-                            repository.cropAdjustmentModeOrdinal.value = it.ordinal
+                            preferencesRepository.cropAdjustmentModeOrdinal.value = it.ordinal
                         }
                     }
                 }

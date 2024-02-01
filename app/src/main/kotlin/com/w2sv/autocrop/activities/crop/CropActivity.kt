@@ -4,7 +4,6 @@ import androidx.fragment.app.Fragment
 import com.w2sv.androidutils.generic.getParcelableArrayListCompat
 import com.w2sv.autocrop.activities.AppActivity
 import com.w2sv.autocrop.activities.main.MainActivity
-import com.w2sv.autocrop.utils.extensions.startMainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint  // java.lang.IllegalStateException: Hilt Fragments must be attached to an @AndroidEntryPoint Activity
@@ -18,9 +17,9 @@ class CropActivity : AppActivity() {
 
     override fun handleOnBackPressed() {
         when (val fragment = getCurrentFragment()) {
-            is CroppingFailedFragment -> startMainActivity()
+            is CroppingFailedFragment -> MainActivity.start(this)
             is CropFragment -> fragment.onBackPress()
-            else -> Unit
+            else -> throw IllegalStateException("Invalid Fragment type")
         }
     }
 }

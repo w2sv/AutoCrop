@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Parcelable
 import android.provider.MediaStore
 import com.w2sv.cropbundle.cropping.CropEdges
-import com.w2sv.cropbundle.cropping.Cropper
+import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.cropbundle.cropping.cropped
 import com.w2sv.cropbundle.io.ImageMimeType
 import com.w2sv.cropbundle.io.extensions.loadBitmap
@@ -26,46 +26,56 @@ data class CropBundle(
     var adjustedEdgeThreshold: Int? = null
 ) : Parcelable {
 
-    enum class CreationFailureReason {
-        BitmapLoadingFailure,
-        NoCropEdgesFound
+    sealed interface CreationResult {
+        data class Success(val cropBundle: CropBundle) : CreationResult
+
+        sealed interface Failure : CreationResult {
+            data object NoCropEdgesFound : Failure
+            data object BitmapLoadingFailed : Failure
+        }
     }
+
+    fun identifier(): String =
+        hashCode().toString()
 
     companion object {
         const val EXTRA_POSITION = "com.w2sv.autocrop.extra.CROP_BUNDLE_POSITION"
 
         fun attemptCreation(
             screenshotMediaUri: Uri,
+            cropThreshold: Double,
             context: Context
-        ): Pair<CropBundle?, CreationFailureReason?> =
-            context.contentResolver.loadBitmap(screenshotMediaUri)?.let { screenshotBitmap ->
-                Cropper.invoke(screenshotBitmap, context)?.let { (edges, candidates) ->
-                    val screenshot = Screenshot(
-                        uri = screenshotMediaUri,
-                        height = screenshotBitmap.height,
-                        mediaStoreData = Screenshot.MediaStoreData.query(context.contentResolver, screenshotMediaUri)
-                    )
-
-                    Pair(
-                        CropBundle(
-                            screenshot = screenshot,
-                            crop = Crop.fromScreenshot(
-                                screenshotBitmap,
-                                screenshot.mediaStoreData.diskUsage,
-                                edges
-                            ),
-                            edgeCandidates = candidates
-                        ),
-                        null
-                    )
+        ): CreationResult =
+            when (val screenshotBitmap = context.contentResolver.loadBitmap(screenshotMediaUri)) {
+                null -> CreationResult.Failure.BitmapLoadingFailed
+                else -> {
+                    when (val cropResult = screenshotBitmap.crop(cropThreshold)) {
+                        null -> CreationResult.Failure.NoCropEdgesFound
+                        else -> {
+                            val screenshot = Screenshot(
+                                uri = screenshotMediaUri,
+                                height = screenshotBitmap.height,
+                                mediaStoreData = Screenshot.MediaStoreData.query(
+                                    context.contentResolver,
+                                    screenshotMediaUri
+                                )
+                            )
+                            CreationResult.Success(
+                                CropBundle(
+                                    screenshot = screenshot,
+                                    crop = Crop.fromScreenshot(
+                                        screenshotBitmap = screenshotBitmap,
+                                        screenshotDiskUsage = screenshot.mediaStoreData.diskUsage,
+                                        edges = cropResult.edges
+                                    ),
+                                    edgeCandidates = cropResult.candidates
+                                )
+                            )
+                        }
+                    }
                 }
-                    ?: Pair(null, CreationFailureReason.NoCropEdgesFound)
             }
-                ?: Pair(null, CreationFailureReason.BitmapLoadingFailure)
     }
-
-    fun identifier(): String =
-        hashCode().toString()
 }
 
 @Parcelize

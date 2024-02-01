@@ -1,36 +1,31 @@
 package com.w2sv.cropbundle.io
 
+import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import com.w2sv.cropbundle.io.extensions.deleteImage
 import slimber.log.i
 
-sealed class ScreenshotDeletionResult {
-    object None : ScreenshotDeletionResult()
-    object SuccessfullyDeleted : ScreenshotDeletionResult()
-    object DeletionFailed : ScreenshotDeletionResult()
-    class DeletionApprovalRequired(val requestUri: Uri) : ScreenshotDeletionResult()
+sealed interface ScreenshotDeletionResult {
+    data object SuccessfullyDeleted : ScreenshotDeletionResult
+    data object DeletionFailed : ScreenshotDeletionResult
+    data class DeletionApprovalRequired(val requestUri: Uri) : ScreenshotDeletionResult
 
     companion object {
+        fun get(mediaStoreId: Long, contentResolver: ContentResolver): ScreenshotDeletionResult =
+            when (IMAGE_DELETION_REQUIRING_APPROVAL) {
+                true ->
+                    DeletionApprovalRequired(
+                        getImageDeleteRequestUri(mediaStoreId)
+                    )
 
-        fun get(deleteScreenshot: Boolean, mediaStoreId: Long, context: Context): ScreenshotDeletionResult =
-            when (deleteScreenshot) {
-                true -> when (IMAGE_DELETION_REQUIRING_APPROVAL) {
-                    true ->
-                        DeletionApprovalRequired(
-                            getImageDeleteRequestUri(mediaStoreId)
-                        )
-
-                    false -> when (context.contentResolver.deleteImage(mediaStoreId)) {
-                        true -> SuccessfullyDeleted
-                        false -> DeletionFailed
-                    }
+                false -> when (contentResolver.deleteImage(mediaStoreId)) {
+                    true -> SuccessfullyDeleted
+                    false -> DeletionFailed
                 }
-
-                false -> None
             }
                 .also {
-                    i{"ScreenshotDeletionResult: $it"}
+                    i { "ScreenshotDeletionResult: $it" }
                 }
     }
 }

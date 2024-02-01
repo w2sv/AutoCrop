@@ -57,7 +57,8 @@ import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.requireCastActivity
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
-import com.w2sv.common.datastore.Repository
+import com.w2sv.common.Constants
+import com.w2sv.common.datastore.PreferencesRepository
 import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
@@ -65,11 +66,11 @@ import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -80,16 +81,10 @@ class CropPagerFragment :
     SaveAllCropsDialogFragment.ResultListener,
     RecropDialogFragment.Listener {
 
-    companion object {
-        fun getInstance(cropResults: CropResults): CropPagerFragment =
-            getFragment(CropPagerFragment::class.java, CropResults.EXTRA to cropResults)
-    }
-
     @HiltViewModel
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
-        val repository: Repository,
-        @ApplicationContext context: Context
+        private val preferencesRepository: PreferencesRepository,
     ) : androidx.lifecycle.ViewModel() {
 
         val dataSet = CropPager.DataSet(ExaminationActivity.ViewModel.cropBundles)
@@ -132,8 +127,16 @@ class CropPagerFragment :
 
         var autoScrollCoroutine: Job? = null
 
+        val doAutoScrollPersisted = preferencesRepository.autoScroll.stateIn(viewModelScope, SharingStarted.Eagerly)
+
+        fun saveDoAutoScroll(value: Boolean) {
+            viewModelScope.launch {
+                preferencesRepository.autoScroll.save(value)
+            }
+        }
+
         val doAutoScrollLive: LiveData<Boolean> =
-            MutableLiveData(repository.autoScroll.value && dataSet.size > 1)
+            MutableLiveData(doAutoScrollPersisted.value && dataSet.size > 1)
 
         private fun maxAutoScrolls(): Int =
             dataSet.size - dataSet.livePosition.value!!
@@ -174,12 +177,15 @@ class CropPagerFragment :
             RecropDialogFragment.getInstance(
                 dataSet.livePosition.value!!,
                 dataSet.liveElement.adjustedEdgeThreshold
-                    ?: repository.edgeCandidateThreshold.value
+                    ?: edgeCandidateThreshold.value
             )
 
+        private val edgeCandidateThreshold =
+            preferencesRepository.edgeCandidateThreshold.stateIn(viewModelScope, SharingStarted.Eagerly)
+
         val backPressHandler = BackPressHandler(
-            viewModelScope,
-            context.resources.getLong(R.integer.duration_backpress_confirmation_window)
+            coroutineScope = viewModelScope,
+            confirmationWindowDuration = Constants.confirmationWindowDuration
         )
 
         var lastCropProcedureToast: Toast? = null
@@ -355,14 +361,14 @@ class CropPagerFragment :
                         findItem(R.id.crop_pager_item_auto_scroll)
                             .apply {
                                 isCheckable = true
-                                isChecked = viewModel.repository.autoScroll.value
+                                isChecked = viewModel.doAutoScrollPersisted.value
                                 makeOnClickPersistent(requireContext())
                             }
                         setOnMenuItemClickListener { item ->
                             when (item.itemId) {
                                 R.id.crop_pager_item_auto_scroll -> {
                                     item.toggleCheck { newValue ->
-                                        viewModel.repository.autoScroll.value = newValue
+                                        viewModel.saveDoAutoScroll(newValue)
                                     }
 
                                     KEEP_MENU_ITEM_OPEN_ON_CLICK
@@ -404,7 +410,7 @@ class CropPagerFragment :
      * removes view, procedure action has been selected for, from pager
      */
     override fun onSaveCrop(dataSetPosition: Int) {
-        activityViewModel.processCropBundleAsScopedCoroutine(
+        activityViewModel.processCropBundle(
             dataSetPosition,
             requireContext().applicationContext
         )
@@ -502,6 +508,11 @@ class CropPagerFragment :
                 activityViewModel.startMainActivity(requireActivity())
             }
         )
+    }
+
+    companion object {
+        fun getInstance(cropResults: CropResults): CropPagerFragment =
+            getFragment(CropPagerFragment::class.java, CropResults.EXTRA to cropResults)
     }
 }
 

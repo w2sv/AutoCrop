@@ -11,13 +11,15 @@ import com.w2sv.cropbundle.io.utils.systemPicturesDirectory
 import slimber.log.i
 
 @RequiresApi(Build.VERSION_CODES.Q)
+@Throws(IllegalArgumentException::class)
 fun getMediaUri(context: Context, uri: Uri): Uri? =
     try {
-        if (DocumentsContract.isDocumentUri(context, uri))
-            MediaStore.getMediaUri(context, uri)!!
+        if (DocumentsContract.isDocumentUri(context, uri)) {
+            MediaStore.getMediaUri(context, uri)
                 .also {
                     i { "Converted to mediaUri: $it" }
                 }
+        }
         else
             uri
     }
@@ -25,6 +27,7 @@ fun getMediaUri(context: Context, uri: Uri): Uri? =
         null
     }
 
+// TODO: rewrite
 fun cropSaveDirPathIdentifier(documentUri: Uri?): String =
     documentUri?.let { documentUriPathIdentifier(it) }
         ?: systemPicturesDirectory().path

@@ -1,6 +1,5 @@
 package com.w2sv.autocrop.activities.examination
 
-import android.app.Activity
 import android.content.Context
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
@@ -16,17 +15,18 @@ import com.w2sv.autocrop.activities.examination.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.examination.exit.ExitFragment
 import com.w2sv.autocrop.activities.examination.pager.CropPagerFragment
 import com.w2sv.autocrop.activities.examination.saveall.SaveAllFragment
+import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.domain.AccumulatedIOResults
-import com.w2sv.autocrop.utils.extensions.startMainActivity
+import com.w2sv.common.datastore.PreferencesRepository
 import com.w2sv.cropbundle.CropBundle
+import com.w2sv.cropbundle.io.CropBundleIOProcessingUseCase
 import com.w2sv.cropbundle.io.CropBundleIOResult
-import com.w2sv.cropbundle.io.CropBundleIORunner
 import com.w2sv.cropbundle.io.ScreenshotDeletionResult
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,7 +35,8 @@ class ExaminationActivity : AppActivity() {
 
     @HiltViewModel
     class ViewModel @Inject constructor(
-        @ApplicationContext context: Context
+        private val cropBundleIOProcessingUseCase: CropBundleIOProcessingUseCase,
+        preferencesRepository: PreferencesRepository
     ) : androidx.lifecycle.ViewModel() {
 
         private val cropBundleIOResults = mutableListOf<CropBundleIOResult>()
@@ -45,7 +46,7 @@ class ExaminationActivity : AppActivity() {
                 it.screenshotDeletionResult is ScreenshotDeletionResult.DeletionApprovalRequired
             }
 
-        fun processCropBundleAsScopedCoroutine(cropBundlePosition: Int, context: Context) {
+        fun processCropBundle(cropBundlePosition: Int, context: Context) {
             cropProcessingJob = viewModelScope.launch(Dispatchers.IO) {
                 addCropBundleIOResult(cropBundlePosition, context)
             }
@@ -61,20 +62,27 @@ class ExaminationActivity : AppActivity() {
             val cropBundle = cropBundles[cropBundlePosition]
 
             cropBundleIOResults.add(
-                cropBundleIORunner.invoke(
-                    cropBundle.crop.bitmap,
-                    cropBundle.screenshot.mediaStoreData,
-                    context
+                cropBundleIOProcessingUseCase.invoke(
+                    cropBitmap = cropBundle.crop.bitmap,
+                    screenshotMediaStoreData = cropBundle.screenshot.mediaStoreData,
+                    deleteScreenshot = deleteScreenshots.value,
+                    context = context
                 )
             )
         }
 
-        private val cropBundleIORunner = CropBundleIORunner.getInstance(context)
+        private val deleteScreenshots = preferencesRepository.deleteScreenshots.stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly
+        )
 
-        fun startMainActivity(activity: Activity) {
-            activity.startMainActivity {
-                putExtra(AccumulatedIOResults.EXTRA, AccumulatedIOResults.get(cropBundleIOResults))
-            }
+        fun startMainActivity(context: Context) {
+            MainActivity.start(
+                context = context,
+                intentConfigurationBlock = {
+                    putExtra(AccumulatedIOResults.EXTRA, AccumulatedIOResults.get(cropBundleIOResults))
+                }
+            )
         }
 
         companion object {
@@ -112,7 +120,7 @@ class ExaminationActivity : AppActivity() {
             is CropAdjustmentFragment -> supportFragmentManager.popBackStack()
             is SaveAllFragment -> showToast(getString(R.string.wait_until_crops_have_been_saved))
             is CropPagerFragment -> fragment.onBackPress()
-            else -> Unit
+            else -> throw IllegalStateException("Invalid Fragment type")
         }
     }
 }

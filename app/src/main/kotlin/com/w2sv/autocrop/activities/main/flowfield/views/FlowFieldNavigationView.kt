@@ -92,7 +92,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 R.id.main_menu_item_change_crop_dir -> {
                     flowFieldFragment
                         .openDocumentTreeContractHandler
-                        .selectDocument(viewModel.uriRepository.treeUri.value)
+                        .selectDocument(viewModel.cropSaveDirTreeUri.value)
                 }
 
                 R.id.main_menu_item_configure_cropping_settings -> {

@@ -135,7 +135,6 @@ dependencies {
     implementation(libs.viewboundcontroller)
     implementation(libs.androidutils)
     implementation(libs.viewanimations)
-    implementation(libs.onboarder)
     implementation(libs.bidirectionalviewpager)
 
     // Other

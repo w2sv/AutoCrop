@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
@@ -31,29 +32,26 @@ import com.w2sv.autocrop.activities.examination.comparison.model.ImageType
 import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
-import com.w2sv.common.datastore.Repository
+import com.w2sv.common.datastore.PreferencesRepository
 import com.w2sv.cropbundle.CropBundle
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class ComparisonFragment
     : AppFragment<ComparisonBinding>(ComparisonBinding::class.java) {
 
-    companion object {
-        fun getInstance(cropBundlePosition: Int): ComparisonFragment =
-            getFragment(ComparisonFragment::class.java, CropBundle.EXTRA_POSITION to cropBundlePosition)
-    }
-
     @HiltViewModel
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
         contentResolver: ContentResolver,
-        repository: Repository
+        preferencesRepository: PreferencesRepository
     ) : androidx.lifecycle.ViewModel() {
 
-        val comparisonInstructionsShown: Repository.Preference<Boolean> = repository.comparisonInstructionsShown
+        val comparisonInstructionsShown =
+            preferencesRepository.comparisonInstructionsShown.stateIn(viewModelScope, SharingStarted.Eagerly)
 
         val cropBundle: CropBundle =
             ExaminationActivity.ViewModel.cropBundles[savedStateHandle[CropBundle.EXTRA_POSITION]!!]
@@ -153,5 +151,10 @@ class ComparisonFragment
     fun popFromFragmentManager(fragmentManager: FragmentManager) {
         binding.cropIv.show()
         fragmentManager.popBackStack()
+    }
+
+    companion object {
+        fun getInstance(cropBundlePosition: Int): ComparisonFragment =
+            getFragment(ComparisonFragment::class.java, CropBundle.EXTRA_POSITION to cropBundlePosition)
     }
 }

@@ -21,8 +21,9 @@ import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.common.collect.EvictingQueue
 import com.w2sv.common.PermissionHandler
+import com.w2sv.common.datastore.PreferencesRepository
 import com.w2sv.cropbundle.Screenshot
-import com.w2sv.cropbundle.cropping.Cropper
+import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.cropbundle.cropping.cropped
 import com.w2sv.cropbundle.io.CROP_FILE_ADDENDUM
 import com.w2sv.cropbundle.io.IMAGE_DELETION_REQUIRING_APPROVAL
@@ -39,73 +40,21 @@ import com.w2sv.screenshotlistening.notifications.AppNotificationChannel
 import com.w2sv.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.screenshotlistening.notifications.setChannelAndGetNotificationBuilder
 import com.w2sv.screenshotlistening.services.abstrct.BoundService
+import dagger.hilt.android.AndroidEntryPoint
 import slimber.log.i
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.util.Date
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ScreenshotListener : BoundService(),
                            PendingIntentAssociatedResourcesCleanupService.Client {
 
-    companion object {
-        fun startService(context: Context) {
-            context.startService(
-                getIntent(context)
-            )
-            i { "Starting ScreenshotListener" }
-        }
-
-        fun stopService(context: Context) {
-            context.startService(
-                getIntent(context)
-                    .setAction(ACTION_STOP_SERVICE)
-            )
-            i { "Stopping ScreenshotListener" }
-        }
-
-        private const val ACTION_STOP_SERVICE = "com.w2sv.autocrop.STOP_SERVICE"
-
-        private fun getIntent(context: Context): Intent =
-            Intent(context, ScreenshotListener::class.java)
-
-        fun startCleanupService(context: Context, intent: Intent) {
-            context.startService(
-                intent.setClass(context, CleanupService::class.java)
-            )
-        }
-
-        const val EXTRA_ATTEMPT_SCREENSHOT_DELETION = "com.w2sv.autocrop.extra.DELETE_SCREENSHOT"
-        const val EXTRA_DELETE_REQUEST_URI = "com.w2sv.autocrop.extra.DELETE_REQUEST_URI"
-        const val EXTRA_SCREENSHOT_MEDIASTORE_DATA = "com.w2sv.autocrop.extra.SCREENSHOT_MEDIASTORE_DATA"
-        const val EXTRA_TEMPORARY_CROP_FILE_PATH = "com.w2sv.autocrop.extra.CROP_FILE_PATH"
-
-        fun permissionHandlers(componentActivity: ComponentActivity): List<PermissionHandler> =
-            buildList {
-                add(
-                    PermissionHandler(
-                        componentActivity,
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                            Manifest.permission.READ_MEDIA_IMAGES
-                        else
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                        R.string.media_file_access_required_for_registering_new_screenshots,
-                        R.string.go_to_app_settings_and_grant_media_file_access_for_screenshot_listening_to_work
-                    )
-                )
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    add(
-                        PermissionHandler(
-                            componentActivity,
-                            Manifest.permission.POST_NOTIFICATIONS,
-                            R.string.if_you_don_t_allow_notification_posting_autocrop_can_t_inform_you_about_croppable_screenshots,
-                            R.string.go_to_app_settings_and_enable_notification_posting_for_screenshot_listening_to_work
-                        )
-                    )
-                }
-            }
-    }
+    @Inject
+    lateinit var preferencesRepository: PreferencesRepository
 
     class CleanupService : PendingIntentAssociatedResourcesCleanupService<ScreenshotListener>(ScreenshotListener::class.java)
 
@@ -209,9 +158,9 @@ class ScreenshotListener : BoundService(),
     private fun onNewScreenshotUri(uri: Uri): Boolean =
         try {
             val screenshotBitmap = contentResolver.loadBitmap(uri)!!
-            Cropper.invoke(screenshotBitmap, applicationContext)?.let { (cropEdges, _) ->
+            screenshotBitmap.crop(preferencesRepository.edgeCandidateThreshold)?.let { cropResult ->
                 val screenshotMediaStoreData = Screenshot.MediaStoreData.query(contentResolver, uri)
-                val cropBitmap = screenshotBitmap.cropped(cropEdges)
+                val cropBitmap = screenshotBitmap.cropped(cropResult.edges)
                 val temporaryCropFilePath = saveCropToTempFile(cropBitmap, screenshotMediaStoreData.id)
 
                 showCroppableScreenshotDetectedNotification(
@@ -380,6 +329,64 @@ class ScreenshotListener : BoundService(),
 
         contentResolver.unregisterContentObserver(screenshotObserver)
             .also { i { "Unregistered imageContentObserver" } }
+    }
+
+    companion object {
+        fun startService(context: Context) {
+            context.startService(
+                getIntent(context)
+            )
+            i { "Starting ScreenshotListener" }
+        }
+
+        fun stopService(context: Context) {
+            context.startService(
+                getIntent(context)
+                    .setAction(ACTION_STOP_SERVICE)
+            )
+            i { "Stopping ScreenshotListener" }
+        }
+
+        private const val ACTION_STOP_SERVICE = "com.w2sv.autocrop.STOP_SERVICE"
+
+        private fun getIntent(context: Context): Intent =
+            Intent(context, ScreenshotListener::class.java)
+
+        fun startCleanupService(context: Context, intent: Intent) {
+            context.startService(
+                intent.setClass(context, CleanupService::class.java)
+            )
+        }
+
+        const val EXTRA_ATTEMPT_SCREENSHOT_DELETION = "com.w2sv.autocrop.extra.DELETE_SCREENSHOT"
+        const val EXTRA_DELETE_REQUEST_URI = "com.w2sv.autocrop.extra.DELETE_REQUEST_URI"
+        const val EXTRA_SCREENSHOT_MEDIASTORE_DATA = "com.w2sv.autocrop.extra.SCREENSHOT_MEDIASTORE_DATA"
+        const val EXTRA_TEMPORARY_CROP_FILE_PATH = "com.w2sv.autocrop.extra.CROP_FILE_PATH"
+
+        fun permissionHandlers(componentActivity: ComponentActivity): List<PermissionHandler> =
+            buildList {
+                add(
+                    PermissionHandler(
+                        componentActivity,
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                            Manifest.permission.READ_MEDIA_IMAGES
+                        else
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                        R.string.media_file_access_required_for_registering_new_screenshots,
+                        R.string.go_to_app_settings_and_grant_media_file_access_for_screenshot_listening_to_work
+                    )
+                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    add(
+                        PermissionHandler(
+                            componentActivity,
+                            Manifest.permission.POST_NOTIFICATIONS,
+                            R.string.if_you_don_t_allow_notification_posting_autocrop_can_t_inform_you_about_croppable_screenshots,
+                            R.string.go_to_app_settings_and_enable_notification_posting_for_screenshot_listening_to_work
+                        )
+                    )
+                }
+            }
     }
 }
 

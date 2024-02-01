@@ -16,10 +16,10 @@ abstract class AbstractCropSavingDialogFragment : RoundedDialogFragment() {
     protected fun AlertDialog.Builder.setDeleteCorrespondingScreenshotsOption(text: String) {
         setMultiChoiceItems(
             arrayOf(text),
-            booleanArrayOf(viewModel.repository.deleteScreenshots.value)
+            booleanArrayOf(viewModel.preferencesRepository.deleteScreenshots.value)
         ) { _, _, _ ->
-            viewModel.repository.deleteScreenshots.value =
-                !viewModel.repository.deleteScreenshots.value
+            viewModel.preferencesRepository.deleteScreenshots.value =
+                !viewModel.preferencesRepository.deleteScreenshots.value
         }
     }
 }

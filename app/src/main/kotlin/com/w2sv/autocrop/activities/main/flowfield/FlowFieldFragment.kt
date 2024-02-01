@@ -4,9 +4,11 @@ package com.w2sv.autocrop.activities.main.flowfield
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
@@ -18,6 +20,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -48,6 +51,7 @@ import com.w2sv.autocrop.utils.cropSaveDirPathIdentifier
 import com.w2sv.autocrop.utils.extensions.resolution
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
+import com.w2sv.common.Constants
 import com.w2sv.common.PermissionHandler
 import com.w2sv.common.datastore.UriRepository
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
@@ -55,7 +59,9 @@ import com.w2sv.flowfield.Sketch
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import processing.android.PFragment
 import javax.inject.Inject
 
@@ -63,16 +69,10 @@ import javax.inject.Inject
 class FlowFieldFragment :
     AppFragment<FlowfieldBinding>(FlowfieldBinding::class.java) {
 
-    companion object {
-        fun getInstance(accumulatedIoResults: AccumulatedIOResults?): FlowFieldFragment =
-            getFragment(FlowFieldFragment::class.java, AccumulatedIOResults.EXTRA to accumulatedIoResults)
-    }
-
     @HiltViewModel
     class ViewModel @Inject constructor(
-        @ApplicationContext context: Context,
         savedStateHandle: SavedStateHandle,
-        val uriRepository: UriRepository,
+        private val uriRepository: UriRepository,
     ) : androidx.lifecycle.ViewModel() {
 
         val accumulatedIoResults: AccumulatedIOResults? = savedStateHandle[AccumulatedIOResults.EXTRA]
@@ -95,24 +95,30 @@ class FlowFieldFragment :
          * Misc LiveData
          */
 
-        val hideForegroundElementsLive: LiveData<Boolean> by lazy {
-            MutableLiveData(false)
+        val hideForegroundElementsLive: LiveData<Boolean> = MutableLiveData(false)
+
+        val cropSaveDirIdentifierLive =
+            uriRepository.documentUri.map { cropSaveDirPathIdentifier(it) }.asLiveData(Dispatchers.Main)
+        val screenshotListenerCancelledFromNotificationLive: LiveData<Boolean> = MutableLiveData(false)
+
+        fun setCropSaveDirTreeUri(treeUri: Uri, contentResolver: ContentResolver) {
+            viewModelScope.launch { uriRepository.saveTreeUri(treeUri) }
+            contentResolver
+                .takePersistableUriPermission(
+                    treeUri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
         }
 
-        val cropSaveDirIdentifierLive: LiveData<String> by lazy {
-            MutableLiveData(cropSaveDirPathIdentifier(uriRepository.documentUri.value))
-        }
-        val screenshotListenerCancelledFromNotificationLive: LiveData<Boolean> by lazy {
-            MutableLiveData(false)
-        }
+        val cropSaveDirTreeUri = uriRepository.treeUriStateFlow
 
         /**
          * BackPressListener
          */
 
         val backPressHandler = BackPressHandler(
-            viewModelScope,
-            context.resources.getLong(R.integer.duration_backpress_confirmation_window)
+            coroutineScope = viewModelScope,
+            confirmationWindowDuration = Constants.confirmationWindowDuration
         )
     }
 
@@ -298,18 +304,16 @@ class FlowFieldFragment :
     val openDocumentTreeContractHandler by lazy {
         OpenDocumentTreeContractHandler(requireActivity()) {
             it?.let { treeUri ->
-                val text = if (viewModel.uriRepository.setNewUri(treeUri, requireContext().contentResolver)) {
-                    viewModel.cropSaveDirIdentifierLive.postValue(cropSaveDirPathIdentifier(viewModel.uriRepository.documentUri.value))
-                    SpannableStringBuilder()
+                viewModel.setCropSaveDirTreeUri(treeUri, requireContext().contentResolver)
+                // TODO: show toast in reactive manner on viewModel.cropSaveDirIdentifierLive change
+                requireContext().showToast(
+                    text = SpannableStringBuilder()
                         .append(getString(R.string.crops_will_be_saved_to))
                         .color(requireContext().getColor(R.color.success)) {
                             append(viewModel.cropSaveDirIdentifierLive.value!!)
-                        }
-                }
-                else
-                    getString(R.string.directory_didn_t_change)
-
-                requireContext().showToast(text, Toast.LENGTH_LONG)
+                        },
+                    duration = Toast.LENGTH_LONG
+                )
             }
         }
     }
@@ -328,5 +332,10 @@ class FlowFieldFragment :
                     }
                 )
         }
+    }
+
+    companion object {
+        fun getInstance(accumulatedIoResults: AccumulatedIOResults?): FlowFieldFragment =
+            getFragment(FlowFieldFragment::class.java, AccumulatedIOResults.EXTRA to accumulatedIoResults)
     }
 }
