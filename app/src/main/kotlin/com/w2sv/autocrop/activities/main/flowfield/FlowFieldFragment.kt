@@ -1,5 +1,3 @@
-@file: Suppress("DEPRECATION")
-
 package com.w2sv.autocrop.activities.main.flowfield
 
 import android.Manifest
@@ -7,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -23,14 +20,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.daimajia.androidanimations.library.Techniques
+import com.w2sv.androidutils.coroutines.collectFromFlow
 import com.w2sv.androidutils.eventhandling.BackPressHandler
 import com.w2sv.androidutils.generic.uris
-import com.w2sv.androidutils.lifecycle.SelfManagingLocalBroadcastReceiver
 import com.w2sv.androidutils.lifecycle.addObservers
-import com.w2sv.androidutils.lifecycle.postValue
 import com.w2sv.androidutils.notifying.showToast
+import com.w2sv.androidutils.services.isServiceRunning
 import com.w2sv.androidutils.ui.resources.getLong
 import com.w2sv.androidutils.ui.views.hide
 import com.w2sv.androidutils.ui.views.show
@@ -53,12 +49,13 @@ import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.common.Constants
 import com.w2sv.common.PermissionHandler
-import com.w2sv.common.datastore.UriRepository
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
+import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.flowfield.Sketch
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -72,7 +69,9 @@ class FlowFieldFragment :
     @HiltViewModel
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
-        private val uriRepository: UriRepository,
+        private val preferencesRepository: PreferencesRepository,
+        cancelledSSLFromNotification: ScreenshotListener.CancelledFromNotification,
+        @ApplicationContext context: Context
     ) : androidx.lifecycle.ViewModel() {
 
         val accumulatedIoResults: AccumulatedIOResults? = savedStateHandle[AccumulatedIOResults.EXTRA]
@@ -97,12 +96,25 @@ class FlowFieldFragment :
 
         val hideForegroundElementsLive: LiveData<Boolean> = MutableLiveData(false)
 
-        val cropSaveDirIdentifierLive =
-            uriRepository.documentUri.map { cropSaveDirPathIdentifier(it) }.asLiveData(Dispatchers.Main)
-        val screenshotListenerCancelledFromNotificationLive: LiveData<Boolean> = MutableLiveData(false)
+        val cropSaveDirIdentifierLive = preferencesRepository.cropSaveDirDocumentUri
+            .map { cropSaveDirPathIdentifier(it, context) }
+            .asLiveData(Dispatchers.Main)
+
+        val screenshotListenerRunning: LiveData<Boolean> get() = _screenshotListenerRunning
+        private val _screenshotListenerRunning = MutableLiveData(context.isServiceRunning<ScreenshotListener>())
+
+        fun setScreenshotListenerRunning(value: Boolean) {
+            _screenshotListenerRunning.postValue(value)
+        }
+
+        init {
+            viewModelScope.collectFromFlow(cancelledSSLFromNotification.sharedFlow) {
+                setScreenshotListenerRunning(false)
+            }
+        }
 
         fun setCropSaveDirTreeUri(treeUri: Uri, contentResolver: ContentResolver) {
-            viewModelScope.launch { uriRepository.saveTreeUri(treeUri) }
+            viewModelScope.launch { preferencesRepository.saveCropSaveDirTreeUri(treeUri) }
             contentResolver
                 .takePersistableUriPermission(
                     treeUri,
@@ -110,7 +122,7 @@ class FlowFieldFragment :
                 )
         }
 
-        val cropSaveDirTreeUri = uriRepository.treeUriStateFlow
+        val cropSaveDirTreeUri = preferencesRepository.cropSaveDirTreeUri
 
         /**
          * BackPressListener
@@ -118,33 +130,17 @@ class FlowFieldFragment :
 
         val backPressHandler = BackPressHandler(
             coroutineScope = viewModelScope,
-            confirmationWindowDuration = Constants.confirmationWindowDuration
+            confirmationWindowDuration = Constants.CONFIRMATION_WINDOW_DURATION
         )
     }
 
-    class CancelledSSLFromNotificationListener(
-        broadcastManager: LocalBroadcastManager,
-        callback: (Context?, Intent?) -> Unit
-    ) : SelfManagingLocalBroadcastReceiver.Impl(
-        broadcastManager,
-        IntentFilter(ScreenshotListener.OnCancelledFromNotificationListener.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS),
-        callback
-    )
-
     private val viewModel by viewModels<ViewModel>()
-
-    private val cancelledSSLFromNotificationListener: CancelledSSLFromNotificationListener by lazy {
-        CancelledSSLFromNotificationListener(LocalBroadcastManager.getInstance(requireContext())) { _, _ ->
-            viewModel.screenshotListenerCancelledFromNotificationLive.postValue(true)
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         addObservers(
             listOf(
-                cancelledSSLFromNotificationListener,
                 selectImagesContractHandler,
                 openDocumentTreeContractHandler,
                 writeExternalStoragePermissionHandler

@@ -58,11 +58,11 @@ import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.requireCastActivity
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.common.Constants
-import com.w2sv.common.datastore.PreferencesRepository
 import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
 import com.w2sv.cropbundle.cropping.crop
+import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -86,6 +86,12 @@ class CropPagerFragment :
         savedStateHandle: SavedStateHandle,
         private val preferencesRepository: PreferencesRepository,
     ) : androidx.lifecycle.ViewModel() {
+
+        val deleteScreenshots = preferencesRepository.deleteScreenshots.stateIn(viewModelScope, SharingStarted.Eagerly)
+
+        fun saveDeleteScreenshots(value: Boolean) {
+            viewModelScope.launch { preferencesRepository.deleteScreenshots.save(value) }
+        }
 
         val dataSet = CropPager.DataSet(ExaminationActivity.ViewModel.cropBundles)
 
@@ -185,7 +191,7 @@ class CropPagerFragment :
 
         val backPressHandler = BackPressHandler(
             coroutineScope = viewModelScope,
-            confirmationWindowDuration = Constants.confirmationWindowDuration
+            confirmationWindowDuration = Constants.CONFIRMATION_WINDOW_DURATION
         )
 
         var lastCropProcedureToast: Toast? = null

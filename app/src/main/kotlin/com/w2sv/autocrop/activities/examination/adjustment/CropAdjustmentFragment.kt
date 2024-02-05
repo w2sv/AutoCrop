@@ -26,20 +26,18 @@ import com.w2sv.autocrop.activities.examination.adjustment.extensions.asMappedFr
 import com.w2sv.autocrop.activities.examination.adjustment.extensions.asRectF
 import com.w2sv.autocrop.activities.examination.adjustment.extensions.getRectF
 import com.w2sv.autocrop.activities.examination.adjustment.extensions.maintainedPercentage
-import com.w2sv.autocrop.activities.examination.adjustment.model.CropAdjustmentMode
 import com.w2sv.autocrop.activities.examination.adjustment.model.EdgeSelectionState
 import com.w2sv.autocrop.activities.examination.adjustment.model.Line
-import com.w2sv.autocrop.activities.examination.adjustment.model.N_SCREEN_ORIENTATIONS
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.utils.getFragment
-import com.w2sv.common.datastore.PreferencesRepository
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
-import com.w2sv.kotlinutils.extensions.getByOrdinal
+import com.w2sv.domain.model.CropAdjustmentMode
+import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.kotlinutils.extensions.rounded
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.min
@@ -95,7 +93,7 @@ class CropAdjustmentFragment
         }
 
         val edgeCandidateLinesViewDomainCache = lruCache<Matrix, List<Line>>(
-            N_SCREEN_ORIENTATIONS,
+            maxSize = N_SCREEN_ORIENTATIONS,
             create = { matrix ->
                 FloatArray(edgeCandidatePoints.size)
                     .asMappedFrom(edgeCandidatePoints, matrix)
@@ -114,15 +112,10 @@ class CropAdjustmentFragment
          * CropAdjustmentMode
          */
 
-        val modeLive: MutableStateFlow<CropAdjustmentMode> by lazy {
-            MutableStateFlow(getByOrdinal<CropAdjustmentMode>(preferencesRepository.cropAdjustmentModeOrdinal.value))
-                .apply {
-                    viewModelScope.launch {
-                        collect {
-                            preferencesRepository.cropAdjustmentModeOrdinal.value = it.ordinal
-                        }
-                    }
-                }
+        val adjustmentMode = preferencesRepository.cropAdjustmentMode.stateIn(viewModelScope, SharingStarted.Eagerly)
+
+        fun saveAdjustmentMode(value: CropAdjustmentMode) {
+            viewModelScope.launch { preferencesRepository.cropAdjustmentMode.save(value) }
         }
 
         /**
@@ -154,7 +147,7 @@ class CropAdjustmentFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.modeSwitch.isChecked = when (viewModel.modeLive.value) {
+        binding.modeSwitch.isChecked = when (viewModel.adjustmentMode.value) {
             CropAdjustmentMode.Manual -> false
             CropAdjustmentMode.EdgeSelection -> true
         }
@@ -172,7 +165,7 @@ class CropAdjustmentFragment
             binding.applyButton.isEnabled = it
         }
         lifecycleScope.launch {
-            modeLive.collect {
+            adjustmentMode.collect {
                 binding.cropAdjustmentView.setModeConfig(it)
                 binding.modeLabelTv.text = getString(it.labelRes)
                 binding.resetButton.visibility = when (it) {
@@ -206,11 +199,12 @@ class CropAdjustmentFragment
             cropAdjustmentView.reset()
         }
         modeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.modeLive.value =
+            viewModel.saveAdjustmentMode(
                 if (isChecked)
                     CropAdjustmentMode.EdgeSelection
                 else
                     CropAdjustmentMode.Manual
+            )
         }
 
         cancelButton.setOnClickListener {
@@ -233,3 +227,5 @@ private fun formattedUnitText(
             append(label)
         }
         .append(" ${value ?: "-"}")
+
+private const val N_SCREEN_ORIENTATIONS: Int = 2

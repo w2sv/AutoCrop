@@ -2,12 +2,14 @@ package com.w2sv.autocrop.activities.examination.comparison
 
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.ui.resources.getColoredDrawable
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.views.RoundedDialogFragment
-import com.w2sv.common.datastore.PreferencesRepository
+import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -17,7 +19,7 @@ internal class ComparisonScreenInstructionDialogFragment : RoundedDialogFragment
     class ViewModel @Inject constructor(val preferencesRepository: PreferencesRepository) : androidx.lifecycle.ViewModel() {
 
         fun onDismissDialog() {
-            preferencesRepository.comparisonInstructionsShown.value = true
+            viewModelScope.launch { preferencesRepository.comparisonInstructionsShown.save(true) }
         }
     }
 

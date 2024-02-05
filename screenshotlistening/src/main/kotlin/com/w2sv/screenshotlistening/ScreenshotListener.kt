@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.w2sv.screenshotlistening
 
 import android.Manifest
@@ -18,13 +16,8 @@ import android.os.Looper
 import android.provider.MediaStore
 import androidx.activity.ComponentActivity
 import androidx.core.app.NotificationCompat
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.common.collect.EvictingQueue
 import com.w2sv.common.PermissionHandler
-import com.w2sv.common.datastore.PreferencesRepository
-import com.w2sv.cropbundle.Screenshot
-import com.w2sv.cropbundle.cropping.crop
-import com.w2sv.cropbundle.cropping.cropped
 import com.w2sv.cropbundle.io.CROP_FILE_ADDENDUM
 import com.w2sv.cropbundle.io.IMAGE_DELETION_REQUIRING_APPROVAL
 import com.w2sv.cropbundle.io.extensions.compressToAndCloseStream
@@ -32,15 +25,20 @@ import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.cropbundle.io.extensions.queryMediaStoreData
 import com.w2sv.cropbundle.io.getImageDeleteRequestUri
 import com.w2sv.cropbundle.io.utils.systemScreenshotsDirectory
+import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.kotlinutils.dateFromUnixTimestamp
 import com.w2sv.kotlinutils.extensions.getNextTriple
 import com.w2sv.kotlinutils.timeDelta
-import com.w2sv.screenshotlistening.ScreenshotListener.OnCancelledFromNotificationListener.Companion.ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS
 import com.w2sv.screenshotlistening.notifications.AppNotificationChannel
 import com.w2sv.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.screenshotlistening.notifications.setChannelAndGetNotificationBuilder
 import com.w2sv.screenshotlistening.services.abstrct.BoundService
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import slimber.log.i
 import java.io.File
 import java.io.FileNotFoundException
@@ -48,6 +46,7 @@ import java.io.FileOutputStream
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Singleton
 
 @AndroidEntryPoint
 class ScreenshotListener : BoundService(),
@@ -56,18 +55,33 @@ class ScreenshotListener : BoundService(),
     @Inject
     lateinit var preferencesRepository: PreferencesRepository
 
+    @Singleton
+    class CancelledFromNotification @Inject constructor() {
+        private val scope = CoroutineScope(Dispatchers.Main)
+
+        val sharedFlow get() = mutableSharedFlow.asSharedFlow()
+        private val mutableSharedFlow = MutableSharedFlow<Unit>()
+
+        internal fun emit() {
+            scope.launch { mutableSharedFlow.emit(Unit) }
+        }
+    }
+
     class CleanupService : PendingIntentAssociatedResourcesCleanupService<ScreenshotListener>(ScreenshotListener::class.java)
 
-    /**
-     * Triggered by ScreenshotListener notification "Stop"-action and responsible for calling [stopService] &
-     * triggering BroadcastReceivers subscribed to [ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS]
-     */
+    @AndroidEntryPoint
     class OnCancelledFromNotificationListener : BroadcastReceiver() {
 
-        companion object {
-            const val ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS =
-                "com.w2sv.autocrop.action.NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS"
+        @Inject
+        lateinit var cancelledFromNotification: CancelledFromNotification
 
+        override fun onReceive(context: Context?, intent: Intent?) {
+            stopService(context!!)
+
+            cancelledFromNotification.emit()
+        }
+
+        companion object {
             private const val PENDING_INTENT_REQUEST_CODE = 1447
 
             fun getPendingIntent(context: Context): PendingIntent =
@@ -76,15 +90,6 @@ class ScreenshotListener : BoundService(),
                     PENDING_INTENT_REQUEST_CODE,
                     Intent(context, OnCancelledFromNotificationListener::class.java),
                     PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
-                )
-        }
-
-        override fun onReceive(context: Context?, intent: Intent?) {
-            stopService(context!!)
-
-            LocalBroadcastManager.getInstance(context)
-                .sendBroadcast(
-                    Intent(ACTION_NOTIFY_ON_SCREENSHOT_LISTENER_CANCELLED_LISTENERS)
                 )
         }
     }
@@ -158,30 +163,30 @@ class ScreenshotListener : BoundService(),
     private fun onNewScreenshotUri(uri: Uri): Boolean =
         try {
             val screenshotBitmap = contentResolver.loadBitmap(uri)!!
-            screenshotBitmap.crop(preferencesRepository.edgeCandidateThreshold)?.let { cropResult ->
-                val screenshotMediaStoreData = Screenshot.MediaStoreData.query(contentResolver, uri)
-                val cropBitmap = screenshotBitmap.cropped(cropResult.edges)
-                val temporaryCropFilePath = saveCropToTempFile(cropBitmap, screenshotMediaStoreData.id)
-
-                showCroppableScreenshotDetectedNotification(
-                    cropBitmap,
-                    screenshotMediaStoreData.id
-                ) { clazz, isSaveIntent, notificationId, actionRequestCodes, putCancelNotificationExtra ->
-                    Intent(this, clazz)
-                        .putExtra(EXTRA_TEMPORARY_CROP_FILE_PATH, temporaryCropFilePath)
-                        .putCleanupExtras(
-                            notificationId,
-                            actionRequestCodes,
-                            putCancelNotificationExtra
-                        )
-                        .apply {
-                            if (isSaveIntent) {
-                                data = uri
-                                putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
-                            }
-                        }
-                }
-            }
+            //            screenshotBitmap.crop(preferencesRepository.edgeCandidateThreshold)?.let { cropResult ->
+            //                val screenshotMediaStoreData = Screenshot.MediaStoreData.query(contentResolver, uri)
+            //                val cropBitmap = screenshotBitmap.cropped(cropResult.edges)
+            //                val temporaryCropFilePath = saveCropToTempFile(cropBitmap, screenshotMediaStoreData.id)
+            //
+            //                showCroppableScreenshotDetectedNotification(
+            //                    cropBitmap,
+            //                    screenshotMediaStoreData.id
+            //                ) { clazz, isSaveIntent, notificationId, actionRequestCodes, putCancelNotificationExtra ->
+            //                    Intent(this, clazz)
+            //                        .putExtra(EXTRA_TEMPORARY_CROP_FILE_PATH, temporaryCropFilePath)
+            //                        .putCleanupExtras(
+            //                            notificationId,
+            //                            actionRequestCodes,
+            //                            putCancelNotificationExtra
+            //                        )
+            //                        .apply {
+            //                            if (isSaveIntent) {
+            //                                data = uri
+            //                                putExtra(EXTRA_SCREENSHOT_MEDIASTORE_DATA, screenshotMediaStoreData)
+            //                            }
+            //                        }
+            //                }
+            //            }
             true
         }
         catch (ex: Exception) {

@@ -28,8 +28,8 @@ import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.autocrop.utils.requireCastActivity
 import com.w2sv.common.Constants
-import com.w2sv.common.datastore.PreferencesRepository
 import com.w2sv.cropbundle.CropBundle
+import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +52,7 @@ class CropFragment
 
         val backPressListener = BackPressHandler(
             coroutineScope = viewModelScope,
-            confirmationWindowDuration = Constants.confirmationWindowDuration
+            confirmationWindowDuration = Constants.CONFIRMATION_WINDOW_DURATION
         )
 
         private val screenshotUris: List<Uri> = savedStateHandle[MainActivity.EXTRA_SELECTED_IMAGE_URIS]!!

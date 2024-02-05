@@ -33,7 +33,7 @@ import com.w2sv.autocrop.activities.examination.adjustment.extensions.maxRectOf
 import com.w2sv.autocrop.activities.examination.adjustment.extensions.minRectOf
 import com.w2sv.autocrop.activities.examination.adjustment.extensions.setVerticalEdges
 import com.w2sv.autocrop.activities.examination.adjustment.model.AnimatableRectF
-import com.w2sv.autocrop.activities.examination.adjustment.model.CropAdjustmentMode
+import com.w2sv.domain.model.CropAdjustmentMode
 import com.w2sv.autocrop.activities.examination.adjustment.model.DraggingState
 import com.w2sv.autocrop.activities.examination.adjustment.model.Edge
 import com.w2sv.autocrop.activities.examination.adjustment.model.Edge.BOTTOM

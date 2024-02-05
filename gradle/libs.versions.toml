@@ -34,7 +34,6 @@ androidx-lifecycle-livedata-core-ktx = { module = 'androidx.lifecycle:lifecycle-
 androidx-fragment = 'androidx.fragment:fragment-ktx:1.6.2'
 androidx-activity = 'androidx.activity:activity-ktx:1.8.2'
 androidx-splashscreen = 'androidx.core:core-splashscreen:1.0.1'
-androidx-localbroadcastmanager = 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
 androidx-datastore-preferences = 'androidx.datastore:datastore-preferences:1.0.0'
 
 # google
@@ -48,6 +47,7 @@ slimber = 'com.github.PaulWoitaschek:Slimber:2.0.0'
 snacky = 'com.github.matecode:Snacky:1.1.6'
 animatoo = 'com.github.mohammadatif:Animatoo:1.0.1'
 lottie = 'com.airbnb.android:lottie:6.0.0'
+simplestorage = "com.anggrayudi:storage:1.5.5"
 
 # Plugins
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }

@@ -21,7 +21,7 @@ import kotlin.math.roundToInt
 @Parcelize
 data class CropBundle(
     val screenshot: Screenshot,
-    var crop: Crop,
+    var crop: Crop,  // TODO
     var edgeCandidates: List<Int>,
     var adjustedEdgeThreshold: Int? = null
 ) : Parcelable {

@@ -13,10 +13,8 @@ import com.google.android.material.navigation.NavigationView
 import com.w2sv.androidutils.generic.appPlayStoreUrl
 import com.w2sv.androidutils.generic.openUrlWithActivityNotFoundHandling
 import com.w2sv.androidutils.generic.requireActivity
-import com.w2sv.androidutils.lifecycle.toggle
 import com.w2sv.androidutils.notifying.showToast
 import com.w2sv.androidutils.permissions.permissionhandler.requestPermissions
-import com.w2sv.androidutils.services.isServiceRunning
 import com.w2sv.androidutils.ui.dialogs.show
 import com.w2sv.androidutils.ui.views.configureItem
 import com.w2sv.androidutils.ui.views.viewModel
@@ -36,6 +34,10 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         findFragment<FlowFieldFragment>()
     }
 
+    private val lifecycleOwner by lazy {
+        findViewTreeLifecycleOwner()!!
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
@@ -50,36 +52,34 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         menu.configureItem(R.id.main_menu_item_listen_to_screen_captures) {
             it.actionView = Switch(context)
                 .apply {
-                    isChecked = context.isServiceRunning<ScreenshotListener>()
+                    viewModel.screenshotListenerRunning.observe(lifecycleOwner) { isRunning ->
+                        isChecked = isRunning
+                    }
                     setOnCheckedChangeListener { _, value ->
-                        when {
-                            viewModel.screenshotListenerCancelledFromNotificationLive.value == true -> viewModel.screenshotListenerCancelledFromNotificationLive.toggle()
-
-                            value -> flowFieldFragment
+                        when (value) {
+                            true -> flowFieldFragment
                                 .screenshotListeningPermissionHandlers
                                 .requestPermissions(
                                     onGranted = {
                                         ScreenshotListener.startService(context)
+                                        viewModel.setScreenshotListenerRunning(true)
                                     },
                                     onDenied = {
-                                        isChecked = false
+                                        viewModel.setScreenshotListenerRunning(false)
                                     }
                                 )
 
-                            else -> ScreenshotListener.stopService(context)
-                        }
-                    }
-
-                    viewModel.screenshotListenerCancelledFromNotificationLive.observe(this@FlowFieldNavigationView.findViewTreeLifecycleOwner()!!) { isCancelled ->
-                        if (isCancelled) {
-                            isChecked = false
+                            false -> {
+                                ScreenshotListener.stopService(context)
+                                viewModel.setScreenshotListenerRunning(false)
+                            }
                         }
                     }
                 }
         }
 
     private fun setCurrentCropDirIdentifier() {
-        viewModel.cropSaveDirIdentifierLive.observe(findViewTreeLifecycleOwner()!!) { cropSaveDirIdentifier ->
+        viewModel.cropSaveDirIdentifierLive.observe(lifecycleOwner) { cropSaveDirIdentifier ->
             menu.configureItem(R.id.main_menu_item_current_crop_dir) { item ->
                 item.title = cropSaveDirIdentifier
             }
@@ -102,7 +102,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
 
                 R.id.main_menu_item_about -> {
                     (context.requireActivity() as ViewBoundFragmentActivity).fragmentReplacementTransaction(
-                        AboutFragment(),
+                        fragment = AboutFragment(),
                         animated = true
                     )
                         .addToBackStack(null)

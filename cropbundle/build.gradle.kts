@@ -6,7 +6,7 @@ plugins {
 
 dependencies {
     implementation(projects.opencv)
-    implementation(projects.common)
+    implementation(projects.domain)
 
     implementation (libs.androidx.core)
     implementation (libs.kotlinutils)

@@ -32,8 +32,8 @@ import com.w2sv.autocrop.activities.examination.comparison.model.ImageType
 import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
-import com.w2sv.common.datastore.PreferencesRepository
 import com.w2sv.cropbundle.CropBundle
+import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted

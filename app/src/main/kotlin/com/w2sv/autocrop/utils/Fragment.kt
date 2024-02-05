@@ -14,4 +14,5 @@ fun <F : Fragment> getFragment(clazz: Class<F>, vararg bundlePairs: Pair<String,
 fun <A : Activity> Fragment.requireCastActivity(): A =
     requireActivity() as A
 
-val Fragment.tagName: String get() = this::class.java.simpleName
+val Fragment.tagName: String
+    get() = this::class.java.simpleName

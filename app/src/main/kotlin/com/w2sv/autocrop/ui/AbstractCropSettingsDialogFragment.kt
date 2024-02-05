@@ -6,13 +6,16 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.android.material.slider.Slider
+import com.w2sv.androidutils.datastorage.datastore.preferences.PersistedValue
 import com.w2sv.androidutils.lifecycle.postValue
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.model.CROP_SENSITIVITY_MAX
 import com.w2sv.autocrop.ui.model.cropSensitivity
 import com.w2sv.autocrop.ui.model.edgeCandidateThreshold
 import com.w2sv.autocrop.ui.views.RoundedDialogFragment
+import kotlinx.coroutines.flow.SharingStarted
 
 abstract class AbstractCropSettingsDialogFragment(
     @StringRes private val title: Int,
@@ -20,9 +23,11 @@ abstract class AbstractCropSettingsDialogFragment(
     @StringRes private val positiveButtonText: Int
 ) : RoundedDialogFragment() {
 
-    abstract class ViewModel(initialEdgeCandidateThreshold: Int) : androidx.lifecycle.ViewModel() {
+    abstract class ViewModel(initialEdgeCandidateThresholdPersisted: PersistedValue.UniTyped<Int>) : androidx.lifecycle.ViewModel() {
+        private val initialEdgeCandidateThreshold = initialEdgeCandidateThresholdPersisted.stateIn(viewModelScope, SharingStarted.Eagerly)
+
         @IntRange(from = 0, to = 20)
-        private val initialCropSensitivity: Int = cropSensitivity(initialEdgeCandidateThreshold)
+        private val initialCropSensitivity: Int = cropSensitivity(initialEdgeCandidateThreshold.value)
 
         val cropSensitivityLive: LiveData<Int> by lazy {
             MutableLiveData(initialCropSensitivity)

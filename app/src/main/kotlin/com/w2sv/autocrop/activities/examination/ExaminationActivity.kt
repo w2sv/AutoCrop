@@ -17,11 +17,11 @@ import com.w2sv.autocrop.activities.examination.pager.CropPagerFragment
 import com.w2sv.autocrop.activities.examination.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.domain.AccumulatedIOResults
-import com.w2sv.common.datastore.PreferencesRepository
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.io.CropBundleIOProcessingUseCase
 import com.w2sv.cropbundle.io.CropBundleIOResult
 import com.w2sv.cropbundle.io.ScreenshotDeletionResult
+import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

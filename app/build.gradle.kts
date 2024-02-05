@@ -114,6 +114,8 @@ play {
 dependencies {
     // Modules
     implementation(projects.cropbundle)
+    implementation(projects.domain)
+    implementation(projects.datastore)
     implementation(projects.screenshotlistening)
     implementation(projects.common)
     implementation(projects.flowfield)
@@ -141,6 +143,7 @@ dependencies {
     implementation(libs.slimber)
     implementation(libs.animatoo)
     implementation(libs.lottie)
+    implementation(libs.simplestorage)
 
     //    // ---------------
     //    // unitTest

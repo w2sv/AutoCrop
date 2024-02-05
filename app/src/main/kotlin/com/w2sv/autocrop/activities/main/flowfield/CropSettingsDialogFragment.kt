@@ -1,13 +1,15 @@
 package com.w2sv.autocrop.activities.main.flowfield
 
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.lifecycle.postValue
 import com.w2sv.androidutils.notifying.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.AbstractCropSettingsDialogFragment
-import com.w2sv.common.datastore.PreferencesRepository
+import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -19,10 +21,10 @@ class CropSettingsDialogFragment : AbstractCropSettingsDialogFragment(
 
     @HiltViewModel
     class ViewModel @Inject constructor(private val preferencesRepository: PreferencesRepository) : AbstractCropSettingsDialogFragment.ViewModel(
-        preferencesRepository.edgeCandidateThreshold.value
+        preferencesRepository.edgeCandidateThreshold
     ) {
         fun syncCropSettings() {
-            preferencesRepository.edgeCandidateThreshold.value = edgeCandidateThreshold
+            viewModelScope.launch { preferencesRepository.edgeCandidateThreshold.save(edgeCandidateThreshold) }
             settingsDissimilarLive.postValue(false)
         }
     }

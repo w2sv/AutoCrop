@@ -2,12 +2,12 @@ package com.w2sv.cropbundle.io
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.w2sv.common.datastore.UriRepository
 import com.w2sv.cropbundle.Screenshot
+import com.w2sv.domain.repository.PreferencesRepository
 import javax.inject.Inject
 
 class CropBundleIOProcessingUseCase @Inject constructor(
-    private val uriRepository: UriRepository
+    private val preferencesRepository: PreferencesRepository
 ) {
     fun invoke(
         cropBitmap: Bitmap,
@@ -23,7 +23,7 @@ class CropBundleIOProcessingUseCase @Inject constructor(
                     fileName = screenshotMediaStoreData.fileName,
                     mimeType = screenshotMediaStoreData.mimeType
                 ),
-                parentDocumentUri = uriRepository.getWritableDocumentUriOrNull(context)
+                parentDocumentUri = preferencesRepository.getWritableCropSaveDirDocumentUriOrNull(context)
             ),
             screenshotDeletionResult = if (deleteScreenshot) {
                 ScreenshotDeletionResult.get(
