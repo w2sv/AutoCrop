@@ -15,7 +15,7 @@ sealed interface ScreenshotDeletionResult {
             when (IMAGE_DELETION_REQUIRING_APPROVAL) {
                 true ->
                     DeletionApprovalRequired(
-                        getImageDeleteRequestUri(mediaStoreId)
+                        getImageContentUri(mediaStoreId)
                     )
 
                 false -> when (contentResolver.deleteImage(mediaStoreId)) {

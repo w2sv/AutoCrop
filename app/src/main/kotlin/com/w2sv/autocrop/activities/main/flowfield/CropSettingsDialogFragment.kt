@@ -2,6 +2,7 @@ package com.w2sv.autocrop.activities.main.flowfield
 
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
+import com.w2sv.androidutils.coroutines.getValueSynchronously
 import com.w2sv.androidutils.lifecycle.postValue
 import com.w2sv.androidutils.notifying.showToast
 import com.w2sv.autocrop.R
@@ -14,25 +15,24 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class CropSettingsDialogFragment : AbstractCropSettingsDialogFragment(
-    R.string.crop_settings,
-    R.drawable.ic_settings_24,
-    R.string.apply
+    title = R.string.crop_settings,
+    icon = R.drawable.ic_settings_24,
+    positiveButtonText = R.string.apply
 ) {
-
-    @HiltViewModel
-    class ViewModel @Inject constructor(private val preferencesRepository: PreferencesRepository) : AbstractCropSettingsDialogFragment.ViewModel(
-        preferencesRepository.edgeCandidateThreshold
-    ) {
-        fun syncCropSettings() {
-            viewModelScope.launch { preferencesRepository.edgeCandidateThreshold.save(edgeCandidateThreshold) }
-            settingsDissimilarLive.postValue(false)
-        }
-    }
-
     override val viewModel by viewModels<ViewModel>()
 
     override fun onPositiveButtonClicked() {
         viewModel.syncCropSettings()
-        requireContext().showToast("Updated Crop Settings")
+        requireContext().showToast(R.string.updated_crop_settings)
+    }
+
+    @HiltViewModel
+    class ViewModel @Inject constructor(private val preferencesRepository: PreferencesRepository) : AbstractCropSettingsDialogFragment.ViewModel(
+        preferencesRepository.edgeCandidateThreshold.getValueSynchronously()
+    ) {
+        fun syncCropSettings() {
+            viewModelScope.launch { preferencesRepository.edgeCandidateThreshold.save(edgeCandidateThreshold) }
+            settingsDissimilar.postValue(false)
+        }
     }
 }

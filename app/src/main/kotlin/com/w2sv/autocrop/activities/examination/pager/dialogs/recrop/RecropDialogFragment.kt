@@ -12,10 +12,29 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecropDialogFragment : AbstractCropSettingsDialogFragment(
-    R.string.recrop_with_adjusted_settings,
-    R.drawable.ic_autorenew_24,
-    R.string.recrop
+    title = R.string.recrop_with_adjusted_settings,
+    icon = R.drawable.ic_autorenew_24,
+    positiveButtonText = R.string.recrop
 ) {
+    override val viewModel by viewModels<ViewModel>()
+
+    override fun onPositiveButtonClicked() {
+        (requireParentFragment() as Listener).onRecrop(
+            cropBundlePosition = viewModel.cropBundlePosition,
+            threshold = viewModel.edgeCandidateThreshold.toDouble()
+        )
+    }
+
+    @HiltViewModel
+    class ViewModel @Inject constructor(savedStateHandle: SavedStateHandle) : AbstractCropSettingsDialogFragment.ViewModel(
+        initialEdgeCandidateThreshold = savedStateHandle[EXTRA_INITIAL_THRESHOLD]!!
+    ) {
+        val cropBundlePosition: Int = savedStateHandle[CropBundle.EXTRA_POSITION]!!
+    }
+
+    interface Listener {
+        fun onRecrop(cropBundlePosition: Int, threshold: Double)
+    }
 
     companion object {
         private const val EXTRA_INITIAL_THRESHOLD = "com.w2sv.autocrop.extra.INITIAL_THRESHOLD"
@@ -26,25 +45,5 @@ class RecropDialogFragment : AbstractCropSettingsDialogFragment(
                 CropBundle.EXTRA_POSITION to cropBundlePosition,
                 EXTRA_INITIAL_THRESHOLD to initialThreshold
             )
-    }
-
-    @HiltViewModel
-    class ViewModel @Inject constructor(savedStateHandle: SavedStateHandle) : AbstractCropSettingsDialogFragment.ViewModel(
-        savedStateHandle[EXTRA_INITIAL_THRESHOLD]!!
-    ) {
-        val cropBundlePosition: Int = savedStateHandle[CropBundle.EXTRA_POSITION]!!
-    }
-
-    override val viewModel by viewModels<ViewModel>()
-
-    override fun onPositiveButtonClicked() {
-        (requireParentFragment() as Listener).onRecrop(
-            viewModel.cropBundlePosition,
-            viewModel.edgeCandidateThreshold.toDouble()
-        )
-    }
-
-    interface Listener {
-        fun onRecrop(cropBundlePosition: Int, threshold: Double)
     }
 }

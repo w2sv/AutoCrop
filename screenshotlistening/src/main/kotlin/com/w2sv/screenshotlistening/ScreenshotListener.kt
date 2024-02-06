@@ -7,7 +7,6 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.database.ContentObserver
-import android.database.CursorIndexOutOfBoundsException
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
@@ -18,17 +17,11 @@ import androidx.activity.ComponentActivity
 import androidx.core.app.NotificationCompat
 import com.google.common.collect.EvictingQueue
 import com.w2sv.common.PermissionHandler
-import com.w2sv.cropbundle.io.CROP_FILE_ADDENDUM
 import com.w2sv.cropbundle.io.IMAGE_DELETION_REQUIRING_APPROVAL
 import com.w2sv.cropbundle.io.extensions.compressToAndCloseStream
 import com.w2sv.cropbundle.io.extensions.loadBitmap
-import com.w2sv.cropbundle.io.extensions.queryMediaStoreData
-import com.w2sv.cropbundle.io.getImageDeleteRequestUri
-import com.w2sv.cropbundle.io.utils.systemScreenshotsDirectory
+import com.w2sv.cropbundle.io.getImageContentUri
 import com.w2sv.domain.repository.PreferencesRepository
-import com.w2sv.kotlinutils.dateFromUnixTimestamp
-import com.w2sv.kotlinutils.extensions.getNextTriple
-import com.w2sv.kotlinutils.timeDelta
 import com.w2sv.screenshotlistening.notifications.AppNotificationChannel
 import com.w2sv.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.screenshotlistening.notifications.setChannelAndGetNotificationBuilder
@@ -43,8 +36,6 @@ import slimber.log.i
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.util.Date
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -257,7 +248,7 @@ class ScreenshotListener : BoundService(),
                                 isSaveIntent = true,
                                 cancelNotificationExtra = true
                             )
-                                .putExtra(EXTRA_DELETE_REQUEST_URI, getImageDeleteRequestUri(screenshotMediaStoreId)),
+                                .putExtra(EXTRA_DELETE_REQUEST_URI, getImageContentUri(screenshotMediaStoreId)),
                             REPLACE_CURRENT_PENDING_INTENT_FLAGS
                         )
                     else

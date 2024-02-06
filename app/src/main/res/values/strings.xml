@@ -81,4 +81,5 @@
     <string name="updated_crop">Updated Crop</string>
     <string name="discarded_crop">Discarded crop</string>
     <string name="saved_crop">Saved crop</string>
+    <string name="updated_crop_settings">Updated Crop Settings</string>
 </resources>

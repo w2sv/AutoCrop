@@ -6,16 +6,13 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.google.android.material.slider.Slider
-import com.w2sv.androidutils.datastorage.datastore.preferences.PersistedValue
 import com.w2sv.androidutils.lifecycle.postValue
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.model.CROP_SENSITIVITY_MAX
 import com.w2sv.autocrop.ui.model.cropSensitivity
 import com.w2sv.autocrop.ui.model.edgeCandidateThreshold
 import com.w2sv.autocrop.ui.views.RoundedDialogFragment
-import kotlinx.coroutines.flow.SharingStarted
 
 abstract class AbstractCropSettingsDialogFragment(
     @StringRes private val title: Int,
@@ -23,24 +20,22 @@ abstract class AbstractCropSettingsDialogFragment(
     @StringRes private val positiveButtonText: Int
 ) : RoundedDialogFragment() {
 
-    abstract class ViewModel(initialEdgeCandidateThresholdPersisted: PersistedValue.UniTyped<Int>) : androidx.lifecycle.ViewModel() {
-        private val initialEdgeCandidateThreshold = initialEdgeCandidateThresholdPersisted.stateIn(viewModelScope, SharingStarted.Eagerly)
+    abstract class ViewModel(initialEdgeCandidateThreshold: Int) : androidx.lifecycle.ViewModel() {
 
         @IntRange(from = 0, to = 20)
-        private val initialCropSensitivity: Int = cropSensitivity(initialEdgeCandidateThreshold.value)
+        private val initialCropSensitivity: Int = cropSensitivity(initialEdgeCandidateThreshold)
 
-        val cropSensitivityLive: LiveData<Int> by lazy {
+        val cropSensitivity: LiveData<Int> by lazy {
             MutableLiveData(initialCropSensitivity)
         }
 
-        val edgeCandidateThreshold: Int get() = edgeCandidateThreshold(cropSensitivityLive.value!!)
+        val edgeCandidateThreshold: Int
+            get() = edgeCandidateThreshold(cropSensitivity.value!!)
 
-        val settingsDissimilarLive: LiveData<Boolean> by lazy {
-            MutableLiveData(false)
-        }
+        val settingsDissimilar: LiveData<Boolean> = MutableLiveData(false)
 
         fun onSettingsInput() {
-            settingsDissimilarLive.postValue(cropSensitivityLive.value != initialCropSensitivity)
+            settingsDissimilar.postValue(cropSensitivity.value != initialCropSensitivity)
         }
     }
 
@@ -66,10 +61,10 @@ abstract class AbstractCropSettingsDialogFragment(
     }
 
     private fun ViewModel.setLiveDataObservers(dialog: AlertDialog) {
-        cropSensitivityLive.observe(requireParentFragment().viewLifecycleOwner) {
+        cropSensitivity.observe(requireParentFragment().viewLifecycleOwner) {
             onSettingsInput()
         }
-        settingsDissimilarLive.observe(requireParentFragment().viewLifecycleOwner) { settingsChanged ->
+        settingsDissimilar.observe(requireParentFragment().viewLifecycleOwner) { settingsChanged ->
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).apply {
                 isEnabled = settingsChanged
             }
@@ -80,11 +75,11 @@ abstract class AbstractCropSettingsDialogFragment(
         valueFrom = 0f
         valueTo = CROP_SENSITIVITY_MAX.toFloat()
         stepSize = 1f
-        value = viewModel.cropSensitivityLive.value!!.toFloat()
+        value = viewModel.cropSensitivity.value!!.toFloat()
 
         addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
-                viewModel.cropSensitivityLive.postValue(value.toInt())
+                viewModel.cropSensitivity.postValue(value.toInt())
             }
         }
     }
