@@ -6,12 +6,14 @@ import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
 import slimber.log.d
 
-internal fun getEdgeCandidates(matRGBA: Mat, threshold: Double): List<Int>? {
+internal fun getEdgeCandidates(matRGBA: Mat, @CropSensitivity sensitivity: Int): List<Int>? {
     val matGrayScale = Mat()
     Imgproc.cvtColor(matRGBA, matGrayScale, Imgproc.COLOR_RGBA2GRAY)
 
     val matCanny = Mat()
     Imgproc.Canny(matGrayScale, matCanny, 100.0, 200.0)
+
+    val threshold = edgeCandidateThreshold(sensitivity)
 
     return measured(methodLabel = "getCandidates") {
         (0 until matCanny.rows()).filter { i ->

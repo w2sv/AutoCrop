@@ -11,9 +11,9 @@ fun Bitmap.cropped(edges: CropEdges): Bitmap =
         edges.height - 1
     )
 
-fun Bitmap.crop(threshold: Double): CropResult? {
+fun Bitmap.crop(@CropSensitivity sensitivity: Int): CropResult? {
     val matRGBA = getMat()
-    return getEdgeCandidates(matRGBA, threshold)?.let {
+    return getEdgeCandidates(matRGBA, sensitivity)?.let {
         CropResult(
             edges = getMaxScoreCropEdges(candidates = it, matRGBA = matRGBA),
             candidates = it

@@ -14,26 +14,6 @@ data class AccumulatedIOResults(
     val nDeletedScreenshots: Int
 ) : Parcelable {
 
-    companion object {
-        const val EXTRA = "com.w2sv.autocrop.extra.IO_RESULTS"
-
-        fun get(ioResults: Iterable<CropBundleIOResult>): AccumulatedIOResults {
-            val cropUris = ArrayList<Uri>()
-            var nDeletedScreenshots = 0
-
-            ioResults.forEach {
-                it.cropFileUri?.let { uri ->
-                    cropUris.add(uri)
-                }
-                if (it.screenshotDeletionResult == ScreenshotDeletionResult.SuccessfullyDeleted) {
-                    nDeletedScreenshots += 1
-                }
-            }
-
-            return AccumulatedIOResults(cropUris, nDeletedScreenshots)
-        }
-    }
-
     private val nSavedCrops: Int get() = cropUris.size
 
     val anyCropsSaved: Boolean get() = cropUris.isNotEmpty()
@@ -56,4 +36,24 @@ data class AccumulatedIOResults(
                         } ${"screenshot".numericallyInflected(nDeletedScreenshots)}"
                     )
             }
+
+    companion object {
+        const val EXTRA = "com.w2sv.autocrop.extra.IO_RESULTS"
+
+        fun get(ioResults: Iterable<CropBundleIOResult>): AccumulatedIOResults {
+            val cropUris = ArrayList<Uri>()
+            var nDeletedScreenshots = 0
+
+            ioResults.forEach {
+                it.cropFileUri?.let { uri ->
+                    cropUris.add(uri)
+                }
+                if (it.screenshotDeletionResult == ScreenshotDeletionResult.SuccessfullyDeleted) {
+                    nDeletedScreenshots += 1
+                }
+            }
+
+            return AccumulatedIOResults(cropUris, nDeletedScreenshots)
+        }
+    }
 }

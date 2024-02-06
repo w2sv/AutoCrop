@@ -10,7 +10,7 @@ interface PreferencesRepository {
     val comparisonInstructionsShown: PersistedValue.UniTyped<Boolean>
     val autoScroll: PersistedValue.UniTyped<Boolean>
     val deleteScreenshots: PersistedValue.UniTyped<Boolean>
-    val edgeCandidateThreshold: PersistedValue.UniTyped<Int>
+    val cropSensitivity: PersistedValue.UniTyped<Int>
     val cropAdjustmentMode: PersistedValue.EnumValued<CropAdjustmentMode>
 
     val cropSaveDirTreeUri: StateFlow<Uri?>

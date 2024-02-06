@@ -28,11 +28,11 @@ class CropSettingsDialogFragment : AbstractCropSettingsDialogFragment(
 
     @HiltViewModel
     class ViewModel @Inject constructor(private val preferencesRepository: PreferencesRepository) : AbstractCropSettingsDialogFragment.ViewModel(
-        preferencesRepository.edgeCandidateThreshold.getValueSynchronously()
+        preferencesRepository.cropSensitivity.getValueSynchronously()
     ) {
         fun syncCropSettings() {
-            viewModelScope.launch { preferencesRepository.edgeCandidateThreshold.save(edgeCandidateThreshold) }
-            settingsDissimilar.postValue(false)
+            viewModelScope.launch { preferencesRepository.cropSensitivity.save(cropSensitivity.value!!) }
+            sensitivityHasChanged.postValue(false)
         }
     }
 }

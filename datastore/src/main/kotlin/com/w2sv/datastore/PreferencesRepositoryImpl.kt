@@ -36,7 +36,7 @@ class PreferencesRepositoryImpl @Inject constructor(
 
     override val deleteScreenshots = getPersistedValue(booleanPreferencesKey("deleteScreenshots"), false)
 
-    override val edgeCandidateThreshold = getPersistedValue(intPreferencesKey("edgeCandidateThreshold"), 150)
+    override val cropSensitivity = getPersistedValue(intPreferencesKey("cropSensitivity"), 5)
 
     override val cropAdjustmentMode =
         getPersistedValue(intPreferencesKey("cropAdjustmentMode"), CropAdjustmentMode.Manual)

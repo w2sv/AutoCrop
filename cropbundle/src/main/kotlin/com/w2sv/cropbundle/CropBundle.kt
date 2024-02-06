@@ -8,6 +8,7 @@ import android.os.Parcelable
 import android.provider.MediaStore
 import androidx.core.database.getLongOrNull
 import com.w2sv.cropbundle.cropping.CropEdges
+import com.w2sv.cropbundle.cropping.CropSensitivity
 import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.cropbundle.cropping.cropped
 import com.w2sv.cropbundle.io.ImageMimeType
@@ -24,7 +25,7 @@ data class CropBundle(
     val screenshot: Screenshot,
     var crop: Crop,  // TODO: vars
     var edgeCandidates: List<Int>,
-    var adjustedEdgeThreshold: Int? = null
+    @CropSensitivity var cropSensitivity: Int
 ) : Parcelable {
 
     sealed interface CreationResult {
@@ -44,13 +45,13 @@ data class CropBundle(
 
         fun attemptCreation(
             screenshotMediaUri: Uri,
-            cropThreshold: Double,
+            @CropSensitivity cropSensitivity: Int,
             context: Context
         ): CreationResult =
             when (val screenshotBitmap = context.contentResolver.loadBitmap(screenshotMediaUri)) {
                 null -> CreationResult.Failure.BitmapLoadingFailed
                 else -> {
-                    when (val cropResult = screenshotBitmap.crop(cropThreshold)) {
+                    when (val cropResult = screenshotBitmap.crop(cropSensitivity)) {
                         null -> CreationResult.Failure.NoCropEdgesFound
                         else -> {
                             val screenshot = Screenshot(
@@ -69,7 +70,8 @@ data class CropBundle(
                                         screenshotDiskUsage = screenshot.mediaStoreData.diskUsage,
                                         edges = cropResult.edges
                                     ),
-                                    edgeCandidates = cropResult.candidates
+                                    edgeCandidates = cropResult.candidates,
+                                    cropSensitivity = cropSensitivity
                                 )
                             )
                         }

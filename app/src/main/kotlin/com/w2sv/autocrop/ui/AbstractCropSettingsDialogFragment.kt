@@ -1,18 +1,15 @@
 package com.w2sv.autocrop.ui
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.IntRange
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.slider.Slider
-import com.w2sv.androidutils.lifecycle.postValue
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.model.CROP_SENSITIVITY_MAX
-import com.w2sv.autocrop.ui.model.cropSensitivity
-import com.w2sv.autocrop.ui.model.edgeCandidateThreshold
 import com.w2sv.autocrop.ui.views.RoundedDialogFragment
+import com.w2sv.cropbundle.cropping.CROP_SENSITIVITY_MAX
+import com.w2sv.cropbundle.cropping.CropSensitivity
 
 abstract class AbstractCropSettingsDialogFragment(
     @StringRes private val title: Int,
@@ -20,23 +17,18 @@ abstract class AbstractCropSettingsDialogFragment(
     @StringRes private val positiveButtonText: Int
 ) : RoundedDialogFragment() {
 
-    abstract class ViewModel(initialEdgeCandidateThreshold: Int) : androidx.lifecycle.ViewModel() {
+    abstract class ViewModel(@CropSensitivity private val initialCropSensitivity: Int) : androidx.lifecycle.ViewModel() {
 
-        @IntRange(from = 0, to = 20)
-        private val initialCropSensitivity: Int = cropSensitivity(initialEdgeCandidateThreshold)
+        val cropSensitivity: LiveData<Int> get() = _cropSensitivity
+        private val _cropSensitivity = MutableLiveData(initialCropSensitivity)
 
-        val cropSensitivity: LiveData<Int> by lazy {
-            MutableLiveData(initialCropSensitivity)
+        fun setCropSensitivity(@CropSensitivity value: Int) {
+            _cropSensitivity.postValue(value)
+            _sensitivityHasChanged.postValue(value != initialCropSensitivity)
         }
 
-        val edgeCandidateThreshold: Int
-            get() = edgeCandidateThreshold(cropSensitivity.value!!)
-
-        val settingsDissimilar: LiveData<Boolean> = MutableLiveData(false)
-
-        fun onSettingsInput() {
-            settingsDissimilar.postValue(cropSensitivity.value != initialCropSensitivity)
-        }
+        val sensitivityHasChanged: LiveData<Boolean> get() = _sensitivityHasChanged
+        private val _sensitivityHasChanged = MutableLiveData(false)
     }
 
     abstract val viewModel: ViewModel
@@ -56,31 +48,28 @@ abstract class AbstractCropSettingsDialogFragment(
     override fun AlertDialog.onCreatedListener() {
         setOnShowListener {
             viewModel.setLiveDataObservers(this)
-            findViewById<Slider>(R.id.sensitivity_slider)!!.set()
+            findViewById<Slider>(R.id.sensitivity_slider)!!
+                .apply {
+                    valueFrom = 0f
+                    valueTo = CROP_SENSITIVITY_MAX.toFloat()
+                    stepSize = 1f
+                    value = viewModel.cropSensitivity.value!!.toFloat()
+
+                    addOnChangeListener { _, value, fromUser ->
+                        if (fromUser) {
+                            viewModel.setCropSensitivity(value.toInt())
+                        }
+                    }
+                }
         }
     }
 
     private fun ViewModel.setLiveDataObservers(dialog: AlertDialog) {
-        cropSensitivity.observe(requireParentFragment().viewLifecycleOwner) {
-            onSettingsInput()
-        }
-        settingsDissimilar.observe(requireParentFragment().viewLifecycleOwner) { settingsChanged ->
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).apply {
-                isEnabled = settingsChanged
-            }
-        }
-    }
-
-    private fun Slider.set() {
-        valueFrom = 0f
-        valueTo = CROP_SENSITIVITY_MAX.toFloat()
-        stepSize = 1f
-        value = viewModel.cropSensitivity.value!!.toFloat()
-
-        addOnChangeListener { _, value, fromUser ->
-            if (fromUser) {
-                viewModel.cropSensitivity.postValue(value.toInt())
-            }
+        sensitivityHasChanged.observe(requireParentFragment().viewLifecycleOwner) { settingsChanged ->
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .apply {
+                    isEnabled = settingsChanged
+                }
         }
     }
 }

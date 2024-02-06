@@ -14,7 +14,7 @@ internal class CropSensitivityKtTest {
         "15, 101"
     )
     fun edgeCandidateThreshold(sensitivity: Int, expected: Int) {
-        Assertions.assertEquals(expected, edgeCandidateThreshold(sensitivity))
+        Assertions.assertEquals(expected, com.w2sv.cropbundle.cropping.edgeCandidateThreshold(sensitivity))
     }
 
     @ParameterizedTest
@@ -25,6 +25,6 @@ internal class CropSensitivityKtTest {
         "214, 4"
     )
     fun cropSensitivity(threshold: Int, expected: Int) {
-        Assertions.assertEquals(expected, cropSensitivity(threshold))
+        Assertions.assertEquals(expected, com.w2sv.cropbundle.cropping.cropSensitivity(threshold))
     }
 }

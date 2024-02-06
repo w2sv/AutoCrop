@@ -61,6 +61,7 @@ import com.w2sv.common.Constants
 import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropEdges
+import com.w2sv.cropbundle.cropping.CropSensitivity
 import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.kotlinutils.extensions.numericallyInflected
@@ -181,13 +182,9 @@ class CropPagerFragment :
 
         fun getRecropDialog(): RecropDialogFragment =
             RecropDialogFragment.getInstance(
-                dataSet.livePosition.value!!,
-                dataSet.liveElement.adjustedEdgeThreshold
-                    ?: edgeCandidateThreshold.value
+                cropBundlePosition = dataSet.livePosition.value!!,
+                initialThreshold = dataSet.liveElement.cropSensitivity
             )
-
-        private val edgeCandidateThreshold =
-            preferencesRepository.edgeCandidateThreshold.stateIn(viewModelScope, SharingStarted.Eagerly)
 
         val backPressHandler = BackPressHandler(
             coroutineScope = viewModelScope,
@@ -455,10 +452,10 @@ class CropPagerFragment :
         requireCastActivity<ExaminationActivity>().invokeExitFragment()
     }
 
-    override fun onRecrop(cropBundlePosition: Int, threshold: Double) =
+    override fun onRecrop(cropBundlePosition: Int, @CropSensitivity cropSensitivity: Int) =
         onRecropWrapper {
             requireContext().showToast(
-                when (viewModel.dataSet[cropBundlePosition].recropAndUpdate(threshold)) {
+                when (viewModel.dataSet[cropBundlePosition].recropAndUpdate(cropSensitivity)) {
                     false -> R.string.no_crop_edges_found_for_adjusted_settings
                     true -> {
                         cropPager.pager.notifyCurrentItemChanged()
@@ -490,16 +487,16 @@ class CropPagerFragment :
         cropPager.pager.isEnabled = true
     }
 
-    private fun CropBundle.recropAndUpdate(threshold: Double): Boolean {
+    private fun CropBundle.recropAndUpdate(@CropSensitivity cropSensitivity: Int): Boolean {
         val screenshotBitmap = screenshot.getBitmap(requireContext().contentResolver)
-        return screenshotBitmap.crop(threshold)?.let { (edges, candidates) ->
+        return screenshotBitmap.crop(cropSensitivity)?.let { (edges, candidates) ->
             crop = Crop.fromScreenshot(
                 screenshotBitmap,
                 screenshot.mediaStoreData.diskUsage,
                 edges
             )
             edgeCandidates = candidates
-            adjustedEdgeThreshold = threshold.toInt()
+            this.cropSensitivity = cropSensitivity
             true
         }
             ?: false

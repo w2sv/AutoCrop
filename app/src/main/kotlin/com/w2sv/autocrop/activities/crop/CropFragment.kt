@@ -1,10 +1,8 @@
 package com.w2sv.autocrop.activities.crop
 
-import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -26,7 +24,6 @@ import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.databinding.CropBinding
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
-import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.autocrop.utils.requireCastActivity
 import com.w2sv.common.Constants
 import com.w2sv.cropbundle.CropBundle
@@ -92,7 +89,7 @@ class CropFragment
 
             return CropBundle.attemptCreation(
                 screenshotMediaUri = screenshotUri,
-                cropThreshold = cropThreshold,
+                cropSensitivity = cropSensitivity.value,
                 context = context
             )
                 .run {
@@ -114,8 +111,8 @@ class CropFragment
                 }
         }
 
-        private val cropThreshold =
-            preferencesRepository.edgeCandidateThreshold.stateIn(viewModelScope, SharingStarted.Eagerly).value.toDouble()
+        private val cropSensitivity =
+            preferencesRepository.cropSensitivity.stateIn(viewModelScope, SharingStarted.Eagerly)
     }
 
     private val viewModel by viewModels<ViewModel>()
