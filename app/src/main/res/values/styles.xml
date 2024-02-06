@@ -65,11 +65,6 @@
 
     <!--Misc-->
 
-    <style name="ButtonRowLabel">
-        <item name="android:textSize">@dimen/text_size_medium_small</item>
-        <item name="android:paddingHorizontal">2dp</item>
-    </style>
-
     <style name="CropAdjustmentButton">
         <item name="android:layout_width">@dimen/toolbar_button_width</item>
         <item name="android:layout_height">@dimen/height_button</item>

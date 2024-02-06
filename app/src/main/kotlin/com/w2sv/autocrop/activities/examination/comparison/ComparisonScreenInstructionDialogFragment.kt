@@ -30,7 +30,7 @@ internal class ComparisonScreenInstructionDialogFragment : RoundedDialogFragment
             setTitle(getString(R.string.comparison_screen))
             setIcon(
                 context.getColoredDrawable(
-                    R.drawable.ic_crop_original_24,
+                    R.drawable.ic_inspect_image_24,
                     com.w2sv.common.R.color.magenta_saturated
                 )
             )
