@@ -432,11 +432,11 @@ private class ScreenshotObserver(
                 if (pendingUris.contains(it))
                     attemptOnNewScreenshotListenerInvocation(it, false)
                 else {
-                    when (it.isNewScreenshot()) {
-                        true -> attemptOnNewScreenshotListenerInvocation(it, true)
-                        false -> blacklist.add(it)
-                        null -> pendingUris.add(it)
-                    }
+//                    when (it.isNewScreenshot()) {
+//                        true -> attemptOnNewScreenshotListenerInvocation(it, true)
+//                        false -> blacklist.add(it)
+//                        null -> pendingUris.add(it)
+//                    }
                 }
             }
         }
@@ -451,32 +451,32 @@ private class ScreenshotObserver(
             pendingUris.add(uri)
     }
 
-    private fun Uri.isNewScreenshot(): Boolean? =
-        try {
-            val (absolutePath, fileName, dateAdded) = contentResolver.queryMediaStoreData(
-                this,
-                arrayOf(
-                    MediaStore.Images.Media.DISPLAY_NAME,
-                    MediaStore.Images.Media.DATA,  // e.g. /storage/emulated/0/Pictures/Screenshots/.pending-1665749333-Screenshot_20221007-140853687.png
-                    MediaStore.Images.Media.DATE_ADDED
-                )
-            )
-                .iterator()
-                .getNextTriple()
-
-            !fileName.contains(CROP_FILE_ADDENDUM) &&  // exclude produced AutoCrop's
-                    timeDelta(  // exclude files having already been on the file system and which were only triggered, due to a change of their metadata
-                        dateFromUnixTimestamp(dateAdded),
-                        Date(System.currentTimeMillis()),
-                        TimeUnit.SECONDS
-                    ) < 20 &&
-                    (systemScreenshotsDirectory()?.let { absolutePath.contains(it.name) } == true ||  // infer whether or not actually a screenshot
-                            fileName
-                                .lowercase()
-                                .contains("screenshot"))
-
-        }
-        catch (e: CursorIndexOutOfBoundsException) {
-            null
-        }
+//    private fun Uri.isNewScreenshot(): Boolean? =
+//        try {
+//            val (absolutePath, fileName, dateAdded) = contentResolver.queryMediaStoreData(
+//                this,
+//                arrayOf(
+//                    MediaStore.Images.Media.DISPLAY_NAME,
+//                    MediaStore.Images.Media.DATA,  // e.g. /storage/emulated/0/Pictures/Screenshots/.pending-1665749333-Screenshot_20221007-140853687.png
+//                    MediaStore.Images.Media.DATE_ADDED
+//                )
+//            )!!
+//                .iterator()
+//                .getNextTriple()
+//
+//            !fileName.contains(CROP_FILE_ADDENDUM) &&  // exclude produced AutoCrop's
+//                    timeDelta(  // exclude files having already been on the file system and which were only triggered, due to a change of their metadata
+//                        dateFromUnixTimestamp(dateAdded),
+//                        Date(System.currentTimeMillis()),
+//                        TimeUnit.SECONDS
+//                    ) < 20 &&
+//                    (systemScreenshotsDirectory()?.let { absolutePath.contains(it.name) } == true ||  // infer whether or not actually a screenshot
+//                            fileName
+//                                .lowercase()
+//                                .contains("screenshot"))
+//
+//        }
+//        catch (e: CursorIndexOutOfBoundsException) {
+//            null
+//        }
 }

@@ -1,7 +1,6 @@
 package com.w2sv.cropbundle.io
 
 import android.content.ContentResolver
-import android.content.Context
 import android.net.Uri
 import com.w2sv.cropbundle.io.extensions.deleteImage
 import slimber.log.i

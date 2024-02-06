@@ -107,7 +107,7 @@ class ComparisonFragment
     }
 
     private fun ComparisonBinding.populate() {
-        cropIv.transitionName = viewModel.cropBundle.identifier()
+        cropIv.transitionName = viewModel.cropBundle.identifier
         cropIv.setImageBitmap(viewModel.cropBundle.crop.bitmap)
         screenshotIv.setImageBitmap(viewModel.screenshotBitmap)
     }

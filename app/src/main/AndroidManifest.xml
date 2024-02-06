@@ -12,8 +12,10 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29" />  <!-- implies READ_EXTERNAL_STORAGE; @see https://stackoverflow.com/questions/64221188/write-external-storage-when-targeting-android-10 -->
-<!--    <uses-permission-->
-    <!--        android:name="android.permission.READ_MEDIA_IMAGES"/>-->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <!-- Application -->
 

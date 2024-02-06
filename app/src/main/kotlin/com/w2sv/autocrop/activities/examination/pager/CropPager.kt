@@ -53,7 +53,7 @@ class CropPager(
                         dataSet.atCorrespondingPosition(position).let { cropBundle ->
                             with(holder.imageView) {
                                 setImageBitmap(cropBundle.crop.bitmap)
-                                ViewCompat.setTransitionName(this, cropBundle.identifier())
+                                ViewCompat.setTransitionName(this, cropBundle.identifier)
                             }
                         }
                     }

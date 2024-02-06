@@ -10,7 +10,6 @@
         android:maxSdkVersion="32" />
 
     <!-- SDK >= 33 -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!-- == More granular drop-in for READ_EXTERNAL_STORAGE -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application>

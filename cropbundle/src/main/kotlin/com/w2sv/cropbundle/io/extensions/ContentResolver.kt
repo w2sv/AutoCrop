@@ -1,6 +1,7 @@
 package com.w2sv.cropbundle.io.extensions
 
 import android.content.ContentResolver
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -45,26 +46,26 @@ fun ContentResolver.deleteImage(mediaStoreId: Long): Boolean =
     }
 
 /**
- * @see
- *      https://stackoverflow.com/a/16511111/12083276
+ * https://stackoverflow.com/a/16511111/12083276
  */
-fun ContentResolver.queryMediaStoreData(
+fun <R> ContentResolver.queryMediaStoreData(
     uri: Uri,
     columns: Array<String>,
     selection: String? = null,
-    selectionArgs: Array<String>? = null
-): List<String> =
+    selectionArgs: Array<String>? = null,
+    onCursor: (Cursor) -> R
+): R? =
     query(
         uri,
         columns,
         selection,
         selectionArgs,
         null
-    )!!.run {
-        moveToFirst()
-        columns.map { getString(getColumnIndexOrThrow(it)) }
-            .also { close() }
-    }
+    )
+        ?.use {
+            it.moveToFirst()
+            onCursor(it)
+        }
 
 //fun ContentResolver.queryMediaStoreDatum(
 //    uri: Uri,

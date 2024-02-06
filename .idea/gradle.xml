@@ -23,6 +23,8 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/cropbundle" />
+            <option value="$PROJECT_DIR$/datastore" />
+            <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/flowfield" />
             <option value="$PROJECT_DIR$/opencv" />
             <option value="$PROJECT_DIR$/plugins" />

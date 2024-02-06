@@ -259,7 +259,7 @@ class FlowFieldFragment :
 
     private val selectImagesContractHandler: SelectImagesContractHandlerCompat<*, *> by lazy {
         SelectImagesContractHandlerCompat.getInstance(
-            requireActivity(),
+            activity = requireActivity(),
             callbackLowerThanQ = {
                 it.uris?.let { uris ->
                     startActivity(
@@ -274,17 +274,26 @@ class FlowFieldFragment :
                     )
                 }
             },
-            callbackFromQ = @SuppressLint("NewApi") { imageUris ->
+            callbackFromQ = { imageUris ->
                 if (imageUris.isNotEmpty()) {
-                    if (getMediaUri(requireContext(), imageUris.first()) == null)
+                    @SuppressLint("NewApi")
+                    if (getMediaUri(context = requireContext(), uri = imageUris.first()) == null) {
                         requireContext().showToast(
                             R.string.content_provider_not_supported_please_select_a_different_one,
                             Toast.LENGTH_LONG
                         )
-                    else
-                        requireActivity().startActivity(
+                    }
+                    else {
+                        // Take persistable read permission for each Uri; Fixes consecutively occasionally occurring permission exception on reading in bitmap
+                        imageUris.forEach {
+                            requireContext().contentResolver.takePersistableUriPermission(
+                                it,
+                                Intent.FLAG_GRANT_READ_URI_PERMISSION
+                            )
+                        }
+                        requireContext().startActivity(
                             Intent(
-                                activity,
+                                requireContext(),
                                 CropActivity::class.java
                             )
                                 .putParcelableArrayListExtra(
@@ -292,6 +301,7 @@ class FlowFieldFragment :
                                     ArrayList(imageUris)
                                 )
                         )
+                    }
                 }
             }
         )

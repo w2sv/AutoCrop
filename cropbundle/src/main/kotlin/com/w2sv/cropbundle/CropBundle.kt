@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Parcelable
 import android.provider.MediaStore
+import androidx.core.database.getLongOrNull
 import com.w2sv.cropbundle.cropping.CropEdges
 import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.cropbundle.cropping.cropped
@@ -21,7 +22,7 @@ import kotlin.math.roundToInt
 @Parcelize
 data class CropBundle(
     val screenshot: Screenshot,
-    var crop: Crop,  // TODO
+    var crop: Crop,  // TODO: vars
     var edgeCandidates: List<Int>,
     var adjustedEdgeThreshold: Int? = null
 ) : Parcelable {
@@ -35,8 +36,8 @@ data class CropBundle(
         }
     }
 
-    fun identifier(): String =
-        hashCode().toString()
+    val identifier: String
+        get() = hashCode().toString()
 
     companion object {
         const val EXTRA_POSITION = "com.w2sv.autocrop.extra.CROP_BUNDLE_POSITION"
@@ -61,7 +62,7 @@ data class CropBundle(
                                 )
                             )
                             CreationResult.Success(
-                                CropBundle(
+                                cropBundle = CropBundle(
                                     screenshot = screenshot,
                                     crop = Crop.fromScreenshot(
                                         screenshotBitmap = screenshotBitmap,
@@ -94,25 +95,29 @@ data class Screenshot(
     ) : Parcelable {
 
         companion object {
-            fun query(contentResolver: ContentResolver, uri: Uri): MediaStoreData =
-                contentResolver.queryMediaStoreData(
+            fun query(contentResolver: ContentResolver, uri: Uri): MediaStoreData {
+                i { "uri: $uri" }  // content://media/picker/0/com.android.providers.media.photopicker/media/1000016069
+                return contentResolver.queryMediaStoreData(
                     uri = uri,
                     columns = arrayOf(
                         MediaStore.Images.Media.SIZE,
                         MediaStore.Images.Media.DISPLAY_NAME,
                         MediaStore.Images.Media.MIME_TYPE,
                         MediaStore.Images.Media._ID
-                    )
-                )
-                    .run {
-                        i { "Queried media store column values: ${toList()}" }
+                    ),
+                    onCursor = {
+                        val fileName = it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME))
                         MediaStoreData(
-                            diskUsage = get(0).toLong(),
-                            fileName = get(1),
-                            mimeType = ImageMimeType.parse(get(2)),
-                            id = get(3).toLong()
+                            diskUsage = it.getLong(it.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)),
+                            fileName = fileName,
+                            mimeType = ImageMimeType.parse(it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE))),
+                            id = it.getLongOrNull(it.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
+                                ?: fileName.substringBeforeLast(".").toLong()  // TODO: probably still unreliable
                         )
+                            .also { i { it.toString() } }
                     }
+                )!!
+            }
         }
     }
 
