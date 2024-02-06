@@ -6,6 +6,7 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.text.bold
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -40,7 +41,6 @@ import com.w2sv.autocrop.activities.examination.pager.dialogs.cropsaving.Abstrac
 import com.w2sv.autocrop.activities.examination.pager.dialogs.cropsaving.CropSavingDialogFragment
 import com.w2sv.autocrop.activities.examination.pager.dialogs.cropsaving.SaveAllCropsDialogFragment
 import com.w2sv.autocrop.activities.examination.pager.dialogs.recrop.RecropDialogFragment
-import com.w2sv.autocrop.activities.examination.pager.model.CropProcedure
 import com.w2sv.autocrop.activities.examination.saveall.SaveAllFragment
 import com.w2sv.autocrop.databinding.CropPagerBinding
 import com.w2sv.autocrop.ui.model.Click
@@ -431,12 +431,14 @@ class CropPagerFragment :
 
         cropPager.scrollToNextViewAndRemoveCurrent(dataSetPosition)
 
-        viewModel.lastCropProcedureToast?.cancel()
-        viewModel.lastCropProcedureToast = requireContext()
-            .makeToast(cropProcedure.notificationMessageRes)
-            .also {
-                it.show()
-            }
+        cropProcedure.notificationMessageRes?.let { nonNullMessageRes ->
+            viewModel.lastCropProcedureToast?.cancel()
+            viewModel.lastCropProcedureToast = requireContext()
+                .makeToast(nonNullMessageRes)
+                .also {
+                    it.show()
+                }
+        }
     }
 
     override fun onSaveAllCrops() {
@@ -542,4 +544,9 @@ private class CubeOutPageTransformer : ViewPager2.PageTransformer {
             rotationY = 90f * position
         }
     }
+}
+
+private enum class CropProcedure(@StringRes val notificationMessageRes: Int?) {
+    Discard(null),
+    Save(R.string.saved_crop)
 }

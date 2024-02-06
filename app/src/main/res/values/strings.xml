@@ -79,7 +79,6 @@
     <string name="comparison_screen">Comparison Screen</string>
     <string name="no_crop_edges_found_for_adjusted_settings">No Crop Edges found for adjusted Settings</string>
     <string name="updated_crop">Updated Crop</string>
-    <string name="discarded_crop">Discarded crop</string>
     <string name="saved_crop">Saved crop</string>
     <string name="updated_crop_settings">Updated Crop Settings</string>
 </resources>
