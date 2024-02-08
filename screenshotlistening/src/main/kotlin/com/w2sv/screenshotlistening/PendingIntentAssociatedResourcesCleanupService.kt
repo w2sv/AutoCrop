@@ -1,8 +1,8 @@
 package com.w2sv.screenshotlistening
 
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import com.w2sv.androidutils.notifying.getNotificationManager
 import com.w2sv.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.screenshotlistening.services.ServiceBindingHandler
 import com.w2sv.screenshotlistening.services.abstrct.BoundService
@@ -61,9 +61,9 @@ abstract class PendingIntentAssociatedResourcesCleanupService<T>(private val cli
         if (intent!!.getBooleanExtra(EXTRA_CANCEL_NOTIFICATION, false)) {
             val notificationId = intent.getIntExtra(EXTRA_ASSOCIATED_NOTIFICATION_ID, -1)
 
-            getNotificationManager()
-                .cancel(notificationId)
-                .also { i { "Cancelled notification $notificationId" } }
+//            notificationManager
+//                .cancel(notificationId)
+//                .also { i { "Cancelled notification $notificationId" } }
         }
 
         Client.BindingHandler(this, clientClass)

@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.androidutils.eventhandling.BackPressHandler
-import com.w2sv.androidutils.lifecycle.increment
+import com.w2sv.androidutils.lifecycle.extensions.increment
 import com.w2sv.androidutils.notifying.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
@@ -58,7 +58,8 @@ class CropFragment
 
         val cropBundles = mutableListOf<CropBundle>()
         val cropResults = CropResults()
-        val liveProgress: LiveData<Int> = MutableLiveData(0)
+        val liveProgress: LiveData<Int> get() = _liveProgress
+        private val _liveProgress = MutableLiveData(0)
 
         suspend fun cropCoroutine(
             context: Context,
@@ -72,7 +73,7 @@ class CropFragment
                         }
                     }
                     withContext(Dispatchers.Main) {
-                        liveProgress.increment()
+                        _liveProgress.increment()
                     }
                 }
                 onFinishedListener()

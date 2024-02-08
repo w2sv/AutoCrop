@@ -1,6 +1,7 @@
 package com.w2sv.screenshotlistening
 
 import android.Manifest
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.ContentResolver
@@ -45,6 +46,9 @@ class ScreenshotListener : BoundService(),
 
     @Inject
     lateinit var preferencesRepository: PreferencesRepository
+
+    @Inject
+    lateinit var notificationManager: NotificationManager
 
     @Singleton
     class CancelledFromNotification @Inject constructor() {
@@ -120,8 +124,9 @@ class ScreenshotListener : BoundService(),
 
     private fun foregroundServiceNotificationBuilder(): NotificationCompat.Builder =
         setChannelAndGetNotificationBuilder(
-            AppNotificationChannel.STARTED_FOREGROUND_SERVICE,
-            AppNotificationChannel.STARTED_FOREGROUND_SERVICE.title
+            notificationManager = notificationManager,
+            channel = AppNotificationChannel.STARTED_FOREGROUND_SERVICE,
+            contentTitle = AppNotificationChannel.STARTED_FOREGROUND_SERVICE.title
         )
             .setStyle(
                 NotificationCompat.BigTextStyle()
@@ -301,7 +306,8 @@ class ScreenshotListener : BoundService(),
     }
 
     override val notificationGroup = NotificationGroup(
-        this,
+        notificationManager = notificationManager,
+        context = this,
         notificationChannel = AppNotificationChannel.DETECTED_NEW_CROPPABLE_SCREENSHOT,
         summaryBuilderConfigurator = { nChildren ->
             setContentTitle(getString(R.string.detected_n_croppable_screenshots, nChildren))

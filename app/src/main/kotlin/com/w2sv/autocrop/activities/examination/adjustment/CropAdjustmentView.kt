@@ -18,7 +18,6 @@ import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.findViewTreeLifecycleOwner
-import com.w2sv.androidutils.lifecycle.postValue
 import com.w2sv.androidutils.ui.views.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.examination.adjustment.extensions.animateMatrix
@@ -33,7 +32,6 @@ import com.w2sv.autocrop.activities.examination.adjustment.extensions.maxRectOf
 import com.w2sv.autocrop.activities.examination.adjustment.extensions.minRectOf
 import com.w2sv.autocrop.activities.examination.adjustment.extensions.setVerticalEdges
 import com.w2sv.autocrop.activities.examination.adjustment.model.AnimatableRectF
-import com.w2sv.domain.model.CropAdjustmentMode
 import com.w2sv.autocrop.activities.examination.adjustment.model.DraggingState
 import com.w2sv.autocrop.activities.examination.adjustment.model.Edge
 import com.w2sv.autocrop.activities.examination.adjustment.model.Edge.BOTTOM
@@ -41,6 +39,7 @@ import com.w2sv.autocrop.activities.examination.adjustment.model.Edge.TOP
 import com.w2sv.autocrop.activities.examination.adjustment.model.EdgeSelectionState
 import com.w2sv.autocrop.activities.examination.adjustment.model.Line
 import com.w2sv.cropbundle.cropping.CropEdges
+import com.w2sv.domain.model.CropAdjustmentMode
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -209,7 +208,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     // Value Exposition
 
     private fun CropAdjustmentFragment.ViewModel.postCropEdges() {
-        cropEdgesLive.postValue(
+        postCropEdges(
             cropRectImageDomain().run {
                 CropEdges(top.roundToInt(), bottom.roundToInt())
             }
@@ -557,14 +556,14 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                     viewModel.postCropEdges()
                 }
 
-                else -> viewModel.cropEdgesLive.postValue(null)
+                else -> viewModel.postCropEdges(null)
             }
 
             invalidate()
         }
 
         override fun setUp() {
-            viewModel.edgeCandidatesSelectionState.postValue(EdgeSelectionState.Unselected)
+            viewModel.postEdgeSelectionState(EdgeSelectionState.Unselected)
             resetCropRectViewDomain()
 
             animateImageTo(defaultImageMatrix) {
@@ -572,7 +571,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 drawCandidates = true
                 invalidate()
 
-                viewModel.edgeCandidatesSelectionState.observe(findViewTreeLifecycleOwner()!!) {
+                viewModel.edgeSelectionState.observe(findViewTreeLifecycleOwner()!!) {
                     onEdgeCandidatesSelectionStateChanged(it)
                 }
             }
@@ -583,8 +582,8 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 true -> {
                     edgeCandidateYsViewDomain.forEachIndexed { selectedEdgeCandidateIndex, y ->
                         if (event.isOnHorizontalLine(y, TOUCH_TOLERANCE_MARGIN)) {
-                            viewModel.edgeCandidatesSelectionState.postValue(
-                                when (val state = viewModel.edgeCandidatesSelectionState.value!!) {
+                            viewModel.postEdgeSelectionState(
+                                when (val state = viewModel.edgeSelectionState.value!!) {
                                     is EdgeSelectionState.Unselected, is EdgeSelectionState.SelectedBoth ->
                                         EdgeSelectionState.SelectedFirst(selectedEdgeCandidateIndex)
 
@@ -612,7 +611,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 canvas.drawEdgeCandidates()
                 canvas.drawEdgeIndicationTriangles()
 
-                if (viewModel.edgeCandidatesSelectionState.value is EdgeSelectionState.SelectedBoth) {
+                if (viewModel.edgeSelectionState.value is EdgeSelectionState.SelectedBoth) {
                     canvas.drawCropMask()
                 }
             }
@@ -625,7 +624,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                     floats[1],
                     floats[2],
                     floats[3],
-                    if (viewModel.edgeCandidatesSelectionState.value!!.isSelected(i))
+                    if (viewModel.edgeSelectionState.value!!.isSelected(i))
                         selectedEdgeCandidatePaint
                     else
                         unselectedEdgeCandidatePaint
@@ -635,7 +634,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         private fun Canvas.drawEdgeIndicationTriangles() {
             edgeCandidateYsViewDomain.forEachIndexed { i, y ->
-                val paint = if (viewModel.edgeCandidatesSelectionState.value!!.isSelected(i))
+                val paint = if (viewModel.edgeSelectionState.value!!.isSelected(i))
                     selectedTrianglePaint
                 else
                     unselectedTrianglePaint

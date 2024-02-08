@@ -28,7 +28,7 @@ abstract class AbstractCropSettingsDialogFragment(
         }
 
         val sensitivityHasChanged: LiveData<Boolean> get() = _sensitivityHasChanged
-        private val _sensitivityHasChanged = MutableLiveData(false)
+        protected val _sensitivityHasChanged = MutableLiveData(false)
     }
 
     abstract val viewModel: ViewModel

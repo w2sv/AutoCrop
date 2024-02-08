@@ -1,18 +1,16 @@
 package com.w2sv.screenshotlistening.notifications
 
+import android.app.NotificationManager
 import android.content.Context
-import android.content.ContextWrapper
 import androidx.core.app.NotificationCompat
-import com.w2sv.androidutils.notifying.getNotificationManager
-import com.w2sv.androidutils.notifying.showNotification
 import slimber.log.i
 
 class NotificationGroup(
-    context: Context,
+    private val notificationManager: NotificationManager,
+    private val context: Context,
     private val notificationChannel: AppNotificationChannel,
     private val summaryBuilderConfigurator: NotificationCompat.Builder.(nChildren: Int) -> NotificationCompat.Builder
-) : ContextWrapper(context) {
-
+) {
     val childrenIds = UniqueGroupedIds(baseSeed = notificationChannel.childIdSeed)
     val requestCodes = UniqueGroupedIds(baseSeed = notificationChannel.requestCodeSeed)
     private val groupKey = "GROUP_${notificationChannel.id}"
@@ -22,28 +20,32 @@ class NotificationGroup(
             showSummaryNotification()
 
         childrenIds.add(id)
-            .also { i { "Added ${notificationChannel.name} notification $id" } }
+        i { "Added ${notificationChannel.name} notification $id" }
 
-        showNotification(
+        notificationManager.notify(
             id,
-            setChannelAndGetNotificationBuilder(
+            context.setChannelAndGetNotificationBuilder(
+                notificationManager,
                 notificationChannel
             )
                 .setOnlyAlertOnce(true)
                 .setGroup(groupKey)
                 .builderConfigurator()
+                .build()
         )
     }
 
     private fun showSummaryNotification() {
-        showNotification(
+        notificationManager.notify(
             notificationChannel.groupSummaryId,
-            setChannelAndGetNotificationBuilder(
+            context.setChannelAndGetNotificationBuilder(
+                notificationManager,
                 notificationChannel,
             )
                 .summaryBuilderConfigurator(childrenIds.size)
                 .setGroup(groupKey)
                 .setGroupSummary(true)
+                .build()
         )
     }
 
@@ -53,7 +55,8 @@ class NotificationGroup(
         requestCodes.removeAll(associatedRequestCodes.toSet())
         i { "Removed request codes $associatedRequestCodes" }
 
-        if (childrenIds.isEmpty())
-            getNotificationManager().cancel(notificationChannel.childIdSeed)
+        if (childrenIds.isEmpty()) {
+            notificationManager.cancel(notificationChannel.childIdSeed)
+        }
     }
 }

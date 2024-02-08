@@ -16,8 +16,4 @@ object AppModule {
     @Provides
     fun provideContentResolver(@ApplicationContext context: Context): ContentResolver =
         context.contentResolver
-
-    @Provides
-    fun provideResources(@ApplicationContext context: Context): Resources =
-        context.resources
 }

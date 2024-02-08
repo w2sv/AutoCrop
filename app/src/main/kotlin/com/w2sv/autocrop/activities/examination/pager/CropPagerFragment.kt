@@ -21,7 +21,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.eventhandling.BackPressHandler
 import com.w2sv.androidutils.generic.getParcelableCompat
-import com.w2sv.androidutils.lifecycle.postValue
 import com.w2sv.androidutils.notifying.makeToast
 import com.w2sv.androidutils.notifying.showToast
 import com.w2sv.androidutils.ui.dialogs.show
@@ -102,7 +101,7 @@ class CropPagerFragment :
 
         fun getCropSavingDialogOnClick(click: Click): AbstractCropSavingDialogFragment? =
             when {
-                doAutoScrollLive.value == true -> null
+                doAutoScroll.value == true -> null
                 click == Click.Single || dataSet.isHoldingSingularElement -> getSaveCropDialog(true)
                 else -> getSaveAllCropsDialog(true)
             }
@@ -127,7 +126,7 @@ class CropPagerFragment :
                     maxAutoScrolls(),
                     period
                 ) {
-                    doAutoScrollLive.postValue(false)
+                    _doAutoScroll.postValue(false)
                 }
             }
         }
@@ -142,8 +141,12 @@ class CropPagerFragment :
             }
         }
 
-        val doAutoScrollLive: LiveData<Boolean> =
-            MutableLiveData(doAutoScrollPersisted.value && dataSet.size > 1)
+        val doAutoScroll: LiveData<Boolean> get() = _doAutoScroll
+        private val _doAutoScroll = MutableLiveData(doAutoScrollPersisted.value && dataSet.size > 1)
+
+        fun cancelAutoScroll() {
+            _doAutoScroll.postValue(false)
+        }
 
         private fun maxAutoScrolls(): Int =
             dataSet.size - dataSet.livePosition.value!!
@@ -236,7 +239,7 @@ class CropPagerFragment :
             binding.updateOnDataSetPositionChanged(it)
         }
 
-        doAutoScrollLive.observe(viewLifecycleOwner) {
+        doAutoScroll.observe(viewLifecycleOwner) {
             binding.updateOnAutoScrollStatusChanged(it)
         }
 
@@ -311,7 +314,7 @@ class CropPagerFragment :
         //            RecropAllDialogFragment().show(childFragmentManager)
         //        }
         cancelAutoScrollButton.setOnClickListener {
-            viewModel.doAutoScrollLive.postValue(false)
+            viewModel.cancelAutoScroll()
         }
         discardCropButton.setOnClickListener {
             removeView(viewModel.dataSet.livePosition.value!!, CropProcedure.Discard)

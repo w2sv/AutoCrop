@@ -19,8 +19,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
-import com.w2sv.androidutils.lifecycle.postValue
-import com.w2sv.androidutils.lifecycle.repostValue
+import com.w2sv.androidutils.lifecycle.extensions.repostValue
 import com.w2sv.androidutils.ui.dialogs.show
 import com.w2sv.androidutils.ui.resources.getLong
 import com.w2sv.androidutils.ui.views.crossVisualize
@@ -59,8 +58,23 @@ class ComparisonFragment
 
         var enterTransitionCompleted = false
 
-        val imageTypeLive: LiveData<ImageType> = MutableLiveData(ImageType.Crop)
-        val screenshotViewImageMatrixLive: LiveData<Matrix> = MutableLiveData()
+        val imageType: LiveData<ImageType> get() = _imageType
+        private val _imageType = MutableLiveData(ImageType.Crop)
+
+        fun postImageType(value: ImageType) {
+            _imageType.postValue(value)
+        }
+
+        fun repostImageType() {
+            _imageType.repostValue()
+        }
+
+        val screenshotViewImageMatrix: LiveData<Matrix> get() = _screenshotViewImageMatrix
+        private val _screenshotViewImageMatrix = MutableLiveData<Matrix>()
+
+        fun postScreenshotViewImageMatrix(value: Matrix) {
+            _screenshotViewImageMatrix.postValue(value)
+        }
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -93,7 +107,7 @@ class ComparisonFragment
             }
             else {
                 // trigger display of displayedImageTv
-                viewModel.imageTypeLive.repostValue()
+                viewModel.repostImageType()
             }
         }
     }
@@ -117,13 +131,13 @@ class ComparisonFragment
         root.setOnTouchListener { v, event ->
             when (event.action) {
                 ACTION_DOWN -> {
-                    viewModel.imageTypeLive.postValue(ImageType.Screenshot)
+                    viewModel.postImageType(ImageType.Screenshot)
                     v.performClick()
                     true
                 }
 
                 ACTION_UP -> {
-                    viewModel.imageTypeLive.postValue(ImageType.Crop)
+                    viewModel.postImageType(ImageType.Crop)
                     true
                 }
 
@@ -133,10 +147,10 @@ class ComparisonFragment
     }
 
     private fun ViewModel.setLiveDataObservers() {
-        screenshotViewImageMatrixLive.observe(viewLifecycleOwner) {
+        screenshotViewImageMatrix.observe(viewLifecycleOwner) {
             binding.cropIv.alignWithScreenshotIV(it, cropBundle.crop.edges)
         }
-        imageTypeLive.observe(viewLifecycleOwner) {
+        imageType.observe(viewLifecycleOwner) {
             when (it!!) {
                 ImageType.Screenshot -> crossVisualize(binding.cropIv, binding.screenshotIv)
                 ImageType.Crop -> crossVisualize(binding.screenshotIv, binding.cropIv)

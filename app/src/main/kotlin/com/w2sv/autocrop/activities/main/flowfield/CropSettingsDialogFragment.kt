@@ -3,7 +3,6 @@ package com.w2sv.autocrop.activities.main.flowfield
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.coroutines.getValueSynchronously
-import com.w2sv.androidutils.lifecycle.postValue
 import com.w2sv.androidutils.notifying.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.AbstractCropSettingsDialogFragment
@@ -32,7 +31,7 @@ class CropSettingsDialogFragment : AbstractCropSettingsDialogFragment(
     ) {
         fun syncCropSettings() {
             viewModelScope.launch { preferencesRepository.cropSensitivity.save(cropSensitivity.value!!) }
-            sensitivityHasChanged.postValue(false)
+            _sensitivityHasChanged.postValue(false)
         }
     }
 }

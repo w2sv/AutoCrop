@@ -24,7 +24,8 @@ import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.coroutines.collectFromFlow
 import com.w2sv.androidutils.eventhandling.BackPressHandler
 import com.w2sv.androidutils.generic.uris
-import com.w2sv.androidutils.lifecycle.addObservers
+import com.w2sv.androidutils.lifecycle.extensions.addObservers
+import com.w2sv.androidutils.lifecycle.extensions.toggle
 import com.w2sv.androidutils.notifying.showToast
 import com.w2sv.androidutils.services.isServiceRunning
 import com.w2sv.androidutils.ui.resources.getLong
@@ -94,7 +95,12 @@ class FlowFieldFragment :
          * Misc LiveData
          */
 
-        val hideForegroundElementsLive: LiveData<Boolean> = MutableLiveData(false)
+        val hideForegroundElements: LiveData<Boolean> get() = _hideForegroundElements
+        private val _hideForegroundElements = MutableLiveData(false)
+
+        fun toggleHideForegroundElements() {
+            _hideForegroundElements.toggle()
+        }
 
         val cropSaveDirIdentifierLive = preferencesRepository.cropSaveDirDocumentUri
             .map { cropSaveDirPathIdentifier(it, context) }
@@ -217,7 +223,7 @@ class FlowFieldFragment :
     }
 
     private fun ViewModel.setLiveDataObservers() {
-        hideForegroundElementsLive.observe(viewLifecycleOwner) { hideForeground ->
+        hideForegroundElements.observe(viewLifecycleOwner) { hideForeground ->
             if (hideForeground) {
                 binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 

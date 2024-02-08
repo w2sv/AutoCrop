@@ -10,7 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.w2sv.androidutils.lifecycle.increment
+import com.w2sv.androidutils.lifecycle.extensions.increment
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.databinding.SaveAllBinding
@@ -42,14 +42,13 @@ class SaveAllFragment :
 
         val nUnprocessedCrops: Int = cropBundleIndices.size
 
-        val saveProgressLive: LiveData<Int> by lazy {
-            MutableLiveData(0)
-        }
+        val saveProgress: LiveData<Int> get() = _saveProgress
+        private val _saveProgress = MutableLiveData(0)
 
         private val unprocessedCropBundleIndices: List<Int>
             get() =
                 cropBundleIndices.run {
-                    subList(saveProgressLive.value!!, size)
+                    subList(saveProgress.value!!, size)
                 }
 
         suspend fun saveAllCoroutine(processCropBundle: suspend (Int) -> Unit, onFinishedListener: () -> Unit) {
@@ -61,7 +60,7 @@ class SaveAllFragment :
                         )
                     }
                     withContext(Dispatchers.Main) {
-                        saveProgressLive.increment()
+                        _saveProgress.increment()
                     }
                 }
 
@@ -75,7 +74,7 @@ class SaveAllFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.saveProgressLive.observe(viewLifecycleOwner) {
+        viewModel.saveProgress.observe(viewLifecycleOwner) {
             binding.progressTv.updateText(
                 minOf(it + 1, viewModel.nUnprocessedCrops),
                 viewModel.nUnprocessedCrops

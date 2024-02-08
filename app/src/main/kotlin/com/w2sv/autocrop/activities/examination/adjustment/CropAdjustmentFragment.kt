@@ -18,7 +18,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import com.w2sv.androidutils.lifecycle.postValue
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
@@ -63,7 +62,7 @@ class CropAdjustmentFragment
         private val preferencesRepository: PreferencesRepository
     ) : androidx.lifecycle.ViewModel() {
 
-        val cropBundle: CropBundle =
+        private val cropBundle: CropBundle =
             ExaminationActivity.ViewModel.cropBundles[savedStateHandle[CropBundle.EXTRA_POSITION]!!]
         val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
 
@@ -122,23 +121,30 @@ class CropAdjustmentFragment
          * CropEdges
          */
 
-        val cropEdgesLive: LiveData<CropEdges?> by lazy {
-            MutableLiveData(cropBundle.crop.edges)
-        }
-        val cropEdgesChangedLive: LiveData<Boolean> by lazy {
-            MutableLiveData(false)
+        val cropEdges: LiveData<CropEdges?> get() = _cropEdges
+        private val _cropEdges = MutableLiveData(cropBundle.crop.edges)
+
+        fun postCropEdges(value: CropEdges?) {
+            _cropEdgesHaveChanged.postValue(value != null && value != _cropEdges.value)
+            _cropEdges.postValue(value)
         }
 
+        val cropEdgesHaveChanged: LiveData<Boolean> get() = _cropEdgesHaveChanged
+        private val _cropEdgesHaveChanged = MutableLiveData(false)
+
         fun resetCropEdges() {
-            cropEdgesLive.postValue(cropBundle.crop.edges)
+            _cropEdges.postValue(cropBundle.crop.edges)
         }
 
         /**
          * Selected Edges
          */
 
-        val edgeCandidatesSelectionState: LiveData<EdgeSelectionState> by lazy {
-            MutableLiveData(EdgeSelectionState.Unselected)
+        val edgeSelectionState: LiveData<EdgeSelectionState> get() = _edgeSelectionState
+        private val _edgeSelectionState = MutableLiveData<EdgeSelectionState>(EdgeSelectionState.Unselected)
+
+        fun postEdgeSelectionState(value: EdgeSelectionState) {
+            _edgeSelectionState.postValue(value)
         }
     }
 
@@ -156,11 +162,10 @@ class CropAdjustmentFragment
     }
 
     private fun ViewModel.setLiveDataObservers() {
-        cropEdgesLive.observe(viewLifecycleOwner) { edges ->
+        cropEdges.observe(viewLifecycleOwner) { edges ->
             binding.onCropEdgesChanged(edges)
-            cropEdgesChangedLive.postValue(edges != null && edges != cropBundle.crop.edges)
         }
-        cropEdgesChangedLive.observe(viewLifecycleOwner) {
+        cropEdgesHaveChanged.observe(viewLifecycleOwner) {
             binding.resetButton.isEnabled = it
             binding.applyButton.isEnabled = it
         }
@@ -211,7 +216,7 @@ class CropAdjustmentFragment
             requireActivity().supportFragmentManager.popBackStack()
         }
         applyButton.setOnClickListener {
-            setFragmentResult(REQUEST_KEY, bundleOf(CropEdges.EXTRA to viewModel.cropEdgesLive.value))
+            setFragmentResult(REQUEST_KEY, bundleOf(CropEdges.EXTRA to viewModel.cropEdges.value))
             requireActivity().supportFragmentManager.popBackStack()
         }
     }
