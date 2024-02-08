@@ -27,7 +27,7 @@ class CropSettingsDialogFragment : AbstractCropSettingsDialogFragment(
 
     @HiltViewModel
     class ViewModel @Inject constructor(private val preferencesRepository: PreferencesRepository) : AbstractCropSettingsDialogFragment.ViewModel(
-        preferencesRepository.cropSensitivity.getValueSynchronously()
+        preferencesRepository.cropSensitivity.getValueSynchronously()  // TODO
     ) {
         fun syncCropSettings() {
             viewModelScope.launch { preferencesRepository.cropSensitivity.save(cropSensitivity.value!!) }

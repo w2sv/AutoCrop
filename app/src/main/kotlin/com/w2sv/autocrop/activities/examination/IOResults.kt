@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.domain
+package com.w2sv.autocrop.activities.examination
 
 import android.net.Uri
 import android.os.Parcelable
@@ -9,14 +9,16 @@ import com.w2sv.kotlinutils.extensions.numericallyInflected
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class AccumulatedIOResults(
+data class IOResults(
     val cropUris: ArrayList<Uri>,
     val nDeletedScreenshots: Int
 ) : Parcelable {
 
-    private val nSavedCrops: Int get() = cropUris.size
+    private val nSavedCrops: Int
+        get() = cropUris.size
 
-    val anyCropsSaved: Boolean get() = cropUris.isNotEmpty()
+    val anyCropsSaved: Boolean
+        get() = cropUris.isNotEmpty()
 
     fun getNotificationText(): CharSequence =
         if (nSavedCrops == 0)
@@ -40,7 +42,7 @@ data class AccumulatedIOResults(
     companion object {
         const val EXTRA = "com.w2sv.autocrop.extra.IO_RESULTS"
 
-        fun get(ioResults: Iterable<CropBundleIOResult>): AccumulatedIOResults {
+        fun get(ioResults: Iterable<CropBundleIOResult>): IOResults {
             val cropUris = ArrayList<Uri>()
             var nDeletedScreenshots = 0
 
@@ -53,7 +55,7 @@ data class AccumulatedIOResults(
                 }
             }
 
-            return AccumulatedIOResults(cropUris, nDeletedScreenshots)
+            return IOResults(cropUris, nDeletedScreenshots)
         }
     }
 }

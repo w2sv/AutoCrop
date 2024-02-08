@@ -10,7 +10,7 @@ import com.w2sv.androidutils.generic.getParcelableCompat
 import com.w2sv.autocrop.activities.AppActivity
 import com.w2sv.autocrop.activities.main.about.AboutFragment
 import com.w2sv.autocrop.activities.main.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.domain.AccumulatedIOResults
+import com.w2sv.autocrop.activities.examination.IOResults
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,7 +33,7 @@ class MainActivity : AppActivity() {
     //////////////////////////////////////
 
     override fun getRootFragment(): Fragment =
-        FlowFieldFragment.getInstance(intent.getParcelableCompat(AccumulatedIOResults.EXTRA))
+        FlowFieldFragment.getInstance(intent.getParcelableCompat(IOResults.EXTRA))
 
     override fun handleOnBackPressed() {
         when (val fragment = getCurrentFragment()) {

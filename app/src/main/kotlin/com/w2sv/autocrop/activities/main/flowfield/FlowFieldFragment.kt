@@ -38,7 +38,7 @@ import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.activities.main.flowfield.contracthandlers.OpenDocumentTreeContractHandler
 import com.w2sv.autocrop.activities.main.flowfield.contracthandlers.SelectImagesContractHandlerCompat
 import com.w2sv.autocrop.databinding.FlowfieldBinding
-import com.w2sv.autocrop.domain.AccumulatedIOResults
+import com.w2sv.autocrop.activities.examination.IOResults
 import com.w2sv.autocrop.ui.views.animate
 import com.w2sv.autocrop.ui.views.fadeIn
 import com.w2sv.autocrop.ui.views.fadeInAnimationComposer
@@ -75,7 +75,7 @@ class FlowFieldFragment :
         @ApplicationContext context: Context
     ) : androidx.lifecycle.ViewModel() {
 
-        val accumulatedIoResults: AccumulatedIOResults? = savedStateHandle[AccumulatedIOResults.EXTRA]
+        val ioResults: IOResults? = savedStateHandle[IOResults.EXTRA]
 
         var fadedInForegroundOnEntry = false
 
@@ -86,7 +86,7 @@ class FlowFieldFragment :
         fun showIOResultsNotificationIfApplicable(
             context: Context
         ) {
-            accumulatedIoResults?.let {
+            ioResults?.let {
                 context.showToast(it.getNotificationText())
             }
         }
@@ -172,7 +172,7 @@ class FlowFieldFragment :
     }
 
     private fun FlowfieldBinding.showLayoutElements() {
-        val anyCropsSaved = viewModel.accumulatedIoResults?.anyCropsSaved == true
+        val anyCropsSaved = viewModel.ioResults?.anyCropsSaved == true
 
         when (viewModel.fadedInForegroundOnEntry) {
             true -> if (anyCropsSaved) {
@@ -213,7 +213,7 @@ class FlowFieldFragment :
                     Intent(Intent.ACTION_SEND_MULTIPLE)
                         .putExtra(
                             Intent.EXTRA_STREAM,
-                            viewModel.accumulatedIoResults!!.cropUris
+                            viewModel.ioResults!!.cropUris
                         )
                         .setType(IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER),
                     null
@@ -347,7 +347,7 @@ class FlowFieldFragment :
     }
 
     companion object {
-        fun getInstance(accumulatedIoResults: AccumulatedIOResults?): FlowFieldFragment =
-            getFragment(FlowFieldFragment::class.java, AccumulatedIOResults.EXTRA to accumulatedIoResults)
+        fun getInstance(ioResults: IOResults?): FlowFieldFragment =
+            getFragment(FlowFieldFragment::class.java, IOResults.EXTRA to ioResults)
     }
 }

@@ -16,7 +16,6 @@ import com.w2sv.autocrop.activities.examination.exit.ExitFragment
 import com.w2sv.autocrop.activities.examination.pager.CropPagerFragment
 import com.w2sv.autocrop.activities.examination.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
-import com.w2sv.autocrop.domain.AccumulatedIOResults
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.io.CropBundleIOProcessingUseCase
 import com.w2sv.cropbundle.io.CropBundleIOResult
@@ -80,7 +79,7 @@ class ExaminationActivity : AppActivity() {
             MainActivity.start(
                 context = context,
                 intentConfigurationBlock = {
-                    putExtra(AccumulatedIOResults.EXTRA, AccumulatedIOResults.get(cropBundleIOResults))
+                    putExtra(IOResults.EXTRA, IOResults.get(cropBundleIOResults))
                 }
             )
         }

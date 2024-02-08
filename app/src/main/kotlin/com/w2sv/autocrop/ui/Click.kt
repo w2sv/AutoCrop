@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.ui.model
+package com.w2sv.autocrop.ui
 
 enum class Click {
     Single,

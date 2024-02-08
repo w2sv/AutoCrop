@@ -42,7 +42,7 @@ import com.w2sv.autocrop.activities.examination.pager.dialogs.cropsaving.SaveAll
 import com.w2sv.autocrop.activities.examination.pager.dialogs.recrop.RecropDialogFragment
 import com.w2sv.autocrop.activities.examination.saveall.SaveAllFragment
 import com.w2sv.autocrop.databinding.CropPagerBinding
-import com.w2sv.autocrop.ui.model.Click
+import com.w2sv.autocrop.ui.Click
 import com.w2sv.autocrop.ui.views.KEEP_MENU_ITEM_OPEN_ON_CLICK
 import com.w2sv.autocrop.ui.views.VisualizationMethod
 import com.w2sv.autocrop.ui.views.animate
