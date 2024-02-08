@@ -16,39 +16,19 @@
                     android:id="@+id/main_menu_item_configure_cropping_settings"
                     android:icon="@drawable/ic_settings_24"
                     android:title="@string/settings" />
-            </menu>
-        </item>
-    </group>
-
-    <!--  Crop Saving  -->
-
-    <group>
-        <item android:title="@string/menu_item_divider_saving">
-
-            <menu>
                 <item
-                    android:id="@+id/main_menu_item_change_crop_dir"
+                    android:id="@+id/main_menu_item_save_dir"
                     android:icon="@drawable/ic_folder_24"
-                    android:title="@string/menu_item_change_directory" />
+                    android:title="@string/menu_item_save_dir" />
                 <item
-                    android:id="@+id/main_menu_item_current_crop_dir"
+                    android:id="@+id/main_menu_item_save_dir_display"
                     android:enabled="false"
                     tools:ignore="MenuTitle" />
             </menu>
         </item>
     </group>
 
-    <!--    <group>-->
-    <!--        <item android:title="@string/menu_item_divider_examination">-->
-
-    <!--            <menu>-->
-    <!--                <item-->
-    <!--                    android:id="@+id/main_menu_item_auto_scroll"-->
-    <!--                    android:icon="@drawable/ic_autoscroll_24"-->
-    <!--                    android:title="@string/menu_item_auto_scroll" />-->
-    <!--            </menu>-->
-    <!--        </item>-->
-    <!--    </group>-->
+    <!--  Crop Saving  -->
 
     <!--  Other  -->
 

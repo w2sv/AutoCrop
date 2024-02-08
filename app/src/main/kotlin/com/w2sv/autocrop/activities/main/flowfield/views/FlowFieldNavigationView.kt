@@ -79,8 +79,8 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         }
 
     private fun setCurrentCropDirIdentifier() {
-        viewModel.cropSaveDirIdentifierLive.observe(lifecycleOwner) { cropSaveDirIdentifier ->
-            menu.configureItem(R.id.main_menu_item_current_crop_dir) { item ->
+        viewModel.cropSaveDirIdentifier.observe(lifecycleOwner) { cropSaveDirIdentifier ->
+            menu.configureItem(R.id.main_menu_item_save_dir_display) { item ->
                 item.title = cropSaveDirIdentifier
             }
         }
@@ -89,10 +89,8 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     private fun setOnClickListeners() {
         setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.main_menu_item_change_crop_dir -> {
-                    flowFieldFragment
-                        .openDocumentTreeContractHandler
-                        .selectDocument(viewModel.cropSaveDirTreeUri.value)
+                R.id.main_menu_item_save_dir -> {
+                    flowFieldFragment.launchCropSaveDirSelection()
                 }
 
                 R.id.main_menu_item_configure_cropping_settings -> {

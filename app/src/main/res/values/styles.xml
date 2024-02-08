@@ -54,9 +54,10 @@
     <style name="AutoCropTV" parent="ShadowVisible">
         <item name="android:text">@string/auto_crop</item>
         <item name="android:textColor">@color/magenta_saturated</item>
-        <item name="fontFamily">@font/tiltprism</item>
         <item name="android:paddingHorizontal">4dp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/tiltprism</item>
+        <item name="fontFamily">@font/tiltprism</item>
     </style>
 
     <style name="AutoCropTVBig" parent="AutoCropTV">

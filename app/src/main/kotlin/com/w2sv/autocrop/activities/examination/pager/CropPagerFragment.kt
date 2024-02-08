@@ -513,7 +513,7 @@ class CropPagerFragment :
                 requireContext().showToast(getString(R.string.tap_again_to_return_to_main_screen))
             },
             {
-                activityViewModel.startMainActivity(requireActivity())
+                activityViewModel.startMainActivity(requireContext())
             }
         )
     }

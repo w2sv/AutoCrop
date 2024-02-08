@@ -6,10 +6,15 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.text.color
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.viewModels
@@ -24,6 +29,7 @@ import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.coroutines.collectFromFlow
 import com.w2sv.androidutils.eventhandling.BackPressHandler
 import com.w2sv.androidutils.generic.uris
+import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
 import com.w2sv.androidutils.lifecycle.extensions.addObservers
 import com.w2sv.androidutils.lifecycle.extensions.toggle
 import com.w2sv.androidutils.notifying.showToast
@@ -34,11 +40,9 @@ import com.w2sv.androidutils.ui.views.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
-import com.w2sv.autocrop.activities.main.MainActivity
-import com.w2sv.autocrop.activities.main.flowfield.contracthandlers.OpenDocumentTreeContractHandler
-import com.w2sv.autocrop.activities.main.flowfield.contracthandlers.SelectImagesContractHandlerCompat
-import com.w2sv.autocrop.databinding.FlowfieldBinding
 import com.w2sv.autocrop.activities.examination.IOResults
+import com.w2sv.autocrop.activities.main.MainActivity
+import com.w2sv.autocrop.databinding.FlowfieldBinding
 import com.w2sv.autocrop.ui.views.animate
 import com.w2sv.autocrop.ui.views.fadeIn
 import com.w2sv.autocrop.ui.views.fadeInAnimationComposer
@@ -102,7 +106,7 @@ class FlowFieldFragment :
             _hideForegroundElements.toggle()
         }
 
-        val cropSaveDirIdentifierLive = preferencesRepository.cropSaveDirDocumentUri
+        val cropSaveDirIdentifier = preferencesRepository.cropSaveDirDocumentUri
             .map { cropSaveDirPathIdentifier(it, context) }
             .asLiveData(Dispatchers.Main)
 
@@ -120,12 +124,12 @@ class FlowFieldFragment :
         }
 
         fun setCropSaveDirTreeUri(treeUri: Uri, contentResolver: ContentResolver) {
-            viewModelScope.launch { preferencesRepository.saveCropSaveDirTreeUri(treeUri) }
             contentResolver
                 .takePersistableUriPermission(
                     treeUri,
                     Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                 )
+            viewModelScope.launch { preferencesRepository.saveCropSaveDirTreeUri(treeUri) }
         }
 
         val cropSaveDirTreeUri = preferencesRepository.cropSaveDirTreeUri
@@ -151,7 +155,6 @@ class FlowFieldFragment :
                 openDocumentTreeContractHandler,
                 writeExternalStoragePermissionHandler
             ) + screenshotListeningPermissionHandlers
-
         )
     }
 
@@ -247,7 +250,7 @@ class FlowFieldFragment :
     }
 
     /**
-     * ActivityCallContractAdministrators
+     * ActivityCallContractHandlers
      */
 
     private val writeExternalStoragePermissionHandler by lazy {
@@ -313,21 +316,28 @@ class FlowFieldFragment :
         )
     }
 
-    val openDocumentTreeContractHandler by lazy {
-        OpenDocumentTreeContractHandler(requireActivity()) {
-            it?.let { treeUri ->
-                viewModel.setCropSaveDirTreeUri(treeUri, requireContext().contentResolver)
-                // TODO: show toast in reactive manner on viewModel.cropSaveDirIdentifierLive change
-                requireContext().showToast(
-                    text = SpannableStringBuilder()
-                        .append(getString(R.string.crops_will_be_saved_to))
-                        .color(requireContext().getColor(R.color.success)) {
-                            append(viewModel.cropSaveDirIdentifierLive.value!!)
-                        },
-                    duration = Toast.LENGTH_LONG
-                )
+    private val openDocumentTreeContractHandler by lazy {
+        OpenDocumentTreeContractHandler(
+            activity = requireActivity(),
+            resultCallback = {
+                it?.let { treeUri ->
+                    viewModel.setCropSaveDirTreeUri(treeUri, requireContext().contentResolver)
+                    // TODO: show toast in reactive manner on viewModel.cropSaveDirIdentifierLive change
+                    requireContext().showToast(
+                        text = SpannableStringBuilder()
+                            .append(getString(R.string.crops_will_be_saved_to))
+                            .color(requireContext().getColor(R.color.success)) {
+                                append(viewModel.cropSaveDirIdentifier.value!!)
+                            },
+                        duration = Toast.LENGTH_LONG
+                    )
+                }
             }
-        }
+        )
+    }
+
+    fun launchCropSaveDirSelection() {
+        openDocumentTreeContractHandler.selectDocument(viewModel.cropSaveDirTreeUri.value)
     }
 
     fun onBackPress() {
@@ -349,5 +359,76 @@ class FlowFieldFragment :
     companion object {
         fun getInstance(ioResults: IOResults?): FlowFieldFragment =
             getFragment(FlowFieldFragment::class.java, IOResults.EXTRA to ioResults)
+    }
+}
+
+private class OpenDocumentTreeContractHandler(
+    activity: ComponentActivity,
+    override val resultCallback: (Uri?) -> Unit
+) : ActivityCallContractHandler.Impl<Uri?, Uri?>(
+    activity = activity,
+    activityResultContract = object : ActivityResultContracts.OpenDocumentTree() {
+        override fun createIntent(context: Context, input: Uri?): Intent =
+            super.createIntent(context, input)
+                .setFlags(
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                            Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                            Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+                )
+    }
+) {
+    fun selectDocument(treeUri: Uri?) {
+        resultLauncher.launch(treeUri)
+    }
+}
+
+private sealed interface SelectImagesContractHandlerCompat<I, O> : ActivityCallContractHandler<I, O> {
+
+    companion object {
+        fun getInstance(
+            activity: ComponentActivity,
+            callbackLowerThanQ: (ActivityResult) -> Unit,
+            callbackFromQ: (List<Uri>) -> Unit
+        ): SelectImagesContractHandlerCompat<*, *> =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                FromQ(activity, callbackFromQ)
+            else
+                LowerThanQ(activity, callbackLowerThanQ)
+    }
+
+    fun selectImages()
+
+    class LowerThanQ(
+        activity: ComponentActivity,
+        override val resultCallback: (ActivityResult) -> Unit
+    ) : ActivityCallContractHandler.Impl<Intent, ActivityResult>(
+        activity,
+        ActivityResultContracts.StartActivityForResult()
+    ),
+        SelectImagesContractHandlerCompat<Intent, ActivityResult> {
+
+        override fun selectImages() {
+            resultLauncher.launch(
+                Intent(Intent.ACTION_PICK).apply {
+                    type = IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
+                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                }
+            )
+        }
+    }
+
+    class FromQ(
+        activity: ComponentActivity,
+        override val resultCallback: (List<Uri>) -> Unit
+    ) : ActivityCallContractHandler.Impl<PickVisualMediaRequest, List<@JvmSuppressWildcards Uri>>(
+        activity,
+        ActivityResultContracts.PickMultipleVisualMedia()
+    ),
+        SelectImagesContractHandlerCompat<PickVisualMediaRequest, List<@JvmSuppressWildcards Uri>> {
+
+        override fun selectImages() {
+            resultLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
     }
 }

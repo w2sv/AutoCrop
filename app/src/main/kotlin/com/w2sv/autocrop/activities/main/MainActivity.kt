@@ -8,10 +8,11 @@ import androidx.fragment.app.Fragment
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.w2sv.androidutils.generic.getParcelableCompat
 import com.w2sv.autocrop.activities.AppActivity
+import com.w2sv.autocrop.activities.examination.IOResults
 import com.w2sv.autocrop.activities.main.about.AboutFragment
 import com.w2sv.autocrop.activities.main.flowfield.FlowFieldFragment
-import com.w2sv.autocrop.activities.examination.IOResults
 import dagger.hilt.android.AndroidEntryPoint
+import slimber.log.i
 
 @AndroidEntryPoint
 class MainActivity : AppActivity() {
@@ -36,6 +37,8 @@ class MainActivity : AppActivity() {
         FlowFieldFragment.getInstance(intent.getParcelableCompat(IOResults.EXTRA))
 
     override fun handleOnBackPressed() {
+        i { "handleOnBackPressed" }
+
         when (val fragment = getCurrentFragment()) {
             is AboutFragment -> supportFragmentManager.popBackStack()
             is FlowFieldFragment -> fragment.onBackPress()
@@ -48,7 +51,6 @@ class MainActivity : AppActivity() {
 
         fun start(
             context: Context,
-            clearCurrentActivity: Boolean = false,
             animation: ((Context) -> Unit)? = Animatoo::animateSwipeRight,
             intentConfigurationBlock: (Intent.() -> Intent) = { this }
         ) {
@@ -58,7 +60,7 @@ class MainActivity : AppActivity() {
                     MainActivity::class.java
                 )
                     .intentConfigurationBlock()
-                    .apply { if (clearCurrentActivity) flags = Intent.FLAG_ACTIVITY_CLEAR_TASK }
+                    .apply { flags = Intent.FLAG_ACTIVITY_CLEAR_TOP }
             )
             animation?.invoke(context)
         }
