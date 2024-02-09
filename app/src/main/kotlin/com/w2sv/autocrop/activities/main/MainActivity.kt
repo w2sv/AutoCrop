@@ -52,14 +52,14 @@ class MainActivity : AppActivity() {
         fun start(
             context: Context,
             animation: ((Context) -> Unit)? = Animatoo::animateSwipeRight,
-            intentConfigurationBlock: (Intent.() -> Intent) = { this }
+            configureIntent: (Intent.() -> Intent) = { this }
         ) {
             context.startActivity(
                 Intent(
                     context,
                     MainActivity::class.java
                 )
-                    .intentConfigurationBlock()
+                    .configureIntent()
                     .apply { flags = Intent.FLAG_ACTIVITY_CLEAR_TOP }
             )
             animation?.invoke(context)

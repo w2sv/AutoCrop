@@ -78,7 +78,7 @@ class ExaminationActivity : AppActivity() {
         fun startMainActivity(context: Context) {
             MainActivity.start(
                 context = context,
-                intentConfigurationBlock = {
+                configureIntent = {
                     putExtra(IOResults.EXTRA, IOResults.get(cropBundleIOResults))
                 }
             )

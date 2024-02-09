@@ -8,14 +8,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.text.color
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -27,6 +25,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.coroutines.collectFromFlow
+import com.w2sv.androidutils.coroutines.mapState
 import com.w2sv.androidutils.eventhandling.BackPressHandler
 import com.w2sv.androidutils.generic.uris
 import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
@@ -61,8 +60,6 @@ import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import processing.android.PFragment
 import javax.inject.Inject
@@ -107,8 +104,8 @@ class FlowFieldFragment :
         }
 
         val cropSaveDirIdentifier = preferencesRepository.cropSaveDirDocumentUri
-            .map { cropSaveDirPathIdentifier(it, context) }
-            .asLiveData(Dispatchers.Main)
+            .mapState { cropSaveDirPathIdentifier(it, context) }
+            .asLiveData()
 
         val screenshotListenerRunning: LiveData<Boolean> get() = _screenshotListenerRunning
         private val _screenshotListenerRunning = MutableLiveData(context.isServiceRunning<ScreenshotListener>())
@@ -322,15 +319,6 @@ class FlowFieldFragment :
             resultCallback = {
                 it?.let { treeUri ->
                     viewModel.setCropSaveDirTreeUri(treeUri, requireContext().contentResolver)
-                    // TODO: show toast in reactive manner on viewModel.cropSaveDirIdentifierLive change
-                    requireContext().showToast(
-                        text = SpannableStringBuilder()
-                            .append(getString(R.string.crops_will_be_saved_to))
-                            .color(requireContext().getColor(R.color.success)) {
-                                append(viewModel.cropSaveDirIdentifier.value!!)
-                            },
-                        duration = Toast.LENGTH_LONG
-                    )
                 }
             }
         )
