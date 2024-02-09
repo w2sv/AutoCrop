@@ -30,7 +30,7 @@ import com.w2sv.autocrop.activities.examination.adjustment.model.Line
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.cropbundle.CropBundle
-import com.w2sv.cropbundle.cropping.CropEdges
+import com.w2sv.cropbundle.cropping.model.CropEdges
 import com.w2sv.domain.model.CropAdjustmentMode
 import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.kotlinutils.extensions.rounded

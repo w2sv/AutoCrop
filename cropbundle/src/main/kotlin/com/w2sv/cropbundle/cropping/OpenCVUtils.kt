@@ -1,6 +1,7 @@
 package com.w2sv.cropbundle.cropping
 
 import android.graphics.Bitmap
+import com.w2sv.cropbundle.cropping.model.CropEdges
 import org.opencv.android.Utils
 import org.opencv.core.Core
 import org.opencv.core.Mat

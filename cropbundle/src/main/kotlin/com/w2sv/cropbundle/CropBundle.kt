@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Parcelable
 import android.provider.MediaStore
 import androidx.core.database.getLongOrNull
-import com.w2sv.cropbundle.cropping.CropEdges
+import com.w2sv.cropbundle.cropping.model.CropEdges
 import com.w2sv.cropbundle.cropping.CropSensitivity
 import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.cropbundle.cropping.cropped

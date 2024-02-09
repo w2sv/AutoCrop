@@ -1,4 +1,4 @@
-package com.w2sv.cropbundle.cropping
+package com.w2sv.cropbundle.cropping.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

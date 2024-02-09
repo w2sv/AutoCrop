@@ -38,7 +38,7 @@ import com.w2sv.autocrop.activities.examination.adjustment.model.Edge.BOTTOM
 import com.w2sv.autocrop.activities.examination.adjustment.model.Edge.TOP
 import com.w2sv.autocrop.activities.examination.adjustment.model.EdgeSelectionState
 import com.w2sv.autocrop.activities.examination.adjustment.model.Line
-import com.w2sv.cropbundle.cropping.CropEdges
+import com.w2sv.cropbundle.cropping.model.CropEdges
 import com.w2sv.domain.model.CropAdjustmentMode
 import kotlin.math.max
 import kotlin.math.min

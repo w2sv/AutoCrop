@@ -1,18 +1,43 @@
 package com.w2sv.cropbundle.cropping
 
+import android.graphics.Bitmap
 import com.w2sv.androidutils.generic.measured
+import com.w2sv.cropbundle.cropping.model.CropEdges
+import com.w2sv.cropbundle.cropping.model.CropParameters
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
 import slimber.log.d
 
-internal fun getEdgeCandidates(matRGBA: Mat, @CropSensitivity sensitivity: Int): List<Int>? {
+fun Bitmap.cropped(edges: CropEdges): Bitmap =
+    Bitmap.createBitmap(
+        this,
+        0,
+        edges.top + 1,
+        width,
+        edges.height - 1
+    )
+
+fun Bitmap.crop(@CropSensitivity sensitivity: Int): CropParameters? {
+    val matRGBA = getMat()
+    return getEdgeCandidates(matRGBA, sensitivity)?.let {
+        CropParameters(
+            edges = getMaxScoreCropEdges(candidates = it, matRGBA = matRGBA),
+            candidates = it
+        )
+    }
+}
+
+private fun getEdgeCandidates(matRGBA: Mat, @CropSensitivity sensitivity: Int): List<Int>? {
+    // Convert to gray scale
     val matGrayScale = Mat()
     Imgproc.cvtColor(matRGBA, matGrayScale, Imgproc.COLOR_RGBA2GRAY)
 
+    // Get canny edge detected matrix
     val matCanny = Mat()
     Imgproc.Canny(matGrayScale, matCanny, 100.0, 200.0)
 
+    // Convert sensitivity to threshold
     val threshold = edgeCandidateThreshold(sensitivity)
 
     return measured(methodLabel = "getCandidates") {
@@ -28,7 +53,7 @@ internal fun getEdgeCandidates(matRGBA: Mat, @CropSensitivity sensitivity: Int):
     }
 }
 
-internal fun getMaxScoreCropEdges(candidates: List<Int>, matRGBA: Mat): CropEdges {
+private fun getMaxScoreCropEdges(candidates: List<Int>, matRGBA: Mat): CropEdges {
     d { "Candidates: $candidates" }
 
     val matSobel = Mat()

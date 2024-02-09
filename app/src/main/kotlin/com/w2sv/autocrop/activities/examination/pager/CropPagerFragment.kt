@@ -59,7 +59,7 @@ import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.common.Constants
 import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.CropBundle
-import com.w2sv.cropbundle.cropping.CropEdges
+import com.w2sv.cropbundle.cropping.model.CropEdges
 import com.w2sv.cropbundle.cropping.CropSensitivity
 import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.domain.repository.PreferencesRepository
