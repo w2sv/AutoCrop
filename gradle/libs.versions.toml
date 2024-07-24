@@ -9,7 +9,7 @@ hilt = '2.46'
 junit = '5.9.3'
 mannodermaus = '1.3.0'
 espresso = '3.5.1'
-lifecycle = '2.6.1'
+lifecycle = '2.8.4'
 
 [libraries]
 
