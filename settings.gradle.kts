@@ -20,10 +20,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "AutoCrop"
 include (":app")
-include (":domain")
-include (":datastore")
-include (":cropbundle")
-include (":screenshotlistening")
-include (":common")
-include (":flowfield")
-include (":opencv")
+include (":core:domain")
+include (":core:datastore")
+include (":core:cropbundle")
+include (":core:screenshotlistening")
+include (":core:common")
+include (":core:flowfield")
+include (":core:opencv")

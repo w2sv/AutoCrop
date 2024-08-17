@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.play)
     alias(libs.plugins.kotlin)
     alias(libs.plugins.autocrop.hilt)
-    alias(libs.plugins.kotlin.parcelize) 
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 kotlin {
@@ -112,14 +112,14 @@ play {
 }
 
 dependencies {
-    // Modules
-    implementation(projects.cropbundle)
-    implementation(projects.domain)
-    implementation(projects.datastore)
-    implementation(projects.screenshotlistening)
-    implementation(projects.common)
-    implementation(projects.flowfield)
-    implementation(projects.opencv)
+    // Project Modules
+    implementation(projects.core.cropbundle)
+    implementation(projects.core.domain)
+    implementation(projects.core.datastore)
+    implementation(projects.core.screenshotlistening)
+    implementation(projects.core.common)
+    implementation(projects.core.flowfield)
+    implementation(projects.core.opencv)
 
     // Androidx
     implementation(libs.androidx.appcompat)
@@ -136,6 +136,8 @@ dependencies {
     implementation(libs.kotlinutils)
     implementation(libs.viewboundcontroller)
     implementation(libs.androidutils.core)
+    implementation(libs.androidutils.lifecycle)
+    implementation(libs.androidutils.view)
     implementation(libs.viewanimations)
     implementation(libs.bidirectionalviewpager)
 

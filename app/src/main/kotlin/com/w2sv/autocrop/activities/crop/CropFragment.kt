@@ -12,9 +12,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
-import com.w2sv.androidutils.eventhandling.BackPressHandler
-import com.w2sv.androidutils.lifecycle.extensions.increment
-import com.w2sv.androidutils.notifying.showToast
+import com.w2sv.androidutils.BackPressHandler
+import com.w2sv.androidutils.lifecycle.increment
+import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
@@ -25,7 +25,7 @@ import com.w2sv.autocrop.databinding.CropBinding
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.requireCastActivity
-import com.w2sv.common.Constants
+import com.w2sv.autocrop.ui.Constant
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,7 +50,7 @@ class CropFragment
 
         val backPressListener = BackPressHandler(
             coroutineScope = viewModelScope,
-            confirmationWindowDuration = Constants.CONFIRMATION_WINDOW_DURATION
+            confirmationWindowDuration = Constant.BACKPRESS_CONFIRMATION_WINDOW_DURATION
         )
 
         private val screenshotUris: List<Uri> = savedStateHandle[MainActivity.EXTRA_SELECTED_IMAGE_URIS]!!
@@ -96,7 +96,7 @@ class CropFragment
                 .run {
                     when (this) {
                         is CropBundle.CreationResult.Failure.NoCropEdgesFound -> {
-                            cropResults.nNotCroppableImages += 1
+                            cropResults.uncroppableImageCount += 1
                             null
                         }
 

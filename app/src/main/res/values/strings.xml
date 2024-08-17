@@ -81,4 +81,8 @@
     <string name="updated_crop">Updated Crop</string>
     <string name="saved_crop">Saved crop</string>
     <string name="updated_crop_settings">Updated Crop Settings</string>
+    <plurals name="screenshot">
+        <item quantity="one">screenshot</item>
+        <item quantity="other">screenshots</item>
+    </plurals>
 </resources>

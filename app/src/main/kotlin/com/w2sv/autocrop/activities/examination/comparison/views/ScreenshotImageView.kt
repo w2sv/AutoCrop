@@ -3,7 +3,7 @@ package com.w2sv.autocrop.activities.examination.comparison.views
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
-import com.w2sv.androidutils.ui.views.viewModel
+import com.w2sv.androidutils.view.viewModel
 import com.w2sv.autocrop.activities.examination.comparison.ComparisonFragment
 
 class ScreenshotImageView(context: Context, attributeSet: AttributeSet) :

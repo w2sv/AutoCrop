@@ -1,6 +1,7 @@
 package com.w2sv.autocrop.activities.examination.pager
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
@@ -19,16 +20,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.viewpager2.widget.ViewPager2
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.androidutils.eventhandling.BackPressHandler
-import com.w2sv.androidutils.generic.getParcelableCompat
-import com.w2sv.androidutils.notifying.makeToast
-import com.w2sv.androidutils.notifying.showToast
-import com.w2sv.androidutils.ui.dialogs.show
-import com.w2sv.androidutils.ui.resources.getHtmlText
-import com.w2sv.androidutils.ui.resources.getLong
-import com.w2sv.androidutils.ui.views.hide
-import com.w2sv.androidutils.ui.views.remove
-import com.w2sv.androidutils.ui.views.show
+import com.w2sv.androidutils.BackPressHandler
+import com.w2sv.androidutils.os.getParcelableCompat
+import com.w2sv.androidutils.res.getLong
+import com.w2sv.androidutils.res.getText
+import com.w2sv.androidutils.view.dialogs.show
+import com.w2sv.androidutils.view.hide
+import com.w2sv.androidutils.view.remove
+import com.w2sv.androidutils.view.show
+import com.w2sv.androidutils.widget.makeToast
+import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
@@ -43,6 +44,7 @@ import com.w2sv.autocrop.activities.examination.pager.dialogs.recrop.RecropDialo
 import com.w2sv.autocrop.activities.examination.saveall.SaveAllFragment
 import com.w2sv.autocrop.databinding.CropPagerBinding
 import com.w2sv.autocrop.ui.Click
+import com.w2sv.autocrop.ui.Constant
 import com.w2sv.autocrop.ui.views.KEEP_MENU_ITEM_OPEN_ON_CLICK
 import com.w2sv.autocrop.ui.views.VisualizationMethod
 import com.w2sv.autocrop.ui.views.animate
@@ -56,14 +58,12 @@ import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.requireCastActivity
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
-import com.w2sv.common.Constants
 import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.CropBundle
-import com.w2sv.cropbundle.cropping.model.CropEdges
 import com.w2sv.cropbundle.cropping.CropSensitivity
 import com.w2sv.cropbundle.cropping.crop
+import com.w2sv.cropbundle.cropping.model.CropEdges
 import com.w2sv.domain.repository.PreferencesRepository
-import com.w2sv.kotlinutils.extensions.numericallyInflected
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -85,6 +85,7 @@ class CropPagerFragment :
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
         private val preferencesRepository: PreferencesRepository,
+        private val resources: Resources
     ) : androidx.lifecycle.ViewModel() {
 
         val deleteScreenshots = preferencesRepository.deleteScreenshots.stateIn(viewModelScope, SharingStarted.Eagerly)
@@ -167,12 +168,19 @@ class CropPagerFragment :
                 .run {
                     val cropResults = savedStateHandle.get<CropResults>(CropResults.EXTRA)!!
 
-                    if (cropResults.nNotCroppableImages != 0) {
+                    if (cropResults.uncroppableImageCount != 0) {
                         append("Couldn't find crop bounds for")
                         bold {
-                            append(" ${cropResults.nNotCroppableImages}")
+                            append(" ${cropResults.uncroppableImageCount}")
                         }
-                        append(" ${"screenshot".numericallyInflected(cropResults.nNotCroppableImages)}")
+                        append(
+                            " ${
+                                resources.getQuantityString(
+                                    R.plurals.screenshot,
+                                    cropResults.uncroppableImageCount
+                                )
+                            }"
+                        )
                     }
                     ifEmpty { null }
                 }
@@ -189,12 +197,12 @@ class CropPagerFragment :
                 initialThreshold = dataSet.liveElement.cropSensitivity
             )
 
-        val backPressHandler = BackPressHandler(
-            coroutineScope = viewModelScope,
-            confirmationWindowDuration = Constants.CONFIRMATION_WINDOW_DURATION
-        )
-
         var lastCropProcedureToast: Toast? = null
+
+        val backPressHandler = BackPressHandler(
+            viewModelScope,
+            Constant.BACKPRESS_CONFIRMATION_WINDOW_DURATION
+        )
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -251,7 +259,7 @@ class CropPagerFragment :
 
     private fun CropPagerBinding.updateOnDataSetPositionChanged(position: Int) {
         with(viewModel.dataSet[position].crop) {
-            discardingStatisticsTv.text = resources.getHtmlText(
+            discardingStatisticsTv.text = resources.getText(
                 R.string.discarding_statistics,
                 "$discardedPercentage%",
                 discardedFileSizeFormatted

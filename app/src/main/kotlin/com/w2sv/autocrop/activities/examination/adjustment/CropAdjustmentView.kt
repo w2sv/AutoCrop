@@ -18,7 +18,7 @@ import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.findViewTreeLifecycleOwner
-import com.w2sv.androidutils.ui.views.viewModel
+import com.w2sv.androidutils.view.viewModel
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.examination.adjustment.extensions.animateMatrix
 import com.w2sv.autocrop.activities.examination.adjustment.extensions.asMappedFrom
@@ -448,7 +448,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         private val horizontalCropRectEdgePaint: Paint by lazy {
             Paint().apply {
-                color = context.getColor(com.w2sv.common.R.color.magenta_saturated)
+                color = context.getColor(com.w2sv.core.common.R.color.magenta_saturated)
                 strokeWidth = 3F
                 style = Paint.Style.FILL
             }
@@ -456,7 +456,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         private val horizontalProtrusionPaint: Paint by lazy {
             Paint().apply {
-                color = context.getColor(com.w2sv.common.R.color.magenta_saturated)
+                color = context.getColor(com.w2sv.core.common.R.color.magenta_saturated)
                 strokeWidth = 8F
                 style = Paint.Style.FILL
             }
@@ -747,7 +747,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
 
         private const val DELTA_CENTER_HORIZONTAL_EDGE_PROTRUSION: Float = 32f
 
-        private val UNSELECTED_EDGE_CANDIDATE_COLOR = com.w2sv.common.R.color.light_gray
+        private val UNSELECTED_EDGE_CANDIDATE_COLOR = com.w2sv.core.common.R.color.light_gray
 
         private val SELECTED_EDGE_CANDIDATE_COLOR = R.color.highlight
 

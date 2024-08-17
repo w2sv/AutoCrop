@@ -18,11 +18,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
-import com.w2sv.androidutils.ui.animations.SimpleAnimationListener
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.databinding.CropPagerExitBinding
 import com.w2sv.autocrop.ui.views.getAnimationComposer
+import com.w2sv.autocrop.utils.doOnEnd
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.cropbundle.io.CropBundleIOResult
 import com.w2sv.cropbundle.io.ScreenshotDeletionResult
@@ -77,20 +77,15 @@ class ExitFragment :
         if (enter)
             AnimationUtils.loadAnimation(requireActivity(), nextAnim)
                 .apply {
-                    setAnimationListener(
-                        object : SimpleAnimationListener() {
-
-                            override fun onAnimationEnd(animation: Animation?) {
-                                deleteRequestIntentContractAdministrator?.emitDeleteRequest(
-                                    requireContext().contentResolver,
-                                    viewModel.deletionApprovalRequiringCropBundleIOResults.map {
-                                        (it.screenshotDeletionResult as ScreenshotDeletionResult.DeletionApprovalRequired).requestUri
-                                    }
-                                )
-                                    ?: launchAppIconAnimationAndStartMainActivity()
+                    doOnEnd {
+                        deleteRequestIntentContractAdministrator?.emitDeleteRequest(
+                            requireContext().contentResolver,
+                            viewModel.deletionApprovalRequiringCropBundleIOResults.map {
+                                (it.screenshotDeletionResult as ScreenshotDeletionResult.DeletionApprovalRequired).requestUri
                             }
-                        }
-                    )
+                        )
+                            ?: launchAppIconAnimationAndStartMainActivity()
+                    }
                 }
         else
             super.onCreateAnimation(transit, false, nextAnim)

@@ -19,11 +19,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
-import com.w2sv.androidutils.lifecycle.extensions.repostValue
-import com.w2sv.androidutils.ui.dialogs.show
-import com.w2sv.androidutils.ui.resources.getLong
-import com.w2sv.androidutils.ui.views.crossVisualize
-import com.w2sv.androidutils.ui.views.show
+import com.w2sv.androidutils.lifecycle.repostValue
+import com.w2sv.androidutils.res.getLong
+import com.w2sv.androidutils.view.crossVisualize
+import com.w2sv.androidutils.view.dialogs.show
+import com.w2sv.androidutils.view.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
@@ -84,9 +84,9 @@ class ComparisonFragment
 
         sharedElementEnterTransition = TransitionInflater.from(context)
             .inflateTransition(android.R.transition.move)
-            .setDuration(resources.getLong(R.integer.delay_medium))
-            .setInterpolator(DecelerateInterpolator(1.5f))
-            .addListener(
+            ?.setDuration(resources.getLong(R.integer.delay_medium))
+            ?.setInterpolator(DecelerateInterpolator(1.5f))
+            ?.addListener(
                 object : TransitionListenerAdapter() {
                     override fun onTransitionEnd(transition: Transition) {
                         super.onTransitionEnd(transition)

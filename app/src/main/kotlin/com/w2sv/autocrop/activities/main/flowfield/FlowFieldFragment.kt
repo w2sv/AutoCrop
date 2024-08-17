@@ -24,18 +24,14 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.androidutils.coroutines.collectFromFlow
-import com.w2sv.androidutils.coroutines.mapState
-import com.w2sv.androidutils.eventhandling.BackPressHandler
-import com.w2sv.androidutils.generic.uris
+import com.w2sv.androidutils.isServiceRunning
 import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
-import com.w2sv.androidutils.lifecycle.extensions.addObservers
-import com.w2sv.androidutils.lifecycle.extensions.toggle
-import com.w2sv.androidutils.notifying.showToast
-import com.w2sv.androidutils.services.isServiceRunning
-import com.w2sv.androidutils.ui.resources.getLong
-import com.w2sv.androidutils.ui.views.hide
-import com.w2sv.androidutils.ui.views.show
+import com.w2sv.androidutils.lifecycle.toggle
+import com.w2sv.androidutils.res.getLong
+import com.w2sv.androidutils.uris
+import com.w2sv.androidutils.view.hide
+import com.w2sv.androidutils.view.show
+import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.crop.CropActivity
@@ -51,15 +47,18 @@ import com.w2sv.autocrop.utils.cropSaveDirPathIdentifier
 import com.w2sv.autocrop.utils.extensions.resolution
 import com.w2sv.autocrop.utils.getFragment
 import com.w2sv.autocrop.utils.getMediaUri
-import com.w2sv.common.Constants
-import com.w2sv.common.PermissionHandler
+import com.w2sv.common.AppPermissionHandler
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
+import com.w2sv.domain.repository.PermissionRepository
 import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.flowfield.Sketch
+import com.w2sv.kotlinutils.coroutines.collectFromFlow
+import com.w2sv.kotlinutils.coroutines.mapState
 import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import processing.android.PFragment
 import javax.inject.Inject
@@ -67,6 +66,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FlowFieldFragment :
     AppFragment<FlowfieldBinding>(FlowfieldBinding::class.java) {
+
+    @Inject
+    lateinit var permissionRepository: PermissionRepository
 
     @HiltViewModel
     class ViewModel @Inject constructor(
@@ -130,15 +132,6 @@ class FlowFieldFragment :
         }
 
         val cropSaveDirTreeUri = preferencesRepository.cropSaveDirTreeUri
-
-        /**
-         * BackPressListener
-         */
-
-        val backPressHandler = BackPressHandler(
-            coroutineScope = viewModelScope,
-            confirmationWindowDuration = Constants.CONFIRMATION_WINDOW_DURATION
-        )
     }
 
     private val viewModel by viewModels<ViewModel>()
@@ -146,13 +139,12 @@ class FlowFieldFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        addObservers(
-            listOf(
-                selectImagesContractHandler,
-                openDocumentTreeContractHandler,
-                writeExternalStoragePermissionHandler
-            ) + screenshotListeningPermissionHandlers
-        )
+        (listOf(
+            selectImagesContractHandler,
+            openDocumentTreeContractHandler,
+            writeExternalStoragePermissionHandler
+        ) + screenshotListeningPermissionHandlers)
+            .forEach(lifecycle::addObserver)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -204,7 +196,7 @@ class FlowFieldFragment :
         }
         imageSelectionButton.setOnClickListener {
             writeExternalStoragePermissionHandler.requestPermissionIfRequired(
-                onGranted = selectImagesContractHandler::selectImages
+                onGranted = selectImagesContractHandler::selectImages,
             )
         }
         shareCropsButton.setOnClickListener {
@@ -251,16 +243,31 @@ class FlowFieldFragment :
      */
 
     private val writeExternalStoragePermissionHandler by lazy {
-        PermissionHandler(
-            requireActivity(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            R.string.media_file_writing_required_for_saving_crops,
-            R.string.go_to_app_settings_and_grant_media_file_writing_in_order_for_the_app_to_work
+        AppPermissionHandler(
+            activity = requireActivity(),
+            permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            permissionDeniedMessageRes = R.string.media_file_writing_required_for_saving_crops,
+            permissionRationalSuppressedMessageRes = R.string.go_to_app_settings_and_grant_media_file_writing_in_order_for_the_app_to_work,
+            permissionPreviouslyRequested = permissionRepository.readExternalStoragePermissionRequested.stateIn(
+                viewModel.viewModelScope,
+                SharingStarted.Eagerly
+            ),
+            savePermissionPreviouslyRequested = {
+                viewModel.viewModelScope.launch {
+                    permissionRepository.readExternalStoragePermissionRequested.save(
+                        true
+                    )
+                }
+            }
         )
     }
 
     val screenshotListeningPermissionHandlers by lazy {
-        ScreenshotListener.permissionHandlers(requireActivity())
+        ScreenshotListener.permissionHandlers(
+            componentActivity = requireActivity(),
+            permissionRepository = permissionRepository,
+            scope = viewModel.viewModelScope
+        )
     }
 
     private val selectImagesContractHandler: SelectImagesContractHandlerCompat<*, *> by lazy {
@@ -333,14 +340,7 @@ class FlowFieldFragment :
             if (isOpen)
                 closeDrawer()
             else
-                viewModel.backPressHandler(
-                    {
-                        requireContext().showToast(resources.getString(R.string.tap_again_to_exit))
-                    },
-                    {
-                        requireActivity().finishAffinity()
-                    }
-                )
+                requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
 

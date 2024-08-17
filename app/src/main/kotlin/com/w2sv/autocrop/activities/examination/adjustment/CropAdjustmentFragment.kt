@@ -33,7 +33,7 @@ import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.model.CropEdges
 import com.w2sv.domain.model.CropAdjustmentMode
 import com.w2sv.domain.repository.PreferencesRepository
-import com.w2sv.kotlinutils.extensions.rounded
+import com.w2sv.kotlinutils.rounded
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted

@@ -3,7 +3,7 @@ package com.w2sv.autocrop.activities.examination.comparison
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
-import com.w2sv.androidutils.ui.resources.getColoredDrawable
+import com.w2sv.androidutils.graphics.getColoredDrawable
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.views.RoundedDialogFragment
 import com.w2sv.domain.repository.PreferencesRepository
@@ -16,7 +16,7 @@ import javax.inject.Inject
 internal class ComparisonScreenInstructionDialogFragment : RoundedDialogFragment() {
 
     @HiltViewModel
-    class ViewModel @Inject constructor(val preferencesRepository: PreferencesRepository) : androidx.lifecycle.ViewModel() {
+    class ViewModel @Inject constructor(private val preferencesRepository: PreferencesRepository) : androidx.lifecycle.ViewModel() {
 
         fun onDismissDialog() {
             viewModelScope.launch { preferencesRepository.comparisonInstructionsShown.save(true) }
@@ -31,7 +31,7 @@ internal class ComparisonScreenInstructionDialogFragment : RoundedDialogFragment
             setIcon(
                 context.getColoredDrawable(
                     R.drawable.ic_inspect_image_24,
-                    com.w2sv.common.R.color.magenta_saturated
+                    com.w2sv.core.common.R.color.magenta_saturated
                 )
             )
             setMessage(getString(R.string.comparison_instruction))
