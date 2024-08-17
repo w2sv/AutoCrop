@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.autocrop.library)
     alias(libs.plugins.autocrop.hilt)
-    id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.parcelize) 
 }
 
 dependencies {
@@ -11,7 +11,7 @@ dependencies {
     implementation (libs.androidx.core)
     implementation (libs.kotlinutils)
     implementation (libs.slimber)
-    implementation (libs.androidutils)
+    implementation (libs.androidutils.core)
 
 //    // ---------------
 //    // unitTest

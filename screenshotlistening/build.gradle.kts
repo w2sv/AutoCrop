@@ -11,7 +11,7 @@ dependencies {
 
     implementation(libs.androidx.core)
     implementation(libs.slimber)
-    implementation(libs.androidutils)
+    implementation(libs.androidutils.core)
     implementation(libs.kotlinutils)
     implementation(libs.google.guava)
 

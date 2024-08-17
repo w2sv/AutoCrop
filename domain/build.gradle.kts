@@ -7,5 +7,5 @@ dependencies {
     implementation (libs.slimber)
 
     implementation (libs.kotlinutils)
-    implementation (libs.androidutils)
+    implementation (libs.androidutils.core)
 }

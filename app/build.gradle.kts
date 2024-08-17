@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.play)
     alias(libs.plugins.kotlin)
     alias(libs.plugins.autocrop.hilt)
-    id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.parcelize) 
 }
 
 kotlin {
@@ -135,7 +135,7 @@ dependencies {
     // Owned
     implementation(libs.kotlinutils)
     implementation(libs.viewboundcontroller)
-    implementation(libs.androidutils)
+    implementation(libs.androidutils.core)
     implementation(libs.viewanimations)
     implementation(libs.bidirectionalviewpager)
 

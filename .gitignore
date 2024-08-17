@@ -76,3 +76,5 @@ lint/reports/
 
 # Android Profiling
 *.hprof
+
+.kotlin/

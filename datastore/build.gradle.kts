@@ -9,5 +9,5 @@ dependencies {
     implementation (libs.androidx.datastore.preferences)
     implementation (libs.slimber)
 
-    implementation (libs.androidutils)
+    implementation (libs.androidutils.core)
 }
