@@ -21,14 +21,15 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/common" />
-            <option value="$PROJECT_DIR$/cropbundle" />
-            <option value="$PROJECT_DIR$/datastore" />
-            <option value="$PROJECT_DIR$/domain" />
-            <option value="$PROJECT_DIR$/flowfield" />
-            <option value="$PROJECT_DIR$/opencv" />
+            <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/common" />
+            <option value="$PROJECT_DIR$/core/cropbundle" />
+            <option value="$PROJECT_DIR$/core/datastore" />
+            <option value="$PROJECT_DIR$/core/domain" />
+            <option value="$PROJECT_DIR$/core/flowfield" />
+            <option value="$PROJECT_DIR$/core/opencv" />
+            <option value="$PROJECT_DIR$/core/screenshotlistening" />
             <option value="$PROJECT_DIR$/plugins" />
-            <option value="$PROJECT_DIR$/screenshotlistening" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

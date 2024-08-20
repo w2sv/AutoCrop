@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
 import com.daimajia.androidanimations.library.YoYo.YoYoString
-import com.w2sv.androidutils.ui.views.increaseTouchArea
-import com.w2sv.androidutils.ui.views.viewModel
+import com.w2sv.androidutils.view.increaseTouchArea
+import com.w2sv.androidutils.view.viewModel
 import com.w2sv.autocrop.activities.main.flowfield.FlowFieldFragment
 
 

@@ -18,6 +18,7 @@
     <application
         android:name=".Application"
         android:appCategory="image"
+        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/logo"
         android:label="@string/auto_crop"
         android:requestLegacyExternalStorage="true"

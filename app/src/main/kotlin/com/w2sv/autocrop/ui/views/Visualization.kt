@@ -1,7 +1,7 @@
 package com.w2sv.autocrop.ui.views
 
 import android.view.View
-import com.w2sv.androidutils.ui.views.show
+import com.w2sv.androidutils.view.show
 
 fun Iterable<View>.visualize(method: VisualizationMethod) {
     forEach {

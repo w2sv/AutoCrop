@@ -3,9 +3,9 @@ package com.w2sv.autocrop.ui.views
 import android.view.View
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
-import com.w2sv.androidutils.coroutines.launchDelayed
-import com.w2sv.androidutils.ui.views.hide
-import com.w2sv.androidutils.ui.views.show
+import com.w2sv.androidutils.view.hide
+import com.w2sv.androidutils.view.show
+import com.w2sv.kotlinutils.coroutines.launchDelayed
 import kotlinx.coroutines.CoroutineScope
 
 fun View.animate(

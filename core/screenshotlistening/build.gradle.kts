@@ -13,6 +13,7 @@ dependencies {
     implementation(libs.slimber)
     implementation(libs.androidutils.core)
     implementation(libs.kotlinutils)
+    implementation(libs.kotlindelegates)
     implementation(libs.google.guava)
 
     testImplementation(libs.bundles.unitTest)

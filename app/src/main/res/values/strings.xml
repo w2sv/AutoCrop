@@ -85,4 +85,8 @@
         <item quantity="one">screenshot</item>
         <item quantity="other">screenshots</item>
     </plurals>
+    <plurals name="crop">
+        <item quantity="one">crop</item>
+        <item quantity="other">crops</item>
+    </plurals>
 </resources>

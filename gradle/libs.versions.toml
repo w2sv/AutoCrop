@@ -26,9 +26,10 @@ androidutils-lifecycle = { module = "com.github.w2sv.AndroidUtils:lifecycle", ve
 androidutils-view = { module = "com.github.w2sv.AndroidUtils:views", version.ref = "androidutils" }
 datastoreutils-preferences = { module = "com.github.w2sv.DataStoreUtils:preferences", version.ref = "datastoreutils" }
 kotlinutils = "com.github.w2sv:KotlinUtils:0.1.3-rc1"
+kotlindelegates = "com.github.w2sv:Kotlin-Delegates:0.0.1-rc1"
 viewboundcontroller = "com.github.w2sv:ViewboundController:0.0.7-rc1"
 viewanimations = "com.github.w2sv:AndroidViewAnimations:3.0.2-rc2"
-bidirectionalviewpager = "com.github.w2sv:bidirectionalviewpager:0.0.1-rc1"
+bidirectionalviewpager = "com.github.w2sv:BidirectionalViewPager:0.0.2-rc1"
 permissionhandler = "com.github.w2sv:PermissionHandler:1.0.1-rc2"
 
 # androidx

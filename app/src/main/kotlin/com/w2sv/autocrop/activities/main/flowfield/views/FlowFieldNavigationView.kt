@@ -10,19 +10,19 @@ import androidx.core.app.ShareCompat
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.google.android.material.navigation.NavigationView
-import com.w2sv.androidutils.generic.appPlayStoreUrl
-import com.w2sv.androidutils.generic.openUrlWithActivityNotFoundHandling
-import com.w2sv.androidutils.generic.requireActivity
-import com.w2sv.androidutils.notifying.showToast
-import com.w2sv.androidutils.permissions.permissionhandler.requestPermissions
-import com.w2sv.androidutils.ui.dialogs.show
-import com.w2sv.androidutils.ui.views.configureItem
-import com.w2sv.androidutils.ui.views.viewModel
+import com.w2sv.androidutils.findActivity
+import com.w2sv.androidutils.openUrl
+import com.w2sv.androidutils.packagePlayStoreUrl
+import com.w2sv.androidutils.view.configureItem
+import com.w2sv.androidutils.view.dialogs.show
+import com.w2sv.androidutils.view.viewModel
+import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.main.about.AboutFragment
 import com.w2sv.autocrop.activities.main.flowfield.CropSettingsDialogFragment
 import com.w2sv.autocrop.activities.main.flowfield.FlowFieldFragment
+import com.w2sv.permissionhandler.requestPermissions
 import com.w2sv.screenshotlistening.ScreenshotListener
 
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
@@ -99,7 +99,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 }
 
                 R.id.main_menu_item_about -> {
-                    (context.requireActivity() as ViewBoundFragmentActivity).fragmentReplacementTransaction(
+                    (context.findActivity() as ViewBoundFragmentActivity).fragmentReplacementTransaction(
                         fragment = AboutFragment(),
                         animated = true
                     )
@@ -108,7 +108,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 }
 
                 R.id.main_menu_item_go_to_github -> {
-                    context.openUrlWithActivityNotFoundHandling("https://github.com/w2sv/autocrop")
+                    context.openUrl("https://github.com/w2sv/autocrop")
                 }
 
                 R.id.main_menu_item_rate_the_app -> {
@@ -116,7 +116,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                         context.startActivity(
                             Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse(appPlayStoreUrl(context))
+                                Uri.parse(context.packagePlayStoreUrl)
                             )
                                 .setPackage("com.android.vending")
                         )
@@ -129,7 +129,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 R.id.main_menu_item_share -> {
                     ShareCompat.IntentBuilder(context)
                         .setType("text/plain")
-                        .setText("Check out AutoCrop!\n${appPlayStoreUrl(context)}")
+                        .setText("Check out AutoCrop!\n${context.packagePlayStoreUrl}")
                         .startChooser()
                 }
             }

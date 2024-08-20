@@ -1,17 +1,18 @@
 package com.w2sv.autocrop.activities.examination
 
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Parcelable
 import androidx.core.text.buildSpannedString
+import com.w2sv.autocrop.R
 import com.w2sv.cropbundle.io.CropBundleIOResult
 import com.w2sv.cropbundle.io.ScreenshotDeletionResult
-import com.w2sv.kotlinutils.extensions.numericallyInflected
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class IOResults(
     val cropUris: ArrayList<Uri>,
-    val nDeletedScreenshots: Int
+    val deletedScreenshotCount: Int
 ) : Parcelable {
 
     private val nSavedCrops: Int
@@ -20,22 +21,22 @@ data class IOResults(
     val anyCropsSaved: Boolean
         get() = cropUris.isNotEmpty()
 
-    fun getNotificationText(): CharSequence =
+    fun getNotificationText(resources: Resources): CharSequence =
         if (nSavedCrops == 0)
             "Discarded all crops"
         else
             buildSpannedString {
                 append(
-                    "Saved $nSavedCrops ${"crop".numericallyInflected(nSavedCrops)}"
+                    "Saved $nSavedCrops ${resources.getQuantityString(R.plurals.crop, nSavedCrops)}"
                 )
-                if (nDeletedScreenshots != 0)
+                if (deletedScreenshotCount != 0)
                     append(
                         " and deleted ${
-                            if (nDeletedScreenshots == nSavedCrops)
+                            if (deletedScreenshotCount == nSavedCrops)
                                 "corresponding"
                             else
-                                nDeletedScreenshots
-                        } ${"screenshot".numericallyInflected(nDeletedScreenshots)}"
+                                deletedScreenshotCount
+                        } ${resources.getQuantityString(R.plurals.screenshot, deletedScreenshotCount)}"
                     )
             }
 

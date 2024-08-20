@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -75,7 +76,8 @@ class FlowFieldFragment :
         savedStateHandle: SavedStateHandle,
         private val preferencesRepository: PreferencesRepository,
         cancelledSSLFromNotification: ScreenshotListener.CancelledFromNotification,
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
+        private val resources: Resources
     ) : androidx.lifecycle.ViewModel() {
 
         val ioResults: IOResults? = savedStateHandle[IOResults.EXTRA]
@@ -90,7 +92,7 @@ class FlowFieldFragment :
             context: Context
         ) {
             ioResults?.let {
-                context.showToast(it.getNotificationText())
+                context.showToast(it.getNotificationText(resources))
             }
         }
 

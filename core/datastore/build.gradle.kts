@@ -7,7 +7,7 @@ dependencies {
     implementation(projects.core.domain)
 
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.datastoreutils.preferences)
+    api(libs.datastoreutils.preferences) // TODO: eh
     implementation(libs.slimber)
 
     implementation(libs.androidutils.core)

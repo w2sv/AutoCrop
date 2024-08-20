@@ -2,11 +2,11 @@ package com.w2sv.autocrop.activities.main.flowfield
 
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
-import com.w2sv.androidutils.coroutines.getValueSynchronously
-import com.w2sv.androidutils.notifying.showToast
+import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.AbstractCropSettingsDialogFragment
 import com.w2sv.domain.repository.PreferencesRepository
+import com.w2sv.kotlinutils.coroutines.firstBlocking
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -27,7 +27,7 @@ class CropSettingsDialogFragment : AbstractCropSettingsDialogFragment(
 
     @HiltViewModel
     class ViewModel @Inject constructor(private val preferencesRepository: PreferencesRepository) : AbstractCropSettingsDialogFragment.ViewModel(
-        preferencesRepository.cropSensitivity.getValueSynchronously()  // TODO
+        preferencesRepository.cropSensitivity.firstBlocking()  // TODO
     ) {
         fun syncCropSettings() {
             viewModelScope.launch { preferencesRepository.cropSensitivity.save(cropSensitivity.value!!) }

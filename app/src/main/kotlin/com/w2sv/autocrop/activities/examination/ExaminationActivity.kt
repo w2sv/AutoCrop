@@ -4,9 +4,8 @@ import android.content.Context
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
-import com.w2sv.androidutils.coroutines.invokeOnCompletion
-import com.w2sv.androidutils.generic.getParcelableCompat
-import com.w2sv.androidutils.notifying.showToast
+import com.w2sv.androidutils.os.getParcelableCompat
+import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppActivity
 import com.w2sv.autocrop.activities.crop.domain.CropResults
@@ -104,7 +103,7 @@ class ExaminationActivity : AppActivity() {
         )
 
     fun invokeExitFragment() {
-        viewModels<ViewModel>().value.cropProcessingJob.invokeOnCompletion {
+        viewModels<ViewModel>().value.cropProcessingJob?.invokeOnCompletion {
             fragmentReplacementTransaction(
                 ExitFragment(),
                 true

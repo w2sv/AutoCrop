@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
-import com.w2sv.androidutils.generic.getParcelableCompat
+import com.w2sv.androidutils.os.getParcelableCompat
 import com.w2sv.autocrop.activities.AppActivity
 import com.w2sv.autocrop.activities.examination.IOResults
 import com.w2sv.autocrop.activities.main.about.AboutFragment

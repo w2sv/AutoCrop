@@ -6,7 +6,7 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import com.w2sv.kotlinutils.delegates.Consumable
+import com.w2sv.delegates.Consumable
 import com.w2sv.screenshotlistening.services.abstrct.BoundService
 import slimber.log.i
 

@@ -19,13 +19,16 @@ internal fun Project.baseConfig() {
                 minSdk = libs.findVersionInt("minSdk")
                 targetSdk = libs.findVersionInt("compileSdk")
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-//                testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'
+                // testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'
             }
             compileSdkVersion(libs.findVersionInt("compileSdk"))
             testOptions {
                 animationsDisabled = true
-                unitTests.isReturnDefaultValues = true
-                unitTests.isIncludeAndroidResources = true
+
+                unitTests {
+                    isReturnDefaultValues = true
+                    isIncludeAndroidResources = true
+                }
             }
         }
     }
