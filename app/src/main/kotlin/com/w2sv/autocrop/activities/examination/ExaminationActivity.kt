@@ -102,14 +102,21 @@ class ExaminationActivity : AppActivity() {
             intent.getParcelableCompat(CropResults.EXTRA)!!
         )
 
-    fun invokeExitFragment() {
-        viewModels<ViewModel>().value.cropProcessingJob?.invokeOnCompletion {
-            fragmentReplacementTransaction(
-                ExitFragment(),
-                true
-            )
-                .commit()
+    private val viewModel by viewModels<ViewModel>()
+
+    fun invokeExitFragmentOnNoCropProcessingJobRunning() {
+        viewModel.cropProcessingJob?.invokeOnCompletion {
+            invokeExitFragment()
         }
+            ?: invokeExitFragment()
+    }
+
+    private fun invokeExitFragment() {
+        fragmentReplacementTransaction(
+            ExitFragment(),
+            true
+        )
+            .commit()
     }
 
     override fun handleOnBackPressed() {

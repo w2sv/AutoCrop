@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="@dimen/status_bar_height_approximated"
-    android:paddingBottom="?attr/actionBarSize"
-    android:weightSum="1">
+    android:paddingBottom="?attr/actionBarSize">
 
     <LinearLayout
         android:layout_width="match_parent"

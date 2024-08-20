@@ -72,6 +72,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
+import slimber.log.i
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -206,7 +207,6 @@ class CropPagerFragment :
     }
 
     private val viewModel by viewModels<ViewModel>()
-
     private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
 
     private lateinit var cropPager: CropPager
@@ -223,8 +223,8 @@ class CropPagerFragment :
         super.onViewCreated(view, savedInstanceState)
 
         cropPager = CropPager(
-            binding.viewPager,
-            viewModel.dataSet,
+            pager = binding.viewPager,
+            dataSet = viewModel.dataSet,
             onClickListener = {
                 viewModel.getCropSavingDialogOnClick(Click.Single)
                     ?.show(childFragmentManager)
@@ -312,7 +312,7 @@ class CropPagerFragment :
 
     private fun CropPagerBinding.setOnClickListeners() {
         discardAllButton.setOnClickListener {
-            requireCastActivity<ExaminationActivity>().invokeExitFragment()
+            requireCastActivity<ExaminationActivity>().invokeExitFragmentOnNoCropProcessingJobRunning()
         }
         saveAllButton.setOnClickListener {
             viewModel.getSaveAllCropsDialog(false)
@@ -328,7 +328,8 @@ class CropPagerFragment :
             removeView(viewModel.dataSet.livePosition.value!!, CropProcedure.Discard)
         }
         saveCropButton.setOnClickListener {
-            viewModel.getSaveCropDialog(false)
+            viewModel
+                .getSaveCropDialog(false)
                 .show(childFragmentManager)
         }
         manualCropButton.setOnClickListener {
@@ -437,7 +438,8 @@ class CropPagerFragment :
 
     private fun removeView(dataSetPosition: Int, cropProcedure: CropProcedure) {
         if (viewModel.dataSet.isHoldingSingularElement) {
-            return requireCastActivity<ExaminationActivity>().invokeExitFragment()
+            i { "Invoking exit fragment" }
+            return requireCastActivity<ExaminationActivity>().invokeExitFragmentOnNoCropProcessingJobRunning()
         }
 
         cropPager.scrollToNextViewAndRemoveCurrent(dataSetPosition)
@@ -462,7 +464,7 @@ class CropPagerFragment :
     }
 
     override fun onDiscardAllCrops() {
-        requireCastActivity<ExaminationActivity>().invokeExitFragment()
+        requireCastActivity<ExaminationActivity>().invokeExitFragmentOnNoCropProcessingJobRunning()
     }
 
     override fun onRecrop(cropBundlePosition: Int, @CropSensitivity cropSensitivity: Int) =

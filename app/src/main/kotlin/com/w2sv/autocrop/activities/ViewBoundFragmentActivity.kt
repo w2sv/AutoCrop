@@ -23,11 +23,12 @@ abstract class ViewBoundFragmentActivity : ViewBoundActivity<BlankBinding>(Blank
     // Fragment Transactions
     // ==========================
 
+    @SuppressLint("CommitTransaction")
     private fun launchRootFragment() {
         supportFragmentManager
             .beginTransaction()
             .setReorderingAllowed(true)
-            .run {
+            .apply {
                 val rootFragment = getRootFragment()
                 add(
                     binding.root.id,

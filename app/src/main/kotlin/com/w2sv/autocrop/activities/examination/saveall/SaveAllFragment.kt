@@ -90,7 +90,7 @@ class SaveAllFragment :
                             requireContext()
                         )
                     },
-                    onFinishedListener = { requireCastActivity<ExaminationActivity>().invokeExitFragment() }
+                    onFinishedListener = { requireCastActivity<ExaminationActivity>().invokeExitFragmentOnNoCropProcessingJobRunning() }
                 )
             }
         }

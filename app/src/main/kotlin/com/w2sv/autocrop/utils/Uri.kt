@@ -12,7 +12,6 @@ import com.w2sv.cropbundle.io.utils.systemPicturesDirectory
 import slimber.log.i
 
 @RequiresApi(Build.VERSION_CODES.Q)
-@Throws(IllegalArgumentException::class)
 fun getMediaUri(context: Context, uri: Uri): Uri? =
     try {
         if (DocumentsContract.isDocumentUri(context, uri)) {

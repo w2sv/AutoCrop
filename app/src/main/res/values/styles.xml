@@ -34,7 +34,6 @@
         <item name="android:listDivider">@color/low_alpha_gray</item>
     </style>
 
-
     <!--App Title TextView-->
 
     <style name="ShadowVisible">
