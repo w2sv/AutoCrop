@@ -116,7 +116,7 @@ dependencies {
     implementation(projects.core.cropbundle)
     implementation(projects.core.domain)
     implementation(projects.core.datastore)
-    implementation(projects.core.screenshotlistening)
+//    implementation(projects.core.screenshotlistening)
     implementation(projects.core.common)
     implementation(projects.core.flowfield)
     implementation(projects.core.opencv)

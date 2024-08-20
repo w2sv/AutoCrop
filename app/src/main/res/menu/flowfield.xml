@@ -4,10 +4,10 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <item
-        android:id="@+id/main_menu_item_listen_to_screen_captures"
-        android:icon="@drawable/ic_hearing_24"
-        android:title="@string/screenshot_listener" />
+<!--    <item-->
+<!--        android:id="@+id/main_menu_item_listen_to_screen_captures"-->
+<!--        android:icon="@drawable/ic_hearing_24"-->
+<!--        android:title="@string/screenshot_listener" />-->
 
     <group>
         <item android:title="@string/cropping">

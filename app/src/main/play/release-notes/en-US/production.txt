@@ -1,7 +1,3 @@
-[Improved]
-- App performance & stability
-- Notification messages
-[Fixed]
-- bidirectional CropPager swiping
-[Other Changes]
-- Slimmed down onboarding
+- Disabled Screenshot listener (for now)
+- Fixed crashes on screenshot selection on Android 14+
+- Enable usage on newer Android versions

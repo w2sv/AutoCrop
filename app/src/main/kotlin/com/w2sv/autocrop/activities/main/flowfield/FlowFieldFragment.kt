@@ -25,7 +25,6 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.androidutils.isServiceRunning
 import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
 import com.w2sv.androidutils.lifecycle.toggle
 import com.w2sv.androidutils.res.getLong
@@ -53,9 +52,7 @@ import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
 import com.w2sv.domain.repository.PermissionRepository
 import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.flowfield.Sketch
-import com.w2sv.kotlinutils.coroutines.collectFromFlow
 import com.w2sv.kotlinutils.coroutines.mapState
-import com.w2sv.screenshotlistening.ScreenshotListener
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -75,7 +72,7 @@ class FlowFieldFragment :
     class ViewModel @Inject constructor(
         savedStateHandle: SavedStateHandle,
         private val preferencesRepository: PreferencesRepository,
-        cancelledSSLFromNotification: ScreenshotListener.CancelledFromNotification,
+        //        cancelledSSLFromNotification: ScreenshotListener.CancelledFromNotification,
         @ApplicationContext context: Context,
         private val resources: Resources
     ) : androidx.lifecycle.ViewModel() {
@@ -111,18 +108,18 @@ class FlowFieldFragment :
             .mapState { cropSaveDirPathIdentifier(it, context) }
             .asLiveData()
 
-        val screenshotListenerRunning: LiveData<Boolean> get() = _screenshotListenerRunning
-        private val _screenshotListenerRunning = MutableLiveData(context.isServiceRunning<ScreenshotListener>())
-
-        fun setScreenshotListenerRunning(value: Boolean) {
-            _screenshotListenerRunning.postValue(value)
-        }
-
-        init {
-            viewModelScope.collectFromFlow(cancelledSSLFromNotification.sharedFlow) {
-                setScreenshotListenerRunning(false)
-            }
-        }
+        //        val screenshotListenerRunning: LiveData<Boolean> get() = _screenshotListenerRunning
+        //        private val _screenshotListenerRunning = MutableLiveData(context.isServiceRunning<ScreenshotListener>())
+        //
+        //        fun setScreenshotListenerRunning(value: Boolean) {
+        //            _screenshotListenerRunning.postValue(value)
+        //        }
+        //
+        //        init {
+        //            viewModelScope.collectFromFlow(cancelledSSLFromNotification.sharedFlow) {
+        //                setScreenshotListenerRunning(false)
+        //            }
+        //        }
 
         fun setCropSaveDirTreeUri(treeUri: Uri, contentResolver: ContentResolver) {
             contentResolver
@@ -141,11 +138,11 @@ class FlowFieldFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (listOf(
+        listOf(
             selectImagesContractHandler,
             openDocumentTreeContractHandler,
             writeExternalStoragePermissionHandler
-        ) + screenshotListeningPermissionHandlers)
+        )
             .forEach(lifecycle::addObserver)
     }
 
@@ -264,13 +261,13 @@ class FlowFieldFragment :
         )
     }
 
-    val screenshotListeningPermissionHandlers by lazy {
-        ScreenshotListener.permissionHandlers(
-            componentActivity = requireActivity(),
-            permissionRepository = permissionRepository,
-            scope = viewModel.viewModelScope
-        )
-    }
+    //    val screenshotListeningPermissionHandlers by lazy {
+    //        ScreenshotListener.permissionHandlers(
+    //            componentActivity = requireActivity(),
+    //            permissionRepository = permissionRepository,
+    //            scope = viewModel.viewModelScope
+    //        )
+    //    }
 
     private val selectImagesContractHandler: SelectImagesContractHandlerCompat<*, *> by lazy {
         SelectImagesContractHandlerCompat.getInstance(

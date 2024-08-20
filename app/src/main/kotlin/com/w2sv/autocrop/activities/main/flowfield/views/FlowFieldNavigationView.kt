@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.AttributeSet
-import android.widget.Switch
 import androidx.core.app.ShareCompat
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -22,8 +21,6 @@ import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.main.about.AboutFragment
 import com.w2sv.autocrop.activities.main.flowfield.CropSettingsDialogFragment
 import com.w2sv.autocrop.activities.main.flowfield.FlowFieldFragment
-import com.w2sv.permissionhandler.requestPermissions
-import com.w2sv.screenshotlistening.ScreenshotListener
 
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
     NavigationView(context, attributeSet) {
@@ -42,41 +39,41 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         super.onAttachedToWindow()
 
         if (!isInEditMode) {
-            setListenToScreenCapturesItem()
+//            setListenToScreenCapturesItem()
             setCurrentCropDirIdentifier()
             setOnClickListeners()
         }
     }
 
-    private fun setListenToScreenCapturesItem() =
-        menu.configureItem(R.id.main_menu_item_listen_to_screen_captures) {
-            it.actionView = Switch(context)
-                .apply {
-                    viewModel.screenshotListenerRunning.observe(lifecycleOwner) { isRunning ->
-                        isChecked = isRunning
-                    }
-                    setOnCheckedChangeListener { _, value ->
-                        when (value) {
-                            true -> flowFieldFragment
-                                .screenshotListeningPermissionHandlers
-                                .requestPermissions(
-                                    onGranted = {
-                                        ScreenshotListener.startService(context)
-                                        viewModel.setScreenshotListenerRunning(true)
-                                    },
-                                    onDenied = {
-                                        viewModel.setScreenshotListenerRunning(false)
-                                    }
-                                )
-
-                            false -> {
-                                ScreenshotListener.stopService(context)
-                                viewModel.setScreenshotListenerRunning(false)
-                            }
-                        }
-                    }
-                }
-        }
+//    private fun setListenToScreenCapturesItem() =
+//        menu.configureItem(R.id.main_menu_item_listen_to_screen_captures) {
+//            it.actionView = Switch(context)
+//                .apply {
+//                    viewModel.screenshotListenerRunning.observe(lifecycleOwner) { isRunning ->
+//                        isChecked = isRunning
+//                    }
+//                    setOnCheckedChangeListener { _, value ->
+//                        when (value) {
+//                            true -> flowFieldFragment
+//                                .screenshotListeningPermissionHandlers
+//                                .requestPermissions(
+//                                    onGranted = {
+//                                        ScreenshotListener.startService(context)
+//                                        viewModel.setScreenshotListenerRunning(true)
+//                                    },
+//                                    onDenied = {
+//                                        viewModel.setScreenshotListenerRunning(false)
+//                                    }
+//                                )
+//
+//                            false -> {
+//                                ScreenshotListener.stopService(context)
+//                                viewModel.setScreenshotListenerRunning(false)
+//                            }
+//                        }
+//                    }
+//                }
+//        }
 
     private fun setCurrentCropDirIdentifier() {
         viewModel.cropSaveDirIdentifier.observe(lifecycleOwner) { cropSaveDirIdentifier ->

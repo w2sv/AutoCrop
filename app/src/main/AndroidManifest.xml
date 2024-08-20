@@ -25,7 +25,8 @@
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.App.Main"
-        tools:replace="android:label">
+        tools:replace="android:label"
+        tools:targetApi="tiramisu">
 
         <!-- Activities -->
 
