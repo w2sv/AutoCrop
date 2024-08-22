@@ -334,15 +334,6 @@ class FlowFieldFragment :
         openDocumentTreeContractHandler.selectDocument(viewModel.cropSaveDirTreeUri.value)
     }
 
-    fun onBackPress() {
-        binding.drawerLayout.run {
-            if (isOpen)
-                closeDrawer()
-            else
-                requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-    }
-
     companion object {
         fun getInstance(ioResults: IOResults?): FlowFieldFragment =
             getFragment(FlowFieldFragment::class.java, IOResults.EXTRA to ioResults)

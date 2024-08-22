@@ -56,6 +56,7 @@ import com.w2sv.autocrop.ui.views.visualize
 import com.w2sv.autocrop.utils.extensions.isHoldingSingularElement
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
+import com.w2sv.autocrop.utils.registerOnBackPressedHandler
 import com.w2sv.autocrop.utils.requireCastActivity
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.cropbundle.Crop
@@ -210,6 +211,21 @@ class CropPagerFragment :
     private val activityViewModel by activityViewModels<ExaminationActivity.ViewModel>()
 
     private lateinit var cropPager: CropPager
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        registerOnBackPressedHandler {
+            viewModel.backPressHandler(
+                onFirstPress = {
+                    requireContext().showToast(getString(R.string.tap_again_to_return_to_main_screen))
+                },
+                onSecondPress = {
+                    activityViewModel.navigateToMainActivity(requireActivity())
+                }
+            )
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -515,17 +531,6 @@ class CropPagerFragment :
             true
         }
             ?: false
-    }
-
-    fun onBackPress() {
-        viewModel.backPressHandler(
-            {
-                requireContext().showToast(getString(R.string.tap_again_to_return_to_main_screen))
-            },
-            {
-                activityViewModel.startMainActivity(requireContext())
-            }
-        )
     }
 
     companion object {

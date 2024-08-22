@@ -10,7 +10,6 @@ import android.view.MotionEvent.ACTION_DOWN
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -31,6 +30,7 @@ import com.w2sv.autocrop.activities.examination.comparison.model.ImageType
 import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
+import com.w2sv.autocrop.utils.registerOnBackPressedHandler
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
@@ -98,6 +98,11 @@ class ComparisonFragment
                     }
                 }
             )
+
+        registerOnBackPressedHandler {
+            binding.cropIv.show()
+            parentFragmentManager.popBackStack()
+        }
     }
 
     private fun onEnterTransitionCompleted() {
@@ -160,11 +165,6 @@ class ComparisonFragment
                 binding.displayedImageTv.setTextAndShow(it)
             }
         }
-    }
-
-    fun popFromFragmentManager(fragmentManager: FragmentManager) {
-        binding.cropIv.show()
-        fragmentManager.popBackStack()
     }
 
     companion object {

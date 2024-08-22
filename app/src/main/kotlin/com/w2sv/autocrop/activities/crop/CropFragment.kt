@@ -22,10 +22,11 @@ import com.w2sv.autocrop.activities.crop.domain.CropResults
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.autocrop.databinding.CropBinding
+import com.w2sv.autocrop.ui.Constant
 import com.w2sv.autocrop.utils.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.utils.getFragment
+import com.w2sv.autocrop.utils.registerOnBackPressedHandler
 import com.w2sv.autocrop.utils.requireCastActivity
-import com.w2sv.autocrop.ui.Constant
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
@@ -118,6 +119,21 @@ class CropFragment
 
     private val viewModel by viewModels<ViewModel>()
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        registerOnBackPressedHandler {
+            viewModel.backPressListener(
+                onFirstPress = {
+                    requireContext().showToast(getString(R.string.tap_again_to_cancel))
+                },
+                onSecondPress = {
+                    MainActivity.start(requireActivity())
+                }
+            )
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -171,17 +187,6 @@ class CropFragment
                 )
         )
         Animatoo.animateSwipeLeft(requireActivity())
-    }
-
-    fun onBackPress() {
-        viewModel.backPressListener(
-            {
-                requireContext().showToast(getString(R.string.tap_again_to_cancel))
-            },
-            {
-                MainActivity.start(requireContext())
-            }
-        )
     }
 
     companion object {

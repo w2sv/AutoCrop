@@ -1,19 +1,15 @@
 package com.w2sv.autocrop.activities.examination
 
+import android.app.Activity
 import android.content.Context
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.os.getParcelableCompat
-import com.w2sv.androidutils.widget.showToast
-import com.w2sv.autocrop.R
-import com.w2sv.autocrop.activities.AppActivity
+import com.w2sv.autocrop.activities.ViewBoundFragmentActivity
 import com.w2sv.autocrop.activities.crop.domain.CropResults
-import com.w2sv.autocrop.activities.examination.adjustment.CropAdjustmentFragment
-import com.w2sv.autocrop.activities.examination.comparison.ComparisonFragment
 import com.w2sv.autocrop.activities.examination.exit.ExitFragment
 import com.w2sv.autocrop.activities.examination.pager.CropPagerFragment
-import com.w2sv.autocrop.activities.examination.saveall.SaveAllFragment
 import com.w2sv.autocrop.activities.main.MainActivity
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.io.CropBundleIOProcessingUseCase
@@ -29,7 +25,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ExaminationActivity : AppActivity() {
+class ExaminationActivity : ViewBoundFragmentActivity() {
 
     @HiltViewModel
     class ViewModel @Inject constructor(
@@ -74,9 +70,9 @@ class ExaminationActivity : AppActivity() {
             SharingStarted.Eagerly
         )
 
-        fun startMainActivity(context: Context) {
+        fun navigateToMainActivity(activity: Activity) {
             MainActivity.start(
-                context = context,
+                activity = activity,
                 configureIntent = {
                     putExtra(IOResults.EXTRA, IOResults.get(cropBundleIOResults))
                 }
@@ -117,15 +113,5 @@ class ExaminationActivity : AppActivity() {
             true
         )
             .commit()
-    }
-
-    override fun handleOnBackPressed() {
-        when (val fragment = getCurrentFragment()) {
-            is ComparisonFragment -> fragment.popFromFragmentManager(supportFragmentManager)
-            is CropAdjustmentFragment -> supportFragmentManager.popBackStack()
-            is SaveAllFragment -> showToast(getString(R.string.wait_until_crops_have_been_saved))
-            is CropPagerFragment -> fragment.onBackPress()
-            else -> throw IllegalStateException("Invalid Fragment type")
-        }
     }
 }

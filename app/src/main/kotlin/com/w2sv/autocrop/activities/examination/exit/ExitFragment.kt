@@ -101,7 +101,7 @@ class ExitFragment :
                     .random()
             )
                 .onEnd {
-                    activityViewModel.startMainActivity(requireContext())
+                    activityViewModel.navigateToMainActivity(requireActivity())
                 }
                 .play()
         }

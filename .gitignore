@@ -42,7 +42,7 @@ captures/
 # Keystore files
 keystore.properties
 /keys.jks
-/service-account-key.json
+/app/service-account-key.json
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild

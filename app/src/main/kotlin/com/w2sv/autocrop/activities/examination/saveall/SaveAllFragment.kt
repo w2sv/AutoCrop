@@ -1,5 +1,6 @@
 package com.w2sv.autocrop.activities.examination.saveall
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
@@ -11,10 +12,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.w2sv.androidutils.lifecycle.increment
+import com.w2sv.androidutils.widget.showToast
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.activities.AppFragment
 import com.w2sv.autocrop.activities.examination.ExaminationActivity
 import com.w2sv.autocrop.databinding.SaveAllBinding
 import com.w2sv.autocrop.utils.getFragment
+import com.w2sv.autocrop.utils.registerOnBackPressedHandler
 import com.w2sv.autocrop.utils.requireCastActivity
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -70,6 +74,12 @@ class SaveAllFragment :
     }
 
     private val viewModel by viewModels<ViewModel>()
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        registerOnBackPressedHandler { requireContext().showToast(getString(R.string.wait_until_crops_have_been_saved)) }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
