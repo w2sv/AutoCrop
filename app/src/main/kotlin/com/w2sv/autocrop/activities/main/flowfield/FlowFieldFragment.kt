@@ -274,22 +274,13 @@ class FlowFieldFragment :
             activity = requireActivity(),
             callbackLowerThanQ = {
                 it.uris?.let { uris ->
-                    startActivity(
-                        Intent(
-                            requireActivity(),
-                            CropActivity::class.java
-                        )
-                            .putParcelableArrayListExtra(
-                                MainActivity.EXTRA_SELECTED_IMAGE_URIS,
-                                ArrayList(uris)
-                            )
-                    )
+                    navigateToCropActivity(uris)
                 }
             },
-            callbackFromQ = { imageUris ->
-                if (imageUris.isNotEmpty()) {
+            callbackFromQ = { uris ->
+                if (uris.isNotEmpty()) {
                     @SuppressLint("NewApi")
-                    if (getMediaUri(context = requireContext(), uri = imageUris.first()) == null) {
+                    if (getMediaUri(context = requireContext(), uri = uris.first()) == null) {
                         requireContext().showToast(
                             R.string.content_provider_not_supported_please_select_a_different_one,
                             Toast.LENGTH_LONG
@@ -297,25 +288,29 @@ class FlowFieldFragment :
                     }
                     else {
                         // Take persistable read permission for each Uri; Fixes consecutively occasionally occurring permission exception on reading in bitmap
-                        imageUris.forEach {
+                        uris.forEach {
                             requireContext().contentResolver.takePersistableUriPermission(
                                 it,
                                 Intent.FLAG_GRANT_READ_URI_PERMISSION
                             )
                         }
-                        requireContext().startActivity(
-                            Intent(
-                                requireContext(),
-                                CropActivity::class.java
-                            )
-                                .putParcelableArrayListExtra(
-                                    MainActivity.EXTRA_SELECTED_IMAGE_URIS,
-                                    ArrayList(imageUris)
-                                )
-                        )
+                        navigateToCropActivity(uris)
                     }
                 }
             }
+        )
+    }
+
+    private fun navigateToCropActivity(uris: List<Uri>) {
+        startActivity(
+            Intent(
+                requireActivity(),
+                CropActivity::class.java
+            )
+                .putParcelableArrayListExtra(
+                    MainActivity.EXTRA_SELECTED_IMAGE_URIS,
+                    ArrayList(uris)
+                )
         )
     }
 

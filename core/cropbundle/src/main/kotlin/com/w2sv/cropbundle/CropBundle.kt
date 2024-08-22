@@ -29,7 +29,8 @@ data class CropBundle(
 ) : Parcelable {
 
     sealed interface CreationResult {
-        data class Success(val cropBundle: CropBundle) : CreationResult
+        @JvmInline
+        value class Success(val cropBundle: CropBundle) : CreationResult
 
         sealed interface Failure : CreationResult {
             data object NoCropEdgesFound : Failure
@@ -46,9 +47,9 @@ data class CropBundle(
         fun attemptCreation(
             screenshotMediaUri: Uri,
             @CropSensitivity cropSensitivity: Int,
-            context: Context
+            contentResolver: ContentResolver
         ): CreationResult =
-            when (val screenshotBitmap = context.contentResolver.loadBitmap(screenshotMediaUri)) {
+            when (val screenshotBitmap = contentResolver.loadBitmap(screenshotMediaUri)) {
                 null -> CreationResult.Failure.BitmapLoadingFailed
                 else -> {
                     when (val cropResult = screenshotBitmap.crop(cropSensitivity)) {
@@ -58,7 +59,7 @@ data class CropBundle(
                                 uri = screenshotMediaUri,
                                 height = screenshotBitmap.height,
                                 mediaStoreData = Screenshot.MediaStoreData.query(
-                                    context.contentResolver,
+                                    contentResolver,
                                     screenshotMediaUri
                                 )
                             )

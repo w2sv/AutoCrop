@@ -25,7 +25,7 @@ build-and-publish:
 	@echo "Clean"  # Required as 'publishBundle' publishes all .aab's in specified archive dir
 	@./gradlew clean
 
-	@git add .; git commit -m "$(VERSION)"; git push;
+#	@git add .; git commit -m "$(VERSION)"; git push;
 
 #	@echo "Build APK"
 #	@./gradlew assembleRelease --console verbose

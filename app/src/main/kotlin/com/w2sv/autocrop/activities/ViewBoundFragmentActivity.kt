@@ -63,8 +63,4 @@ abstract class ViewBoundFragmentActivity : ViewBoundActivity<BlankBinding>(Blank
 
     fun getCurrentFragment(): Fragment? =
         supportFragmentManager.findFragmentById(binding.root.id)
-
-    @Suppress("UNCHECKED_CAST")
-    fun <F : Fragment> getCastCurrentFragment(): F? =
-        getCurrentFragment() as F?
 }
