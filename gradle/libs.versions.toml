@@ -17,6 +17,7 @@ espresso = "3.6.1"
 lifecycle = "2.8.4"
 androidutils = "0.4.2-rc2"
 datastoreutils = "0.0.3-rc1"
+androidxNavigation = "2.7.7"
 
 [libraries]
 
@@ -42,6 +43,8 @@ androidx-fragment = "androidx.fragment:fragment-ktx:1.8.2"
 androidx-activity = "androidx.activity:activity-ktx:1.9.1"
 androidx-splashscreen = "androidx.core:core-splashscreen:1.0.1"
 androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.1.1"
+androidx-navigation-ui = { module = "androidx.navigation:navigation-ui", version.ref = "androidxNavigation" }
+androidx-navigation-fragment = { module = "androidx.navigation:navigation-fragment", version.ref = "androidxNavigation" }
 
 # google
 google-guava = "com.google.guava:guava:33.2.1-jre"
@@ -89,6 +92,7 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 junit5 = { id = "de.mannodermaus.android-junit5", version = "1.10.0.0" }
 play = { id = "com.github.triplet.play", version.ref = "triplet-play" }
+androidx-navigation-safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigation" }
 
 # Plugins defined by the project
 autocrop-library = { id = "autocrop.library", version = "unspecified" }

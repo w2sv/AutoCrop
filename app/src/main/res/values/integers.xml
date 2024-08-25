@@ -9,6 +9,4 @@
     <integer name="delay_medium_large">750</integer>
     <integer name="delay_large">1000</integer>
 
-    <integer name="period_auto_scroll">@integer/delay_large</integer>
-
 </resources>

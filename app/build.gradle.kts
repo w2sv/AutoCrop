@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.autocrop.hilt)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.androidx.navigation.safe.args)
 }
 
 kotlin {
@@ -128,9 +129,8 @@ dependencies {
     implementation(libs.androidx.viewpager2)
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.splashscreen)
-
-    // Google
-    implementation(libs.google.material)
+    implementation(libs.androidx.navigation.ui)
+    implementation(libs.androidx.navigation.fragment)
 
     // Owned
     implementation(libs.kotlinutils)
@@ -146,6 +146,7 @@ dependencies {
     implementation(libs.animatoo)
     implementation(libs.lottie)
     implementation(libs.simplestorage)
+    implementation(libs.google.material)
 
     //    // ---------------
     //    // unitTest

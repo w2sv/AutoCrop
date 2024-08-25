@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/home_screen">
+
+    <fragment
+        android:id="@+id/home_screen"
+        android:name="com.w2sv.autocrop.ui.screen.home.HomeScreenFragment">
+
+        <action
+            android:id="@+id/navigate_to_about_screen"
+            app:destination="@id/about_screen" />
+
+        <action
+            android:id="@+id/navigate_to_crop_screen"
+            app:destination="@id/crop_screen" />
+
+        <fragment
+            android:id="@+id/about_screen"
+            android:name="com.w2sv.autocrop.ui.screen.about.AboutScreenFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/crop_screen"
+        android:name="com.w2sv.autocrop.ui.screen.crop.CropScreenFragment">
+
+        <argument
+            android:name="imageUris"
+            app:argType="android.net.Uri[]" />
+
+        <action
+            android:id="@+id/navigate_to_cropping_failed_screen"
+            app:destination="@id/cropping_failed_screen" />
+
+        <action
+            android:id="@+id/navigate_to_crop_pager_screen"
+            app:destination="@id/crop_pager_screen" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cropping_failed_screen"
+        android:name="com.w2sv.autocrop.ui.screen.croppingfailed.CroppingFailedScreenFragment">
+
+        <action
+            android:id="@+id/navigate_to_home_screen"
+            app:destination="@id/home_screen" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/crop_pager_screen"
+        android:name="com.w2sv.autocrop.ui.screen.pager.CropPagerScreenFragment">
+
+        <action
+            android:id="@+id/navigate_to_exit_screen"
+            app:destination="@id/exit_screen" />
+
+        <action
+            android:id="@+id/navigate_to_comparison_screen"
+            app:destination="@id/comparison_screen" />
+
+        <action
+            android:id="@+id/navigate_to_crop_adjustment_screen"
+            app:destination="@id/crop_adjustment_screen" />
+
+        <action
+            android:id="@+id/navigate_to_save_all_screen"
+            app:destination="@id/save_all_screen" />
+
+        <action
+            android:id="@+id/show_crop_procedure_dialog"
+            app:destination="@id/crop_procedure_dialog" />
+
+        <action
+            android:id="@+id/show_crops_procedure_dialog"
+            app:destination="@id/crops_procedure_dialog" />
+
+        <action
+            android:id="@+id/show_recrop_dialog"
+            app:destination="@id/recrop_dialog" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/crop_procedure_dialog"
+        android:name="com.w2sv.autocrop.ui.screen.pager.dialog.cropsaving.CropProcedureDialogFragment">
+
+        <argument
+            android:name="cropBundleIndex"
+            app:argType="int" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/crops_procedure_dialog"
+        android:name="com.w2sv.autocrop.ui.screen.pager.dialog.cropsaving.CropsProcedureDialogFragment" />
+
+    <dialog
+        android:id="@+id/recrop_dialog"
+        android:name="com.w2sv.autocrop.ui.screen.pager.dialog.recrop.RecropDialogFragment">
+
+        <argument
+            android:name="initialCropSensitivity"
+            app:argType="int" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/comparison_screen"
+        android:name="com.w2sv.autocrop.ui.screen.comparison.ComparisonFragment">
+
+        <argument
+            android:name="cropBundleIndex"
+            app:argType="int" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/crop_adjustment_screen"
+        android:name="com.w2sv.autocrop.ui.screen.cropadjustment.CropAdjustmentFragment">
+
+        <argument
+            android:name="cropBundleIndex"
+            app:argType="int" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/save_all_screen"
+        android:name="com.w2sv.autocrop.ui.screen.saveall.SaveAllFragment">
+
+        <action
+            android:id="@+id/navigate_to_exit_screen"
+            app:destination="@id/exit_screen" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/exit_screen"
+        android:name="com.w2sv.autocrop.ui.screen.exit.ExitFragment">
+
+        <action
+            android:id="@+id/navigate_to_home_screen"
+            app:destination="@id/home_screen" />
+    </fragment>
+
+</navigation>
