@@ -10,11 +10,11 @@ import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.lifecycle.increment
 import com.w2sv.autocrop.model.CropResults
 import com.w2sv.autocrop.ui.util.Constant
+import com.w2sv.autocrop.ui.util.nonNullValue
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.withContext
 import slimber.log.i
@@ -26,43 +26,42 @@ class CropScreenViewModel @Inject constructor(
     preferencesRepository: PreferencesRepository
 ) : androidx.lifecycle.ViewModel() {
 
-    val backPressListener = BackPressHandler(
-        coroutineScope = viewModelScope,
-        confirmationWindowDuration = Constant.BACKPRESS_CONFIRMATION_WINDOW_DURATION
-    )
-
     private val screenshotUris: List<Uri> =
         CropScreenFragmentArgs.fromSavedStateHandle(savedStateHandle).imageUris.toList()
-    val nScreenshots = screenshotUris.size
+    val screenshotCount = screenshotUris.size
 
-    val cropBundles = mutableListOf<CropBundle>()
-    val cropResults = CropResults()
+    val cropProgress: LiveData<Int> get() = _cropProgress
+    private val _cropProgress = MutableLiveData(0)
 
-    val liveProgress: LiveData<Int> get() = _liveProgress
-    private val _liveProgress = MutableLiveData(0)
+    private var unopenableImageCount: Int = 0
+    private var uncroppableImageCount: Int = 0
 
-    suspend fun cropCoroutine(
+    suspend fun cropScreenshots(
         contentResolver: ContentResolver,
-        onFinishedListener: suspend () -> Unit
+        onCropBundle: (CropBundle) -> Unit,
+        onFinishedListener: suspend (CropResults) -> Unit
     ) {
-        coroutineScope {
-            getImminentUris().forEach { uri ->
-                withContext(Dispatchers.IO) {
-                    attemptCropBundleCreation(uri, contentResolver)?.let {
-                        cropBundles.add(it)
-                    }
-                }
-                withContext(Dispatchers.Main) {
-                    _liveProgress.increment()
+        getImminentUris().forEach { uri ->
+            withContext(Dispatchers.IO) {
+                attemptCropBundleCreation(uri, contentResolver)?.let {
+                    onCropBundle(it)
                 }
             }
-            onFinishedListener()
+            withContext(Dispatchers.Main) {
+                _cropProgress.increment()
+            }
         }
+        onFinishedListener(
+            CropResults(
+                unopenableImageCount = unopenableImageCount,
+                uncroppableImageCount = uncroppableImageCount
+            )
+        )
     }
 
     private fun getImminentUris(): List<Uri> =
         screenshotUris.run {
-            subList(liveProgress.value!!, size)
+            subList(cropProgress.nonNullValue, size)
         }
 
     private fun attemptCropBundleCreation(screenshotUri: Uri, contentResolver: ContentResolver): CropBundle? {
@@ -76,12 +75,12 @@ class CropScreenViewModel @Inject constructor(
             .run {
                 when (this) {
                     is CropBundle.CreationResult.Failure.NoCropEdgesFound -> {
-                        cropResults.uncroppableImageCount += 1
+                        uncroppableImageCount += 1
                         null
                     }
 
                     is CropBundle.CreationResult.Failure.BitmapLoadingFailed -> {
-                        cropResults.nNotOpenableImages += 1
+                        unopenableImageCount
                         null
                     }
 
@@ -91,6 +90,11 @@ class CropScreenViewModel @Inject constructor(
                 }
             }
     }
+
+    val backPressListener = BackPressHandler(
+        coroutineScope = viewModelScope,
+        confirmationWindowDuration = Constant.BACKPRESS_CONFIRMATION_WINDOW_DURATION
+    )
 
     private val cropSensitivity =
         preferencesRepository.cropSensitivity.stateIn(viewModelScope, SharingStarted.Eagerly)

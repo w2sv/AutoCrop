@@ -18,7 +18,7 @@ import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
 import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.databinding.CropPagerExitBinding
-import com.w2sv.autocrop.ui.screen.ExaminationViewModel
+import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.autocrop.ui.views.getAnimationComposer
 import com.w2sv.autocrop.util.doOnEnd
 import com.w2sv.autocrop.util.extensions.launchAfterShortDelay
@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 class ExitFragment :
     AppFragment<CropPagerExitBinding>(CropPagerExitBinding::class.java) {
 
-    private val activityViewModel by activityViewModels<ExaminationViewModel>()
+    private val activityViewModel by activityViewModels<CropBundleViewModel>()
 
     private val deletionApprovalRequiringCropBundleIOResults by lazy {
         activityViewModel.deletionApprovalRequiringCropBundleIOResults()

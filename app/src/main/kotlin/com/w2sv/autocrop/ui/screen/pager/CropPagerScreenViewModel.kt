@@ -14,7 +14,6 @@ import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.widget.makeToast
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.model.CropResults
 import com.w2sv.autocrop.ui.screen.pager.view.CropPagerWrapper
 import com.w2sv.autocrop.ui.util.Constant
 import com.w2sv.autocrop.ui.util.nonNullValue
@@ -75,7 +74,7 @@ class CropPagerScreenViewModel @Inject constructor(
     private val uncroppedScreenshotsSnackbarText: SpannableStringBuilder? =
         SpannableStringBuilder()
             .run {
-                val cropResults = savedStateHandle.get<CropResults>(CropResults.EXTRA)!!
+                val cropResults = CropPagerScreenFragmentArgs.fromSavedStateHandle(savedStateHandle).cropResults
 
                 if (cropResults.uncroppableImageCount != 0) {
                     append("Couldn't find crop bounds for")

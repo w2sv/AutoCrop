@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CropBinding
+import com.w2sv.autocrop.model.CropResults
+import com.w2sv.autocrop.ui.screen.cropBundleViewModel
 import com.w2sv.autocrop.util.extensions.launchAfterShortDelay
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ class CropScreenFragment
     : AppFragment<CropBinding>(CropBinding::class.java) {
 
     private val viewModel by viewModels<CropScreenViewModel>()
+    private val cropBundleVM by cropBundleViewModel()
 
     override val onBackPressed: () -> Unit
         get() = {
@@ -35,12 +37,11 @@ class CropScreenFragment
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
-            croppingProgressBar.max = viewModel.nScreenshots
-        }
-        with(viewModel) {
-            liveProgress.observe(viewLifecycleOwner) {
-                binding.progressTv.updateText(it, nScreenshots)
-                binding.croppingProgressBar.progress = it
+            croppingProgressBar.max = viewModel.screenshotCount
+
+            viewModel.cropProgress.observe(viewLifecycleOwner) {
+                progressTv.updateText(it, viewModel.screenshotCount)
+                croppingProgressBar.progress = it
             }
         }
     }
@@ -49,15 +50,17 @@ class CropScreenFragment
         super.onResume()
 
         lifecycleScope.launch {
-            viewModel.cropCoroutine(requireContext().contentResolver) {
-                invokeSubsequentScreen()
-            }
+            viewModel.cropScreenshots(
+                contentResolver = requireContext().contentResolver,
+                onCropBundle = cropBundleVM::addCropBundle,
+                onFinishedListener = ::invokeSubsequentScreen
+            )
         }
     }
 
-    private fun invokeSubsequentScreen() {
-        if (viewModel.cropBundles.isNotEmpty())
-            navController.navigate(CropScreenFragmentDirections.navigateToCropPagerScreen())
+    private fun invokeSubsequentScreen(cropResults: CropResults) {
+        if (cropBundleVM.cropBundles.isNotEmpty())
+            navController.navigate(CropScreenFragmentDirections.navigateToCropPagerScreen(cropResults))
         else
             launchAfterShortDelay {  // to assure progress bar having reached 100% before UI change
                 navController.navigate(CropScreenFragmentDirections.navigateToCroppingFailedScreen())

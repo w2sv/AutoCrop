@@ -17,7 +17,7 @@ import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CropPagerBinding
-import com.w2sv.autocrop.ui.screen.ExaminationViewModel
+import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.autocrop.ui.screen.pager.dialog.cropsaving.CropProcedureDialogFragment
 import com.w2sv.autocrop.ui.screen.pager.dialog.cropsaving.CropsProcedureDialogFragment
 import com.w2sv.autocrop.ui.screen.pager.dialog.recrop.RecropDialogFragment
@@ -55,7 +55,7 @@ class CropPagerScreenFragment :
     RecropDialogFragment.Listener {
 
     private val viewModel by viewModels<CropPagerScreenViewModel>()
-    private val examinationVM by activityViewModels<ExaminationViewModel>()
+    private val examinationVM by activityViewModels<CropBundleViewModel>()
 
     private lateinit var cropPagerWrapper: CropPagerWrapper
 
@@ -155,7 +155,7 @@ class CropPagerScreenFragment :
             }
         }
         else {
-            val cancelledScrolling = viewModel.autoScrollCoroutine?.let {
+            val cancelledScrolling = autoScrollJob?.let {
                 it.cancel()
                 true
             }

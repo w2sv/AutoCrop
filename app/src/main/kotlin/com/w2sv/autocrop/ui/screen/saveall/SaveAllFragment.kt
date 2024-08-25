@@ -10,7 +10,7 @@ import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.SaveAllBinding
-import com.w2sv.autocrop.ui.screen.ExaminationViewModel
+import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class SaveAllFragment :
     AppFragment<SaveAllBinding>(SaveAllBinding::class.java) {
 
-    private val examinationVM by activityViewModels<ExaminationViewModel>()
+    private val examinationVM by activityViewModels<CropBundleViewModel>()
 
     override val onBackPressed: () -> Unit
         get() = { requireContext().showToast(getString(R.string.wait_until_crops_have_been_saved)) }
