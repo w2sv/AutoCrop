@@ -14,14 +14,17 @@ class CropProcedureDialogFragment : AbstractCropProcedureDialogFragment() {
             setIcon(R.drawable.ic_save_24)
             setDeleteCorrespondingScreenshotsOption("Delete corresponding screenshot")
             setNegativeButton("No, discard crop") { _, _ ->
-                (parentFragment as ResultListener)
+                resultListener
                     .onDiscardCrop(args.cropBundleIndex)
             }
             setPositiveButton(getString(R.string.yes)) { _, _ ->
-                (requireParentFragment() as ResultListener)
+                resultListener
                     .onSaveCrop(args.cropBundleIndex)
             }
         }
+
+    private val resultListener
+        get() = requireParentFragment() as ResultListener
 
     interface ResultListener {
         fun onSaveCrop(dataSetPosition: Int)

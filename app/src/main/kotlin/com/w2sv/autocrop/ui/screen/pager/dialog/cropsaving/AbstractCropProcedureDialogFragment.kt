@@ -7,7 +7,11 @@ import com.w2sv.autocrop.ui.views.RoundedDialogFragment
 
 abstract class AbstractCropProcedureDialogFragment : RoundedDialogFragment() {
 
-    private val viewModel by viewModels<CropPagerScreenViewModel>({ requireParentFragment() })
+    private val viewModel by viewModels<CropPagerScreenViewModel>(
+        ownerProducer = {
+            parentFragmentManager.primaryNavigationFragment!!
+        }
+    )
 
     protected fun AlertDialog.Builder.setDeleteCorrespondingScreenshotsOption(text: String) {
         setMultiChoiceItems(

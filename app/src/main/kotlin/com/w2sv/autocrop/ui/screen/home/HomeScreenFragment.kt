@@ -5,12 +5,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.drawerlayout.widget.DrawerLayout
@@ -21,7 +19,6 @@ import androidx.lifecycle.viewModelScope
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
 import com.w2sv.androidutils.res.getLong
-import com.w2sv.androidutils.uris
 import com.w2sv.androidutils.view.hide
 import com.w2sv.androidutils.view.show
 import com.w2sv.androidutils.widget.showToast
@@ -58,7 +55,6 @@ class HomeScreenFragment :
         super.onCreate(savedInstanceState)
 
         listOf(
-            selectImagesContractHandler,
             openDocumentTreeContractHandler,
             writeExternalStoragePermissionHandler
         )
@@ -114,7 +110,7 @@ class HomeScreenFragment :
         }
         imageSelectionButton.setOnClickListener {
             writeExternalStoragePermissionHandler.requestPermissionIfRequired(
-                onGranted = selectImagesContractHandler::selectImages,
+                onGranted = ::launchImageSelection,
             )
         }
         shareCropsButton.setOnClickListener {
@@ -188,39 +184,34 @@ class HomeScreenFragment :
     //        )
     //    }
 
-    private val selectImagesContractHandler: SelectImagesContractHandlerCompat<*, *> by lazy {
-        SelectImagesContractHandlerCompat.getInstance(
-            activity = requireActivity(),
-            callbackLowerThanQ = {
-                it.uris?.let { uris ->
-                    navigateToCropActivity(uris.toTypedArray())
-                }
-            },
-            callbackFromQ = { uris ->
-                if (uris.isNotEmpty()) {
-                    @SuppressLint("NewApi")
-                    if (getMediaUri(context = requireContext(), uri = uris.first()) == null) {
-                        requireContext().showToast(
-                            R.string.content_provider_not_supported_please_select_a_different_one,
-                            Toast.LENGTH_LONG
-                        )
-                    }
-                    else {
-                        // Take persistable read permission for each Uri; Fixes consecutively occasionally occurring permission exception on reading in bitmap
-                        uris.forEach {
-                            requireContext().contentResolver.takePersistableUriPermission(
-                                it,
-                                Intent.FLAG_GRANT_READ_URI_PERMISSION
-                            )
-                        }
-                        navigateToCropActivity(uris.toTypedArray())
-                    }
-                }
-            }
-        )
+    private fun launchImageSelection() {
+        imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
-    private fun navigateToCropActivity(uris: Array<Uri>) {
+    private val imagePicker =
+        registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
+            if (uris.isNotEmpty()) {
+                @SuppressLint("NewApi")
+                if (getMediaUri(context = requireContext(), uri = uris.first()) == null) {
+                    requireContext().showToast(
+                        R.string.content_provider_not_supported_please_select_a_different_one,
+                        Toast.LENGTH_LONG
+                    )
+                }
+                else {
+                    // Take persistable read permission for each Uri; Fixes consecutively occasionally occurring permission exception on reading in bitmap
+                    uris.forEach {
+                        requireContext().contentResolver.takePersistableUriPermission(
+                            it,
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        )
+                    }
+                    navigateToCropScreen(uris.toTypedArray())
+                }
+            }
+        }
+
+    private fun navigateToCropScreen(uris: Array<Uri>) {
         navController.navigate(HomeScreenFragmentDirections.navigateToCropScreen(uris))
     }
 
@@ -258,55 +249,5 @@ private class OpenDocumentTreeContractHandler(
 ) {
     fun selectDocument(treeUri: Uri?) {
         resultLauncher.launch(treeUri)
-    }
-}
-
-private sealed interface SelectImagesContractHandlerCompat<I, O> : ActivityCallContractHandler<I, O> {
-
-    fun selectImages()
-
-    companion object {
-        fun getInstance(
-            activity: ComponentActivity,
-            callbackLowerThanQ: (ActivityResult) -> Unit,
-            callbackFromQ: (List<Uri>) -> Unit
-        ): SelectImagesContractHandlerCompat<*, *> =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                FromQ(activity, callbackFromQ)
-            else
-                LowerThanQ(activity, callbackLowerThanQ)
-    }
-
-    class LowerThanQ(
-        activity: ComponentActivity,
-        override val resultCallback: (ActivityResult) -> Unit
-    ) : ActivityCallContractHandler.Impl<Intent, ActivityResult>(
-        activity,
-        ActivityResultContracts.StartActivityForResult()
-    ),
-        SelectImagesContractHandlerCompat<Intent, ActivityResult> {
-
-        override fun selectImages() {
-            resultLauncher.launch(
-                Intent(Intent.ACTION_PICK).apply {
-                    type = IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
-                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                }
-            )
-        }
-    }
-
-    class FromQ(
-        activity: ComponentActivity,
-        override val resultCallback: (List<Uri>) -> Unit
-    ) : ActivityCallContractHandler.Impl<PickVisualMediaRequest, List<@JvmSuppressWildcards Uri>>(
-        activity,
-        ActivityResultContracts.PickMultipleVisualMedia()
-    ),
-        SelectImagesContractHandlerCompat<PickVisualMediaRequest, List<@JvmSuppressWildcards Uri>> {
-
-        override fun selectImages() {
-            resultLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        }
     }
 }

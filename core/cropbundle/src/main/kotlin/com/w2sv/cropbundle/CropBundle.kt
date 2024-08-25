@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Parcelable
 import android.provider.MediaStore
-import androidx.core.database.getLongOrNull
 import com.w2sv.cropbundle.cropping.CropSensitivity
 import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.cropbundle.cropping.cropped
@@ -103,7 +102,7 @@ data class Screenshot(
                         MediaStore.Images.Media.SIZE,
                         MediaStore.Images.Media.DISPLAY_NAME,
                         MediaStore.Images.Media.MIME_TYPE,
-                        MediaStore.Images.Media._ID
+                        //                        MediaStore.Images.Media._ID  TODO: leads to java.lang.IllegalArgumentException: Unexpected picker URI projection. Uri:content://com.android.providers.media.photopicker/media/1000000346. Column:_id
                     ),
                     onCursor = {
                         val fileName = it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME))
@@ -111,8 +110,9 @@ data class Screenshot(
                             diskUsage = it.getLong(it.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)),
                             fileName = fileName,
                             mimeType = ImageMimeType.parse(it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE))),
-                            id = it.getLongOrNull(it.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
-                                ?: fileName.substringBeforeLast(".").toLong()  // TODO: probably still unreliable
+                            id = fileName.substringBeforeLast(".").toLong()  // TODO
+                            //                            it.getLongOrNull(it.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
+                            //                                ?: fileName.substringBeforeLast(".").toLong()  // TODO: probably still unreliable
                         )
                             .also { i { it.toString() } }
                     }
