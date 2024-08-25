@@ -32,8 +32,7 @@ class CropAdjustmentViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository
 ) : androidx.lifecycle.ViewModel() {
 
-    private val cropBundle: CropBundle =
-        ExaminationActivity.ViewModel.cropBundles[savedStateHandle[CropBundle.EXTRA_POSITION]!!]
+    private val cropBundle: CropBundle = CropAdjustmentFragmentArgs.fromSavedStateHandle(savedStateHandle).cropBundle
     val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
 
     /**

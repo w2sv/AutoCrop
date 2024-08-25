@@ -14,23 +14,23 @@
         <action
             android:id="@+id/navigate_to_crop_screen"
             app:destination="@id/crop_nav_graph" />
-
-        <fragment
-            android:id="@+id/about_screen"
-            android:name="com.w2sv.autocrop.ui.screen.about.AboutScreenFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/about_screen"
+        android:name="com.w2sv.autocrop.ui.screen.about.AboutScreenFragment" />
 
     <navigation
         android:id="@+id/crop_nav_graph"
         app:startDestination="@id/crop_screen">
 
+        <argument
+            android:name="imageUris"
+            app:argType="android.net.Uri[]" />
+
         <fragment
             android:id="@+id/crop_screen"
             android:name="com.w2sv.autocrop.ui.screen.crop.CropScreenFragment">
-
-            <argument
-                android:name="imageUris"
-                app:argType="android.net.Uri[]" />
 
             <action
                 android:id="@+id/navigate_to_cropping_failed_screen"
@@ -93,7 +93,7 @@
 
             <argument
                 android:name="cropBundleIndex"
-                app:argType="int" />
+                app:argType="integer" />
         </dialog>
 
         <dialog
@@ -106,7 +106,7 @@
 
             <argument
                 android:name="initialCropSensitivity"
-                app:argType="int" />
+                app:argType="integer" />
         </dialog>
 
         <fragment
@@ -114,8 +114,8 @@
             android:name="com.w2sv.autocrop.ui.screen.comparison.ComparisonFragment">
 
             <argument
-                android:name="cropBundleIndex"
-                app:argType="int" />
+                android:name="cropBundle"
+                app:argType="com.w2sv.cropbundle.CropBundle" />
         </fragment>
 
         <fragment
@@ -123,8 +123,8 @@
             android:name="com.w2sv.autocrop.ui.screen.cropadjustment.CropAdjustmentFragment">
 
             <argument
-                android:name="cropBundleIndex"
-                app:argType="int" />
+                android:name="cropBundle"
+                app:argType="com.w2sv.cropbundle.CropBundle" />
         </fragment>
 
         <fragment

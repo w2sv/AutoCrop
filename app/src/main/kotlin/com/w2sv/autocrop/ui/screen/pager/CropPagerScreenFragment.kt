@@ -18,6 +18,7 @@ import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CropPagerBinding
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
+import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
 import com.w2sv.autocrop.ui.screen.pager.dialog.cropsaving.CropProcedureDialogFragment
 import com.w2sv.autocrop.ui.screen.pager.dialog.cropsaving.CropsProcedureDialogFragment
 import com.w2sv.autocrop.ui.screen.pager.dialog.recrop.RecropDialogFragment
@@ -39,6 +40,7 @@ import com.w2sv.cropbundle.cropping.CropSensitivity
 import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.cropbundle.cropping.model.CropEdges
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.withCreationCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -54,8 +56,15 @@ class CropPagerScreenFragment :
     CropsProcedureDialogFragment.ResultListener,
     RecropDialogFragment.Listener {
 
-    private val viewModel by viewModels<CropPagerScreenViewModel>()
-    private val examinationVM by activityViewModels<CropBundleViewModel>()
+    private val viewModel by viewModels<CropPagerScreenViewModel>(
+        extrasProducer = {
+            defaultViewModelCreationExtras
+                .withCreationCallback<CropPagerScreenViewModel.AssistedFactory> { factory ->
+                    factory.create(cropBundleVM.cropBundles)
+                }
+        }
+    )
+    private val cropBundleVM by cropNavGraphViewModel<CropBundleViewModel>()
 
     private lateinit var cropPagerWrapper: CropPagerWrapper
 
@@ -198,13 +207,13 @@ class CropPagerScreenFragment :
             showCropProcedureDialog()
         }
         manualCropButton.setOnClickListener {
-            navController.navigate(CropPagerScreenFragmentDirections.navigateToCropAdjustmentScreen(viewModel.dataSet.livePosition.nonNullValue))
+            navController.navigate(CropPagerScreenFragmentDirections.navigateToCropAdjustmentScreen(viewModel.dataSet.liveElement))
         }
         recropButton.setOnClickListener {
             navController.navigate(CropPagerScreenFragmentDirections.showRecropDialog(viewModel.dataSet.liveElement.cropSensitivity))
         }
         comparisonButton.setOnClickListener {
-            navController.navigate(CropPagerScreenFragmentDirections.navigateToComparisonScreen(viewModel.dataSet.livePosition.nonNullValue))
+            navController.navigate(CropPagerScreenFragmentDirections.navigateToComparisonScreen(viewModel.dataSet.liveElement))
             // TODO
 
             //            val cropImageView =
@@ -290,7 +299,7 @@ class CropPagerScreenFragment :
      * removes view, procedure action has been selected for, from pager
      */
     override fun onSaveCrop(dataSetPosition: Int) {
-        examinationVM.processCropBundle(
+        cropBundleVM.processCropBundle(
             dataSetPosition,
             requireContext()
         )

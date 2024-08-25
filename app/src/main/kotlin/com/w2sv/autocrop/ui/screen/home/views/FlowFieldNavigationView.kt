@@ -8,8 +8,8 @@ import android.util.AttributeSet
 import androidx.core.app.ShareCompat
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.navigation.findNavController
 import com.google.android.material.navigation.NavigationView
-import com.w2sv.androidutils.findActivity
 import com.w2sv.androidutils.openUrl
 import com.w2sv.androidutils.packagePlayStoreUrl
 import com.w2sv.androidutils.view.configureItem
@@ -17,10 +17,8 @@ import com.w2sv.androidutils.view.dialogs.show
 import com.w2sv.androidutils.view.viewModel
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.screen.about.AboutFragment
-import com.w2sv.autocrop.screen.flowfield.CropSettingsDialogFragment
-import com.w2sv.autocrop.screen.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.ui.screen.home.HomeScreenFragment
+import com.w2sv.autocrop.ui.screen.home.HomeScreenFragmentDirections
 import com.w2sv.autocrop.ui.screen.home.HomeScreenViewModel
 
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
@@ -97,12 +95,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 }
 
                 R.id.main_menu_item_about -> {
-                    (context.findActivity() as ViewBoundFragmentActivity).fragmentReplacementTransaction(
-                        fragment = AboutFragment(),
-                        animated = true
-                    )
-                        .addToBackStack(null)
-                        .commit()
+                    findNavController().navigate(HomeScreenFragmentDirections.navigateToAboutScreen())
                 }
 
                 R.id.main_menu_item_go_to_github -> {

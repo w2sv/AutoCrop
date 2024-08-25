@@ -9,7 +9,8 @@ import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CropBinding
 import com.w2sv.autocrop.model.CropResults
-import com.w2sv.autocrop.ui.screen.cropBundleViewModel
+import com.w2sv.autocrop.ui.screen.CropBundleViewModel
+import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
 import com.w2sv.autocrop.util.extensions.launchAfterShortDelay
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -19,7 +20,7 @@ class CropScreenFragment
     : AppFragment<CropBinding>(CropBinding::class.java) {
 
     private val viewModel by viewModels<CropScreenViewModel>()
-    private val cropBundleVM by cropBundleViewModel()
+    private val cropBundleVM by cropNavGraphViewModel<CropBundleViewModel>()
 
     override val onBackPressed: () -> Unit
         get() = {

@@ -4,14 +4,11 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.annotation.ColorInt
-import androidx.core.os.bundleOf
 import androidx.core.text.color
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.w2sv.autocrop.R
 import com.w2sv.autocrop.AppFragment
-import com.w2sv.autocrop.activities.examination.adjustment.extensions.maintainedPercentage
+import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.maintainedPercentage
 import com.w2sv.cropbundle.cropping.model.CropEdges
@@ -90,11 +87,11 @@ class CropAdjustmentFragment
         }
 
         cancelButton.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            navController.popBackStack()
         }
         applyButton.setOnClickListener {
-            setFragmentResult(REQUEST_KEY, bundleOf(CropEdges.EXTRA to viewModel.cropEdges.value))
-            requireActivity().supportFragmentManager.popBackStack()
+            //            setFragmentResult(REQUEST_KEY, bundleOf(CropEdges.EXTRA to viewModel.cropEdges.value))
+            navController.popBackStack()
         }
     }
 }

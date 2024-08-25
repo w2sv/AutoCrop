@@ -2,11 +2,11 @@ package com.w2sv.autocrop.ui.screen
 
 import android.content.Context
 import androidx.fragment.app.Fragment
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.navGraphViewModels
 import com.w2sv.androidutils.lifecycle.increment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.util.nonNullValue
@@ -24,8 +24,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-fun Fragment.cropBundleViewModel(): Lazy<CropBundleViewModel> =
-    navGraphViewModels<CropBundleViewModel>(R.id.crop_nav_graph)
+inline fun <reified VM : ViewModel> Fragment.cropNavGraphViewModel(): Lazy<VM> =
+    hiltNavGraphViewModels<VM>(R.id.crop_nav_graph)
 
 @HiltViewModel
 class CropBundleViewModel @Inject constructor(
@@ -34,7 +34,7 @@ class CropBundleViewModel @Inject constructor(
 ) : ViewModel() {
 
     val cropBundles: List<CropBundle> get() = _cropBundles
-    val _cropBundles: MutableList<CropBundle> = mutableListOf()
+    private val _cropBundles: MutableList<CropBundle> = mutableListOf()
 
     fun addCropBundle(bundle: CropBundle) {
         _cropBundles.add(bundle)

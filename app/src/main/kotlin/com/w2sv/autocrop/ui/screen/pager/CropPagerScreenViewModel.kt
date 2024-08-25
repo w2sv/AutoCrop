@@ -17,18 +17,26 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.screen.pager.view.CropPagerWrapper
 import com.w2sv.autocrop.ui.util.Constant
 import com.w2sv.autocrop.ui.util.nonNullValue
+import com.w2sv.cropbundle.CropBundle
 import com.w2sv.domain.repository.PreferencesRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class CropPagerScreenViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = CropPagerScreenViewModel.AssistedFactory::class)
+class CropPagerScreenViewModel @AssistedInject constructor(
     savedStateHandle: SavedStateHandle,
     private val preferencesRepository: PreferencesRepository,
-    private val resources: Resources
+    private val resources: Resources,
+    @Assisted cropBundles: List<CropBundle>
 ) : androidx.lifecycle.ViewModel() {
+
+    @dagger.assisted.AssistedFactory
+    interface AssistedFactory {
+        fun create(cropBundles: List<CropBundle>): CropPagerScreenViewModel
+    }
 
     val deleteScreenshots = preferencesRepository.deleteScreenshots.stateIn(viewModelScope, SharingStarted.Eagerly)
 
@@ -36,7 +44,7 @@ class CropPagerScreenViewModel @Inject constructor(
         viewModelScope.launch { preferencesRepository.deleteScreenshots.save(!deleteScreenshots.value) }
     }
 
-    val dataSet = CropPagerWrapper.DataSet(ExaminationActivity.ViewModel.cropBundles)
+    val dataSet = CropPagerWrapper.DataSet(cropBundles.toMutableList())  // TODO
 
     // ==================
     // AutoScroll

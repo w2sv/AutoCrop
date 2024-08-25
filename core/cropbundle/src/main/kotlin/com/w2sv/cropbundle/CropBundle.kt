@@ -1,16 +1,15 @@
 package com.w2sv.cropbundle
 
 import android.content.ContentResolver
-import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Parcelable
 import android.provider.MediaStore
 import androidx.core.database.getLongOrNull
-import com.w2sv.cropbundle.cropping.model.CropEdges
 import com.w2sv.cropbundle.cropping.CropSensitivity
 import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.cropbundle.cropping.cropped
+import com.w2sv.cropbundle.cropping.model.CropEdges
 import com.w2sv.cropbundle.io.ImageMimeType
 import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.cropbundle.io.extensions.queryMediaStoreData
@@ -42,8 +41,6 @@ data class CropBundle(
         get() = hashCode().toString()
 
     companion object {
-        const val EXTRA_POSITION = "com.w2sv.autocrop.extra.CROP_BUNDLE_POSITION"
-
         fun attemptCreation(
             screenshotMediaUri: Uri,
             @CropSensitivity cropSensitivity: Int,

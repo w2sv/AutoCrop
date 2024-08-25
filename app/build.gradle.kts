@@ -131,6 +131,7 @@ dependencies {
     implementation(libs.androidx.splashscreen)
     implementation(libs.androidx.navigation.ui)
     implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.hilt.navigation.fragment)
 
     // Owned
     implementation(libs.kotlinutils)

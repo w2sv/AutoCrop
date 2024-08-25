@@ -8,6 +8,18 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="about_screen">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="crop_nav_graph">
                     <value>
                       <LayoutPositions>
@@ -235,11 +247,6 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="about_screen">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
                             <entry key="navigate_to_about_screen">
                               <value>
                                 <LayoutPositions />

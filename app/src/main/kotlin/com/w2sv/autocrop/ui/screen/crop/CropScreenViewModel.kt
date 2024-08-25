@@ -8,6 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.lifecycle.increment
+import com.w2sv.autocrop.CropNavGraphArgs
 import com.w2sv.autocrop.model.CropResults
 import com.w2sv.autocrop.ui.util.Constant
 import com.w2sv.autocrop.ui.util.nonNullValue
@@ -27,7 +28,7 @@ class CropScreenViewModel @Inject constructor(
 ) : androidx.lifecycle.ViewModel() {
 
     private val screenshotUris: List<Uri> =
-        CropScreenFragmentArgs.fromSavedStateHandle(savedStateHandle).imageUris.toList()
+        CropNavGraphArgs.fromSavedStateHandle(savedStateHandle).imageUris.toList()
     val screenshotCount = screenshotUris.size
 
     val cropProgress: LiveData<Int> get() = _cropProgress

@@ -41,8 +41,5 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.w2sv.autocrop.activities.crop.CropActivity" />
-        <activity android:name="com.w2sv.autocrop.activities.examination.ExaminationActivity" />
-
     </application>
 </manifest>

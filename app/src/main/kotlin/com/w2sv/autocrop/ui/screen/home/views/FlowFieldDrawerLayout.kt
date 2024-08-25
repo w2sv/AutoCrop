@@ -6,8 +6,8 @@ import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.findFragment
-import com.w2sv.autocrop.screen.flowfield.FlowFieldFragment
 import com.w2sv.autocrop.databinding.FlowfieldBinding
+import com.w2sv.autocrop.ui.screen.home.HomeScreenFragment
 
 class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : DrawerLayout(context, attributeSet) {
 
@@ -15,7 +15,7 @@ class FlowFieldDrawerLayout(context: Context, attributeSet: AttributeSet) : Draw
         super.onAttachedToWindow()
 
         if (!isInEditMode) {
-            val binding: FlowfieldBinding by lazy { findFragment<FlowFieldFragment>().binding }
+            val binding: FlowfieldBinding by lazy { findFragment<HomeScreenFragment>().binding }  // TODO
 
             addDrawerListener(
                 object : SimpleDrawerListener() {
