@@ -2,8 +2,11 @@ package com.w2sv.cropbundle.io
 
 import android.content.ContentResolver
 import android.net.Uri
+import android.provider.DocumentsContract
+import com.w2sv.cropbundle.Screenshot
+import com.w2sv.cropbundle.io.ScreenshotDeletionResult.DeletionFailed
+import com.w2sv.cropbundle.io.ScreenshotDeletionResult.SuccessfullyDeleted
 import com.w2sv.cropbundle.io.extensions.deleteImage
-import slimber.log.i
 
 sealed interface ScreenshotDeletionResult {
     data object SuccessfullyDeleted : ScreenshotDeletionResult
@@ -11,20 +14,24 @@ sealed interface ScreenshotDeletionResult {
     data class DeletionApprovalRequired(val requestUri: Uri) : ScreenshotDeletionResult
 
     companion object {
-        fun get(mediaStoreId: Long, contentResolver: ContentResolver): ScreenshotDeletionResult =
-            when (IMAGE_DELETION_REQUIRING_APPROVAL) {
-                true ->
-                    DeletionApprovalRequired(
-                        getImageContentUri(mediaStoreId)
-                    )
+        fun get(screenshot: Screenshot, contentResolver: ContentResolver): ScreenshotDeletionResult {
+            return screenshot.mediaStoreData.id?.let { mediaStoreId ->
+                when (mediaDeletionRequiresExplicitUserApproval) {
+                    true ->
+                        DeletionApprovalRequired(
+                            getImageContentUri(mediaStoreId)
+                        )
 
-                false -> when (contentResolver.deleteImage(mediaStoreId)) {
-                    true -> SuccessfullyDeleted
-                    false -> DeletionFailed
+                    false -> contentResolver.deleteImage(mediaStoreId).toScreenshotDeletionResult()
                 }
             }
-                .also {
-                    i { "ScreenshotDeletionResult: $it" }
-                }
+                ?: DocumentsContract.deleteDocument(contentResolver, screenshot.uri).toScreenshotDeletionResult()
+        }
     }
 }
+
+private fun Boolean.toScreenshotDeletionResult() =
+    when (this) {
+        true -> SuccessfullyDeleted
+        false -> DeletionFailed
+    }

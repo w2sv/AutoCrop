@@ -279,23 +279,14 @@ class FlowFieldFragment :
             },
             callbackFromQ = { uris ->
                 if (uris.isNotEmpty()) {
-                    @SuppressLint("NewApi")
-                    if (getMediaUri(context = requireContext(), uri = uris.first()) == null) {
-                        requireContext().showToast(
-                            R.string.content_provider_not_supported_please_select_a_different_one,
-                            Toast.LENGTH_LONG
+                    // Take persistable read permission for each Uri; Fixes consecutively occasionally occurring permission exception on reading in bitmap
+                    uris.forEach {
+                        requireContext().contentResolver.takePersistableUriPermission(
+                            it,
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION
                         )
                     }
-                    else {
-                        // Take persistable read permission for each Uri; Fixes consecutively occasionally occurring permission exception on reading in bitmap
-                        uris.forEach {
-                            requireContext().contentResolver.takePersistableUriPermission(
-                                it,
-                                Intent.FLAG_GRANT_READ_URI_PERMISSION
-                            )
-                        }
-                        navigateToCropActivity(uris)
-                    }
+                    navigateToCropActivity(uris)
                 }
             }
         )

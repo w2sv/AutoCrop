@@ -1,6 +1,5 @@
 package com.w2sv.autocrop.activities.crop
 
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -64,13 +63,13 @@ class CropFragment
         private val _liveProgress = MutableLiveData(0)
 
         suspend fun cropCoroutine(
-            contentResolver: ContentResolver,
+            context: Context,
             onFinishedListener: () -> Unit
         ) {
             coroutineScope {
                 getImminentUris().forEach { uri ->
                     withContext(Dispatchers.IO) {
-                        attemptCropBundleCreation(uri, contentResolver)?.let {
+                        attemptCropBundleCreation(uri, context)?.let {
                             cropBundles.add(it)
                         }
                     }
@@ -87,13 +86,13 @@ class CropFragment
                 subList(liveProgress.value!!, size)
             }
 
-        private fun attemptCropBundleCreation(screenshotUri: Uri, contentResolver: ContentResolver): CropBundle? {
+        private fun attemptCropBundleCreation(screenshotUri: Uri, context: Context): CropBundle? {
             i { "attemptCropBundleCreation; screenshotUri=$screenshotUri" }
 
             return CropBundle.attemptCreation(
                 screenshotMediaUri = screenshotUri,
                 cropSensitivity = cropSensitivity.value,
-                contentResolver = contentResolver
+                context = context
             )
                 .run {
                     when (this) {
@@ -157,7 +156,7 @@ class CropFragment
         super.onResume()
 
         lifecycleScope.launch {
-            viewModel.cropCoroutine(requireContext().contentResolver) {
+            viewModel.cropCoroutine(requireContext()) {
                 invokeSubsequentScreen()
             }
         }

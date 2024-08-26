@@ -13,5 +13,5 @@ fun getImageContentUri(mediaStoreId: Long): Uri =
     )
 
 @ChecksSdkIntAtLeast(api=Build.VERSION_CODES.R)
-val IMAGE_DELETION_REQUIRING_APPROVAL: Boolean =
+val mediaDeletionRequiresExplicitUserApproval: Boolean =
     Build.VERSION.SDK_INT >= Build.VERSION_CODES.R

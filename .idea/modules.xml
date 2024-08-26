@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/AutoCrop.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/AutoCrop.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/opencv/AutoCrop.core.opencv.iml" filepath="$PROJECT_DIR$/.idea/modules/core/opencv/AutoCrop.core.opencv.iml" />
     </modules>
   </component>

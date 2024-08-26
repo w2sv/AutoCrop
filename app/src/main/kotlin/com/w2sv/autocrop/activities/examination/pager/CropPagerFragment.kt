@@ -90,12 +90,6 @@ class CropPagerFragment :
         private val resources: Resources
     ) : androidx.lifecycle.ViewModel() {
 
-        val deleteScreenshots = preferencesRepository.deleteScreenshots.stateIn(viewModelScope, SharingStarted.Eagerly)
-
-        fun saveDeleteScreenshots(value: Boolean) {
-            viewModelScope.launch { preferencesRepository.deleteScreenshots.save(value) }
-        }
-
         val dataSet = CropPager.DataSet(ExaminationActivity.ViewModel.cropBundles)
 
         // ==================

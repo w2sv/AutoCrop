@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.w2sv.cropbundle.Screenshot
 import com.w2sv.domain.repository.PreferencesRepository
+import slimber.log.i
 import javax.inject.Inject
 
 class CropBundleIOProcessingUseCase @Inject constructor(
@@ -11,25 +12,26 @@ class CropBundleIOProcessingUseCase @Inject constructor(
 ) {
     fun invoke(
         cropBitmap: Bitmap,
-        screenshotMediaStoreData: Screenshot.MediaStoreData,
+        screenshot: Screenshot,
         deleteScreenshot: Boolean,
         context: Context
     ): CropBundleIOResult =
         CropBundleIOResult(
             cropFileUri = context.contentResolver.saveBitmap(
                 bitmap = cropBitmap,
-                mimeType = screenshotMediaStoreData.mimeType,
+                mimeType = screenshot.mediaStoreData.mimeType,
                 fileName = cropFileName(
-                    fileName = screenshotMediaStoreData.fileName,
-                    mimeType = screenshotMediaStoreData.mimeType
+                    fileName = screenshot.mediaStoreData.fileName,
+                    mimeType = screenshot.mediaStoreData.mimeType
                 ),
                 parentDocumentUri = preferencesRepository.getWritableCropSaveDirDocumentUriOrNull(context)
             ),
             screenshotDeletionResult = if (deleteScreenshot) {
                 ScreenshotDeletionResult.get(
-                    mediaStoreId = screenshotMediaStoreData.id,
+                    screenshot = screenshot,
                     contentResolver = context.contentResolver
                 )
+                    .also { i { "Screenshot deletion result: $it" } }
             }
             else {
                 null

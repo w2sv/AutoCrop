@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
+import slimber.log.i
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,7 +31,7 @@ class ExaminationActivity : ViewBoundFragmentActivity() {
     @HiltViewModel
     class ViewModel @Inject constructor(
         private val cropBundleIOProcessingUseCase: CropBundleIOProcessingUseCase,
-        preferencesRepository: PreferencesRepository
+        private val preferencesRepository: PreferencesRepository
     ) : androidx.lifecycle.ViewModel() {
 
         private val cropBundleIOResults = mutableListOf<CropBundleIOResult>()
@@ -58,17 +59,21 @@ class ExaminationActivity : ViewBoundFragmentActivity() {
             cropBundleIOResults.add(
                 cropBundleIOProcessingUseCase.invoke(
                     cropBitmap = cropBundle.crop.bitmap,
-                    screenshotMediaStoreData = cropBundle.screenshot.mediaStoreData,
-                    deleteScreenshot = deleteScreenshots.value,
+                    screenshot = cropBundle.screenshot,
+                    deleteScreenshot = deleteScreenshots.value.also { i { "Delete screnshot: $it" } },
                     context = context
                 )
             )
         }
 
-        private val deleteScreenshots = preferencesRepository.deleteScreenshots.stateIn(
+        val deleteScreenshots = preferencesRepository.deleteScreenshots.stateIn(
             viewModelScope,
             SharingStarted.Eagerly
         )
+
+        fun toggleDeleteScreenshots() {
+            viewModelScope.launch { preferencesRepository.deleteScreenshots.save(!deleteScreenshots.value) }
+        }
 
         fun navigateToMainActivity(activity: Activity) {
             MainActivity.start(

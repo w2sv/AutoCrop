@@ -19,7 +19,7 @@ import androidx.core.app.NotificationCompat
 import com.google.common.collect.EvictingQueue
 import com.w2sv.common.AppPermissionHandler
 import com.w2sv.core.screenshotlistening.R
-import com.w2sv.cropbundle.io.IMAGE_DELETION_REQUIRING_APPROVAL
+import com.w2sv.cropbundle.io.mediaDeletionRequiresExplicitUserApproval
 import com.w2sv.cropbundle.io.extensions.compressToAndCloseStream
 import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.cropbundle.io.getImageContentUri
@@ -247,7 +247,7 @@ class ScreenshotListener : BoundService(),
                 NotificationCompat.Action(
                     null,
                     getString(R.string.save_delete_screenshot),
-                    if (IMAGE_DELETION_REQUIRING_APPROVAL)
+                    if (mediaDeletionRequiresExplicitUserApproval)
                         PendingIntent.getActivity(
                             this@ScreenshotListener,
                             actionRequestCodes[1],

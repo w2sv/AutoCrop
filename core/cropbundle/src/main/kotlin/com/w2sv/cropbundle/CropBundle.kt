@@ -1,6 +1,7 @@
 package com.w2sv.cropbundle
 
 import android.content.ContentResolver
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Parcelable
@@ -45,9 +46,9 @@ data class CropBundle(
         fun attemptCreation(
             screenshotMediaUri: Uri,
             @CropSensitivity cropSensitivity: Int,
-            contentResolver: ContentResolver
+            context: Context
         ): CreationResult =
-            when (val screenshotBitmap = contentResolver.loadBitmap(screenshotMediaUri)) {
+            when (val screenshotBitmap = context.contentResolver.loadBitmap(screenshotMediaUri)) {
                 null -> CreationResult.Failure.BitmapLoadingFailed
                 else -> {
                     when (val cropResult = screenshotBitmap.crop(cropSensitivity)) {
@@ -57,7 +58,7 @@ data class CropBundle(
                                 uri = screenshotMediaUri,
                                 height = screenshotBitmap.height,
                                 mediaStoreData = Screenshot.MediaStoreData.query(
-                                    contentResolver,
+                                    context,
                                     screenshotMediaUri
                                 )
                             )
@@ -92,13 +93,14 @@ data class Screenshot(
         val diskUsage: Long,
         val fileName: String,
         val mimeType: ImageMimeType,
-        val id: Long
+        val id: Long?  // null upon no photo picker available, which leads to uri being a document uri
     ) : Parcelable {
 
         companion object {
-            fun query(contentResolver: ContentResolver, uri: Uri): MediaStoreData {
+            fun query(context: Context, uri: Uri): MediaStoreData {
                 i { "uri: $uri" }  // content://media/picker/0/com.android.providers.media.photopicker/media/1000016069
-                return contentResolver.queryMediaStoreData(
+                // // content://com.android.providers.media.documents/document/image%3A33
+                return context.contentResolver.queryMediaStoreData(
                     uri = uri,
                     columns = arrayOf(
                         MediaStore.Images.Media.SIZE,
@@ -111,7 +113,7 @@ data class Screenshot(
                             diskUsage = it.getLong(it.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)),
                             fileName = fileName,
                             mimeType = ImageMimeType.parse(it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE))),
-                            id = fileName.substringBeforeLast(".").toLong()  // TODO: probably still unreliable
+                            id = fileName.substringBeforeLast(".").toLongOrNull()  // TODO: probably still unreliable
                         )
                             .also { i { it.toString() } }
                     }
