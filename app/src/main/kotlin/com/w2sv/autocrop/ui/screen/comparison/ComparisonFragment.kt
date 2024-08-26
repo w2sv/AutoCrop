@@ -7,6 +7,8 @@ import android.view.MotionEvent.ACTION_DOWN
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.view.doOnNextLayout
 import androidx.fragment.app.viewModels
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
@@ -19,9 +21,14 @@ import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.ui.screen.comparison.model.ImageType
+import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.getScaleY
 import com.w2sv.autocrop.util.extensions.launchAfterShortDelay
 import com.w2sv.autocrop.util.registerOnBackPressedHandler
+import com.w2sv.cropbundle.CropBundle
 import dagger.hilt.android.AndroidEntryPoint
+
+val CropBundle.sharedElementTransitionName: String
+    get() = hashCode().toString()
 
 @AndroidEntryPoint
 class ComparisonFragment
@@ -72,9 +79,21 @@ class ComparisonFragment
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
-            cropIv.transitionName = viewModel.cropBundle.identifier
-            cropIv.setImageBitmap(viewModel.cropBundle.crop.bitmap)
-            screenshotIv.setImageBitmap(viewModel.screenshotBitmap)
+            with(cropIv) {
+                transitionName = viewModel.cropBundle.sharedElementTransitionName
+                setImageBitmap(viewModel.cropBundle.crop.bitmap)
+            }
+            with(screenshotIv) {
+                setImageBitmap(viewModel.screenshotBitmap)
+                doOnNextLayout {
+                    val matrix = (it as AppCompatImageView).imageMatrix
+                    with(cropIv) {
+                        imageMatrix = matrix
+                        translationY = viewModel.cropBundle.crop.edges.top.toFloat() * matrix.getScaleY()
+                        postInvalidate()
+                    }
+                }
+            }
 
             root.setOnTouchListener { v, event ->
                 when (event.action) {
@@ -94,9 +113,6 @@ class ComparisonFragment
             }
 
             with(viewModel) {
-                screenshotViewImageMatrix.observe(viewLifecycleOwner) {
-                    cropIv.alignWithScreenshotIV(it, cropBundle.crop.edges)
-                }
                 imageType.observe(viewLifecycleOwner) {
                     when (it!!) {
                         ImageType.Screenshot -> crossVisualize(cropIv, screenshotIv)

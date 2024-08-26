@@ -2,7 +2,6 @@ package com.w2sv.autocrop.ui.screen.comparison
 
 import android.content.ContentResolver
 import android.graphics.Bitmap
-import android.graphics.Matrix
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -39,12 +38,5 @@ class ComparisonViewModel @Inject constructor(
 
     fun repostImageType() {
         _imageType.repostValue()
-    }
-
-    val screenshotViewImageMatrix: LiveData<Matrix> get() = _screenshotViewImageMatrix
-    private val _screenshotViewImageMatrix = MutableLiveData<Matrix>()
-
-    fun postScreenshotViewImageMatrix(value: Matrix) {
-        _screenshotViewImageMatrix.postValue(value)
     }
 }

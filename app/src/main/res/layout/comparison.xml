@@ -10,14 +10,14 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/margin_medium">
 
-        <com.w2sv.autocrop.ui.screen.comparison.views.CropImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/crop_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
             android:scaleType="matrix" />
 
-        <com.w2sv.autocrop.ui.screen.comparison.views.ScreenshotImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/screenshot_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

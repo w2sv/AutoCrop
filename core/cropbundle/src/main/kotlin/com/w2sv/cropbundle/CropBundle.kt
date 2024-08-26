@@ -36,9 +36,6 @@ data class CropBundle(
         }
     }
 
-    val identifier: String
-        get() = hashCode().toString()
-
     companion object {
         fun attemptCreation(
             screenshotMediaUri: Uri,

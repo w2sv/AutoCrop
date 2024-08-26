@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.w2sv.autocrop.databinding.CropImageViewBinding
+import com.w2sv.autocrop.ui.screen.comparison.sharedElementTransitionName
 import com.w2sv.autocrop.ui.util.nonNullValue
 import com.w2sv.bidirectionalviewpager.BidirectionalViewPagerDataSet
 import com.w2sv.bidirectionalviewpager.ViewRemovableBidirectionalViewPager2
@@ -54,7 +55,7 @@ class CropPagerWrapper(
                         dataSet.atCorrespondingPosition(position).let { cropBundle ->
                             with(holder.imageView) {
                                 setImageBitmap(cropBundle.crop.bitmap)
-                                ViewCompat.setTransitionName(this, cropBundle.identifier)
+                                ViewCompat.setTransitionName(this, cropBundle.sharedElementTransitionName)
                             }
                         }
                     }

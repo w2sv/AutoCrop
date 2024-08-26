@@ -18,6 +18,7 @@ import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CropPagerBinding
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
+import com.w2sv.autocrop.ui.screen.comparison.sharedElementTransitionName
 import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
 import com.w2sv.autocrop.ui.screen.pager.dialog.cropsaving.CropProcedureDialogFragment
 import com.w2sv.autocrop.ui.screen.pager.dialog.cropsaving.CropsProcedureDialogFragment
@@ -215,15 +216,16 @@ class CropPagerScreenFragment :
             navController.navigate(CropPagerScreenFragmentDirections.showRecropDialog(viewModel.dataSet.liveElement.cropSensitivity))
         }
         comparisonButton.setOnClickListener {
-            val cropImageView =
-                binding
-                    .viewPager
-                    .currentViewHolder<ImageViewHolder>()!!
-                    .imageView
+            val cropBundle = viewModel.dataSet.liveElement
 
             navController.navigate(
-                CropPagerScreenFragmentDirections.navigateToComparisonScreen(viewModel.dataSet.liveElement),
-                FragmentNavigatorExtras(cropImageView to cropImageView.transitionName)
+                CropPagerScreenFragmentDirections.navigateToComparisonScreen(cropBundle),
+                FragmentNavigatorExtras(
+                    binding
+                        .viewPager
+                        .currentViewHolder<ImageViewHolder>()!!
+                        .imageView to cropBundle.sharedElementTransitionName
+                )
             )
         }
         popupMenuButton.setOnClickListener {
