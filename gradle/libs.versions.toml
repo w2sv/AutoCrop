@@ -8,7 +8,7 @@ agp = "8.5.2"
 kotlin = "2.0.10"
 java = "17"
 ksp = "2.0.10-1.0.24"
-triplet-play = "3.10.1"
+triplet-play = "3.11.0"
 hilt = "2.51.1"
 
 junit = "5.10.3"
