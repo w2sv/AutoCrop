@@ -1,16 +1,14 @@
 package com.w2sv.cropbundle
 
 import android.content.ContentResolver
-import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Parcelable
 import android.provider.MediaStore
-import androidx.core.database.getLongOrNull
-import com.w2sv.cropbundle.cropping.model.CropEdges
 import com.w2sv.cropbundle.cropping.CropSensitivity
 import com.w2sv.cropbundle.cropping.crop
 import com.w2sv.cropbundle.cropping.cropped
+import com.w2sv.cropbundle.cropping.model.CropEdges
 import com.w2sv.cropbundle.io.ImageMimeType
 import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.cropbundle.io.extensions.queryMediaStoreData
@@ -106,7 +104,6 @@ data class Screenshot(
                         MediaStore.Images.Media.SIZE,
                         MediaStore.Images.Media.DISPLAY_NAME,
                         MediaStore.Images.Media.MIME_TYPE,
-                        MediaStore.Images.Media._ID
                     ),
                     onCursor = {
                         val fileName = it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME))
@@ -114,8 +111,7 @@ data class Screenshot(
                             diskUsage = it.getLong(it.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)),
                             fileName = fileName,
                             mimeType = ImageMimeType.parse(it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE))),
-                            id = it.getLongOrNull(it.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
-                                ?: fileName.substringBeforeLast(".").toLong()  // TODO: probably still unreliable
+                            id = fileName.substringBeforeLast(".").toLong()  // TODO: probably still unreliable
                         )
                             .also { i { it.toString() } }
                     }
