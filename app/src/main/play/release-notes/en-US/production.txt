@@ -1,1 +1,1 @@
-- Fix on back press behaviour
+- Fix image selection on Android 13+ & screenshot deletion
