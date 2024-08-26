@@ -8,13 +8,17 @@ import com.w2sv.autocrop.BuildConfig
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.AboutBinding
 import com.w2sv.autocrop.ui.views.animate
+import slimber.log.i
 import java.util.Calendar
 
 class AboutScreenFragment :
     AppFragment<AboutBinding>(AboutBinding::class.java) {
 
     override val onBackPressed: (() -> Unit)?
-        get() = { navController.popBackStack() }
+        get() = {
+            i { "called" }
+            navController.popBackStack()
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

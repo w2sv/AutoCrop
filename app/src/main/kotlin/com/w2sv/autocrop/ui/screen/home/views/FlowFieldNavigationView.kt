@@ -8,7 +8,7 @@ import android.util.AttributeSet
 import androidx.core.app.ShareCompat
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.androidutils.openUrl
 import com.w2sv.androidutils.packagePlayStoreUrl
@@ -26,7 +26,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
 
     private val viewModel by viewModel<HomeScreenViewModel>()
 
-    private val flowFieldFragment by lazy {
+    private val homeScreenFragment by lazy {
         findFragment<HomeScreenFragment>()
     }
 
@@ -86,16 +86,17 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
         setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.main_menu_item_save_dir -> {
-                    flowFieldFragment.launchCropSaveDirSelection()
+                    homeScreenFragment.launchCropSaveDirSelection()
                 }
 
                 R.id.main_menu_item_configure_cropping_settings -> {
                     CropSettingsDialogFragment()
-                        .show(flowFieldFragment.childFragmentManager)
+                        .show(homeScreenFragment.childFragmentManager)
                 }
 
                 R.id.main_menu_item_about -> {
-                    findNavController().navigate(HomeScreenFragmentDirections.navigateToAboutScreen())
+                    homeScreenFragment.findNavController()
+                        .navigate(HomeScreenFragmentDirections.navigateToAboutScreen())
                 }
 
                 R.id.main_menu_item_go_to_github -> {
@@ -125,7 +126,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 }
             }
 
-            flowFieldFragment.binding.drawerLayout.closeDrawer()
+            homeScreenFragment.binding.drawerLayout.closeDrawer()
             true
         }
     }

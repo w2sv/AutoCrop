@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.drawerlayout.widget.DrawerLayout
@@ -17,7 +16,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
 import com.w2sv.androidutils.res.getLong
 import com.w2sv.androidutils.view.hide
 import com.w2sv.androidutils.view.show
@@ -54,11 +52,7 @@ class HomeScreenFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        listOf(
-            openDocumentTreeContractHandler,
-            writeExternalStoragePermissionHandler
-        )
-            .forEach(lifecycle::addObserver)
+        lifecycle.addObserver(writeExternalStoragePermissionHandler)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -113,19 +107,21 @@ class HomeScreenFragment :
                 onGranted = ::launchImageSelection,
             )
         }
-        shareCropsButton.setOnClickListener {
-            startActivity(
-                Intent.createChooser(
-                    Intent(Intent.ACTION_SEND_MULTIPLE)
-                        .putExtra(
-                            Intent.EXTRA_STREAM,
-                            viewModel.cropBundleIoResults!!.cropUris
-                        )
-                        .setType(IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER),
-                    null
-                )
+        shareCropsButton.setOnClickListener { shareCrops() }
+    }
+
+    private fun shareCrops() {
+        startActivity(
+            Intent.createChooser(
+                Intent(Intent.ACTION_SEND_MULTIPLE)
+                    .putExtra(
+                        Intent.EXTRA_STREAM,
+                        viewModel.cropBundleIoResults!!.cropUris
+                    )
+                    .setType(IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER),
+                null
             )
-        }
+        )
     }
 
     private fun HomeScreenViewModel.setLiveDataObservers() {
@@ -156,7 +152,7 @@ class HomeScreenFragment :
      * ActivityCallContractHandlers
      */
 
-    private val writeExternalStoragePermissionHandler by lazy {
+    private val writeExternalStoragePermissionHandler by lazy {  // TODO: what do I even need this for
         AppPermissionHandler(
             activity = requireActivity(),
             permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -215,39 +211,25 @@ class HomeScreenFragment :
         navController.navigate(HomeScreenFragmentDirections.navigateToCropScreen(uris))
     }
 
-    private val openDocumentTreeContractHandler by lazy {
-        OpenDocumentTreeContractHandler(
-            activity = requireActivity(),
-            resultCallback = {
-                it?.let { treeUri ->
-                    viewModel.setCropSaveDirTreeUri(treeUri, requireContext().contentResolver)
-                }
-            }
-        )
-    }
-
     fun launchCropSaveDirSelection() {
-        openDocumentTreeContractHandler.selectDocument(viewModel.cropSaveDirTreeUri.value)
+        documentTreePicker.launch(viewModel.cropSaveDirTreeUri.value)
     }
-}
 
-private class OpenDocumentTreeContractHandler(
-    activity: ComponentActivity,
-    override val resultCallback: (Uri?) -> Unit
-) : ActivityCallContractHandler.Impl<Uri?, Uri?>(
-    activity = activity,
-    activityResultContract = object : ActivityResultContracts.OpenDocumentTree() {
-        override fun createIntent(context: Context, input: Uri?): Intent =
-            super.createIntent(context, input)
-                .setFlags(
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
-                            Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                            Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
-                            Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
-                )
-    }
-) {
-    fun selectDocument(treeUri: Uri?) {
-        resultLauncher.launch(treeUri)
-    }
+    private val documentTreePicker =
+        registerForActivityResult(
+            object : ActivityResultContracts.OpenDocumentTree() {
+                override fun createIntent(context: Context, input: Uri?): Intent =
+                    super.createIntent(context, input)
+                        .setFlags(
+                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                                    Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                                    Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                                    Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+                        )
+            }
+        ) { optionalTreeUri ->
+            optionalTreeUri?.let { treeUri ->
+                viewModel.setCropSaveDirTreeUri(treeUri, requireContext().contentResolver)
+            }
+        }
 }
