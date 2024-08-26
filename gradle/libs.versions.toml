@@ -9,7 +9,7 @@ kotlin = "2.0.10"
 java = "17"
 ksp = "2.0.10-1.0.24"
 triplet-play = "3.10.1"
-hilt = "2.51.1"
+hilt = "2.52"
 
 junit = "5.10.3"
 mannodermaus = "1.3.0"
