@@ -22,7 +22,7 @@ class ComparisonViewModel @Inject constructor(
     preferencesRepository: PreferencesRepository
 ) : androidx.lifecycle.ViewModel() {
 
-    val comparisonInstructionsShown =
+    val instructionsShown =
         preferencesRepository.comparisonInstructionsShown.stateIn(viewModelScope, SharingStarted.Eagerly)
 
     val cropBundle: CropBundle = ComparisonFragmentArgs.fromSavedStateHandle(savedStateHandle).cropBundle

@@ -3,10 +3,10 @@ package com.w2sv.autocrop.ui.screen.pager
 import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.viewpager2.widget.ViewPager2
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.res.getText
@@ -28,12 +28,14 @@ import com.w2sv.autocrop.ui.util.nonNullValue
 import com.w2sv.autocrop.ui.views.KEEP_MENU_ITEM_OPEN_ON_CLICK
 import com.w2sv.autocrop.ui.views.VisualizationMethod
 import com.w2sv.autocrop.ui.views.animate
+import com.w2sv.autocrop.ui.views.currentViewHolder
 import com.w2sv.autocrop.ui.views.makeOnClickPersistent
 import com.w2sv.autocrop.ui.views.notifyCurrentItemChanged
 import com.w2sv.autocrop.ui.views.toggleCheck
 import com.w2sv.autocrop.ui.views.visualize
 import com.w2sv.autocrop.util.extensions.containsSingularElement
 import com.w2sv.autocrop.util.extensions.launchAfterShortDelay
+import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
 import com.w2sv.cropbundle.Crop
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.cropbundle.cropping.CropSensitivity
@@ -213,19 +215,16 @@ class CropPagerScreenFragment :
             navController.navigate(CropPagerScreenFragmentDirections.showRecropDialog(viewModel.dataSet.liveElement.cropSensitivity))
         }
         comparisonButton.setOnClickListener {
-            navController.navigate(CropPagerScreenFragmentDirections.navigateToComparisonScreen(viewModel.dataSet.liveElement))
-            // TODO
+            val cropImageView =
+                binding
+                    .viewPager
+                    .currentViewHolder<ImageViewHolder>()!!
+                    .imageView
 
-            //            val cropImageView =
-            //                binding
-            //                    .viewPager
-            //                    .currentViewHolder<ImageViewHolder>()!!
-            //                    .imageView
-            //
-            //            addSharedElement(
-            //                cropImageView,
-            //                cropImageView.transitionName
-            //            )
+            navController.navigate(
+                CropPagerScreenFragmentDirections.navigateToComparisonScreen(viewModel.dataSet.liveElement),
+                FragmentNavigatorExtras(cropImageView to cropImageView.transitionName)
+            )
         }
         popupMenuButton.setOnClickListener {
             with(PopupMenu(requireContext(), it)) {

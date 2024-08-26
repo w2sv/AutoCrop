@@ -57,7 +57,7 @@ class ComparisonFragment
 
     private fun onEnterTransitionCompleted() {
         launchAfterShortDelay {
-            if (!viewModel.comparisonInstructionsShown.value) {
+            if (!viewModel.instructionsShown.value) {
                 ComparisonScreenInstructionDialogFragment().show(childFragmentManager)
             }
             else {
@@ -67,52 +67,46 @@ class ComparisonFragment
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.populate()
-        binding.setListeners()
-        viewModel.setLiveDataObservers()
-    }
+        with(binding) {
+            cropIv.transitionName = viewModel.cropBundle.identifier
+            cropIv.setImageBitmap(viewModel.cropBundle.crop.bitmap)
+            screenshotIv.setImageBitmap(viewModel.screenshotBitmap)
 
-    private fun ComparisonBinding.populate() {
-        cropIv.transitionName = viewModel.cropBundle.identifier
-        cropIv.setImageBitmap(viewModel.cropBundle.crop.bitmap)
-        screenshotIv.setImageBitmap(viewModel.screenshotBitmap)
-    }
+            root.setOnTouchListener { v, event ->
+                when (event.action) {
+                    ACTION_DOWN -> {
+                        viewModel.postImageType(ImageType.Screenshot)
+                        v.performClick()
+                        true
+                    }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun ComparisonBinding.setListeners() {
-        root.setOnTouchListener { v, event ->
-            when (event.action) {
-                ACTION_DOWN -> {
-                    viewModel.postImageType(ImageType.Screenshot)
-                    v.performClick()
-                    true
+                    ACTION_UP -> {
+                        viewModel.postImageType(ImageType.Crop)
+                        true
+                    }
+
+                    else -> false
                 }
-
-                ACTION_UP -> {
-                    viewModel.postImageType(ImageType.Crop)
-                    true
-                }
-
-                else -> false
-            }
-        }
-    }
-
-    private fun ComparisonViewModel.setLiveDataObservers() {
-        screenshotViewImageMatrix.observe(viewLifecycleOwner) {
-            binding.cropIv.alignWithScreenshotIV(it, cropBundle.crop.edges)
-        }
-        imageType.observe(viewLifecycleOwner) {
-            when (it!!) {
-                ImageType.Screenshot -> crossVisualize(binding.cropIv, binding.screenshotIv)
-                ImageType.Crop -> crossVisualize(binding.screenshotIv, binding.cropIv)
             }
 
-            if (enterTransitionCompleted) {
-                binding.displayedImageTv.setTextAndShow(it)
+            with(viewModel) {
+                screenshotViewImageMatrix.observe(viewLifecycleOwner) {
+                    cropIv.alignWithScreenshotIV(it, cropBundle.crop.edges)
+                }
+                imageType.observe(viewLifecycleOwner) {
+                    when (it!!) {
+                        ImageType.Screenshot -> crossVisualize(cropIv, screenshotIv)
+                        ImageType.Crop -> crossVisualize(screenshotIv, cropIv)
+                    }
+
+                    if (enterTransitionCompleted) {
+                        displayedImageTv.setTextAndShow(it)
+                    }
+                }
             }
         }
     }
