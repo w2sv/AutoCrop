@@ -14,14 +14,14 @@ import java.util.Set;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
-public class Sketch extends PApplet {
+public class PerlinNoiseFlowFieldSketch extends PApplet {
 
     private final FlowField flowfield = new FlowField();
     private final ArrayList<Particle> particles = new ArrayList<>();
     private final AlphaDropper alphaDropper = new AlphaDropper();
     private final ColorHandler colorHandler = new ColorHandler();
 
-    public Sketch(Point screenResolution) {
+    public PerlinNoiseFlowFieldSketch(Point screenResolution) {
         width = screenResolution.x;
         height = screenResolution.y;
     }
@@ -39,7 +39,7 @@ public class Sketch extends PApplet {
         background(Config.BACKGROUND_COLOR);
 
         colorHandler.setStrokeColor(g);
-        g.strokeWeight(Sketch.Config.PARTICLE_STROKE_WEIGHT);
+        g.strokeWeight(PerlinNoiseFlowFieldSketch.Config.PARTICLE_STROKE_WEIGHT);
 
         // initialize particles
         Particle.setFlowFieldDimensions(width, height);
@@ -90,8 +90,8 @@ public class Sketch extends PApplet {
  */
 class ColorHandler {
 
-    private final PeriodicalRunner runner = new PeriodicalRunner(Sketch.Config.PARTICLE_COLOR_CHANGE_PERIOD);
-    public int color = Random.randomElement(new ArrayList<>(Sketch.Config.PARTICLE_COLORS));
+    private final PeriodicalRunner runner = new PeriodicalRunner(PerlinNoiseFlowFieldSketch.Config.PARTICLE_COLOR_CHANGE_PERIOD);
+    public int color = Random.randomElement(new ArrayList<>(PerlinNoiseFlowFieldSketch.Config.PARTICLE_COLORS));
 
     public void changeColorIfDue(int millis, PGraphics canvas) {
         runner.runIfDue(millis, () -> {
@@ -101,16 +101,16 @@ class ColorHandler {
     }
 
     public void setStrokeColor(PGraphics canvas) {
-        canvas.stroke(color, Sketch.Config.PARTICLE_STROKE_ALPHA);
+        canvas.stroke(color, PerlinNoiseFlowFieldSketch.Config.PARTICLE_STROKE_ALPHA);
     }
 
     private void setNewRandomlyPickedColor() {
-        color = Random.randomElement(new ArrayList<>(Sets.difference(Sketch.Config.PARTICLE_COLORS, Set.of(color))));
+        color = Random.randomElement(new ArrayList<>(Sets.difference(PerlinNoiseFlowFieldSketch.Config.PARTICLE_COLORS, Set.of(color))));
     }
 }
 
 class AlphaDropper {
-    private final PeriodicalRunner periodicalRunner = new PeriodicalRunner(Sketch.Config.ALPHA_DROP_PERIOD);
+    private final PeriodicalRunner periodicalRunner = new PeriodicalRunner(PerlinNoiseFlowFieldSketch.Config.ALPHA_DROP_PERIOD);
 
     void dropAlphaIfDue(int millis, PGraphics canvas) {
         periodicalRunner.runIfDue(millis, () -> dropAlpha(canvas));

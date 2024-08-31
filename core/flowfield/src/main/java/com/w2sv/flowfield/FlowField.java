@@ -19,15 +19,15 @@ class FlowField {
         particles.forEachRemaining((particle -> particle.applyForceVector(
                 getForceVector(
                         Pair.create(
-                                PApplet.floor(particle.pos.x / Sketch.Config.FLOW_FIELD_GRANULARITY) + 1,
-                                PApplet.floor(particle.pos.y / Sketch.Config.FLOW_FIELD_GRANULARITY) + 1
+                                PApplet.floor(particle.pos.x / PerlinNoiseFlowFieldSketch.Config.FLOW_FIELD_GRANULARITY) + 1,
+                                PApplet.floor(particle.pos.y / PerlinNoiseFlowFieldSketch.Config.FLOW_FIELD_GRANULARITY) + 1
                         ),
                         forceCash,
                         parent
                 )
         )));
 
-        zOff += Sketch.Config.FLOW_FIELD_Z_OFF_INCREMENT;
+        zOff += PerlinNoiseFlowFieldSketch.Config.FLOW_FIELD_Z_OFF_INCREMENT;
     }
 
     private PVector getForceVector(Pair<Integer, Integer> pos, HashMap<Pair<Integer, Integer>, PVector> forceCash, PApplet parent) {

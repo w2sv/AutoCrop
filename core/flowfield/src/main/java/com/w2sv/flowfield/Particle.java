@@ -16,10 +16,10 @@ class Particle {
 
     public Particle(PApplet parent) {
         vel = new PVector(
-                parent.random(Sketch.Config.PARTICLE_START_VELOCITY_LOW, Sketch.Config.PARTICLE_START_VELOCITY_HIGH),
-                parent.random(Sketch.Config.PARTICLE_START_VELOCITY_LOW, Sketch.Config.PARTICLE_START_VELOCITY_HIGH)
+                parent.random(PerlinNoiseFlowFieldSketch.Config.PARTICLE_START_VELOCITY_LOW, PerlinNoiseFlowFieldSketch.Config.PARTICLE_START_VELOCITY_HIGH),
+                parent.random(PerlinNoiseFlowFieldSketch.Config.PARTICLE_START_VELOCITY_LOW, PerlinNoiseFlowFieldSketch.Config.PARTICLE_START_VELOCITY_HIGH)
         );
-        maxSpeed = parent.random(Sketch.Config.PARTICLE_MAX_VELOCITY_LOW, Sketch.Config.PARTICLE_MAX_VELOCITY_HIGH);
+        maxSpeed = parent.random(PerlinNoiseFlowFieldSketch.Config.PARTICLE_MAX_VELOCITY_LOW, PerlinNoiseFlowFieldSketch.Config.PARTICLE_MAX_VELOCITY_HIGH);
 
         pos = new PVector(parent.random(flowFieldWidth), parent.random(flowFieldHeight));
         previousPos = pos.copy();

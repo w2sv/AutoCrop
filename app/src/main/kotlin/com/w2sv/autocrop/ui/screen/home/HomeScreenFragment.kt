@@ -33,7 +33,7 @@ import com.w2sv.autocrop.util.getMediaUri
 import com.w2sv.common.AppPermissionHandler
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
 import com.w2sv.domain.repository.PermissionRepository
-import com.w2sv.flowfield.Sketch
+import com.w2sv.flowfield.PerlinNoiseFlowFieldSketch
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
@@ -58,11 +58,12 @@ class HomeScreenFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Attach PerlinNoiseFlowFieldSketch as PFragment
         childFragmentManager
             .beginTransaction()
             .add(
                 binding.flowfieldLayout.id,
-                PFragment(Sketch(requireActivity().windowManager.resolution))
+                PFragment(PerlinNoiseFlowFieldSketch(requireActivity().windowManager.resolution))
             )
             .commitAllowingStateLoss()  // Fixes java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
 
@@ -103,9 +104,7 @@ class HomeScreenFragment :
             drawerLayout.toggleDrawer()
         }
         imageSelectionButton.setOnClickListener {
-            writeExternalStoragePermissionHandler.requestPermissionIfRequired(
-                onGranted = ::launchImageSelection,
-            )
+            launchImageSelection()
         }
         shareCropsButton.setOnClickListener { shareCrops() }
     }
@@ -152,7 +151,7 @@ class HomeScreenFragment :
      * ActivityCallContractHandlers
      */
 
-    private val writeExternalStoragePermissionHandler by lazy {  // TODO: what do I even need this for
+    private val writeExternalStoragePermissionHandler by lazy {  // TODO: what's this even needed for?
         AppPermissionHandler(
             activity = requireActivity(),
             permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -181,7 +180,11 @@ class HomeScreenFragment :
     //    }
 
     private fun launchImageSelection() {
-        imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        writeExternalStoragePermissionHandler.requestPermissionIfRequired(
+            onGranted = {
+                imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
+        )
     }
 
     private val imagePicker =
@@ -212,10 +215,10 @@ class HomeScreenFragment :
     }
 
     fun launchCropSaveDirSelection() {
-        documentTreePicker.launch(viewModel.cropSaveDirTreeUri.value)
+        cropSaveDirPicker.launch(viewModel.cropSaveDirTreeUri.value)
     }
 
-    private val documentTreePicker =
+    private val cropSaveDirPicker =
         registerForActivityResult(
             object : ActivityResultContracts.OpenDocumentTree() {
                 override fun createIntent(context: Context, input: Uri?): Intent =

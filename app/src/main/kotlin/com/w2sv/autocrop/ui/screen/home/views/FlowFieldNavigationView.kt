@@ -1,6 +1,5 @@
 package com.w2sv.autocrop.ui.screen.home.views
 
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -12,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.androidutils.openUrl
 import com.w2sv.androidutils.packagePlayStoreUrl
+import com.w2sv.androidutils.startActivity
 import com.w2sv.androidutils.view.configureItem
 import com.w2sv.androidutils.view.dialogs.show
 import com.w2sv.androidutils.view.viewModel
@@ -104,18 +104,16 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 }
 
                 R.id.main_menu_item_rate_the_app -> {
-                    try {
-                        context.startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(context.packagePlayStoreUrl)
-                            )
-                                .setPackage("com.android.vending")
+                    context.startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(context.packagePlayStoreUrl)
                         )
-                    }
-                    catch (e: ActivityNotFoundException) {
-                        context.showToast("Seems like you're not signed into the Play Store \uD83E\uDD14")
-                    }
+                            .setPackage("com.android.vending"),
+                        onActivityNotFoundException = {
+                            context.showToast("Seems like you're not signed into the Play Store")
+                        }
+                    )
                 }
 
                 R.id.main_menu_item_share -> {
@@ -126,7 +124,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 }
             }
 
-            homeScreenFragment.binding.drawerLayout.closeDrawer()
+//            homeScreenFragment.binding.drawerLayout.closeDrawer()
             true
         }
     }
