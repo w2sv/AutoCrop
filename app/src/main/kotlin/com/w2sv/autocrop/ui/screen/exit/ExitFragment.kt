@@ -18,8 +18,8 @@ import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.databinding.CropPagerExitBinding
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
-import com.w2sv.autocrop.ui.views.getAnimationComposer
-import com.w2sv.autocrop.util.extensions.launchAfterShortDelay
+import com.w2sv.autocrop.ui.util.getAnimationComposer
+import com.w2sv.autocrop.util.launchAfterShortDelay
 import com.w2sv.cropbundle.io.ScreenshotDeletionResult
 import kotlinx.coroutines.launch
 

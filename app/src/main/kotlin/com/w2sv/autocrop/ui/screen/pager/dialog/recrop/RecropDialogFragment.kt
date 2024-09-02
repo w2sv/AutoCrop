@@ -4,7 +4,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.util.nonNullValue
-import com.w2sv.autocrop.ui.views.AbstractCropSettingsDialogFragment
+import com.w2sv.autocrop.ui.designsystem.AbstractCropSettingsDialogFragment
 import com.w2sv.cropbundle.cropping.CropSensitivity
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -67,7 +67,7 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <com.w2sv.autocrop.ui.views.FractionTextView
+        <com.w2sv.autocrop.ui.designsystem.FractionTextView
             android:id="@+id/page_indication_tv"
 
             android:layout_width="wrap_content"

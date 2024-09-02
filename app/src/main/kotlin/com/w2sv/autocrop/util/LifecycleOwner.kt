@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.util.extensions
+package com.w2sv.autocrop.util
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope

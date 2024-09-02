@@ -22,7 +22,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.ui.screen.comparison.model.ImageType
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.getScaleY
-import com.w2sv.autocrop.util.extensions.launchAfterShortDelay
+import com.w2sv.autocrop.util.launchAfterShortDelay
 import com.w2sv.autocrop.util.registerOnBackPressedHandler
 import com.w2sv.cropbundle.CropBundle
 import dagger.hilt.android.AndroidEntryPoint

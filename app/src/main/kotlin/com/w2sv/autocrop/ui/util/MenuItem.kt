@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.ui.views
+package com.w2sv.autocrop.ui.util
 
 import android.content.Context
 import android.view.MenuItem

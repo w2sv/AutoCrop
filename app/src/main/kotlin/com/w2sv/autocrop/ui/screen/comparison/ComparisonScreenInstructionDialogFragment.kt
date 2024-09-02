@@ -5,7 +5,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.graphics.getColoredDrawable
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.views.RoundedDialogFragment
+import com.w2sv.autocrop.ui.designsystem.RoundedDialogFragment
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel

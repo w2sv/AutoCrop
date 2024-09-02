@@ -4,7 +4,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.views.AbstractCropSettingsDialogFragment
+import com.w2sv.autocrop.ui.designsystem.AbstractCropSettingsDialogFragment
 import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.kotlinutils.coroutines.firstBlocking
 import dagger.hilt.android.AndroidEntryPoint

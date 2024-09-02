@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,32 +11,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.w2sv.autocrop.ui.screen.home.views.FlowFieldDrawerLayout
+    <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:id="@+id/foreground_layout"
+        <LinearLayout
+            android:id="@+id/foreground_layout_parent"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.w2sv.autocrop.ui.screen.home.views.ForegroundElementsToggleButton
-                android:id="@+id/foreground_elements_toggle_button"
-                android:layout_width="@dimen/size_image_button"
-                android:layout_height="@dimen/size_image_button"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="@dimen/margin_horizontal_large"
-                android:layout_marginBottom="?attr/actionBarSize"
-                android:background="@drawable/ic_eye_24"
-                android:backgroundTint="@color/low_alpha_gray"
-                android:contentDescription="@string/toggle_foreground_elements" />
-
             <RelativeLayout
-                android:id="@+id/high_alpha_foreground_layout"
+                android:id="@+id/foreground_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                tools:ignore="UselessParent">
+
+                <ImageButton
+                    android:id="@+id/foreground_elements_toggle_button"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="@dimen/margin_horizontal_large"
+                    android:layout_marginBottom="?attr/actionBarSize"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/toggle_foreground_elements"
+                    android:src="@drawable/ic_eye_24"
+                    app:tint="@color/low_alpha_gray" />
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/navigation_view_toggle_button"
@@ -76,7 +79,7 @@
 
             </RelativeLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <com.w2sv.autocrop.ui.screen.home.views.FlowFieldNavigationView
             android:id="@+id/navigation_view"
@@ -92,6 +95,6 @@
             app:itemIconTint="@color/highlight"
             app:menu="@menu/flowfield" />
 
-    </com.w2sv.autocrop.ui.screen.home.views.FlowFieldDrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 
 </RelativeLayout>

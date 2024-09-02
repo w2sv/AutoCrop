@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.ui.views
+package com.w2sv.autocrop.ui.util
 
 import android.view.View
 import com.w2sv.androidutils.view.show
@@ -11,5 +11,5 @@ fun Iterable<View>.visualize(method: VisualizationMethod) {
 
 enum class VisualizationMethod(val invoke: (View) -> Unit) {
     Instantaneous({ it.show() }),
-    FadeIn({ it.fadeIn() })
+    FadeIn({ it.fadeInYoYo() })
 }

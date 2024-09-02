@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.ui.views
+package com.w2sv.autocrop.ui.designsystem
 
 import android.app.Dialog
 import android.os.Bundle

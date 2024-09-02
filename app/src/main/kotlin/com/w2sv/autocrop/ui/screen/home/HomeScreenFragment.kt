@@ -10,25 +10,25 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.androidutils.res.getLong
-import com.w2sv.androidutils.view.hide
 import com.w2sv.androidutils.view.show
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.databinding.FlowfieldBinding
-import com.w2sv.autocrop.ui.views.animate
-import com.w2sv.autocrop.ui.views.fadeIn
-import com.w2sv.autocrop.ui.views.fadeInAnimationComposer
-import com.w2sv.autocrop.ui.views.fadeOut
-import com.w2sv.autocrop.ui.views.onHalfwayFinished
-import com.w2sv.autocrop.util.extensions.resolution
+import com.w2sv.autocrop.databinding.HomeScreenBinding
+import com.w2sv.autocrop.ui.util.animate
+import com.w2sv.autocrop.ui.util.fadeIn
+import com.w2sv.autocrop.ui.util.fadeInAnimationComposer
+import com.w2sv.autocrop.ui.util.fadeOut
+import com.w2sv.autocrop.ui.util.onHalfwayFinished
+import com.w2sv.autocrop.ui.util.resolution
 import com.w2sv.autocrop.util.getMediaUri
 import com.w2sv.common.AppPermissionHandler
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
@@ -38,11 +38,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import processing.android.PFragment
+import processing.core.PApplet
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeScreenFragment :
-    AppFragment<FlowfieldBinding>(FlowfieldBinding::class.java) {
+    AppFragment<HomeScreenBinding>(HomeScreenBinding::class.java) {
 
     @Inject
     lateinit var permissionRepository: PermissionRepository
@@ -58,21 +59,42 @@ class HomeScreenFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Attach PerlinNoiseFlowFieldSketch as PFragment
-        childFragmentManager
-            .beginTransaction()
-            .add(
-                binding.flowfieldLayout.id,
-                PFragment(PerlinNoiseFlowFieldSketch(requireActivity().windowManager.resolution))
+        with(binding) {
+            attachSketch(
+                canvas = flowfieldLayout,
+                sketch = PerlinNoiseFlowFieldSketch(requireActivity().windowManager.resolution)
             )
-            .commitAllowingStateLoss()  // Fixes java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
 
-        binding.showLayoutElements()
-        binding.setOnClickListeners()
-        viewModel.setLiveDataObservers()
+            drawerLayout.onDrawerSlide(viewModel::setDrawerSlideOffset)
+
+            showLayoutElements()
+
+            navigationViewToggleButton.setOnClickListener { drawerLayout.toggleDrawer() }
+            imageSelectionButton.setOnClickListener { launchImageSelection() }
+            shareCropsButton.setOnClickListener { shareCrops() }
+            foregroundElementsToggleButton.setOnClickListener { viewModel.toggleFullFlowFieldDisplay() }
+
+            with(viewModel) {
+                fullFlowFieldDisplay.observe(viewLifecycleOwner) { hideForeground ->
+                    if (hideForeground) {
+                        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                        foregroundLayoutParent.setOnClickListener { viewModel.toggleFullFlowFieldDisplay() }
+                        foregroundLayout.fadeOut()
+                    }
+                    else {
+                        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+                        foregroundLayoutParent.setOnClickListener(null)
+                        foregroundLayout.fadeIn()
+                    }
+                }
+                drawerSlideOffset.observe(viewLifecycleOwner) {
+                    affectDrawerAssociatedViewsOnSlide(it)
+                }
+            }
+        }
     }
 
-    private fun FlowfieldBinding.showLayoutElements() {
+    private fun HomeScreenBinding.showLayoutElements() {
         val anyCropsSaved = viewModel.cropBundleIoResults?.anyCropsSaved == true
 
         when (viewModel.fadedInForegroundOnEntry) {
@@ -82,7 +104,7 @@ class HomeScreenFragment :
 
             false -> {
                 foregroundLayout
-                    .fadeInAnimationComposer(resources.getLong(R.integer.duration_flowfield_buttons_fade_in))
+                    .fadeInAnimationComposer(duration = 3500L)
                     .onHalfwayFinished(lifecycleScope) {
                         viewModel.fadedInForegroundOnEntry = true
                         viewModel.showIOResultsNotificationIfApplicable(requireContext())
@@ -99,16 +121,6 @@ class HomeScreenFragment :
         }
     }
 
-    private fun FlowfieldBinding.setOnClickListeners() {
-        navigationViewToggleButton.setOnClickListener {
-            drawerLayout.toggleDrawer()
-        }
-        imageSelectionButton.setOnClickListener {
-            launchImageSelection()
-        }
-        shareCropsButton.setOnClickListener { shareCrops() }
-    }
-
     private fun shareCrops() {
         startActivity(
             Intent.createChooser(
@@ -121,30 +133,6 @@ class HomeScreenFragment :
                 null
             )
         )
-    }
-
-    private fun HomeScreenViewModel.setLiveDataObservers() {
-        hideForegroundElements.observe(viewLifecycleOwner) { hideForeground ->
-            if (hideForeground) {
-                binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-
-                if (lifecycle.currentState == Lifecycle.State.STARTED) {
-                    binding.highAlphaForegroundLayout.hide()
-                }
-                else {
-                    binding.foregroundElementsToggleButton.setForegroundElementsFadeAnimation {
-                        binding.highAlphaForegroundLayout.fadeOut()
-                    }
-                }
-            }
-            else {
-                binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-
-                binding.foregroundElementsToggleButton.setForegroundElementsFadeAnimation {
-                    binding.highAlphaForegroundLayout.fadeIn()
-                }
-            }
-        }
     }
 
     /**
@@ -235,4 +223,48 @@ class HomeScreenFragment :
                 viewModel.setCropSaveDirTreeUri(treeUri, requireContext().contentResolver)
             }
         }
+}
+
+private fun DrawerLayout.openDrawer() {
+    openDrawer(GravityCompat.START)
+}
+
+private fun DrawerLayout.closeDrawer() {
+    closeDrawer(GravityCompat.START)
+}
+
+private fun DrawerLayout.toggleDrawer() {
+    if (isOpen)
+        closeDrawer()
+    else
+        openDrawer()
+}
+
+private fun DrawerLayout.onDrawerSlide(callback: (Float) -> Unit) {
+    addDrawerListener(
+        object : SimpleDrawerListener() {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                callback(slideOffset)
+            }
+        }
+    )
+}
+
+private fun HomeScreenBinding.affectDrawerAssociatedViewsOnSlide(slideOffset: Float) {
+    navigationViewToggleButton.progress = slideOffset
+
+    val associatedButtonAlpha = 1 - slideOffset
+    imageSelectionButton.alpha = associatedButtonAlpha
+    shareCropsButton.alpha = associatedButtonAlpha
+    foregroundElementsToggleButton.alpha = associatedButtonAlpha
+}
+
+private fun Fragment.attachSketch(canvas: View, sketch: PApplet) {
+    childFragmentManager
+        .beginTransaction()
+        .add(
+            canvas.id,
+            PFragment(sketch)
+        )
+        .commitAllowingStateLoss()  // Fixes java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
 }

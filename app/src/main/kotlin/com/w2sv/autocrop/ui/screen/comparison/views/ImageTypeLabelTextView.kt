@@ -8,7 +8,7 @@ import com.w2sv.androidutils.res.getLong
 import com.w2sv.androidutils.view.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.screen.comparison.model.ImageType
-import com.w2sv.autocrop.ui.views.fadeOut
+import com.w2sv.autocrop.ui.util.fadeOut
 
 class ImageTypeLabelTextView(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
 

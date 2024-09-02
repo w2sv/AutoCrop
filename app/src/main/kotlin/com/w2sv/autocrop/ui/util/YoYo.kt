@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.ui.views
+package com.w2sv.autocrop.ui.util
 
 import android.view.View
 import com.daimajia.androidanimations.library.Techniques
@@ -31,19 +31,17 @@ fun YoYo.AnimationComposer.onHalfwayFinished(
     block: suspend CoroutineScope.() -> Unit
 ): YoYo.AnimationComposer =
     apply {
-        coroutineScope.launchDelayed(duration / 2) {
-            block()
-        }
+        coroutineScope.launchDelayed(duration / 2, block = block)
     }
 
 fun crossFade(fadeOut: View, fadeIn: View, duration: Long? = null) {
     fadeOut.fadeOut(duration)
-    fadeIn.fadeIn(duration)
+    fadeIn.fadeInYoYo(duration)
 }
 
-fun fadeIn(vararg view: View, duration: Long? = null) {
+fun fadeInYoYo(vararg view: View, duration: Long? = null) {
     view.forEach {
-        it.fadeIn(duration)
+        it.fadeInYoYo(duration)
     }
 }
 
@@ -53,7 +51,7 @@ fun fadeOut(vararg view: View, duration: Long? = null) {
     }
 }
 
-fun View.fadeIn(duration: Long? = null): YoYo.YoYoString =
+fun View.fadeInYoYo(duration: Long? = null): YoYo.YoYoString =
     fadeInAnimationComposer(duration)
         .play()
 

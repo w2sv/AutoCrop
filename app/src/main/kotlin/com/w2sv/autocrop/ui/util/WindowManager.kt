@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.util.extensions
+package com.w2sv.autocrop.ui.util
 
 import android.graphics.Point
 import android.os.Build

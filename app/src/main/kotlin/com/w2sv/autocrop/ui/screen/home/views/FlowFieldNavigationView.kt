@@ -124,7 +124,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
                 }
             }
 
-//            homeScreenFragment.binding.drawerLayout.closeDrawer()
+            //            homeScreenFragment.binding.drawerLayout.closeDrawer()
             true
         }
     }

@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.util.extensions
+package com.w2sv.autocrop.util
 
 val Collection<*>.containsSingularElement: Boolean
     get() = size == 1

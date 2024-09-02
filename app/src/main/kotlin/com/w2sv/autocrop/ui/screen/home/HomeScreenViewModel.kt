@@ -46,15 +46,18 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Misc LiveData
-     */
+    val fullFlowFieldDisplay: LiveData<Boolean> get() = _fullFlowFieldDisplay
+    private val _fullFlowFieldDisplay = MutableLiveData(false)
 
-    val hideForegroundElements: LiveData<Boolean> get() = _hideForegroundElements
-    private val _hideForegroundElements = MutableLiveData(false)
+    fun toggleFullFlowFieldDisplay() {
+        _fullFlowFieldDisplay.toggle()
+    }
 
-    fun toggleHideForegroundElements() {
-        _hideForegroundElements.toggle()
+    val drawerSlideOffset: LiveData<Float> get() = _drawerSlideOffset
+    private val _drawerSlideOffset = MutableLiveData(0f)
+
+    fun setDrawerSlideOffset(value: Float) {
+        _drawerSlideOffset.value = value
     }
 
     val cropSaveDirIdentifier = preferencesRepository.cropSaveDirDocumentUri
