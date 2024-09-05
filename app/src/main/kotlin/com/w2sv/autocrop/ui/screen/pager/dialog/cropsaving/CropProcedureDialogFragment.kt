@@ -24,7 +24,7 @@ class CropProcedureDialogFragment : AbstractCropProcedureDialogFragment() {
         }
 
     private val resultListener
-        get() = requireParentFragment() as ResultListener
+        get() = parentFragment as ResultListener
 
     interface ResultListener {
         fun onSaveCrop(dataSetPosition: Int)

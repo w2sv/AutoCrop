@@ -55,6 +55,7 @@ class CropPagerScreenFragment :
     CropsProcedureDialogFragment.ResultListener,
     RecropDialogFragment.Listener {
 
+    private val cropBundleVM by cropNavGraphViewModel<CropBundleViewModel>()
     private val viewModel by viewModels<CropPagerScreenViewModel>(
         extrasProducer = {
             defaultViewModelCreationExtras
@@ -63,7 +64,6 @@ class CropPagerScreenFragment :
                 }
         }
     )
-    private val cropBundleVM by cropNavGraphViewModel<CropBundleViewModel>()
 
     private lateinit var cropPagerWrapper: CropPagerWrapper
 
@@ -107,22 +107,24 @@ class CropPagerScreenFragment :
             }
         )
 
-        viewModel.setLiveDataObservers()
-        binding.setOnClickListeners()
-    }
+        with(binding) {
+//            viewPager.setPageTransformer(AccordionTransformer())
 
-    private fun CropPagerScreenViewModel.setLiveDataObservers() {
-        dataSet.livePosition.observe(viewLifecycleOwner) {
-            binding.onDataSetPositionChanged(it)
-        }
+            setOnClickListeners()
+            with(viewModel) {
+                dataSet.livePosition.observe(viewLifecycleOwner) {
+                    onDataSetPositionChanged(it)
+                }
 
-        autoScrolling.observe(viewLifecycleOwner) {
-            binding.onDoAutoScrollChanged(it)
-        }
+                autoScrolling.observe(viewLifecycleOwner) {
+                    onDoAutoScrollChanged(it)
+                }
 
-        dataSet.observe(viewLifecycleOwner) {
-            if (it.containsSingularElement && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-                binding.allCropsButtonsWLabel.animate(Techniques.ZoomOut)
+                dataSet.observe(viewLifecycleOwner) {
+                    if (it.containsSingularElement && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                        allCropsButtonRow.animate(Techniques.ZoomOut)
+                    }
+                }
             }
         }
     }
@@ -172,7 +174,7 @@ class CropPagerScreenFragment :
             buildList {
                 add(currentCropLayout)
                 if (!viewModel.dataSet.containsSingularElement) {
-                    add(allCropsButtonsWLabel)
+                    add(allCropsButtonRow)
                 }
             }
                 .visualize(
@@ -183,7 +185,6 @@ class CropPagerScreenFragment :
                 viewModel.showCropResultsToastIfApplicable(requireContext())
             }
 
-            viewPager.setPageTransformer(CubeOutPageTransformer())
             cancelAutoScrollButton.hide()
         }
     }
@@ -352,6 +353,15 @@ private class CubeOutPageTransformer : ViewPager2.PageTransformer {
             pivotX = (if (position < 0) width else 0).toFloat()
             pivotY = height * 0.5f
             rotationY = 90f * position
+        }
+    }
+}
+
+private class AccordionTransformer : ViewPager2.PageTransformer {
+    override fun transformPage(page: View, position: Float) {
+        with(page) {
+            pivotX = if (position < 0) 0f else width.toFloat()
+            scaleX = if (position < 0) 1f + position else 1f - position
         }
     }
 }

@@ -12,56 +12,53 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_horizontal_small"
-        android:layout_marginTop="@dimen/margin_medium">
+        android:layout_marginTop="@dimen/margin_medium"
+        android:gravity="center_vertical">
 
         <LinearLayout
-            android:id="@+id/all_crops_buttons_w_label"
+            android:id="@+id/all_crops_button_row"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_rounded_rectangle_w_button_background"
+            android:gravity="center"
+            android:orientation="vertical"
             android:paddingVertical="@dimen/margin_button_row"
             android:visibility="invisible"
             tools:visibility="visible">
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/discard_all_button"
-                android:layout_width="@dimen/size_image_button"
-                android:layout_height="@dimen/size_image_button"
-                android:layout_marginHorizontal="@dimen/margin_button_row"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="@string/all"
+                android:textColor="@color/higher_light" />
 
-                android:background="@drawable/ic_cancel_24"
-                android:backgroundTint="@color/higher_light"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-                android:contentDescription="@string/discard_all_crops" />
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/discard_all_button"
+                    android:layout_width="@dimen/size_image_button"
+                    android:layout_height="@dimen/size_image_button"
+                    android:layout_marginHorizontal="@dimen/margin_button_row"
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/save_all_button"
-                android:layout_width="@dimen/size_image_button"
-                android:layout_height="@dimen/size_image_button"
-                android:layout_marginHorizontal="@dimen/margin_button_row"
+                    android:background="@drawable/ic_cancel_24"
+                    android:backgroundTint="@color/higher_light"
 
-                android:background="@drawable/ic_save_24"
-                android:backgroundTint="@color/higher_light"
+                    android:contentDescription="@string/discard_all_crops" />
 
-                android:contentDescription="@string/save_all_crops" />
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/save_all_button"
+                    android:layout_width="@dimen/size_image_button"
+                    android:layout_height="@dimen/size_image_button"
+                    android:layout_marginHorizontal="@dimen/margin_button_row"
 
-            <!--                <com.google.android.material.divider.MaterialDivider-->
-            <!--                    android:layout_width="1dp"-->
-            <!--                    android:layout_height="match_parent"-->
-            <!--                    android:layout_marginHorizontal="2dp"-->
-            <!--                    android:layout_marginVertical="2dp"-->
-            <!--                    app:dividerColor="@color/low_alpha_gray" />-->
+                    android:background="@drawable/ic_save_24"
+                    android:backgroundTint="@color/higher_light"
 
-            <!--                <androidx.appcompat.widget.AppCompatImageButton-->
-            <!--                    android:id="@+id/recrop_all_button"-->
-            <!--                    android:layout_width="@dimen/size_image_button"-->
-            <!--                    android:layout_height="@dimen/size_image_button"-->
-            <!--                    android:layout_marginHorizontal="@dimen/margin_button_row"-->
-
-            <!--                    android:background="@drawable/ic_autorenew_24"-->
-            <!--                    android:backgroundTint="@color/higher_light"-->
-
-            <!--                    android:contentDescription="@string/manually_adjust_the_crop" />-->
+                    android:contentDescription="@string/save_all_crops" />
+            </LinearLayout>
         </LinearLayout>
 
         <Space
@@ -74,7 +71,6 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
 
             android:text="@string/fraction"
             android:textColor="@color/crop_pager_text"
@@ -94,7 +90,6 @@
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
-
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/surface_on_black_background" />
@@ -147,7 +142,7 @@
                 android:text="@string/discarding_statistics"
                 android:textColor="@color/crop_pager_text"
                 android:textSize="@dimen/text_size_small"
-                tools:text="Removed 11%=8kb"/>
+                tools:text="Removed 11%=8kb" />
 
             <Space
                 android:layout_width="0dp"

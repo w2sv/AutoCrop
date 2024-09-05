@@ -81,6 +81,9 @@
     <string name="updated_crop">Updated Crop</string>
     <string name="saved_crop">Saved crop</string>
     <string name="updated_crop_settings">Updated Crop Settings</string>
+    <string name="no_discard_all">No, discard all</string>
+    <string name="delete_corresponding_screenshots">Delete corresponding screenshots</string>
+    <string name="crops_procedure_dialog_title">Save %1$d crops?</string>
     <plurals name="screenshot">
         <item quantity="one">screenshot</item>
         <item quantity="other">screenshots</item>

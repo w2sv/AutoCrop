@@ -1,29 +1,27 @@
 package com.w2sv.autocrop.ui.screen.pager.dialog.cropsaving
 
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.activityViewModels
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
+import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
 
 class CropsProcedureDialogFragment : AbstractCropProcedureDialogFragment() {
 
-    private val cropViewModel by activityViewModels<CropBundleViewModel>()
+    private val cropViewModel by cropNavGraphViewModel<CropBundleViewModel>()
 
     override fun AlertDialog.Builder.build(): AlertDialog.Builder =
         apply {
-            setTitle("Save ${cropViewModel.cropBundleCount} crops?")
+            setTitle(getString(R.string.crops_procedure_dialog_title, cropViewModel.cropBundleCount))
             setIcon(R.drawable.ic_save_24)
-            setDeleteCorrespondingScreenshotsOption("Delete corresponding screenshots")
+            setDeleteCorrespondingScreenshotsOption(getString(R.string.delete_corresponding_screenshots))
             setPositiveButton(getString(R.string.yes)) { _, _ ->
                 (parentFragment as ResultListener)
                     .onSaveAllCrops()
             }
-            setNegativeButton("No, discard all") { _, _ ->
+            setNegativeButton(getString(R.string.no_discard_all)) { _, _ ->
                 (parentFragment as ResultListener)
                     .onDiscardAllCrops()
             }
-
-
         }
 
     interface ResultListener {
