@@ -21,7 +21,7 @@ data class CropBundleIOResults(
     val anyCropsSaved: Boolean
         get() = cropUris.isNotEmpty()
 
-    fun getNotificationText(resources: Resources): CharSequence =
+    fun notificationMessage(resources: Resources): CharSequence =
         if (nSavedCrops == 0)
             "Discarded all crops"
         else

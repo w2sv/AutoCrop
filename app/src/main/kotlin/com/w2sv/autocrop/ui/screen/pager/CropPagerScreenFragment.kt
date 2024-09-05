@@ -2,7 +2,6 @@ package com.w2sv.autocrop.ui.screen.pager
 
 import android.os.Bundle
 import android.view.View
-import android.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
@@ -25,14 +24,11 @@ import com.w2sv.autocrop.ui.screen.pager.dialog.cropsaving.CropsProcedureDialogF
 import com.w2sv.autocrop.ui.screen.pager.dialog.recrop.RecropDialogFragment
 import com.w2sv.autocrop.ui.screen.pager.model.CropProcedure
 import com.w2sv.autocrop.ui.screen.pager.view.CropPagerWrapper
-import com.w2sv.autocrop.ui.util.nonNullValue
-import com.w2sv.autocrop.ui.util.KEEP_MENU_ITEM_OPEN_ON_CLICK
 import com.w2sv.autocrop.ui.util.VisualizationMethod
 import com.w2sv.autocrop.ui.util.animate
 import com.w2sv.autocrop.ui.util.currentViewHolder
-import com.w2sv.autocrop.ui.util.makeOnClickPersistent
+import com.w2sv.autocrop.ui.util.nonNullValue
 import com.w2sv.autocrop.ui.util.notifyCurrentItemChanged
-import com.w2sv.autocrop.ui.util.toggleCheck
 import com.w2sv.autocrop.ui.util.visualize
 import com.w2sv.autocrop.util.containsSingularElement
 import com.w2sv.autocrop.util.launchAfterShortDelay
@@ -175,7 +171,6 @@ class CropPagerScreenFragment :
 
             buildList {
                 add(currentCropLayout)
-                add(popupMenuButton)
                 if (!viewModel.dataSet.containsSingularElement) {
                     add(allCropsButtonsWLabel)
                 }
@@ -227,37 +222,6 @@ class CropPagerScreenFragment :
                         .imageView to cropBundle.sharedElementTransitionName
                 )
             )
-        }
-        popupMenuButton.setOnClickListener {
-            with(PopupMenu(requireContext(), it)) {
-                menuInflater.inflate(
-                    R.menu.crop_pager,
-                    menu
-                )
-                menu
-                    .apply {
-                        findItem(R.id.crop_pager_item_auto_scroll)
-                            .apply {
-                                isCheckable = true
-                                isChecked = viewModel.doAutoScroll.value
-                                makeOnClickPersistent(requireContext())
-                            }
-                        setOnMenuItemClickListener { item ->
-                            when (item.itemId) {
-                                R.id.crop_pager_item_auto_scroll -> {
-                                    item.toggleCheck { newValue ->
-                                        viewModel.saveDoAutoScroll(newValue)
-                                    }
-
-                                    KEEP_MENU_ITEM_OPEN_ON_CLICK
-                                }
-
-                                else -> true
-                            }
-                        }
-                    }
-                show()
-            }
         }
     }
 

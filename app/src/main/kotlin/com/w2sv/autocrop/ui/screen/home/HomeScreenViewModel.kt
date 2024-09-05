@@ -3,7 +3,6 @@ package com.w2sv.autocrop.ui.screen.home
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,25 +25,12 @@ class HomeScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val preferencesRepository: PreferencesRepository,
     //        cancelledSSLFromNotification: ScreenshotListener.CancelledFromNotification,
-    @ApplicationContext context: Context,
-    private val resources: Resources
+    @ApplicationContext context: Context
 ) : androidx.lifecycle.ViewModel() {
 
     val cropBundleIoResults: CropBundleIOResults? = savedStateHandle[CropBundleIOResults.EXTRA]
 
     var fadedInForegroundOnEntry = false
-
-    /**
-     * IO Results Notification
-     */
-
-    fun showIOResultsNotificationIfApplicable(
-        context: Context
-    ) {
-        cropBundleIoResults?.let {
-            context.showToast(it.getNotificationText(resources))
-        }
-    }
 
     val fullFlowFieldDisplay: LiveData<Boolean> get() = _fullFlowFieldDisplay
     private val _fullFlowFieldDisplay = MutableLiveData(false)
@@ -64,6 +50,17 @@ class HomeScreenViewModel @Inject constructor(
         .mapState { cropSaveDirPathIdentifier(it, context) }
         .asLiveData()
 
+    val cropSaveDirTreeUri = preferencesRepository.cropSaveDirTreeUri
+
+    fun setCropSaveDirTreeUri(treeUri: Uri, contentResolver: ContentResolver) {
+        contentResolver
+            .takePersistableUriPermission(
+                treeUri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+        viewModelScope.launch { preferencesRepository.saveCropSaveDirTreeUri(treeUri) }
+    }
+
     //        val screenshotListenerRunning: LiveData<Boolean> get() = _screenshotListenerRunning
     //        private val _screenshotListenerRunning = MutableLiveData(context.isServiceRunning<ScreenshotListener>())
     //
@@ -76,15 +73,4 @@ class HomeScreenViewModel @Inject constructor(
     //                setScreenshotListenerRunning(false)
     //            }
     //        }
-
-    fun setCropSaveDirTreeUri(treeUri: Uri, contentResolver: ContentResolver) {
-        contentResolver
-            .takePersistableUriPermission(
-                treeUri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-            )
-        viewModelScope.launch { preferencesRepository.saveCropSaveDirTreeUri(treeUri) }
-    }
-
-    val cropSaveDirTreeUri = preferencesRepository.cropSaveDirTreeUri
 }

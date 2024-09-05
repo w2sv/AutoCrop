@@ -17,13 +17,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.androidutils.view.show
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.HomeScreenBinding
-import com.w2sv.autocrop.ui.util.animate
 import com.w2sv.autocrop.ui.util.fadeIn
 import com.w2sv.autocrop.ui.util.fadeInAnimationComposer
 import com.w2sv.autocrop.ui.util.fadeOut
@@ -31,7 +28,6 @@ import com.w2sv.autocrop.ui.util.onHalfwayFinished
 import com.w2sv.autocrop.ui.util.resolution
 import com.w2sv.autocrop.util.getMediaUri
 import com.w2sv.common.AppPermissionHandler
-import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
 import com.w2sv.domain.repository.PermissionRepository
 import com.w2sv.flowfield.PerlinNoiseFlowFieldSketch
 import dagger.hilt.android.AndroidEntryPoint
@@ -67,14 +63,23 @@ class HomeScreenFragment :
 
             drawerLayout.onDrawerSlide(viewModel::setDrawerSlideOffset)
 
-            showLayoutElements()
-
             navigationViewToggleButton.setOnClickListener { drawerLayout.toggleDrawer() }
             imageSelectionButton.setOnClickListener { launchImageSelection() }
-            shareCropsButton.setOnClickListener { shareCrops() }
             foregroundElementsToggleButton.setOnClickListener { viewModel.toggleFullFlowFieldDisplay() }
 
             with(viewModel) {
+                if (!fadedInForegroundOnEntry) {
+                    foregroundLayout
+                        .fadeInAnimationComposer(duration = 3500L)
+                        .onHalfwayFinished(lifecycleScope) {
+                            viewModel.fadedInForegroundOnEntry = true
+                            viewModel.cropBundleIoResults?.notificationMessage(resources)?.let {
+                                requireContext().showToast(it)
+                            }
+                        }
+                        .play()
+                }
+
                 fullFlowFieldDisplay.observe(viewLifecycleOwner) { hideForeground ->
                     if (hideForeground) {
                         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
@@ -92,47 +97,6 @@ class HomeScreenFragment :
                 }
             }
         }
-    }
-
-    private fun HomeScreenBinding.showLayoutElements() {
-        val anyCropsSaved = viewModel.cropBundleIoResults?.anyCropsSaved == true
-
-        when (viewModel.fadedInForegroundOnEntry) {
-            true -> if (anyCropsSaved) {
-                shareCropsButton.show()
-            }
-
-            false -> {
-                foregroundLayout
-                    .fadeInAnimationComposer(duration = 3500L)
-                    .onHalfwayFinished(lifecycleScope) {
-                        viewModel.fadedInForegroundOnEntry = true
-                        viewModel.showIOResultsNotificationIfApplicable(requireContext())
-
-                        if (anyCropsSaved) {
-                            with(shareCropsButton) {
-                                show()
-                                animate(Techniques.RotateInUpLeft)
-                            }
-                        }
-                    }
-                    .play()
-            }
-        }
-    }
-
-    private fun shareCrops() {
-        startActivity(
-            Intent.createChooser(
-                Intent(Intent.ACTION_SEND_MULTIPLE)
-                    .putExtra(
-                        Intent.EXTRA_STREAM,
-                        viewModel.cropBundleIoResults!!.cropUris
-                    )
-                    .setType(IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER),
-                null
-            )
-        )
     }
 
     /**
@@ -255,7 +219,6 @@ private fun HomeScreenBinding.affectDrawerAssociatedViewsOnSlide(slideOffset: Fl
 
     val associatedButtonAlpha = 1 - slideOffset
     imageSelectionButton.alpha = associatedButtonAlpha
-    shareCropsButton.alpha = associatedButtonAlpha
     foregroundElementsToggleButton.alpha = associatedButtonAlpha
 }
 
