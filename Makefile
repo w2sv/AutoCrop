@@ -1,17 +1,30 @@
 SHELL=/bin/bash
 
+VERSION := $(shell grep -Po '^version=\K.*' gradle.properties)
+
 setup-emulator:
 	@chmod +x shell/push-test-resources-to-emulator.sh
 	@sudo shell/push-test-resources-to-emulator.sh
 
+# ==============
+# Development
+# ==============
+
 optimize-drawables:
 	@avocado app/src/main/res/drawable/*.xml
+
+format:
+	@./gradlew ktlintFormat
+
+update-dependencies:
+	@./gradlew versionCatalogUpdate
+
+update-gradle:
+	@./gradlew wrapper --gradle-version latest
 
 # ==============
 # Publishing
 # ==============
-
-VERSION := $(shell grep -Po '^version=\K.*' gradle.properties)
 
 publish-listing:
 	@./gradlew publishListing  --console verbose
