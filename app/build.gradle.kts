@@ -2,12 +2,11 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.play)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.autocrop.application)
     alias(libs.plugins.autocrop.hilt)
-    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.play)
 }
 
 kotlin {
@@ -15,15 +14,8 @@ kotlin {
 }
 
 android {
-    val packageName = "com.w2sv.autocrop"
-
-    namespace = packageName
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
     defaultConfig {
-        applicationId = packageName
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.compileSdk.get().toInt()
+        applicationId = namespace
 
         versionCode = project.findProperty("versionCode")!!.toString().toInt()
         versionName = version.toString()
@@ -39,9 +31,6 @@ android {
 
         // Name built bundles "{versionName}-{buildFlavor}.aab"
 //        setProperty("archivesBaseName", versionName)
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        //        testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'
     }
     signingConfigs {
         create("release") {
@@ -76,17 +65,12 @@ android {
         buildConfig = true
         viewBinding = true
     }
-    packaging {
-        resources {
-            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
-        }
-    }
-    hilt {
-        enableAggregatingTask = true  // Fixes warning
-    }
-    @Suppress("UnstableApiUsage")
-    testOptions {
-        animationsDisabled = true
+    lint {
+        checkDependencies = true
+        xmlReport = false
+        htmlReport = true
+        textReport = false
+        htmlOutput = project.layout.buildDirectory.file("reports/lint-results-debug.html").get().asFile
     }
     // Name built apks "{versionName}.apk"
     applicationVariants.all {

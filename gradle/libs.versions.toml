@@ -74,6 +74,8 @@ androidx-navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotli
 autocrop-hilt = { id = "autocrop.hilt" }
 # @keep
 autocrop-library = { id = "autocrop.library" }
+# @keep
+autocrop-application = { id = "autocrop.application" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
