@@ -44,7 +44,7 @@ class CropPagerScreenViewModel @AssistedInject constructor(
         viewModelScope.launch { preferencesRepository.deleteScreenshots.save(!deleteScreenshots.value) }
     }
 
-    val dataSet = CropPagerWrapper.DataSet(cropBundles.toMutableList())  // TODO
+    val dataSet = CropPagerWrapper.DataSet(cropBundles.toMutableList()) // TODO
 
     // ==================
     // AutoScroll

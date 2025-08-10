@@ -15,8 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SaveAllFragment :
-    AppFragment<SaveAllBinding>(SaveAllBinding::class.java) {
+class SaveAllFragment : AppFragment<SaveAllBinding>(SaveAllBinding::class.java) {
 
     private val examinationVM by activityViewModels<CropBundleViewModel>()
 

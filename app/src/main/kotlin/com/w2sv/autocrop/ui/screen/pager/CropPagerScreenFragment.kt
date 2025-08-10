@@ -99,8 +99,7 @@ class CropPagerScreenFragment :
             onLongClickListener = {
                 if (viewModel.dataSet.containsSingularElement) {
                     false
-                }
-                else {
+                } else {
                     showCropsProcedureDialog()
                     true
                 }
@@ -152,8 +151,9 @@ class CropPagerScreenFragment :
         if (doAutoScroll) {
             cancelAutoScrollButton.show()
             lifecycle.coroutineScope.launch {
-                if (autoScrollJob == null)
+                if (autoScrollJob == null) {
                     delay(AUTO_SCROLL_PERIOD)
+                }
 
                 autoScrollJob = viewPager.scrollPeriodically(
                     this,
@@ -163,8 +163,7 @@ class CropPagerScreenFragment :
                     viewModel.cancelAutoScroll()
                 }
             }
-        }
-        else {
+        } else {
             val cancelledScrolling = autoScrollJob?.let {
                 it.cancel()
                 true
@@ -375,8 +374,9 @@ private fun ViewPager2.scrollPeriodically(
     coroutineScope.launch(Dispatchers.Main) {
         (0 until maxScrolls).forEach {
             setCurrentItem(currentItem + 1, true)
-            if (it != maxScrolls - 1)
+            if (it != maxScrolls - 1) {
                 delay(period)
+            }
         }
         onFinishedListener()
     }

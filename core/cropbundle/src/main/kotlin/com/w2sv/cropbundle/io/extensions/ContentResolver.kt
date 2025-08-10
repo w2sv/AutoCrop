@@ -6,14 +6,13 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
-import slimber.log.i
 import java.io.FileNotFoundException
+import slimber.log.i
 
 fun ContentResolver.loadBitmap(uri: Uri): Bitmap? =
     try {
         BitmapFactory.decodeStream(openInputStream(uri))
-    }
-    catch (e: FileNotFoundException) {
+    } catch (e: FileNotFoundException) {
         i(e)
         null
     }
@@ -33,14 +32,14 @@ fun ContentResolver.deleteImage(mediaStoreId: Long): Boolean =
             arrayOf(mediaStoreId.toString())
         ) != 0
         i {
-            if (rowsDeleted)
+            if (rowsDeleted) {
                 "Successfully deleted image"
-            else
+            } else {
                 "Could not delete image"
+            }
         }
         rowsDeleted
-    }
-    catch (e: NullPointerException) {
+    } catch (e: NullPointerException) {
         i(e)
         false
     }
@@ -67,10 +66,10 @@ fun <R> ContentResolver.queryMediaStoreData(
             onCursor(it)
         }
 
-//fun ContentResolver.queryMediaStoreDatum(
+// fun ContentResolver.queryMediaStoreDatum(
 //    uri: Uri,
 //    column: String,
 //    selection: String? = null,
 //    selectionArgs: Array<String>? = null
-//): String =
+// ): String =
 //    queryMediaStoreData(uri, arrayOf(column), selection, selectionArgs).first()

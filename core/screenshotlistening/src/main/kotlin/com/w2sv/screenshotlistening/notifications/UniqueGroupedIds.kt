@@ -1,7 +1,7 @@
 package com.w2sv.screenshotlistening.notifications
 
-import slimber.log.i
 import java.util.PriorityQueue
+import slimber.log.i
 
 open class UniqueGroupedIds(baseSeed: Int) : PriorityQueue<Int>() {
 
@@ -24,6 +24,8 @@ open class UniqueGroupedIds(baseSeed: Int) : PriorityQueue<Int>() {
             }
 
     fun getAndAddMultipleNewIds(n: Int): ArrayList<Int> =
-        ArrayList((0 until n)
-            .map { getAndAddNewId() })
+        ArrayList(
+            (0 until n)
+                .map { getAndAddNewId() }
+        )
 }

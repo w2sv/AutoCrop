@@ -16,8 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CropScreenFragment
-    : AppFragment<CropBinding>(CropBinding::class.java) {
+class CropScreenFragment : AppFragment<CropBinding>(CropBinding::class.java) {
 
     private val viewModel by viewModels<CropScreenViewModel>()
     private val cropBundleVM by cropNavGraphViewModel<CropBundleViewModel>()
@@ -60,11 +59,13 @@ class CropScreenFragment
     }
 
     private fun invokeSubsequentScreen(cropResults: CropResults) {
-        if (cropBundleVM.cropBundles.isNotEmpty())
+        if (cropBundleVM.cropBundles.isNotEmpty()) {
             navController.navigate(CropScreenFragmentDirections.navigateToCropPagerScreen(cropResults))
-        else
-            launchAfterShortDelay {  // to assure progress bar having reached 100% before UI change
+        } else {
+            launchAfterShortDelay {
+                // to assure progress bar having reached 100% before UI change
                 navController.navigate(CropScreenFragmentDirections.navigateToCroppingFailedScreen())
             }
+        }
     }
 }

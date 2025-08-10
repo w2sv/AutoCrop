@@ -10,8 +10,7 @@ import com.w2sv.autocrop.util.navController
 import com.w2sv.autocrop.util.registerOnBackPressedHandler
 import com.w2sv.viewboundcontroller.ViewBoundFragment
 
-abstract class AppFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
-    ViewBoundFragment<VB>(bindingClass) {
+abstract class AppFragment<VB : ViewBinding>(bindingClass: Class<VB>) : ViewBoundFragment<VB>(bindingClass) {
 
     protected val navController by navController()
     open val onBackPressed: (() -> Unit)? = null

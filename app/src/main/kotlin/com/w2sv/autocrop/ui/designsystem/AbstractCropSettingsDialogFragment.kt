@@ -23,11 +23,11 @@ abstract class AbstractCropSettingsDialogFragment(
 
         fun setCropSensitivity(@CropSensitivity value: Int) {
             _cropSensitivity.postValue(value)
-            _sensitivityHasChanged.postValue(value != initialCropSensitivity)
+            sensitivityHasChangedMutable.postValue(value != initialCropSensitivity)
         }
 
-        val sensitivityHasChanged: LiveData<Boolean> get() = _sensitivityHasChanged
-        protected val _sensitivityHasChanged = MutableLiveData(false)
+        val sensitivityHasChanged: LiveData<Boolean> get() = sensitivityHasChangedMutable
+        protected val sensitivityHasChangedMutable = MutableLiveData(false)
     }
 
     protected abstract val viewModel: ViewModel

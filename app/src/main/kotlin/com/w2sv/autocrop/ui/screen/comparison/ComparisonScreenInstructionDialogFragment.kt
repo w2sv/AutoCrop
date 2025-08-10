@@ -9,8 +9,8 @@ import com.w2sv.autocrop.ui.designsystem.RoundedDialogFragment
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 internal class ComparisonScreenInstructionDialogFragment : RoundedDialogFragment() {
@@ -38,6 +38,6 @@ internal class ComparisonScreenInstructionDialogFragment : RoundedDialogFragment
             setPositiveButton(resources.getString(R.string.got_it)) { _, _ ->
                 viewModel.onDismissDialog()
             }
-            setOnDismissListener { viewModel.onDismissDialog() }  // TODO
+            setOnDismissListener { viewModel.onDismissDialog() } // TODO
         }
 }

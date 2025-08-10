@@ -18,8 +18,7 @@ fun Fragment.registerOnBackPressedHandler(handleOnBackPressed: () -> Unit) {
     )
 }
 
-fun Fragment.navController(): Lazy<NavController> {
-    return lazy {
+fun Fragment.navController(): Lazy<NavController> =
+    lazy {
         findNavController()
     }
-}

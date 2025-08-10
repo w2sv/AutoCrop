@@ -8,7 +8,8 @@ fun systemPicturesDirectory(): File =
     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
 
 fun systemScreenshotsDirectory(): File? =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_SCREENSHOTS)
-    else
+    } else {
         null
+    }

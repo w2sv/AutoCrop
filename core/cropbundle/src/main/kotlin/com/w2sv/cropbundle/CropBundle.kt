@@ -13,15 +13,15 @@ import com.w2sv.cropbundle.io.ImageMimeType
 import com.w2sv.cropbundle.io.extensions.loadBitmap
 import com.w2sv.cropbundle.io.extensions.queryMediaStoreData
 import com.w2sv.kotlinutils.rounded
+import kotlin.math.roundToInt
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import slimber.log.i
-import kotlin.math.roundToInt
 
 @Parcelize
 data class CropBundle(
     val screenshot: Screenshot,
-    var crop: Crop,  // TODO: vars
+    var crop: Crop, // TODO: vars
     var edgeCandidates: List<Int>,
     @CropSensitivity var cropSensitivity: Int
 ) : Parcelable {
@@ -76,29 +76,20 @@ data class CropBundle(
 }
 
 @Parcelize
-data class Screenshot(
-    val uri: Uri,
-    val height: Int,
-    val mediaStoreData: MediaStoreData
-) : Parcelable {
+data class Screenshot(val uri: Uri, val height: Int, val mediaStoreData: MediaStoreData) : Parcelable {
 
     @Parcelize
-    data class MediaStoreData(
-        val diskUsage: Long,
-        val fileName: String,
-        val mimeType: ImageMimeType,
-        val id: Long
-    ) : Parcelable {
+    data class MediaStoreData(val diskUsage: Long, val fileName: String, val mimeType: ImageMimeType, val id: Long) : Parcelable {
 
         companion object {
             fun query(contentResolver: ContentResolver, uri: Uri): MediaStoreData {
-                i { "uri: $uri" }  // content://media/picker/0/com.android.providers.media.photopicker/media/1000016069
+                i { "uri: $uri" } // content://media/picker/0/com.android.providers.media.photopicker/media/1000016069
                 return contentResolver.queryMediaStoreData(
                     uri = uri,
                     columns = arrayOf(
                         MediaStore.Images.Media.SIZE,
                         MediaStore.Images.Media.DISPLAY_NAME,
-                        MediaStore.Images.Media.MIME_TYPE,
+                        MediaStore.Images.Media.MIME_TYPE
                         //                        MediaStore.Images.Media._ID  TODO: leads to java.lang.IllegalArgumentException: Unexpected picker URI projection. Uri:content://com.android.providers.media.photopicker/media/1000000346. Column:_id
                     ),
                     onCursor = {
@@ -107,7 +98,7 @@ data class Screenshot(
                             diskUsage = it.getLong(it.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)),
                             fileName = fileName,
                             mimeType = ImageMimeType.parse(it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE))),
-                            id = fileName.substringBeforeLast(".").toLong()  // TODO
+                            id = fileName.substringBeforeLast(".").toLong() // TODO
                             //                            it.getLongOrNull(it.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
                             //                                ?: fileName.substringBeforeLast(".").toLong()  // TODO: probably still unreliable
                         )
@@ -124,23 +115,23 @@ data class Screenshot(
 
 // TODO: write tests
 @Parcelize
-data class Crop(
-    val bitmap: Bitmap,
-    val edges: CropEdges,
-    val discardedPercentage: Int,
-    private val discardedKB: Long
-) : Parcelable {
+data class Crop(val bitmap: Bitmap, val edges: CropEdges, val discardedPercentage: Int, private val discardedKB: Long) : Parcelable {
 
     @IgnoredOnParcel
     val discardedFileSizeFormatted: String by lazy {
-        if (discardedKB >= 1000)
+        if (discardedKB >= 1000) {
             "${(discardedKB.toFloat() / 1000).rounded(1)}mb"
-        else
+        } else {
             "${discardedKB}kb"
+        }
     }
 
     companion object {
-        fun fromScreenshot(screenshotBitmap: Bitmap, screenshotDiskUsage: Long, edges: CropEdges): Crop {
+        fun fromScreenshot(
+            screenshotBitmap: Bitmap,
+            screenshotDiskUsage: Long,
+            edges: CropEdges
+        ): Crop {
             val cropBitmap = screenshotBitmap.cropped(edges)
             val discardedPercentageF =
                 ((screenshotBitmap.height - cropBitmap.height).toFloat() / screenshotBitmap.height.toFloat())

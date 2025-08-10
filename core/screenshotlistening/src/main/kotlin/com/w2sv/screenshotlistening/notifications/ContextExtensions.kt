@@ -20,10 +20,7 @@ fun Context.setChannelAndGetNotificationBuilder(
     return notificationBuilder(channel.id, contentTitle)
 }
 
-private fun Context.notificationBuilder(
-    channelId: String,
-    title: String?,
-): NotificationCompat.Builder =
+private fun Context.notificationBuilder(channelId: String, title: String?): NotificationCompat.Builder =
     NotificationCompat.Builder(this, channelId)
         .setSmallIcon(com.w2sv.core.common.R.drawable.ic_hearing_24)
         .setContentTitle(title)

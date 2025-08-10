@@ -32,7 +32,6 @@
             <option value="$PROJECT_DIR$/core/domain" />
             <option value="$PROJECT_DIR$/core/flowfield" />
             <option value="$PROJECT_DIR$/core/opencv" />
-            <option value="$PROJECT_DIR$/core/screenshotlistening" />
           </set>
         </option>
       </GradleProjectSettings>

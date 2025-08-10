@@ -18,7 +18,7 @@ enum class ImageMimeType(val outFileExtension: String, val compressFormat: Bitma
             when (mediaStoreIdentifier) {
                 PNG.mediaStoreIdentifier -> PNG
                 WEBP.mediaStoreIdentifier -> WEBP
-                else -> JPG  // may be "image/jpg" OR "image/jpeg"
+                else -> JPG // may be "image/jpg" OR "image/jpeg"
             }
     }
 }

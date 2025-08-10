@@ -114,7 +114,12 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         }
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    override fun onSizeChanged(
+        w: Int,
+        h: Int,
+        oldw: Int,
+        oldh: Int
+    ) {
         super.onSizeChanged(w, h, oldw, oldh)
 
         postLayoutInit()
@@ -298,7 +303,7 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                 invalidate()
             }
 
-            return true  // TODO
+            return true // TODO
         }
 
         private var draggingState: DraggingState = DraggingState.Idle
@@ -341,7 +346,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         }
 
         private fun Canvas.drawCropRectGrid() {
-
             // -------------
             // Outer rectangle
 
@@ -503,7 +507,6 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                     borderRect.bottom
                 )
             }
-
         }
 
         private fun getCenteredViewDomainCropRect(): RectF {
@@ -574,10 +577,13 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
         }
 
         override fun onTouchEvent(event: MotionEvent): Boolean =
-            when (event.action == MotionEvent.ACTION_DOWN && imageBorderRectViewDomain.contains(
-                event,
-                TOUCH_TOLERANCE_MARGIN
-            )) {
+            when (
+                event.action == MotionEvent.ACTION_DOWN &&
+                    imageBorderRectViewDomain.contains(
+                        event,
+                        TOUCH_TOLERANCE_MARGIN
+                    )
+            ) {
                 true -> {
                     edgeCandidateYsViewDomain.forEachIndexed { selectedEdgeCandidateIndex, y ->
                         if (event.isOnHorizontalLine(y, TOUCH_TOLERANCE_MARGIN)) {
@@ -587,12 +593,13 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                                         EdgeSelectionState.SelectedFirst(selectedEdgeCandidateIndex)
 
                                     is EdgeSelectionState.SelectedFirst -> {
-                                        if (state.index == selectedEdgeCandidateIndex)
+                                        if (state.index == selectedEdgeCandidateIndex) {
                                             EdgeSelectionState.Unselected
-                                        else
+                                        } else {
                                             listOf(state.index, selectedEdgeCandidateIndex).sorted().run {
                                                 EdgeSelectionState.SelectedBoth(get(0), get(1))
                                             }
+                                        }
                                     }
                                 }
                             )
@@ -623,20 +630,22 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
                     floats[1],
                     floats[2],
                     floats[3],
-                    if (viewModel.edgeSelectionState.value!!.isSelected(i))
+                    if (viewModel.edgeSelectionState.value!!.isSelected(i)) {
                         selectedEdgeCandidatePaint
-                    else
+                    } else {
                         unselectedEdgeCandidatePaint
+                    }
                 )
             }
         }
 
         private fun Canvas.drawEdgeIndicationTriangles() {
             edgeCandidateYsViewDomain.forEachIndexed { i, y ->
-                val paint = if (viewModel.edgeSelectionState.value!!.isSelected(i))
+                val paint = if (viewModel.edgeSelectionState.value!!.isSelected(i)) {
                     selectedTrianglePaint
-                else
+                } else {
                     unselectedTrianglePaint
+                }
 
                 drawPath(
                     pathTriangleWTipLeft(

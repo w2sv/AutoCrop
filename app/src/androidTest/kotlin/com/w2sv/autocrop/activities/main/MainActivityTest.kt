@@ -1,49 +1,49 @@
-//package com.w2sv.autocrop.activities.main
+// package com.w2sv.autocrop.activities.main
 //
-//import android.Manifest
-//import android.content.Intent
-//import android.net.Uri
-//import android.os.Build
-//import android.os.Handler
-//import android.os.Looper
-//import androidx.test.core.app.ApplicationProvider
-//import androidx.test.espresso.Espresso.onView
-//import androidx.test.espresso.ViewInteraction
-//import androidx.test.espresso.action.ViewActions
-//import androidx.test.espresso.intent.Intents.intended
-//import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
-//import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
-//import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra
-//import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtraWithKey
-//import androidx.test.espresso.intent.matcher.IntentMatchers.hasPackage
-//import androidx.test.espresso.intent.matcher.IntentMatchers.hasType
-//import androidx.test.espresso.matcher.ViewMatchers.isClickable
-//import androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
-//import androidx.test.espresso.matcher.ViewMatchers.withId
-//import androidx.test.espresso.matcher.ViewMatchers.withText
-//import androidx.test.filters.FlakyTest
-//import androidx.test.runner.permission.PermissionRequester
-//import com.w2sv.autocrop.R
-//import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
-//import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
-//import BooleanPreferences
-//import com.w2sv.autocrop.utils.android.IMAGE_MIME_TYPE
-//import de.mannodermaus.junit5.ActivityScenarioExtension
-//import org.hamcrest.CoreMatchers.allOf
-//import org.hamcrest.CoreMatchers.equalTo
-//import org.junit.jupiter.api.Assertions
-//import org.junit.jupiter.api.BeforeAll
-//import org.junit.jupiter.api.BeforeEach
-//import org.junit.jupiter.api.Nested
-//import org.junit.jupiter.api.Test
-//import org.junit.jupiter.api.extension.RegisterExtension
-//import utils.espresso.SLOW_TIMEOUT
-//import utils.espresso.check
-//import utils.intentTester
-//import utils.espresso.isDisplayed
-//import utils.espresso.retryFlakyAction
+// import android.Manifest
+// import android.content.Intent
+// import android.net.Uri
+// import android.os.Build
+// import android.os.Handler
+// import android.os.Looper
+// import androidx.test.core.app.ApplicationProvider
+// import androidx.test.espresso.Espresso.onView
+// import androidx.test.espresso.ViewInteraction
+// import androidx.test.espresso.action.ViewActions
+// import androidx.test.espresso.intent.Intents.intended
+// import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
+// import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
+// import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra
+// import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtraWithKey
+// import androidx.test.espresso.intent.matcher.IntentMatchers.hasPackage
+// import androidx.test.espresso.intent.matcher.IntentMatchers.hasType
+// import androidx.test.espresso.matcher.ViewMatchers.isClickable
+// import androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
+// import androidx.test.espresso.matcher.ViewMatchers.withId
+// import androidx.test.espresso.matcher.ViewMatchers.withText
+// import androidx.test.filters.FlakyTest
+// import androidx.test.runner.permission.PermissionRequester
+// import com.w2sv.autocrop.R
+// import com.w2sv.autocrop.activities.main.fragments.about.AboutFragment
+// import com.w2sv.autocrop.activities.main.fragments.flowfield.FlowFieldFragment
+// import BooleanPreferences
+// import com.w2sv.autocrop.utils.android.IMAGE_MIME_TYPE
+// import de.mannodermaus.junit5.ActivityScenarioExtension
+// import org.hamcrest.CoreMatchers.allOf
+// import org.hamcrest.CoreMatchers.equalTo
+// import org.junit.jupiter.api.Assertions
+// import org.junit.jupiter.api.BeforeAll
+// import org.junit.jupiter.api.BeforeEach
+// import org.junit.jupiter.api.Nested
+// import org.junit.jupiter.api.Test
+// import org.junit.jupiter.api.extension.RegisterExtension
+// import utils.espresso.SLOW_TIMEOUT
+// import utils.espresso.check
+// import utils.intentTester
+// import utils.espresso.isDisplayed
+// import utils.espresso.retryFlakyAction
 //
-//internal class MainActivityTest {
+// internal class MainActivityTest {
 //    @JvmField
 //    @RegisterExtension
 //    val scenarioExtension = ActivityScenarioExtension.launch<MainActivity>()
@@ -267,4 +267,4 @@
 //    //            Assertions.assertTrue(it.isFinishing)
 //    //        }
 //    //    }
-//}
+// }

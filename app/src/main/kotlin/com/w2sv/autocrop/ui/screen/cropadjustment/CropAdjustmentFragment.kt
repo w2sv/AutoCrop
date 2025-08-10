@@ -15,12 +15,11 @@ import com.w2sv.cropbundle.cropping.model.CropEdges
 import com.w2sv.domain.model.CropAdjustmentMode
 import com.w2sv.kotlinutils.rounded
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import kotlin.math.min
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CropAdjustmentFragment
-    : AppFragment<CropAdjustmentBinding>(CropAdjustmentBinding::class.java) {
+class CropAdjustmentFragment : AppFragment<CropAdjustmentBinding>(CropAdjustmentBinding::class.java) {
 
     private val viewModel by viewModels<CropAdjustmentViewModel>()
 
@@ -79,10 +78,11 @@ class CropAdjustmentFragment
         }
         modeSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.saveAdjustmentMode(
-                if (isChecked)
+                if (isChecked) {
                     CropAdjustmentMode.EdgeSelection
-                else
+                } else {
                     CropAdjustmentMode.Manual
+                }
             )
         }
 

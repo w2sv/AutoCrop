@@ -31,8 +31,7 @@ val CropBundle.sharedElementTransitionName: String
     get() = hashCode().toString()
 
 @AndroidEntryPoint
-class ComparisonFragment
-    : AppFragment<ComparisonBinding>(ComparisonBinding::class.java) {
+class ComparisonFragment : AppFragment<ComparisonBinding>(ComparisonBinding::class.java) {
 
     private val viewModel by viewModels<ComparisonViewModel>()
 
@@ -66,8 +65,7 @@ class ComparisonFragment
         launchAfterShortDelay {
             if (!viewModel.instructionsShown.value) {
                 ComparisonScreenInstructionDialogFragment().show(childFragmentManager)
-            }
-            else {
+            } else {
                 // trigger display of displayedImageTv
                 viewModel.repostImageType()
             }

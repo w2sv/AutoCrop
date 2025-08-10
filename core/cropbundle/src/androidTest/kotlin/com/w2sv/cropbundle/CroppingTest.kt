@@ -1,26 +1,26 @@
-//package com.w2sv.cropbundle
+// package com.w2sv.cropbundle
 //
-//import android.graphics.Bitmap
-//import android.graphics.BitmapFactory
-//import com.w2sv.cropbundle.cropping.model.CropEdges
-//import com.w2sv.cropbundle.cropping.crop
-//import com.w2sv.cropbundle.utils.assetFileStream
-//import org.junit.jupiter.api.Assertions.assertEquals
-//import org.junit.jupiter.api.BeforeAll
-//import org.junit.jupiter.params.ParameterizedTest
-//import org.junit.jupiter.params.provider.Arguments
-//import org.junit.jupiter.params.provider.MethodSource
-//import org.opencv.android.OpenCVLoader
-//import slimber.log.d
-//import timber.log.Timber
-//import java.io.File
-//import java.util.stream.Stream
+// import android.graphics.Bitmap
+// import android.graphics.BitmapFactory
+// import com.w2sv.cropbundle.cropping.model.CropEdges
+// import com.w2sv.cropbundle.cropping.crop
+// import com.w2sv.cropbundle.utils.assetFileStream
+// import org.junit.jupiter.api.Assertions.assertEquals
+// import org.junit.jupiter.api.BeforeAll
+// import org.junit.jupiter.params.ParameterizedTest
+// import org.junit.jupiter.params.provider.Arguments
+// import org.junit.jupiter.params.provider.MethodSource
+// import org.opencv.android.OpenCVLoader
+// import slimber.log.d
+// import timber.log.Timber
+// import java.io.File
+// import java.util.stream.Stream
 //
-///**
+// /**
 // * Actually running unit tests which however can't be implemented as such, due to
 // * inherent infeasibility of loading images
 // */
-//class CroppingTest {
+// class CroppingTest {
 //
 //    companion object {
 //        @BeforeAll
@@ -188,9 +188,9 @@
 //    //                .crop()
 //    //        )
 //    //    }
-//}
+// }
 //
-//private fun loadTestScreenshot(imageFileName: String, subDirName: String): Bitmap =
+// private fun loadTestScreenshot(imageFileName: String, subDirName: String): Bitmap =
 //    BitmapFactory.decodeStream(
 //        assetFileStream(File(subDirName, imageFileName).path)
 //    )

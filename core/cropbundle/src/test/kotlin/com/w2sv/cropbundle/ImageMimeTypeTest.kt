@@ -12,7 +12,7 @@ internal class ImageMimeTypeTest {
         "image/jpeg, JPG",
         "image/png, PNG",
         "image/webp, WEBP",
-        "image/jhsadfa, JPG",
+        "image/jhsadfa, JPG"
     )
     fun parse(mediaStoreIdentifier: String, expectedEnumName: String) {
         assertEquals(expectedEnumName, ImageMimeType.parse(mediaStoreIdentifier).name)

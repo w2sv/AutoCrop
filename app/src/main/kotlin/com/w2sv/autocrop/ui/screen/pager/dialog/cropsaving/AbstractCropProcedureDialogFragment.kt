@@ -2,8 +2,8 @@ package com.w2sv.autocrop.ui.screen.pager.dialog.cropsaving
 
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
-import com.w2sv.autocrop.ui.screen.pager.CropPagerScreenViewModel
 import com.w2sv.autocrop.ui.designsystem.RoundedDialogFragment
+import com.w2sv.autocrop.ui.screen.pager.CropPagerScreenViewModel
 
 abstract class AbstractCropProcedureDialogFragment : RoundedDialogFragment() {
 

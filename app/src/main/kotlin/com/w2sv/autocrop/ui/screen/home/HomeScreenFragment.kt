@@ -31,15 +31,14 @@ import com.w2sv.common.AppPermissionHandler
 import com.w2sv.domain.repository.PermissionRepository
 import com.w2sv.flowfield.PerlinNoiseFlowFieldSketch
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import processing.android.PFragment
 import processing.core.PApplet
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeScreenFragment :
-    AppFragment<HomeScreenBinding>(HomeScreenBinding::class.java) {
+class HomeScreenFragment : AppFragment<HomeScreenBinding>(HomeScreenBinding::class.java) {
 
     @Inject
     lateinit var permissionRepository: PermissionRepository
@@ -85,8 +84,7 @@ class HomeScreenFragment :
                         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                         foregroundLayoutParent.setOnClickListener { viewModel.toggleFullFlowFieldDisplay() }
                         foregroundLayout.fadeOut()
-                    }
-                    else {
+                    } else {
                         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
                         foregroundLayoutParent.setOnClickListener(null)
                         foregroundLayout.fadeIn()
@@ -103,7 +101,8 @@ class HomeScreenFragment :
      * ActivityCallContractHandlers
      */
 
-    private val writeExternalStoragePermissionHandler by lazy {  // TODO: what's this even needed for?
+    private val writeExternalStoragePermissionHandler by lazy {
+        // TODO: what's this even needed for?
         AppPermissionHandler(
             activity = requireActivity(),
             permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -148,8 +147,7 @@ class HomeScreenFragment :
                         R.string.content_provider_not_supported_please_select_a_different_one,
                         Toast.LENGTH_LONG
                     )
-                }
-                else {
+                } else {
                     // Take persistable read permission for each Uri; Fixes consecutively occasionally occurring permission exception on reading in bitmap
                     uris.forEach {
                         requireContext().contentResolver.takePersistableUriPermission(
@@ -177,9 +175,9 @@ class HomeScreenFragment :
                     super.createIntent(context, input)
                         .setFlags(
                             Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
-                                    Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                                    Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
-                                    Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+                                Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                                Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
                         )
             }
         ) { optionalTreeUri ->
@@ -198,10 +196,11 @@ private fun DrawerLayout.closeDrawer() {
 }
 
 private fun DrawerLayout.toggleDrawer() {
-    if (isOpen)
+    if (isOpen) {
         closeDrawer()
-    else
+    } else {
         openDrawer()
+    }
 }
 
 private fun DrawerLayout.onDrawerSlide(callback: (Float) -> Unit) {
@@ -229,5 +228,5 @@ private fun Fragment.attachSketch(canvas: View, sketch: PApplet) {
             canvas.id,
             PFragment(sketch)
         )
-        .commitAllowingStateLoss()  // Fixes java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+        .commitAllowingStateLoss() // Fixes java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
 }

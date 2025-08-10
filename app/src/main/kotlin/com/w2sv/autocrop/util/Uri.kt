@@ -19,11 +19,10 @@ fun getMediaUri(context: Context, uri: Uri): Uri? =
                 .also {
                     i { "Converted to mediaUri: $it" }
                 }
+        } else {
+            uri // TODO: eh?
         }
-        else
-            uri  // TODO: eh?
-    }
-    catch (e: IllegalArgumentException) {
+    } catch (e: IllegalArgumentException) {
         null
     }
 
@@ -39,7 +38,7 @@ fun cropSaveDirPathIdentifier(documentUri: Uri?, context: Context): String =
 private fun getDocumentUriPath(documentUri: Uri, context: Context): String? =
     DocumentFile.fromSingleUri(context, documentUri)?.getSimplePath(context)
 
-//fun treeUriPath(contentResolver: ContentResolver, treeUri: Uri): DocumentsContract.Path? =
+// fun treeUriPath(contentResolver: ContentResolver, treeUri: Uri): DocumentsContract.Path? =
 //    DocumentsContract.findDocumentPath(
 //        contentResolver,
 //        DocumentsContract.buildChildDocumentsUriUsingTree(

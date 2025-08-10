@@ -11,8 +11,8 @@ import com.w2sv.autocrop.ui.screen.comparison.model.ImageType
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
 import javax.inject.Inject
+import kotlinx.coroutines.flow.SharingStarted
 
 @HiltViewModel
 class ComparisonViewModel @Inject constructor(

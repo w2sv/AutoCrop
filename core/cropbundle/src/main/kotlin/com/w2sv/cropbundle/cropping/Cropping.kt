@@ -43,10 +43,11 @@ private fun getEdgeCandidates(matRGBA: Mat, @CropSensitivity sensitivity: Int): 
         matCanny.row(i).singleChannelMean() > threshold
     }
         .run {
-            if (isEmpty())
+            if (isEmpty()) {
                 null
-            else
+            } else {
                 listOf(0) + this + listOf(matCanny.rows())
+            }
         }
 }
 

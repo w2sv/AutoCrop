@@ -10,10 +10,7 @@ import com.w2sv.delegates.Consumable
 import com.w2sv.screenshotlistening.services.abstrct.BoundService
 import slimber.log.i
 
-open class ServiceBindingHandler<T : BoundService>(
-    context: Context,
-    private val serviceClass: Class<T>
-) : ContextWrapper(context) {
+open class ServiceBindingHandler<T : BoundService>(context: Context, private val serviceClass: Class<T>) : ContextWrapper(context) {
 
     private var boundService: T? = null
     private var onServiceConnected by Consumable<(T) -> Unit>(null)
@@ -39,9 +36,9 @@ open class ServiceBindingHandler<T : BoundService>(
                 serviceConnection,
                 BIND_AUTO_CREATE
             )
-        }
-        else
+        } else {
             block(boundService!!)
+        }
     }
 
     fun unbindService() {

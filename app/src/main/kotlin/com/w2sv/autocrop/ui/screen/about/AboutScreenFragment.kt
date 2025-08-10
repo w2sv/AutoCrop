@@ -8,11 +8,10 @@ import com.w2sv.autocrop.BuildConfig
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.AboutBinding
 import com.w2sv.autocrop.ui.util.animate
-import slimber.log.i
 import java.util.Calendar
+import slimber.log.i
 
-class AboutScreenFragment :
-    AppFragment<AboutBinding>(AboutBinding::class.java) {
+class AboutScreenFragment : AppFragment<AboutBinding>(AboutBinding::class.java) {
 
     override val onBackPressed: (() -> Unit)?
         get() = {

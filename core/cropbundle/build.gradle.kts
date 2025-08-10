@@ -8,10 +8,10 @@ dependencies {
     implementation(projects.core.opencv)
     implementation(projects.core.domain)
 
-    implementation (libs.androidx.core)
-    implementation (libs.w2sv.kotlinutils)
-    implementation (libs.slimber)
-    implementation (libs.androidutils.core)
+    implementation(libs.androidx.core)
+    implementation(libs.w2sv.kotlinutils)
+    implementation(libs.slimber)
+    implementation(libs.androidutils.core)
 
 //    // ---------------
 //    // unitTest

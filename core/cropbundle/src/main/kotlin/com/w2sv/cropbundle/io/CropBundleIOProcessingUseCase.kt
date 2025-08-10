@@ -6,9 +6,7 @@ import com.w2sv.cropbundle.Screenshot
 import com.w2sv.domain.repository.PreferencesRepository
 import javax.inject.Inject
 
-class CropBundleIOProcessingUseCase @Inject constructor(
-    private val preferencesRepository: PreferencesRepository
-) {
+class CropBundleIOProcessingUseCase @Inject constructor(private val preferencesRepository: PreferencesRepository) {
     fun invoke(
         cropBitmap: Bitmap,
         screenshotMediaStoreData: Screenshot.MediaStoreData,
@@ -30,8 +28,7 @@ class CropBundleIOProcessingUseCase @Inject constructor(
                     mediaStoreId = screenshotMediaStoreData.id,
                     contentResolver = context.contentResolver
                 )
-            }
-            else {
+            } else {
                 null
             }
         )

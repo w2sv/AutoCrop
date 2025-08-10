@@ -11,5 +11,5 @@ fun Bitmap.getRectF(): RectF =
         0f,
         0f,
         width.toFloat(),
-        height.toFloat(),
+        height.toFloat()
     )

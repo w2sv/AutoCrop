@@ -9,15 +9,16 @@ import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.kotlinutils.coroutines.flow.firstBlocking
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CropSettingsDialogFragment : AbstractCropSettingsDialogFragment(
-    title = R.string.crop_settings,
-    icon = R.drawable.ic_settings_24,
-    positiveButtonText = R.string.apply
-) {
+class CropSettingsDialogFragment :
+    AbstractCropSettingsDialogFragment(
+        title = R.string.crop_settings,
+        icon = R.drawable.ic_settings_24,
+        positiveButtonText = R.string.apply
+    ) {
     override val viewModel by viewModels<ViewModel>()
 
     override fun onPositiveButtonClicked() {
@@ -26,12 +27,13 @@ class CropSettingsDialogFragment : AbstractCropSettingsDialogFragment(
     }
 
     @HiltViewModel
-    class ViewModel @Inject constructor(private val preferencesRepository: PreferencesRepository) : AbstractCropSettingsDialogFragment.ViewModel(
-        preferencesRepository.cropSensitivity.firstBlocking()  // TODO
-    ) {
+    class ViewModel @Inject constructor(private val preferencesRepository: PreferencesRepository) :
+        AbstractCropSettingsDialogFragment.ViewModel(
+            preferencesRepository.cropSensitivity.firstBlocking() // TODO
+        ) {
         fun syncCropSettings() {
             viewModelScope.launch { preferencesRepository.cropSensitivity.save(cropSensitivity.value!!) }
-            _sensitivityHasChanged.postValue(false)
+            sensitivityHasChangedMutable.postValue(false)
         }
     }
 }

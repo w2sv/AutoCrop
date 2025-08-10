@@ -12,10 +12,10 @@ import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import com.w2sv.cropbundle.io.extensions.compressToAndCloseStream
 import com.w2sv.cropbundle.io.utils.systemPicturesDirectory
-import slimber.log.i
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
+import slimber.log.i
 
 /**
  * @see
@@ -36,7 +36,7 @@ fun ContentResolver.saveBitmap(
     return if (successfullySaved) writeUri else null
 }
 
-@SuppressLint("Recycle")  // Suppress 'OutputStream should be closed' warning
+@SuppressLint("Recycle") // Suppress 'OutputStream should be closed' warning
 private object GetOutputStream {
     operator fun invoke(
         contentResolver: ContentResolver,
@@ -47,9 +47,11 @@ private object GetOutputStream {
         when {
             parentDocumentUri != null -> fromParentDocument(fileName, contentResolver, parentDocumentUri, mimeType)
             Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q -> untilQ(fileName)
-            else -> @RequiresApi(Build.VERSION_CODES.Q) {
-                postQ(fileName, contentResolver, mimeType)
-            }
+            else ->
+                @RequiresApi(Build.VERSION_CODES.Q)
+                {
+                    postQ(fileName, contentResolver, mimeType)
+                }
         }
 
     private fun fromParentDocument(

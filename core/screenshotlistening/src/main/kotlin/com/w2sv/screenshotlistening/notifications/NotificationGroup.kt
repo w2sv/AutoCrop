@@ -16,8 +16,9 @@ class NotificationGroup(
     private val groupKey = "GROUP_${notificationChannel.id}"
 
     fun addChild(id: Int, builderConfigurator: NotificationCompat.Builder.() -> NotificationCompat.Builder) {
-        if (childrenIds.isNotEmpty())
+        if (childrenIds.isNotEmpty()) {
             showSummaryNotification()
+        }
 
         childrenIds.add(id)
         i { "Added ${notificationChannel.name} notification $id" }
@@ -40,7 +41,7 @@ class NotificationGroup(
             notificationChannel.groupSummaryId,
             context.setChannelAndGetNotificationBuilder(
                 notificationManager,
-                notificationChannel,
+                notificationChannel
             )
                 .summaryBuilderConfigurator(childrenIds.size)
                 .setGroup(groupKey)

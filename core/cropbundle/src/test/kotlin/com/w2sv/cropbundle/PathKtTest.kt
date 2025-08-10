@@ -18,7 +18,7 @@ internal class PathKtTest {
     @ParameterizedTest
     @CsvSource(
         "screenshot234.png, screenshot234",
-        "234.something.png, 234.something",
+        "234.something.png, 234.something"
     )
     fun extensionLessFileName(fileName: String, expected: String) {
         assertEquals(expected, extensionLessFileName(fileName))

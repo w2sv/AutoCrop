@@ -10,10 +10,7 @@ import com.w2sv.cropbundle.io.ScreenshotDeletionResult
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class CropBundleIOResults(
-    val cropUris: ArrayList<Uri>,
-    val deletedScreenshotCount: Int
-) : Parcelable {
+data class CropBundleIOResults(val cropUris: ArrayList<Uri>, val deletedScreenshotCount: Int) : Parcelable {
 
     private val nSavedCrops: Int
         get() = cropUris.size
@@ -22,23 +19,26 @@ data class CropBundleIOResults(
         get() = cropUris.isNotEmpty()
 
     fun notificationMessage(resources: Resources): CharSequence =
-        if (nSavedCrops == 0)
+        if (nSavedCrops == 0) {
             "Discarded all crops"
-        else
+        } else {
             buildSpannedString {
                 append(
                     "Saved $nSavedCrops ${resources.getQuantityString(R.plurals.crop, nSavedCrops)}"
                 )
-                if (deletedScreenshotCount != 0)
+                if (deletedScreenshotCount != 0) {
                     append(
                         " and deleted ${
-                            if (deletedScreenshotCount == nSavedCrops)
+                            if (deletedScreenshotCount == nSavedCrops) {
                                 "corresponding"
-                            else
+                            } else {
                                 deletedScreenshotCount
+                            }
                         } ${resources.getQuantityString(R.plurals.screenshot, deletedScreenshotCount)}"
                     )
+                }
             }
+        }
 
     companion object {
         const val EXTRA = "com.w2sv.autocrop.extra.IO_RESULTS"

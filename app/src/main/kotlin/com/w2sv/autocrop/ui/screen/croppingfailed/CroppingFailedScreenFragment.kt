@@ -5,8 +5,7 @@ import android.view.View
 import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.databinding.CroppingFailedBinding
 
-class CroppingFailedScreenFragment
-    : AppFragment<CroppingFailedBinding>(CroppingFailedBinding::class.java) {
+class CroppingFailedScreenFragment : AppFragment<CroppingFailedBinding>(CroppingFailedBinding::class.java) {
 
     override val onBackPressed: () -> Unit
         get() = ::navigateToMainActivity

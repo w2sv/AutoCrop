@@ -13,7 +13,8 @@ class Application : Application() {
 
         OpenCVLoader.initDebug()
 
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+        }
     }
 }

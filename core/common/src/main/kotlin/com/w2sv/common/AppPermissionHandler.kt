@@ -30,8 +30,8 @@ class AppPermissionHandler(
         onGranted: () -> Unit,
         onDenied: (() -> Unit)?,
         onRequestDismissed: (() -> Unit)?
-    ): Boolean {
-        return super.requestPermissionIfRequired(
+    ): Boolean =
+        super.requestPermissionIfRequired(
             onGranted,
             {
                 getSnackyBuilder(activity.getString(permissionDeniedMessageRes))
@@ -41,7 +41,6 @@ class AppPermissionHandler(
             },
             onRequestDismissed
         )
-    }
 
     override fun onPermissionRationalSuppressed() {
         getSnackyBuilder(activity.getString(permissionRationalSuppressedMessageRes))

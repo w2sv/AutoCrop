@@ -14,24 +14,22 @@ android {
             }
         }
     }
-
     buildTypes {
         debug {
             packaging {
                 jniLibs {
-                    keepDebugSymbols.add("**/*.so")  // controlled by OpenCV CMake scripts
+                    keepDebugSymbols.add("**/*.so") // controlled by OpenCV CMake scripts
                 }
             }
         }
         release {
             packaging {
                 jniLibs {
-                    keepDebugSymbols.add("**/*.so")  // controlled by OpenCV CMake scripts
+                    keepDebugSymbols.add("**/*.so") // controlled by OpenCV CMake scripts
                 }
             }
         }
     }
-
     sourceSets {
         getByName("main") {
             jniLibs.srcDirs(listOf("native/libs"))

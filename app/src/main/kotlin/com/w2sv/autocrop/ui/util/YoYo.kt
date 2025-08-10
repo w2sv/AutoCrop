@@ -8,17 +8,11 @@ import com.w2sv.androidutils.view.show
 import com.w2sv.kotlinutils.coroutines.launchDelayed
 import kotlinx.coroutines.CoroutineScope
 
-fun View.animate(
-    technique: Techniques,
-    duration: Long? = null
-): YoYo.YoYoString =
+fun View.animate(technique: Techniques, duration: Long? = null): YoYo.YoYoString =
     getAnimationComposer(technique, duration)
         .play()
 
-fun View.getAnimationComposer(
-    technique: Techniques,
-    duration: Long? = null
-): YoYo.AnimationComposer =
+fun View.getAnimationComposer(technique: Techniques, duration: Long? = null): YoYo.AnimationComposer =
     YoYo.with(technique, this)
         .apply {
             duration?.let {
@@ -34,7 +28,11 @@ fun YoYo.AnimationComposer.onHalfwayFinished(
         coroutineScope.launchDelayed(duration / 2, block = block)
     }
 
-fun crossFade(fadeOut: View, fadeIn: View, duration: Long? = null) {
+fun crossFade(
+    fadeOut: View,
+    fadeIn: View,
+    duration: Long? = null
+) {
     fadeOut.fadeOut(duration)
     fadeIn.fadeInYoYo(duration)
 }

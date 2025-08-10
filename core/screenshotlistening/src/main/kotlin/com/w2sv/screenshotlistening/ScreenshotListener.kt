@@ -30,6 +30,11 @@ import com.w2sv.screenshotlistening.notifications.NotificationGroup
 import com.w2sv.screenshotlistening.notifications.setChannelAndGetNotificationBuilder
 import com.w2sv.screenshotlistening.services.abstrct.BoundService
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -37,15 +42,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import slimber.log.i
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @AndroidEntryPoint
-class ScreenshotListener : BoundService(),
-                           PendingIntentAssociatedResourcesCleanupService.Client {
+class ScreenshotListener :
+    BoundService(),
+    PendingIntentAssociatedResourcesCleanupService.Client {
 
     @Inject
     internal lateinit var preferencesRepository: PreferencesRepository
@@ -96,7 +97,11 @@ class ScreenshotListener : BoundService(),
     // Launching
     // =============
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int
+    ): Int {
         emitOnStartCommandLog(intent, flags, startId)
 
         when (intent!!.action) {
@@ -187,8 +192,7 @@ class ScreenshotListener : BoundService(),
             //                }
             //            }
             true
-        }
-        catch (ex: Exception) {
+        } catch (ex: Exception) {
             when (ex) {
                 is IllegalStateException, is NullPointerException, is FileNotFoundException -> Unit
                 else -> throw ex
@@ -220,7 +224,11 @@ class ScreenshotListener : BoundService(),
         val notificationId = notificationGroup.childrenIds.getNewId()
         val actionRequestCodes = notificationGroup.requestCodes.getAndAddMultipleNewIds(4)
 
-        fun getActionIntent(clazz: Class<*>, isSaveIntent: Boolean, cancelNotificationExtra: Boolean): Intent =
+        fun getActionIntent(
+            clazz: Class<*>,
+            isSaveIntent: Boolean,
+            cancelNotificationExtra: Boolean
+        ): Intent =
             getActionIntentTemplate(
                 clazz,
                 isSaveIntent,
@@ -247,7 +255,7 @@ class ScreenshotListener : BoundService(),
                 NotificationCompat.Action(
                     null,
                     getString(R.string.save_delete_screenshot),
-                    if (IMAGE_DELETION_REQUIRING_APPROVAL)
+                    if (IMAGE_DELETION_REQUIRING_APPROVAL) {
                         PendingIntent.getActivity(
                             this@ScreenshotListener,
                             actionRequestCodes[1],
@@ -259,7 +267,7 @@ class ScreenshotListener : BoundService(),
                                 .putExtra(EXTRA_DELETE_REQUEST_URI, getImageContentUri(screenshotMediaStoreId)),
                             REPLACE_CURRENT_PENDING_INTENT_FLAGS
                         )
-                    else
+                    } else {
                         PendingIntent.getService(
                             this@ScreenshotListener,
                             actionRequestCodes[1],
@@ -271,6 +279,7 @@ class ScreenshotListener : BoundService(),
                                 .putExtra(EXTRA_ATTEMPT_SCREENSHOT_DELETION, true),
                             REPLACE_CURRENT_PENDING_INTENT_FLAGS
                         )
+                    }
                 )
             )
             addAction(
@@ -413,8 +422,7 @@ class ScreenshotListener : BoundService(),
                             }
                         )
                     )
-                }
-                else {
+                } else {
                     add(
                         AppPermissionHandler(
                             activity = componentActivity,
@@ -442,10 +450,8 @@ class ScreenshotListener : BoundService(),
 private const val REPLACE_CURRENT_PENDING_INTENT_FLAGS: Int =
     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
 
-private class ScreenshotObserver(
-    private val contentResolver: ContentResolver,
-    private val onNewScreenshotListener: (Uri) -> Boolean
-) : ContentObserver(Handler(Looper.getMainLooper())) {
+private class ScreenshotObserver(private val contentResolver: ContentResolver, private val onNewScreenshotListener: (Uri) -> Boolean) :
+    ContentObserver(Handler(Looper.getMainLooper())) {
 
     companion object {
         /**
@@ -473,9 +479,9 @@ private class ScreenshotObserver(
         uri?.let {
             i { "Called onChange for $it" }
             if (!blacklist.contains(it)) {
-                if (pendingUris.contains(it))
+                if (pendingUris.contains(it)) {
                     attemptOnNewScreenshotListenerInvocation(it, false)
-                else {
+                } else {
                     //                    when (it.isNewScreenshot()) {
                     //                        true -> attemptOnNewScreenshotListenerInvocation(it, true)
                     //                        false -> blacklist.add(it)
@@ -490,9 +496,9 @@ private class ScreenshotObserver(
         if (onNewScreenshotListener(uri)) {
             blacklist.add(uri)
             i { "Added $uri to blacklist" }
-        }
-        else if (addToPendingUrisIfInaccessible)
+        } else if (addToPendingUrisIfInaccessible) {
             pendingUris.add(uri)
+        }
     }
 
     //    private fun Uri.isNewScreenshot(): Boolean? =

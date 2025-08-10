@@ -17,10 +17,11 @@ class PermissionRepositoryImpl @Inject constructor(dataStore: DataStore<Preferen
     PermissionRepository {
 
     override val readMediaImagesPermissionRequested: DataStoreFlow<Boolean>? =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             dataStoreFlow(booleanPreferencesKey("PermissionHandler.${Manifest.permission.READ_MEDIA_IMAGES}")) { false }
-        else
+        } else {
             null
+        }
 
     override val readExternalStoragePermissionRequested: DataStoreFlow<Boolean> =
         dataStoreFlow(booleanPreferencesKey("PermissionHandler.${Manifest.permission.READ_EXTERNAL_STORAGE}")) { false }
@@ -29,8 +30,9 @@ class PermissionRepositoryImpl @Inject constructor(dataStore: DataStore<Preferen
         dataStoreFlow(booleanPreferencesKey("PermissionHandler.${Manifest.permission.WRITE_EXTERNAL_STORAGE}")) { false }
 
     override val postNotificationsPermissionRequested: DataStoreFlow<Boolean>? =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             dataStoreFlow(booleanPreferencesKey("PermissionHandler.${Manifest.permission.POST_NOTIFICATIONS}")) { false }
-        else
+        } else {
             null
+        }
 }

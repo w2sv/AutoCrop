@@ -21,8 +21,7 @@ import com.w2sv.autocrop.ui.screen.home.HomeScreenFragment
 import com.w2sv.autocrop.ui.screen.home.HomeScreenFragmentDirections
 import com.w2sv.autocrop.ui.screen.home.HomeScreenViewModel
 
-class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) :
-    NavigationView(context, attributeSet) {
+class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) : NavigationView(context, attributeSet) {
 
     private val viewModel by viewModel<HomeScreenViewModel>()
 

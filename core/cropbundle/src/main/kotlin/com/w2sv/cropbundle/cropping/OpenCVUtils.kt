@@ -62,10 +62,12 @@ internal fun Mat.getMultiChannelMinMaxElements(): Pair<Double, Double> {
     (0 until rows()).forEach { i ->
         (0 until cols()).forEach { j ->
             get(i, j).forEach { element ->
-                if (element < min)
+                if (element < min) {
                     min = element
-                if (element > max)
+                }
+                if (element > max) {
                     max = element
+                }
             }
         }
     }
@@ -83,7 +85,7 @@ internal fun Mat.logInfo(matrixName: String) {
 
     d {
         "$matrixName: ${rows()}X${cols()}X${channels()} \n\t" +
-                "μ=${meanMat.toList()} σ=${stdDevMat.toList()} \n\t" +
-                "min=$min max=$max"
+            "μ=${meanMat.toList()} σ=${stdDevMat.toList()} \n\t" +
+            "min=$min max=$max"
     }
 }

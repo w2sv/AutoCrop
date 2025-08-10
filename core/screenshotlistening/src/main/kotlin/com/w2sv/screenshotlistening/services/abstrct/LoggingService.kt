@@ -6,12 +6,16 @@ import slimber.log.i
 
 abstract class LoggingService : Service() {
 
-    fun emitOnStartCommandLog(intent: Intent?, flags: Int, startId: Int) {
+    fun emitOnStartCommandLog(
+        intent: Intent?,
+        flags: Int,
+        startId: Int
+    ) {
         i {
             "onStartCommand; " +
-                    "intent: $intent | " +
-                    "flags: $flags | " +
-                    "startId: $startId"
+                "intent: $intent | " +
+                "flags: $flags | " +
+                "startId: $startId"
         }
     }
 

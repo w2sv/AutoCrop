@@ -22,7 +22,7 @@ class CropPagerWrapper(
     val pager: ViewPager2,
     private val dataSet: DataSet,
     onClickListener: (View) -> Unit,
-    onLongClickListener: (View) -> Boolean,
+    onLongClickListener: (View) -> Boolean
 ) : ViewRemovableBidirectionalViewPager2<CropBundle>(pager, dataSet) {
 
     class DataSet(dataSet: MutableList<CropBundle>) : BidirectionalViewPagerDataSet<CropBundle>(dataSet) {

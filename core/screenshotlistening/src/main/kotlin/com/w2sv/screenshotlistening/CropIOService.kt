@@ -2,8 +2,8 @@ package com.w2sv.screenshotlistening
 
 import android.content.Intent
 import android.widget.Toast
-import com.w2sv.cropbundle.io.CropBundleIOResult
 import com.w2sv.cropbundle.io.CropBundleIOProcessingUseCase
+import com.w2sv.cropbundle.io.CropBundleIOResult
 import com.w2sv.cropbundle.io.ScreenshotDeletionResult
 import com.w2sv.screenshotlistening.services.abstrct.UnboundService
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,7 +19,11 @@ class CropIOService : UnboundService() {
     @Inject
     lateinit var cropBundleIOProcessingUseCase: CropBundleIOProcessingUseCase
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int
+    ): Int {
         ScreenshotListener.startCleanupService(this, intent!!)
 
         showIOResultsNotification(runIntentParametrizedCropBundleIO(intent))
@@ -50,8 +54,9 @@ class CropIOService : UnboundService() {
             when {
                 cropBundleIoResult.successfullySavedCrop -> buildString {
                     append("Successfully saved crop")
-                    if (cropBundleIoResult.screenshotDeletionResult is ScreenshotDeletionResult.SuccessfullyDeleted)
+                    if (cropBundleIoResult.screenshotDeletionResult is ScreenshotDeletionResult.SuccessfullyDeleted) {
                         append(" & deleted Screenshot")
+                    }
                     append("!")
                 }
 

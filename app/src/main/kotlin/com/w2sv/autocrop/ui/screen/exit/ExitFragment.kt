@@ -23,8 +23,7 @@ import com.w2sv.autocrop.util.launchAfterShortDelay
 import com.w2sv.cropbundle.io.ScreenshotDeletionResult
 import kotlinx.coroutines.launch
 
-class ExitFragment :
-    AppFragment<CropPagerExitBinding>(CropPagerExitBinding::class.java) {
+class ExitFragment : AppFragment<CropPagerExitBinding>(CropPagerExitBinding::class.java) {
 
     private val cropBundleVM by cropNavGraphViewModel<CropBundleViewModel>()
 
@@ -43,7 +42,8 @@ class ExitFragment :
                     }
                 }
 
-                launchAfterShortDelay {  // required for appearing of transition animation, which otherwise is just skipped
+                launchAfterShortDelay {
+                    // required for appearing of transition animation, which otherwise is just skipped
                     launchAppIconAnimationAndNavigateToHomeScreen()
                 }
             }
@@ -91,7 +91,7 @@ class ExitFragment :
 }
 
 @SuppressLint("NewApi")
-private class DeleteRequestIntentContractAdministrator(  // TODO: remove
+private class DeleteRequestIntentContractAdministrator( // TODO: remove
     activity: ComponentActivity,
     override val resultCallback: (ActivityResult) -> Unit
 ) : ActivityCallContractHandler.Impl<IntentSenderRequest, ActivityResult>(

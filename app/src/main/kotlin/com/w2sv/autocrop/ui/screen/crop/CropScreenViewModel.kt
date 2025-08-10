@@ -15,17 +15,15 @@ import com.w2sv.autocrop.ui.util.nonNullValue
 import com.w2sv.cropbundle.CropBundle
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.withContext
 import slimber.log.i
-import javax.inject.Inject
 
 @HiltViewModel
-class CropScreenViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
-    preferencesRepository: PreferencesRepository
-) : androidx.lifecycle.ViewModel() {
+class CropScreenViewModel @Inject constructor(savedStateHandle: SavedStateHandle, preferencesRepository: PreferencesRepository) :
+    androidx.lifecycle.ViewModel() {
 
     private val screenshotUris: List<Uri> =
         CropNavGraphArgs.fromSavedStateHandle(savedStateHandle).imageUris.toList()

@@ -10,7 +10,7 @@ internal class CropBundleProcessingKtTest {
     @ParameterizedTest
     @CsvSource(
         "screenshot234.png, screenshot234-AutoCropped_[0-9]{8}_[0-9]{6}.png",
-        "234.png, 234-AutoCropped_[0-9]{8}_[0-9]{6}.png",
+        "234.png, 234-AutoCropped_[0-9]{8}_[0-9]{6}.png"
     )
     fun testCropFileName(fileName: String, match_regex: String) {
         Assertions.assertTrue(
