@@ -45,11 +45,11 @@ class HomeScreenFragment : AppFragment<HomeScreenBinding>(HomeScreenBinding::cla
 
     private val viewModel by viewModels<HomeScreenViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        lifecycle.addObserver(writeExternalStoragePermissionHandler)
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+//        lifecycle.addObserver(writeExternalStoragePermissionHandler)
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -101,26 +101,26 @@ class HomeScreenFragment : AppFragment<HomeScreenBinding>(HomeScreenBinding::cla
      * ActivityCallContractHandlers
      */
 
-    private val writeExternalStoragePermissionHandler by lazy {
-        // TODO: what's this even needed for?
-        AppPermissionHandler(
-            activity = requireActivity(),
-            permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            permissionDeniedMessageRes = R.string.media_file_writing_required_for_saving_crops,
-            permissionRationalSuppressedMessageRes = R.string.go_to_app_settings_and_grant_media_file_writing_in_order_for_the_app_to_work,
-            permissionPreviouslyRequested = permissionRepository.readExternalStoragePermissionRequested.stateIn(
-                viewModel.viewModelScope,
-                SharingStarted.Eagerly
-            ),
-            savePermissionPreviouslyRequested = {
-                viewModel.viewModelScope.launch {
-                    permissionRepository.readExternalStoragePermissionRequested.save(
-                        true
-                    )
-                }
-            }
-        )
-    }
+//    private val writeExternalStoragePermissionHandler by lazy {
+//        // TODO: what's this even needed for?
+//        AppPermissionHandler(
+//            activity = requireActivity(),
+//            permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//            permissionDeniedMessageRes = R.string.media_file_writing_required_for_saving_crops,
+//            permissionRationalSuppressedMessageRes = R.string.go_to_app_settings_and_grant_media_file_writing_in_order_for_the_app_to_work,
+//            permissionPreviouslyRequested = permissionRepository.readExternalStoragePermissionRequested.stateIn(
+//                viewModel.viewModelScope,
+//                SharingStarted.Eagerly
+//            ),
+//            savePermissionPreviouslyRequested = {
+//                viewModel.viewModelScope.launch {
+//                    permissionRepository.readExternalStoragePermissionRequested.save(
+//                        true
+//                    )
+//                }
+//            }
+//        )
+//    }
 
     //    val screenshotListeningPermissionHandlers by lazy {
     //        ScreenshotListener.permissionHandlers(
@@ -131,11 +131,12 @@ class HomeScreenFragment : AppFragment<HomeScreenBinding>(HomeScreenBinding::cla
     //    }
 
     private fun launchImageSelection() {
-        writeExternalStoragePermissionHandler.requestPermissionIfRequired(
-            onGranted = {
-                imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            }
-        )
+//        writeExternalStoragePermissionHandler.requestPermissionIfRequired(
+//            onGranted = {
+//                imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+//            }
+//        )
+        imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
     private val imagePicker =
