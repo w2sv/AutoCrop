@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.autocrop.library)
     alias(libs.plugins.autocrop.hilt)
-    alias(libs.plugins.kotlin.parcelize) 
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 dependencies {
@@ -9,7 +9,7 @@ dependencies {
     implementation(projects.core.domain)
 
     implementation (libs.androidx.core)
-    implementation (libs.kotlinutils)
+    implementation (libs.w2sv.kotlinutils)
     implementation (libs.slimber)
     implementation (libs.androidutils.core)
 

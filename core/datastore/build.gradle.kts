@@ -7,9 +7,9 @@ dependencies {
     implementation(projects.core.domain)
 
     implementation(libs.androidx.datastore.preferences)
-    api(libs.datastoreutils.preferences) // TODO: eh
+    api(libs.w2sv.datastoreutils.preferences)
     implementation(libs.slimber)
 
     implementation(libs.androidutils.core)
-    implementation(libs.kotlinutils)
+    implementation(libs.w2sv.kotlinutils)
 }

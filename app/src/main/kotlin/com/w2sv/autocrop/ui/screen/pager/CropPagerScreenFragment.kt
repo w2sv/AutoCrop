@@ -8,7 +8,7 @@ import androidx.lifecycle.coroutineScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.viewpager2.widget.ViewPager2
 import com.daimajia.androidanimations.library.Techniques
-import com.w2sv.androidutils.res.getText
+import com.w2sv.androidutils.res.getHtmlFormattedText
 import com.w2sv.androidutils.view.hide
 import com.w2sv.androidutils.view.remove
 import com.w2sv.androidutils.view.show
@@ -131,7 +131,7 @@ class CropPagerScreenFragment :
 
     private fun CropPagerBinding.onDataSetPositionChanged(position: Int) {
         with(viewModel.dataSet[position].crop) {
-            discardingStatisticsTv.text = resources.getText(
+            discardingStatisticsTv.text = resources.getHtmlFormattedText(
                 R.string.discarding_statistics,
                 "$discardedPercentage%",
                 discardedFileSizeFormatted

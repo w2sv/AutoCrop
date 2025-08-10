@@ -2,12 +2,12 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.application)
+    alias(libs.plugins.android.application)
     alias(libs.plugins.play)
-    alias(libs.plugins.kotlin)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.autocrop.hilt)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.androidx.navigation.safe.args)
+    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
 
 kotlin {
@@ -38,12 +38,11 @@ android {
         }
 
         // Name built bundles "{versionName}-{buildFlavor}.aab"
-        setProperty("archivesBaseName", versionName)
+//        setProperty("archivesBaseName", versionName)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         //        testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'
     }
-
     signingConfigs {
         create("release") {
             rootProject.file("keystore.properties").let { file ->
@@ -59,7 +58,6 @@ android {
             }
         }
     }
-
     buildTypes {
         getByName("debug") {
             applicationIdSuffix = ".debug"
@@ -74,27 +72,22 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
     }
-
     buildFeatures {
         buildConfig = true
         viewBinding = true
     }
-
     packaging {
         resources {
             excludes.add("/META-INF/{AL2.0,LGPL2.1}")
         }
     }
-
     hilt {
         enableAggregatingTask = true  // Fixes warning
     }
-
     @Suppress("UnstableApiUsage")
     testOptions {
         animationsDisabled = true
     }
-
     // Name built apks "{versionName}.apk"
     applicationVariants.all {
         outputs
@@ -134,13 +127,13 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.fragment)
 
     // Owned
-    implementation(libs.kotlinutils)
-    implementation(libs.viewboundcontroller)
+    implementation(libs.w2sv.kotlinutils)
+    implementation(libs.w2sv.viewboundcontroller)
     implementation(libs.androidutils.core)
-    implementation(libs.androidutils.lifecycle)
-    implementation(libs.androidutils.view)
-    implementation(libs.viewanimations)
-    implementation(libs.bidirectionalviewpager)
+    implementation(libs.w2sv.androidutils.lifecycle)
+    implementation(libs.w2sv.androidutils.view)
+    implementation(libs.w2sv.viewanimations)
+    implementation(libs.w2sv.bidirectionalviewpager)
 
     // Other
     implementation(libs.slimber)

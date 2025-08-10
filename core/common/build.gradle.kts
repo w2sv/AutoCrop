@@ -17,8 +17,8 @@ dependencies {
     implementation(libs.snacky)
     implementation(libs.slimber)
 
-    implementation(libs.kotlinutils)
-    api(libs.permissionhandler)
+    implementation(libs.w2sv.kotlinutils)
+    api(libs.w2sv.permissionhandler)
     implementation(libs.androidutils.core)
-    implementation(libs.androidutils.lifecycle)
+    implementation(libs.w2sv.androidutils.lifecycle)
 }

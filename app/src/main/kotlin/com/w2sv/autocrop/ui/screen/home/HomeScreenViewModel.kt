@@ -14,7 +14,7 @@ import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.model.CropBundleIOResults
 import com.w2sv.autocrop.util.cropSaveDirPathIdentifier
 import com.w2sv.domain.repository.PreferencesRepository
-import com.w2sv.kotlinutils.coroutines.mapState
+import com.w2sv.kotlinutils.coroutines.flow.mapState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
