@@ -1,16 +1,16 @@
 [versions]
-# SDKs
+# @keep
 minSdk = "26"
+# @keep
 compileSdk = "34"
-
-# Plugins
 agp = "8.5.2"
 kotlin = "2.0.10"
+# @keep
 java = "17"
 ksp = "2.0.10-1.0.24"
 triplet-play = "3.10.1"
 hilt = "2.51.1"
-
+ktlint = "13.0.0"
 junit = "5.10.3"
 mannodermaus = "1.3.0"
 espresso = "3.6.1"
@@ -18,6 +18,7 @@ lifecycle = "2.8.4"
 androidutils = "0.4.2-rc2"
 datastoreutils = "0.0.3-rc1"
 androidxNavigation = "2.7.7"
+versionCatalogUpdate = "1.0.0"
 
 [libraries]
 
@@ -61,8 +62,11 @@ lottie = "com.airbnb.android:lottie:6.0.0"
 simplestorage = "com.anggrayudi:storage:2.0.0"
 
 # Plugins
+# @keep
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+# @keep
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+# @keep
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 
 # unitTest
@@ -94,7 +98,10 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 junit5 = { id = "de.mannodermaus.android-junit5", version = "1.10.0.0" }
 play = { id = "com.github.triplet.play", version.ref = "triplet-play" }
 androidx-navigation-safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigation" }
+versionCatalogUpdate = { id = "nl.littlerobots.version-catalog-update", version.ref = "versionCatalogUpdate" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 
-# Plugins defined by the project
+# @keep
 autocrop-library = { id = "autocrop.library", version = "unspecified" }
+# @keep
 autocrop-hilt = { id = "autocrop.hilt", version = "unspecified" }
