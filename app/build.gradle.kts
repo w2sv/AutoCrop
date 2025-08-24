@@ -133,13 +133,13 @@ dependencies {
     implementation(libs.google.material)
 
     // Owned
-    implementation(libs.kotlinutils)
-    implementation(libs.viewboundcontroller)
-    implementation(libs.androidutils.core)
-    implementation(libs.androidutils.lifecycle)
-    implementation(libs.androidutils.view)
-    implementation(libs.viewanimations)
-    implementation(libs.bidirectionalviewpager)
+    implementation(libs.w2sv.kotlinutils)
+    implementation(libs.w2sv.viewboundcontroller)
+    implementation(libs.w2sv.androidutils.core)
+    implementation(libs.w2sv.androidutils.lifecycle)
+    implementation(libs.w2sv.androidutils.view)
+    implementation(libs.w2sv.viewanimations)
+    implementation(libs.w2sv.bidirectionalviewpager)
 
     // Other
     implementation(libs.slimber)

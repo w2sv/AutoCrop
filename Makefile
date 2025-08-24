@@ -7,6 +7,15 @@ setup-emulator:
 optimize-drawables:
 	@avocado app/src/main/res/drawable/*.xml
 
+format:
+	@./gradlew ktlintFormat
+
+update-dependencies:
+	@./gradlew versionCatalogUpdate
+
+update-gradle:
+	@./gradlew wrapper --gradle-version latest
+
 # ==============
 # Publishing
 # ==============

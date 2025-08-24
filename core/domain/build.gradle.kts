@@ -6,7 +6,7 @@ dependencies {
     implementation(libs.androidx.core)
     implementation(libs.slimber)
 
-    implementation(libs.datastoreutils.preferences)
-    implementation(libs.kotlinutils)
-    implementation(libs.androidutils.core)
+    implementation(libs.w2sv.datastoreutils.preferences)
+    implementation(libs.w2sv.kotlinutils)
+    implementation(libs.w2sv.androidutils.core)
 }

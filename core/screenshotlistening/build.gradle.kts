@@ -11,9 +11,9 @@ dependencies {
 
     implementation(libs.androidx.core)
     implementation(libs.slimber)
-    implementation(libs.androidutils.core)
-    implementation(libs.kotlinutils)
-    implementation(libs.kotlindelegates)
+    implementation(libs.w2sv.androidutils.core)
+    implementation(libs.w2sv.kotlinutils)
+    implementation(libs.w2sv.kotlindelegates)
     implementation(libs.google.guava)
 
     testImplementation(libs.bundles.unitTest)
