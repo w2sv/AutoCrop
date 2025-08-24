@@ -6,7 +6,7 @@ import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.AbstractCropSettingsDialogFragment
 import com.w2sv.domain.repository.PreferencesRepository
-import com.w2sv.kotlinutils.coroutines.firstBlocking
+import com.w2sv.kotlinutils.coroutines.flow.firstBlocking
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

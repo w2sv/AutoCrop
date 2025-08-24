@@ -13,7 +13,7 @@ import com.w2sv.androidutils.hasPermission
 import com.w2sv.datastoreutils.preferences.PreferencesDataStoreRepository
 import com.w2sv.domain.model.CropAdjustmentMode
 import com.w2sv.domain.repository.PreferencesRepository
-import com.w2sv.kotlinutils.coroutines.mapState
+import com.w2sv.kotlinutils.coroutines.flow.mapState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -31,18 +31,18 @@ class PreferencesRepositoryImpl @Inject constructor(
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     override val comparisonInstructionsShown =
-        dataStoreFlow(booleanPreferencesKey("comparisonInstructionsShown"), false)
+        dataStoreFlow(booleanPreferencesKey("comparisonInstructionsShown"), { false })
 
-    override val autoScroll = dataStoreFlow(booleanPreferencesKey("autoScroll"), true)
+    override val autoScroll = dataStoreFlow(booleanPreferencesKey("autoScroll"), { true })
 
-    override val deleteScreenshots = dataStoreFlow(booleanPreferencesKey("deleteScreenshots"), false)
+    override val deleteScreenshots = dataStoreFlow(booleanPreferencesKey("deleteScreenshots"), { false })
 
-    override val cropSensitivity = dataStoreFlow(intPreferencesKey("cropSensitivity"), 5)
+    override val cropSensitivity = dataStoreFlow(intPreferencesKey("cropSensitivity"), { 5 })
 
     override val cropAdjustmentMode =
-        dataStoreFlow(intPreferencesKey("cropAdjustmentMode"), CropAdjustmentMode.Manual)
+        enumDataStoreFlow(intPreferencesKey("cropAdjustmentMode"), { CropAdjustmentMode.Manual })
 
-    private val cropSaveDirTreeUriPersisted = dataStoreUriFlow(stringPreferencesKey("treeUri"), null)
+    private val cropSaveDirTreeUriPersisted = uriDataStoreFlow(stringPreferencesKey("treeUri"), { null })
 
     override suspend fun saveCropSaveDirTreeUri(value: Uri) {
         cropSaveDirTreeUriPersisted.save(value)

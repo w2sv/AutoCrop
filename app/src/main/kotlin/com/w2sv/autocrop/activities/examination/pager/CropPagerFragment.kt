@@ -22,8 +22,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.os.getParcelableCompat
+import com.w2sv.androidutils.res.getHtmlFormattedText
 import com.w2sv.androidutils.res.getLong
-import com.w2sv.androidutils.res.getText
 import com.w2sv.androidutils.view.dialogs.show
 import com.w2sv.androidutils.view.hide
 import com.w2sv.androidutils.view.remove
@@ -269,7 +269,7 @@ class CropPagerFragment :
 
     private fun CropPagerBinding.updateOnDataSetPositionChanged(position: Int) {
         with(viewModel.dataSet[position].crop) {
-            discardingStatisticsTv.text = resources.getText(
+            discardingStatisticsTv.text = resources.getHtmlFormattedText(
                 R.string.discarding_statistics,
                 "$discardedPercentage%",
                 discardedFileSizeFormatted

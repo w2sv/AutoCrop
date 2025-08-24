@@ -1,7 +1,6 @@
 package com.w2sv.autocrop.activities.main.flowfield
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -10,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -46,13 +44,12 @@ import com.w2sv.autocrop.ui.views.onHalfwayFinished
 import com.w2sv.autocrop.utils.cropSaveDirPathIdentifier
 import com.w2sv.autocrop.utils.extensions.resolution
 import com.w2sv.autocrop.utils.getFragment
-import com.w2sv.autocrop.utils.getMediaUri
 import com.w2sv.common.AppPermissionHandler
 import com.w2sv.cropbundle.io.IMAGE_MIME_TYPE_MEDIA_STORE_IDENTIFIER
 import com.w2sv.domain.repository.PermissionRepository
 import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.flowfield.Sketch
-import com.w2sv.kotlinutils.coroutines.mapState
+import com.w2sv.kotlinutils.coroutines.flow.mapState
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
