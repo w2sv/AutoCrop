@@ -2,9 +2,9 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.application)
-    alias(libs.plugins.play)
-    alias(libs.plugins.kotlin)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.triplet.play)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.autocrop.hilt)
     alias(libs.plugins.kotlin.parcelize)
 }
@@ -37,7 +37,7 @@ android {
         }
 
         // Name built bundles "{versionName}-{buildFlavor}.aab"
-        setProperty("archivesBaseName", versionName)
+//        setProperty("archivesBaseName", versionName)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         //        testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'

@@ -6,8 +6,8 @@ class HiltPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             with(pluginManager) {
-                apply(libs.findPluginId("ksp"))
-                apply(libs.findPluginId("hilt"))
+                apply(libs.findPluginId("google.ksp"))
+                apply(libs.findPluginId("google-dagger-hilt-android"))
             }
 
             dependencies {
