@@ -29,7 +29,6 @@
             <option value="$PROJECT_DIR$/core/domain" />
             <option value="$PROJECT_DIR$/core/flowfield" />
             <option value="$PROJECT_DIR$/core/opencv" />
-            <option value="$PROJECT_DIR$/core/screenshotlistening" />
             <option value="$PROJECT_DIR$/plugins" />
           </set>
         </option>

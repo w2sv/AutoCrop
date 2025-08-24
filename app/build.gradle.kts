@@ -89,7 +89,6 @@ android {
         enableAggregatingTask = true  // Fixes warning
     }
 
-    @Suppress("UnstableApiUsage")
     testOptions {
         animationsDisabled = true
     }
