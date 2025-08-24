@@ -1,1 +1,1 @@
-- Fix image selection on Android 13+ & screenshot deletion
+- Support Android 16
