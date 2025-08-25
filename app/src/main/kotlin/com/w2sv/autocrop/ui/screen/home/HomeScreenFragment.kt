@@ -1,6 +1,5 @@
 package com.w2sv.autocrop.ui.screen.home
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -16,7 +15,6 @@ import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.R
@@ -27,15 +25,12 @@ import com.w2sv.autocrop.ui.util.fadeOut
 import com.w2sv.autocrop.ui.util.onHalfwayFinished
 import com.w2sv.autocrop.ui.util.resolution
 import com.w2sv.autocrop.util.getMediaUri
-import com.w2sv.common.AppPermissionHandler
 import com.w2sv.domain.repository.PermissionRepository
 import com.w2sv.flowfield.PerlinNoiseFlowFieldSketch
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.launch
 import processing.android.PFragment
 import processing.core.PApplet
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeScreenFragment : AppFragment<HomeScreenBinding>(HomeScreenBinding::class.java) {
@@ -45,11 +40,11 @@ class HomeScreenFragment : AppFragment<HomeScreenBinding>(HomeScreenBinding::cla
 
     private val viewModel by viewModels<HomeScreenViewModel>()
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//        lifecycle.addObserver(writeExternalStoragePermissionHandler)
-//    }
+    //    override fun onCreate(savedInstanceState: Bundle?) {
+    //        super.onCreate(savedInstanceState)
+    //
+    //        lifecycle.addObserver(writeExternalStoragePermissionHandler)
+    //    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -84,7 +79,8 @@ class HomeScreenFragment : AppFragment<HomeScreenBinding>(HomeScreenBinding::cla
                         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                         foregroundLayoutParent.setOnClickListener { viewModel.toggleFullFlowFieldDisplay() }
                         foregroundLayout.fadeOut()
-                    } else {
+                    }
+                    else {
                         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
                         foregroundLayoutParent.setOnClickListener(null)
                         foregroundLayout.fadeIn()
@@ -101,26 +97,26 @@ class HomeScreenFragment : AppFragment<HomeScreenBinding>(HomeScreenBinding::cla
      * ActivityCallContractHandlers
      */
 
-//    private val writeExternalStoragePermissionHandler by lazy {
-//        // TODO: what's this even needed for?
-//        AppPermissionHandler(
-//            activity = requireActivity(),
-//            permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//            permissionDeniedMessageRes = R.string.media_file_writing_required_for_saving_crops,
-//            permissionRationalSuppressedMessageRes = R.string.go_to_app_settings_and_grant_media_file_writing_in_order_for_the_app_to_work,
-//            permissionPreviouslyRequested = permissionRepository.readExternalStoragePermissionRequested.stateIn(
-//                viewModel.viewModelScope,
-//                SharingStarted.Eagerly
-//            ),
-//            savePermissionPreviouslyRequested = {
-//                viewModel.viewModelScope.launch {
-//                    permissionRepository.readExternalStoragePermissionRequested.save(
-//                        true
-//                    )
-//                }
-//            }
-//        )
-//    }
+    //    private val writeExternalStoragePermissionHandler by lazy {
+    //        // TODO: what's this even needed for?
+    //        AppPermissionHandler(
+    //            activity = requireActivity(),
+    //            permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    //            permissionDeniedMessageRes = R.string.media_file_writing_required_for_saving_crops,
+    //            permissionRationalSuppressedMessageRes = R.string.go_to_app_settings_and_grant_media_file_writing_in_order_for_the_app_to_work,
+    //            permissionPreviouslyRequested = permissionRepository.readExternalStoragePermissionRequested.stateIn(
+    //                viewModel.viewModelScope,
+    //                SharingStarted.Eagerly
+    //            ),
+    //            savePermissionPreviouslyRequested = {
+    //                viewModel.viewModelScope.launch {
+    //                    permissionRepository.readExternalStoragePermissionRequested.save(
+    //                        true
+    //                    )
+    //                }
+    //            }
+    //        )
+    //    }
 
     //    val screenshotListeningPermissionHandlers by lazy {
     //        ScreenshotListener.permissionHandlers(
@@ -131,11 +127,11 @@ class HomeScreenFragment : AppFragment<HomeScreenBinding>(HomeScreenBinding::cla
     //    }
 
     private fun launchImageSelection() {
-//        writeExternalStoragePermissionHandler.requestPermissionIfRequired(
-//            onGranted = {
-//                imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-//            }
-//        )
+        //        writeExternalStoragePermissionHandler.requestPermissionIfRequired(
+        //            onGranted = {
+        //                imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        //            }
+        //        )
         imagePicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
@@ -148,7 +144,8 @@ class HomeScreenFragment : AppFragment<HomeScreenBinding>(HomeScreenBinding::cla
                         R.string.content_provider_not_supported_please_select_a_different_one,
                         Toast.LENGTH_LONG
                     )
-                } else {
+                }
+                else {
                     // Take persistable read permission for each Uri; Fixes consecutively occasionally occurring permission exception on reading in bitmap
                     uris.forEach {
                         requireContext().contentResolver.takePersistableUriPermission(
@@ -199,7 +196,8 @@ private fun DrawerLayout.closeDrawer() {
 private fun DrawerLayout.toggleDrawer() {
     if (isOpen) {
         closeDrawer()
-    } else {
+    }
+    else {
         openDrawer()
     }
 }
