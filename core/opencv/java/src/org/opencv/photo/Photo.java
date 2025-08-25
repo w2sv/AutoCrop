@@ -3,12 +3,22 @@
 //
 package org.opencv.photo;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfFloat;
 import org.opencv.core.Point;
+import org.opencv.photo.AlignMTB;
+import org.opencv.photo.CalibrateDebevec;
+import org.opencv.photo.CalibrateRobertson;
+import org.opencv.photo.MergeDebevec;
+import org.opencv.photo.MergeMertens;
+import org.opencv.photo.MergeRobertson;
+import org.opencv.photo.Tonemap;
+import org.opencv.photo.TonemapDrago;
+import org.opencv.photo.TonemapMantiuk;
+import org.opencv.photo.TonemapReinhard;
 import org.opencv.utils.Converters;
-
-import java.util.List;
 
 // C++: class Photo
 
@@ -19,11 +29,18 @@ public class Photo {
             INPAINT_NS = 0,
             INPAINT_TELEA = 1,
             LDR_SIZE = 256,
+            RECURS_FILTER = 1,
+            NORMCONV_FILTER = 2;
+
+
+    // C++: enum SeamlessCloneFlags (cv.SeamlessCloneFlags)
+    public static final int
             NORMAL_CLONE = 1,
             MIXED_CLONE = 2,
             MONOCHROME_TRANSFER = 3,
-            RECURS_FILTER = 1,
-            NORMCONV_FILTER = 2;
+            NORMAL_CLONE_WIDE = 9,
+            MIXED_CLONE_WIDE = 10,
+            MONOCHROME_TRANSFER_WIDE = 11;
 
 
     //
@@ -33,29 +50,29 @@ public class Photo {
     /**
      * Restores the selected region in an image using the region neighborhood.
      *
-     * @param src           Input 8-bit, 16-bit unsigned or 32-bit float 1-channel or 8-bit 3-channel image.
-     * @param inpaintMask   Inpainting mask, 8-bit 1-channel image. Non-zero pixels indicate the area that
-     *                      needs to be inpainted.
-     * @param dst           Output image with the same size and type as src .
+     * @param src Input 8-bit, 16-bit unsigned or 32-bit float 1-channel or 8-bit 3-channel image.
+     * @param inpaintMask Inpainting mask, 8-bit 1-channel image. Non-zero pixels indicate the area that
+     * needs to be inpainted.
+     * @param dst Output image with the same size and type as src .
      * @param inpaintRadius Radius of a circular neighborhood of each point inpainted that is considered
-     *                      by the algorithm.
-     * @param flags         Inpainting method that could be cv::INPAINT_NS or cv::INPAINT_TELEA
-     *                      <p>
-     *                      The function reconstructs the selected image area from the pixel near the area boundary. The
-     *                      function may be used to remove dust and scratches from a scanned photo, or to remove undesirable
-     *                      objects from still images or video. See &lt;http://en.wikipedia.org/wiki/Inpainting&gt; for more details.
+     * by the algorithm.
+     * @param flags Inpainting method that could be cv::INPAINT_NS or cv::INPAINT_TELEA
      *
-     *                      <b>Note:</b>
-     *                      <ul>
-     *                        <li>
-     *                            An example using the inpainting technique can be found at
-     *                              opencv_source_code/samples/cpp/inpaint.cpp
-     *                        </li>
-     *                        <li>
-     *                            (Python) An example using the inpainting technique can be found at
-     *                              opencv_source_code/samples/python/inpaint.py
-     *                        </li>
-     *                      </ul>
+     * The function reconstructs the selected image area from the pixel near the area boundary. The
+     * function may be used to remove dust and scratches from a scanned photo, or to remove undesirable
+     * objects from still images or video. See &lt;http://en.wikipedia.org/wiki/Inpainting&gt; for more details.
+     *
+     * <b>Note:</b>
+     * <ul>
+     *   <li>
+     *       An example using the inpainting technique can be found at
+     *         opencv_source_code/samples/cpp/inpaint.cpp
+     *   </li>
+     *   <li>
+     *       (Python) An example using the inpainting technique can be found at
+     *         opencv_source_code/samples/python/inpaint.py
+     *   </li>
+     * </ul>
      */
     public static void inpaint(Mat src, Mat inpaintMask, Mat dst, double inpaintRadius, int flags) {
         inpaint_0(src.nativeObj, inpaintMask.nativeObj, dst.nativeObj, inpaintRadius, flags);
@@ -71,21 +88,21 @@ public class Photo {
      * &lt;http://www.ipol.im/pub/algo/bcm_non_local_means_denoising/&gt; with several computational
      * optimizations. Noise expected to be a gaussian white noise
      *
-     * @param src                Input 8-bit 1-channel, 2-channel, 3-channel or 4-channel image.
-     * @param dst                Output image with the same size and type as src .
+     * @param src Input 8-bit 1-channel, 2-channel, 3-channel or 4-channel image.
+     * @param dst Output image with the same size and type as src .
      * @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
-     *                           Should be odd. Recommended value 7 pixels
-     * @param searchWindowSize   Size in pixels of the window that is used to compute weighted average for
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Parameter regulating filter strength. Big h value perfectly removes noise but also
-     *                           removes image details, smaller h value preserves details but also preserves some noise
-     *                           <p>
-     *                           This function expected to be applied to grayscale images. For colored images look at
-     *                           fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
-     *                           image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
-     *                           image to CIELAB colorspace and then separately denoise L and AB components with different h
-     *                           parameter.
+     * Should be odd. Recommended value 7 pixels
+     * @param searchWindowSize Size in pixels of the window that is used to compute weighted average for
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Parameter regulating filter strength. Big h value perfectly removes noise but also
+     * removes image details, smaller h value preserves details but also preserves some noise
+     *
+     * This function expected to be applied to grayscale images. For colored images look at
+     * fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
+     * image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
+     * image to CIELAB colorspace and then separately denoise L and AB components with different h
+     * parameter.
      */
     public static void fastNlMeansDenoising(Mat src, Mat dst, float h, int templateWindowSize, int searchWindowSize) {
         fastNlMeansDenoising_0(src.nativeObj, dst.nativeObj, h, templateWindowSize, searchWindowSize);
@@ -96,20 +113,20 @@ public class Photo {
      * &lt;http://www.ipol.im/pub/algo/bcm_non_local_means_denoising/&gt; with several computational
      * optimizations. Noise expected to be a gaussian white noise
      *
-     * @param src                Input 8-bit 1-channel, 2-channel, 3-channel or 4-channel image.
-     * @param dst                Output image with the same size and type as src .
+     * @param src Input 8-bit 1-channel, 2-channel, 3-channel or 4-channel image.
+     * @param dst Output image with the same size and type as src .
      * @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
-     *                           Should be odd. Recommended value 7 pixels
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Parameter regulating filter strength. Big h value perfectly removes noise but also
-     *                           removes image details, smaller h value preserves details but also preserves some noise
-     *                           <p>
-     *                           This function expected to be applied to grayscale images. For colored images look at
-     *                           fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
-     *                           image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
-     *                           image to CIELAB colorspace and then separately denoise L and AB components with different h
-     *                           parameter.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Parameter regulating filter strength. Big h value perfectly removes noise but also
+     * removes image details, smaller h value preserves details but also preserves some noise
+     *
+     * This function expected to be applied to grayscale images. For colored images look at
+     * fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
+     * image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
+     * image to CIELAB colorspace and then separately denoise L and AB components with different h
+     * parameter.
      */
     public static void fastNlMeansDenoising(Mat src, Mat dst, float h, int templateWindowSize) {
         fastNlMeansDenoising_1(src.nativeObj, dst.nativeObj, h, templateWindowSize);
@@ -122,17 +139,17 @@ public class Photo {
      *
      * @param src Input 8-bit 1-channel, 2-channel, 3-channel or 4-channel image.
      * @param dst Output image with the same size and type as src .
-     *            Should be odd. Recommended value 7 pixels
-     *            given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *            denoising time. Recommended value 21 pixels
-     * @param h   Parameter regulating filter strength. Big h value perfectly removes noise but also
-     *            removes image details, smaller h value preserves details but also preserves some noise
-     *            <p>
-     *            This function expected to be applied to grayscale images. For colored images look at
-     *            fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
-     *            image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
-     *            image to CIELAB colorspace and then separately denoise L and AB components with different h
-     *            parameter.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Parameter regulating filter strength. Big h value perfectly removes noise but also
+     * removes image details, smaller h value preserves details but also preserves some noise
+     *
+     * This function expected to be applied to grayscale images. For colored images look at
+     * fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
+     * image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
+     * image to CIELAB colorspace and then separately denoise L and AB components with different h
+     * parameter.
      */
     public static void fastNlMeansDenoising(Mat src, Mat dst, float h) {
         fastNlMeansDenoising_2(src.nativeObj, dst.nativeObj, h);
@@ -145,16 +162,16 @@ public class Photo {
      *
      * @param src Input 8-bit 1-channel, 2-channel, 3-channel or 4-channel image.
      * @param dst Output image with the same size and type as src .
-     *            Should be odd. Recommended value 7 pixels
-     *            given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *            denoising time. Recommended value 21 pixels
-     *            removes image details, smaller h value preserves details but also preserves some noise
-     *            <p>
-     *            This function expected to be applied to grayscale images. For colored images look at
-     *            fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
-     *            image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
-     *            image to CIELAB colorspace and then separately denoise L and AB components with different h
-     *            parameter.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * removes image details, smaller h value preserves details but also preserves some noise
+     *
+     * This function expected to be applied to grayscale images. For colored images look at
+     * fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
+     * image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
+     * image to CIELAB colorspace and then separately denoise L and AB components with different h
+     * parameter.
      */
     public static void fastNlMeansDenoising(Mat src, Mat dst) {
         fastNlMeansDenoising_3(src.nativeObj, dst.nativeObj);
@@ -170,25 +187,25 @@ public class Photo {
      * &lt;http://www.ipol.im/pub/algo/bcm_non_local_means_denoising/&gt; with several computational
      * optimizations. Noise expected to be a gaussian white noise
      *
-     * @param src                Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
-     *                           2-channel, 3-channel or 4-channel image.
-     * @param dst                Output image with the same size and type as src .
+     * @param src Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
+     * 2-channel, 3-channel or 4-channel image.
+     * @param dst Output image with the same size and type as src .
      * @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
-     *                           Should be odd. Recommended value 7 pixels
-     * @param searchWindowSize   Size in pixels of the window that is used to compute weighted average for
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Array of parameters regulating filter strength, either one
-     *                           parameter applied to all channels or one per channel in dst. Big h value
-     *                           perfectly removes noise but also removes image details, smaller h
-     *                           value preserves details but also preserves some noise
-     * @param normType           Type of norm used for weight calculation. Can be either NORM_L2 or NORM_L1
-     *                           <p>
-     *                           This function expected to be applied to grayscale images. For colored images look at
-     *                           fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
-     *                           image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
-     *                           image to CIELAB colorspace and then separately denoise L and AB components with different h
-     *                           parameter.
+     * Should be odd. Recommended value 7 pixels
+     * @param searchWindowSize Size in pixels of the window that is used to compute weighted average for
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Array of parameters regulating filter strength, either one
+     * parameter applied to all channels or one per channel in dst. Big h value
+     * perfectly removes noise but also removes image details, smaller h
+     * value preserves details but also preserves some noise
+     * @param normType Type of norm used for weight calculation. Can be either NORM_L2 or NORM_L1
+     *
+     * This function expected to be applied to grayscale images. For colored images look at
+     * fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
+     * image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
+     * image to CIELAB colorspace and then separately denoise L and AB components with different h
+     * parameter.
      */
     public static void fastNlMeansDenoising(Mat src, Mat dst, MatOfFloat h, int templateWindowSize, int searchWindowSize, int normType) {
         Mat h_mat = h;
@@ -200,24 +217,24 @@ public class Photo {
      * &lt;http://www.ipol.im/pub/algo/bcm_non_local_means_denoising/&gt; with several computational
      * optimizations. Noise expected to be a gaussian white noise
      *
-     * @param src                Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
-     *                           2-channel, 3-channel or 4-channel image.
-     * @param dst                Output image with the same size and type as src .
+     * @param src Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
+     * 2-channel, 3-channel or 4-channel image.
+     * @param dst Output image with the same size and type as src .
      * @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
-     *                           Should be odd. Recommended value 7 pixels
-     * @param searchWindowSize   Size in pixels of the window that is used to compute weighted average for
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Array of parameters regulating filter strength, either one
-     *                           parameter applied to all channels or one per channel in dst. Big h value
-     *                           perfectly removes noise but also removes image details, smaller h
-     *                           value preserves details but also preserves some noise
-     *                           <p>
-     *                           This function expected to be applied to grayscale images. For colored images look at
-     *                           fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
-     *                           image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
-     *                           image to CIELAB colorspace and then separately denoise L and AB components with different h
-     *                           parameter.
+     * Should be odd. Recommended value 7 pixels
+     * @param searchWindowSize Size in pixels of the window that is used to compute weighted average for
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Array of parameters regulating filter strength, either one
+     * parameter applied to all channels or one per channel in dst. Big h value
+     * perfectly removes noise but also removes image details, smaller h
+     * value preserves details but also preserves some noise
+     *
+     * This function expected to be applied to grayscale images. For colored images look at
+     * fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
+     * image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
+     * image to CIELAB colorspace and then separately denoise L and AB components with different h
+     * parameter.
      */
     public static void fastNlMeansDenoising(Mat src, Mat dst, MatOfFloat h, int templateWindowSize, int searchWindowSize) {
         Mat h_mat = h;
@@ -229,23 +246,23 @@ public class Photo {
      * &lt;http://www.ipol.im/pub/algo/bcm_non_local_means_denoising/&gt; with several computational
      * optimizations. Noise expected to be a gaussian white noise
      *
-     * @param src                Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
-     *                           2-channel, 3-channel or 4-channel image.
-     * @param dst                Output image with the same size and type as src .
+     * @param src Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
+     * 2-channel, 3-channel or 4-channel image.
+     * @param dst Output image with the same size and type as src .
      * @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
-     *                           Should be odd. Recommended value 7 pixels
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Array of parameters regulating filter strength, either one
-     *                           parameter applied to all channels or one per channel in dst. Big h value
-     *                           perfectly removes noise but also removes image details, smaller h
-     *                           value preserves details but also preserves some noise
-     *                           <p>
-     *                           This function expected to be applied to grayscale images. For colored images look at
-     *                           fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
-     *                           image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
-     *                           image to CIELAB colorspace and then separately denoise L and AB components with different h
-     *                           parameter.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Array of parameters regulating filter strength, either one
+     * parameter applied to all channels or one per channel in dst. Big h value
+     * perfectly removes noise but also removes image details, smaller h
+     * value preserves details but also preserves some noise
+     *
+     * This function expected to be applied to grayscale images. For colored images look at
+     * fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
+     * image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
+     * image to CIELAB colorspace and then separately denoise L and AB components with different h
+     * parameter.
      */
     public static void fastNlMeansDenoising(Mat src, Mat dst, MatOfFloat h, int templateWindowSize) {
         Mat h_mat = h;
@@ -258,21 +275,21 @@ public class Photo {
      * optimizations. Noise expected to be a gaussian white noise
      *
      * @param src Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
-     *            2-channel, 3-channel or 4-channel image.
+     * 2-channel, 3-channel or 4-channel image.
      * @param dst Output image with the same size and type as src .
-     *            Should be odd. Recommended value 7 pixels
-     *            given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *            denoising time. Recommended value 21 pixels
-     * @param h   Array of parameters regulating filter strength, either one
-     *            parameter applied to all channels or one per channel in dst. Big h value
-     *            perfectly removes noise but also removes image details, smaller h
-     *            value preserves details but also preserves some noise
-     *            <p>
-     *            This function expected to be applied to grayscale images. For colored images look at
-     *            fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
-     *            image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
-     *            image to CIELAB colorspace and then separately denoise L and AB components with different h
-     *            parameter.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Array of parameters regulating filter strength, either one
+     * parameter applied to all channels or one per channel in dst. Big h value
+     * perfectly removes noise but also removes image details, smaller h
+     * value preserves details but also preserves some noise
+     *
+     * This function expected to be applied to grayscale images. For colored images look at
+     * fastNlMeansDenoisingColored. Advanced usage of this functions can be manual denoising of colored
+     * image in different colorspaces. Such approach is used in fastNlMeansDenoisingColored by converting
+     * image to CIELAB colorspace and then separately denoise L and AB components with different h
+     * parameter.
      */
     public static void fastNlMeansDenoising(Mat src, Mat dst, MatOfFloat h) {
         Mat h_mat = h;
@@ -287,21 +304,21 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoising function for colored images
      *
-     * @param src                Input 8-bit 3-channel image.
-     * @param dst                Output image with the same size and type as src .
+     * @param src Input 8-bit 3-channel image.
+     * @param dst Output image with the same size and type as src .
      * @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
-     *                           Should be odd. Recommended value 7 pixels
-     * @param searchWindowSize   Size in pixels of the window that is used to compute weighted average for
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Parameter regulating filter strength for luminance component. Bigger h value perfectly
-     *                           removes noise but also removes image details, smaller h value preserves details but also preserves
-     *                           some noise
-     * @param hColor             The same as h but for color components. For most images value equals 10
-     *                           will be enough to remove colored noise and do not distort colors
-     *                           <p>
-     *                           The function converts image to CIELAB colorspace and then separately denoise L and AB components
-     *                           with given h parameters using fastNlMeansDenoising function.
+     * Should be odd. Recommended value 7 pixels
+     * @param searchWindowSize Size in pixels of the window that is used to compute weighted average for
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Parameter regulating filter strength for luminance component. Bigger h value perfectly
+     * removes noise but also removes image details, smaller h value preserves details but also preserves
+     * some noise
+     * @param hColor The same as h but for color components. For most images value equals 10
+     * will be enough to remove colored noise and do not distort colors
+     *
+     * The function converts image to CIELAB colorspace and then separately denoise L and AB components
+     * with given h parameters using fastNlMeansDenoising function.
      */
     public static void fastNlMeansDenoisingColored(Mat src, Mat dst, float h, float hColor, int templateWindowSize, int searchWindowSize) {
         fastNlMeansDenoisingColored_0(src.nativeObj, dst.nativeObj, h, hColor, templateWindowSize, searchWindowSize);
@@ -310,20 +327,20 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoising function for colored images
      *
-     * @param src                Input 8-bit 3-channel image.
-     * @param dst                Output image with the same size and type as src .
+     * @param src Input 8-bit 3-channel image.
+     * @param dst Output image with the same size and type as src .
      * @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
-     *                           Should be odd. Recommended value 7 pixels
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Parameter regulating filter strength for luminance component. Bigger h value perfectly
-     *                           removes noise but also removes image details, smaller h value preserves details but also preserves
-     *                           some noise
-     * @param hColor             The same as h but for color components. For most images value equals 10
-     *                           will be enough to remove colored noise and do not distort colors
-     *                           <p>
-     *                           The function converts image to CIELAB colorspace and then separately denoise L and AB components
-     *                           with given h parameters using fastNlMeansDenoising function.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Parameter regulating filter strength for luminance component. Bigger h value perfectly
+     * removes noise but also removes image details, smaller h value preserves details but also preserves
+     * some noise
+     * @param hColor The same as h but for color components. For most images value equals 10
+     * will be enough to remove colored noise and do not distort colors
+     *
+     * The function converts image to CIELAB colorspace and then separately denoise L and AB components
+     * with given h parameters using fastNlMeansDenoising function.
      */
     public static void fastNlMeansDenoisingColored(Mat src, Mat dst, float h, float hColor, int templateWindowSize) {
         fastNlMeansDenoisingColored_1(src.nativeObj, dst.nativeObj, h, hColor, templateWindowSize);
@@ -332,19 +349,19 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoising function for colored images
      *
-     * @param src    Input 8-bit 3-channel image.
-     * @param dst    Output image with the same size and type as src .
-     *               Should be odd. Recommended value 7 pixels
-     *               given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *               denoising time. Recommended value 21 pixels
-     * @param h      Parameter regulating filter strength for luminance component. Bigger h value perfectly
-     *               removes noise but also removes image details, smaller h value preserves details but also preserves
-     *               some noise
+     * @param src Input 8-bit 3-channel image.
+     * @param dst Output image with the same size and type as src .
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Parameter regulating filter strength for luminance component. Bigger h value perfectly
+     * removes noise but also removes image details, smaller h value preserves details but also preserves
+     * some noise
      * @param hColor The same as h but for color components. For most images value equals 10
-     *               will be enough to remove colored noise and do not distort colors
-     *               <p>
-     *               The function converts image to CIELAB colorspace and then separately denoise L and AB components
-     *               with given h parameters using fastNlMeansDenoising function.
+     * will be enough to remove colored noise and do not distort colors
+     *
+     * The function converts image to CIELAB colorspace and then separately denoise L and AB components
+     * with given h parameters using fastNlMeansDenoising function.
      */
     public static void fastNlMeansDenoisingColored(Mat src, Mat dst, float h, float hColor) {
         fastNlMeansDenoisingColored_2(src.nativeObj, dst.nativeObj, h, hColor);
@@ -355,16 +372,16 @@ public class Photo {
      *
      * @param src Input 8-bit 3-channel image.
      * @param dst Output image with the same size and type as src .
-     *            Should be odd. Recommended value 7 pixels
-     *            given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *            denoising time. Recommended value 21 pixels
-     * @param h   Parameter regulating filter strength for luminance component. Bigger h value perfectly
-     *            removes noise but also removes image details, smaller h value preserves details but also preserves
-     *            some noise
-     *            will be enough to remove colored noise and do not distort colors
-     *            <p>
-     *            The function converts image to CIELAB colorspace and then separately denoise L and AB components
-     *            with given h parameters using fastNlMeansDenoising function.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Parameter regulating filter strength for luminance component. Bigger h value perfectly
+     * removes noise but also removes image details, smaller h value preserves details but also preserves
+     * some noise
+     * will be enough to remove colored noise and do not distort colors
+     *
+     * The function converts image to CIELAB colorspace and then separately denoise L and AB components
+     * with given h parameters using fastNlMeansDenoising function.
      */
     public static void fastNlMeansDenoisingColored(Mat src, Mat dst, float h) {
         fastNlMeansDenoisingColored_3(src.nativeObj, dst.nativeObj, h);
@@ -375,15 +392,15 @@ public class Photo {
      *
      * @param src Input 8-bit 3-channel image.
      * @param dst Output image with the same size and type as src .
-     *            Should be odd. Recommended value 7 pixels
-     *            given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *            denoising time. Recommended value 21 pixels
-     *            removes noise but also removes image details, smaller h value preserves details but also preserves
-     *            some noise
-     *            will be enough to remove colored noise and do not distort colors
-     *            <p>
-     *            The function converts image to CIELAB colorspace and then separately denoise L and AB components
-     *            with given h parameters using fastNlMeansDenoising function.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * removes noise but also removes image details, smaller h value preserves details but also preserves
+     * some noise
+     * will be enough to remove colored noise and do not distort colors
+     *
+     * The function converts image to CIELAB colorspace and then separately denoise L and AB components
+     * with given h parameters using fastNlMeansDenoising function.
      */
     public static void fastNlMeansDenoisingColored(Mat src, Mat dst) {
         fastNlMeansDenoisingColored_4(src.nativeObj, dst.nativeObj);
@@ -397,26 +414,26 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoising function for images sequence where consecutive images have been
      * captured in small period of time. For example video. This version of the function is for grayscale
-     * images or for manual manipulation with colorspaces. For more details see
-     * &lt;http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.131.6394&gt;
+     * images or for manual manipulation with colorspaces. See CITE: Buades2005DenoisingIS for more details
+     * (open access [here](https://static.aminer.org/pdf/PDF/000/317/196/spatio_temporal_wiener_filtering_of_image_sequences_using_a_parametric.pdf)).
      *
-     * @param srcImgs            Input 8-bit 1-channel, 2-channel, 3-channel or
-     *                           4-channel images sequence. All images should have the same type and
-     *                           size.
-     * @param imgToDenoiseIndex  Target image to denoise index in srcImgs sequence
+     * @param srcImgs Input 8-bit 1-channel, 2-channel, 3-channel or
+     * 4-channel images sequence. All images should have the same type and
+     * size.
+     * @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
      * @param temporalWindowSize Number of surrounding images to use for target image denoising. Should
-     *                           be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
-     *                           imgToDenoiseIndex - temporalWindowSize / 2 from srcImgs will be used to denoise
-     *                           srcImgs[imgToDenoiseIndex] image.
-     * @param dst                Output image with the same size and type as srcImgs images.
+     * be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
+     * imgToDenoiseIndex + temporalWindowSize / 2 from srcImgs will be used to denoise
+     * srcImgs[imgToDenoiseIndex] image.
+     * @param dst Output image with the same size and type as srcImgs images.
      * @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
-     *                           Should be odd. Recommended value 7 pixels
-     * @param searchWindowSize   Size in pixels of the window that is used to compute weighted average for
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Parameter regulating filter strength. Bigger h value
-     *                           perfectly removes noise but also removes image details, smaller h
-     *                           value preserves details but also preserves some noise
+     * Should be odd. Recommended value 7 pixels
+     * @param searchWindowSize Size in pixels of the window that is used to compute weighted average for
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Parameter regulating filter strength. Bigger h value
+     * perfectly removes noise but also removes image details, smaller h
+     * value preserves details but also preserves some noise
      */
     public static void fastNlMeansDenoisingMulti(List<Mat> srcImgs, Mat dst, int imgToDenoiseIndex, int temporalWindowSize, float h, int templateWindowSize, int searchWindowSize) {
         Mat srcImgs_mat = Converters.vector_Mat_to_Mat(srcImgs);
@@ -426,25 +443,25 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoising function for images sequence where consecutive images have been
      * captured in small period of time. For example video. This version of the function is for grayscale
-     * images or for manual manipulation with colorspaces. For more details see
-     * &lt;http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.131.6394&gt;
+     * images or for manual manipulation with colorspaces. See CITE: Buades2005DenoisingIS for more details
+     * (open access [here](https://static.aminer.org/pdf/PDF/000/317/196/spatio_temporal_wiener_filtering_of_image_sequences_using_a_parametric.pdf)).
      *
-     * @param srcImgs            Input 8-bit 1-channel, 2-channel, 3-channel or
-     *                           4-channel images sequence. All images should have the same type and
-     *                           size.
-     * @param imgToDenoiseIndex  Target image to denoise index in srcImgs sequence
+     * @param srcImgs Input 8-bit 1-channel, 2-channel, 3-channel or
+     * 4-channel images sequence. All images should have the same type and
+     * size.
+     * @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
      * @param temporalWindowSize Number of surrounding images to use for target image denoising. Should
-     *                           be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
-     *                           imgToDenoiseIndex - temporalWindowSize / 2 from srcImgs will be used to denoise
-     *                           srcImgs[imgToDenoiseIndex] image.
-     * @param dst                Output image with the same size and type as srcImgs images.
+     * be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
+     * imgToDenoiseIndex + temporalWindowSize / 2 from srcImgs will be used to denoise
+     * srcImgs[imgToDenoiseIndex] image.
+     * @param dst Output image with the same size and type as srcImgs images.
      * @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
-     *                           Should be odd. Recommended value 7 pixels
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Parameter regulating filter strength. Bigger h value
-     *                           perfectly removes noise but also removes image details, smaller h
-     *                           value preserves details but also preserves some noise
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Parameter regulating filter strength. Bigger h value
+     * perfectly removes noise but also removes image details, smaller h
+     * value preserves details but also preserves some noise
      */
     public static void fastNlMeansDenoisingMulti(List<Mat> srcImgs, Mat dst, int imgToDenoiseIndex, int temporalWindowSize, float h, int templateWindowSize) {
         Mat srcImgs_mat = Converters.vector_Mat_to_Mat(srcImgs);
@@ -454,24 +471,24 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoising function for images sequence where consecutive images have been
      * captured in small period of time. For example video. This version of the function is for grayscale
-     * images or for manual manipulation with colorspaces. For more details see
-     * &lt;http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.131.6394&gt;
+     * images or for manual manipulation with colorspaces. See CITE: Buades2005DenoisingIS for more details
+     * (open access [here](https://static.aminer.org/pdf/PDF/000/317/196/spatio_temporal_wiener_filtering_of_image_sequences_using_a_parametric.pdf)).
      *
-     * @param srcImgs            Input 8-bit 1-channel, 2-channel, 3-channel or
-     *                           4-channel images sequence. All images should have the same type and
-     *                           size.
-     * @param imgToDenoiseIndex  Target image to denoise index in srcImgs sequence
+     * @param srcImgs Input 8-bit 1-channel, 2-channel, 3-channel or
+     * 4-channel images sequence. All images should have the same type and
+     * size.
+     * @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
      * @param temporalWindowSize Number of surrounding images to use for target image denoising. Should
-     *                           be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
-     *                           imgToDenoiseIndex - temporalWindowSize / 2 from srcImgs will be used to denoise
-     *                           srcImgs[imgToDenoiseIndex] image.
-     * @param dst                Output image with the same size and type as srcImgs images.
-     *                           Should be odd. Recommended value 7 pixels
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Parameter regulating filter strength. Bigger h value
-     *                           perfectly removes noise but also removes image details, smaller h
-     *                           value preserves details but also preserves some noise
+     * be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
+     * imgToDenoiseIndex + temporalWindowSize / 2 from srcImgs will be used to denoise
+     * srcImgs[imgToDenoiseIndex] image.
+     * @param dst Output image with the same size and type as srcImgs images.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Parameter regulating filter strength. Bigger h value
+     * perfectly removes noise but also removes image details, smaller h
+     * value preserves details but also preserves some noise
      */
     public static void fastNlMeansDenoisingMulti(List<Mat> srcImgs, Mat dst, int imgToDenoiseIndex, int temporalWindowSize, float h) {
         Mat srcImgs_mat = Converters.vector_Mat_to_Mat(srcImgs);
@@ -481,23 +498,23 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoising function for images sequence where consecutive images have been
      * captured in small period of time. For example video. This version of the function is for grayscale
-     * images or for manual manipulation with colorspaces. For more details see
-     * &lt;http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.131.6394&gt;
+     * images or for manual manipulation with colorspaces. See CITE: Buades2005DenoisingIS for more details
+     * (open access [here](https://static.aminer.org/pdf/PDF/000/317/196/spatio_temporal_wiener_filtering_of_image_sequences_using_a_parametric.pdf)).
      *
-     * @param srcImgs            Input 8-bit 1-channel, 2-channel, 3-channel or
-     *                           4-channel images sequence. All images should have the same type and
-     *                           size.
-     * @param imgToDenoiseIndex  Target image to denoise index in srcImgs sequence
+     * @param srcImgs Input 8-bit 1-channel, 2-channel, 3-channel or
+     * 4-channel images sequence. All images should have the same type and
+     * size.
+     * @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
      * @param temporalWindowSize Number of surrounding images to use for target image denoising. Should
-     *                           be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
-     *                           imgToDenoiseIndex - temporalWindowSize / 2 from srcImgs will be used to denoise
-     *                           srcImgs[imgToDenoiseIndex] image.
-     * @param dst                Output image with the same size and type as srcImgs images.
-     *                           Should be odd. Recommended value 7 pixels
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     *                           perfectly removes noise but also removes image details, smaller h
-     *                           value preserves details but also preserves some noise
+     * be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
+     * imgToDenoiseIndex + temporalWindowSize / 2 from srcImgs will be used to denoise
+     * srcImgs[imgToDenoiseIndex] image.
+     * @param dst Output image with the same size and type as srcImgs images.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * perfectly removes noise but also removes image details, smaller h
+     * value preserves details but also preserves some noise
      */
     public static void fastNlMeansDenoisingMulti(List<Mat> srcImgs, Mat dst, int imgToDenoiseIndex, int temporalWindowSize) {
         Mat srcImgs_mat = Converters.vector_Mat_to_Mat(srcImgs);
@@ -512,28 +529,28 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoising function for images sequence where consecutive images have been
      * captured in small period of time. For example video. This version of the function is for grayscale
-     * images or for manual manipulation with colorspaces. For more details see
-     * &lt;http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.131.6394&gt;
+     * images or for manual manipulation with colorspaces. See CITE: Buades2005DenoisingIS for more details
+     * (open access [here](https://static.aminer.org/pdf/PDF/000/317/196/spatio_temporal_wiener_filtering_of_image_sequences_using_a_parametric.pdf)).
      *
-     * @param srcImgs            Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
-     *                           2-channel, 3-channel or 4-channel images sequence. All images should
-     *                           have the same type and size.
-     * @param imgToDenoiseIndex  Target image to denoise index in srcImgs sequence
+     * @param srcImgs Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
+     * 2-channel, 3-channel or 4-channel images sequence. All images should
+     * have the same type and size.
+     * @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
      * @param temporalWindowSize Number of surrounding images to use for target image denoising. Should
-     *                           be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
-     *                           imgToDenoiseIndex - temporalWindowSize / 2 from srcImgs will be used to denoise
-     *                           srcImgs[imgToDenoiseIndex] image.
-     * @param dst                Output image with the same size and type as srcImgs images.
+     * be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
+     * imgToDenoiseIndex + temporalWindowSize / 2 from srcImgs will be used to denoise
+     * srcImgs[imgToDenoiseIndex] image.
+     * @param dst Output image with the same size and type as srcImgs images.
      * @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
-     *                           Should be odd. Recommended value 7 pixels
-     * @param searchWindowSize   Size in pixels of the window that is used to compute weighted average for
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Array of parameters regulating filter strength, either one
-     *                           parameter applied to all channels or one per channel in dst. Big h value
-     *                           perfectly removes noise but also removes image details, smaller h
-     *                           value preserves details but also preserves some noise
-     * @param normType           Type of norm used for weight calculation. Can be either NORM_L2 or NORM_L1
+     * Should be odd. Recommended value 7 pixels
+     * @param searchWindowSize Size in pixels of the window that is used to compute weighted average for
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Array of parameters regulating filter strength, either one
+     * parameter applied to all channels or one per channel in dst. Big h value
+     * perfectly removes noise but also removes image details, smaller h
+     * value preserves details but also preserves some noise
+     * @param normType Type of norm used for weight calculation. Can be either NORM_L2 or NORM_L1
      */
     public static void fastNlMeansDenoisingMulti(List<Mat> srcImgs, Mat dst, int imgToDenoiseIndex, int temporalWindowSize, MatOfFloat h, int templateWindowSize, int searchWindowSize, int normType) {
         Mat srcImgs_mat = Converters.vector_Mat_to_Mat(srcImgs);
@@ -544,27 +561,27 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoising function for images sequence where consecutive images have been
      * captured in small period of time. For example video. This version of the function is for grayscale
-     * images or for manual manipulation with colorspaces. For more details see
-     * &lt;http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.131.6394&gt;
+     * images or for manual manipulation with colorspaces. See CITE: Buades2005DenoisingIS for more details
+     * (open access [here](https://static.aminer.org/pdf/PDF/000/317/196/spatio_temporal_wiener_filtering_of_image_sequences_using_a_parametric.pdf)).
      *
-     * @param srcImgs            Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
-     *                           2-channel, 3-channel or 4-channel images sequence. All images should
-     *                           have the same type and size.
-     * @param imgToDenoiseIndex  Target image to denoise index in srcImgs sequence
+     * @param srcImgs Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
+     * 2-channel, 3-channel or 4-channel images sequence. All images should
+     * have the same type and size.
+     * @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
      * @param temporalWindowSize Number of surrounding images to use for target image denoising. Should
-     *                           be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
-     *                           imgToDenoiseIndex - temporalWindowSize / 2 from srcImgs will be used to denoise
-     *                           srcImgs[imgToDenoiseIndex] image.
-     * @param dst                Output image with the same size and type as srcImgs images.
+     * be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
+     * imgToDenoiseIndex + temporalWindowSize / 2 from srcImgs will be used to denoise
+     * srcImgs[imgToDenoiseIndex] image.
+     * @param dst Output image with the same size and type as srcImgs images.
      * @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
-     *                           Should be odd. Recommended value 7 pixels
-     * @param searchWindowSize   Size in pixels of the window that is used to compute weighted average for
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Array of parameters regulating filter strength, either one
-     *                           parameter applied to all channels or one per channel in dst. Big h value
-     *                           perfectly removes noise but also removes image details, smaller h
-     *                           value preserves details but also preserves some noise
+     * Should be odd. Recommended value 7 pixels
+     * @param searchWindowSize Size in pixels of the window that is used to compute weighted average for
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Array of parameters regulating filter strength, either one
+     * parameter applied to all channels or one per channel in dst. Big h value
+     * perfectly removes noise but also removes image details, smaller h
+     * value preserves details but also preserves some noise
      */
     public static void fastNlMeansDenoisingMulti(List<Mat> srcImgs, Mat dst, int imgToDenoiseIndex, int temporalWindowSize, MatOfFloat h, int templateWindowSize, int searchWindowSize) {
         Mat srcImgs_mat = Converters.vector_Mat_to_Mat(srcImgs);
@@ -575,26 +592,26 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoising function for images sequence where consecutive images have been
      * captured in small period of time. For example video. This version of the function is for grayscale
-     * images or for manual manipulation with colorspaces. For more details see
-     * &lt;http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.131.6394&gt;
+     * images or for manual manipulation with colorspaces. See CITE: Buades2005DenoisingIS for more details
+     * (open access [here](https://static.aminer.org/pdf/PDF/000/317/196/spatio_temporal_wiener_filtering_of_image_sequences_using_a_parametric.pdf)).
      *
-     * @param srcImgs            Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
-     *                           2-channel, 3-channel or 4-channel images sequence. All images should
-     *                           have the same type and size.
-     * @param imgToDenoiseIndex  Target image to denoise index in srcImgs sequence
+     * @param srcImgs Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
+     * 2-channel, 3-channel or 4-channel images sequence. All images should
+     * have the same type and size.
+     * @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
      * @param temporalWindowSize Number of surrounding images to use for target image denoising. Should
-     *                           be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
-     *                           imgToDenoiseIndex - temporalWindowSize / 2 from srcImgs will be used to denoise
-     *                           srcImgs[imgToDenoiseIndex] image.
-     * @param dst                Output image with the same size and type as srcImgs images.
+     * be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
+     * imgToDenoiseIndex + temporalWindowSize / 2 from srcImgs will be used to denoise
+     * srcImgs[imgToDenoiseIndex] image.
+     * @param dst Output image with the same size and type as srcImgs images.
      * @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
-     *                           Should be odd. Recommended value 7 pixels
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Array of parameters regulating filter strength, either one
-     *                           parameter applied to all channels or one per channel in dst. Big h value
-     *                           perfectly removes noise but also removes image details, smaller h
-     *                           value preserves details but also preserves some noise
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Array of parameters regulating filter strength, either one
+     * parameter applied to all channels or one per channel in dst. Big h value
+     * perfectly removes noise but also removes image details, smaller h
+     * value preserves details but also preserves some noise
      */
     public static void fastNlMeansDenoisingMulti(List<Mat> srcImgs, Mat dst, int imgToDenoiseIndex, int temporalWindowSize, MatOfFloat h, int templateWindowSize) {
         Mat srcImgs_mat = Converters.vector_Mat_to_Mat(srcImgs);
@@ -605,25 +622,25 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoising function for images sequence where consecutive images have been
      * captured in small period of time. For example video. This version of the function is for grayscale
-     * images or for manual manipulation with colorspaces. For more details see
-     * &lt;http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.131.6394&gt;
+     * images or for manual manipulation with colorspaces. See CITE: Buades2005DenoisingIS for more details
+     * (open access [here](https://static.aminer.org/pdf/PDF/000/317/196/spatio_temporal_wiener_filtering_of_image_sequences_using_a_parametric.pdf)).
      *
-     * @param srcImgs            Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
-     *                           2-channel, 3-channel or 4-channel images sequence. All images should
-     *                           have the same type and size.
-     * @param imgToDenoiseIndex  Target image to denoise index in srcImgs sequence
+     * @param srcImgs Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
+     * 2-channel, 3-channel or 4-channel images sequence. All images should
+     * have the same type and size.
+     * @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
      * @param temporalWindowSize Number of surrounding images to use for target image denoising. Should
-     *                           be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
-     *                           imgToDenoiseIndex - temporalWindowSize / 2 from srcImgs will be used to denoise
-     *                           srcImgs[imgToDenoiseIndex] image.
-     * @param dst                Output image with the same size and type as srcImgs images.
-     *                           Should be odd. Recommended value 7 pixels
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Array of parameters regulating filter strength, either one
-     *                           parameter applied to all channels or one per channel in dst. Big h value
-     *                           perfectly removes noise but also removes image details, smaller h
-     *                           value preserves details but also preserves some noise
+     * be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
+     * imgToDenoiseIndex + temporalWindowSize / 2 from srcImgs will be used to denoise
+     * srcImgs[imgToDenoiseIndex] image.
+     * @param dst Output image with the same size and type as srcImgs images.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Array of parameters regulating filter strength, either one
+     * parameter applied to all channels or one per channel in dst. Big h value
+     * perfectly removes noise but also removes image details, smaller h
+     * value preserves details but also preserves some noise
      */
     public static void fastNlMeansDenoisingMulti(List<Mat> srcImgs, Mat dst, int imgToDenoiseIndex, int temporalWindowSize, MatOfFloat h) {
         Mat srcImgs_mat = Converters.vector_Mat_to_Mat(srcImgs);
@@ -639,26 +656,26 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoisingMulti function for colored images sequences
      *
-     * @param srcImgs            Input 8-bit 3-channel images sequence. All images should have the same type and
-     *                           size.
-     * @param imgToDenoiseIndex  Target image to denoise index in srcImgs sequence
+     * @param srcImgs Input 8-bit 3-channel images sequence. All images should have the same type and
+     * size.
+     * @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
      * @param temporalWindowSize Number of surrounding images to use for target image denoising. Should
-     *                           be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
-     *                           imgToDenoiseIndex - temporalWindowSize / 2 from srcImgs will be used to denoise
-     *                           srcImgs[imgToDenoiseIndex] image.
-     * @param dst                Output image with the same size and type as srcImgs images.
+     * be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
+     * imgToDenoiseIndex + temporalWindowSize / 2 from srcImgs will be used to denoise
+     * srcImgs[imgToDenoiseIndex] image.
+     * @param dst Output image with the same size and type as srcImgs images.
      * @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
-     *                           Should be odd. Recommended value 7 pixels
-     * @param searchWindowSize   Size in pixels of the window that is used to compute weighted average for
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Parameter regulating filter strength for luminance component. Bigger h value perfectly
-     *                           removes noise but also removes image details, smaller h value preserves details but also preserves
-     *                           some noise.
-     * @param hColor             The same as h but for color components.
-     *                           <p>
-     *                           The function converts images to CIELAB colorspace and then separately denoise L and AB components
-     *                           with given h parameters using fastNlMeansDenoisingMulti function.
+     * Should be odd. Recommended value 7 pixels
+     * @param searchWindowSize Size in pixels of the window that is used to compute weighted average for
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Parameter regulating filter strength for luminance component. Bigger h value perfectly
+     * removes noise but also removes image details, smaller h value preserves details but also preserves
+     * some noise.
+     * @param hColor The same as h but for color components.
+     *
+     * The function converts images to CIELAB colorspace and then separately denoise L and AB components
+     * with given h parameters using fastNlMeansDenoisingMulti function.
      */
     public static void fastNlMeansDenoisingColoredMulti(List<Mat> srcImgs, Mat dst, int imgToDenoiseIndex, int temporalWindowSize, float h, float hColor, int templateWindowSize, int searchWindowSize) {
         Mat srcImgs_mat = Converters.vector_Mat_to_Mat(srcImgs);
@@ -668,25 +685,25 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoisingMulti function for colored images sequences
      *
-     * @param srcImgs            Input 8-bit 3-channel images sequence. All images should have the same type and
-     *                           size.
-     * @param imgToDenoiseIndex  Target image to denoise index in srcImgs sequence
+     * @param srcImgs Input 8-bit 3-channel images sequence. All images should have the same type and
+     * size.
+     * @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
      * @param temporalWindowSize Number of surrounding images to use for target image denoising. Should
-     *                           be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
-     *                           imgToDenoiseIndex - temporalWindowSize / 2 from srcImgs will be used to denoise
-     *                           srcImgs[imgToDenoiseIndex] image.
-     * @param dst                Output image with the same size and type as srcImgs images.
+     * be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
+     * imgToDenoiseIndex + temporalWindowSize / 2 from srcImgs will be used to denoise
+     * srcImgs[imgToDenoiseIndex] image.
+     * @param dst Output image with the same size and type as srcImgs images.
      * @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
-     *                           Should be odd. Recommended value 7 pixels
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Parameter regulating filter strength for luminance component. Bigger h value perfectly
-     *                           removes noise but also removes image details, smaller h value preserves details but also preserves
-     *                           some noise.
-     * @param hColor             The same as h but for color components.
-     *                           <p>
-     *                           The function converts images to CIELAB colorspace and then separately denoise L and AB components
-     *                           with given h parameters using fastNlMeansDenoisingMulti function.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Parameter regulating filter strength for luminance component. Bigger h value perfectly
+     * removes noise but also removes image details, smaller h value preserves details but also preserves
+     * some noise.
+     * @param hColor The same as h but for color components.
+     *
+     * The function converts images to CIELAB colorspace and then separately denoise L and AB components
+     * with given h parameters using fastNlMeansDenoisingMulti function.
      */
     public static void fastNlMeansDenoisingColoredMulti(List<Mat> srcImgs, Mat dst, int imgToDenoiseIndex, int temporalWindowSize, float h, float hColor, int templateWindowSize) {
         Mat srcImgs_mat = Converters.vector_Mat_to_Mat(srcImgs);
@@ -696,24 +713,24 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoisingMulti function for colored images sequences
      *
-     * @param srcImgs            Input 8-bit 3-channel images sequence. All images should have the same type and
-     *                           size.
-     * @param imgToDenoiseIndex  Target image to denoise index in srcImgs sequence
+     * @param srcImgs Input 8-bit 3-channel images sequence. All images should have the same type and
+     * size.
+     * @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
      * @param temporalWindowSize Number of surrounding images to use for target image denoising. Should
-     *                           be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
-     *                           imgToDenoiseIndex - temporalWindowSize / 2 from srcImgs will be used to denoise
-     *                           srcImgs[imgToDenoiseIndex] image.
-     * @param dst                Output image with the same size and type as srcImgs images.
-     *                           Should be odd. Recommended value 7 pixels
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Parameter regulating filter strength for luminance component. Bigger h value perfectly
-     *                           removes noise but also removes image details, smaller h value preserves details but also preserves
-     *                           some noise.
-     * @param hColor             The same as h but for color components.
-     *                           <p>
-     *                           The function converts images to CIELAB colorspace and then separately denoise L and AB components
-     *                           with given h parameters using fastNlMeansDenoisingMulti function.
+     * be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
+     * imgToDenoiseIndex + temporalWindowSize / 2 from srcImgs will be used to denoise
+     * srcImgs[imgToDenoiseIndex] image.
+     * @param dst Output image with the same size and type as srcImgs images.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Parameter regulating filter strength for luminance component. Bigger h value perfectly
+     * removes noise but also removes image details, smaller h value preserves details but also preserves
+     * some noise.
+     * @param hColor The same as h but for color components.
+     *
+     * The function converts images to CIELAB colorspace and then separately denoise L and AB components
+     * with given h parameters using fastNlMeansDenoisingMulti function.
      */
     public static void fastNlMeansDenoisingColoredMulti(List<Mat> srcImgs, Mat dst, int imgToDenoiseIndex, int temporalWindowSize, float h, float hColor) {
         Mat srcImgs_mat = Converters.vector_Mat_to_Mat(srcImgs);
@@ -723,23 +740,23 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoisingMulti function for colored images sequences
      *
-     * @param srcImgs            Input 8-bit 3-channel images sequence. All images should have the same type and
-     *                           size.
-     * @param imgToDenoiseIndex  Target image to denoise index in srcImgs sequence
+     * @param srcImgs Input 8-bit 3-channel images sequence. All images should have the same type and
+     * size.
+     * @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
      * @param temporalWindowSize Number of surrounding images to use for target image denoising. Should
-     *                           be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
-     *                           imgToDenoiseIndex - temporalWindowSize / 2 from srcImgs will be used to denoise
-     *                           srcImgs[imgToDenoiseIndex] image.
-     * @param dst                Output image with the same size and type as srcImgs images.
-     *                           Should be odd. Recommended value 7 pixels
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     * @param h                  Parameter regulating filter strength for luminance component. Bigger h value perfectly
-     *                           removes noise but also removes image details, smaller h value preserves details but also preserves
-     *                           some noise.
-     *                           <p>
-     *                           The function converts images to CIELAB colorspace and then separately denoise L and AB components
-     *                           with given h parameters using fastNlMeansDenoisingMulti function.
+     * be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
+     * imgToDenoiseIndex + temporalWindowSize / 2 from srcImgs will be used to denoise
+     * srcImgs[imgToDenoiseIndex] image.
+     * @param dst Output image with the same size and type as srcImgs images.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * @param h Parameter regulating filter strength for luminance component. Bigger h value perfectly
+     * removes noise but also removes image details, smaller h value preserves details but also preserves
+     * some noise.
+     *
+     * The function converts images to CIELAB colorspace and then separately denoise L and AB components
+     * with given h parameters using fastNlMeansDenoisingMulti function.
      */
     public static void fastNlMeansDenoisingColoredMulti(List<Mat> srcImgs, Mat dst, int imgToDenoiseIndex, int temporalWindowSize, float h) {
         Mat srcImgs_mat = Converters.vector_Mat_to_Mat(srcImgs);
@@ -749,22 +766,22 @@ public class Photo {
     /**
      * Modification of fastNlMeansDenoisingMulti function for colored images sequences
      *
-     * @param srcImgs            Input 8-bit 3-channel images sequence. All images should have the same type and
-     *                           size.
-     * @param imgToDenoiseIndex  Target image to denoise index in srcImgs sequence
+     * @param srcImgs Input 8-bit 3-channel images sequence. All images should have the same type and
+     * size.
+     * @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
      * @param temporalWindowSize Number of surrounding images to use for target image denoising. Should
-     *                           be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
-     *                           imgToDenoiseIndex - temporalWindowSize / 2 from srcImgs will be used to denoise
-     *                           srcImgs[imgToDenoiseIndex] image.
-     * @param dst                Output image with the same size and type as srcImgs images.
-     *                           Should be odd. Recommended value 7 pixels
-     *                           given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
-     *                           denoising time. Recommended value 21 pixels
-     *                           removes noise but also removes image details, smaller h value preserves details but also preserves
-     *                           some noise.
-     *                           <p>
-     *                           The function converts images to CIELAB colorspace and then separately denoise L and AB components
-     *                           with given h parameters using fastNlMeansDenoisingMulti function.
+     * be odd. Images from imgToDenoiseIndex - temporalWindowSize / 2 to
+     * imgToDenoiseIndex + temporalWindowSize / 2 from srcImgs will be used to denoise
+     * srcImgs[imgToDenoiseIndex] image.
+     * @param dst Output image with the same size and type as srcImgs images.
+     * Should be odd. Recommended value 7 pixels
+     * given pixel. Should be odd. Affect performance linearly: greater searchWindowsSize - greater
+     * denoising time. Recommended value 21 pixels
+     * removes noise but also removes image details, smaller h value preserves details but also preserves
+     * some noise.
+     *
+     * The function converts images to CIELAB colorspace and then separately denoise L and AB components
+     * with given h parameters using fastNlMeansDenoisingMulti function.
      */
     public static void fastNlMeansDenoisingColoredMulti(List<Mat> srcImgs, Mat dst, int imgToDenoiseIndex, int temporalWindowSize) {
         Mat srcImgs_mat = Converters.vector_Mat_to_Mat(srcImgs);
@@ -781,12 +798,12 @@ public class Photo {
      * finding a function to minimize some functional). As the image denoising, in particular, may be seen
      * as the variational problem, primal-dual algorithm then can be used to perform denoising and this is
      * exactly what is implemented.
-     * <p>
+     *
      * It should be noted, that this implementation was taken from the July 2013 blog entry
      * CITE: MA13 , which also contained (slightly more general) ready-to-use source code on Python.
      * Subsequently, that code was rewritten on C++ with the usage of openCV by Vadim Pisarevsky at the end
      * of July 2013 and finally it was slightly adapted by later authors.
-     * <p>
+     *
      * Although the thorough discussion and justification of the algorithm involved may be found in
      * CITE: ChambolleEtAl, it might make sense to skim over it here, following CITE: MA13 . To begin
      * with, we consider the 1-byte gray-level images as the functions from the rectangular domain of
@@ -794,25 +811,25 @@ public class Photo {
      * \(\left\{(x,y)\in\mathbb{N}\times\mathbb{N}\mid 1\leq x\leq n,\;1\leq y\leq m\right\}\) for some
      * \(m,\;n\in\mathbb{N}\)) into \(\{0,1,\dots,255\}\). We shall denote the noised images as \(f_i\) and with
      * this view, given some image \(x\) of the same size, we may measure how bad it is by the formula
-     * <p>
+     *
      * \(\left\|\left\|\nabla x\right\|\right\| + \lambda\sum_i\left\|\left\|x-f_i\right\|\right\|\)
-     * <p>
+     *
      * \(\|\|\cdot\|\|\) here denotes \(L_2\)-norm and as you see, the first addend states that we want our
      * image to be smooth (ideally, having zero gradient, thus being constant) and the second states that
      * we want our result to be close to the observations we've got. If we treat \(x\) as a function, this is
      * exactly the functional what we seek to minimize and here the Primal-Dual algorithm comes into play.
      *
      * @param observations This array should contain one or more noised versions of the image that is to
-     *                     be restored.
-     * @param result       Here the denoised image will be stored. There is no need to do pre-allocation of
-     *                     storage space, as it will be automatically allocated, if necessary.
-     * @param lambda       Corresponds to \(\lambda\) in the formulas above. As it is enlarged, the smooth
-     *                     (blurred) images are treated more favorably than detailed (but maybe more noised) ones. Roughly
-     *                     speaking, as it becomes smaller, the result will be more blur but more sever outliers will be
-     *                     removed.
-     * @param niters       Number of iterations that the algorithm will run. Of course, as more iterations as
-     *                     better, but it is hard to quantitatively refine this statement, so just use the default and
-     *                     increase it if the results are poor.
+     * be restored.
+     * @param result Here the denoised image will be stored. There is no need to do pre-allocation of
+     * storage space, as it will be automatically allocated, if necessary.
+     * @param lambda Corresponds to \(\lambda\) in the formulas above. As it is enlarged, the smooth
+     * (blurred) images are treated more favorably than detailed (but maybe more noised) ones. Roughly
+     * speaking, as it becomes smaller, the result will be more blur but more sever outliers will be
+     * removed.
+     * @param niters Number of iterations that the algorithm will run. Of course, as more iterations as
+     * better, but it is hard to quantitatively refine this statement, so just use the default and
+     * increase it if the results are poor.
      */
     public static void denoise_TVL1(List<Mat> observations, Mat result, double lambda, int niters) {
         Mat observations_mat = Converters.vector_Mat_to_Mat(observations);
@@ -824,12 +841,12 @@ public class Photo {
      * finding a function to minimize some functional). As the image denoising, in particular, may be seen
      * as the variational problem, primal-dual algorithm then can be used to perform denoising and this is
      * exactly what is implemented.
-     * <p>
+     *
      * It should be noted, that this implementation was taken from the July 2013 blog entry
      * CITE: MA13 , which also contained (slightly more general) ready-to-use source code on Python.
      * Subsequently, that code was rewritten on C++ with the usage of openCV by Vadim Pisarevsky at the end
      * of July 2013 and finally it was slightly adapted by later authors.
-     * <p>
+     *
      * Although the thorough discussion and justification of the algorithm involved may be found in
      * CITE: ChambolleEtAl, it might make sense to skim over it here, following CITE: MA13 . To begin
      * with, we consider the 1-byte gray-level images as the functions from the rectangular domain of
@@ -837,24 +854,24 @@ public class Photo {
      * \(\left\{(x,y)\in\mathbb{N}\times\mathbb{N}\mid 1\leq x\leq n,\;1\leq y\leq m\right\}\) for some
      * \(m,\;n\in\mathbb{N}\)) into \(\{0,1,\dots,255\}\). We shall denote the noised images as \(f_i\) and with
      * this view, given some image \(x\) of the same size, we may measure how bad it is by the formula
-     * <p>
+     *
      * \(\left\|\left\|\nabla x\right\|\right\| + \lambda\sum_i\left\|\left\|x-f_i\right\|\right\|\)
-     * <p>
+     *
      * \(\|\|\cdot\|\|\) here denotes \(L_2\)-norm and as you see, the first addend states that we want our
      * image to be smooth (ideally, having zero gradient, thus being constant) and the second states that
      * we want our result to be close to the observations we've got. If we treat \(x\) as a function, this is
      * exactly the functional what we seek to minimize and here the Primal-Dual algorithm comes into play.
      *
      * @param observations This array should contain one or more noised versions of the image that is to
-     *                     be restored.
-     * @param result       Here the denoised image will be stored. There is no need to do pre-allocation of
-     *                     storage space, as it will be automatically allocated, if necessary.
-     * @param lambda       Corresponds to \(\lambda\) in the formulas above. As it is enlarged, the smooth
-     *                     (blurred) images are treated more favorably than detailed (but maybe more noised) ones. Roughly
-     *                     speaking, as it becomes smaller, the result will be more blur but more sever outliers will be
-     *                     removed.
-     *                     better, but it is hard to quantitatively refine this statement, so just use the default and
-     *                     increase it if the results are poor.
+     * be restored.
+     * @param result Here the denoised image will be stored. There is no need to do pre-allocation of
+     * storage space, as it will be automatically allocated, if necessary.
+     * @param lambda Corresponds to \(\lambda\) in the formulas above. As it is enlarged, the smooth
+     * (blurred) images are treated more favorably than detailed (but maybe more noised) ones. Roughly
+     * speaking, as it becomes smaller, the result will be more blur but more sever outliers will be
+     * removed.
+     * better, but it is hard to quantitatively refine this statement, so just use the default and
+     * increase it if the results are poor.
      */
     public static void denoise_TVL1(List<Mat> observations, Mat result, double lambda) {
         Mat observations_mat = Converters.vector_Mat_to_Mat(observations);
@@ -866,12 +883,12 @@ public class Photo {
      * finding a function to minimize some functional). As the image denoising, in particular, may be seen
      * as the variational problem, primal-dual algorithm then can be used to perform denoising and this is
      * exactly what is implemented.
-     * <p>
+     *
      * It should be noted, that this implementation was taken from the July 2013 blog entry
      * CITE: MA13 , which also contained (slightly more general) ready-to-use source code on Python.
      * Subsequently, that code was rewritten on C++ with the usage of openCV by Vadim Pisarevsky at the end
      * of July 2013 and finally it was slightly adapted by later authors.
-     * <p>
+     *
      * Although the thorough discussion and justification of the algorithm involved may be found in
      * CITE: ChambolleEtAl, it might make sense to skim over it here, following CITE: MA13 . To begin
      * with, we consider the 1-byte gray-level images as the functions from the rectangular domain of
@@ -879,23 +896,23 @@ public class Photo {
      * \(\left\{(x,y)\in\mathbb{N}\times\mathbb{N}\mid 1\leq x\leq n,\;1\leq y\leq m\right\}\) for some
      * \(m,\;n\in\mathbb{N}\)) into \(\{0,1,\dots,255\}\). We shall denote the noised images as \(f_i\) and with
      * this view, given some image \(x\) of the same size, we may measure how bad it is by the formula
-     * <p>
+     *
      * \(\left\|\left\|\nabla x\right\|\right\| + \lambda\sum_i\left\|\left\|x-f_i\right\|\right\|\)
-     * <p>
+     *
      * \(\|\|\cdot\|\|\) here denotes \(L_2\)-norm and as you see, the first addend states that we want our
      * image to be smooth (ideally, having zero gradient, thus being constant) and the second states that
      * we want our result to be close to the observations we've got. If we treat \(x\) as a function, this is
      * exactly the functional what we seek to minimize and here the Primal-Dual algorithm comes into play.
      *
      * @param observations This array should contain one or more noised versions of the image that is to
-     *                     be restored.
-     * @param result       Here the denoised image will be stored. There is no need to do pre-allocation of
-     *                     storage space, as it will be automatically allocated, if necessary.
-     *                     (blurred) images are treated more favorably than detailed (but maybe more noised) ones. Roughly
-     *                     speaking, as it becomes smaller, the result will be more blur but more sever outliers will be
-     *                     removed.
-     *                     better, but it is hard to quantitatively refine this statement, so just use the default and
-     *                     increase it if the results are poor.
+     * be restored.
+     * @param result Here the denoised image will be stored. There is no need to do pre-allocation of
+     * storage space, as it will be automatically allocated, if necessary.
+     * (blurred) images are treated more favorably than detailed (but maybe more noised) ones. Roughly
+     * speaking, as it becomes smaller, the result will be more blur but more sever outliers will be
+     * removed.
+     * better, but it is hard to quantitatively refine this statement, so just use the default and
+     * increase it if the results are poor.
      */
     public static void denoise_TVL1(List<Mat> observations, Mat result) {
         Mat observations_mat = Converters.vector_Mat_to_Mat(observations);
@@ -911,8 +928,8 @@ public class Photo {
      * Creates simple linear mapper with gamma correction
      *
      * @param gamma positive value for gamma correction. Gamma value of 1.0 implies no correction, gamma
-     *              equal to 2.2f is suitable for most displays.
-     *              Generally gamma &gt; 1 brightens the image and gamma &lt; 1 darkens it.
+     * equal to 2.2f is suitable for most displays.
+     * Generally gamma &gt; 1 brightens the image and gamma &lt; 1 darkens it.
      * @return automatically generated
      */
     public static Tonemap createTonemap(float gamma) {
@@ -921,10 +938,9 @@ public class Photo {
 
     /**
      * Creates simple linear mapper with gamma correction
-     * <p>
+     *
      * equal to 2.2f is suitable for most displays.
      * Generally gamma &gt; 1 brightens the image and gamma &lt; 1 darkens it.
-     *
      * @return automatically generated
      */
     public static Tonemap createTonemap() {
@@ -939,11 +955,11 @@ public class Photo {
     /**
      * Creates TonemapDrago object
      *
-     * @param gamma      gamma value for gamma correction. See createTonemap
+     * @param gamma gamma value for gamma correction. See createTonemap
      * @param saturation positive saturation enhancement value. 1.0 preserves saturation, values greater
-     *                   than 1 increase saturation and values less than 1 decrease it.
-     * @param bias       value for bias function in [0, 1] range. Values from 0.7 to 0.9 usually give best
-     *                   results, default value is 0.85.
+     * than 1 increase saturation and values less than 1 decrease it.
+     * @param bias value for bias function in [0, 1] range. Values from 0.7 to 0.9 usually give best
+     * results, default value is 0.85.
      * @return automatically generated
      */
     public static TonemapDrago createTonemapDrago(float gamma, float saturation, float bias) {
@@ -953,10 +969,10 @@ public class Photo {
     /**
      * Creates TonemapDrago object
      *
-     * @param gamma      gamma value for gamma correction. See createTonemap
+     * @param gamma gamma value for gamma correction. See createTonemap
      * @param saturation positive saturation enhancement value. 1.0 preserves saturation, values greater
-     *                   than 1 increase saturation and values less than 1 decrease it.
-     *                   results, default value is 0.85.
+     * than 1 increase saturation and values less than 1 decrease it.
+     * results, default value is 0.85.
      * @return automatically generated
      */
     public static TonemapDrago createTonemapDrago(float gamma, float saturation) {
@@ -967,8 +983,8 @@ public class Photo {
      * Creates TonemapDrago object
      *
      * @param gamma gamma value for gamma correction. See createTonemap
-     *              than 1 increase saturation and values less than 1 decrease it.
-     *              results, default value is 0.85.
+     * than 1 increase saturation and values less than 1 decrease it.
+     * results, default value is 0.85.
      * @return automatically generated
      */
     public static TonemapDrago createTonemapDrago(float gamma) {
@@ -977,10 +993,9 @@ public class Photo {
 
     /**
      * Creates TonemapDrago object
-     * <p>
+     *
      * than 1 increase saturation and values less than 1 decrease it.
      * results, default value is 0.85.
-     *
      * @return automatically generated
      */
     public static TonemapDrago createTonemapDrago() {
@@ -995,12 +1010,12 @@ public class Photo {
     /**
      * Creates TonemapReinhard object
      *
-     * @param gamma       gamma value for gamma correction. See createTonemap
-     * @param intensity   result intensity in [-8, 8] range. Greater intensity produces brighter results.
+     * @param gamma gamma value for gamma correction. See createTonemap
+     * @param intensity result intensity in [-8, 8] range. Greater intensity produces brighter results.
      * @param light_adapt light adaptation in [0, 1] range. If 1 adaptation is based only on pixel
-     *                    value, if 0 it's global, otherwise it's a weighted mean of this two cases.
+     * value, if 0 it's global, otherwise it's a weighted mean of this two cases.
      * @param color_adapt chromatic adaptation in [0, 1] range. If 1 channels are treated independently,
-     *                    if 0 adaptation level is the same for each channel.
+     * if 0 adaptation level is the same for each channel.
      * @return automatically generated
      */
     public static TonemapReinhard createTonemapReinhard(float gamma, float intensity, float light_adapt, float color_adapt) {
@@ -1010,11 +1025,11 @@ public class Photo {
     /**
      * Creates TonemapReinhard object
      *
-     * @param gamma       gamma value for gamma correction. See createTonemap
-     * @param intensity   result intensity in [-8, 8] range. Greater intensity produces brighter results.
+     * @param gamma gamma value for gamma correction. See createTonemap
+     * @param intensity result intensity in [-8, 8] range. Greater intensity produces brighter results.
      * @param light_adapt light adaptation in [0, 1] range. If 1 adaptation is based only on pixel
-     *                    value, if 0 it's global, otherwise it's a weighted mean of this two cases.
-     *                    if 0 adaptation level is the same for each channel.
+     * value, if 0 it's global, otherwise it's a weighted mean of this two cases.
+     * if 0 adaptation level is the same for each channel.
      * @return automatically generated
      */
     public static TonemapReinhard createTonemapReinhard(float gamma, float intensity, float light_adapt) {
@@ -1024,10 +1039,10 @@ public class Photo {
     /**
      * Creates TonemapReinhard object
      *
-     * @param gamma     gamma value for gamma correction. See createTonemap
+     * @param gamma gamma value for gamma correction. See createTonemap
      * @param intensity result intensity in [-8, 8] range. Greater intensity produces brighter results.
-     *                  value, if 0 it's global, otherwise it's a weighted mean of this two cases.
-     *                  if 0 adaptation level is the same for each channel.
+     * value, if 0 it's global, otherwise it's a weighted mean of this two cases.
+     * if 0 adaptation level is the same for each channel.
      * @return automatically generated
      */
     public static TonemapReinhard createTonemapReinhard(float gamma, float intensity) {
@@ -1038,8 +1053,8 @@ public class Photo {
      * Creates TonemapReinhard object
      *
      * @param gamma gamma value for gamma correction. See createTonemap
-     *              value, if 0 it's global, otherwise it's a weighted mean of this two cases.
-     *              if 0 adaptation level is the same for each channel.
+     * value, if 0 it's global, otherwise it's a weighted mean of this two cases.
+     * if 0 adaptation level is the same for each channel.
      * @return automatically generated
      */
     public static TonemapReinhard createTonemapReinhard(float gamma) {
@@ -1048,10 +1063,9 @@ public class Photo {
 
     /**
      * Creates TonemapReinhard object
-     * <p>
+     *
      * value, if 0 it's global, otherwise it's a weighted mean of this two cases.
      * if 0 adaptation level is the same for each channel.
-     *
      * @return automatically generated
      */
     public static TonemapReinhard createTonemapReinhard() {
@@ -1066,9 +1080,9 @@ public class Photo {
     /**
      * Creates TonemapMantiuk object
      *
-     * @param gamma      gamma value for gamma correction. See createTonemap
-     * @param scale      contrast scale factor. HVS response is multiplied by this parameter, thus compressing
-     *                   dynamic range. Values from 0.6 to 0.9 produce best results.
+     * @param gamma gamma value for gamma correction. See createTonemap
+     * @param scale contrast scale factor. HVS response is multiplied by this parameter, thus compressing
+     * dynamic range. Values from 0.6 to 0.9 produce best results.
      * @param saturation saturation enhancement value. See createTonemapDrago
      * @return automatically generated
      */
@@ -1081,7 +1095,7 @@ public class Photo {
      *
      * @param gamma gamma value for gamma correction. See createTonemap
      * @param scale contrast scale factor. HVS response is multiplied by this parameter, thus compressing
-     *              dynamic range. Values from 0.6 to 0.9 produce best results.
+     * dynamic range. Values from 0.6 to 0.9 produce best results.
      * @return automatically generated
      */
     public static TonemapMantiuk createTonemapMantiuk(float gamma, float scale) {
@@ -1092,7 +1106,7 @@ public class Photo {
      * Creates TonemapMantiuk object
      *
      * @param gamma gamma value for gamma correction. See createTonemap
-     *              dynamic range. Values from 0.6 to 0.9 produce best results.
+     * dynamic range. Values from 0.6 to 0.9 produce best results.
      * @return automatically generated
      */
     public static TonemapMantiuk createTonemapMantiuk(float gamma) {
@@ -1101,9 +1115,8 @@ public class Photo {
 
     /**
      * Creates TonemapMantiuk object
-     * <p>
-     * dynamic range. Values from 0.6 to 0.9 produce best results.
      *
+     * dynamic range. Values from 0.6 to 0.9 produce best results.
      * @return automatically generated
      */
     public static TonemapMantiuk createTonemapMantiuk() {
@@ -1118,11 +1131,11 @@ public class Photo {
     /**
      * Creates AlignMTB object
      *
-     * @param max_bits      logarithm to the base 2 of maximal shift in each dimension. Values of 5 and 6 are
-     *                      usually good enough (31 and 63 pixels shift respectively).
+     * @param max_bits logarithm to the base 2 of maximal shift in each dimension. Values of 5 and 6 are
+     * usually good enough (31 and 63 pixels shift respectively).
      * @param exclude_range range for exclusion bitmap that is constructed to suppress noise around the
-     *                      median value.
-     * @param cut           if true cuts images, otherwise fills the new regions with zeros.
+     * median value.
+     * @param cut if true cuts images, otherwise fills the new regions with zeros.
      * @return automatically generated
      */
     public static AlignMTB createAlignMTB(int max_bits, int exclude_range, boolean cut) {
@@ -1132,10 +1145,10 @@ public class Photo {
     /**
      * Creates AlignMTB object
      *
-     * @param max_bits      logarithm to the base 2 of maximal shift in each dimension. Values of 5 and 6 are
-     *                      usually good enough (31 and 63 pixels shift respectively).
+     * @param max_bits logarithm to the base 2 of maximal shift in each dimension. Values of 5 and 6 are
+     * usually good enough (31 and 63 pixels shift respectively).
      * @param exclude_range range for exclusion bitmap that is constructed to suppress noise around the
-     *                      median value.
+     * median value.
      * @return automatically generated
      */
     public static AlignMTB createAlignMTB(int max_bits, int exclude_range) {
@@ -1146,8 +1159,8 @@ public class Photo {
      * Creates AlignMTB object
      *
      * @param max_bits logarithm to the base 2 of maximal shift in each dimension. Values of 5 and 6 are
-     *                 usually good enough (31 and 63 pixels shift respectively).
-     *                 median value.
+     * usually good enough (31 and 63 pixels shift respectively).
+     * median value.
      * @return automatically generated
      */
     public static AlignMTB createAlignMTB(int max_bits) {
@@ -1156,10 +1169,9 @@ public class Photo {
 
     /**
      * Creates AlignMTB object
-     * <p>
+     *
      * usually good enough (31 and 63 pixels shift respectively).
      * median value.
-     *
      * @return automatically generated
      */
     public static AlignMTB createAlignMTB() {
@@ -1175,10 +1187,10 @@ public class Photo {
      * Creates CalibrateDebevec object
      *
      * @param samples number of pixel locations to use
-     * @param lambda  smoothness term weight. Greater values produce smoother results, but can alter the
-     *                response.
-     * @param random  if true sample pixel locations are chosen at random, otherwise they form a
-     *                rectangular grid.
+     * @param lambda smoothness term weight. Greater values produce smoother results, but can alter the
+     * response.
+     * @param random if true sample pixel locations are chosen at random, otherwise they form a
+     * rectangular grid.
      * @return automatically generated
      */
     public static CalibrateDebevec createCalibrateDebevec(int samples, float lambda, boolean random) {
@@ -1189,9 +1201,9 @@ public class Photo {
      * Creates CalibrateDebevec object
      *
      * @param samples number of pixel locations to use
-     * @param lambda  smoothness term weight. Greater values produce smoother results, but can alter the
-     *                response.
-     *                rectangular grid.
+     * @param lambda smoothness term weight. Greater values produce smoother results, but can alter the
+     * response.
+     * rectangular grid.
      * @return automatically generated
      */
     public static CalibrateDebevec createCalibrateDebevec(int samples, float lambda) {
@@ -1202,8 +1214,8 @@ public class Photo {
      * Creates CalibrateDebevec object
      *
      * @param samples number of pixel locations to use
-     *                response.
-     *                rectangular grid.
+     * response.
+     * rectangular grid.
      * @return automatically generated
      */
     public static CalibrateDebevec createCalibrateDebevec(int samples) {
@@ -1212,10 +1224,9 @@ public class Photo {
 
     /**
      * Creates CalibrateDebevec object
-     * <p>
+     *
      * response.
      * rectangular grid.
-     *
      * @return automatically generated
      */
     public static CalibrateDebevec createCalibrateDebevec() {
@@ -1230,7 +1241,7 @@ public class Photo {
     /**
      * Creates CalibrateRobertson object
      *
-     * @param max_iter  maximal number of Gauss-Seidel solver iterations.
+     * @param max_iter maximal number of Gauss-Seidel solver iterations.
      * @param threshold target difference between results of two successive steps of the minimization.
      * @return automatically generated
      */
@@ -1264,7 +1275,6 @@ public class Photo {
 
     /**
      * Creates MergeDebevec object
-     *
      * @return automatically generated
      */
     public static MergeDebevec createMergeDebevec() {
@@ -1279,9 +1289,9 @@ public class Photo {
     /**
      * Creates MergeMertens object
      *
-     * @param contrast_weight   contrast measure weight. See MergeMertens.
+     * @param contrast_weight contrast measure weight. See MergeMertens.
      * @param saturation_weight saturation measure weight
-     * @param exposure_weight   well-exposedness measure weight
+     * @param exposure_weight well-exposedness measure weight
      * @return automatically generated
      */
     public static MergeMertens createMergeMertens(float contrast_weight, float saturation_weight, float exposure_weight) {
@@ -1291,7 +1301,7 @@ public class Photo {
     /**
      * Creates MergeMertens object
      *
-     * @param contrast_weight   contrast measure weight. See MergeMertens.
+     * @param contrast_weight contrast measure weight. See MergeMertens.
      * @param saturation_weight saturation measure weight
      * @return automatically generated
      */
@@ -1325,7 +1335,6 @@ public class Photo {
 
     /**
      * Creates MergeRobertson object
-     *
      * @return automatically generated
      */
     public static MergeRobertson createMergeRobertson() {
@@ -1342,11 +1351,11 @@ public class Photo {
      * black-and-white photograph rendering, and in many single channel image processing applications
      * CITE: CL12 .
      *
-     * @param src         Input 8-bit 3-channel image.
-     * @param grayscale   Output 8-bit 1-channel image.
+     * @param src Input 8-bit 3-channel image.
+     * @param grayscale Output 8-bit 1-channel image.
      * @param color_boost Output 8-bit 3-channel image.
-     *                    <p>
-     *                    This function is to be applied on color images.
+     *
+     * This function is to be applied on color images.
      */
     public static void decolor(Mat src, Mat grayscale, Mat color_boost) {
         decolor_0(src.nativeObj, grayscale.nativeObj, color_boost.nativeObj);
@@ -1358,18 +1367,19 @@ public class Photo {
     //
 
     /**
-     * Image editing tasks concern either global changes (color/intensity corrections, filters,
-     * deformations) or local changes concerned to a selection. Here we are interested in achieving local
-     * changes, ones that are restricted to a region manually selected (ROI), in a seamless and effortless
-     * manner. The extent of the changes ranges from slight distortions to complete replacement by novel
-     * content CITE: PM03 .
+     * Performs seamless cloning to blend a region from a source image into a destination image.
+     * This function is designed for local image editing, allowing changes restricted to a region
+     * (manually selected as the ROI) to be applied effortlessly and seamlessly. These changes can
+     * range from slight distortions to complete replacement by novel content CITE: PM03.
      *
-     * @param src   Input 8-bit 3-channel image.
-     * @param dst   Input 8-bit 3-channel image.
-     * @param mask  Input 8-bit 1 or 3-channel image.
-     * @param p     Point in dst image where object is placed.
-     * @param blend Output image with the same size and type as dst.
-     * @param flags Cloning method that could be cv::NORMAL_CLONE, cv::MIXED_CLONE or cv::MONOCHROME_TRANSFER
+     * @param src The source image (8-bit 3-channel), from which a region will be blended into the destination.
+     * @param dst The destination image (8-bit 3-channel), where the src image will be blended.
+     * @param mask A binary mask (8-bit, 1, 3, or 4-channel) specifying the region in the source image to blend.
+     * Non-zero pixels indicate the region to be blended. If an empty Mat is provided, a mask with
+     * all non-zero pixels is created internally.
+     * @param p The point where the center of the src image is placed in the dst image.
+     * @param blend The output image that stores the result of the seamless cloning. It has the same size and type as {@code dst}.
+     * @param flags Flags that control the type of cloning method, can take values of {@code cv::SeamlessCloneFlags}.
      */
     public static void seamlessClone(Mat src, Mat dst, Mat mask, Point p, Mat blend, int flags) {
         seamlessClone_0(src.nativeObj, dst.nativeObj, mask.nativeObj, p.x, p.y, blend.nativeObj, flags);
@@ -1384,14 +1394,14 @@ public class Photo {
      * Given an original color image, two differently colored versions of this image can be mixed
      * seamlessly.
      *
-     * @param src       Input 8-bit 3-channel image.
-     * @param mask      Input 8-bit 1 or 3-channel image.
-     * @param dst       Output image with the same size and type as src .
-     * @param red_mul   R-channel multiply factor.
+     * @param src Input 8-bit 3-channel image.
+     * @param mask Input 8-bit 1 or 3-channel image.
+     * @param dst Output image with the same size and type as src .
+     * @param red_mul R-channel multiply factor.
      * @param green_mul G-channel multiply factor.
-     * @param blue_mul  B-channel multiply factor.
-     *                  <p>
-     *                  Multiplication factor is between .5 to 2.5.
+     * @param blue_mul B-channel multiply factor.
+     *
+     * Multiplication factor is between .5 to 2.5.
      */
     public static void colorChange(Mat src, Mat mask, Mat dst, float red_mul, float green_mul, float blue_mul) {
         colorChange_0(src.nativeObj, mask.nativeObj, dst.nativeObj, red_mul, green_mul, blue_mul);
@@ -1401,13 +1411,13 @@ public class Photo {
      * Given an original color image, two differently colored versions of this image can be mixed
      * seamlessly.
      *
-     * @param src       Input 8-bit 3-channel image.
-     * @param mask      Input 8-bit 1 or 3-channel image.
-     * @param dst       Output image with the same size and type as src .
-     * @param red_mul   R-channel multiply factor.
+     * @param src Input 8-bit 3-channel image.
+     * @param mask Input 8-bit 1 or 3-channel image.
+     * @param dst Output image with the same size and type as src .
+     * @param red_mul R-channel multiply factor.
      * @param green_mul G-channel multiply factor.
-     *                  <p>
-     *                  Multiplication factor is between .5 to 2.5.
+     *
+     * Multiplication factor is between .5 to 2.5.
      */
     public static void colorChange(Mat src, Mat mask, Mat dst, float red_mul, float green_mul) {
         colorChange_1(src.nativeObj, mask.nativeObj, dst.nativeObj, red_mul, green_mul);
@@ -1417,12 +1427,12 @@ public class Photo {
      * Given an original color image, two differently colored versions of this image can be mixed
      * seamlessly.
      *
-     * @param src     Input 8-bit 3-channel image.
-     * @param mask    Input 8-bit 1 or 3-channel image.
-     * @param dst     Output image with the same size and type as src .
+     * @param src Input 8-bit 3-channel image.
+     * @param mask Input 8-bit 1 or 3-channel image.
+     * @param dst Output image with the same size and type as src .
      * @param red_mul R-channel multiply factor.
-     *                <p>
-     *                Multiplication factor is between .5 to 2.5.
+     *
+     * Multiplication factor is between .5 to 2.5.
      */
     public static void colorChange(Mat src, Mat mask, Mat dst, float red_mul) {
         colorChange_2(src.nativeObj, mask.nativeObj, dst.nativeObj, red_mul);
@@ -1432,11 +1442,11 @@ public class Photo {
      * Given an original color image, two differently colored versions of this image can be mixed
      * seamlessly.
      *
-     * @param src  Input 8-bit 3-channel image.
+     * @param src Input 8-bit 3-channel image.
      * @param mask Input 8-bit 1 or 3-channel image.
-     * @param dst  Output image with the same size and type as src .
-     *             <p>
-     *             Multiplication factor is between .5 to 2.5.
+     * @param dst Output image with the same size and type as src .
+     *
+     * Multiplication factor is between .5 to 2.5.
      */
     public static void colorChange(Mat src, Mat mask, Mat dst) {
         colorChange_3(src.nativeObj, mask.nativeObj, dst.nativeObj);
@@ -1451,13 +1461,13 @@ public class Photo {
      * Applying an appropriate non-linear transformation to the gradient field inside the selection and
      * then integrating back with a Poisson solver, modifies locally the apparent illumination of an image.
      *
-     * @param src   Input 8-bit 3-channel image.
-     * @param mask  Input 8-bit 1 or 3-channel image.
-     * @param dst   Output image with the same size and type as src.
+     * @param src Input 8-bit 3-channel image.
+     * @param mask Input 8-bit 1 or 3-channel image.
+     * @param dst Output image with the same size and type as src.
      * @param alpha Value ranges between 0-2.
-     * @param beta  Value ranges between 0-2.
-     *              <p>
-     *              This is useful to highlight under-exposed foreground objects or to reduce specular reflections.
+     * @param beta Value ranges between 0-2.
+     *
+     * This is useful to highlight under-exposed foreground objects or to reduce specular reflections.
      */
     public static void illuminationChange(Mat src, Mat mask, Mat dst, float alpha, float beta) {
         illuminationChange_0(src.nativeObj, mask.nativeObj, dst.nativeObj, alpha, beta);
@@ -1467,12 +1477,12 @@ public class Photo {
      * Applying an appropriate non-linear transformation to the gradient field inside the selection and
      * then integrating back with a Poisson solver, modifies locally the apparent illumination of an image.
      *
-     * @param src   Input 8-bit 3-channel image.
-     * @param mask  Input 8-bit 1 or 3-channel image.
-     * @param dst   Output image with the same size and type as src.
+     * @param src Input 8-bit 3-channel image.
+     * @param mask Input 8-bit 1 or 3-channel image.
+     * @param dst Output image with the same size and type as src.
      * @param alpha Value ranges between 0-2.
-     *              <p>
-     *              This is useful to highlight under-exposed foreground objects or to reduce specular reflections.
+     *
+     * This is useful to highlight under-exposed foreground objects or to reduce specular reflections.
      */
     public static void illuminationChange(Mat src, Mat mask, Mat dst, float alpha) {
         illuminationChange_1(src.nativeObj, mask.nativeObj, dst.nativeObj, alpha);
@@ -1482,11 +1492,11 @@ public class Photo {
      * Applying an appropriate non-linear transformation to the gradient field inside the selection and
      * then integrating back with a Poisson solver, modifies locally the apparent illumination of an image.
      *
-     * @param src  Input 8-bit 3-channel image.
+     * @param src Input 8-bit 3-channel image.
      * @param mask Input 8-bit 1 or 3-channel image.
-     * @param dst  Output image with the same size and type as src.
-     *             <p>
-     *             This is useful to highlight under-exposed foreground objects or to reduce specular reflections.
+     * @param dst Output image with the same size and type as src.
+     *
+     * This is useful to highlight under-exposed foreground objects or to reduce specular reflections.
      */
     public static void illuminationChange(Mat src, Mat mask, Mat dst) {
         illuminationChange_2(src.nativeObj, mask.nativeObj, dst.nativeObj);
@@ -1501,17 +1511,17 @@ public class Photo {
      * By retaining only the gradients at edge locations, before integrating with the Poisson solver, one
      * washes out the texture of the selected region, giving its contents a flat aspect. Here Canny Edge %Detector is used.
      *
-     * @param src            Input 8-bit 3-channel image.
-     * @param mask           Input 8-bit 1 or 3-channel image.
-     * @param dst            Output image with the same size and type as src.
-     * @param low_threshold  %Range from 0 to 100.
+     * @param src Input 8-bit 3-channel image.
+     * @param mask Input 8-bit 1 or 3-channel image.
+     * @param dst Output image with the same size and type as src.
+     * @param low_threshold %Range from 0 to 100.
      * @param high_threshold Value &gt; 100.
-     * @param kernel_size    The size of the Sobel kernel to be used.
+     * @param kernel_size The size of the Sobel kernel to be used.
      *
-     *                       <b>Note:</b>
-     *                       The algorithm assumes that the color of the source image is close to that of the destination. This
-     *                       assumption means that when the colors don't match, the source image color gets tinted toward the
-     *                       color of the destination image.
+     * <b>Note:</b>
+     * The algorithm assumes that the color of the source image is close to that of the destination. This
+     * assumption means that when the colors don't match, the source image color gets tinted toward the
+     * color of the destination image.
      */
     public static void textureFlattening(Mat src, Mat mask, Mat dst, float low_threshold, float high_threshold, int kernel_size) {
         textureFlattening_0(src.nativeObj, mask.nativeObj, dst.nativeObj, low_threshold, high_threshold, kernel_size);
@@ -1521,16 +1531,16 @@ public class Photo {
      * By retaining only the gradients at edge locations, before integrating with the Poisson solver, one
      * washes out the texture of the selected region, giving its contents a flat aspect. Here Canny Edge %Detector is used.
      *
-     * @param src            Input 8-bit 3-channel image.
-     * @param mask           Input 8-bit 1 or 3-channel image.
-     * @param dst            Output image with the same size and type as src.
-     * @param low_threshold  %Range from 0 to 100.
+     * @param src Input 8-bit 3-channel image.
+     * @param mask Input 8-bit 1 or 3-channel image.
+     * @param dst Output image with the same size and type as src.
+     * @param low_threshold %Range from 0 to 100.
      * @param high_threshold Value &gt; 100.
      *
-     *                       <b>Note:</b>
-     *                       The algorithm assumes that the color of the source image is close to that of the destination. This
-     *                       assumption means that when the colors don't match, the source image color gets tinted toward the
-     *                       color of the destination image.
+     * <b>Note:</b>
+     * The algorithm assumes that the color of the source image is close to that of the destination. This
+     * assumption means that when the colors don't match, the source image color gets tinted toward the
+     * color of the destination image.
      */
     public static void textureFlattening(Mat src, Mat mask, Mat dst, float low_threshold, float high_threshold) {
         textureFlattening_1(src.nativeObj, mask.nativeObj, dst.nativeObj, low_threshold, high_threshold);
@@ -1540,15 +1550,15 @@ public class Photo {
      * By retaining only the gradients at edge locations, before integrating with the Poisson solver, one
      * washes out the texture of the selected region, giving its contents a flat aspect. Here Canny Edge %Detector is used.
      *
-     * @param src           Input 8-bit 3-channel image.
-     * @param mask          Input 8-bit 1 or 3-channel image.
-     * @param dst           Output image with the same size and type as src.
+     * @param src Input 8-bit 3-channel image.
+     * @param mask Input 8-bit 1 or 3-channel image.
+     * @param dst Output image with the same size and type as src.
      * @param low_threshold %Range from 0 to 100.
      *
-     *                      <b>Note:</b>
-     *                      The algorithm assumes that the color of the source image is close to that of the destination. This
-     *                      assumption means that when the colors don't match, the source image color gets tinted toward the
-     *                      color of the destination image.
+     * <b>Note:</b>
+     * The algorithm assumes that the color of the source image is close to that of the destination. This
+     * assumption means that when the colors don't match, the source image color gets tinted toward the
+     * color of the destination image.
      */
     public static void textureFlattening(Mat src, Mat mask, Mat dst, float low_threshold) {
         textureFlattening_2(src.nativeObj, mask.nativeObj, dst.nativeObj, low_threshold);
@@ -1558,14 +1568,14 @@ public class Photo {
      * By retaining only the gradients at edge locations, before integrating with the Poisson solver, one
      * washes out the texture of the selected region, giving its contents a flat aspect. Here Canny Edge %Detector is used.
      *
-     * @param src  Input 8-bit 3-channel image.
+     * @param src Input 8-bit 3-channel image.
      * @param mask Input 8-bit 1 or 3-channel image.
-     * @param dst  Output image with the same size and type as src.
+     * @param dst Output image with the same size and type as src.
      *
-     *             <b>Note:</b>
-     *             The algorithm assumes that the color of the source image is close to that of the destination. This
-     *             assumption means that when the colors don't match, the source image color gets tinted toward the
-     *             color of the destination image.
+     * <b>Note:</b>
+     * The algorithm assumes that the color of the source image is close to that of the destination. This
+     * assumption means that when the colors don't match, the source image color gets tinted toward the
+     * color of the destination image.
      */
     public static void textureFlattening(Mat src, Mat mask, Mat dst) {
         textureFlattening_3(src.nativeObj, mask.nativeObj, dst.nativeObj);
@@ -1580,9 +1590,9 @@ public class Photo {
      * Filtering is the fundamental operation in image and video processing. Edge-preserving smoothing
      * filters are used in many different applications CITE: EM11 .
      *
-     * @param src     Input 8-bit 3-channel image.
-     * @param dst     Output 8-bit 3-channel image.
-     * @param flags   Edge preserving filters: cv::RECURS_FILTER or cv::NORMCONV_FILTER
+     * @param src Input 8-bit 3-channel image.
+     * @param dst Output 8-bit 3-channel image.
+     * @param flags Edge preserving filters: cv::RECURS_FILTER or cv::NORMCONV_FILTER
      * @param sigma_s %Range between 0 to 200.
      * @param sigma_r %Range between 0 to 1.
      */
@@ -1594,9 +1604,9 @@ public class Photo {
      * Filtering is the fundamental operation in image and video processing. Edge-preserving smoothing
      * filters are used in many different applications CITE: EM11 .
      *
-     * @param src     Input 8-bit 3-channel image.
-     * @param dst     Output 8-bit 3-channel image.
-     * @param flags   Edge preserving filters: cv::RECURS_FILTER or cv::NORMCONV_FILTER
+     * @param src Input 8-bit 3-channel image.
+     * @param dst Output 8-bit 3-channel image.
+     * @param flags Edge preserving filters: cv::RECURS_FILTER or cv::NORMCONV_FILTER
      * @param sigma_s %Range between 0 to 200.
      */
     public static void edgePreservingFilter(Mat src, Mat dst, int flags, float sigma_s) {
@@ -1607,8 +1617,8 @@ public class Photo {
      * Filtering is the fundamental operation in image and video processing. Edge-preserving smoothing
      * filters are used in many different applications CITE: EM11 .
      *
-     * @param src   Input 8-bit 3-channel image.
-     * @param dst   Output 8-bit 3-channel image.
+     * @param src Input 8-bit 3-channel image.
+     * @param dst Output 8-bit 3-channel image.
      * @param flags Edge preserving filters: cv::RECURS_FILTER or cv::NORMCONV_FILTER
      */
     public static void edgePreservingFilter(Mat src, Mat dst, int flags) {
@@ -1634,8 +1644,8 @@ public class Photo {
     /**
      * This filter enhances the details of a particular image.
      *
-     * @param src     Input 8-bit 3-channel image.
-     * @param dst     Output image with the same size and type as src.
+     * @param src Input 8-bit 3-channel image.
+     * @param dst Output image with the same size and type as src.
      * @param sigma_s %Range between 0 to 200.
      * @param sigma_r %Range between 0 to 1.
      */
@@ -1646,8 +1656,8 @@ public class Photo {
     /**
      * This filter enhances the details of a particular image.
      *
-     * @param src     Input 8-bit 3-channel image.
-     * @param dst     Output image with the same size and type as src.
+     * @param src Input 8-bit 3-channel image.
+     * @param dst Output image with the same size and type as src.
      * @param sigma_s %Range between 0 to 200.
      */
     public static void detailEnhance(Mat src, Mat dst, float sigma_s) {
@@ -1672,11 +1682,11 @@ public class Photo {
     /**
      * Pencil-like non-photorealistic line drawing
      *
-     * @param src          Input 8-bit 3-channel image.
-     * @param dst1         Output 8-bit 1-channel image.
-     * @param dst2         Output image with the same size and type as src.
-     * @param sigma_s      %Range between 0 to 200.
-     * @param sigma_r      %Range between 0 to 1.
+     * @param src Input 8-bit 3-channel image.
+     * @param dst1 Output 8-bit 1-channel image.
+     * @param dst2 Output image with the same size and type as src.
+     * @param sigma_s %Range between 0 to 200.
+     * @param sigma_r %Range between 0 to 1.
      * @param shade_factor %Range between 0 to 0.1.
      */
     public static void pencilSketch(Mat src, Mat dst1, Mat dst2, float sigma_s, float sigma_r, float shade_factor) {
@@ -1686,9 +1696,9 @@ public class Photo {
     /**
      * Pencil-like non-photorealistic line drawing
      *
-     * @param src     Input 8-bit 3-channel image.
-     * @param dst1    Output 8-bit 1-channel image.
-     * @param dst2    Output image with the same size and type as src.
+     * @param src Input 8-bit 3-channel image.
+     * @param dst1 Output 8-bit 1-channel image.
+     * @param dst2 Output image with the same size and type as src.
      * @param sigma_s %Range between 0 to 200.
      * @param sigma_r %Range between 0 to 1.
      */
@@ -1699,9 +1709,9 @@ public class Photo {
     /**
      * Pencil-like non-photorealistic line drawing
      *
-     * @param src     Input 8-bit 3-channel image.
-     * @param dst1    Output 8-bit 1-channel image.
-     * @param dst2    Output image with the same size and type as src.
+     * @param src Input 8-bit 3-channel image.
+     * @param dst1 Output 8-bit 1-channel image.
+     * @param dst2 Output image with the same size and type as src.
      * @param sigma_s %Range between 0 to 200.
      */
     public static void pencilSketch(Mat src, Mat dst1, Mat dst2, float sigma_s) {
@@ -1711,7 +1721,7 @@ public class Photo {
     /**
      * Pencil-like non-photorealistic line drawing
      *
-     * @param src  Input 8-bit 3-channel image.
+     * @param src Input 8-bit 3-channel image.
      * @param dst1 Output 8-bit 1-channel image.
      * @param dst2 Output image with the same size and type as src.
      */
@@ -1729,8 +1739,8 @@ public class Photo {
      * photorealism. Edge-aware filters are ideal for stylization, as they can abstract regions of low
      * contrast while preserving, or enhancing, high-contrast features.
      *
-     * @param src     Input 8-bit 3-channel image.
-     * @param dst     Output image with the same size and type as src.
+     * @param src Input 8-bit 3-channel image.
+     * @param dst Output image with the same size and type as src.
      * @param sigma_s %Range between 0 to 200.
      * @param sigma_r %Range between 0 to 1.
      */
@@ -1743,8 +1753,8 @@ public class Photo {
      * photorealism. Edge-aware filters are ideal for stylization, as they can abstract regions of low
      * contrast while preserving, or enhancing, high-contrast features.
      *
-     * @param src     Input 8-bit 3-channel image.
-     * @param dst     Output image with the same size and type as src.
+     * @param src Input 8-bit 3-channel image.
+     * @param dst Output image with the same size and type as src.
      * @param sigma_s %Range between 0 to 200.
      */
     public static void stylization(Mat src, Mat dst, float sigma_s) {
@@ -1785,131 +1795,92 @@ public class Photo {
     // Unknown type 'GpuMat' (I), skipping the function
 
 
+
+
     // C++:  void cv::inpaint(Mat src, Mat inpaintMask, Mat& dst, double inpaintRadius, int flags)
     private static native void inpaint_0(long src_nativeObj, long inpaintMask_nativeObj, long dst_nativeObj, double inpaintRadius, int flags);
 
     // C++:  void cv::fastNlMeansDenoising(Mat src, Mat& dst, float h = 3, int templateWindowSize = 7, int searchWindowSize = 21)
     private static native void fastNlMeansDenoising_0(long src_nativeObj, long dst_nativeObj, float h, int templateWindowSize, int searchWindowSize);
-
     private static native void fastNlMeansDenoising_1(long src_nativeObj, long dst_nativeObj, float h, int templateWindowSize);
-
     private static native void fastNlMeansDenoising_2(long src_nativeObj, long dst_nativeObj, float h);
-
     private static native void fastNlMeansDenoising_3(long src_nativeObj, long dst_nativeObj);
 
     // C++:  void cv::fastNlMeansDenoising(Mat src, Mat& dst, vector_float h, int templateWindowSize = 7, int searchWindowSize = 21, int normType = NORM_L2)
     private static native void fastNlMeansDenoising_4(long src_nativeObj, long dst_nativeObj, long h_mat_nativeObj, int templateWindowSize, int searchWindowSize, int normType);
-
     private static native void fastNlMeansDenoising_5(long src_nativeObj, long dst_nativeObj, long h_mat_nativeObj, int templateWindowSize, int searchWindowSize);
-
     private static native void fastNlMeansDenoising_6(long src_nativeObj, long dst_nativeObj, long h_mat_nativeObj, int templateWindowSize);
-
     private static native void fastNlMeansDenoising_7(long src_nativeObj, long dst_nativeObj, long h_mat_nativeObj);
 
     // C++:  void cv::fastNlMeansDenoisingColored(Mat src, Mat& dst, float h = 3, float hColor = 3, int templateWindowSize = 7, int searchWindowSize = 21)
     private static native void fastNlMeansDenoisingColored_0(long src_nativeObj, long dst_nativeObj, float h, float hColor, int templateWindowSize, int searchWindowSize);
-
     private static native void fastNlMeansDenoisingColored_1(long src_nativeObj, long dst_nativeObj, float h, float hColor, int templateWindowSize);
-
     private static native void fastNlMeansDenoisingColored_2(long src_nativeObj, long dst_nativeObj, float h, float hColor);
-
     private static native void fastNlMeansDenoisingColored_3(long src_nativeObj, long dst_nativeObj, float h);
-
     private static native void fastNlMeansDenoisingColored_4(long src_nativeObj, long dst_nativeObj);
 
     // C++:  void cv::fastNlMeansDenoisingMulti(vector_Mat srcImgs, Mat& dst, int imgToDenoiseIndex, int temporalWindowSize, float h = 3, int templateWindowSize = 7, int searchWindowSize = 21)
     private static native void fastNlMeansDenoisingMulti_0(long srcImgs_mat_nativeObj, long dst_nativeObj, int imgToDenoiseIndex, int temporalWindowSize, float h, int templateWindowSize, int searchWindowSize);
-
     private static native void fastNlMeansDenoisingMulti_1(long srcImgs_mat_nativeObj, long dst_nativeObj, int imgToDenoiseIndex, int temporalWindowSize, float h, int templateWindowSize);
-
     private static native void fastNlMeansDenoisingMulti_2(long srcImgs_mat_nativeObj, long dst_nativeObj, int imgToDenoiseIndex, int temporalWindowSize, float h);
-
     private static native void fastNlMeansDenoisingMulti_3(long srcImgs_mat_nativeObj, long dst_nativeObj, int imgToDenoiseIndex, int temporalWindowSize);
 
     // C++:  void cv::fastNlMeansDenoisingMulti(vector_Mat srcImgs, Mat& dst, int imgToDenoiseIndex, int temporalWindowSize, vector_float h, int templateWindowSize = 7, int searchWindowSize = 21, int normType = NORM_L2)
     private static native void fastNlMeansDenoisingMulti_4(long srcImgs_mat_nativeObj, long dst_nativeObj, int imgToDenoiseIndex, int temporalWindowSize, long h_mat_nativeObj, int templateWindowSize, int searchWindowSize, int normType);
-
     private static native void fastNlMeansDenoisingMulti_5(long srcImgs_mat_nativeObj, long dst_nativeObj, int imgToDenoiseIndex, int temporalWindowSize, long h_mat_nativeObj, int templateWindowSize, int searchWindowSize);
-
     private static native void fastNlMeansDenoisingMulti_6(long srcImgs_mat_nativeObj, long dst_nativeObj, int imgToDenoiseIndex, int temporalWindowSize, long h_mat_nativeObj, int templateWindowSize);
-
     private static native void fastNlMeansDenoisingMulti_7(long srcImgs_mat_nativeObj, long dst_nativeObj, int imgToDenoiseIndex, int temporalWindowSize, long h_mat_nativeObj);
 
     // C++:  void cv::fastNlMeansDenoisingColoredMulti(vector_Mat srcImgs, Mat& dst, int imgToDenoiseIndex, int temporalWindowSize, float h = 3, float hColor = 3, int templateWindowSize = 7, int searchWindowSize = 21)
     private static native void fastNlMeansDenoisingColoredMulti_0(long srcImgs_mat_nativeObj, long dst_nativeObj, int imgToDenoiseIndex, int temporalWindowSize, float h, float hColor, int templateWindowSize, int searchWindowSize);
-
     private static native void fastNlMeansDenoisingColoredMulti_1(long srcImgs_mat_nativeObj, long dst_nativeObj, int imgToDenoiseIndex, int temporalWindowSize, float h, float hColor, int templateWindowSize);
-
     private static native void fastNlMeansDenoisingColoredMulti_2(long srcImgs_mat_nativeObj, long dst_nativeObj, int imgToDenoiseIndex, int temporalWindowSize, float h, float hColor);
-
     private static native void fastNlMeansDenoisingColoredMulti_3(long srcImgs_mat_nativeObj, long dst_nativeObj, int imgToDenoiseIndex, int temporalWindowSize, float h);
-
     private static native void fastNlMeansDenoisingColoredMulti_4(long srcImgs_mat_nativeObj, long dst_nativeObj, int imgToDenoiseIndex, int temporalWindowSize);
 
     // C++:  void cv::denoise_TVL1(vector_Mat observations, Mat result, double lambda = 1.0, int niters = 30)
     private static native void denoise_TVL1_0(long observations_mat_nativeObj, long result_nativeObj, double lambda, int niters);
-
     private static native void denoise_TVL1_1(long observations_mat_nativeObj, long result_nativeObj, double lambda);
-
     private static native void denoise_TVL1_2(long observations_mat_nativeObj, long result_nativeObj);
 
     // C++:  Ptr_Tonemap cv::createTonemap(float gamma = 1.0f)
     private static native long createTonemap_0(float gamma);
-
     private static native long createTonemap_1();
 
     // C++:  Ptr_TonemapDrago cv::createTonemapDrago(float gamma = 1.0f, float saturation = 1.0f, float bias = 0.85f)
     private static native long createTonemapDrago_0(float gamma, float saturation, float bias);
-
     private static native long createTonemapDrago_1(float gamma, float saturation);
-
     private static native long createTonemapDrago_2(float gamma);
-
     private static native long createTonemapDrago_3();
 
     // C++:  Ptr_TonemapReinhard cv::createTonemapReinhard(float gamma = 1.0f, float intensity = 0.0f, float light_adapt = 1.0f, float color_adapt = 0.0f)
     private static native long createTonemapReinhard_0(float gamma, float intensity, float light_adapt, float color_adapt);
-
     private static native long createTonemapReinhard_1(float gamma, float intensity, float light_adapt);
-
     private static native long createTonemapReinhard_2(float gamma, float intensity);
-
     private static native long createTonemapReinhard_3(float gamma);
-
     private static native long createTonemapReinhard_4();
 
     // C++:  Ptr_TonemapMantiuk cv::createTonemapMantiuk(float gamma = 1.0f, float scale = 0.7f, float saturation = 1.0f)
     private static native long createTonemapMantiuk_0(float gamma, float scale, float saturation);
-
     private static native long createTonemapMantiuk_1(float gamma, float scale);
-
     private static native long createTonemapMantiuk_2(float gamma);
-
     private static native long createTonemapMantiuk_3();
 
     // C++:  Ptr_AlignMTB cv::createAlignMTB(int max_bits = 6, int exclude_range = 4, bool cut = true)
     private static native long createAlignMTB_0(int max_bits, int exclude_range, boolean cut);
-
     private static native long createAlignMTB_1(int max_bits, int exclude_range);
-
     private static native long createAlignMTB_2(int max_bits);
-
     private static native long createAlignMTB_3();
 
     // C++:  Ptr_CalibrateDebevec cv::createCalibrateDebevec(int samples = 70, float lambda = 10.0f, bool random = false)
     private static native long createCalibrateDebevec_0(int samples, float lambda, boolean random);
-
     private static native long createCalibrateDebevec_1(int samples, float lambda);
-
     private static native long createCalibrateDebevec_2(int samples);
-
     private static native long createCalibrateDebevec_3();
 
     // C++:  Ptr_CalibrateRobertson cv::createCalibrateRobertson(int max_iter = 30, float threshold = 0.01f)
     private static native long createCalibrateRobertson_0(int max_iter, float threshold);
-
     private static native long createCalibrateRobertson_1(int max_iter);
-
     private static native long createCalibrateRobertson_2();
 
     // C++:  Ptr_MergeDebevec cv::createMergeDebevec()
@@ -1917,11 +1888,8 @@ public class Photo {
 
     // C++:  Ptr_MergeMertens cv::createMergeMertens(float contrast_weight = 1.0f, float saturation_weight = 1.0f, float exposure_weight = 0.0f)
     private static native long createMergeMertens_0(float contrast_weight, float saturation_weight, float exposure_weight);
-
     private static native long createMergeMertens_1(float contrast_weight, float saturation_weight);
-
     private static native long createMergeMertens_2(float contrast_weight);
-
     private static native long createMergeMertens_3();
 
     // C++:  Ptr_MergeRobertson cv::createMergeRobertson()
@@ -1935,59 +1903,41 @@ public class Photo {
 
     // C++:  void cv::colorChange(Mat src, Mat mask, Mat& dst, float red_mul = 1.0f, float green_mul = 1.0f, float blue_mul = 1.0f)
     private static native void colorChange_0(long src_nativeObj, long mask_nativeObj, long dst_nativeObj, float red_mul, float green_mul, float blue_mul);
-
     private static native void colorChange_1(long src_nativeObj, long mask_nativeObj, long dst_nativeObj, float red_mul, float green_mul);
-
     private static native void colorChange_2(long src_nativeObj, long mask_nativeObj, long dst_nativeObj, float red_mul);
-
     private static native void colorChange_3(long src_nativeObj, long mask_nativeObj, long dst_nativeObj);
 
     // C++:  void cv::illuminationChange(Mat src, Mat mask, Mat& dst, float alpha = 0.2f, float beta = 0.4f)
     private static native void illuminationChange_0(long src_nativeObj, long mask_nativeObj, long dst_nativeObj, float alpha, float beta);
-
     private static native void illuminationChange_1(long src_nativeObj, long mask_nativeObj, long dst_nativeObj, float alpha);
-
     private static native void illuminationChange_2(long src_nativeObj, long mask_nativeObj, long dst_nativeObj);
 
     // C++:  void cv::textureFlattening(Mat src, Mat mask, Mat& dst, float low_threshold = 30, float high_threshold = 45, int kernel_size = 3)
     private static native void textureFlattening_0(long src_nativeObj, long mask_nativeObj, long dst_nativeObj, float low_threshold, float high_threshold, int kernel_size);
-
     private static native void textureFlattening_1(long src_nativeObj, long mask_nativeObj, long dst_nativeObj, float low_threshold, float high_threshold);
-
     private static native void textureFlattening_2(long src_nativeObj, long mask_nativeObj, long dst_nativeObj, float low_threshold);
-
     private static native void textureFlattening_3(long src_nativeObj, long mask_nativeObj, long dst_nativeObj);
 
     // C++:  void cv::edgePreservingFilter(Mat src, Mat& dst, int flags = 1, float sigma_s = 60, float sigma_r = 0.4f)
     private static native void edgePreservingFilter_0(long src_nativeObj, long dst_nativeObj, int flags, float sigma_s, float sigma_r);
-
     private static native void edgePreservingFilter_1(long src_nativeObj, long dst_nativeObj, int flags, float sigma_s);
-
     private static native void edgePreservingFilter_2(long src_nativeObj, long dst_nativeObj, int flags);
-
     private static native void edgePreservingFilter_3(long src_nativeObj, long dst_nativeObj);
 
     // C++:  void cv::detailEnhance(Mat src, Mat& dst, float sigma_s = 10, float sigma_r = 0.15f)
     private static native void detailEnhance_0(long src_nativeObj, long dst_nativeObj, float sigma_s, float sigma_r);
-
     private static native void detailEnhance_1(long src_nativeObj, long dst_nativeObj, float sigma_s);
-
     private static native void detailEnhance_2(long src_nativeObj, long dst_nativeObj);
 
     // C++:  void cv::pencilSketch(Mat src, Mat& dst1, Mat& dst2, float sigma_s = 60, float sigma_r = 0.07f, float shade_factor = 0.02f)
     private static native void pencilSketch_0(long src_nativeObj, long dst1_nativeObj, long dst2_nativeObj, float sigma_s, float sigma_r, float shade_factor);
-
     private static native void pencilSketch_1(long src_nativeObj, long dst1_nativeObj, long dst2_nativeObj, float sigma_s, float sigma_r);
-
     private static native void pencilSketch_2(long src_nativeObj, long dst1_nativeObj, long dst2_nativeObj, float sigma_s);
-
     private static native void pencilSketch_3(long src_nativeObj, long dst1_nativeObj, long dst2_nativeObj);
 
     // C++:  void cv::stylization(Mat src, Mat& dst, float sigma_s = 60, float sigma_r = 0.45f)
     private static native void stylization_0(long src_nativeObj, long dst_nativeObj, float sigma_s, float sigma_r);
-
     private static native void stylization_1(long src_nativeObj, long dst_nativeObj, float sigma_s);
-
     private static native void stylization_2(long src_nativeObj, long dst_nativeObj);
 
 }

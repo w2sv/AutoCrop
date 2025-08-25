@@ -13,9 +13,10 @@ namespace aruco {
 //! @{
 
 struct CV_EXPORTS_W_SIMPLE CharucoParameters {
-    CharucoParameters() {
+    CV_WRAP CharucoParameters() {
         minMarkers = 2;
         tryRefineMarkers = false;
+        checkMarkers = true;
     }
     /// cameraMatrix optional 3x3 floating-point camera matrix
     CV_PROP_RW Mat cameraMatrix;
@@ -28,6 +29,9 @@ struct CV_EXPORTS_W_SIMPLE CharucoParameters {
 
     /// try to use refine board, default false
     CV_PROP_RW bool tryRefineMarkers;
+
+    /// run check to verify that markers belong to the same board, default true
+    CV_PROP_RW bool checkMarkers;
 };
 
 class CV_EXPORTS_W CharucoDetector : public Algorithm {
@@ -77,6 +81,9 @@ public:
      * If camera parameters are provided, the process is based in an approximated pose estimation, else it is based on local homography.
      * Only visible corners are returned. For each corner, its corresponding identifier is also returned in charucoIds.
      * @sa findChessboardCorners
+     * @note After OpenCV 4.6.0, there was an incompatible change in the ChArUco pattern generation algorithm for even row counts.
+     * Use cv::aruco::CharucoBoard::setLegacyPattern() to ensure compatibility with patterns created using OpenCV versions prior to 4.6.0.
+     * For more information, see the issue: https://github.com/opencv/opencv/issues/23152
      */
     CV_WRAP void detectBoard(InputArray image, OutputArray charucoCorners, OutputArray charucoIds,
                              InputOutputArrayOfArrays markerCorners = noArray(),
@@ -104,7 +111,7 @@ public:
      */
     CV_WRAP void detectDiamonds(InputArray image, OutputArrayOfArrays diamondCorners, OutputArray diamondIds,
                                 InputOutputArrayOfArrays markerCorners = noArray(),
-                                InputOutputArrayOfArrays markerIds = noArray()) const;
+                                InputOutputArray markerIds = noArray()) const;
 protected:
     struct CharucoDetectorImpl;
     Ptr<CharucoDetectorImpl> charucoDetectorImpl;

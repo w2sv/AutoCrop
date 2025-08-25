@@ -34,7 +34,6 @@ android {
         getByName("main") {
             jniLibs.srcDirs(listOf("native/libs"))
             java.srcDirs(listOf("java/src"))
-            aidl.srcDirs(listOf("java/src"))
             res.srcDirs(listOf("java/res"))
         }
     }
@@ -44,4 +43,6 @@ android {
             path("${project.projectDir}/libcxx_helper/CMakeLists.txt")
         }
     }
+
+    buildFeatures.buildConfig = true
 }

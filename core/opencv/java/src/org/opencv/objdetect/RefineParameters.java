@@ -4,18 +4,24 @@
 package org.opencv.objdetect;
 
 
-// C++: class RefineParameters
 
+// C++: class RefineParameters
 /**
  * struct RefineParameters is used by ArucoDetector
  */
 public class RefineParameters {
 
     protected final long nativeObj;
+    protected RefineParameters(long addr) { nativeObj = addr; }
 
-    protected RefineParameters(long addr) {
-        nativeObj = addr;
-    }
+    public long getNativeObjAddr() { return nativeObj; }
+
+    // internal usage only
+    public static RefineParameters __fromPtr__(long addr) { return new RefineParameters(addr); }
+
+    //
+    // C++:   cv::aruco::RefineParameters::RefineParameters(float minRepDistance = 10.f, float errorCorrectionRate = 3.f, bool checkAllOrders = true)
+    //
 
     public RefineParameters(float minRepDistance, float errorCorrectionRate, boolean checkAllOrders) {
         nativeObj = RefineParameters_0(minRepDistance, errorCorrectionRate, checkAllOrders);
@@ -25,10 +31,6 @@ public class RefineParameters {
         nativeObj = RefineParameters_1(minRepDistance, errorCorrectionRate);
     }
 
-    //
-    // C++:   cv::aruco::RefineParameters::RefineParameters(float minRepDistance = 10.f, float errorCorrectionRate = 3.f, bool checkAllOrders = true)
-    //
-
     public RefineParameters(float minRepDistance) {
         nativeObj = RefineParameters_2(minRepDistance);
     }
@@ -36,14 +38,6 @@ public class RefineParameters {
     public RefineParameters() {
         nativeObj = RefineParameters_3();
     }
-
-    // internal usage only
-    public static RefineParameters __fromPtr__(long addr) {
-        return new RefineParameters(addr);
-    }
-
-    // C++:   cv::aruco::RefineParameters::RefineParameters(float minRepDistance = 10.f, float errorCorrectionRate = 3.f, bool checkAllOrders = true)
-    private static native long RefineParameters_0(float minRepDistance, float errorCorrectionRate, boolean checkAllOrders);
 
 
     //
@@ -64,42 +58,74 @@ public class RefineParameters {
     // C++: float RefineParameters::minRepDistance
     //
 
-    private static native long RefineParameters_1(float minRepDistance, float errorCorrectionRate);
+    public float get_minRepDistance() {
+        return get_minRepDistance_0(nativeObj);
+    }
 
 
     //
     // C++: void RefineParameters::minRepDistance
     //
 
-    private static native long RefineParameters_2(float minRepDistance);
+    public void set_minRepDistance(float minRepDistance) {
+        set_minRepDistance_0(nativeObj, minRepDistance);
+    }
 
 
     //
     // C++: float RefineParameters::errorCorrectionRate
     //
 
-    private static native long RefineParameters_3();
+    public float get_errorCorrectionRate() {
+        return get_errorCorrectionRate_0(nativeObj);
+    }
 
 
     //
     // C++: void RefineParameters::errorCorrectionRate
     //
 
-    // C++: float RefineParameters::minRepDistance
-    private static native float get_minRepDistance_0(long nativeObj);
+    public void set_errorCorrectionRate(float errorCorrectionRate) {
+        set_errorCorrectionRate_0(nativeObj, errorCorrectionRate);
+    }
 
 
     //
     // C++: bool RefineParameters::checkAllOrders
     //
 
-    // C++: void RefineParameters::minRepDistance
-    private static native void set_minRepDistance_0(long nativeObj, float minRepDistance);
+    public boolean get_checkAllOrders() {
+        return get_checkAllOrders_0(nativeObj);
+    }
 
 
     //
     // C++: void RefineParameters::checkAllOrders
     //
+
+    public void set_checkAllOrders(boolean checkAllOrders) {
+        set_checkAllOrders_0(nativeObj, checkAllOrders);
+    }
+
+
+    @Override
+    protected void finalize() throws Throwable {
+        delete(nativeObj);
+    }
+
+
+
+    // C++:   cv::aruco::RefineParameters::RefineParameters(float minRepDistance = 10.f, float errorCorrectionRate = 3.f, bool checkAllOrders = true)
+    private static native long RefineParameters_0(float minRepDistance, float errorCorrectionRate, boolean checkAllOrders);
+    private static native long RefineParameters_1(float minRepDistance, float errorCorrectionRate);
+    private static native long RefineParameters_2(float minRepDistance);
+    private static native long RefineParameters_3();
+
+    // C++: float RefineParameters::minRepDistance
+    private static native float get_minRepDistance_0(long nativeObj);
+
+    // C++: void RefineParameters::minRepDistance
+    private static native void set_minRepDistance_0(long nativeObj, float minRepDistance);
 
     // C++: float RefineParameters::errorCorrectionRate
     private static native float get_errorCorrectionRate_0(long nativeObj);
@@ -115,38 +141,5 @@ public class RefineParameters {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
-    public long getNativeObjAddr() {
-        return nativeObj;
-    }
-
-    public float get_minRepDistance() {
-        return get_minRepDistance_0(nativeObj);
-    }
-
-    public void set_minRepDistance(float minRepDistance) {
-        set_minRepDistance_0(nativeObj, minRepDistance);
-    }
-
-    public float get_errorCorrectionRate() {
-        return get_errorCorrectionRate_0(nativeObj);
-    }
-
-    public void set_errorCorrectionRate(float errorCorrectionRate) {
-        set_errorCorrectionRate_0(nativeObj, errorCorrectionRate);
-    }
-
-    public boolean get_checkAllOrders() {
-        return get_checkAllOrders_0(nativeObj);
-    }
-
-    public void set_checkAllOrders(boolean checkAllOrders) {
-        set_checkAllOrders_0(nativeObj, checkAllOrders);
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        delete(nativeObj);
-    }
 
 }

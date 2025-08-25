@@ -3,6 +3,9 @@
 //
 package org.opencv.videoio;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.opencv.utils.Converters;
 
 // C++: class Videoio
 
@@ -32,14 +35,14 @@ public class Videoio {
             CAP_PROP_OPENNI_GENERATOR_PRESENT = 109,
             CAP_PROP_OPENNI2_SYNC = 110,
             CAP_PROP_OPENNI2_MIRROR = 111,
-            CAP_OPENNI_IMAGE_GENERATOR_PRESENT = CAP_OPENNI_IMAGE_GENERATOR + CAP_PROP_OPENNI_GENERATOR_PRESENT,
-            CAP_OPENNI_IMAGE_GENERATOR_OUTPUT_MODE = CAP_OPENNI_IMAGE_GENERATOR + CAP_PROP_OPENNI_OUTPUT_MODE,
-            CAP_OPENNI_DEPTH_GENERATOR_PRESENT = CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_GENERATOR_PRESENT,
-            CAP_OPENNI_DEPTH_GENERATOR_BASELINE = CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_BASELINE,
-            CAP_OPENNI_DEPTH_GENERATOR_FOCAL_LENGTH = CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_FOCAL_LENGTH,
-            CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION = CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_REGISTRATION,
+            CAP_OPENNI_IMAGE_GENERATOR_PRESENT = +CAP_OPENNI_IMAGE_GENERATOR + CAP_PROP_OPENNI_GENERATOR_PRESENT,
+            CAP_OPENNI_IMAGE_GENERATOR_OUTPUT_MODE = +CAP_OPENNI_IMAGE_GENERATOR + CAP_PROP_OPENNI_OUTPUT_MODE,
+            CAP_OPENNI_DEPTH_GENERATOR_PRESENT = +CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_GENERATOR_PRESENT,
+            CAP_OPENNI_DEPTH_GENERATOR_BASELINE = +CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_BASELINE,
+            CAP_OPENNI_DEPTH_GENERATOR_FOCAL_LENGTH = +CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_FOCAL_LENGTH,
+            CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION = +CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_REGISTRATION,
             CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION_ON = CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION,
-            CAP_OPENNI_IR_GENERATOR_PRESENT = CAP_OPENNI_IR_GENERATOR + CAP_PROP_OPENNI_GENERATOR_PRESENT,
+            CAP_OPENNI_IR_GENERATOR_PRESENT = +CAP_OPENNI_IR_GENERATOR + CAP_PROP_OPENNI_GENERATOR_PRESENT,
             CAP_OPENNI_DEPTH_MAP = 0,
             CAP_OPENNI_POINT_CLOUD_MAP = 1,
             CAP_OPENNI_DISPARITY_MAP = 2,
@@ -229,6 +232,7 @@ public class Videoio {
             CAP_PROP_XI_SENSOR_FEATURE_SELECTOR = 585,
             CAP_PROP_XI_SENSOR_FEATURE_VALUE = 586,
             CAP_PROP_ARAVIS_AUTOTRIGGER = 600,
+            CAP_PROP_ANDROID_DEVICE_TORCH = 8001,
             CAP_PROP_IOS_DEVICE_FOCUS = 9001,
             CAP_PROP_IOS_DEVICE_EXPOSURE = 9002,
             CAP_PROP_IOS_DEVICE_FLASH = 9003,
@@ -323,12 +327,24 @@ public class Videoio {
             CAP_OBSENSOR_DEPTH_MAP = 0,
             CAP_OBSENSOR_BGR_IMAGE = 1,
             CAP_OBSENSOR_IR_IMAGE = 2;
+
+
+    // C++: enum VideoCaptureOBSensorGenerators (cv.VideoCaptureOBSensorGenerators)
+    public static final int
+            CAP_OBSENSOR_DEPTH_GENERATOR = 1 << 29,
+            CAP_OBSENSOR_IMAGE_GENERATOR = 1 << 28,
+            CAP_OBSENSOR_IR_GENERATOR = 1 << 27,
+            CAP_OBSENSOR_GENERATORS_MASK = CAP_OBSENSOR_DEPTH_GENERATOR + CAP_OBSENSOR_IMAGE_GENERATOR + CAP_OBSENSOR_IR_GENERATOR;
+
+
     // C++: enum VideoCaptureOBSensorProperties (cv.VideoCaptureOBSensorProperties)
     public static final int
             CAP_PROP_OBSENSOR_INTRINSIC_FX = 26001,
             CAP_PROP_OBSENSOR_INTRINSIC_FY = 26002,
             CAP_PROP_OBSENSOR_INTRINSIC_CX = 26003,
-            CAP_PROP_OBSENSOR_INTRINSIC_CY = 26004;    // C++: enum VideoCaptureOBSensorGenerators (cv.VideoCaptureOBSensorGenerators)
+            CAP_PROP_OBSENSOR_INTRINSIC_CY = 26004;
+
+
     // C++: enum VideoCaptureProperties (cv.VideoCaptureProperties)
     public static final int
             CAP_PROP_POS_MSEC = 0,
@@ -400,11 +416,11 @@ public class Videoio {
             CAP_PROP_LRF_HAS_KEY_FRAME = 67,
             CAP_PROP_CODEC_EXTRADATA_INDEX = 68,
             CAP_PROP_FRAME_TYPE = 69,
-            CAP_PROP_N_THREADS = 70;    public static final int
-            CAP_OBSENSOR_DEPTH_GENERATOR = 1 << 29,
-            CAP_OBSENSOR_IMAGE_GENERATOR = 1 << 28,
-            CAP_OBSENSOR_IR_GENERATOR = 1 << 27,
-            CAP_OBSENSOR_GENERATORS_MASK = CAP_OBSENSOR_DEPTH_GENERATOR + CAP_OBSENSOR_IMAGE_GENERATOR + CAP_OBSENSOR_IR_GENERATOR;
+            CAP_PROP_N_THREADS = 70,
+            CAP_PROP_PTS = 71,
+            CAP_PROP_DTS_DELAY = 72;
+
+
     // C++: enum VideoWriterProperties (cv.VideoWriterProperties)
     public static final int
             VIDEOWRITER_PROP_QUALITY = 1,
@@ -414,11 +430,20 @@ public class Videoio {
             VIDEOWRITER_PROP_DEPTH = 5,
             VIDEOWRITER_PROP_HW_ACCELERATION = 6,
             VIDEOWRITER_PROP_HW_DEVICE = 7,
-            VIDEOWRITER_PROP_HW_ACCELERATION_USE_OPENCL = 8;
+            VIDEOWRITER_PROP_HW_ACCELERATION_USE_OPENCL = 8,
+            VIDEOWRITER_PROP_RAW_VIDEO = 9,
+            VIDEOWRITER_PROP_KEY_INTERVAL = 10,
+            VIDEOWRITER_PROP_KEY_FLAG = 11,
+            VIDEOWRITER_PROP_PTS = 12,
+            VIDEOWRITER_PROP_DTS_DELAY = 13;
+
+
+    //
+    // C++:  String cv::videoio_registry::getBackendName(VideoCaptureAPIs api)
+    //
 
     /**
      * Returns backend API name or "UnknownVideoAPI(xxx)"
-     *
      * @param api backend ID (#VideoCaptureAPIs)
      * @return automatically generated
      */
@@ -426,9 +451,78 @@ public class Videoio {
         return getBackendName_0(api);
     }
 
+
+    //
+    // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getBackends()
+    //
+
+    /**
+     * Returns list of all available backends
+     * @return automatically generated
+     */
+    public static List<Integer> getBackends() {
+        return getBackends_0();
+    }
+
+
+    //
+    // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getCameraBackends()
+    //
+
+    /**
+     * Returns list of available backends which works via {@code cv::VideoCapture(int index)}
+     * @return automatically generated
+     */
+    public static List<Integer> getCameraBackends() {
+        return getCameraBackends_0();
+    }
+
+
+    //
+    // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getStreamBackends()
+    //
+
+    /**
+     * Returns list of available backends which works via {@code cv::VideoCapture(filename)}
+     * @return automatically generated
+     */
+    public static List<Integer> getStreamBackends() {
+        return getStreamBackends_0();
+    }
+
+
+    //
+    // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getStreamBufferedBackends()
+    //
+
+    /**
+     * Returns list of available backends which works via {@code cv::VideoCapture(buffer)}
+     * @return automatically generated
+     */
+    public static List<Integer> getStreamBufferedBackends() {
+        return getStreamBufferedBackends_0();
+    }
+
+
+    //
+    // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getWriterBackends()
+    //
+
+    /**
+     * Returns list of available backends which works via {@code cv::VideoWriter()}
+     * @return automatically generated
+     */
+    public static List<Integer> getWriterBackends() {
+        return getWriterBackends_0();
+    }
+
+
+    //
+    // C++:  bool cv::videoio_registry::hasBackend(VideoCaptureAPIs api)
+    //
+
     /**
      * Returns true if backend is available
-     *
      * @param api automatically generated
      * @return automatically generated
      */
@@ -438,12 +532,11 @@ public class Videoio {
 
 
     //
-    // C++:  String cv::videoio_registry::getBackendName(VideoCaptureAPIs api)
+    // C++:  bool cv::videoio_registry::isBackendBuiltIn(VideoCaptureAPIs api)
     //
 
     /**
      * Returns true if backend is built in (false if backend is used as plugin)
-     *
      * @param api automatically generated
      * @return automatically generated
      */
@@ -453,41 +546,12 @@ public class Videoio {
 
 
     //
-    // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getBackends()
-    //
-
-    // Return type 'vector_VideoCaptureAPIs' is not supported, skipping the function
-
-
-    //
-    // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getCameraBackends()
-    //
-
-    // Return type 'vector_VideoCaptureAPIs' is not supported, skipping the function
-
-
-    //
-    // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getStreamBackends()
-    //
-
-    // Return type 'vector_VideoCaptureAPIs' is not supported, skipping the function
-
-
-    //
-    // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getWriterBackends()
-    //
-
-    // Return type 'vector_VideoCaptureAPIs' is not supported, skipping the function
-
-
-    //
-    // C++:  bool cv::videoio_registry::hasBackend(VideoCaptureAPIs api)
+    // C++:  string cv::videoio_registry::getCameraBackendPluginVersion(VideoCaptureAPIs api, int& version_ABI, int& version_API)
     //
 
     /**
      * Returns description and ABI/API version of videoio plugin's camera interface
-     *
-     * @param api         automatically generated
+     * @param api automatically generated
      * @param version_ABI automatically generated
      * @param version_API automatically generated
      * @return automatically generated
@@ -496,52 +560,8 @@ public class Videoio {
         double[] version_ABI_out = new double[1];
         double[] version_API_out = new double[1];
         String retVal = getCameraBackendPluginVersion_0(api, version_ABI_out, version_API_out);
-        if (version_ABI != null) version_ABI[0] = (int) version_ABI_out[0];
-        if (version_API != null) version_API[0] = (int) version_API_out[0];
-        return retVal;
-    }
-
-
-    //
-    // C++:  bool cv::videoio_registry::isBackendBuiltIn(VideoCaptureAPIs api)
-    //
-
-    /**
-     * Returns description and ABI/API version of videoio plugin's stream capture interface
-     *
-     * @param api         automatically generated
-     * @param version_ABI automatically generated
-     * @param version_API automatically generated
-     * @return automatically generated
-     */
-    public static String getStreamBackendPluginVersion(int api, int[] version_ABI, int[] version_API) {
-        double[] version_ABI_out = new double[1];
-        double[] version_API_out = new double[1];
-        String retVal = getStreamBackendPluginVersion_0(api, version_ABI_out, version_API_out);
-        if (version_ABI != null) version_ABI[0] = (int) version_ABI_out[0];
-        if (version_API != null) version_API[0] = (int) version_API_out[0];
-        return retVal;
-    }
-
-
-    //
-    // C++:  string cv::videoio_registry::getCameraBackendPluginVersion(VideoCaptureAPIs api, int& version_ABI, int& version_API)
-    //
-
-    /**
-     * Returns description and ABI/API version of videoio plugin's writer interface
-     *
-     * @param api         automatically generated
-     * @param version_ABI automatically generated
-     * @param version_API automatically generated
-     * @return automatically generated
-     */
-    public static String getWriterBackendPluginVersion(int api, int[] version_ABI, int[] version_API) {
-        double[] version_ABI_out = new double[1];
-        double[] version_API_out = new double[1];
-        String retVal = getWriterBackendPluginVersion_0(api, version_ABI_out, version_API_out);
-        if (version_ABI != null) version_ABI[0] = (int) version_ABI_out[0];
-        if (version_API != null) version_API[0] = (int) version_API_out[0];
+        if(version_ABI!=null) version_ABI[0] = (int)version_ABI_out[0];
+        if(version_API!=null) version_API[0] = (int)version_API_out[0];
         return retVal;
     }
 
@@ -550,13 +570,84 @@ public class Videoio {
     // C++:  string cv::videoio_registry::getStreamBackendPluginVersion(VideoCaptureAPIs api, int& version_ABI, int& version_API)
     //
 
-    // C++:  String cv::videoio_registry::getBackendName(VideoCaptureAPIs api)
-    private static native String getBackendName_0(int api);
+    /**
+     * Returns description and ABI/API version of videoio plugin's stream capture interface
+     * @param api automatically generated
+     * @param version_ABI automatically generated
+     * @param version_API automatically generated
+     * @return automatically generated
+     */
+    public static String getStreamBackendPluginVersion(int api, int[] version_ABI, int[] version_API) {
+        double[] version_ABI_out = new double[1];
+        double[] version_API_out = new double[1];
+        String retVal = getStreamBackendPluginVersion_0(api, version_ABI_out, version_API_out);
+        if(version_ABI!=null) version_ABI[0] = (int)version_ABI_out[0];
+        if(version_API!=null) version_API[0] = (int)version_API_out[0];
+        return retVal;
+    }
+
+
+    //
+    // C++:  string cv::videoio_registry::getStreamBufferedBackendPluginVersion(VideoCaptureAPIs api, int& version_ABI, int& version_API)
+    //
+
+    /**
+     * Returns description and ABI/API version of videoio plugin's buffer capture interface
+     * @param api automatically generated
+     * @param version_ABI automatically generated
+     * @param version_API automatically generated
+     * @return automatically generated
+     */
+    public static String getStreamBufferedBackendPluginVersion(int api, int[] version_ABI, int[] version_API) {
+        double[] version_ABI_out = new double[1];
+        double[] version_API_out = new double[1];
+        String retVal = getStreamBufferedBackendPluginVersion_0(api, version_ABI_out, version_API_out);
+        if(version_ABI!=null) version_ABI[0] = (int)version_ABI_out[0];
+        if(version_API!=null) version_API[0] = (int)version_API_out[0];
+        return retVal;
+    }
 
 
     //
     // C++:  string cv::videoio_registry::getWriterBackendPluginVersion(VideoCaptureAPIs api, int& version_ABI, int& version_API)
     //
+
+    /**
+     * Returns description and ABI/API version of videoio plugin's writer interface
+     * @param api automatically generated
+     * @param version_ABI automatically generated
+     * @param version_API automatically generated
+     * @return automatically generated
+     */
+    public static String getWriterBackendPluginVersion(int api, int[] version_ABI, int[] version_API) {
+        double[] version_ABI_out = new double[1];
+        double[] version_API_out = new double[1];
+        String retVal = getWriterBackendPluginVersion_0(api, version_ABI_out, version_API_out);
+        if(version_ABI!=null) version_ABI[0] = (int)version_ABI_out[0];
+        if(version_API!=null) version_API[0] = (int)version_API_out[0];
+        return retVal;
+    }
+
+
+
+
+    // C++:  String cv::videoio_registry::getBackendName(VideoCaptureAPIs api)
+    private static native String getBackendName_0(int api);
+
+    // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getBackends()
+    private static native List<Integer> getBackends_0();
+
+    // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getCameraBackends()
+    private static native List<Integer> getCameraBackends_0();
+
+    // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getStreamBackends()
+    private static native List<Integer> getStreamBackends_0();
+
+    // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getStreamBufferedBackends()
+    private static native List<Integer> getStreamBufferedBackends_0();
+
+    // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getWriterBackends()
+    private static native List<Integer> getWriterBackends_0();
 
     // C++:  bool cv::videoio_registry::hasBackend(VideoCaptureAPIs api)
     private static native boolean hasBackend_0(int api);
@@ -570,10 +661,10 @@ public class Videoio {
     // C++:  string cv::videoio_registry::getStreamBackendPluginVersion(VideoCaptureAPIs api, int& version_ABI, int& version_API)
     private static native String getStreamBackendPluginVersion_0(int api, double[] version_ABI_out, double[] version_API_out);
 
+    // C++:  string cv::videoio_registry::getStreamBufferedBackendPluginVersion(VideoCaptureAPIs api, int& version_ABI, int& version_API)
+    private static native String getStreamBufferedBackendPluginVersion_0(int api, double[] version_ABI_out, double[] version_API_out);
+
     // C++:  string cv::videoio_registry::getWriterBackendPluginVersion(VideoCaptureAPIs api, int& version_ABI, int& version_API)
     private static native String getWriterBackendPluginVersion_0(int api, double[] version_ABI_out, double[] version_API_out);
-
-
-
 
 }

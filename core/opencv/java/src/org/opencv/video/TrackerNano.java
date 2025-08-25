@@ -3,11 +3,15 @@
 //
 package org.opencv.video;
 
-// C++: class TrackerNano
+import org.opencv.dnn.Net;
+import org.opencv.video.Tracker;
+import org.opencv.video.TrackerNano;
+import org.opencv.video.TrackerNano_Params;
 
+// C++: class TrackerNano
 /**
  * the Nano tracker is a super lightweight dnn-based general object tracking.
- * <p>
+ *
  * Nano tracker is much faster and extremely lightweight due to special model structure, the whole model size is about 1.9 MB.
  * Nano tracker needs two models: one for feature extraction (backbone) and the another for localization (neckhead).
  * Model download link: https://github.com/HonglinChu/SiamTrackers/tree/master/NanoTrack/models/nanotrackv2
@@ -16,14 +20,10 @@ package org.opencv.video;
  */
 public class TrackerNano extends Tracker {
 
-    protected TrackerNano(long addr) {
-        super(addr);
-    }
+    protected TrackerNano(long addr) { super(addr); }
 
     // internal usage only
-    public static TrackerNano __fromPtr__(long addr) {
-        return new TrackerNano(addr);
-    }
+    public static TrackerNano __fromPtr__(long addr) { return new TrackerNano(addr); }
 
     //
     // C++: static Ptr_TrackerNano cv::TrackerNano::create(TrackerNano_Params parameters = TrackerNano::Params())
@@ -31,17 +31,15 @@ public class TrackerNano extends Tracker {
 
     /**
      * Constructor
-     *
-     * @param parameters NanoTrack parameters TrackerNano::Params
+     *     @param parameters NanoTrack parameters TrackerNano::Params
      * @return automatically generated
      */
     public static TrackerNano create(TrackerNano_Params parameters) {
-        return TrackerNano.__fromPtr__(create_0(parameters.nativeObj));
+        return TrackerNano.__fromPtr__(create_0(parameters.getNativeObjAddr()));
     }
 
     /**
      * Constructor
-     *
      * @return automatically generated
      */
     public static TrackerNano create() {
@@ -50,32 +48,51 @@ public class TrackerNano extends Tracker {
 
 
     //
+    // C++: static Ptr_TrackerNano cv::TrackerNano::create(Net backbone, Net neckhead)
+    //
+
+    /**
+     * Constructor
+     * @param backbone pre-loaded backbone model
+     * @param neckhead pre-loaded neckhead model
+     * @return automatically generated
+     */
+    public static TrackerNano create(Net backbone, Net neckhead) {
+        return TrackerNano.__fromPtr__(create_2(backbone.getNativeObjAddr(), neckhead.getNativeObjAddr()));
+    }
+
+
+    //
     // C++:  float cv::TrackerNano::getTrackingScore()
     //
 
-    // C++: static Ptr_TrackerNano cv::TrackerNano::create(TrackerNano_Params parameters = TrackerNano::Params())
-    private static native long create_0(long parameters_nativeObj);
-
-    private static native long create_1();
-
-    // C++:  float cv::TrackerNano::getTrackingScore()
-    private static native float getTrackingScore_0(long nativeObj);
-
-    // native support for java finalize()
-    private static native void delete(long nativeObj);
-
     /**
      * Return tracking score
-     *
      * @return automatically generated
      */
     public float getTrackingScore() {
         return getTrackingScore_0(nativeObj);
     }
 
+
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
+
+
+
+    // C++: static Ptr_TrackerNano cv::TrackerNano::create(TrackerNano_Params parameters = TrackerNano::Params())
+    private static native long create_0(long parameters_nativeObj);
+    private static native long create_1();
+
+    // C++: static Ptr_TrackerNano cv::TrackerNano::create(Net backbone, Net neckhead)
+    private static native long create_2(long backbone_nativeObj, long neckhead_nativeObj);
+
+    // C++:  float cv::TrackerNano::getTrackingScore()
+    private static native float getTrackingScore_0(long nativeObj);
+
+    // native support for java finalize()
+    private static native void delete(long nativeObj);
 
 }

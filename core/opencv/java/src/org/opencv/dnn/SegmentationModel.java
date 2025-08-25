@@ -4,32 +4,23 @@
 package org.opencv.dnn;
 
 import org.opencv.core.Mat;
+import org.opencv.dnn.Model;
+import org.opencv.dnn.Net;
 
 // C++: class SegmentationModel
-
 /**
  * This class represents high-level API for segmentation  models
- * <p>
+ *
  * SegmentationModel allows to set params for preprocessing input image.
  * SegmentationModel creates net from file with trained weights and config,
  * sets preprocessing input, runs forward pass and returns the class prediction for each pixel.
  */
 public class SegmentationModel extends Model {
 
-    protected SegmentationModel(long addr) {
-        super(addr);
-    }
+    protected SegmentationModel(long addr) { super(addr); }
 
-    /**
-     * Create segmentation model from network represented in one of the supported formats.
-     * An order of {@code model} and {@code config} arguments does not matter.
-     *
-     * @param model  Binary file contains trained weights.
-     * @param config Text file contains network configuration.
-     */
-    public SegmentationModel(String model, String config) {
-        super(SegmentationModel_0(model, config));
-    }
+    // internal usage only
+    public static SegmentationModel __fromPtr__(long addr) { return new SegmentationModel(addr); }
 
     //
     // C++:   cv::dnn::SegmentationModel::SegmentationModel(String model, String config = "")
@@ -38,20 +29,20 @@ public class SegmentationModel extends Model {
     /**
      * Create segmentation model from network represented in one of the supported formats.
      * An order of {@code model} and {@code config} arguments does not matter.
-     *
+     * @param model Binary file contains trained weights.
+     * @param config Text file contains network configuration.
+     */
+    public SegmentationModel(String model, String config) {
+        super(SegmentationModel_0(model, config));
+    }
+
+    /**
+     * Create segmentation model from network represented in one of the supported formats.
+     * An order of {@code model} and {@code config} arguments does not matter.
      * @param model Binary file contains trained weights.
      */
     public SegmentationModel(String model) {
         super(SegmentationModel_1(model));
-    }
-
-    /**
-     * Create model from deep learning network.
-     *
-     * @param network Net object.
-     */
-    public SegmentationModel(Net network) {
-        super(SegmentationModel_2(network.nativeObj));
     }
 
 
@@ -59,9 +50,12 @@ public class SegmentationModel extends Model {
     // C++:   cv::dnn::SegmentationModel::SegmentationModel(Net network)
     //
 
-    // internal usage only
-    public static SegmentationModel __fromPtr__(long addr) {
-        return new SegmentationModel(addr);
+    /**
+     * Create model from deep learning network.
+     * @param network Net object.
+     */
+    public SegmentationModel(Net network) {
+        super(SegmentationModel_2(network.getNativeObjAddr()));
     }
 
 
@@ -69,9 +63,25 @@ public class SegmentationModel extends Model {
     // C++:  void cv::dnn::SegmentationModel::segment(Mat frame, Mat& mask)
     //
 
+    /**
+     * Given the {@code input} frame, create input blob, run net
+     * @param mask Allocated class prediction for each pixel
+     * @param frame automatically generated
+     */
+    public void segment(Mat frame, Mat mask) {
+        segment_0(nativeObj, frame.nativeObj, mask.nativeObj);
+    }
+
+
+    @Override
+    protected void finalize() throws Throwable {
+        delete(nativeObj);
+    }
+
+
+
     // C++:   cv::dnn::SegmentationModel::SegmentationModel(String model, String config = "")
     private static native long SegmentationModel_0(String model, String config);
-
     private static native long SegmentationModel_1(String model);
 
     // C++:   cv::dnn::SegmentationModel::SegmentationModel(Net network)
@@ -82,20 +92,5 @@ public class SegmentationModel extends Model {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
-    /**
-     * Given the {@code input} frame, create input blob, run net
-     *
-     * @param mask  Allocated class prediction for each pixel
-     * @param frame automatically generated
-     */
-    public void segment(Mat frame, Mat mask) {
-        segment_0(nativeObj, frame.nativeObj, mask.nativeObj);
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        delete(nativeObj);
-    }
 
 }
