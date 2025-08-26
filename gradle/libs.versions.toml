@@ -1,17 +1,17 @@
 [versions]
-agp = "8.12.0"
+agp = "8.12.1"
 androidutils = "0.4.6"
 androidxNavigation = "2.9.3"
 # @keep
 compileSdk = "36"
 datastoreutils = "0.0.7-rc2"
-hilt = "2.57"
+hilt = "2.57.1"
 # @keep
 java = "17"
 junit = "4.13.2"
-kotlin = "2.2.0"
-ksp = "2.2.0-2.0.2"
-ktlint = "13.0.0"
+kotlin = "2.2.10"
+ksp = "2.2.10-2.0.2"
+ktlint = "13.1.0"
 lifecycle = "2.9.2"
 # @keep
 minSdk = "26"
@@ -24,9 +24,9 @@ versionCatalogUpdate = "1.0.0"
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 androidx-activity = "androidx.activity:activity-ktx:1.10.1"
 androidx-appcompat = "androidx.appcompat:appcompat:1.7.1"
-androidx-core = "androidx.core:core-ktx:1.16.0"
+androidx-core = "androidx.core:core-ktx:1.17.0"
 androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.1.7"
-androidx-fragment = "androidx.fragment:fragment-ktx:1.8.8"
+androidx-fragment = "androidx.fragment:fragment-ktx:1.8.9"
 androidx-hilt-navigation-fragment = "androidx.hilt:hilt-navigation-fragment:1.2.0"
 androidx-lifecycle-livedata-core-ktx = { module = "androidx.lifecycle:lifecycle-livedata-core-ktx", version.ref = "lifecycle" }
 androidx-navigation-fragment = { module = "androidx.navigation:navigation-fragment", version.ref = "androidxNavigation" }
@@ -58,7 +58,7 @@ w2sv-bidirectionalviewpager = "com.github.w2sv:BidirectionalViewPager:0.0.2-rc1"
 w2sv-datastoreutils-preferences = { module = "com.github.w2sv.DataStoreUtils:preferences", version.ref = "datastoreutils" }
 w2sv-kotlindelegates = "com.github.w2sv:Kotlin-Delegates:0.0.1-rc1"
 w2sv-kotlinutils = "com.github.w2sv:KotlinUtils:0.1.9"
-w2sv-permissionhandler = "com.github.w2sv:PermissionHandler:1.0.1-rc2"
+w2sv-permissionhandler = "com.github.w2sv:PermissionHandler:1.1.0-rc1"
 w2sv-viewanimations = "com.github.w2sv:AndroidViewAnimations:3.0.2-rc2"
 w2sv-viewboundcontroller = "com.github.w2sv:ViewboundController:0.0.7-rc1"
 
@@ -73,11 +73,11 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 androidx-navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigation" }
 # @keep
+autocrop-application = { id = "autocrop.application" }
+# @keep
 autocrop-hilt = { id = "autocrop.hilt" }
 # @keep
 autocrop-library = { id = "autocrop.library" }
-# @keep
-autocrop-application = { id = "autocrop.application" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
