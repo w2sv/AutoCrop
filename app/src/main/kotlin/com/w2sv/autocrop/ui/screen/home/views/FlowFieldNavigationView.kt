@@ -2,12 +2,11 @@ package com.w2sv.autocrop.ui.screen.home.views
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.util.AttributeSet
 import androidx.core.app.ShareCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.navigation.NavigationView
 import com.w2sv.androidutils.openUrl
 import com.w2sv.androidutils.packagePlayStoreUrl
@@ -18,7 +17,6 @@ import com.w2sv.androidutils.view.viewModel
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.screen.home.HomeScreenFragment
-import com.w2sv.autocrop.ui.screen.home.HomeScreenFragmentDirections
 import com.w2sv.autocrop.ui.screen.home.HomeScreenViewModel
 
 class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) : NavigationView(context, attributeSet) {
@@ -93,11 +91,6 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) : Na
                         .show(homeScreenFragment.childFragmentManager)
                 }
 
-                R.id.main_menu_item_about -> {
-                    homeScreenFragment.findNavController()
-                        .navigate(HomeScreenFragmentDirections.navigateToAboutScreen())
-                }
-
                 R.id.main_menu_item_go_to_github -> {
                     context.openUrl("https://github.com/w2sv/autocrop")
                 }
@@ -106,7 +99,7 @@ class FlowFieldNavigationView(context: Context, attributeSet: AttributeSet) : Na
                     context.startActivity(
                         Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse(context.packagePlayStoreUrl)
+                            context.packagePlayStoreUrl.toUri()
                         )
                             .setPackage("com.android.vending"),
                         onActivityNotFoundException = {

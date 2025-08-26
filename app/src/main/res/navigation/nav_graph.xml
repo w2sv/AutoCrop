@@ -8,17 +8,9 @@
         android:name="com.w2sv.autocrop.ui.screen.home.HomeScreenFragment">
 
         <action
-            android:id="@+id/navigate_to_about_screen"
-            app:destination="@id/about_screen" />
-
-        <action
             android:id="@+id/navigate_to_crop_screen"
             app:destination="@id/crop_nav_graph" />
     </fragment>
-
-    <fragment
-        android:id="@+id/about_screen"
-        android:name="com.w2sv.autocrop.ui.screen.about.AboutScreenFragment" />
 
     <navigation
         android:id="@+id/crop_nav_graph"
