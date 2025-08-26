@@ -20,7 +20,7 @@ import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
 import com.w2sv.autocrop.ui.util.getAnimationComposer
 import com.w2sv.autocrop.util.launchAfterShortDelay
-import com.w2sv.cropbundle.io.ScreenshotDeletionResult
+import com.w2sv.domain.model.ScreenshotDeletionResult
 import kotlinx.coroutines.launch
 
 class ExitFragment : AppFragment<CropPagerExitBinding>(CropPagerExitBinding::class.java) {

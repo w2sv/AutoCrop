@@ -5,9 +5,9 @@ import android.view.View
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.BuildConfig
-import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.AboutBinding
 import com.w2sv.autocrop.ui.util.animate
+import com.w2sv.core.common.R.string as Strings
 import java.util.Calendar
 import slimber.log.i
 
@@ -23,8 +23,8 @@ class AboutScreenFragment : AppFragment<AboutBinding>(AboutBinding::class.java) 
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
-            copyrightTv.text = resources.getString(R.string.copyright, Calendar.getInstance().get(Calendar.YEAR))
-            versionTv.text = resources.getString(R.string.version, BuildConfig.VERSION_NAME)
+            copyrightTv.text = resources.getString(Strings.copyright, Calendar.getInstance().get(Calendar.YEAR))
+            versionTv.text = resources.getString(Strings.version, BuildConfig.VERSION_NAME)
 
             appTitleTextView.setOnClickListener { it.animate(Techniques.Wobble) }
             logoIv.setOnClickListener { it.animate(Techniques.Tada) }

@@ -17,7 +17,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.AppFragment
-import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.HomeScreenBinding
 import com.w2sv.autocrop.ui.util.fadeIn
 import com.w2sv.autocrop.ui.util.fadeInAnimationComposer
@@ -25,12 +24,13 @@ import com.w2sv.autocrop.ui.util.fadeOut
 import com.w2sv.autocrop.ui.util.onHalfwayFinished
 import com.w2sv.autocrop.ui.util.resolution
 import com.w2sv.autocrop.util.getMediaUri
+import com.w2sv.core.common.R.string as Strings
 import com.w2sv.domain.repository.PermissionRepository
 import com.w2sv.flowfield.PerlinNoiseFlowFieldSketch
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import processing.android.PFragment
 import processing.core.PApplet
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeScreenFragment : AppFragment<HomeScreenBinding>(HomeScreenBinding::class.java) {
@@ -79,8 +79,7 @@ class HomeScreenFragment : AppFragment<HomeScreenBinding>(HomeScreenBinding::cla
                         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                         foregroundLayoutParent.setOnClickListener { viewModel.toggleFullFlowFieldDisplay() }
                         foregroundLayout.fadeOut()
-                    }
-                    else {
+                    } else {
                         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
                         foregroundLayoutParent.setOnClickListener(null)
                         foregroundLayout.fadeIn()
@@ -102,8 +101,8 @@ class HomeScreenFragment : AppFragment<HomeScreenBinding>(HomeScreenBinding::cla
     //        AppPermissionHandler(
     //            activity = requireActivity(),
     //            permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
-    //            permissionDeniedMessageRes = R.string.media_file_writing_required_for_saving_crops,
-    //            permissionRationalSuppressedMessageRes = R.string.go_to_app_settings_and_grant_media_file_writing_in_order_for_the_app_to_work,
+    //            permissionDeniedMessageRes = Strings.media_file_writing_required_for_saving_crops,
+    //            permissionRationalSuppressedMessageRes = Strings.go_to_app_settings_and_grant_media_file_writing_in_order_for_the_app_to_work,
     //            permissionPreviouslyRequested = permissionRepository.readExternalStoragePermissionRequested.stateIn(
     //                viewModel.viewModelScope,
     //                SharingStarted.Eagerly
@@ -141,11 +140,10 @@ class HomeScreenFragment : AppFragment<HomeScreenBinding>(HomeScreenBinding::cla
                 @SuppressLint("NewApi")
                 if (getMediaUri(context = requireContext(), uri = uris.first()) == null) {
                     requireContext().showToast(
-                        R.string.content_provider_not_supported_please_select_a_different_one,
+                        Strings.content_provider_not_supported_please_select_a_different_one,
                         Toast.LENGTH_LONG
                     )
-                }
-                else {
+                } else {
                     // Take persistable read permission for each Uri; Fixes consecutively occasionally occurring permission exception on reading in bitmap
                     uris.forEach {
                         requireContext().contentResolver.takePersistableUriPermission(
@@ -196,8 +194,7 @@ private fun DrawerLayout.closeDrawer() {
 private fun DrawerLayout.toggleDrawer() {
     if (isOpen) {
         closeDrawer()
-    }
-    else {
+    } else {
         openDrawer()
     }
 }

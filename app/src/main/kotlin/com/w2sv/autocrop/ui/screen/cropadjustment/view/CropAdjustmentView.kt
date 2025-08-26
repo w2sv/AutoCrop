@@ -34,8 +34,8 @@ import com.w2sv.autocrop.ui.screen.cropadjustment.model.DraggingState
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.Edge
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.EdgeSelectionState
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.Line
-import com.w2sv.cropbundle.cropping.model.CropEdges
 import com.w2sv.domain.model.CropAdjustmentMode
+import com.w2sv.domain.model.CropEdges
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt

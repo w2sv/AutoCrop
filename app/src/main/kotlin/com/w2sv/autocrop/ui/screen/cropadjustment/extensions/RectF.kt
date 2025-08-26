@@ -4,7 +4,7 @@ import android.graphics.Matrix
 import android.graphics.RectF
 import android.view.MotionEvent
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.Edge
-import com.w2sv.cropbundle.cropping.model.CropEdges
+import com.w2sv.domain.model.CropEdges
 import java.lang.Float.min
 import kotlin.math.max
 

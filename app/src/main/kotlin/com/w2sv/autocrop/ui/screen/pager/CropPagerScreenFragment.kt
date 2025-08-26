@@ -14,7 +14,6 @@ import com.w2sv.androidutils.view.remove
 import com.w2sv.androidutils.view.show
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.AppFragment
-import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CropPagerBinding
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.autocrop.ui.screen.comparison.sharedElementTransitionName
@@ -33,11 +32,12 @@ import com.w2sv.autocrop.ui.util.visualize
 import com.w2sv.autocrop.util.containsSingularElement
 import com.w2sv.autocrop.util.launchAfterShortDelay
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
-import com.w2sv.cropbundle.Crop
-import com.w2sv.cropbundle.CropBundle
-import com.w2sv.cropbundle.cropping.CropSensitivity
-import com.w2sv.cropbundle.cropping.crop
-import com.w2sv.cropbundle.cropping.model.CropEdges
+import com.w2sv.core.common.R.string as Strings
+import com.w2sv.cropping.cropping.crop
+import com.w2sv.cropping.cropping.cropParameters
+import com.w2sv.domain.model.CropBundle
+import com.w2sv.domain.model.CropEdges
+import com.w2sv.domain.model.CropSensitivity
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.withCreationCallback
 import kotlinx.coroutines.CoroutineScope
@@ -71,7 +71,7 @@ class CropPagerScreenFragment :
         get() = {
             viewModel.backPressHandler(
                 onFirstPress = {
-                    requireContext().showToast(getString(R.string.tap_again_to_return_to_main_screen))
+                    requireContext().showToast(getString(Strings.tap_again_to_return_to_main_screen))
                 },
                 onSecondPress = {
                     navigateToExitFragment()
@@ -107,7 +107,7 @@ class CropPagerScreenFragment :
         )
 
         with(binding) {
-//            viewPager.setPageTransformer(AccordionTransformer())
+            //            viewPager.setPageTransformer(AccordionTransformer())
 
             setOnClickListeners()
             with(viewModel) {
@@ -131,9 +131,9 @@ class CropPagerScreenFragment :
     private fun CropPagerBinding.onDataSetPositionChanged(position: Int) {
         with(viewModel.dataSet[position].crop) {
             discardingStatisticsTv.text = resources.getHtmlFormattedText(
-                R.string.discarding_statistics,
+                Strings.discarding_statistics,
                 "$discardedPercentage%",
-                discardedFileSizeFormatted
+                discardedFileSize
             )
         }
 
@@ -239,8 +239,8 @@ class CropPagerScreenFragment :
 
     private fun applyAdjustedCropEdges(cropEdges: CropEdges) {
         viewModel.dataSet.liveElement.let {
-            it.crop = Crop.fromScreenshot(
-                screenshotBitmap = it.screenshot.getBitmap(requireContext().contentResolver),
+            val screenshotBitmap = it.screenshot.getBitmap(requireContext().contentResolver)
+            it.crop = screenshotBitmap.crop(
                 screenshotDiskUsage = it.screenshot.mediaStoreData.diskUsage,
                 edges = cropEdges
             )
@@ -252,7 +252,7 @@ class CropPagerScreenFragment :
         )
 
         launchAfterShortDelay {
-            requireContext().showToast(getString(R.string.adjusted_crop))
+            requireContext().showToast(getString(Strings.adjusted_crop))
         }
     }
 
@@ -299,10 +299,10 @@ class CropPagerScreenFragment :
         onRecropWrapper {
             requireContext().showToast(
                 when (viewModel.dataSet.liveElement.recropAndUpdate(cropSensitivity)) {
-                    false -> R.string.no_crop_edges_found_for_adjusted_settings
+                    false -> Strings.no_crop_edges_found_for_adjusted_settings
                     true -> {
                         cropPagerWrapper.pager.notifyCurrentItemChanged()
-                        R.string.updated_crop
+                        Strings.updated_crop
                     }
                 }
             )
@@ -332,9 +332,8 @@ class CropPagerScreenFragment :
 
     private fun CropBundle.recropAndUpdate(@CropSensitivity cropSensitivity: Int): Boolean {
         val screenshotBitmap = screenshot.getBitmap(requireContext().contentResolver)
-        return screenshotBitmap.crop(cropSensitivity)?.let { (edges, candidates) ->
-            crop = Crop.fromScreenshot(
-                screenshotBitmap,
+        return screenshotBitmap.cropParameters(cropSensitivity)?.let { (edges, candidates) ->
+            crop = screenshotBitmap.crop(
                 screenshot.mediaStoreData.diskUsage,
                 edges
             )

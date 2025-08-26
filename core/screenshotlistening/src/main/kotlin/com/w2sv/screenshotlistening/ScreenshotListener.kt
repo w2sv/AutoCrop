@@ -138,12 +138,12 @@ class ScreenshotListener :
         )
             .setStyle(
                 NotificationCompat.BigTextStyle()
-                    .bigText(getString(R.string.you_will_receive_a_notification_when_autocrop_detects_a_new_croppable_screenshot))
+                    .bigText(getString(Strings.you_will_receive_a_notification_when_autocrop_detects_a_new_croppable_screenshot))
             )
             .addAction(
                 NotificationCompat.Action(
                     com.w2sv.core.common.R.drawable.ic_cancel_24,
-                    getString(R.string.stop),
+                    getString(Strings.stop),
                     OnCancelledFromNotificationListener.getPendingIntent(this)
                 )
             )
@@ -238,11 +238,11 @@ class ScreenshotListener :
             )
 
         notificationGroup.addChild(notificationId) {
-            setContentTitle(getString(R.string.crafted_a_new_autocrop))
+            setContentTitle(getString(Strings.crafted_a_new_autocrop))
             addAction(
                 NotificationCompat.Action(
                     null,
-                    getString(R.string.save),
+                    getString(Strings.save),
                     PendingIntent.getService(
                         this@ScreenshotListener,
                         actionRequestCodes[0],
@@ -254,7 +254,7 @@ class ScreenshotListener :
             addAction(
                 NotificationCompat.Action(
                     null,
-                    getString(R.string.save_delete_screenshot),
+                    getString(Strings.save_delete_screenshot),
                     if (IMAGE_DELETION_REQUIRING_APPROVAL) {
                         PendingIntent.getActivity(
                             this@ScreenshotListener,
@@ -285,7 +285,7 @@ class ScreenshotListener :
             addAction(
                 NotificationCompat.Action(
                     null,
-                    getString(R.string.dismiss),
+                    getString(Strings.dismiss),
                     PendingIntent.getService(
                         this@ScreenshotListener,
                         actionRequestCodes[2],
@@ -322,10 +322,10 @@ class ScreenshotListener :
         context = this,
         notificationChannel = AppNotificationChannel.DETECTED_NEW_CROPPABLE_SCREENSHOT,
         summaryBuilderConfigurator = { nChildren ->
-            setContentTitle(getString(R.string.detected_n_croppable_screenshots, nChildren))
+            setContentTitle(getString(Strings.detected_n_croppable_screenshots, nChildren))
             setStyle(
                 NotificationCompat.InboxStyle()
-                    .setSummaryText(getString(R.string.expand_to_select_actions))
+                    .setSummaryText(getString(Strings.expand_to_select_actions))
             )
         }
     )
@@ -388,8 +388,8 @@ class ScreenshotListener :
                         AppPermissionHandler(
                             activity = componentActivity,
                             permission = Manifest.permission.READ_MEDIA_IMAGES,
-                            permissionDeniedMessageRes = R.string.media_file_access_required_for_registering_new_screenshots,
-                            permissionRationalSuppressedMessageRes = R.string.go_to_app_settings_and_grant_media_file_access_for_screenshot_listening_to_work,
+                            permissionDeniedMessageRes = Strings.media_file_access_required_for_registering_new_screenshots,
+                            permissionRationalSuppressedMessageRes = Strings.go_to_app_settings_and_grant_media_file_access_for_screenshot_listening_to_work,
                             permissionPreviouslyRequested = permissionRepository.readMediaImagesPermissionRequested!!.stateIn(
                                 scope,
                                 SharingStarted.Eagerly
@@ -407,8 +407,8 @@ class ScreenshotListener :
                         AppPermissionHandler(
                             componentActivity,
                             Manifest.permission.POST_NOTIFICATIONS,
-                            R.string.if_you_don_t_allow_notification_posting_autocrop_can_t_inform_you_about_croppable_screenshots,
-                            R.string.go_to_app_settings_and_enable_notification_posting_for_screenshot_listening_to_work,
+                            Strings.if_you_don_t_allow_notification_posting_autocrop_can_t_inform_you_about_croppable_screenshots,
+                            Strings.go_to_app_settings_and_enable_notification_posting_for_screenshot_listening_to_work,
                             permissionPreviouslyRequested = permissionRepository.postNotificationsPermissionRequested!!.stateIn(
                                 scope,
                                 SharingStarted.Eagerly
@@ -427,8 +427,8 @@ class ScreenshotListener :
                         AppPermissionHandler(
                             activity = componentActivity,
                             permission = Manifest.permission.READ_EXTERNAL_STORAGE,
-                            permissionDeniedMessageRes = R.string.media_file_access_required_for_registering_new_screenshots,
-                            permissionRationalSuppressedMessageRes = R.string.go_to_app_settings_and_grant_media_file_access_for_screenshot_listening_to_work,
+                            permissionDeniedMessageRes = Strings.media_file_access_required_for_registering_new_screenshots,
+                            permissionRationalSuppressedMessageRes = Strings.go_to_app_settings_and_grant_media_file_access_for_screenshot_listening_to_work,
                             permissionPreviouslyRequested = permissionRepository.readExternalStoragePermissionRequested.stateIn(
                                 scope,
                                 SharingStarted.Eagerly

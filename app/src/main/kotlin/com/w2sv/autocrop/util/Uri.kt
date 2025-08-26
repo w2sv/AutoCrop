@@ -8,7 +8,7 @@ import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.documentfile.provider.DocumentFile
 import com.anggrayudi.storage.file.getSimplePath
-import com.w2sv.cropbundle.io.utils.systemPicturesDirectory
+import com.w2sv.cropping.io.utils.systemPicturesDirectory
 import slimber.log.i
 
 @RequiresApi(Build.VERSION_CODES.Q)

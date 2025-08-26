@@ -27,11 +27,10 @@
             <option value="$PROJECT_DIR$/build-logic/convention" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/common" />
-            <option value="$PROJECT_DIR$/core/cropbundle" />
+            <option value="$PROJECT_DIR$/core/cropping" />
             <option value="$PROJECT_DIR$/core/datastore" />
             <option value="$PROJECT_DIR$/core/domain" />
             <option value="$PROJECT_DIR$/core/flowfield" />
-            <option value="$PROJECT_DIR$/core/opencv" />
           </set>
         </option>
       </GradleProjectSettings>

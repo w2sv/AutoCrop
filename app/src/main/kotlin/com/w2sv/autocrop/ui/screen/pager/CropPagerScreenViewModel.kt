@@ -13,11 +13,11 @@ import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.widget.makeToast
 import com.w2sv.androidutils.widget.showToast
-import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.screen.pager.view.CropPagerWrapper
 import com.w2sv.autocrop.ui.util.Constant
 import com.w2sv.autocrop.ui.util.nonNullValue
-import com.w2sv.cropbundle.CropBundle
+import com.w2sv.core.common.R.plurals as Plurals
+import com.w2sv.domain.model.CropBundle
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -92,7 +92,7 @@ class CropPagerScreenViewModel @AssistedInject constructor(
                     append(
                         " ${
                             resources.getQuantityString(
-                                R.plurals.screenshot,
+                                Plurals.screenshot,
                                 cropResults.uncroppableImageCount
                             )
                         }"

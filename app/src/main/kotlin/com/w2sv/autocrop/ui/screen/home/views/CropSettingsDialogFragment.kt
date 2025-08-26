@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.designsystem.AbstractCropSettingsDialogFragment
+import com.w2sv.core.common.R.string as Strings
 import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.kotlinutils.coroutines.flow.firstBlocking
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,15 +16,15 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class CropSettingsDialogFragment :
     AbstractCropSettingsDialogFragment(
-        title = R.string.crop_settings,
+        title = Strings.crop_settings,
         icon = R.drawable.ic_settings_24,
-        positiveButtonText = R.string.apply
+        positiveButtonText = Strings.apply
     ) {
     override val viewModel by viewModels<ViewModel>()
 
     override fun onPositiveButtonClicked() {
         viewModel.syncCropSettings()
-        requireContext().showToast(R.string.updated_crop_settings)
+        requireContext().showToast(Strings.updated_crop_settings)
     }
 
     @HiltViewModel

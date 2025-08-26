@@ -24,7 +24,7 @@ import com.w2sv.autocrop.ui.screen.comparison.model.ImageType
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.getScaleY
 import com.w2sv.autocrop.util.launchAfterShortDelay
 import com.w2sv.autocrop.util.registerOnBackPressedHandler
-import com.w2sv.cropbundle.CropBundle
+import com.w2sv.domain.model.CropBundle
 import dagger.hilt.android.AndroidEntryPoint
 
 val CropBundle.sharedElementTransitionName: String

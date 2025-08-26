@@ -11,8 +11,8 @@ import com.w2sv.autocrop.AppFragment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.maintainedPercentage
-import com.w2sv.cropbundle.cropping.model.CropEdges
 import com.w2sv.domain.model.CropAdjustmentMode
+import com.w2sv.domain.model.CropEdges
 import com.w2sv.kotlinutils.rounded
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.min

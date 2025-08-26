@@ -2,11 +2,11 @@ package com.w2sv.autocrop.ui.designsystem
 
 import android.content.Context
 import android.util.AttributeSet
-import com.w2sv.autocrop.R
+import com.w2sv.core.common.R.string as Strings
 
 open class FractionTextView(context: Context, attr: AttributeSet) :
     FormattableTextView(
-        R.string.fraction,
+        Strings.fraction,
         context,
         attr
     )

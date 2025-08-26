@@ -10,9 +10,9 @@
 //
 // @AndroidEntryPoint
 // class RecropAllDialogFragment : AbstractCropSettingsDialogFragment(
-//    R.string.recrop_all_with_adjusted_settings,
+//    Strings.recrop_all_with_adjusted_settings,
 //    R.drawable.ic_autorenew_24,
-//    R.string.recrop
+//    Strings.recrop
 // ) {
 //
 //    @HiltViewModel

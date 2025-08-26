@@ -5,7 +5,8 @@ import androidx.lifecycle.SavedStateHandle
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.designsystem.AbstractCropSettingsDialogFragment
 import com.w2sv.autocrop.ui.util.nonNullValue
-import com.w2sv.cropbundle.cropping.CropSensitivity
+import com.w2sv.core.common.R.string as Strings
+import com.w2sv.domain.model.CropSensitivity
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -13,9 +14,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class RecropDialogFragment :
     AbstractCropSettingsDialogFragment(
-        title = R.string.recrop_with_adjusted_settings,
+        title = Strings.recrop_with_adjusted_settings,
         icon = R.drawable.ic_autorenew_24,
-        positiveButtonText = R.string.recrop
+        positiveButtonText = Strings.recrop
     ) {
     override val viewModel by viewModels<ViewModel>()
 

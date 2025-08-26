@@ -28,9 +28,6 @@ android {
                 arguments("-DOpenCV_DIR=${rootProject.projectDir}/opencv/native")
             }
         }
-
-        // Name built bundles "{versionName}-{buildFlavor}.aab"
-        //        setProperty("archivesBaseName", versionName)
     }
     signingConfigs {
         create("release") {
@@ -91,13 +88,13 @@ play {
 
 dependencies {
     // Project Modules
-    implementation(projects.core.cropbundle)
+    implementation(projects.core.cropping)
     implementation(projects.core.domain)
     implementation(projects.core.datastore)
     //    implementation(projects.core.screenshotlistening)
     implementation(projects.core.common)
     implementation(projects.core.flowfield)
-    implementation(projects.core.opencv)
+    implementation(libs.opencv)
 
     // Androidx
     implementation(libs.androidx.appcompat)

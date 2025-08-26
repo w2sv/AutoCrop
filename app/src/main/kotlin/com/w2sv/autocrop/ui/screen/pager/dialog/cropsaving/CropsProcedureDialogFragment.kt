@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
+import com.w2sv.core.common.R.string as Strings
 
 class CropsProcedureDialogFragment : AbstractCropProcedureDialogFragment() {
 
@@ -11,14 +12,14 @@ class CropsProcedureDialogFragment : AbstractCropProcedureDialogFragment() {
 
     override fun AlertDialog.Builder.build(): AlertDialog.Builder =
         apply {
-            setTitle(getString(R.string.crops_procedure_dialog_title, cropViewModel.cropBundleCount))
+            setTitle(getString(Strings.crops_procedure_dialog_title, cropViewModel.cropBundleCount))
             setIcon(R.drawable.ic_save_24)
-            setDeleteCorrespondingScreenshotsOption(getString(R.string.delete_corresponding_screenshots))
-            setPositiveButton(getString(R.string.yes)) { _, _ ->
+            setDeleteCorrespondingScreenshotsOption(getString(Strings.delete_corresponding_screenshots))
+            setPositiveButton(getString(Strings.yes)) { _, _ ->
                 (parentFragment as ResultListener)
                     .onSaveAllCrops()
             }
-            setNegativeButton(getString(R.string.no_discard_all)) { _, _ ->
+            setNegativeButton(getString(Strings.no_discard_all)) { _, _ ->
                 (parentFragment as ResultListener)
                     .onDiscardAllCrops()
             }

@@ -1,13 +1,13 @@
-//package utils.espresso
+// package utils.espresso
 //
-//import android.os.SystemClock
-//import androidx.test.espresso.PerformException
-//import java.util.concurrent.TimeoutException
+// import android.os.SystemClock
+// import androidx.test.espresso.PerformException
+// import java.util.concurrent.TimeoutException
 //
-//const val MEDIUM_TIMEOUT: Long = 1000
-//const val SLOW_TIMEOUT: Long = 5000
+// const val MEDIUM_TIMEOUT: Long = 1000
+// const val SLOW_TIMEOUT: Long = 5000
 //
-//inline fun retryFlakyAction(timeout: Long = MEDIUM_TIMEOUT, flakyAction: () -> Unit) {
+// inline fun retryFlakyAction(timeout: Long = MEDIUM_TIMEOUT, flakyAction: () -> Unit) {
 //    val startTime = SystemClock.elapsedRealtime()
 //    var nTries = 0
 //
@@ -20,4 +20,4 @@
 //    }
 //
 //    throw TimeoutException("Timed out after $nTries tries in $timeout ms")
-//}
+// }

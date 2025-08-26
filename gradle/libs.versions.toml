@@ -15,6 +15,7 @@ ktlint = "13.0.0"
 lifecycle = "2.9.2"
 # @keep
 minSdk = "26"
+opencv = "4.12.0"
 triplet-play = "3.12.1"
 versionCatalogUpdate = "1.0.0"
 
@@ -46,6 +47,7 @@ kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", ve
 # @keep
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 lottie = "com.airbnb.android:lottie:6.6.7"
+opencv = { module = "org.opencv:opencv", version.ref = "opencv" }
 simplestorage = "com.anggrayudi:storage:2.2.0"
 # other
 slimber = "com.github.PaulWoitaschek:Slimber:2.0.0"

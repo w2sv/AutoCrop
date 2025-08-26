@@ -10,8 +10,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.lifecycle.toggle
-import com.w2sv.autocrop.model.CropBundleIOResults
 import com.w2sv.autocrop.util.cropSaveDirPathIdentifier
+import com.w2sv.domain.model.CropBundleIOResults
 import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.kotlinutils.coroutines.flow.mapState
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -72,7 +72,7 @@
 //    inner class ImageSelectionButton {
 //        @Test
 //        fun visibleAndClickable() {
-//            with(onView(withText(R.string.select_images))) {
+//            with(onView(withText(Strings.select_images))) {
 //                check(isClickable())
 //                check(isCompletelyDisplayed())
 //            }
@@ -87,7 +87,7 @@
 //        fun triggersMultipleImageSelectionIntent() =
 //            intentTester {
 //                retryFlakyAction(SLOW_TIMEOUT) {
-//                    onView(withText(R.string.select_images))
+//                    onView(withText(Strings.select_images))
 //                        .perform(ViewActions.click())
 //                }
 //
@@ -127,11 +127,11 @@
 //            @Test
 //            fun itemsVisibleAndClickable() {
 //                listOf(
-//                    R.string.menu_item_auto_scroll,
-//                    R.string.menu_item_about,
-//                    R.string.menu_item_rate_the_app,
-//                    R.string.menu_item_change_directory,
-//                    R.string.code
+//                    Strings.menu_item_auto_scroll,
+//                    Strings.menu_item_about,
+//                    Strings.menu_item_rate_the_app,
+//                    Strings.menu_item_change_directory,
+//                    Strings.code
 //                )
 //                    .forEach {
 //                        with(onView(withId(it))) {
@@ -145,7 +145,7 @@
 //            fun autoScroll() {
 //                val userPreferencesValueBeforeClick = BooleanPreferences.autoScroll
 //
-//                with(onView(withText(R.string.menu_item_auto_scroll))) {
+//                with(onView(withText(Strings.menu_item_auto_scroll))) {
 //                    perform(ViewActions.click())
 //                    check(isDisplayed())  // check menu is being persisted on click
 //                }

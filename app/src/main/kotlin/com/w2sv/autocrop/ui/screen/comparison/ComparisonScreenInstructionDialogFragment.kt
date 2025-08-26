@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.graphics.getColoredDrawable
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.designsystem.RoundedDialogFragment
+import com.w2sv.core.common.R.string as Strings
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,15 +28,15 @@ internal class ComparisonScreenInstructionDialogFragment : RoundedDialogFragment
 
     override fun AlertDialog.Builder.build(): AlertDialog.Builder =
         apply {
-            setTitle(getString(R.string.comparison_screen))
+            setTitle(getString(Strings.comparison_screen))
             setIcon(
                 context.getColoredDrawable(
                     R.drawable.ic_inspect_image_24,
                     com.w2sv.core.common.R.color.magenta_saturated
                 )
             )
-            setMessage(getString(R.string.comparison_instruction))
-            setPositiveButton(resources.getString(R.string.got_it)) { _, _ ->
+            setMessage(getString(Strings.comparison_instruction))
+            setPositiveButton(resources.getString(Strings.got_it)) { _, _ ->
                 viewModel.onDismissDialog()
             }
             setOnDismissListener { viewModel.onDismissDialog() } // TODO

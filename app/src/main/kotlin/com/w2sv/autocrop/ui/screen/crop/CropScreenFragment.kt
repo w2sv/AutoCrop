@@ -6,12 +6,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.AppFragment
-import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CropBinding
-import com.w2sv.autocrop.model.CropResults
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
 import com.w2sv.autocrop.util.launchAfterShortDelay
+import com.w2sv.core.common.R.string as Strings
+import com.w2sv.domain.model.CropResults
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -25,7 +25,7 @@ class CropScreenFragment : AppFragment<CropBinding>(CropBinding::class.java) {
         get() = {
             viewModel.backPressListener(
                 onFirstPress = {
-                    requireContext().showToast(getString(R.string.tap_again_to_cancel))
+                    requireContext().showToast(getString(Strings.tap_again_to_cancel))
                 },
                 onSecondPress = {
                     navController.popBackStack()

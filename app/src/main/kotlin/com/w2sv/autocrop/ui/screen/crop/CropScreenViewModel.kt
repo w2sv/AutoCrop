@@ -9,10 +9,11 @@ import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.lifecycle.increment
 import com.w2sv.autocrop.CropNavGraphArgs
-import com.w2sv.autocrop.model.CropResults
 import com.w2sv.autocrop.ui.util.Constant
 import com.w2sv.autocrop.ui.util.nonNullValue
-import com.w2sv.cropbundle.CropBundle
+import com.w2sv.cropping.cropping.createCropBundle
+import com.w2sv.domain.model.CropBundle
+import com.w2sv.domain.model.CropResults
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -66,19 +67,19 @@ class CropScreenViewModel @Inject constructor(savedStateHandle: SavedStateHandle
     private fun attemptCropBundleCreation(screenshotUri: Uri, contentResolver: ContentResolver): CropBundle? {
         i { "attemptCropBundleCreation; screenshotUri=$screenshotUri" }
 
-        return CropBundle.attemptCreation(
+        return createCropBundle(
             screenshotMediaUri = screenshotUri,
             cropSensitivity = cropSensitivity.value,
             contentResolver = contentResolver
         )
             .run {
                 when (this) {
-                    is CropBundle.CreationResult.Failure.NoCropEdgesFound -> {
+                    is CropBundle.CreationResult.NoCropEdgesFound -> {
                         uncroppableImageCount += 1
                         null
                     }
 
-                    is CropBundle.CreationResult.Failure.BitmapLoadingFailed -> {
+                    is CropBundle.CreationResult.BitmapLoadingFailed -> {
                         unopenableImageCount
                         null
                     }

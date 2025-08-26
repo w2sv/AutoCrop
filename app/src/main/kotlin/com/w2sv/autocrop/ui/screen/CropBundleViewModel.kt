@@ -10,10 +10,10 @@ import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.lifecycle.increment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.util.nonNullValue
-import com.w2sv.cropbundle.CropBundle
-import com.w2sv.cropbundle.io.CropBundleIOProcessingUseCase
-import com.w2sv.cropbundle.io.CropBundleIOResult
-import com.w2sv.cropbundle.io.ScreenshotDeletionResult
+import com.w2sv.cropping.io.CropBundleIOProcessingUseCase
+import com.w2sv.domain.model.CropBundle
+import com.w2sv.domain.model.CropResult
+import com.w2sv.domain.model.ScreenshotDeletionResult
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -42,9 +42,9 @@ class CropBundleViewModel @Inject constructor(
 
     val cropBundleCount: Int get() = cropBundles.size
 
-    private val cropBundleIOResults = mutableListOf<CropBundleIOResult>()
+    private val cropBundleIOResults = mutableListOf<CropResult>()
 
-    fun deletionApprovalRequiringCropBundleIOResults(): List<CropBundleIOResult> =
+    fun deletionApprovalRequiringCropBundleIOResults(): List<CropResult> =
         cropBundleIOResults.filter {
             it.screenshotDeletionResult is ScreenshotDeletionResult.DeletionApprovalRequired
         }

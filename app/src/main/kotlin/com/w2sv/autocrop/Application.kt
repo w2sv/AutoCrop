@@ -11,7 +11,7 @@ class Application : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        OpenCVLoader.initDebug()
+        OpenCVLoader.initLocal()
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

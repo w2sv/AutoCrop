@@ -7,8 +7,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.slider.Slider
 import com.w2sv.autocrop.R
-import com.w2sv.cropbundle.cropping.CROP_SENSITIVITY_MAX
-import com.w2sv.cropbundle.cropping.CropSensitivity
+import com.w2sv.core.common.R.string as Strings
+import com.w2sv.domain.model.CROP_SENSITIVITY_MAX
+import com.w2sv.domain.model.CropSensitivity
 
 abstract class AbstractCropSettingsDialogFragment(
     @StringRes private val title: Int,
@@ -42,7 +43,7 @@ abstract class AbstractCropSettingsDialogFragment(
             .setPositiveButton(positiveButtonText) { _, _ ->
                 onPositiveButtonClicked()
             }
-            .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
+            .setNegativeButton(resources.getString(Strings.cancel)) { _, _ -> }
 
     override fun AlertDialog.onCreatedListener() {
         setOnShowListener {

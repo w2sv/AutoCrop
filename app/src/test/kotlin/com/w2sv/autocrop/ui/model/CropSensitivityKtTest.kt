@@ -1,6 +1,6 @@
-//package com.w2sv.autocrop.ui.model
+// package com.w2sv.autocrop.ui.model
 //
-//internal class CropSensitivityKtTest {
+// internal class CropSensitivityKtTest {
 //
 //    @ParameterizedTest
 //    @CsvSource(
@@ -23,4 +23,4 @@
 //    fun cropSensitivity(threshold: Int, expected: Int) {
 //        Assertions.assertEquals(expected, com.w2sv.cropbundle.cropping.cropSensitivity(threshold))
 //    }
-//}
+// }

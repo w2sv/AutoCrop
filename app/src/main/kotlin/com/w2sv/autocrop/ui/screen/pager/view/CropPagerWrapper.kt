@@ -13,7 +13,7 @@ import com.w2sv.bidirectionalviewpager.ViewRemovableBidirectionalViewPager2
 import com.w2sv.bidirectionalviewpager.livedata.UpdateBlockableLiveData
 import com.w2sv.bidirectionalviewpager.recyclerview.BidirectionalRecyclerViewAdapter
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
-import com.w2sv.cropbundle.CropBundle
+import com.w2sv.domain.model.CropBundle
 
 /**
  * Proxy for unextendable [ViewPager2].

@@ -3,6 +3,7 @@ package com.w2sv.autocrop.ui.screen.pager.dialog.cropsaving
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.navArgs
 import com.w2sv.autocrop.R
+import com.w2sv.core.common.R.string as Strings
 
 class CropProcedureDialogFragment : AbstractCropProcedureDialogFragment() {
 
@@ -17,7 +18,7 @@ class CropProcedureDialogFragment : AbstractCropProcedureDialogFragment() {
                 resultListener
                     .onDiscardCrop(args.cropBundleIndex)
             }
-            setPositiveButton(getString(R.string.yes)) { _, _ ->
+            setPositiveButton(getString(Strings.yes)) { _, _ ->
                 resultListener
                     .onSaveCrop(args.cropBundleIndex)
             }
