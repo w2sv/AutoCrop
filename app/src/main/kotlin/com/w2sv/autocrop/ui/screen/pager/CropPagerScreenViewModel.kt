@@ -9,6 +9,7 @@ import androidx.core.text.bold
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.widget.makeToast
@@ -31,7 +32,7 @@ class CropPagerScreenViewModel @AssistedInject constructor(
     private val preferencesRepository: PreferencesRepository,
     private val resources: Resources,
     @Assisted cropBundles: List<CropBundle>
-) : androidx.lifecycle.ViewModel() {
+) : ViewModel() {
 
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {

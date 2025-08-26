@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.lifecycle.repostValue
 import com.w2sv.autocrop.ui.screen.comparison.model.ImageType
@@ -19,7 +20,7 @@ class ComparisonViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     contentResolver: ContentResolver,
     preferencesRepository: PreferencesRepository
-) : androidx.lifecycle.ViewModel() {
+) : ViewModel() {
 
     val instructionsShown =
         preferencesRepository.comparisonInstructionsShown.stateIn(viewModelScope, SharingStarted.Eagerly)

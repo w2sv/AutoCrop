@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.lifecycle.increment
@@ -24,7 +25,7 @@ import slimber.log.i
 
 @HiltViewModel
 class CropScreenViewModel @Inject constructor(savedStateHandle: SavedStateHandle, preferencesRepository: PreferencesRepository) :
-    androidx.lifecycle.ViewModel() {
+    ViewModel() {
 
     private val screenshotUris: List<Uri> =
         CropNavGraphArgs.fromSavedStateHandle(savedStateHandle).imageUris.toList()

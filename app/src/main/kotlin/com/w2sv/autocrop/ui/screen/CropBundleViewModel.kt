@@ -16,13 +16,13 @@ import com.w2sv.domain.model.CropResult
 import com.w2sv.domain.model.ScreenshotDeletionResult
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 inline fun <reified VM : ViewModel> Fragment.cropNavGraphViewModel(): Lazy<VM> =
     hiltNavGraphViewModels<VM>(R.id.crop_nav_graph)
@@ -80,10 +80,9 @@ class CropBundleViewModel @Inject constructor(
     private val _saveAllProgress = MutableLiveData(0)
 
     private val unprocessedCropBundles: List<CropBundle>
-        get() =
-            cropBundles.run {
-                subList(saveAllProgress.nonNullValue, size)
-            }
+        get() = cropBundles.run {
+            subList(saveAllProgress.nonNullValue, size)
+        }
 
     suspend fun saveAllCoroutine(context: Context, onFinishedListener: () -> Unit) {
         coroutineScope {

@@ -8,6 +8,7 @@ import androidx.core.util.lruCache
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.asMappedFrom
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.asRectF
@@ -30,7 +31,7 @@ class CropAdjustmentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     contentResolver: ContentResolver,
     private val preferencesRepository: PreferencesRepository
-) : androidx.lifecycle.ViewModel() {
+) : ViewModel() {
 
     private val cropBundle: CropBundle = CropAdjustmentFragmentArgs.fromSavedStateHandle(savedStateHandle).cropBundle
     val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)

@@ -7,6 +7,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.lifecycle.toggle
@@ -16,8 +17,8 @@ import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.kotlinutils.coroutines.flow.mapState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
@@ -25,7 +26,7 @@ class HomeScreenViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
     //        cancelledSSLFromNotification: ScreenshotListener.CancelledFromNotification,
     @ApplicationContext context: Context
-) : androidx.lifecycle.ViewModel() {
+) : ViewModel() {
 
     val cropBundleIoResults: CropBundleIOResults? = savedStateHandle[CropBundleIOResults.EXTRA]
 
