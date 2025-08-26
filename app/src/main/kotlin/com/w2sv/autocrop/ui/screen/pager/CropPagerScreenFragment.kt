@@ -13,7 +13,7 @@ import com.w2sv.androidutils.view.hide
 import com.w2sv.androidutils.view.remove
 import com.w2sv.androidutils.view.show
 import com.w2sv.androidutils.widget.showToast
-import com.w2sv.autocrop.AppFragment
+import com.w2sv.autocrop.ui.AppFragment
 import com.w2sv.autocrop.databinding.CropPagerBinding
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.autocrop.ui.screen.comparison.sharedElementTransitionName

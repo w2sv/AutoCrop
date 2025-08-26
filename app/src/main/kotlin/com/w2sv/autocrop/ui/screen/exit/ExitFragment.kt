@@ -14,7 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
-import com.w2sv.autocrop.AppFragment
+import com.w2sv.autocrop.ui.AppFragment
 import com.w2sv.autocrop.databinding.CropPagerExitBinding
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel

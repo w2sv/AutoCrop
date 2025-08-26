@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.w2sv.androidutils.widget.showToast
-import com.w2sv.autocrop.AppFragment
+import com.w2sv.autocrop.ui.AppFragment
 import com.w2sv.autocrop.databinding.HomeScreenBinding
 import com.w2sv.autocrop.ui.util.fadeIn
 import com.w2sv.autocrop.ui.util.fadeInAnimationComposer

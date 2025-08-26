@@ -7,7 +7,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.w2sv.androidutils.widget.showToast
-import com.w2sv.autocrop.AppFragment
+import com.w2sv.autocrop.ui.AppFragment
 import com.w2sv.autocrop.databinding.SaveAllBinding
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.core.common.R.string as Strings

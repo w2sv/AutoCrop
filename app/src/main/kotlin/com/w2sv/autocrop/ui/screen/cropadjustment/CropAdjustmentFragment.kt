@@ -7,7 +7,7 @@ import androidx.annotation.ColorInt
 import androidx.core.text.color
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.w2sv.autocrop.AppFragment
+import com.w2sv.autocrop.ui.AppFragment
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.maintainedPercentage
