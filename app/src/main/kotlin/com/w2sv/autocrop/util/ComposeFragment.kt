@@ -8,20 +8,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 
 abstract class ComposeFragment : Fragment() {
+
+    protected val navController by lazy { findNavController() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        return ComposeView(requireContext()).apply {
+    ): View =
+        ComposeView(inflater.context).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent { ComposeScreen() }
+            setContent { ScreenContent() }
         }
-    }
 
     @Composable
-    protected abstract fun ComposeScreen()
+    protected abstract fun ScreenContent()
 }

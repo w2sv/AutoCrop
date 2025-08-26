@@ -5,14 +5,14 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
-import com.w2sv.autocrop.util.navController
 import com.w2sv.autocrop.util.registerOnBackPressedHandler
 import com.w2sv.viewboundcontroller.ViewBoundFragment
 
 abstract class AppFragment<VB : ViewBinding>(bindingClass: Class<VB>) : ViewBoundFragment<VB>(bindingClass) {
 
-    protected val navController by navController()
+    protected val navController by lazy { findNavController() }
     open val onBackPressed: (() -> Unit)? = null
 
     override fun onAttach(context: Context) {

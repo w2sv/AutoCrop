@@ -1,6 +1,6 @@
 <resources>
     <string name="auto_crop">AutoCrop</string>
-    <string name="select_screenshots">SELECT SCREENSHOTS</string>
+    <string name="select_screenshots">Select Screenshots</string>
     <string name="menu_item_divider_saving">Saving</string>
     <string name="menu_item_divider_other">Other</string>
     <string name="menu_item_auto_scroll">AutoScroll on Entry</string>

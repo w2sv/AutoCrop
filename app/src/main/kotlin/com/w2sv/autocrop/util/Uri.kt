@@ -2,29 +2,9 @@ package com.w2sv.autocrop.util
 
 import android.content.Context
 import android.net.Uri
-import android.os.Build
-import android.provider.DocumentsContract
-import android.provider.MediaStore
-import androidx.annotation.RequiresApi
 import androidx.documentfile.provider.DocumentFile
 import com.anggrayudi.storage.file.getSimplePath
 import com.w2sv.cropping.io.utils.systemPicturesDirectory
-import slimber.log.i
-
-@RequiresApi(Build.VERSION_CODES.Q)
-fun getMediaUri(context: Context, uri: Uri): Uri? =
-    try {
-        if (DocumentsContract.isDocumentUri(context, uri)) {
-            MediaStore.getMediaUri(context, uri)
-                .also {
-                    i { "Converted to mediaUri: $it" }
-                }
-        } else {
-            uri // TODO: eh?
-        }
-    } catch (e: IllegalArgumentException) {
-        null
-    }
 
 fun cropSaveDirPathIdentifier(documentUri: Uri?, context: Context): String =
     documentUri?.let { getDocumentUriPath(it, context) }
