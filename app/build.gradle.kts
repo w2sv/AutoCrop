@@ -110,7 +110,7 @@ dependencies {
     // Owned
     implementation(libs.w2sv.kotlinutils)
     implementation(libs.w2sv.viewboundcontroller)
-    implementation(libs.androidutils.core)
+    implementation(libs.w2sv.androidutils.core)
     implementation(libs.w2sv.androidutils.lifecycle)
     implementation(libs.w2sv.androidutils.view)
     implementation(libs.w2sv.viewanimations)

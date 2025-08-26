@@ -5,12 +5,13 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.opencv)
     implementation(projects.core.domain)
+    implementation(projects.core.common)
     implementation(libs.androidx.core)
     implementation(libs.w2sv.kotlinutils)
+    implementation(libs.w2sv.androidutils.core)
     implementation(libs.slimber)
-    implementation(libs.androidutils.core)
+    implementation(libs.opencv)
 
     //    // ---------------
     //    // unitTest

@@ -19,6 +19,6 @@ dependencies {
 
     implementation(libs.w2sv.kotlinutils)
     api(libs.w2sv.permissionhandler)
-    implementation(libs.androidutils.core)
+    implementation(libs.w2sv.androidutils.core)
     implementation(libs.w2sv.androidutils.lifecycle)
 }

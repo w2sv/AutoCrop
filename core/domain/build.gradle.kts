@@ -9,5 +9,5 @@ dependencies {
     implementation(libs.slimber)
     implementation(libs.w2sv.datastoreutils.preferences)
     implementation(libs.w2sv.kotlinutils)
-    implementation(libs.androidutils.core)
+    implementation(libs.w2sv.androidutils.core)
 }

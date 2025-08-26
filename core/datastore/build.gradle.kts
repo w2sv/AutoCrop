@@ -10,6 +10,6 @@ dependencies {
     api(libs.w2sv.datastoreutils.preferences)
     implementation(libs.slimber)
 
-    implementation(libs.androidutils.core)
+    implementation(libs.w2sv.androidutils.core)
     implementation(libs.w2sv.kotlinutils)
 }

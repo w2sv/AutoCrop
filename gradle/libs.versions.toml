@@ -22,7 +22,6 @@ versionCatalogUpdate = "1.0.0"
 [libraries]
 # @keep
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
-androidutils-core = { module = "com.github.w2sv.AndroidUtils:core", version.ref = "androidutils" }
 androidx-activity = "androidx.activity:activity-ktx:1.10.1"
 androidx-appcompat = "androidx.appcompat:appcompat:1.7.1"
 androidx-core = "androidx.core:core-ktx:1.16.0"
@@ -52,6 +51,7 @@ simplestorage = "com.anggrayudi:storage:2.2.0"
 # other
 slimber = "com.github.PaulWoitaschek:Slimber:2.0.0"
 snacky = "com.github.matecode:Snacky:1.1.6"
+w2sv-androidutils-core = { module = "com.github.w2sv.AndroidUtils:core", version.ref = "androidutils" }
 w2sv-androidutils-lifecycle = { module = "com.github.w2sv.AndroidUtils:lifecycle", version.ref = "androidutils" }
 w2sv-androidutils-view = { module = "com.github.w2sv.AndroidUtils:views", version.ref = "androidutils" }
 w2sv-bidirectionalviewpager = "com.github.w2sv:BidirectionalViewPager:0.0.2-rc1"

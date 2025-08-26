@@ -3,6 +3,7 @@ package com.w2sv.cropping.io
 import android.content.ContentResolver
 import android.net.Uri
 import android.provider.MediaStore
+import com.w2sv.common.util.log
 import com.w2sv.cropping.io.extensions.queryMediaStoreData
 import com.w2sv.domain.model.ImageMimeType
 import com.w2sv.domain.model.Screenshot.MediaStoreData
@@ -28,7 +29,7 @@ fun queryMediaStoreData(contentResolver: ContentResolver, uri: Uri): MediaStoreD
                 //                            it.getLongOrNull(it.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
                 //                                ?: fileName.substringBeforeLast(".").toLong()  // TODO: probably still unreliable
             )
-                .also { i { it.toString() } }
+                .log()
         }
     )!!
 }

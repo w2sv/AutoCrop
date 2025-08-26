@@ -3,6 +3,7 @@ package com.w2sv.cropping.io
 import android.content.ContentResolver
 import android.content.Context
 import android.graphics.Bitmap
+import com.w2sv.common.util.log
 import com.w2sv.cropping.io.extensions.deleteImage
 import com.w2sv.domain.model.CropResult
 import com.w2sv.domain.model.Screenshot
@@ -12,7 +13,6 @@ import com.w2sv.domain.model.ScreenshotDeletionResult.DeletionFailed
 import com.w2sv.domain.model.ScreenshotDeletionResult.SuccessfullyDeleted
 import com.w2sv.domain.repository.PreferencesRepository
 import javax.inject.Inject
-import slimber.log.i
 
 class CropBundleIOProcessingUseCase @Inject constructor(private val preferencesRepository: PreferencesRepository) {
     fun invoke(
@@ -36,7 +36,8 @@ class CropBundleIOProcessingUseCase @Inject constructor(private val preferencesR
                     mediaStoreId = screenshotMediaStoreData.id,
                     contentResolver = context.contentResolver
                 )
-            } else {
+            }
+            else {
                 null
             }
         )
@@ -54,6 +55,4 @@ private fun screenshotDeletionResult(mediaStoreId: Long, contentResolver: Conten
             false -> DeletionFailed
         }
     }
-        .also {
-            i { "ScreenshotDeletionResult: $it" }
-        }
+        .log { "ScreenshotDeletionResult: $it" }
