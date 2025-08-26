@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.autocrop.application)
     alias(libs.plugins.autocrop.hilt)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    alias(libs.plugins.kotlin.compose.compiler)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.play)
 }
@@ -61,6 +62,7 @@ android {
     buildFeatures {
         buildConfig = true
         viewBinding = true
+        compose = true
     }
     lint {
         checkDependencies = true
@@ -86,6 +88,14 @@ play {
     artifactDir.set(file("build/outputs/bundle/release"))
 }
 
+// https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-compiler.html#compose-compiler-options-dsl
+composeCompiler {
+    includeSourceInformation = true
+    stabilityConfigurationFiles.add(project.layout.projectDirectory.file("compose_compiler_config.conf"))
+    metricsDestination.set(project.layout.buildDirectory.dir("compose_compiler"))
+    reportsDestination.set(project.layout.buildDirectory.dir("compose_compiler"))
+}
+
 dependencies {
     // Project Modules
     implementation(projects.core.cropping)
@@ -94,7 +104,6 @@ dependencies {
     //    implementation(projects.core.screenshotlistening)
     implementation(projects.core.common)
     implementation(projects.core.flowfield)
-    implementation(libs.opencv)
 
     // Androidx
     implementation(libs.androidx.appcompat)
@@ -115,6 +124,17 @@ dependencies {
     implementation(libs.w2sv.androidutils.view)
     implementation(libs.w2sv.viewanimations)
     implementation(libs.w2sv.bidirectionalviewpager)
+    implementation(libs.w2sv.composed)
+
+    // Compose libraries
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.activity)
+    implementation(libs.androidx.compose.viewmodel)
+    implementation(libs.androidx.lifecycle.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // Other
     implementation(libs.slimber)
@@ -122,6 +142,9 @@ dependencies {
     implementation(libs.lottie)
     implementation(libs.simplestorage)
     implementation(libs.google.material)
+    lintChecks(libs.compose.lint.checks)
+    implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.opencv)
 
     // ---------------
     // unitTest
