@@ -1,5 +1,5 @@
 [versions]
-agp = "8.12.1"
+agp = "8.12.2"
 androidutils = "0.4.6"
 androidx-activity-compose = "1.10.1"
 androidxNavigation = "2.9.3"
@@ -19,7 +19,7 @@ kotlin = "2.2.10"
 kotlinxCollectionsImmutable = "0.4.0"
 ksp = "2.2.10-2.0.2"
 ktlint = "13.1.0"
-lifecycle = "2.9.2"
+lifecycle = "2.9.3"
 # @keep
 minSdk = "26"
 opencv = "4.12.0"
@@ -27,6 +27,7 @@ triplet-play = "3.12.1"
 versionCatalogUpdate = "1.0.0"
 
 [libraries]
+airbnb-lottie-compose = "com.airbnb.android:lottie-compose:6.6.7"
 # @keep
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 androidx-activity = { module = "androidx.activity:activity-ktx", version.ref = "androidx-activity-compose" }
@@ -63,7 +64,6 @@ kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", ve
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 # @keep
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
-airbnb-lottie-compose = "com.airbnb.android:lottie-compose:6.6.7"
 opencv = { module = "org.opencv:opencv", version.ref = "opencv" }
 simplestorage = "com.anggrayudi:storage:2.2.0"
 # other
