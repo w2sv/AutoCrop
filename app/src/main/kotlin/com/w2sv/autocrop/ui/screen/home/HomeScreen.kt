@@ -39,12 +39,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.w2sv.autocrop.R
+import com.w2sv.autocrop.ui.designsystem.navigateAnimated
 import com.w2sv.autocrop.ui.screen.home.components.FlowFieldOrPreviewMock
 import com.w2sv.autocrop.ui.screen.home.components.NavigationDrawer
 import com.w2sv.autocrop.ui.util.compose.LottieButton
 import com.w2sv.composed.extensions.rememberVisibilityPercentage
-import com.w2sv.core.common.R.string as Strings
 import kotlinx.coroutines.launch
+import com.w2sv.core.common.R.string as Strings
 
 @Composable
 fun HomeScreen(
@@ -53,7 +54,7 @@ fun HomeScreen(
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 ) {
     val launchImageSelection = rememberLaunchImageSelection { uris ->
-        navController.navigate(HomeScreenFragmentDirections.navigateToCropScreen(uris.toTypedArray()))
+        navController.navigateAnimated(HomeScreenFragmentDirections.navigateToCropScreen(uris.toTypedArray()))
     }
     val scope = rememberCoroutineScope()
     val drawerVisibilityPercentage by drawerState.rememberVisibilityPercentage()
@@ -63,7 +64,7 @@ fun HomeScreen(
             Scaffold {
                 FlowFieldOrPreviewMock(modifier = Modifier.fillMaxSize())
                 Foreground(
-                    alphaPercentage = remember(drawerVisibilityPercentage) { 1 - drawerVisibilityPercentage },
+                    alpha = remember(drawerVisibilityPercentage) { 1 - drawerVisibilityPercentage },
                     onSelectScreenshotsButtonClick = launchImageSelection,
                     modifier = Modifier
                         .fillMaxSize()
@@ -122,11 +123,11 @@ private fun rememberLaunchImageSelection(onImagesSelected: (List<Uri>) -> Unit):
 
 @Composable
 private fun Foreground(
-    @FloatRange(0.0, 1.0) alphaPercentage: Float,
+    @FloatRange(0.0, 1.0) alpha: Float,
     onSelectScreenshotsButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val contentColor = Color.White.copy(alpha = alphaPercentage)
+    val contentColor = Color.White.copy(alpha = alpha)
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         OutlinedButton(
             onClick = onSelectScreenshotsButtonClick,

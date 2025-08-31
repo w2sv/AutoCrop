@@ -15,6 +15,7 @@ import com.w2sv.androidutils.view.show
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.databinding.CropPagerBinding
 import com.w2sv.autocrop.ui.AppFragment
+import com.w2sv.autocrop.ui.designsystem.navigateAnimated
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.autocrop.ui.screen.comparison.sharedElementTransitionName
 import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
@@ -32,7 +33,6 @@ import com.w2sv.autocrop.ui.util.visualize
 import com.w2sv.autocrop.util.containsSingularElement
 import com.w2sv.autocrop.util.launchAfterShortDelay
 import com.w2sv.bidirectionalviewpager.recyclerview.ImageViewHolder
-import com.w2sv.core.common.R.string as Strings
 import com.w2sv.cropping.cropping.crop
 import com.w2sv.cropping.cropping.cropParameters
 import com.w2sv.domain.model.CropBundle
@@ -45,6 +45,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.w2sv.core.common.R.string as Strings
 
 private const val AUTO_SCROLL_PERIOD = 1000L
 
@@ -205,15 +206,15 @@ class CropPagerScreenFragment :
             showCropProcedureDialog()
         }
         manualCropButton.setOnClickListener {
-            navController.navigate(CropPagerScreenFragmentDirections.navigateToCropAdjustmentScreen(viewModel.dataSet.liveElement))
+            navController.navigateAnimated(CropPagerScreenFragmentDirections.navigateToCropAdjustmentScreen(viewModel.dataSet.liveElement))
         }
         recropButton.setOnClickListener {
-            navController.navigate(CropPagerScreenFragmentDirections.showRecropDialog(viewModel.dataSet.liveElement.cropSensitivity))
+            navController.navigateAnimated(CropPagerScreenFragmentDirections.showRecropDialog(viewModel.dataSet.liveElement.cropSensitivity))
         }
         comparisonButton.setOnClickListener {
             val cropBundle = viewModel.dataSet.liveElement
 
-            navController.navigate(
+            navController.navigateAnimated(
                 CropPagerScreenFragmentDirections.navigateToComparisonScreen(cropBundle),
                 FragmentNavigatorExtras(
                     binding
@@ -226,15 +227,15 @@ class CropPagerScreenFragment :
     }
 
     private fun showCropProcedureDialog() {
-        navController.navigate(CropPagerScreenFragmentDirections.showCropProcedureDialog(viewModel.dataSet.livePosition.nonNullValue))
+        navController.navigateAnimated(CropPagerScreenFragmentDirections.showCropProcedureDialog(viewModel.dataSet.livePosition.nonNullValue))
     }
 
     private fun showCropsProcedureDialog() {
-        navController.navigate(CropPagerScreenFragmentDirections.showCropsProcedureDialog())
+        navController.navigateAnimated(CropPagerScreenFragmentDirections.showCropsProcedureDialog())
     }
 
     private fun navigateToExitFragment() {
-        navController.navigate(CropPagerScreenFragmentDirections.navigateToExitScreen())
+        navController.navigateAnimated(CropPagerScreenFragmentDirections.navigateToExitScreen())
     }
 
     private fun applyAdjustedCropEdges(cropEdges: CropEdges) {
@@ -288,7 +289,7 @@ class CropPagerScreenFragment :
     }
 
     override fun onSaveAllCrops() {
-        navController.navigate(CropPagerScreenFragmentDirections.navigateToSaveAllScreen())
+        navController.navigateAnimated(CropPagerScreenFragmentDirections.navigateToSaveAllScreen())
     }
 
     override fun onDiscardAllCrops() {

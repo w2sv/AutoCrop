@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import com.w2sv.autocrop.databinding.CroppingFailedBinding
 import com.w2sv.autocrop.ui.AppFragment
+import com.w2sv.autocrop.ui.designsystem.navigateAnimated
 
 class CroppingFailedScreenFragment : AppFragment<CroppingFailedBinding>(CroppingFailedBinding::class.java) {
 
@@ -19,6 +20,6 @@ class CroppingFailedScreenFragment : AppFragment<CroppingFailedBinding>(Cropping
     }
 
     private fun navigateToMainActivity() {
-        navController.navigate(CroppingFailedScreenFragmentDirections.navigateToHomeScreen())
+        navController.navigateAnimated(CroppingFailedScreenFragmentDirections.navigateToHomeScreen())
     }
 }

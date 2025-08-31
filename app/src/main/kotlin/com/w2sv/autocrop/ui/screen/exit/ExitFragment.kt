@@ -16,6 +16,7 @@ import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
 import com.w2sv.autocrop.databinding.CropPagerExitBinding
 import com.w2sv.autocrop.ui.AppFragment
+import com.w2sv.autocrop.ui.designsystem.navigateAnimated
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
 import com.w2sv.autocrop.ui.util.getAnimationComposer
@@ -83,7 +84,7 @@ class ExitFragment : AppFragment<CropPagerExitBinding>(CropPagerExitBinding::cla
                     .random()
             )
                 .onEnd {
-                    navController.navigate(ExitFragmentDirections.navigateToHomeScreen())
+                    navController.navigateAnimated(ExitFragmentDirections.navigateToHomeScreen())
                 }
                 .play()
         }

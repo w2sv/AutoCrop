@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.databinding.CropBinding
 import com.w2sv.autocrop.ui.AppFragment
+import com.w2sv.autocrop.ui.designsystem.navigateAnimated
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
 import com.w2sv.autocrop.util.launchAfterShortDelay
@@ -60,11 +61,11 @@ class CropScreenFragment : AppFragment<CropBinding>(CropBinding::class.java) {
 
     private fun invokeSubsequentScreen(cropResults: CropResults) {
         if (cropBundleVM.cropBundles.isNotEmpty()) {
-            navController.navigate(CropScreenFragmentDirections.navigateToCropPagerScreen(cropResults))
+            navController.navigateAnimated(CropScreenFragmentDirections.navigateToCropPagerScreen(cropResults))
         } else {
             launchAfterShortDelay {
                 // to assure progress bar having reached 100% before UI change
-                navController.navigate(CropScreenFragmentDirections.navigateToCroppingFailedScreen())
+                navController.navigateAnimated(CropScreenFragmentDirections.navigateToCroppingFailedScreen())
             }
         }
     }
