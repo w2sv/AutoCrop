@@ -7,9 +7,12 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,6 +43,7 @@ internal fun NavigationDrawerSheetItemColumn(
     modifier: Modifier = Modifier,
     context: Context = LocalContext.current
 ) {
+    val bottomItemModifier = Modifier.windowInsetsPadding(WindowInsets.navigationBarsIgnoringVisibility)
     Column(modifier = modifier) {
         remember {
             listOf(
@@ -112,7 +116,8 @@ internal fun NavigationDrawerSheetItemColumn(
                     iconRes = R.drawable.ic_github_24,
                     labelRes = Strings.source,
                     explanationRes = Strings.examine_the_app_s_source_code_on_github,
-                    onClick = { context.openUrl(AppUrl.GITHUB_REPOSITORY) }
+                    onClick = { context.openUrl(AppUrl.GITHUB_REPOSITORY) },
+                    modifier = bottomItemModifier
                 )
             )
         }
