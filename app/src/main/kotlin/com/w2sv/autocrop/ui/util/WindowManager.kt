@@ -27,6 +27,7 @@ fun rememberScreenResolution(): Point {
     return remember { getScreenResolution(context) }
 }
 
+@Suppress("DEPRECATION")
 private fun getScreenResolution(context: Context): Point {
     val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
