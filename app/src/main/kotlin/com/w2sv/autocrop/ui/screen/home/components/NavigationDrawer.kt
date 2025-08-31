@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.w2sv.autocrop.BuildConfig
 import com.w2sv.autocrop.ui.util.compose.SystemBarsIgnoringVisibilityPaddedColumn
@@ -57,21 +58,24 @@ private fun NavigationDrawerSheet(modifier: Modifier = Modifier) {
     ModalDrawerSheet(
         modifier = modifier,
         windowInsets = emptyInsets,
-        drawerContainerColor = Color.Transparent
+        drawerContainerColor = Color.Transparent,
+        drawerContentColor = MaterialTheme.colorScheme.onSurface
     ) {
-        SystemBarsIgnoringVisibilityPaddedColumn(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        SystemBarsIgnoringVisibilityPaddedColumn(horizontalAlignment = Alignment.CenterHorizontally) {
             Header(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = horizontalPadding)
             )
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+            HorizontalDivider(
+                modifier = Modifier.padding(top = 16.dp),
+                color = MaterialTheme.colorScheme.onSurface,
+                thickness = Dp.Hairline
+            )
             NavigationDrawerSheetItemColumn(
-                modifier = Modifier.padding(horizontal = horizontalPadding)
+                modifier = Modifier
+                    .padding(horizontal = horizontalPadding)
+                    .verticalScroll(rememberScrollState())
             )
         }
     }
@@ -82,12 +86,14 @@ private val horizontalPadding = 24.dp
 @Composable
 private fun Header(modifier: Modifier = Modifier) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Spacer(Modifier.height(54.dp))
         Image(
             painterResource(id = com.w2sv.core.common.R.drawable.logo_nobackground),
             null,
             modifier = Modifier
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary)
+                .padding(6.dp)
         )
         Spacer(modifier = Modifier.height(22.dp))
         Text(

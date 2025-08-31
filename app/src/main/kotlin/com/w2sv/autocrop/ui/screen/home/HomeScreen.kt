@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsIgnoringVisibility
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -33,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -54,11 +56,11 @@ import com.w2sv.core.common.R.string as Strings
 fun HomeScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Open)
 ) {
     val launchImageSelection = rememberLaunchImageSelection { uris ->
         navController.navigate(HomeScreenFragmentDirections.navigateToCropScreen(uris.toTypedArray()))
-    } 
+    }
     val scope = rememberCoroutineScope()
     val drawerVisibilityPercentage by drawerState.rememberVisibilityPercentage()
 
@@ -109,7 +111,12 @@ private fun DrawerPrev() {
 private fun LottieButton(animationProgress: () -> Float, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.hamburger_to_backarrow))
 
-    Box(modifier = modifier.clickable { onClick() }) {
+    Box(
+        modifier = modifier
+            .clip(CircleShape)
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
         LottieAnimation(
             composition = composition,
             progress = animationProgress

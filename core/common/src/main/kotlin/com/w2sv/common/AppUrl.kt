@@ -1,8 +1,8 @@
 package com.w2sv.common
 
 object AppUrl {
-    const val LICENSE = "https://github.com/w2sv/AutoCrop/blob/main/LICENSE"
-    const val PRIVACY_POLICY = "https://github.com/w2sv/AutoCrop/blob/main/PRIVACY-POLICY.md"
+    const val LICENSE = "https://github.com/w2sv/AutoCrop/blob/master/LICENSE"
+    const val PRIVACY_POLICY = "https://github.com/w2sv/AutoCrop/blob/master/PRIVACY-POLICY.md"
     const val GITHUB_REPOSITORY = "https://github.com/w2sv/AutoCrop"
     const val CREATE_ISSUE = "https://github.com/w2sv/AutoCrop/issues/new"
     const val GOOGLE_PLAY_DEVELOPER_PAGE =
