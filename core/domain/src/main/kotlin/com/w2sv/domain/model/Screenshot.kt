@@ -15,4 +15,12 @@ data class Screenshot(val uri: Uri, val height: Int, val mediaStoreData: MediaSt
 
     fun getBitmap(contentResolver: ContentResolver): Bitmap =
         contentResolver.loadBitmap(uri)!!
+
+    sealed interface DeletionResult {
+        data object SuccessfullyDeleted : DeletionResult
+        data object DeletionFailed : DeletionResult
+
+        @JvmInline
+        value class ApprovalRequired(val requestUri: Uri) : DeletionResult
+    }
 }

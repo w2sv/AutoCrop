@@ -241,10 +241,10 @@ class CropPagerScreenFragment :
     private fun applyAdjustedCropEdges(cropEdges: CropEdges) {
         viewModel.dataSet.liveElement.let {
             val screenshotBitmap = it.screenshot.getBitmap(requireContext().contentResolver)
-            it.crop = screenshotBitmap.crop(
-                screenshotDiskUsage = it.screenshot.mediaStoreData.diskUsage,
-                edges = cropEdges
-            )
+//            it.crop = screenshotBitmap.crop(
+//                screenshotDiskUsage = it.screenshot.mediaStoreData.diskUsage,
+//                edges = cropEdges
+//            )
         }
 
         binding.viewPager.adapter!!.notifyItemChanged(
@@ -334,12 +334,12 @@ class CropPagerScreenFragment :
     private fun CropBundle.recropAndUpdate(@CropSensitivity cropSensitivity: Int): Boolean {
         val screenshotBitmap = screenshot.getBitmap(requireContext().contentResolver)
         return screenshotBitmap.cropParameters(cropSensitivity)?.let { (edges, candidates) ->
-            crop = screenshotBitmap.crop(
-                screenshot.mediaStoreData.diskUsage,
-                edges
-            )
-            edgeCandidates = candidates
-            this.cropSensitivity = cropSensitivity
+//            crop = screenshotBitmap.crop(
+//                screenshot.mediaStoreData.diskUsage,
+//                edges
+//            )
+//            edgeCandidates = candidates
+//            this.cropSensitivity = cropSensitivity
             true
         }
             ?: false

@@ -7,10 +7,6 @@ import com.w2sv.common.util.log
 import com.w2sv.cropping.io.extensions.deleteImage
 import com.w2sv.domain.model.CropResult
 import com.w2sv.domain.model.Screenshot
-import com.w2sv.domain.model.ScreenshotDeletionResult
-import com.w2sv.domain.model.ScreenshotDeletionResult.DeletionApprovalRequired
-import com.w2sv.domain.model.ScreenshotDeletionResult.DeletionFailed
-import com.w2sv.domain.model.ScreenshotDeletionResult.SuccessfullyDeleted
 import com.w2sv.domain.repository.PreferencesRepository
 import javax.inject.Inject
 
@@ -36,22 +32,23 @@ class CropBundleIOProcessingUseCase @Inject constructor(private val preferencesR
                     mediaStoreId = screenshotMediaStoreData.id,
                     contentResolver = context.contentResolver
                 )
-            } else {
+            }
+            else {
                 null
             }
         )
 }
 
-private fun screenshotDeletionResult(mediaStoreId: Long, contentResolver: ContentResolver): ScreenshotDeletionResult =
+private fun screenshotDeletionResult(mediaStoreId: Long, contentResolver: ContentResolver): Screenshot.DeletionResult =
     when (IMAGE_DELETION_REQUIRING_APPROVAL) {
         true ->
-            DeletionApprovalRequired(
+            Screenshot.DeletionResult.ApprovalRequired(
                 getImageContentUri(mediaStoreId)
             )
 
         false -> when (contentResolver.deleteImage(mediaStoreId)) {
-            true -> SuccessfullyDeleted
-            false -> DeletionFailed
+            true -> Screenshot.DeletionResult.SuccessfullyDeleted
+            false -> Screenshot.DeletionResult.DeletionFailed
         }
     }
         .log { "ScreenshotDeletionResult: $it" }

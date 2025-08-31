@@ -13,16 +13,16 @@ import com.w2sv.autocrop.ui.util.nonNullValue
 import com.w2sv.cropping.io.CropBundleIOProcessingUseCase
 import com.w2sv.domain.model.CropBundle
 import com.w2sv.domain.model.CropResult
-import com.w2sv.domain.model.ScreenshotDeletionResult
+import com.w2sv.domain.model.Screenshot
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 inline fun <reified VM : ViewModel> Fragment.cropNavGraphViewModel(): Lazy<VM> =
     hiltNavGraphViewModels<VM>(R.id.crop_nav_graph)
@@ -46,7 +46,7 @@ class CropBundleViewModel @Inject constructor(
 
     fun deletionApprovalRequiringCropBundleIOResults(): List<CropResult> =
         cropBundleIOResults.filter {
-            it.screenshotDeletionResult is ScreenshotDeletionResult.DeletionApprovalRequired
+            it.screenshotDeletionResult is Screenshot.DeletionResult.ApprovalRequired
         }
 
     fun processCropBundle(cropBundlePosition: Int, context: Context) {

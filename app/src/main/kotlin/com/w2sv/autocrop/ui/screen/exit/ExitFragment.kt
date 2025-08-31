@@ -21,7 +21,7 @@ import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
 import com.w2sv.autocrop.ui.util.getAnimationComposer
 import com.w2sv.autocrop.util.launchAfterShortDelay
-import com.w2sv.domain.model.ScreenshotDeletionResult
+import com.w2sv.domain.model.Screenshot
 import kotlinx.coroutines.launch
 
 class ExitFragment : AppFragment<CropPagerExitBinding>(CropPagerExitBinding::class.java) {
@@ -39,7 +39,7 @@ class ExitFragment : AppFragment<CropPagerExitBinding>(CropPagerExitBinding::cla
             ) {
                 if (it.resultCode == Activity.RESULT_OK) {
                     deletionApprovalRequiringCropBundleIOResults.forEach { cropBundleIOResult ->
-                        cropBundleIOResult.screenshotDeletionResult = ScreenshotDeletionResult.SuccessfullyDeleted
+//                        cropBundleIOResult.screenshotDeletionResult = ScreenshotDeletionResult.SuccessfullyDeleted // TODO
                     }
                 }
 
@@ -67,7 +67,7 @@ class ExitFragment : AppFragment<CropPagerExitBinding>(CropPagerExitBinding::cla
         deleteRequestIntentContractAdministrator?.emitDeleteRequest(
             requireContext().contentResolver,
             deletionApprovalRequiringCropBundleIOResults.map {
-                (it.screenshotDeletionResult as ScreenshotDeletionResult.DeletionApprovalRequired).requestUri
+                (it.screenshotDeletionResult as Screenshot.DeletionResult.ApprovalRequired).requestUri
             }
         )
             ?: launchAppIconAnimationAndNavigateToHomeScreen()
