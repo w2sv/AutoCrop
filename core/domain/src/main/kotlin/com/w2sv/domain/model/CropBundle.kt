@@ -6,9 +6,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CropBundle(
     val screenshot: Screenshot,
-    var crop: Crop, // TODO: vars
-    var edgeCandidates: List<Int>,
-    @CropSensitivity var cropSensitivity: Int
+    val crop: Crop,
+    val edgeCandidates: List<Int>,
+    @CropSensitivity val cropSensitivity: Int
 ) : Parcelable {
 
     sealed interface CreationResult {
