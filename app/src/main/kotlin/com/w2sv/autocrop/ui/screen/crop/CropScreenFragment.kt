@@ -5,8 +5,8 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.w2sv.androidutils.widget.showToast
-import com.w2sv.autocrop.ui.AppFragment
 import com.w2sv.autocrop.databinding.CropBinding
+import com.w2sv.autocrop.ui.AppFragment
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
 import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
 import com.w2sv.autocrop.util.launchAfterShortDelay

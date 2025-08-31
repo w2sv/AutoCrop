@@ -32,8 +32,7 @@ private fun getScreenResolution(context: Context): Point {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         val bounds = wm.currentWindowMetrics.bounds
         Point(bounds.width(), bounds.height())
-    }
-    else {
+    } else {
         val display = wm.defaultDisplay
         Point().apply { display.getRealSize(this) }
     }

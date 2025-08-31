@@ -24,8 +24,7 @@ fun FlowFieldOrPreviewMock(modifier: Modifier = Modifier) {
             modifier
                 .background(Color(145, 25, 69))
         )
-    }
-    else {
+    } else {
         FlowField(modifier)
     }
 }

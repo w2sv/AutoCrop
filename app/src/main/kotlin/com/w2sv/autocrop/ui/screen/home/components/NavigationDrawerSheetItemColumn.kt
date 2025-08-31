@@ -39,10 +39,7 @@ import com.w2sv.common.AppUrl
 import com.w2sv.core.common.R.string as Strings
 
 @Composable
-internal fun NavigationDrawerSheetItemColumn(
-    modifier: Modifier = Modifier,
-    context: Context = LocalContext.current
-) {
+internal fun NavigationDrawerSheetItemColumn(modifier: Modifier = Modifier, context: Context = LocalContext.current) {
     val bottomItemModifier = Modifier.windowInsetsPadding(WindowInsets.navigationBarsIgnoringVisibility)
     Column(modifier = modifier) {
         remember {

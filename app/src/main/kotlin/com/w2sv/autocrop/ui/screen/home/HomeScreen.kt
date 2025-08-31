@@ -6,7 +6,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -44,14 +43,14 @@ import com.w2sv.autocrop.ui.screen.home.components.FlowFieldOrPreviewMock
 import com.w2sv.autocrop.ui.screen.home.components.NavigationDrawer
 import com.w2sv.autocrop.ui.util.compose.LottieButton
 import com.w2sv.composed.extensions.rememberVisibilityPercentage
-import kotlinx.coroutines.launch
 import com.w2sv.core.common.R.string as Strings
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Open)
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 ) {
     val launchImageSelection = rememberLaunchImageSelection { uris ->
         navController.navigate(HomeScreenFragmentDirections.navigateToCropScreen(uris.toTypedArray()))
@@ -59,21 +58,17 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
     val drawerVisibilityPercentage by drawerState.rememberVisibilityPercentage()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = modifier.fillMaxSize()) {
         NavigationDrawer(state = drawerState) {
-            Scaffold(
-                modifier = modifier.background(Color.Black),  // For the brief moment after initializing at which the flowfield is not yet drawing
-            ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    FlowFieldOrPreviewMock(modifier = Modifier.fillMaxSize())
-                    Foreground(
-                        alphaPercentage = remember(drawerVisibilityPercentage) { 1 - drawerVisibilityPercentage },
-                        onSelectScreenshotsButtonClick = launchImageSelection,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(it)
-                    )
-                }
+            Scaffold {
+                FlowFieldOrPreviewMock(modifier = Modifier.fillMaxSize())
+                Foreground(
+                    alphaPercentage = remember(drawerVisibilityPercentage) { 1 - drawerVisibilityPercentage },
+                    onSelectScreenshotsButtonClick = launchImageSelection,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)
+                )
             }
         }
         LottieButton(

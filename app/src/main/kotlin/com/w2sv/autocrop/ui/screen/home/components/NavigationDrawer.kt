@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.dp
 import com.w2sv.autocrop.BuildConfig
 import com.w2sv.autocrop.ui.util.compose.SystemBarsIgnoringVisibilityPaddedColumn
 import com.w2sv.autocrop.ui.util.compose.emptyInsets
-import kotlinx.coroutines.launch
 import com.w2sv.core.common.R.string as Strings
+import kotlinx.coroutines.launch
 
 @Composable
 fun NavigationDrawer(
@@ -95,7 +95,7 @@ private fun Header(modifier: Modifier = Modifier) {
                 .background(MaterialTheme.colorScheme.primary)
                 .padding(6.dp)
         )
-        Spacer(modifier = Modifier.height(22.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = stringResource(id = Strings.version).format(BuildConfig.VERSION_NAME)
         )

@@ -12,7 +12,12 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
-fun LottieButton(@RawRes animationRes: Int, animationProgress: () -> Float, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun LottieButton(
+    @RawRes animationRes: Int,
+    animationProgress: () -> Float,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(animationRes))
 
     LottieAnimation(
