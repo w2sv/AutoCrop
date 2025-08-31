@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.w2sv.autocrop.ui.theme.AppTheme
 
 abstract class ComposeFragment : Fragment() {
 
@@ -21,7 +22,7 @@ abstract class ComposeFragment : Fragment() {
     ): View =
         ComposeView(inflater.context).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent { ScreenContent() }
+            setContent { AppTheme { ScreenContent() } }
         }
 
     @Composable

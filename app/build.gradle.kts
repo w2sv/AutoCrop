@@ -79,6 +79,11 @@ android {
                     "$versionName.apk"
             }
     }
+    kotlin {
+        compilerOptions {
+            optIn.add("androidx.compose.foundation.layout.ExperimentalLayoutApi")
+        }
+    }
 }
 
 // https://github.com/Triple-T/gradle-play-publisher
@@ -139,7 +144,7 @@ dependencies {
     // Other
     implementation(libs.slimber)
     implementation(libs.animatoo)
-    implementation(libs.lottie)
+    implementation(libs.airbnb.lottie.compose)
     implementation(libs.simplestorage)
     implementation(libs.google.material)
     lintChecks(libs.compose.lint.checks)

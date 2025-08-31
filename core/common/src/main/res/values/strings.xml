@@ -94,4 +94,21 @@
     </plurals>
     <string name="manual">Manual</string>
     <string name="edge_selection">Edge Selection</string>
+    <string name="support_development">Support the development</string>
+    <string name="buy_me_a_coffee_as_a_sign_of_gratitude">Buy me a coffee as a sign of gratitude ♥</string>
+    <string name="check_out_my_other_apps">Check out my other apps</string>
+    <string name="examine_the_app_s_source_code_on_github">Examine the app\'s source code on GitHub</string>
+    <string name="rate_the_app_in_the_playstore">Rate the app in the PlayStore</string>
+    <string name="share_explanation">Share the app with someone who might appreciate it</string>
+    <string name="report_a_bug_explanation">Help make the app better!</string>
+    <string name="you_re_not_signed_into_the_play_store">You\'re not signed into the Play Store</string>
+    <string name="share_action_text">Check out AutoCrop!\n%s</string>
+    <string name="legal">Legal</string>
+    <string name="more">More</string>
+    <string name="support_the_app">Support the app</string>
+    <string name="license">License</string>
+    <string name="developer">Developer</string>
+    <string name="report_a_bug_request_a_feature">Report a bug / request a feature</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="rate">Rate</string>
 </resources>
