@@ -16,13 +16,13 @@ import com.w2sv.domain.model.CropResult
 import com.w2sv.domain.model.Screenshot
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 inline fun <reified VM : ViewModel> Fragment.cropNavGraphViewModel(): Lazy<VM> =
     hiltNavGraphViewModels<VM>(R.id.crop_nav_graph)
@@ -30,7 +30,7 @@ inline fun <reified VM : ViewModel> Fragment.cropNavGraphViewModel(): Lazy<VM> =
 @HiltViewModel
 class CropBundleViewModel @Inject constructor(
     private val cropBundleIOProcessingUseCase: CropBundleIOProcessingUseCase,
-    preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
     val cropBundles: List<CropBundle> get() = _cropBundles
@@ -38,6 +38,16 @@ class CropBundleViewModel @Inject constructor(
 
     fun addCropBundle(bundle: CropBundle) {
         _cropBundles.add(bundle)
+    }
+
+    fun discardCropBundleAt(index: Int) {
+        _cropBundles.removeAt(index)
+    }
+
+    val deleteScreenshots = preferencesRepository.deleteScreenshots.stateIn(viewModelScope, SharingStarted.Eagerly)
+
+    fun toggleDeleteScreenshots() {
+        viewModelScope.launch { preferencesRepository.deleteScreenshots.save(!deleteScreenshots.value) }
     }
 
     val cropBundleCount: Int get() = cropBundles.size
@@ -49,8 +59,8 @@ class CropBundleViewModel @Inject constructor(
             it.screenshotDeletionResult is Screenshot.DeletionResult.ApprovalRequired
         }
 
-    fun processCropBundle(cropBundlePosition: Int, context: Context) {
-        processCropBundle(cropBundles[cropBundlePosition], context)
+    fun processCropBundleAt(index: Int, context: Context) {
+        processCropBundle(cropBundles[index], context)
     }
 
     fun processCropBundle(cropBundle: CropBundle, context: Context) {
@@ -68,11 +78,6 @@ class CropBundleViewModel @Inject constructor(
 
     var cropProcessingJob: Job? = null
         private set
-
-    private val deleteScreenshots = preferencesRepository.deleteScreenshots.stateIn(
-        viewModelScope,
-        SharingStarted.Eagerly
-    )
 
     val nUnprocessedCrops: Int = cropBundles.size
 

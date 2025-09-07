@@ -1,9 +1,9 @@
-package com.w2sv.autocrop.ui.screen.pager.model
+package com.w2sv.autocrop.ui.screen.pager
 
 import androidx.annotation.StringRes
-import com.w2sv.core.common.R.string as Strings
+import com.w2sv.core.common.R
 
 enum class CropProcedure(@StringRes val notificationMessageRes: Int?) {
     Discard(null),
-    Save(Strings.saved_crop)
+    Save(R.string.saved_crop)
 }

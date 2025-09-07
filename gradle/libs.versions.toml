@@ -11,7 +11,7 @@ compose-tooling = "1.9.0"
 composed = "0.0.7-rc1"
 datastoreutils = "0.0.7-rc2"
 hilt = "2.57.1"
-hiltNavigationCompose = "1.2.0"
+hiltNavigationFragment = "1.2.0"
 # @keep
 java = "17"
 junit = "4.13.2"
@@ -41,8 +41,7 @@ androidx-compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-
 androidx-core = "androidx.core:core-ktx:1.17.0"
 androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.1.7"
 androidx-fragment = "androidx.fragment:fragment-ktx:1.8.9"
-androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
-androidx-hilt-navigation-fragment = { module = "androidx.hilt:hilt-navigation-fragment", version.ref = "hiltNavigationCompose" }
+androidx-hilt-navigation-fragment = { module = "androidx.hilt:hilt-navigation-fragment", version.ref = "hiltNavigationFragment" }
 androidx-lifecycle-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 androidx-lifecycle-livedata-core-ktx = { module = "androidx.lifecycle:lifecycle-livedata-core-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
@@ -72,7 +71,6 @@ snacky = "com.github.matecode:Snacky:1.1.6"
 w2sv-androidutils-core = { module = "com.github.w2sv.AndroidUtils:core", version.ref = "androidutils" }
 w2sv-androidutils-lifecycle = { module = "com.github.w2sv.AndroidUtils:lifecycle", version.ref = "androidutils" }
 w2sv-androidutils-view = { module = "com.github.w2sv.AndroidUtils:views", version.ref = "androidutils" }
-w2sv-bidirectionalviewpager = "com.github.w2sv:BidirectionalViewPager:0.0.2-rc1"
 w2sv-composed = { module = "com.github.w2sv.Composed:composed", version.ref = "composed" }
 w2sv-datastoreutils-preferences = { module = "com.github.w2sv.DataStoreUtils:preferences", version.ref = "datastoreutils" }
 w2sv-kotlindelegates = "com.github.w2sv:Kotlin-Delegates:0.0.1-rc1"

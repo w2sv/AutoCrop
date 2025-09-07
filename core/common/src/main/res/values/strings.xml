@@ -43,7 +43,7 @@
     <string name="enable">Enable</string>
     <string name="share">Share</string>
     <string name="discard_crop">Discard crop</string>
-    <string name="save_crop">Save crop</string>
+    <string name="save_crop">Save crop?</string>
     <string name="discard_all_crops">Discard all crops</string>
     <string name="save_all_crops">Save all crops</string>
     <string name="all">All</string>
@@ -82,7 +82,10 @@
     <string name="saved_crop">Saved crop</string>
     <string name="updated_crop_settings">Updated Crop Settings</string>
     <string name="no_discard_all">No, discard all</string>
-    <string name="delete_corresponding_screenshots">Delete corresponding screenshots</string>
+    <plurals name="delete_corresponding_screenshots">
+        <item quantity="one">Also delete corresponding screenshot</item>
+        <item quantity="other">Also delete corresponding screenshots</item>
+    </plurals>
     <string name="crops_procedure_dialog_title">Save %1$d crops?</string>
     <plurals name="screenshot">
         <item quantity="one">screenshot</item>

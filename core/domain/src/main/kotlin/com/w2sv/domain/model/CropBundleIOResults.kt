@@ -19,8 +19,7 @@ data class CropBundleIOResults(val cropUris: ArrayList<Uri>, val deletedScreensh
     fun notificationMessage(resources: Resources): CharSequence =
         if (nSavedCrops == 0) {
             "Discarded all crops"
-        }
-        else {
+        } else {
             buildSpannedString {
                 append(
                     "Saved $nSavedCrops ${resources.getQuantityString(R.plurals.crop, nSavedCrops)}"
@@ -30,8 +29,7 @@ data class CropBundleIOResults(val cropUris: ArrayList<Uri>, val deletedScreensh
                         " and deleted ${
                             if (deletedScreenshotCount == nSavedCrops) {
                                 "corresponding"
-                            }
-                            else {
+                            } else {
                                 deletedScreenshotCount
                             }
                         } ${resources.getQuantityString(R.plurals.screenshot, deletedScreenshotCount)}"

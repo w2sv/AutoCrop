@@ -128,7 +128,6 @@ dependencies {
     implementation(libs.w2sv.androidutils.lifecycle)
     implementation(libs.w2sv.androidutils.view)
     implementation(libs.w2sv.viewanimations)
-    implementation(libs.w2sv.bidirectionalviewpager)
     implementation(libs.w2sv.composed)
 
     // Compose libraries
@@ -139,7 +138,6 @@ dependencies {
     implementation(libs.androidx.compose.activity)
     implementation(libs.androidx.compose.viewmodel)
     implementation(libs.androidx.lifecycle.compose)
-    implementation(libs.androidx.hilt.navigation.compose)
 
     // Other
     implementation(libs.slimber)

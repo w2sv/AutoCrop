@@ -32,8 +32,7 @@ class CropBundleIOProcessingUseCase @Inject constructor(private val preferencesR
                     mediaStoreId = screenshotMediaStoreData.id,
                     contentResolver = context.contentResolver
                 )
-            }
-            else {
+            } else {
                 null
             }
         )

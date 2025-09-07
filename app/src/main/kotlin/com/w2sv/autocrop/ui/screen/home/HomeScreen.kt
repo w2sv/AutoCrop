@@ -44,8 +44,8 @@ import com.w2sv.autocrop.ui.screen.home.components.FlowFieldOrPreviewMock
 import com.w2sv.autocrop.ui.screen.home.components.NavigationDrawer
 import com.w2sv.autocrop.ui.util.compose.LottieButton
 import com.w2sv.composed.extensions.rememberVisibilityPercentage
-import kotlinx.coroutines.launch
 import com.w2sv.core.common.R.string as Strings
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(

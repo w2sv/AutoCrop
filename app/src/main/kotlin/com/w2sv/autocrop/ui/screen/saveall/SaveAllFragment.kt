@@ -11,9 +11,9 @@ import com.w2sv.autocrop.databinding.SaveAllBinding
 import com.w2sv.autocrop.ui.AppFragment
 import com.w2sv.autocrop.ui.designsystem.navigateAnimated
 import com.w2sv.autocrop.ui.screen.CropBundleViewModel
+import com.w2sv.core.common.R.string as Strings
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import com.w2sv.core.common.R.string as Strings
 
 @AndroidEntryPoint
 class SaveAllFragment : AppFragment<SaveAllBinding>(SaveAllBinding::class.java) {

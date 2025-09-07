@@ -6,17 +6,13 @@ import android.text.SpannableStringBuilder
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.text.bold
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.widget.makeToast
 import com.w2sv.androidutils.widget.showToast
-import com.w2sv.autocrop.ui.screen.pager.view.CropPagerWrapper
 import com.w2sv.autocrop.ui.util.Constant
-import com.w2sv.autocrop.ui.util.nonNullValue
 import com.w2sv.core.common.R.plurals as Plurals
 import com.w2sv.domain.model.CropBundle
 import com.w2sv.domain.repository.PreferencesRepository
@@ -44,30 +40,6 @@ class CropPagerScreenViewModel @AssistedInject constructor(
     fun toggleDeleteScreenshots() {
         viewModelScope.launch { preferencesRepository.deleteScreenshots.save(!deleteScreenshots.value) }
     }
-
-    val dataSet = CropPagerWrapper.DataSet(cropBundles.toMutableList()) // TODO
-
-    // ==================
-    // AutoScroll
-    // ==================
-
-    val doAutoScroll = preferencesRepository.autoScroll.stateIn(viewModelScope, SharingStarted.Eagerly)
-
-    fun saveDoAutoScroll(value: Boolean) {
-        viewModelScope.launch {
-            preferencesRepository.autoScroll.save(value)
-        }
-    }
-
-    val autoScrolling: LiveData<Boolean> get() = _autoScrolling
-    private val _autoScrolling = MutableLiveData(doAutoScroll.value && dataSet.size > 1)
-
-    fun cancelAutoScroll() {
-        _autoScrolling.postValue(false)
-    }
-
-    fun autoScrollCount(): Int =
-        dataSet.size - dataSet.livePosition.nonNullValue
 
     // ==================
     // Crop Results Notification

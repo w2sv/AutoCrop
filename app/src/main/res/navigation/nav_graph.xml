@@ -26,11 +26,15 @@
 
             <action
                 android:id="@+id/navigate_to_cropping_failed_screen"
-                app:destination="@id/cropping_failed_screen" />
+                app:destination="@id/cropping_failed_screen"
+                app:popUpTo="@id/crop_nav_graph"
+                app:popUpToInclusive="false" />
 
             <action
                 android:id="@+id/navigate_to_crop_pager_screen"
-                app:destination="@id/crop_pager_screen" />
+                app:destination="@id/crop_pager_screen"
+                app:popUpTo="@id/crop_nav_graph"
+                app:popUpToInclusive="false" />
         </fragment>
 
         <fragment
@@ -65,41 +69,7 @@
             <action
                 android:id="@+id/navigate_to_save_all_screen"
                 app:destination="@id/save_all_screen" />
-
-            <action
-                android:id="@+id/show_crop_procedure_dialog"
-                app:destination="@id/crop_procedure_dialog" />
-
-            <action
-                android:id="@+id/show_crops_procedure_dialog"
-                app:destination="@id/crops_procedure_dialog" />
-
-            <action
-                android:id="@+id/show_recrop_dialog"
-                app:destination="@id/recrop_dialog" />
         </fragment>
-
-        <dialog
-            android:id="@+id/crop_procedure_dialog"
-            android:name="com.w2sv.autocrop.ui.screen.pager.dialog.cropsaving.CropProcedureDialogFragment">
-
-            <argument
-                android:name="cropBundleIndex"
-                app:argType="integer" />
-        </dialog>
-
-        <dialog
-            android:id="@+id/crops_procedure_dialog"
-            android:name="com.w2sv.autocrop.ui.screen.pager.dialog.cropsaving.CropsProcedureDialogFragment" />
-
-        <dialog
-            android:id="@+id/recrop_dialog"
-            android:name="com.w2sv.autocrop.ui.screen.pager.dialog.recrop.RecropDialogFragment">
-
-            <argument
-                android:name="initialCropSensitivity"
-                app:argType="integer" />
-        </dialog>
 
         <fragment
             android:id="@+id/comparison_screen"
