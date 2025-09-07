@@ -41,7 +41,7 @@ data class CropBundleIOResults(val cropUris: ArrayList<Uri>, val deletedScreensh
     companion object {
         const val EXTRA = "com.w2sv.autocrop.extra.IO_RESULTS"
 
-        fun get(ioResults: Iterable<CropResult>): CropBundleIOResults {
+        fun get(ioResults: Iterable<CropBundleProcessingResult>): CropBundleIOResults {
             val cropUris = ArrayList<Uri>()
             var nDeletedScreenshots = 0
 

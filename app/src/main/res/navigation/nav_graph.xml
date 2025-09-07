@@ -22,7 +22,7 @@
 
         <fragment
             android:id="@+id/crop_screen"
-            android:name="com.w2sv.autocrop.ui.screen.crop.CropScreenFragment">
+            android:name="com.w2sv.autocrop.ui.screen.crop.CropFragment">
 
             <action
                 android:id="@+id/navigate_to_cropping_failed_screen"
@@ -48,11 +48,7 @@
 
         <fragment
             android:id="@+id/crop_pager_screen"
-            android:name="com.w2sv.autocrop.ui.screen.pager.CropPagerScreenFragment">
-
-            <argument
-                android:name="cropResults"
-                app:argType="com.w2sv.domain.model.CropResults" />
+            android:name="com.w2sv.autocrop.ui.screen.pager.CropInspectionFragment">
 
             <action
                 android:id="@+id/navigate_to_exit_screen"

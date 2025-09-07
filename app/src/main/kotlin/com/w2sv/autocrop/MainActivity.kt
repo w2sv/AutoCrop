@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         if (BuildConfig.DEBUG) {
             findNavController(R.id.nav_host_fragment).currentBackStack.collectOn(lifecycleScope) { backStackEntries ->
-                i { "BackStack: ${backStackEntries.map { it.destination.displayName }}" }
+                i { "BackStack: ${backStackEntries.map { it.destination.displayName.substringAfterLast("/") }}" }
             }
         }
     }

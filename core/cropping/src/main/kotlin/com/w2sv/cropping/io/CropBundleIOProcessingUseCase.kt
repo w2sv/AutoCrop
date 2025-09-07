@@ -5,7 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.w2sv.common.util.log
 import com.w2sv.cropping.io.extensions.deleteImage
-import com.w2sv.domain.model.CropResult
+import com.w2sv.domain.model.CropBundleProcessingResult
 import com.w2sv.domain.model.Screenshot
 import com.w2sv.domain.repository.PreferencesRepository
 import javax.inject.Inject
@@ -16,8 +16,8 @@ class CropBundleIOProcessingUseCase @Inject constructor(private val preferencesR
         screenshotMediaStoreData: Screenshot.MediaStoreData,
         deleteScreenshot: Boolean,
         context: Context
-    ): CropResult =
-        CropResult(
+    ): CropBundleProcessingResult =
+        CropBundleProcessingResult(
             cropFileUri = context.contentResolver.saveBitmap(
                 bitmap = cropBitmap,
                 mimeType = screenshotMediaStoreData.mimeType,

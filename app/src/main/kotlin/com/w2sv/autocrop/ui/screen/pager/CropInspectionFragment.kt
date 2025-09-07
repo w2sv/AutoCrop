@@ -40,8 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.screen.CropBundleViewModel
-import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
+import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import com.w2sv.autocrop.ui.screen.pager.dialogs.ProcessCropBundleDialog
 import com.w2sv.autocrop.ui.theme.AppTheme
 import com.w2sv.autocrop.util.ComposeFragment
@@ -56,27 +55,27 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 @AndroidEntryPoint
-class CropPagerScreenFragment : ComposeFragment() {
+class CropInspectionFragment : ComposeFragment() {
 
-    private val cropBundleVM by cropNavGraphViewModel<CropBundleViewModel>()
+    private val viewModel by cropSessionInjectedViewModel<CropInspectionViewModel, CropInspectionViewModel.Factory>()
 
     @Composable
     override fun ScreenContent() {
         val context = LocalContext.current
-        val deleteScreenshots by cropBundleVM.deleteScreenshots.collectAsStateWithLifecycle()
+        val deleteScreenshots by viewModel.deleteScreenshots.collectAsStateWithLifecycle()
 
         CropPagerScreen(
-            cropBundles = cropBundleVM.cropBundles.toImmutableList(),
-            discardCropBundleAt = { cropBundleVM.discardCropBundleAt(it) },
-            processCropBundleAt = { cropBundleVM.processCropBundleAt(it, context) },
+            cropBundles = viewModel.cropBundles.toImmutableList(),
+            discardCropBundleAt = { viewModel.discardCropBundleAt(it) },
+            processCropBundleAt = { viewModel.processCropBundleAt(it, context) },
             deleteScreenshots = { deleteScreenshots },
-            toggleDeleteScreenshots = { cropBundleVM.toggleDeleteScreenshots() }
+            toggleDeleteScreenshots = { viewModel.toggleDeleteScreenshots() }
         )
     }
 }
 
 @Composable
-fun CropPagerScreen(
+private fun CropPagerScreen(
     cropBundles: ImmutableList<CropBundle>,
     discardCropBundleAt: (Int) -> Unit,
     processCropBundleAt: (Int) -> Unit,

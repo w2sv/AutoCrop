@@ -2,29 +2,34 @@ package com.w2sv.autocrop.ui.screen.crop
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.databinding.CropBinding
 import com.w2sv.autocrop.ui.AppFragment
 import com.w2sv.autocrop.ui.designsystem.navigateAnimated
-import com.w2sv.autocrop.ui.screen.CropBundleViewModel
-import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
-import com.w2sv.autocrop.util.launchAfterShortDelay
+import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
+import com.w2sv.autocrop.ui.util.Constant
 import com.w2sv.core.common.R.string as Strings
-import com.w2sv.domain.model.CropResults
+import com.w2sv.kotlinutils.threadUnsafeLazy
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CropScreenFragment : AppFragment<CropBinding>(CropBinding::class.java) {
+class CropFragment : AppFragment<CropBinding>(CropBinding::class.java) {
 
-    private val viewModel by viewModels<CropScreenViewModel>()
-    private val cropBundleVM by cropNavGraphViewModel<CropBundleViewModel>()
+    private val viewModel by cropSessionInjectedViewModel<CropViewModel, CropViewModel.Factory>()
+
+    private val backPressListener by threadUnsafeLazy {
+        BackPressHandler(
+            coroutineScope = lifecycleScope,
+            confirmationWindowDuration = Constant.BACKPRESS_CONFIRMATION_WINDOW_DURATION
+        )
+    }
 
     override val onBackPressed: () -> Unit
         get() = {
-            viewModel.backPressListener(
+            backPressListener(
                 onFirstPress = {
                     requireContext().showToast(getString(Strings.tap_again_to_cancel))
                 },
@@ -53,20 +58,9 @@ class CropScreenFragment : AppFragment<CropBinding>(CropBinding::class.java) {
         lifecycleScope.launch {
             viewModel.cropScreenshots(
                 contentResolver = requireContext().contentResolver,
-                onCropBundle = cropBundleVM::addCropBundle,
-                onFinishedListener = ::invokeSubsequentScreen
+                onAnySuccessfulCrops = { navController.navigateAnimated(CropFragmentDirections.navigateToCropPagerScreen()) },
+                onNoSuccessfulCrops = { navController.navigateAnimated(CropFragmentDirections.navigateToCroppingFailedScreen()) }
             )
-        }
-    }
-
-    private fun invokeSubsequentScreen(cropResults: CropResults) {
-        if (cropBundleVM.cropBundles.isNotEmpty()) {
-            navController.navigateAnimated(CropScreenFragmentDirections.navigateToCropPagerScreen(cropResults))
-        } else {
-            launchAfterShortDelay {
-                // to assure progress bar having reached 100% before UI change
-                navController.navigateAnimated(CropScreenFragmentDirections.navigateToCroppingFailedScreen())
-            }
         }
     }
 }
