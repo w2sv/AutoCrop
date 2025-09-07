@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_nav_graph"
     app:startDestination="@id/home_screen">
 
     <fragment
@@ -26,25 +27,16 @@
 
             <action
                 android:id="@+id/navigate_to_cropping_failed_screen"
-                app:destination="@id/cropping_failed_screen"
-                app:popUpTo="@id/crop_nav_graph"
-                app:popUpToInclusive="false" />
+                app:destination="@id/cropping_failed_screen" />
 
             <action
                 android:id="@+id/navigate_to_crop_pager_screen"
-                app:destination="@id/crop_pager_screen"
-                app:popUpTo="@id/crop_nav_graph"
-                app:popUpToInclusive="false" />
+                app:destination="@id/crop_pager_screen" />
         </fragment>
 
         <fragment
             android:id="@+id/cropping_failed_screen"
-            android:name="com.w2sv.autocrop.ui.screen.croppingfailed.CroppingFailedScreenFragment">
-
-            <action
-                android:id="@+id/navigate_to_home_screen"
-                app:destination="@id/home_screen" />
-        </fragment>
+            android:name="com.w2sv.autocrop.ui.screen.croppingfailed.CroppingFailedScreenFragment" />
 
         <fragment
             android:id="@+id/crop_pager_screen"

@@ -7,7 +7,7 @@ import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.databinding.CropBinding
 import com.w2sv.autocrop.ui.AppFragment
-import com.w2sv.autocrop.ui.designsystem.navigateAnimated
+import com.w2sv.autocrop.ui.designsystem.navigateAnimatedAndPopCurrentDestination
 import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import com.w2sv.autocrop.ui.util.Constant
 import com.w2sv.core.common.R.string as Strings
@@ -58,8 +58,16 @@ class CropFragment : AppFragment<CropBinding>(CropBinding::class.java) {
         lifecycleScope.launch {
             viewModel.cropScreenshots(
                 contentResolver = requireContext().contentResolver,
-                onAnySuccessfulCrops = { navController.navigateAnimated(CropFragmentDirections.navigateToCropPagerScreen()) },
-                onNoSuccessfulCrops = { navController.navigateAnimated(CropFragmentDirections.navigateToCroppingFailedScreen()) }
+                onAnySuccessfulCrops = {
+                    navController.navigateAnimatedAndPopCurrentDestination(
+                        CropFragmentDirections.navigateToCropPagerScreen()
+                    )
+                },
+                onNoSuccessfulCrops = {
+                    navController.navigateAnimatedAndPopCurrentDestination(
+                        CropFragmentDirections.navigateToCroppingFailedScreen()
+                    )
+                }
             )
         }
     }
