@@ -14,7 +14,7 @@ import com.w2sv.autocrop.ui.util.nonNullValue
 import com.w2sv.cropping.cropping.createCropBundle
 import com.w2sv.domain.model.CropBundle
 import com.w2sv.domain.repository.PreferencesRepository
-import com.w2sv.domain.session.CropSession
+import com.w2sv.cropping.session.CropSession
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

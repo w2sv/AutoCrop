@@ -7,7 +7,8 @@ dependencies {
     implementation(projects.core.common)
     implementation(libs.androidx.core)
     implementation(libs.slimber)
-    implementation(libs.w2sv.datastoreutils.preferences)
+    api(libs.w2sv.datastoreutils.preferences)
+    api(libs.w2sv.datastoreutils.datastoreflow)
     implementation(libs.w2sv.kotlinutils)
     implementation(libs.w2sv.androidutils.core)
 }

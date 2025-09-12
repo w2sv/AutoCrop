@@ -70,7 +70,7 @@
     <string name="couldn_t_find_a_browser_to_open_the_url_with">Couldn\'t find a browser to open the URL with</string>
     <string name="tap_again_to_return_to_main_screen">Tap again to return to main screen</string>
     <string name="adjusted_crop">Adjusted crop</string>
-    <string name="wait_until_crops_have_been_saved">Wait until crops have been saved</string>
+    <string name="wait_until_crops_have_been_saved">Wait until all crops have been processed</string>
     <string name="content_provider_not_supported_please_select_a_different_one">Content provider not supported. Please select a different one</string>
     <string name="crops_will_be_saved_to">"Crops will be saved to "</string>
     <string name="directory_didn_t_change">Directory didn\'t change</string>

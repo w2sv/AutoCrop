@@ -1,6 +1,7 @@
 package com.w2sv.autocrop.di
 
-import com.w2sv.domain.session.CropSession
+import com.w2sv.cropping.io.CropBundleIOProcessingUseCase
+import com.w2sv.cropping.session.CropSession
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,6 +14,6 @@ object CropSessionModule {
 
     @Provides
     @ViewModelScoped
-    fun provideCropSession(): CropSession =
-        CropSession()
+    fun provideCropSession(cropBundleIOProcessingUseCase: CropBundleIOProcessingUseCase): CropSession =
+        CropSession(cropBundleIOProcessingUseCase)
 }

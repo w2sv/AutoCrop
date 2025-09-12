@@ -17,8 +17,7 @@ import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
 import com.w2sv.autocrop.databinding.CropPagerExitBinding
 import com.w2sv.autocrop.ui.AppFragment
 import com.w2sv.autocrop.ui.designsystem.navigateAnimated
-import com.w2sv.autocrop.ui.screen.CropBundleViewModel
-import com.w2sv.autocrop.ui.screen.cropNavGraphViewModel
+import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import com.w2sv.autocrop.ui.util.getAnimationComposer
 import com.w2sv.autocrop.util.launchAfterShortDelay
 import com.w2sv.domain.model.Screenshot
@@ -26,20 +25,16 @@ import kotlinx.coroutines.launch
 
 class ExitFragment : AppFragment<CropPagerExitBinding>(CropPagerExitBinding::class.java) {
 
-    private val cropBundleVM by cropNavGraphViewModel<CropBundleViewModel>()
-
-    private val deletionApprovalRequiringCropBundleIOResults by lazy {
-        cropBundleVM.deletionApprovalRequiringCropBundleIOResults()
-    }
+    private val viewModel by cropSessionInjectedViewModel<ExitFragmentViewModel, ExitFragmentViewModel.Factory>()
 
     private val deleteRequestIntentContractAdministrator: DeleteRequestIntentContractAdministrator? by lazy {
-        when (deletionApprovalRequiringCropBundleIOResults.isNotEmpty()) {
+        when (viewModel.deletionApprovalRequiringCropBundleProcessingResults.isNotEmpty()) {
             true -> DeleteRequestIntentContractAdministrator(
                 requireActivity()
             ) {
                 if (it.resultCode == Activity.RESULT_OK) {
-                    deletionApprovalRequiringCropBundleIOResults.forEach { cropBundleIOResult ->
-//                        cropBundleIOResult.screenshotDeletionResult = ScreenshotDeletionResult.SuccessfullyDeleted // TODO
+                    viewModel.deletionApprovalRequiringCropBundleProcessingResults.forEach { cropBundleIOResult ->
+                        //                        cropBundleIOResult.screenshotDeletionResult = ScreenshotDeletionResult.SuccessfullyDeleted // TODO
                     }
                 }
 
@@ -66,8 +61,8 @@ class ExitFragment : AppFragment<CropPagerExitBinding>(CropPagerExitBinding::cla
 
         deleteRequestIntentContractAdministrator?.emitDeleteRequest(
             requireContext().contentResolver,
-            deletionApprovalRequiringCropBundleIOResults.map {
-                (it.screenshotDeletionResult as Screenshot.DeletionResult.ApprovalRequired).requestUri
+            viewModel.deletionApprovalRequiringCropBundleProcessingResults.map {
+                (it.screenshotDeletionResult as Screenshot.DeletionResult.ApprovalRequired).requestUri // TODO cast
             }
         )
             ?: launchAppIconAnimationAndNavigateToHomeScreen()
