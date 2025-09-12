@@ -5,30 +5,34 @@ import android.net.Uri
 import com.w2sv.cropping.io.CropBundleIOProcessingUseCase
 import com.w2sv.domain.model.CropBundle
 import com.w2sv.domain.model.CropBundleProcessingResult
+import com.w2sv.kotlinutils.copy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.coroutineContext
 
 class CropSession(private val ioProcessingUseCase: CropBundleIOProcessingUseCase) {
 
-    private val _bundles = mutableListOf<CropBundle>()
-    val bundles: List<CropBundle> get() = _bundles
+    private val _bundles = MutableStateFlow<List<CropBundle>>(emptyList())
+    val bundles: StateFlow<List<CropBundle>> get() = _bundles
 
     fun add(bundle: CropBundle) {
-        _bundles.add(bundle)
+        _bundles.update { it + bundle }
     }
 
     fun removeBundleAt(index: Int) {
-        _bundles.removeAt(index)
+        _bundles.update { it.copy { removeAt(index) } }
     }
 
     fun update(index: Int, newBundle: CropBundle) {
-        _bundles[index] = newBundle
+        _bundles.update { it.copy { this[index] = newBundle } }
     }
 
     private var _uncroppableImageUris = mutableListOf<Uri>()
@@ -50,26 +54,25 @@ class CropSession(private val ioProcessingUseCase: CropBundleIOProcessingUseCase
 
     suspend fun processCropBundleAt(index: Int, context: Context, onFinished: suspend () -> Unit = {}) {
         processBundle(
-            bundle = bundles[index],
+            bundle = bundles.value[index],
             context = context,
             onFinished = {
-                _bundles.removeAt(index)
+                removeBundleAt(index)
                 onFinished()
             }
         )
     }
 
     suspend fun processAllBundles(context: Context, onBundleProcessed: suspend () -> Unit = {}) {
-        val iterator = _bundles.iterator()
-        while (iterator.hasNext()) {
+        while (bundles.value.isNotEmpty()) {
             coroutineContext.ensureActive()
 
-            val bundle = iterator.next()
+            val bundle = bundles.value.first()
             processBundle(
                 bundle = bundle,
                 context = context,
                 onFinished = {
-                    iterator.remove()
+                    removeBundleAt(0)
                     onBundleProcessed()
                 }
             )

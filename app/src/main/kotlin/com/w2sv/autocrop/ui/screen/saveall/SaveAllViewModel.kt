@@ -19,7 +19,7 @@ class SaveAllViewModel @AssistedInject constructor(
     @Assisted private val cropSession: CropSession
 ) : ViewModel() {
 
-    val remainingBundleCount = cropSession.bundles.size
+    val remainingBundleCount = cropSession.bundles.value.size
 
     val progress: LiveData<Int> get() = _progress
     private val _progress = MutableLiveData(0)

@@ -63,9 +63,10 @@ class CropInspectionFragment : ComposeFragment() {
     override fun ScreenContent() {
         val context = LocalContext.current
         val deleteScreenshots by viewModel.deleteScreenshots.collectAsStateWithLifecycle()
+        val cropBundles by viewModel.cropBundles.collectAsStateWithLifecycle()
 
         CropPagerScreen(
-            cropBundles = viewModel.cropBundles.toImmutableList(),
+            cropBundles = cropBundles.toImmutableList(),
             discardCropBundleAt = { viewModel.discardCropBundleAt(it) },
             processCropBundleAt = { viewModel.processCropBundleAt(it, context) },
             deleteScreenshots = { deleteScreenshots },

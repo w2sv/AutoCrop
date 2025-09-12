@@ -56,7 +56,7 @@ class CropViewModel @AssistedInject constructor(
             _cropProgress.increment()
         }
 
-        if (cropSession.bundles.isNotEmpty()) {
+        if (cropSession.bundles.value.isNotEmpty()) {
             onAnySuccessfulCrops()
         } else {
             onNoSuccessfulCrops()
