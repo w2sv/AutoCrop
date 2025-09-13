@@ -10,7 +10,7 @@ import com.w2sv.domain.model.Screenshot.MediaStoreData
 import slimber.log.i
 
 fun queryMediaStoreData(contentResolver: ContentResolver, uri: Uri): MediaStoreData {
-    i { "uri: $uri" } // content://media/picker/0/com.android.providers.media.photopicker/media/1000016069
+    i { "queryMediaStoreData for: $uri" } // content://media/picker/0/com.android.providers.media.photopicker/media/1000016069
     return contentResolver.queryMediaStoreData(
         uri = uri,
         columns = arrayOf(
@@ -25,9 +25,8 @@ fun queryMediaStoreData(contentResolver: ContentResolver, uri: Uri): MediaStoreD
                 diskUsage = it.getLong(it.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)),
                 fileName = fileName,
                 mimeType = ImageMimeType.parse(it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE))),
-                id = fileName.substringBeforeLast(".").toLong() // TODO
+                id = uri.lastPathSegment?.toLongOrNull() ?: fileName.substringBeforeLast(".").toLong() // TODO
                 //                            it.getLongOrNull(it.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
-                //                                ?: fileName.substringBeforeLast(".").toLong()  // TODO: probably still unreliable
             )
                 .log()
         }

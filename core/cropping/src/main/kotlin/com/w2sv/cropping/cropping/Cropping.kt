@@ -16,6 +16,7 @@ import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
 import slimber.log.d
+import slimber.log.e
 
 fun Bitmap.cropParameters(@CropSensitivity sensitivity: Int): CropParameters? {
     val matRGBA = getMat()
@@ -44,34 +45,39 @@ fun createCropBundle(
     @CropSensitivity cropSensitivity: Int,
     contentResolver: ContentResolver
 ): CropBundle.CreationResult =
-    when (val screenshotBitmap = contentResolver.loadBitmap(screenshotMediaUri)) {
-        null -> CropBundle.CreationResult.BitmapLoadingFailed
-        else -> {
-            when (val cropResult = screenshotBitmap.cropParameters(cropSensitivity)) {
-                null -> CropBundle.CreationResult.NoCropEdgesFound
-                else -> {
-                    val screenshot = Screenshot(
-                        uri = screenshotMediaUri,
-                        height = screenshotBitmap.height,
-                        mediaStoreData = queryMediaStoreData(
-                            contentResolver,
-                            screenshotMediaUri
+    try {
+        when (val screenshotBitmap = contentResolver.loadBitmap(screenshotMediaUri)) {
+            null -> CropBundle.CreationResult.BitmapLoadingFailed
+            else -> {
+                when (val cropResult = screenshotBitmap.cropParameters(cropSensitivity)) {
+                    null -> CropBundle.CreationResult.NoCropEdgesFound
+                    else -> {
+                        val screenshot = Screenshot(
+                            uri = screenshotMediaUri,
+                            height = screenshotBitmap.height,
+                            mediaStoreData = queryMediaStoreData(
+                                contentResolver,
+                                screenshotMediaUri
+                            )
                         )
-                    )
-                    CropBundle.CreationResult.Success(
-                        cropBundle = CropBundle(
-                            screenshot = screenshot,
-                            crop = screenshotBitmap.crop(
-                                screenshotDiskUsage = screenshot.mediaStoreData.diskUsage,
-                                edges = cropResult.edges
-                            ),
-                            edgeCandidates = cropResult.candidates,
-                            cropSensitivity = cropSensitivity
+                        CropBundle.CreationResult.Success(
+                            cropBundle = CropBundle(
+                                screenshot = screenshot,
+                                crop = screenshotBitmap.crop(
+                                    screenshotDiskUsage = screenshot.mediaStoreData.diskUsage,
+                                    edges = cropResult.edges
+                                ),
+                                edgeCandidates = cropResult.candidates,
+                                cropSensitivity = cropSensitivity
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
+    } catch (e: Exception) {
+        e(e)
+        CropBundle.CreationResult.BitmapLoadingFailed // TODO
     }
 
 private fun Bitmap.cropped(edges: CropEdges): Bitmap =
@@ -116,7 +122,8 @@ private fun getMaxScoreCropEdges(candidates: List<Int>, matRGBA: Mat): CropEdges
     var maxScore = 0f
     var maxScoreEdges: CropEdges? = null
 
-    candidates.windowed(2)
+    candidates
+        .windowed(2)
         .map { CropEdges(it) }
         .forEach { edges ->
             val cropAreaMean: Float = matSobel.getCrop(edges).multiChannelMean().toFloat()
