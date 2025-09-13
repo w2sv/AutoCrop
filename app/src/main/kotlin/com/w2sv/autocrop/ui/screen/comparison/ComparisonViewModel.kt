@@ -33,8 +33,8 @@ class ComparisonViewModel @Inject constructor(
     val imageType: LiveData<ImageType> get() = _imageType
     private val _imageType = MutableLiveData(ImageType.Crop)
 
-    fun postImageType(value: ImageType) {
-        _imageType.postValue(value)
+    fun setImageType(value: ImageType) {
+        _imageType.value = value
     }
 
     fun repostImageType() {

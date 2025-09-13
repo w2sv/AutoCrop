@@ -2,13 +2,13 @@ package com.w2sv.autocrop.ui.screen.cropinspection
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkOut
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +25,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,17 +38,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
 import androidx.navigation.NavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.designsystem.navigateAnimatedAndPopCurrentDestination
+import com.w2sv.autocrop.ui.screen.comparison.ComparisonFragment
 import com.w2sv.autocrop.ui.screen.cropinspection.dialogs.ProcessCropBundleDialog
 import com.w2sv.autocrop.ui.theme.AppTheme
 import com.w2sv.autocrop.ui.util.compose.LocalNavController
@@ -76,6 +78,7 @@ fun CropInspectionScreen(
     val pagerState = rememberPagerState { cropBundles.size }
     val pageIndication by remember { derivedStateOf { "${pagerState.currentPage + 1}/${pagerState.pageCount}" } }
     var showProcedureDialogForIndex by rememberSaveable { mutableStateOf<Int?>(null) }
+    var imageView = remember<ImageView?> { null }
 
     OnChange(cropBundles.size) {
         if (it == 0) {
@@ -87,6 +90,14 @@ fun CropInspectionScreen(
         modifier = modifier,
         floatingActionButton = {
             ProcedureFabRow(
+                onComparisonButtonClick = {
+                    navController.navigate(
+                        CropInspectionFragmentDirections.navigateToComparisonScreen(cropBundles[pagerState.currentPage]),
+                        FragmentNavigatorExtras(
+                            requireNotNull(imageView) to ComparisonFragment.TRANSITION_NAME
+                        )
+                    )
+                },
                 onSaveButtonClick = { showProcedureDialogForIndex = pagerState.currentPage },
                 onDiscardButtonClick = { exitAnimationPageIndex = pagerState.currentPage }
             )
@@ -113,6 +124,7 @@ fun CropInspectionScreen(
                     exitAnimationPageIndex = null
                     discardCropBundleAt(pagerState.currentPage)
                 },
+                onImageViewReady = { imageView = it },
                 modifier = Modifier.fillMaxHeight(0.8f)
             )
             Box(modifier = Modifier.fillMaxHeight(0.1f))
@@ -153,6 +165,7 @@ private fun CropPager(
     getCrop: (Int) -> Crop,
     exitAnimationPageIndex: Int?,
     onExitAnimationFinished: () -> Unit,
+    onImageViewReady: (ImageView) -> Unit,
     modifier: Modifier = Modifier
 ) {
     HorizontalPager(
@@ -169,10 +182,10 @@ private fun CropPager(
                 )
             ) {
                 OnExitAnimationFinished(onExitAnimationFinished)
-                Image(
-                    bitmap = getCrop(pageIndex).bitmap.asImageBitmap(),
-                    contentDescription = null,
-                    contentScale = ContentScale.Fit
+                SharedElementImage(
+                    bitmap = getCrop(pageIndex).bitmap,
+                    transitionName = ComparisonFragment.TRANSITION_NAME,
+                    onImageViewReady = onImageViewReady
                 )
             }
         }
@@ -180,12 +193,34 @@ private fun CropPager(
 }
 
 @Composable
+private fun SharedElementImage(
+    bitmap: Bitmap,
+    transitionName: String,
+    onImageViewReady: (ImageView) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AndroidView(
+        factory = { context ->
+            ImageView(context).apply {
+                setImageBitmap(bitmap)
+                scaleType = ImageView.ScaleType.FIT_CENTER
+                this.transitionName = transitionName
+                onImageViewReady(this)
+            }
+        },
+        modifier = modifier
+    )
+}
+
+@Composable
 private fun ProcedureFabRow(
+    onComparisonButtonClick: () -> Unit,
     onSaveButtonClick: () -> Unit,
     onDiscardButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        ProcedureFab(onComparisonButtonClick, R.drawable.ic_inspect_image_24, LocalContentColor.current, "Compare")
         ProcedureFab(onSaveButtonClick, R.drawable.ic_save_24, Color.Green, stringResource(com.w2sv.core.common.R.string.save))
         ProcedureFab(
             onDiscardButtonClick,
