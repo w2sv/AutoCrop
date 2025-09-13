@@ -16,13 +16,14 @@ import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
 import com.w2sv.autocrop.databinding.CropPagerExitBinding
 import com.w2sv.autocrop.ui.AppFragment
-import com.w2sv.autocrop.ui.designsystem.navigateAnimated
 import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import com.w2sv.autocrop.ui.util.getAnimationComposer
 import com.w2sv.autocrop.util.launchAfterShortDelay
 import com.w2sv.domain.model.Screenshot
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ExitFragment : AppFragment<CropPagerExitBinding>(CropPagerExitBinding::class.java) {
 
     private val viewModel by cropSessionInjectedViewModel<ExitFragmentViewModel, ExitFragmentViewModel.Factory>()
@@ -78,9 +79,7 @@ class ExitFragment : AppFragment<CropPagerExitBinding>(CropPagerExitBinding::cla
                 )
                     .random()
             )
-                .onEnd {
-                    navController.navigateAnimated(ExitFragmentDirections.navigateToHomeScreen())
-                }
+                .onEnd { navController.popBackStack() }
                 .play()
         }
     }

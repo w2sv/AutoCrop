@@ -10,6 +10,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 
@@ -25,9 +26,8 @@ class CropInspectionViewModel @AssistedInject constructor(
         cropSession.removeBundleAt(index)
     }
 
-    fun processCropBundleAt(index: Int, context: Context) {
+    fun processCropBundleAt(index: Int, context: Context): Job =
         viewModelScope.launch { cropSession.processCropBundleAt(index, context) }
-    }
 
     val deleteScreenshots = preferencesRepository.deleteScreenshots.stateIn(viewModelScope, SharingStarted.Eagerly)
 

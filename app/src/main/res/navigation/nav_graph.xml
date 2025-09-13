@@ -31,7 +31,7 @@
 
             <action
                 android:id="@+id/navigate_to_crop_pager_screen"
-                app:destination="@id/crop_pager_screen" />
+                app:destination="@id/crop_inspection_screen" />
         </fragment>
 
         <fragment
@@ -39,7 +39,7 @@
             android:name="com.w2sv.autocrop.ui.screen.croppingfailed.CroppingFailedScreenFragment" />
 
         <fragment
-            android:id="@+id/crop_pager_screen"
+            android:id="@+id/crop_inspection_screen"
             android:name="com.w2sv.autocrop.ui.screen.cropinspection.CropInspectionFragment">
 
             <action
@@ -88,12 +88,7 @@
 
         <fragment
             android:id="@+id/exit_screen"
-            android:name="com.w2sv.autocrop.ui.screen.exit.ExitFragment">
-
-            <action
-                android:id="@+id/navigate_to_home_screen"
-                app:destination="@id/home_screen" />
-        </fragment>
+            android:name="com.w2sv.autocrop.ui.screen.exit.ExitFragment" />
     </navigation>
 
 </navigation>

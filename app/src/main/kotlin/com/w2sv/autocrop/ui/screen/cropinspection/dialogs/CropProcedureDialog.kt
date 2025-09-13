@@ -1,5 +1,6 @@
 package com.w2sv.autocrop.ui.screen.cropinspection.dialogs
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -36,7 +37,8 @@ fun ProcessCropBundleDialog(
                 Checkbox(checked = deleteScreenshots(), onCheckedChange = { toggleDeleteScreenshots() })
                 Text(
                     pluralStringResource(com.w2sv.core.common.R.plurals.delete_corresponding_screenshots, count = 1),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.clickable(onClick = toggleDeleteScreenshots)
                 )
             }
         },

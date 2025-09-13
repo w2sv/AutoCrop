@@ -42,10 +42,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.navigation.NavController
 import com.w2sv.autocrop.R
+import com.w2sv.autocrop.ui.designsystem.navigateAnimatedAndPopCurrentDestination
 import com.w2sv.autocrop.ui.screen.cropinspection.dialogs.ProcessCropBundleDialog
 import com.w2sv.autocrop.ui.theme.AppTheme
+import com.w2sv.autocrop.ui.util.compose.LocalNavController
 import com.w2sv.autocrop.ui.util.compose.OnExitAnimationFinished
+import com.w2sv.composed.OnChange
 import com.w2sv.domain.model.Crop
 import com.w2sv.domain.model.CropBundle
 import com.w2sv.domain.model.CropEdges
@@ -62,12 +66,19 @@ fun CropInspectionScreen(
     processCropBundleAt: (Int) -> Unit,
     deleteScreenshots: () -> Boolean,
     toggleDeleteScreenshots: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController = LocalNavController.current
 ) {
     var exitAnimationPageIndex by remember { mutableStateOf<Int?>(null) }
     val pagerState = rememberPagerState { cropBundles.size }
     val pageIndication by remember { derivedStateOf { "${pagerState.currentPage + 1}/${pagerState.pageCount}" } }
     var showProcedureDialogForIndex by rememberSaveable { mutableStateOf<Int?>(null) }
+
+    OnChange(cropBundles.size) {
+        if (it == 0) {
+            navController.navigateAnimatedAndPopCurrentDestination(CropInspectionFragmentDirections.navigateToExitScreen())
+        }
+    }
 
     Scaffold(
         modifier = modifier,
@@ -108,7 +119,9 @@ fun CropInspectionScreen(
         ProcessCropBundleDialog(
             deleteScreenshots = deleteScreenshots,
             toggleDeleteScreenshots = toggleDeleteScreenshots,
-            onConfirmation = { processCropBundleAt(index) },
+            onConfirmation = {
+                processCropBundleAt(index)
+            },
             onDismissRequest = { showProcedureDialogForIndex = null }
         )
     }
