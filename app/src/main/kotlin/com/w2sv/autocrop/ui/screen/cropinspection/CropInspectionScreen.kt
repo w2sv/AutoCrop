@@ -61,7 +61,6 @@ import com.w2sv.domain.model.ImageMimeType
 import com.w2sv.domain.model.Screenshot
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import slimber.log.i
 
 private val Crop.transitionName: String get() = hashCode().toString()
 
@@ -122,7 +121,6 @@ fun CropInspectionScreen(
                 getCrop = { cropBundles[it].crop },
                 exitAnimationPageIndex = exitAnimationPageIndex,
                 onExitAnimationFinished = {
-                    i { "Calling onExitAnimationFinished" }
                     exitAnimationPageIndex = null
                     discardCropBundleAt(pagerState.currentPage)
                 },
@@ -206,13 +204,9 @@ private fun SharedElementImage(
     onImageViewDisposed: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    OnDispose {
-        i { "onDispose for $transitionName" }
-        onImageViewDisposed(transitionName)
-    }
+    OnDispose { onImageViewDisposed(transitionName) }
     AndroidView(
         factory = { context ->
-            i { "running factory for $transitionName" }
             ImageView(context).apply {
                 setImageBitmap(bitmap)
                 scaleType = ImageView.ScaleType.FIT_CENTER
