@@ -9,6 +9,6 @@ class HomeScreenFragment : ComposeFragment() {
 
     @Composable
     override fun ScreenContent() {
-        HomeScreen(navController = navController)
+        HomeScreen()
     }
 }

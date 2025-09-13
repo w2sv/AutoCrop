@@ -42,21 +42,25 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.designsystem.navigateAnimated
 import com.w2sv.autocrop.ui.screen.home.components.FlowFieldOrPreviewMock
 import com.w2sv.autocrop.ui.screen.home.components.NavigationDrawer
+import com.w2sv.autocrop.ui.util.compose.LocalNavController
 import com.w2sv.autocrop.ui.util.compose.LottieButton
 import com.w2sv.composed.extensions.rememberVisibilityPercentage
-import com.w2sv.core.common.R.string as Strings
+import com.w2sv.kotlinutils.coroutines.launchDelayed
 import kotlinx.coroutines.launch
+import com.w2sv.core.common.R.string as Strings
 
 @Composable
 fun HomeScreen(
-    navController: NavController,
     modifier: Modifier = Modifier,
+    navController: NavController = LocalNavController.current,
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 ) {
-    val launchImageSelection = rememberLaunchImageSelection { uris ->
-        navController.navigateAnimated(HomeScreenFragmentDirections.navigateToCropScreen(uris.toTypedArray()))
-    }
     val scope = rememberCoroutineScope()
+    val launchImageSelection = rememberLaunchImageSelection { uris ->
+        scope.launchDelayed(200L) { // Give image picker time to close so that nav animation is properly displayed
+            navController.navigateAnimated(HomeScreenFragmentDirections.navigateToCropScreen(uris.toTypedArray()))
+        }
+    }
     val drawerVisibilityPercentage by drawerState.rememberVisibilityPercentage()
 
     Box(modifier = modifier.fillMaxSize()) {
@@ -87,7 +91,7 @@ fun HomeScreen(
 @Preview
 @Composable
 private fun Prev() {
-    HomeScreen(NavController(LocalContext.current))
+    HomeScreen()
 }
 
 @Preview
