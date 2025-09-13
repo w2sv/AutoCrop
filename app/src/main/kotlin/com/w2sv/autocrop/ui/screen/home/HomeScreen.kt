@@ -39,7 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.designsystem.navigateAnimated
+import com.w2sv.autocrop.ui.util.navigateAnimated
 import com.w2sv.autocrop.ui.screen.home.components.FlowFieldOrPreviewMock
 import com.w2sv.autocrop.ui.screen.home.components.NavigationDrawer
 import com.w2sv.autocrop.ui.util.compose.LocalNavController

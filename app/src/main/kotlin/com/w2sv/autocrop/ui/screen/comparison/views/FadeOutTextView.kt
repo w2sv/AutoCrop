@@ -7,10 +7,10 @@ import com.daimajia.androidanimations.library.YoYo
 import com.w2sv.androidutils.res.getLong
 import com.w2sv.androidutils.view.show
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.screen.comparison.model.ImageType
-import com.w2sv.autocrop.ui.util.fadeOut
+import com.w2sv.autocrop.ui.screen.comparison.ImageType
+import com.w2sv.autocrop.ui.util.view.fadeOut
 
-class ImageTypeLabelTextView(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
+class FadeOutTextView(context: Context, attributeSet: AttributeSet) : AppCompatTextView(context, attributeSet) {
 
     fun setTextAndShow(imageType: ImageType) {
         fadeOutAnimation?.stop()

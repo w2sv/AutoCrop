@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.ui.util
+package com.w2sv.autocrop.ui.util.view
 
 import android.animation.Animator
 import android.animation.Animator.AnimatorListener

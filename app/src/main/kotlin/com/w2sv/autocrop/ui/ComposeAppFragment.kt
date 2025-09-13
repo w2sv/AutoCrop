@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.util
+package com.w2sv.autocrop.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,7 +14,7 @@ import com.w2sv.autocrop.ui.theme.AppTheme
 import com.w2sv.autocrop.ui.util.compose.LocalNavController
 import com.w2sv.kotlinutils.threadUnsafeLazy
 
-abstract class ComposeFragment : Fragment() {
+abstract class ComposeAppFragment : Fragment() {
 
     protected val navController by threadUnsafeLazy { findNavController() }
 

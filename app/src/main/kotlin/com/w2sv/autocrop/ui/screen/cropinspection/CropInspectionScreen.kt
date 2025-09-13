@@ -25,7 +25,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +36,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -48,7 +46,7 @@ import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.designsystem.navigateAnimatedAndPopCurrentDestination
+import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
 import com.w2sv.autocrop.ui.screen.comparison.ComparisonFragment
 import com.w2sv.autocrop.ui.screen.cropinspection.dialogs.ProcessCropBundleDialog
 import com.w2sv.autocrop.ui.theme.AppTheme
@@ -92,7 +90,7 @@ fun CropInspectionScreen(
             ProcedureFabRow(
                 onComparisonButtonClick = {
                     navController.navigate(
-                        CropInspectionFragmentDirections.navigateToComparisonScreen(cropBundles[pagerState.currentPage]),
+                        CropInspectionFragmentDirections.navigateToComparisonScreen(pagerState.currentPage),
                         FragmentNavigatorExtras(
                             requireNotNull(imageView) to ComparisonFragment.TRANSITION_NAME
                         )
@@ -220,12 +218,11 @@ private fun ProcedureFabRow(
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        ProcedureFab(onComparisonButtonClick, R.drawable.ic_inspect_image_24, LocalContentColor.current, "Compare")
-        ProcedureFab(onSaveButtonClick, R.drawable.ic_save_24, Color.Green, stringResource(com.w2sv.core.common.R.string.save))
+        ProcedureFab(onComparisonButtonClick, R.drawable.ic_inspect_image_24, stringResource(com.w2sv.core.common.R.string.compare))
+        ProcedureFab(onSaveButtonClick, R.drawable.ic_save_24, stringResource(com.w2sv.core.common.R.string.save))
         ProcedureFab(
             onDiscardButtonClick,
             com.w2sv.core.common.R.drawable.ic_cancel_24,
-            Color.Red,
             stringResource(com.w2sv.core.common.R.string.discard)
         )
     }
@@ -235,12 +232,11 @@ private fun ProcedureFabRow(
 private fun ProcedureFab(
     onClick: () -> Unit,
     @DrawableRes drawableRes: Int,
-    drawableTint: Color,
     label: String
 ) {
     ExtendedFloatingActionButton(onClick = onClick) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(painterResource(drawableRes), contentDescription = null, tint = drawableTint)
+            Icon(painterResource(drawableRes), contentDescription = null)
             Text(label)
         }
     }

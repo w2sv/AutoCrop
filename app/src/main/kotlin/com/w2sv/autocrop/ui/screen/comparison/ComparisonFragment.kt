@@ -9,27 +9,27 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.doOnNextLayout
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
 import com.w2sv.androidutils.res.getLong
 import com.w2sv.androidutils.view.crossVisualize
-import com.w2sv.androidutils.view.dialogs.show
-import com.w2sv.androidutils.view.show
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ComparisonBinding
-import com.w2sv.autocrop.ui.AppFragment
-import com.w2sv.autocrop.ui.screen.comparison.model.ImageType
+import com.w2sv.autocrop.ui.ViewBoundAppFragment
+import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.getScaleY
-import com.w2sv.autocrop.util.launchAfterShortDelay
-import com.w2sv.autocrop.util.registerOnBackPressedHandler
+import com.w2sv.autocrop.ui.util.postponeEnterTransition
+import com.w2sv.autocrop.ui.util.registerOnBackPressedHandler
+import com.w2sv.kotlinutils.coroutines.launchDelayed
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ComparisonFragment : AppFragment<ComparisonBinding>(ComparisonBinding::class.java) {
+class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBinding::class.java) {
 
-    private val viewModel by viewModels<ComparisonViewModel>()
+    private val viewModel by cropSessionInjectedViewModel<ComparisonViewModel, ComparisonViewModel.Factory>()
+    private var enterTransitionCompleted = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -43,81 +43,80 @@ class ComparisonFragment : AppFragment<ComparisonBinding>(ComparisonBinding::cla
                     override fun onTransitionEnd(transition: Transition) {
                         super.onTransitionEnd(transition)
 
-                        if (!viewModel.enterTransitionCompleted) {
-                            viewModel.enterTransitionCompleted = true
-                            onEnterTransitionCompleted()
+                        if (!enterTransitionCompleted) {
+                            enterTransitionCompleted = true
+                            lifecycleScope.launchDelayed(200) {
+                                viewModel.repostImageType()
+                            }
                         }
                     }
                 }
             )
 
         registerOnBackPressedHandler {
-            binding.cropIv.show()
-            parentFragmentManager.popBackStack()
+            viewModel.setImageType(ImageType.Crop)
+            navController.popBackStack()
         }
     }
 
-    private fun onEnterTransitionCompleted() {
-        launchAfterShortDelay {
-            if (!viewModel.instructionsShown.value) {
-                ComparisonScreenInstructionDialogFragment().show(childFragmentManager)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        postponeEnterTransition(view)
+
+        binding.apply {
+            initializeScreenshotViewAndCropViewScaleAndPositioning()
+            initializeCropView()
+            setOnTouchEventListeners()
+
+            viewModel.imageType.observe(viewLifecycleOwner) {
+                when (it) {
+                    ImageType.Original -> crossVisualize(cropIv, screenshotIv)
+                    ImageType.Crop -> crossVisualize(screenshotIv, cropIv)
+                }
+
+                if (enterTransitionCompleted) {
+                    displayedImageTv.setTextAndShow(it)
+                }
             }
-            else {
-                // trigger display of displayedImageTv
-                viewModel.repostImageType()
+        }
+    }
+
+    private fun ComparisonBinding.initializeCropView() {
+        cropIv.apply {
+            transitionName = TRANSITION_NAME
+            setImageBitmap(viewModel.crop.bitmap)
+        }
+    }
+
+    private fun ComparisonBinding.initializeScreenshotViewAndCropViewScaleAndPositioning() {
+        screenshotIv.apply {
+            setImageBitmap(viewModel.screenshotBitmap)
+            doOnNextLayout {
+                val screenshotViewMatrix = (it as AppCompatImageView).imageMatrix
+                cropIv.apply {
+                    imageMatrix = screenshotViewMatrix
+                    translationY = viewModel.crop.edges.top.toFloat() * screenshotViewMatrix.getScaleY()
+                    postInvalidate()
+                }
             }
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        with(binding) {
-            with(cropIv) {
-                transitionName = TRANSITION_NAME
-                setImageBitmap(viewModel.cropBundle.crop.bitmap)
-            }
-            with(screenshotIv) {
-                setImageBitmap(viewModel.screenshotBitmap)
-                doOnNextLayout {
-                    val matrix = (it as AppCompatImageView).imageMatrix
-                    with(cropIv) {
-                        imageMatrix = matrix
-                        translationY = viewModel.cropBundle.crop.edges.top.toFloat() * matrix.getScaleY()
-                        postInvalidate()
-                    }
+    private fun ComparisonBinding.setOnTouchEventListeners() {
+        root.setOnTouchListener { v, event ->
+            when (event.action) {
+                ACTION_DOWN -> {
+                    viewModel.setImageType(ImageType.Original)
+                    v.performClick()
+                    true
                 }
-            }
 
-            root.setOnTouchListener { v, event ->
-                when (event.action) {
-                    ACTION_DOWN -> {
-                        viewModel.setImageType(ImageType.Screenshot)
-                        v.performClick()
-                        true
-                    }
-
-                    ACTION_UP -> {
-                        viewModel.setImageType(ImageType.Crop)
-                        true
-                    }
-
-                    else -> false
+                ACTION_UP -> {
+                    viewModel.setImageType(ImageType.Crop)
+                    true
                 }
-            }
 
-            with(viewModel) {
-                imageType.observe(viewLifecycleOwner) {
-                    when (it!!) {
-                        ImageType.Screenshot -> crossVisualize(cropIv, screenshotIv)
-                        ImageType.Crop -> crossVisualize(screenshotIv, cropIv)
-                    }
-
-                    if (enterTransitionCompleted) {
-                        displayedImageTv.setTextAndShow(it)
-                    }
-                }
+                else -> false
             }
         }
     }

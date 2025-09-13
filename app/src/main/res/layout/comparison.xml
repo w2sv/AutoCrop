@@ -1,43 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/status_bar_height_approximated"
-    android:layout_marginBottom="?attr/actionBarSize">
+    android:layout_height="match_parent">
 
     <FrameLayout
+        android:id="@+id/comparison_screen_view_animator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/margin_medium">
+        android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/crop_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:scaleType="matrix" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/screenshot_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:scaleType="fitCenter"
             android:visibility="invisible" />
     </FrameLayout>
 
-    <com.w2sv.autocrop.ui.screen.comparison.views.ImageTypeLabelTextView
+    <com.w2sv.autocrop.ui.screen.comparison.views.FadeOutTextView
         android:id="@+id/displayed_image_tv"
-
-        android:layout_width="95dp"
-        android:layout_height="@dimen/height_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/margin_medium"
-
+        android:layout_marginBottom="80dp"
         android:background="@drawable/shape_rounded_rectangle_w_button_background"
         android:gravity="center"
-
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_medium"
         android:visibility="invisible" />

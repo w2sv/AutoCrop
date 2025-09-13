@@ -14,13 +14,13 @@ import com.w2sv.datastoreutils.preferences.PreferencesDataStoreRepository
 import com.w2sv.domain.model.CropAdjustmentMode
 import com.w2sv.domain.repository.PreferencesRepository
 import com.w2sv.kotlinutils.coroutines.flow.mapState
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
 class PreferencesRepositoryImpl @Inject constructor(dataStore: DataStore<Preferences>) :
@@ -28,9 +28,6 @@ class PreferencesRepositoryImpl @Inject constructor(dataStore: DataStore<Prefere
     PreferencesRepository {
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
-    override val comparisonInstructionsShown =
-        dataStoreFlow(booleanPreferencesKey("comparisonInstructionsShown")) { false }
 
     override val autoScroll = dataStoreFlow(booleanPreferencesKey("autoScroll")) { true }
 
@@ -68,7 +65,8 @@ class PreferencesRepositoryImpl @Inject constructor(dataStore: DataStore<Prefere
         cropSaveDirDocumentUri.value?.let {
             if (it.hasPermission(context, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)) {
                 it
-            } else {
+            }
+            else {
                 null
             }
         }

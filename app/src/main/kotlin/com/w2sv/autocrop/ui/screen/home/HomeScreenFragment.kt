@@ -1,11 +1,11 @@
 package com.w2sv.autocrop.ui.screen.home
 
 import androidx.compose.runtime.Composable
-import com.w2sv.autocrop.util.ComposeFragment
+import com.w2sv.autocrop.ui.ComposeAppFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeScreenFragment : ComposeFragment() {
+class HomeScreenFragment : ComposeAppFragment() {
 
     @Composable
     override fun ScreenContent() {

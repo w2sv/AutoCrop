@@ -7,7 +7,6 @@ import com.w2sv.domain.model.CropAdjustmentMode
 import kotlinx.coroutines.flow.StateFlow
 
 interface PreferencesRepository {
-    val comparisonInstructionsShown: DataStoreFlow<Boolean>
     val autoScroll: DataStoreFlow<Boolean>
     val deleteScreenshots: DataStoreFlow<Boolean>
     val cropSensitivity: DataStoreFlow<Int>

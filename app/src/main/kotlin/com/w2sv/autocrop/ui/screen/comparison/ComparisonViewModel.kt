@@ -6,29 +6,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.w2sv.androidutils.lifecycle.repostValue
-import com.w2sv.autocrop.ui.screen.comparison.model.ImageType
+import com.w2sv.autocrop.ui.screen.CropSessionAccessingViewModelFactory
+import com.w2sv.cropping.session.CropSession
 import com.w2sv.domain.model.CropBundle
-import com.w2sv.domain.repository.PreferencesRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import kotlinx.coroutines.flow.SharingStarted
 
-@HiltViewModel
-class ComparisonViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = ComparisonViewModel.Factory::class)
+class ComparisonViewModel @AssistedInject constructor(
     contentResolver: ContentResolver,
-    preferencesRepository: PreferencesRepository
+    savedStateHandle: SavedStateHandle,
+    @Assisted cropSession: CropSession
 ) : ViewModel() {
 
-    val instructionsShown =
-        preferencesRepository.comparisonInstructionsShown.stateIn(viewModelScope, SharingStarted.Eagerly)
-
-    val cropBundle: CropBundle = ComparisonFragmentArgs.fromSavedStateHandle(savedStateHandle).cropBundle
+    private val cropBundle: CropBundle =
+        cropSession.bundles.value[ComparisonFragmentArgs.fromSavedStateHandle(savedStateHandle).cropBundleIndex]
+    val crop = cropBundle.crop
     val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
-
-    var enterTransitionCompleted = false
 
     val imageType: LiveData<ImageType> get() = _imageType
     private val _imageType = MutableLiveData(ImageType.Crop)
@@ -40,4 +37,7 @@ class ComparisonViewModel @Inject constructor(
     fun repostImageType() {
         _imageType.repostValue()
     }
+
+    @AssistedFactory
+    interface Factory : CropSessionAccessingViewModelFactory<ComparisonViewModel>
 }

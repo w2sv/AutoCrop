@@ -6,8 +6,8 @@ import androidx.lifecycle.lifecycleScope
 import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.databinding.CropBinding
-import com.w2sv.autocrop.ui.AppFragment
-import com.w2sv.autocrop.ui.designsystem.navigateAnimatedAndPopCurrentDestination
+import com.w2sv.autocrop.ui.ViewBoundAppFragment
+import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
 import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import com.w2sv.autocrop.ui.util.Constant
 import com.w2sv.core.common.R.string as Strings
@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CropFragment : AppFragment<CropBinding>(CropBinding::class.java) {
+class CropFragment : ViewBoundAppFragment<CropBinding>(CropBinding::class.java) {
 
     private val viewModel by cropSessionInjectedViewModel<CropViewModel, CropViewModel.Factory>()
 

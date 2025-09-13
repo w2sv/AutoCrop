@@ -7,15 +7,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.databinding.SaveAllBinding
-import com.w2sv.autocrop.ui.AppFragment
-import com.w2sv.autocrop.ui.designsystem.navigateAnimatedAndPopCurrentDestination
+import com.w2sv.autocrop.ui.ViewBoundAppFragment
+import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
 import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import com.w2sv.core.common.R.string as Strings
 
 @AndroidEntryPoint
-class SaveAllFragment : AppFragment<SaveAllBinding>(SaveAllBinding::class.java) {
+class SaveAllFragment : ViewBoundAppFragment<SaveAllBinding>(SaveAllBinding::class.java) {
 
     private val viewModel by cropSessionInjectedViewModel<SaveAllViewModel, SaveAllViewModel.Factory>()
 

@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.ui.util
+package com.w2sv.autocrop.ui.util.view
 
 import android.view.View
 import com.daimajia.androidanimations.library.Techniques

@@ -15,16 +15,16 @@ import androidx.lifecycle.lifecycleScope
 import com.daimajia.androidanimations.library.Techniques
 import com.w2sv.androidutils.lifecycle.ActivityCallContractHandler
 import com.w2sv.autocrop.databinding.CropPagerExitBinding
-import com.w2sv.autocrop.ui.AppFragment
+import com.w2sv.autocrop.ui.ViewBoundAppFragment
 import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
-import com.w2sv.autocrop.ui.util.getAnimationComposer
-import com.w2sv.autocrop.util.launchAfterShortDelay
+import com.w2sv.autocrop.ui.util.view.getAnimationComposer
 import com.w2sv.domain.model.Screenshot
+import com.w2sv.kotlinutils.coroutines.launchDelayed
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ExitFragment : AppFragment<CropPagerExitBinding>(CropPagerExitBinding::class.java) {
+class ExitFragment : ViewBoundAppFragment<CropPagerExitBinding>(CropPagerExitBinding::class.java) {
 
     private val viewModel by cropSessionInjectedViewModel<ExitFragmentViewModel, ExitFragmentViewModel.Factory>()
 
@@ -39,7 +39,7 @@ class ExitFragment : AppFragment<CropPagerExitBinding>(CropPagerExitBinding::cla
                     }
                 }
 
-                launchAfterShortDelay {
+                lifecycleScope.launchDelayed(200) {
                     // required for appearing of transition animation, which otherwise is just skipped
                     launchAppIconAnimationAndNavigateToHomeScreen()
                 }
