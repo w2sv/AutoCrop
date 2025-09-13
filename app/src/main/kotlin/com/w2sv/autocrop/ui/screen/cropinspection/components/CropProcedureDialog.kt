@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.ui.screen.cropinspection.dialogs
+package com.w2sv.autocrop.ui.screen.cropinspection.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

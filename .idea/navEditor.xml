@@ -43,13 +43,13 @@
                                 </LayoutPositions>
                               </value>
                             </entry>
-                            <entry key="crop_pager_screen">
+                            <entry key="crop_inspection_screen">
                               <value>
                                 <LayoutPositions>
                                   <option name="myPosition">
                                     <Point>
-                                      <option name="x" value="256" />
-                                      <option name="y" value="88" />
+                                      <option name="x" value="12" />
+                                      <option name="y" value="12" />
                                     </Point>
                                   </option>
                                   <option name="myPositions">
@@ -125,15 +125,6 @@
                                       <option name="x" value="744" />
                                       <option name="y" value="410" />
                                     </Point>
-                                  </option>
-                                  <option name="myPositions">
-                                    <map>
-                                      <entry key="navigate_to_home_screen">
-                                        <value>
-                                          <LayoutPositions />
-                                        </value>
-                                      </entry>
-                                    </map>
                                   </option>
                                 </LayoutPositions>
                               </value>

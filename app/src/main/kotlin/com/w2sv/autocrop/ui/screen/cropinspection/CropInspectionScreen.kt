@@ -3,13 +3,7 @@ package com.w2sv.autocrop.ui.screen.cropinspection
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.view.View
-import android.widget.ImageView
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,8 +12,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -42,18 +34,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.screen.cropinspection.dialogs.ProcessCropBundleDialog
+import com.w2sv.autocrop.ui.screen.cropinspection.components.CropPager
+import com.w2sv.autocrop.ui.screen.cropinspection.components.ProcessCropBundleDialog
+import com.w2sv.autocrop.ui.screen.cropinspection.components.transitionName
 import com.w2sv.autocrop.ui.theme.AppTheme
 import com.w2sv.autocrop.ui.util.compose.LocalNavController
-import com.w2sv.autocrop.ui.util.compose.OnExitAnimationFinished
 import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
 import com.w2sv.composed.OnChange
-import com.w2sv.composed.OnDispose
 import com.w2sv.domain.model.Crop
 import com.w2sv.domain.model.CropBundle
 import com.w2sv.domain.model.CropEdges
@@ -61,8 +52,6 @@ import com.w2sv.domain.model.ImageMimeType
 import com.w2sv.domain.model.Screenshot
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-
-private val Crop.transitionName: String get() = hashCode().toString()
 
 @Composable
 fun CropInspectionScreen(
@@ -156,66 +145,6 @@ private fun TopRow(pageIndication: String, onBackButtonClick: () -> Unit, modifi
         }
         Text(pageIndication)
     }
-}
-
-private const val exitAnimationDuration = 500
-
-@Composable
-private fun CropPager(
-    state: PagerState,
-    getCrop: (Int) -> Crop,
-    exitAnimationPageIndex: Int?,
-    onExitAnimationFinished: () -> Unit,
-    onImageViewReady: (String, ImageView) -> Unit,
-    onImageViewDisposed: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    HorizontalPager(
-        state = state,
-        modifier = modifier,
-        key = { getCrop(it).hashCode() }
-    ) { pageIndex ->
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            AnimatedVisibility(
-                visible = exitAnimationPageIndex != pageIndex,
-                enter = EnterTransition.None,
-                exit = shrinkOut(animationSpec = tween(durationMillis = exitAnimationDuration), shrinkTowards = Alignment.Center) + fadeOut(
-                    animationSpec = tween(durationMillis = exitAnimationDuration)
-                )
-            ) {
-                OnExitAnimationFinished(onExitAnimationFinished)
-                val crop = getCrop(pageIndex)
-                SharedElementImage(
-                    bitmap = crop.bitmap,
-                    transitionName = crop.transitionName,
-                    onImageViewReady = onImageViewReady,
-                    onImageViewDisposed = onImageViewDisposed
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun SharedElementImage(
-    bitmap: Bitmap,
-    transitionName: String,
-    onImageViewReady: (String, ImageView) -> Unit,
-    onImageViewDisposed: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    OnDispose { onImageViewDisposed(transitionName) }
-    AndroidView(
-        factory = { context ->
-            ImageView(context).apply {
-                setImageBitmap(bitmap)
-                scaleType = ImageView.ScaleType.FIT_CENTER
-                this.transitionName = transitionName
-                onImageViewReady(transitionName, this)
-            }
-        },
-        modifier = modifier
-    )
 }
 
 @Composable
