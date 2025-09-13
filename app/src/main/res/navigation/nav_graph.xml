@@ -40,7 +40,7 @@
 
         <fragment
             android:id="@+id/crop_pager_screen"
-            android:name="com.w2sv.autocrop.ui.screen.pager.CropInspectionFragment">
+            android:name="com.w2sv.autocrop.ui.screen.cropinspection.CropInspectionFragment">
 
             <action
                 android:id="@+id/navigate_to_exit_screen"

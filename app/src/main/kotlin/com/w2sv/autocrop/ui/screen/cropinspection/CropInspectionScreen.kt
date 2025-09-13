@@ -1,8 +1,13 @@
-package com.w2sv.autocrop.ui.screen.pager
+package com.w2sv.autocrop.ui.screen.cropinspection
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,52 +36,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
-import com.w2sv.autocrop.ui.screen.pager.dialogs.ProcessCropBundleDialog
+import com.w2sv.autocrop.ui.screen.cropinspection.dialogs.ProcessCropBundleDialog
 import com.w2sv.autocrop.ui.theme.AppTheme
-import com.w2sv.autocrop.util.ComposeFragment
+import com.w2sv.autocrop.ui.util.compose.OnExitAnimationFinished
 import com.w2sv.domain.model.Crop
 import com.w2sv.domain.model.CropBundle
 import com.w2sv.domain.model.CropEdges
 import com.w2sv.domain.model.ImageMimeType
 import com.w2sv.domain.model.Screenshot
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
-
-@AndroidEntryPoint
-class CropInspectionFragment : ComposeFragment() {
-
-    private val viewModel by cropSessionInjectedViewModel<CropInspectionViewModel, CropInspectionViewModel.Factory>()
-
-    @Composable
-    override fun ScreenContent() {
-        val context = LocalContext.current
-        val deleteScreenshots by viewModel.deleteScreenshots.collectAsStateWithLifecycle()
-        val cropBundles by viewModel.cropBundles.collectAsStateWithLifecycle()
-
-        CropPagerScreen(
-            cropBundles = cropBundles.toImmutableList(),
-            discardCropBundleAt = { viewModel.discardCropBundleAt(it) },
-            processCropBundleAt = { viewModel.processCropBundleAt(it, context) },
-            deleteScreenshots = { deleteScreenshots },
-            toggleDeleteScreenshots = { viewModel.toggleDeleteScreenshots() }
-        )
-    }
-}
+import slimber.log.i
 
 @Composable
-private fun CropPagerScreen(
+fun CropInspectionScreen(
     cropBundles: ImmutableList<CropBundle>,
     discardCropBundleAt: (Int) -> Unit,
     processCropBundleAt: (Int) -> Unit,
@@ -84,6 +64,7 @@ private fun CropPagerScreen(
     toggleDeleteScreenshots: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var exitAnimationPageIndex by remember { mutableStateOf<Int?>(null) }
     val pagerState = rememberPagerState { cropBundles.size }
     val pageIndication by remember { derivedStateOf { "${pagerState.currentPage + 1}/${pagerState.pageCount}" } }
     var showProcedureDialogForIndex by rememberSaveable { mutableStateOf<Int?>(null) }
@@ -93,7 +74,7 @@ private fun CropPagerScreen(
         floatingActionButton = {
             ProcedureFabRow(
                 onSaveButtonClick = { showProcedureDialogForIndex = pagerState.currentPage },
-                onDiscardButtonClick = { discardCropBundleAt(pagerState.currentPage) }
+                onDiscardButtonClick = { exitAnimationPageIndex = pagerState.currentPage }
             )
         }
     ) { paddingValues ->
@@ -108,7 +89,17 @@ private fun CropPagerScreen(
                     .fillMaxHeight(0.1f)
                     .fillMaxWidth()
             )
-            CropPager(state = pagerState, getCrop = { cropBundles[it].crop }, modifier = Modifier.fillMaxHeight(0.8f))
+            CropPager(
+                state = pagerState,
+                getCrop = { cropBundles[it].crop },
+                exitAnimationPageIndex = exitAnimationPageIndex,
+                onExitAnimationFinished = {
+                    i { "Calling onExitAnimationFinished" }
+                    exitAnimationPageIndex = null
+                    discardCropBundleAt(pagerState.currentPage)
+                },
+                modifier = Modifier.fillMaxHeight(0.8f)
+            )
             Box(modifier = Modifier.fillMaxHeight(0.1f))
         }
     }
@@ -135,10 +126,14 @@ private fun TopRow(pageIndication: String, modifier: Modifier = Modifier) {
     }
 }
 
+private const val exitAnimationDuration = 500
+
 @Composable
 private fun CropPager(
     state: PagerState,
     getCrop: (Int) -> Crop,
+    exitAnimationPageIndex: Int?,
+    onExitAnimationFinished: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     HorizontalPager(
@@ -147,11 +142,20 @@ private fun CropPager(
         key = { getCrop(it).hashCode() }
     ) { pageIndex ->
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Image(
-                bitmap = getCrop(pageIndex).bitmap.asImageBitmap(),
-                contentDescription = null,
-                contentScale = ContentScale.Fit
-            )
+            AnimatedVisibility(
+                visible = exitAnimationPageIndex != pageIndex,
+                enter = EnterTransition.None,
+                exit = shrinkOut(animationSpec = tween(durationMillis = exitAnimationDuration), shrinkTowards = Alignment.Center) + fadeOut(
+                    animationSpec = tween(durationMillis = exitAnimationDuration)
+                )
+            ) {
+                OnExitAnimationFinished(onExitAnimationFinished)
+                Image(
+                    bitmap = getCrop(pageIndex).bitmap.asImageBitmap(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit
+                )
+            }
         }
     }
 }
@@ -192,7 +196,7 @@ private fun ProcedureFab(
 @Composable
 private fun CropPagerScreenPrev() {
     AppTheme {
-        CropPagerScreen(
+        CropInspectionScreen(
             cropBundles = persistentListOf(
                 mockCropBundle(bitmap(R.drawable.mock_image))
             ),

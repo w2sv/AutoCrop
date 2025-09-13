@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.ui.screen.pager
+package com.w2sv.autocrop.ui.screen.cropinspection
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

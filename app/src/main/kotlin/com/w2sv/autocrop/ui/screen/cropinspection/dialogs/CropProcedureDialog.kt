@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.ui.screen.pager.dialogs
+package com.w2sv.autocrop.ui.screen.cropinspection.dialogs
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
