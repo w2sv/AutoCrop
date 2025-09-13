@@ -10,6 +10,7 @@ import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.doOnNextLayout
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
@@ -29,6 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBinding::class.java) {
 
     private val viewModel by cropSessionInjectedViewModel<ComparisonViewModel, ComparisonViewModel.Factory>()
+    private val navArgs by navArgs<ComparisonFragmentArgs>()
     private var enterTransitionCompleted = false
 
     override fun onAttach(context: Context) {
@@ -82,7 +84,7 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
 
     private fun ComparisonBinding.initializeCropView() {
         cropIv.apply {
-            transitionName = TRANSITION_NAME
+            transitionName = navArgs.transitionName
             setImageBitmap(viewModel.crop.bitmap)
         }
     }
@@ -119,9 +121,5 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
                 else -> false
             }
         }
-    }
-
-    companion object {
-        const val TRANSITION_NAME = "inspection_to_comparison_screen_transition"
     }
 }

@@ -2,6 +2,7 @@ package com.w2sv.autocrop.ui.screen.cropinspection
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.view.View
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
@@ -46,13 +47,13 @@ import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
-import com.w2sv.autocrop.ui.screen.comparison.ComparisonFragment
 import com.w2sv.autocrop.ui.screen.cropinspection.dialogs.ProcessCropBundleDialog
 import com.w2sv.autocrop.ui.theme.AppTheme
 import com.w2sv.autocrop.ui.util.compose.LocalNavController
 import com.w2sv.autocrop.ui.util.compose.OnExitAnimationFinished
+import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
 import com.w2sv.composed.OnChange
+import com.w2sv.composed.OnDispose
 import com.w2sv.domain.model.Crop
 import com.w2sv.domain.model.CropBundle
 import com.w2sv.domain.model.CropEdges
@@ -61,6 +62,8 @@ import com.w2sv.domain.model.Screenshot
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import slimber.log.i
+
+private val Crop.transitionName: String get() = hashCode().toString()
 
 @Composable
 fun CropInspectionScreen(
@@ -76,7 +79,7 @@ fun CropInspectionScreen(
     val pagerState = rememberPagerState { cropBundles.size }
     val pageIndication by remember { derivedStateOf { "${pagerState.currentPage + 1}/${pagerState.pageCount}" } }
     var showProcedureDialogForIndex by rememberSaveable { mutableStateOf<Int?>(null) }
-    var imageView = remember<ImageView?> { null }
+    val transitionNameToImageView = remember { mutableMapOf<String, View>() }
 
     OnChange(cropBundles.size) {
         if (it == 0) {
@@ -89,10 +92,11 @@ fun CropInspectionScreen(
         floatingActionButton = {
             ProcedureFabRow(
                 onComparisonButtonClick = {
+                    val transitionName = cropBundles[pagerState.currentPage].crop.transitionName
                     navController.navigate(
-                        CropInspectionFragmentDirections.navigateToComparisonScreen(pagerState.currentPage),
+                        CropInspectionFragmentDirections.navigateToComparisonScreen(pagerState.currentPage, transitionName),
                         FragmentNavigatorExtras(
-                            requireNotNull(imageView) to ComparisonFragment.TRANSITION_NAME
+                            transitionNameToImageView.getValue(transitionName) to transitionName
                         )
                     )
                 },
@@ -122,7 +126,8 @@ fun CropInspectionScreen(
                     exitAnimationPageIndex = null
                     discardCropBundleAt(pagerState.currentPage)
                 },
-                onImageViewReady = { imageView = it },
+                onImageViewReady = { transitionName, imageView -> transitionNameToImageView[transitionName] = imageView },
+                onImageViewDisposed = { transitionNameToImageView.remove(it) },
                 modifier = Modifier.fillMaxHeight(0.8f)
             )
             Box(modifier = Modifier.fillMaxHeight(0.1f))
@@ -163,7 +168,8 @@ private fun CropPager(
     getCrop: (Int) -> Crop,
     exitAnimationPageIndex: Int?,
     onExitAnimationFinished: () -> Unit,
-    onImageViewReady: (ImageView) -> Unit,
+    onImageViewReady: (String, ImageView) -> Unit,
+    onImageViewDisposed: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     HorizontalPager(
@@ -180,10 +186,12 @@ private fun CropPager(
                 )
             ) {
                 OnExitAnimationFinished(onExitAnimationFinished)
+                val crop = getCrop(pageIndex)
                 SharedElementImage(
-                    bitmap = getCrop(pageIndex).bitmap,
-                    transitionName = ComparisonFragment.TRANSITION_NAME,
-                    onImageViewReady = onImageViewReady
+                    bitmap = crop.bitmap,
+                    transitionName = crop.transitionName,
+                    onImageViewReady = onImageViewReady,
+                    onImageViewDisposed = onImageViewDisposed
                 )
             }
         }
@@ -194,16 +202,22 @@ private fun CropPager(
 private fun SharedElementImage(
     bitmap: Bitmap,
     transitionName: String,
-    onImageViewReady: (ImageView) -> Unit,
+    onImageViewReady: (String, ImageView) -> Unit,
+    onImageViewDisposed: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    OnDispose {
+        i { "onDispose for $transitionName" }
+        onImageViewDisposed(transitionName)
+    }
     AndroidView(
         factory = { context ->
+            i { "running factory for $transitionName" }
             ImageView(context).apply {
                 setImageBitmap(bitmap)
                 scaleType = ImageView.ScaleType.FIT_CENTER
                 this.transitionName = transitionName
-                onImageViewReady(this)
+                onImageViewReady(transitionName, this)
             }
         },
         modifier = modifier
