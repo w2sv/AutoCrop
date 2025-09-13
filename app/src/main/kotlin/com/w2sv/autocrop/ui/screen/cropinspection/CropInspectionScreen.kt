@@ -20,8 +20,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -96,6 +99,7 @@ fun CropInspectionScreen(
         ) {
             TopRow(
                 pageIndication = pageIndication,
+                onBackButtonClick = { navController.popBackStack() },
                 modifier = Modifier
                     .fillMaxHeight(0.1f)
                     .fillMaxWidth()
@@ -128,14 +132,16 @@ fun CropInspectionScreen(
 }
 
 @Composable
-private fun TopRow(pageIndication: String, modifier: Modifier = Modifier) {
-    Box(modifier = modifier) {
-        Text(
-            pageIndication,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 16.dp)
-        )
+private fun TopRow(pageIndication: String, onBackButtonClick: () -> Unit, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.padding(horizontal = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        IconButton(onClick = onBackButtonClick) {
+            Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
+        }
+        Text(pageIndication)
     }
 }
 
