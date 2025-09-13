@@ -46,7 +46,7 @@ class CropSession(private val ioProcessingUseCase: CropBundleIOProcessingUseCase
     val unopenableImageUris: List<Uri> get() = _unopenableImageUris
 
     fun addUnopenableImage(uri: Uri) {
-        _uncroppableImageUris.add(uri)
+        _unopenableImageUris.add(uri)
     }
 
     private val _cropBundleProcessingResults = mutableListOf<CropBundleProcessingResult>()
