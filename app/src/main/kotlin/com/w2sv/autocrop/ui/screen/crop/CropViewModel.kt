@@ -37,16 +37,14 @@ class CropViewModel @AssistedInject constructor(
 
     private val screenshotUris: List<Uri> = try {
         CropNavGraphArgs.fromSavedStateHandle(savedStateHandle).imageUris.toList()
-    }
-    catch (e: IllegalArgumentException) {
+    } catch (e: IllegalArgumentException) {
         if (BuildConfig.DEBUG) {
             contentResolver.getLatestImageUris(8)
-        }
-        else {
+        } else {
             throw e
         }
     }
-        .log { "screenshotUris=${it}" }
+        .log { "screenshotUris=$it" }
     val screenshotCount = screenshotUris.size
 
     val cropProgress: LiveData<Int> get() = _cropProgress
@@ -71,7 +69,9 @@ class CropViewModel @AssistedInject constructor(
             _cropProgress.increment()
         }
 
-        i { "bundles=${cropSession.bundles.value.size} | uncroppableImageUris=${cropSession.uncroppableImageUris.size} | unopenableImageUris=${cropSession.unopenableImageUris.size}" }
+        i {
+            "bundles=${cropSession.bundles.value.size} | uncroppableImageUris=${cropSession.uncroppableImageUris.size} | unopenableImageUris=${cropSession.unopenableImageUris.size}"
+        }
 
         if (cropSession.bundles.value.isNotEmpty()) {
             onAnySuccessfulCrops()
@@ -88,7 +88,7 @@ class CropViewModel @AssistedInject constructor(
             cropSensitivity = cropSensitivity.value,
             contentResolver = contentResolver
         )
-            .log { "CropBundleCreationResult=${it}" }
+            .log { "CropBundleCreationResult=$it" }
             .run {
                 when (this) {
                     is CropBundle.CreationResult.NoCropEdgesFound -> cropSession.addUncroppableImage(screenshotUri)

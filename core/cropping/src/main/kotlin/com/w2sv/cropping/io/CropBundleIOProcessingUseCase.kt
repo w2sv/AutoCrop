@@ -10,9 +10,9 @@ import com.w2sv.domain.model.CropBundle
 import com.w2sv.domain.model.CropBundleProcessingResult
 import com.w2sv.domain.model.Screenshot
 import com.w2sv.domain.repository.PreferencesRepository
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
-import javax.inject.Inject
 
 class CropBundleIOProcessingUseCase @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
@@ -53,8 +53,7 @@ class CropBundleIOProcessingUseCase @Inject constructor(
                     mediaStoreId = screenshotMediaStoreData.id,
                     contentResolver = context.contentResolver
                 )
-            }
-            else {
+            } else {
                 null
             }
         )

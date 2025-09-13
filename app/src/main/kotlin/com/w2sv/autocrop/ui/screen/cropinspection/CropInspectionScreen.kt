@@ -134,7 +134,11 @@ fun CropInspectionScreen(
 }
 
 @Composable
-private fun TopRow(pageIndication: String, onBackButtonClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun TopRow(
+    pageIndication: String,
+    onBackButtonClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier.padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically,

@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import com.w2sv.autocrop.ui.ComposeAppFragment
+import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import com.w2sv.autocrop.ui.util.postponeEnterTransition
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.toImmutableList

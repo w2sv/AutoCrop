@@ -7,9 +7,9 @@ import com.w2sv.androidutils.BackPressHandler
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.databinding.CropBinding
 import com.w2sv.autocrop.ui.ViewBoundAppFragment
-import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
 import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import com.w2sv.autocrop.ui.util.Constant
+import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
 import com.w2sv.core.common.R.string as Strings
 import com.w2sv.kotlinutils.threadUnsafeLazy
 import dagger.hilt.android.AndroidEntryPoint

@@ -8,11 +8,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.w2sv.androidutils.widget.showToast
 import com.w2sv.autocrop.databinding.SaveAllBinding
 import com.w2sv.autocrop.ui.ViewBoundAppFragment
-import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
 import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
+import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
+import com.w2sv.core.common.R.string as Strings
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import com.w2sv.core.common.R.string as Strings
 
 @AndroidEntryPoint
 class SaveAllFragment : ViewBoundAppFragment<SaveAllBinding>(SaveAllBinding::class.java) {
@@ -36,7 +36,9 @@ class SaveAllFragment : ViewBoundAppFragment<SaveAllBinding>(SaveAllBinding::cla
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.processBundles(
                     context = requireContext(),
-                    onFinished = { navController.navigateAnimatedAndPopCurrentDestination(SaveAllFragmentDirections.navigateToExitScreen()) }
+                    onFinished = {
+                        navController.navigateAnimatedAndPopCurrentDestination(SaveAllFragmentDirections.navigateToExitScreen())
+                    }
                 )
             }
         }

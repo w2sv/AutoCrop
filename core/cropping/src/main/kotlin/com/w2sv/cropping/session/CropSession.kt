@@ -6,6 +6,7 @@ import com.w2sv.cropping.io.CropBundleIOProcessingUseCase
 import com.w2sv.domain.model.CropBundle
 import com.w2sv.domain.model.CropBundleProcessingResult
 import com.w2sv.kotlinutils.copy
+import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
@@ -16,7 +17,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.coroutines.coroutineContext
 
 class CropSession(private val ioProcessingUseCase: CropBundleIOProcessingUseCase) {
 
@@ -52,7 +52,11 @@ class CropSession(private val ioProcessingUseCase: CropBundleIOProcessingUseCase
     private val _cropBundleProcessingResults = mutableListOf<CropBundleProcessingResult>()
     val cropBundleProcessingResults: List<CropBundleProcessingResult> get() = _cropBundleProcessingResults
 
-    suspend fun processCropBundleAt(index: Int, context: Context, onFinished: suspend () -> Unit = {}) {
+    suspend fun processCropBundleAt(
+        index: Int,
+        context: Context,
+        onFinished: suspend () -> Unit = {}
+    ) {
         processBundle(
             bundle = bundles.value[index],
             context = context,
@@ -79,7 +83,11 @@ class CropSession(private val ioProcessingUseCase: CropBundleIOProcessingUseCase
         }
     }
 
-    private suspend fun processBundle(bundle: CropBundle, context: Context, onFinished: suspend () -> Unit) {
+    private suspend fun processBundle(
+        bundle: CropBundle,
+        context: Context,
+        onFinished: suspend () -> Unit
+    ) {
         coroutineScope {
             cropProcessingJob = launch(Dispatchers.IO) {
                 val processingResult = ioProcessingUseCase.invoke(

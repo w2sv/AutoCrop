@@ -39,15 +39,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.util.navigateAnimated
 import com.w2sv.autocrop.ui.screen.home.components.FlowFieldOrPreviewMock
 import com.w2sv.autocrop.ui.screen.home.components.NavigationDrawer
 import com.w2sv.autocrop.ui.util.compose.LocalNavController
 import com.w2sv.autocrop.ui.util.compose.LottieButton
+import com.w2sv.autocrop.ui.util.navigateAnimated
 import com.w2sv.composed.extensions.rememberVisibilityPercentage
+import com.w2sv.core.common.R.string as Strings
 import com.w2sv.kotlinutils.coroutines.launchDelayed
 import kotlinx.coroutines.launch
-import com.w2sv.core.common.R.string as Strings
 
 @Composable
 fun HomeScreen(
@@ -57,7 +57,8 @@ fun HomeScreen(
 ) {
     val scope = rememberCoroutineScope()
     val launchImageSelection = rememberLaunchImageSelection { uris ->
-        scope.launchDelayed(200L) { // Give image picker time to close so that nav animation is properly displayed
+        // Give image picker time to close so that nav animation is properly displayed
+        scope.launchDelayed(200L) {
             navController.navigateAnimated(HomeScreenFragmentDirections.navigateToCropScreen(uris.toTypedArray()))
         }
     }

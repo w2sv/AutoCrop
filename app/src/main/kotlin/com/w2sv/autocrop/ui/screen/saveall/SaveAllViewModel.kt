@@ -15,9 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @HiltViewModel(assistedFactory = SaveAllViewModel.Factory::class)
-class SaveAllViewModel @AssistedInject constructor(
-    @Assisted private val cropSession: CropSession
-) : ViewModel() {
+class SaveAllViewModel @AssistedInject constructor(@Assisted private val cropSession: CropSession) : ViewModel() {
 
     val remainingBundleCount = cropSession.bundles.value.size
 
