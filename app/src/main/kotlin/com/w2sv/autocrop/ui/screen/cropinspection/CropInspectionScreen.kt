@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -69,6 +71,7 @@ fun CropInspectionScreen(
     var showProcedureDialogForIndex by rememberSaveable { mutableStateOf<Int?>(null) }
     val transitionNameToImageView = remember { mutableMapOf<String, View>() }
 
+    // Navigate to exit screen if no crop bundles left
     OnChange(cropBundles.size) {
         if (it == 0) {
             navController.navigateAnimatedAndPopCurrentDestination(CropInspectionFragmentDirections.navigateToExitScreen())
@@ -77,6 +80,9 @@ fun CropInspectionScreen(
 
     Scaffold(
         modifier = modifier,
+        // Ignore system bars visibility so that no snapping behavior occurs during shared element transition from comparison screen,
+        // during which system bars are unhidden
+        contentWindowInsets = WindowInsets.systemBarsIgnoringVisibility,
         floatingActionButton = {
             ProcedureFabRow(
                 onComparisonButtonClick = {
