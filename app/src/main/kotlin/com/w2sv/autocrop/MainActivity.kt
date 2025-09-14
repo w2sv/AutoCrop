@@ -23,7 +23,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         if (BuildConfig.DEBUG) {
             findNavController(R.id.nav_host_fragment).apply {
-                setStartDestinationBasedOnStartWithCropScreen()
+                if (savedInstanceState == null && BuildConfig.START_WITH_CROP_SCREEN) {
+                    inflateGraphWithStartDestination(R.id.crop_nav_graph)
+                }
                 setupBackStackLogging(lifecycleScope)
             }
         }
@@ -40,12 +42,8 @@ private fun NavController.setupBackStackLogging(scope: CoroutineScope) {
     }
 }
 
-private fun NavController.setStartDestinationBasedOnStartWithCropScreen() {
-    @Suppress("KotlinConstantConditions")
-    if (BuildConfig.START_WITH_CROP_SCREEN) {
-        val graph = navInflater.inflate(R.navigation.nav_graph).apply {
-            setStartDestination(R.id.crop_nav_graph)
-        }
-        this.graph = graph
+private fun NavController.inflateGraphWithStartDestination(destinationId: Int) {
+    graph = navInflater.inflate(R.navigation.nav_graph).apply {
+        setStartDestination(destinationId)
     }
 }
