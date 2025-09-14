@@ -37,39 +37,33 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
 
     private val viewModel by cropSessionInjectedViewModel<ComparisonViewModel, ComparisonViewModel.Factory>()
     private val navArgs by navArgs<ComparisonFragmentArgs>()
-    private var enterTransitionCompleted = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         hideSystemBars()
 
-        sharedElementEnterTransition = TransitionInflater.from(context)
+        sharedElementEnterTransition = cropEnterTransition(context)
+        registerOnBackPressedHandler(::onBack)
+    }
+
+    private fun cropEnterTransition(context: Context) =
+        TransitionInflater
+            .from(context)
             .inflateTransition(android.R.transition.move)
             ?.setDuration(500)
             ?.setInterpolator(DecelerateInterpolator(1.5f))
-            ?.addListener(
-                object : TransitionListenerAdapter() {
-                    override fun onTransitionEnd(transition: Transition) {
-                        super.onTransitionEnd(transition)
-
-                        if (!enterTransitionCompleted) {
-                            enterTransitionCompleted = true
-                            lifecycleScope.launchDelayed(200) {
-                                viewModel.emitFadeOutTextArgs(
-                                    FadeOutTextView.Args(
-                                        textRes = com.w2sv.core.common.R.string.comparison_instruction,
-                                        iconRes = R.drawable.ic_info_24,
-                                        displayDuration = 4_000
-                                    )
-                                )
-                            }
-                        }
-                    }
+            ?.onTransitionEnd {
+                // Show instructions after short delay
+                lifecycleScope.launchDelayed(200) {
+                    viewModel.emitFadeOutTextArgs(
+                        FadeOutTextView.Args(
+                            textRes = com.w2sv.core.common.R.string.comparison_instruction,
+                            iconRes = R.drawable.ic_info_24,
+                            displayDuration = 3_000
+                        )
+                    )
                 }
-            )
-
-        registerOnBackPressedHandler(::onBack)
-    }
+            }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition(view)
@@ -153,3 +147,12 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
         navController.popBackStack()
     }
 }
+
+private fun Transition.onTransitionEnd(callback: () -> Unit): Transition =
+    addListener(
+        object : TransitionListenerAdapter() {
+            override fun onTransitionEnd(transition: Transition) {
+                callback()
+            }
+        }
+    )
