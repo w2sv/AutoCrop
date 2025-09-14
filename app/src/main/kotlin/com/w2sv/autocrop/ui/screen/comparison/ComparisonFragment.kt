@@ -41,7 +41,6 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
     override fun onAttach(context: Context) {
         super.onAttach(context)
         hideSystemBars()
-
         sharedElementEnterTransition = cropEnterTransition(context)
         registerOnBackPressedHandler(::onBack)
     }
@@ -71,7 +70,7 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
         binding.apply {
             initializeScreenshotViewAndCropViewScaleAndPositioning()
             initializeCropView()
-            setOnTouchEventListeners()
+            setOnTouchEventListener()
             backButton.setOnClickListener { onBack() }
 
             viewModel.fadeOutTextArgs.collectLatestOn(lifecycleScope) {
@@ -109,25 +108,13 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun ComparisonBinding.setOnTouchEventListeners() {
-        root.setOnTouchListener { v, event ->
-            val insets = ViewCompat.getRootWindowInsets(root)
-            val statusBarHeight = insets?.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.statusBars())?.top
-                ?: 0
-            val navBarHeight = insets?.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.navigationBars())?.bottom
-                ?: 0
-
-            // Ignore touches in system bar areas
-            val y = event.y.toInt()
-            if (y < statusBarHeight || y > root.height - navBarHeight) {
-                return@setOnTouchListener false
-            }
-
+    private fun ComparisonBinding.setOnTouchEventListener() {
+        root.setOnTouchListenerIgnoringSystemBarAreas { view, event ->
             when (event.actionMasked) {
                 ACTION_DOWN -> {
                     viewModel.setImageType(ImageType.Original)
                     // Lets accessibility services know the view was clicked, which enables those services to react to it
-                    v.performClick()
+                    view.performClick()
                     true
                 }
 
@@ -145,6 +132,25 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
         showSystemBars()
         viewModel.setImageType(ImageType.Crop, displayFadeOutText = false)
         navController.popBackStack()
+    }
+}
+
+@SuppressLint("ClickableViewAccessibility")
+private fun View.setOnTouchListenerIgnoringSystemBarAreas(listener: View.OnTouchListener) {
+    setOnTouchListener { view, event ->
+        val insets = ViewCompat.getRootWindowInsets(view)
+        val statusBarHeight = insets?.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.statusBars())?.top
+            ?: 0
+        val navBarHeight = insets?.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.navigationBars())?.bottom
+            ?: 0
+
+        // Ignore touches in system bar areas
+        val y = event.y.toInt()
+        if (y < statusBarHeight || y > view.height - navBarHeight) {
+            return@setOnTouchListener false
+        }
+
+        listener.onTouch(view, event)
     }
 }
 

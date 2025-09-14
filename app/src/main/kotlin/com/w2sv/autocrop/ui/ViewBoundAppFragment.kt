@@ -1,6 +1,7 @@
 package com.w2sv.autocrop.ui
 
 import android.content.Context
+import androidx.annotation.CallSuper
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.w2sv.autocrop.ui.util.registerOnBackPressedHandler
@@ -12,6 +13,7 @@ abstract class ViewBoundAppFragment<VB : ViewBinding>(bindingClass: Class<VB>) :
     protected val navController by threadUnsafeLazy { findNavController() }
     open val onBackPressed: (() -> Unit)? = null
 
+    @CallSuper
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
