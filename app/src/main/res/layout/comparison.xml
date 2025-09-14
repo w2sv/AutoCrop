@@ -36,7 +36,7 @@
             android:src="@drawable/ic_arrow_back_24" />
     </FrameLayout>
 
-    <com.w2sv.autocrop.ui.screen.comparison.views.FadeOutTextView
+    <com.w2sv.autocrop.ui.views.FadeOutTextView
         android:id="@+id/displayed_image_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

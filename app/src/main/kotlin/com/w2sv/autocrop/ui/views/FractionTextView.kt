@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.ui.designsystem
+package com.w2sv.autocrop.ui.views
 
 import android.content.Context
 import android.util.AttributeSet

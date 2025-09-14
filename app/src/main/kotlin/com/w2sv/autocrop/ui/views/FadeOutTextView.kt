@@ -1,4 +1,4 @@
-package com.w2sv.autocrop.ui.screen.comparison.views
+package com.w2sv.autocrop.ui.views
 
 import android.content.Context
 import android.util.AttributeSet

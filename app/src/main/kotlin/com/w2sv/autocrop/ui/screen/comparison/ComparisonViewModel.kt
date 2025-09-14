@@ -8,7 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.w2sv.autocrop.ui.screen.CropSessionAccessingViewModelFactory
-import com.w2sv.autocrop.ui.screen.comparison.views.FadeOutTextView
+import com.w2sv.autocrop.ui.views.FadeOutTextView
 import com.w2sv.cropping.session.CropSession
 import com.w2sv.domain.model.CropBundle
 import com.w2sv.kotlinutils.coroutines.flow.emit
