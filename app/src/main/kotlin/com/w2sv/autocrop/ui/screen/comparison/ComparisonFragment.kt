@@ -14,17 +14,18 @@ import androidx.navigation.fragment.navArgs
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
-import com.w2sv.androidutils.res.getLong
 import com.w2sv.androidutils.view.crossVisualize
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.ui.ViewBoundAppFragment
+import com.w2sv.autocrop.ui.screen.comparison.views.FadeOutTextView
 import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.getScaleY
 import com.w2sv.autocrop.ui.util.hideSystemBars
 import com.w2sv.autocrop.ui.util.postponeEnterTransition
 import com.w2sv.autocrop.ui.util.registerOnBackPressedHandler
 import com.w2sv.autocrop.ui.util.showSystemBars
+import com.w2sv.kotlinutils.coroutines.flow.collectLatestOn
 import com.w2sv.kotlinutils.coroutines.launchDelayed
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,7 +42,7 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
 
         sharedElementEnterTransition = TransitionInflater.from(context)
             .inflateTransition(android.R.transition.move)
-            ?.setDuration(resources.getLong(R.integer.delay_medium))
+            ?.setDuration(500)
             ?.setInterpolator(DecelerateInterpolator(1.5f))
             ?.addListener(
                 object : TransitionListenerAdapter() {
@@ -51,18 +52,20 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
                         if (!enterTransitionCompleted) {
                             enterTransitionCompleted = true
                             lifecycleScope.launchDelayed(200) {
-                                viewModel.repostImageType()
+                                viewModel.emitFadeOutTextArgs(
+                                    FadeOutTextView.Args(
+                                        textRes = com.w2sv.core.common.R.string.comparison_instruction,
+                                        iconRes = R.drawable.ic_info_24,
+                                        displayDuration = 4_000
+                                    )
+                                )
                             }
                         }
                     }
                 }
             )
 
-        registerOnBackPressedHandler {
-            showSystemBars()
-            viewModel.setImageType(ImageType.Crop)
-            navController.popBackStack()
-        }
+        registerOnBackPressedHandler(::onBack)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,15 +75,16 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
             initializeScreenshotViewAndCropViewScaleAndPositioning()
             initializeCropView()
             setOnTouchEventListeners()
+            backButton.setOnClickListener { onBack() }
+
+            viewModel.fadeOutTextArgs.collectLatestOn(lifecycleScope) {
+                displayedImageTv.setAndShow(it)
+            }
 
             viewModel.imageType.observe(viewLifecycleOwner) {
                 when (it) {
                     ImageType.Original -> crossVisualize(cropIv, screenshotIv)
                     ImageType.Crop -> crossVisualize(screenshotIv, cropIv)
-                }
-
-                if (enterTransitionCompleted) {
-                    displayedImageTv.setTextAndShow(it)
                 }
             }
         }
@@ -125,5 +129,11 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
                 else -> false
             }
         }
+    }
+
+    private fun onBack() {
+        showSystemBars()
+        viewModel.setImageType(ImageType.Crop, displayFadeOutText = false)
+        navController.popBackStack()
     }
 }

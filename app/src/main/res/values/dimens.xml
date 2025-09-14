@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <dimen name="status_bar_height_approximated">32dp</dimen>
 
     <dimen name="text_size_small">12sp</dimen>
@@ -16,19 +16,9 @@
     <dimen name="margin_horizontal_large">35dp</dimen>
     <dimen name="margin_top_portrait_mode">46dp</dimen>
 
-    <dimen name="size_lottie_button">46dp</dimen>
     <dimen name="size_image_button">30dp</dimen>
 
     <dimen name="height_button">40dp</dimen>
     <dimen name="toolbar_button_width">70dp</dimen>
-
-    <!-- override -->
-    <dimen name="onboarding_description_text_size">18sp</dimen>
-    <!-- override -->
-    <dimen name="onboarding_page_indicator_dot_size">12dp</dimen>
-    <!-- override -->
-    <dimen name="mtrl_slider_widget_height" tools:ignore="MissingDefaultResource,PrivateResource">
-        20dp
-    </dimen>
 
 </resources>
