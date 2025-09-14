@@ -78,3 +78,4 @@ lint/reports/
 *.hprof
 
 .kotlin/
+local_debug.properties

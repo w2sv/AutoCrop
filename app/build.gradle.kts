@@ -1,3 +1,4 @@
+import com.android.build.api.dsl.VariantDimension
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -20,15 +21,6 @@ android {
 
         versionCode = project.findProperty("versionCode")!!.toString().toInt()
         versionName = version.toString()
-
-        @Suppress("UnstableApiUsage")
-        externalNativeBuild {
-            cmake {
-                cppFlags("-frtti -fexceptions")
-                abiFilters("x86", "x86_64", "armeabi-v7a", "arm64-v8a")
-                arguments("-DOpenCV_DIR=${rootProject.projectDir}/opencv/native")
-            }
-        }
     }
     signingConfigs {
         create("release") {
@@ -47,9 +39,11 @@ android {
     }
     buildTypes {
         getByName("debug") {
+            buildStartWithCropScreenConfigField(retrieveStartWithCropScreenValue(default = false))
             applicationIdSuffix = ".debug"
         }
         getByName("release") {
+            buildStartWithCropScreenConfigField(false)
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -84,6 +78,26 @@ android {
             optIn.add("androidx.compose.foundation.layout.ExperimentalLayoutApi")
         }
     }
+}
+
+private fun retrieveStartWithCropScreenValue(default: Boolean = false): Boolean {
+    val localDebugPropertiesFile = rootProject.file("local_debug.properties")
+
+    if (localDebugPropertiesFile.exists()) {
+        val props = Properties()
+        props.load(FileInputStream(localDebugPropertiesFile))
+        return (props.getProperty("startWithCropScreen")
+            ?: error("Couldn't find property 'startWithCropScreen'")).toBoolean()
+    }
+    return default
+}
+
+private fun VariantDimension.buildStartWithCropScreenConfigField(value: Boolean) {
+    buildConfigField(
+        "boolean",
+        "START_WITH_CROP_SCREEN",
+        value.toString()
+    )
 }
 
 // https://github.com/Triple-T/gradle-play-publisher

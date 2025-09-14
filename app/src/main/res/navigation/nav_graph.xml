@@ -66,6 +66,10 @@
             <argument
                 android:name="cropBundleIndex"
                 app:argType="integer" />
+
+            <argument
+                android:name="transitionName"
+                app:argType="string" />
         </fragment>
 
         <fragment
