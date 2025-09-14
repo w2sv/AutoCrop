@@ -27,6 +27,7 @@ import com.w2sv.autocrop.ui.util.hideSystemBars
 import com.w2sv.autocrop.ui.util.postponeEnterTransition
 import com.w2sv.autocrop.ui.util.registerOnBackPressedHandler
 import com.w2sv.autocrop.ui.util.showSystemBars
+import com.w2sv.autocrop.ui.util.view.setDebouncedOnClickListener
 import com.w2sv.autocrop.ui.views.FadeOutTextView
 import com.w2sv.kotlinutils.coroutines.flow.collectLatestOn
 import com.w2sv.kotlinutils.coroutines.launchDelayed
@@ -71,7 +72,7 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
             initializeScreenshotViewAndCropViewScaleAndPositioning()
             initializeCropView()
             setOnTouchEventListener()
-            backButton.setOnClickListener { onBack() }
+            backButton.setDebouncedOnClickListener { onBack() }
 
             viewModel.fadeOutTextArgs.collectLatestOn(lifecycleScope) {
                 displayedImageTv.setAndShow(it)
