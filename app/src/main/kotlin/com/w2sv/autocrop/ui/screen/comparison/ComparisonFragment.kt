@@ -3,11 +3,14 @@ package com.w2sv.autocrop.ui.screen.comparison
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.view.MotionEvent.ACTION_CANCEL
 import android.view.MotionEvent.ACTION_DOWN
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnNextLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -18,13 +21,13 @@ import com.w2sv.androidutils.view.crossVisualize
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.ui.ViewBoundAppFragment
-import com.w2sv.autocrop.ui.views.FadeOutTextView
 import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.getScaleY
 import com.w2sv.autocrop.ui.util.hideSystemBars
 import com.w2sv.autocrop.ui.util.postponeEnterTransition
 import com.w2sv.autocrop.ui.util.registerOnBackPressedHandler
 import com.w2sv.autocrop.ui.util.showSystemBars
+import com.w2sv.autocrop.ui.views.FadeOutTextView
 import com.w2sv.kotlinutils.coroutines.flow.collectLatestOn
 import com.w2sv.kotlinutils.coroutines.launchDelayed
 import dagger.hilt.android.AndroidEntryPoint
@@ -114,14 +117,27 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
     @SuppressLint("ClickableViewAccessibility")
     private fun ComparisonBinding.setOnTouchEventListeners() {
         root.setOnTouchListener { v, event ->
-            when (event.action) {
+            val insets = ViewCompat.getRootWindowInsets(root)
+            val statusBarHeight = insets?.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.statusBars())?.top
+                ?: 0
+            val navBarHeight = insets?.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.navigationBars())?.bottom
+                ?: 0
+
+            // Ignore touches in system bar areas
+            val y = event.y.toInt()
+            if (y < statusBarHeight || y > root.height - navBarHeight) {
+                return@setOnTouchListener false
+            }
+
+            when (event.actionMasked) {
                 ACTION_DOWN -> {
                     viewModel.setImageType(ImageType.Original)
+                    // Lets accessibility services know the view was clicked, which enables those services to react to it
                     v.performClick()
                     true
                 }
 
-                ACTION_UP -> {
+                ACTION_UP, ACTION_CANCEL -> {
                     viewModel.setImageType(ImageType.Crop)
                     true
                 }
