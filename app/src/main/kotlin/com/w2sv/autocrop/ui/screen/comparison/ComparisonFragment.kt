@@ -21,8 +21,10 @@ import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.ui.ViewBoundAppFragment
 import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.getScaleY
+import com.w2sv.autocrop.ui.util.hideSystemBars
 import com.w2sv.autocrop.ui.util.postponeEnterTransition
 import com.w2sv.autocrop.ui.util.registerOnBackPressedHandler
+import com.w2sv.autocrop.ui.util.showSystemBars
 import com.w2sv.kotlinutils.coroutines.launchDelayed
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,6 +37,7 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        hideSystemBars()
 
         sharedElementEnterTransition = TransitionInflater.from(context)
             .inflateTransition(android.R.transition.move)
@@ -56,6 +59,7 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
             )
 
         registerOnBackPressedHandler {
+            showSystemBars()
             viewModel.setImageType(ImageType.Crop)
             navController.popBackStack()
         }
