@@ -45,6 +45,7 @@ import com.w2sv.autocrop.ui.screen.cropinspection.components.ProcessCropBundleDi
 import com.w2sv.autocrop.ui.screen.cropinspection.components.transitionName
 import com.w2sv.autocrop.ui.theme.AppTheme
 import com.w2sv.autocrop.ui.util.compose.LocalNavController
+import com.w2sv.autocrop.ui.util.compose.debounceClick
 import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
 import com.w2sv.composed.OnChange
 import com.w2sv.domain.model.Crop
@@ -85,7 +86,7 @@ fun CropInspectionScreen(
         contentWindowInsets = WindowInsets.systemBarsIgnoringVisibility,
         floatingActionButton = {
             ProcedureFabRow(
-                onComparisonButtonClick = {
+                onComparisonButtonClick = debounceClick {
                     val transitionName = cropBundles[pagerState.currentPage].crop.transitionName
                     navController.navigate(
                         CropInspectionFragmentDirections.navigateToComparisonScreen(pagerState.currentPage, transitionName),
@@ -106,7 +107,7 @@ fun CropInspectionScreen(
         ) {
             TopRow(
                 pageIndication = pageIndication,
-                onBackButtonClick = { navController.popBackStack() },
+                onBackButtonClick = debounceClick { navController.popBackStack() },
                 modifier = Modifier
                     .fillMaxHeight(0.1f)
                     .fillMaxWidth()

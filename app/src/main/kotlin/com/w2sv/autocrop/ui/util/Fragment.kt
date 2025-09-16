@@ -39,16 +39,17 @@ fun Fragment.hideSystemBars() {
             controller.systemBarsBehavior =
                 WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
-    }
-    else {
+    } else {
         // Android 8.0 – 10 (API 26–29)
         window.decorView.systemUiVisibility =
-            (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+            (
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                )
     }
 }
 
@@ -57,8 +58,7 @@ fun Fragment.showSystemBars() {
     val window = requireActivity().window
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         window.insetsController?.show(WindowInsets.Type.systemBars())
-    }
-    else {
+    } else {
         window.decorView.systemUiVisibility = (
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -66,4 +66,3 @@ fun Fragment.showSystemBars() {
             )
     }
 }
-

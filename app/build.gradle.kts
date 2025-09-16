@@ -86,8 +86,10 @@ private fun retrieveStartWithCropScreenValue(default: Boolean = false): Boolean 
     if (localDebugPropertiesFile.exists()) {
         val props = Properties()
         props.load(FileInputStream(localDebugPropertiesFile))
-        return (props.getProperty("startWithCropScreen")
-            ?: error("Couldn't find property 'startWithCropScreen'")).toBoolean()
+        return (
+            props.getProperty("startWithCropScreen")
+                ?: error("Couldn't find property 'startWithCropScreen'")
+            ).toBoolean()
     }
     return default
 }
