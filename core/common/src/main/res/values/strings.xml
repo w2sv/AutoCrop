@@ -77,6 +77,7 @@
     <string name="media_file_writing_required_for_saving_crops">Media file writing required for saving crops</string>
     <string name="go_to_app_settings_and_grant_media_file_writing_in_order_for_the_app_to_work">Go to app settings and grant media file writing in order for the app to work</string>
     <string name="compare">Compare</string>
+    <string name="adjust">Adjust</string>
     <string name="no_crop_edges_found_for_adjusted_settings">No Crop Edges found for adjusted Settings</string>
     <string name="updated_crop">Updated Crop</string>
     <string name="saved_crop">Saved crop</string>

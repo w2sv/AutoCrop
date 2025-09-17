@@ -5,52 +5,65 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.text.color
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.CropAdjustmentBinding
 import com.w2sv.autocrop.ui.ViewBoundAppFragment
+import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.maintainedPercentage
 import com.w2sv.domain.model.CropAdjustmentMode
 import com.w2sv.domain.model.CropEdges
+import com.w2sv.kotlinutils.coroutines.flow.collectOn
 import com.w2sv.kotlinutils.rounded
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.min
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CropAdjustmentFragment : ViewBoundAppFragment<CropAdjustmentBinding>(CropAdjustmentBinding::class.java) {
 
-    private val viewModel by viewModels<CropAdjustmentViewModel>()
+    private val viewModel by cropSessionInjectedViewModel<CropAdjustmentViewModel, CropAdjustmentViewModel.Factory>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.modeSwitch.isChecked = when (viewModel.adjustmentMode.value) {
+        binding.apply {
+            // Set up observers
+            viewModel.adjustmentMode.collectOn(lifecycleScope) { onAdjustmentMode(it) }
+            viewModel.cropEdges.observe(viewLifecycleOwner) { onCropEdgesChanged(it) }
+            viewModel.cropEdgesHaveChanged.observe(viewLifecycleOwner) {
+                resetButton.isEnabled = it
+                applyButton.isEnabled = it
+            }
+
+            // Set up click listeners
+            resetButton.setOnClickListener { cropAdjustmentView.reset() }
+            modeSwitch.setOnCheckedChangeListener { _, isChecked ->
+                viewModel.saveAdjustmentMode(
+                    if (isChecked) {
+                        CropAdjustmentMode.EdgeSelection
+                    } else {
+                        CropAdjustmentMode.Manual
+                    }
+                )
+            }
+            cancelButton.setOnClickListener { navController.popBackStack() }
+            applyButton.setOnClickListener {
+                viewModel.applyAdjustedEdges()
+                navController.popBackStack()
+            }
+        }
+    }
+
+    private fun CropAdjustmentBinding.onAdjustmentMode(mode: CropAdjustmentMode) {
+        modeSwitch.isChecked = when (mode) {
             CropAdjustmentMode.Manual -> false
             CropAdjustmentMode.EdgeSelection -> true
         }
-        viewModel.setLiveDataObservers()
-        binding.setOnClickListeners()
-    }
-
-    private fun CropAdjustmentViewModel.setLiveDataObservers() {
-        cropEdges.observe(viewLifecycleOwner) { edges ->
-            binding.onCropEdgesChanged(edges)
-        }
-        cropEdgesHaveChanged.observe(viewLifecycleOwner) {
-            binding.resetButton.isEnabled = it
-            binding.applyButton.isEnabled = it
-        }
-        lifecycleScope.launch {
-            adjustmentMode.collect {
-                binding.cropAdjustmentView.setModeConfig(it)
-                binding.modeLabelTv.text = getString(it.labelRes)
-                binding.resetButton.visibility = when (it) {
-                    CropAdjustmentMode.EdgeSelection -> View.GONE
-                    CropAdjustmentMode.Manual -> View.VISIBLE
-                }
-            }
+        cropAdjustmentView.setModeConfig(mode)
+        modeLabelTv.text = getString(mode.labelRes)
+        resetButton.visibility = when (mode) {
+            CropAdjustmentMode.EdgeSelection -> View.GONE
+            CropAdjustmentMode.Manual -> View.VISIBLE
         }
     }
 
@@ -70,29 +83,6 @@ class CropAdjustmentFragment : ViewBoundAppFragment<CropAdjustmentBinding>(CropA
                     (viewModel.screenshotBitmap.maintainedPercentage(it.height.toFloat()) * 100).rounded(1)
                 }
             )
-    }
-
-    private fun CropAdjustmentBinding.setOnClickListeners() {
-        resetButton.setOnClickListener {
-            cropAdjustmentView.reset()
-        }
-        modeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.saveAdjustmentMode(
-                if (isChecked) {
-                    CropAdjustmentMode.EdgeSelection
-                } else {
-                    CropAdjustmentMode.Manual
-                }
-            )
-        }
-
-        cancelButton.setOnClickListener {
-            navController.popBackStack()
-        }
-        applyButton.setOnClickListener {
-            //            setFragmentResult(REQUEST_KEY, bundleOf(CropEdges.EXTRA to viewModel.cropEdges.value))
-            navController.popBackStack()
-        }
     }
 }
 

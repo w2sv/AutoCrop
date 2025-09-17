@@ -77,8 +77,8 @@
             android:name="com.w2sv.autocrop.ui.screen.cropadjustment.CropAdjustmentFragment">
 
             <argument
-                android:name="cropBundle"
-                app:argType="com.w2sv.domain.model.CropBundle" />
+                android:name="cropBundleIndex"
+                app:argType="integer" />
         </fragment>
 
         <fragment

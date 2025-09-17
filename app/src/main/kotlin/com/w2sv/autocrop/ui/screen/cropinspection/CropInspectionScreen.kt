@@ -95,6 +95,9 @@ fun CropInspectionScreen(
                         )
                     )
                 },
+                onAdjustButtonClick = debounceClick {
+                    navController.navigate(CropInspectionFragmentDirections.navigateToCropAdjustmentScreen(pagerState.currentPage))
+                },
                 onSaveButtonClick = { showProcedureDialogForIndex = pagerState.currentPage },
                 onDiscardButtonClick = { exitAnimationPageIndex = pagerState.currentPage }
             )
@@ -161,12 +164,14 @@ private fun TopRow(
 @Composable
 private fun ProcedureFabRow(
     onComparisonButtonClick: () -> Unit,
+    onAdjustButtonClick: () -> Unit,
     onSaveButtonClick: () -> Unit,
     onDiscardButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         ProcedureFab(onComparisonButtonClick, R.drawable.ic_inspect_image_24, stringResource(com.w2sv.core.common.R.string.compare))
+        ProcedureFab(onAdjustButtonClick, R.drawable.ic_crop_24, stringResource(com.w2sv.core.common.R.string.adjust))
         ProcedureFab(onSaveButtonClick, R.drawable.ic_save_24, stringResource(com.w2sv.core.common.R.string.save))
         ProcedureFab(
             onDiscardButtonClick,

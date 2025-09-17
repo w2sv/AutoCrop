@@ -6,12 +6,6 @@ sealed class EdgeSelectionState(private val indices: Set<Int>) {
         indices.contains(index)
 
     data object Unselected : EdgeSelectionState(setOf())
-    class SelectedFirst(val index: Int) : EdgeSelectionState(setOf(index))
-    class SelectedBoth(val indexTopEdge: Int, val indexBottomEdge: Int) :
-        EdgeSelectionState(
-            setOf(
-                indexTopEdge,
-                indexBottomEdge
-            )
-        )
+    data class SelectedFirst(val index: Int) : EdgeSelectionState(setOf(index))
+    data class SelectedBoth(val indexTopEdge: Int, val indexBottomEdge: Int) : EdgeSelectionState(setOf(indexTopEdge, indexBottomEdge))
 }

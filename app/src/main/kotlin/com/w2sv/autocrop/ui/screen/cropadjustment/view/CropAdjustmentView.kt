@@ -39,6 +39,7 @@ import com.w2sv.domain.model.CropEdges
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
+import androidx.core.graphics.withSave
 
 private interface ModeConfig {
     fun setUp()
@@ -186,10 +187,10 @@ class CropAdjustmentView(context: Context, attrs: AttributeSet) : View(context, 
     }
 
     private fun Canvas.drawCropMask() {
-        save()
-        clipRect(cropRectViewDomain)
-        drawColor(ContextCompat.getColor(context, R.color.crop_mask))
-        restore()
+        withSave {
+            clipRect(cropRectViewDomain)
+            drawColor(ContextCompat.getColor(context, R.color.crop_mask))
+        }
     }
 
     // ----------------------------------

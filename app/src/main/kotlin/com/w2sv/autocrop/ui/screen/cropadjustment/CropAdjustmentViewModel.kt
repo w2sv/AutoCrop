@@ -10,30 +10,37 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.w2sv.autocrop.ui.screen.CropSessionAccessingViewModelFactory
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.asMappedFrom
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.asRectF
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.getRectF
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.EdgeSelectionState
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.Line
+import com.w2sv.cropping.cropping.crop
+import com.w2sv.cropping.session.CropSession
 import com.w2sv.domain.model.CropAdjustmentMode
 import com.w2sv.domain.model.CropBundle
 import com.w2sv.domain.model.CropEdges
 import com.w2sv.domain.repository.PreferencesRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 
 private const val N_SCREEN_ORIENTATIONS: Int = 2
 
-@HiltViewModel
-class CropAdjustmentViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = CropAdjustmentViewModel.Factory::class)
+class CropAdjustmentViewModel @AssistedInject constructor(
     savedStateHandle: SavedStateHandle,
     contentResolver: ContentResolver,
-    private val preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository,
+    @Assisted private val cropSession: CropSession
 ) : ViewModel() {
 
-    private val cropBundle: CropBundle = CropAdjustmentFragmentArgs.fromSavedStateHandle(savedStateHandle).cropBundle
+    private val bundleIndex = CropAdjustmentFragmentArgs.fromSavedStateHandle(savedStateHandle).cropBundleIndex
+    private val cropBundle: CropBundle = cropSession.bundles.value[bundleIndex]
     val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
 
     /**
@@ -116,4 +123,19 @@ class CropAdjustmentViewModel @Inject constructor(
     fun postEdgeSelectionState(value: EdgeSelectionState) {
         _edgeSelectionState.postValue(value)
     }
+
+    fun applyAdjustedEdges() {
+        cropSession.update(
+            index = bundleIndex,
+            newBundle = cropBundle.copy(
+                crop = screenshotBitmap.crop(
+                    cropBundle.screenshot.mediaStoreData.diskUsage,
+                    checkNotNull(cropEdges.value)
+                )
+            )
+        )
+    }
+
+    @AssistedFactory
+    interface Factory : CropSessionAccessingViewModelFactory<CropAdjustmentViewModel>
 }
