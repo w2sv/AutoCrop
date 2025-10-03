@@ -1,12 +1,43 @@
 package com.w2sv.autocrop.ui.screen.cropadjustment.extensions
 
+import android.animation.TimeInterpolator
+import android.animation.ValueAnimator
 import android.graphics.Matrix
 import android.graphics.RectF
 import android.view.MotionEvent
+import android.view.animation.AccelerateDecelerateInterpolator
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.Edge
 import com.w2sv.domain.model.CropEdges
 import java.lang.Float.min
 import kotlin.math.max
+
+fun RectF.animateTo(
+    target: RectF,
+    duration: Long = 300L,
+    interpolator: TimeInterpolator = AccelerateDecelerateInterpolator(),
+    onUpdate: (RectF) -> Unit
+): ValueAnimator {
+    val startLeft = left
+    val startTop = top
+    val startRight = right
+    val startBottom = bottom
+
+    return ValueAnimator.ofFloat(0f, 1f).apply {
+        this.interpolator = interpolator
+        this.duration = duration
+        addUpdateListener { animator ->
+            val fraction = animator.animatedFraction
+
+            left = startLeft + (target.left - startLeft) * fraction
+            top = startTop + (target.top - startTop) * fraction
+            right = startRight + (target.right - startRight) * fraction
+            bottom = startBottom + (target.bottom - startBottom) * fraction
+
+            onUpdate(this@animateTo)
+        }
+        start()
+    }
+}
 
 fun maxRectOf(a: RectF, b: RectF): RectF =
     RectF(
@@ -55,16 +86,10 @@ fun RectF.setVerticalEdges(y1: Float, y2: Float) {
     bottom = y2
 }
 
-fun RectF.getCopy(): RectF =
-    RectF(this)
+fun mapRect(src: RectF, dst: RectF, matrix: Matrix): RectF {
+    matrix.mapRect(dst, src)
+    return dst
+}
 
-fun RectF.asMappedFrom(src: RectF, mapMatrix: Matrix): RectF =
-    apply {
-        mapMatrix.mapRect(
-            this,
-            src
-        )
-    }
-
-fun CropEdges.asRectF(width: Int): RectF =
+fun CropEdges.rectF(width: Int): RectF =
     RectF(0F, top.toFloat(), width.toFloat(), bottom.toFloat())

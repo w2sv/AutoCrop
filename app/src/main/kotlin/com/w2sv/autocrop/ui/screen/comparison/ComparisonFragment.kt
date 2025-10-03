@@ -22,7 +22,7 @@ import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ComparisonBinding
 import com.w2sv.autocrop.ui.ViewBoundAppFragment
 import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
-import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.getScaleY
+import com.w2sv.autocrop.ui.util.view.getScaleY
 import com.w2sv.autocrop.ui.util.hideSystemBars
 import com.w2sv.autocrop.ui.util.postponeEnterTransition
 import com.w2sv.autocrop.ui.util.registerOnBackPressedHandler

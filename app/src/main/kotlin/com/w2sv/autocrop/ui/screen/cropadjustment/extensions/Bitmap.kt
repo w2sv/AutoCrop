@@ -6,7 +6,7 @@ import android.graphics.RectF
 fun Bitmap.maintainedPercentage(cropHeight: Float): Float =
     1 - (height.toFloat() - cropHeight) / height.toFloat()
 
-fun Bitmap.getRectF(): RectF =
+fun Bitmap.rectF(): RectF =
     RectF(
         0f,
         0f,

@@ -1,32 +1,29 @@
-package com.w2sv.autocrop.ui.screen.cropadjustment.extensions
+package com.w2sv.autocrop.ui.util.view
 
-import android.animation.ObjectAnimator
+import android.animation.TimeInterpolator
+import android.animation.ValueAnimator
 import android.graphics.Matrix
-import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.core.animation.doOnEnd
 import com.google.android.material.animation.MatrixEvaluator
 
 fun animateMatrix(
-    view: View,
-    propertyName: String,
     src: Matrix,
     dst: Matrix,
     duration: Long,
-    onEnd: (() -> Unit)? = null
+    interpolator: TimeInterpolator = AccelerateDecelerateInterpolator(),
+    onUpdate: (Matrix) -> Unit,
+    onEnd: () -> Unit = {}
 ) {
-    ObjectAnimator.ofObject(view, propertyName, MatrixEvaluator(), src, dst)
-        .apply {
-            this.interpolator = AccelerateDecelerateInterpolator()
-            this.duration = duration
-            addUpdateListener {
-                view.invalidate()
-            }
-            onEnd?.let {
-                doOnEnd { it() }
-            }
+    val animator = ValueAnimator.ofObject(MatrixEvaluator(), src, dst).apply {
+        this.duration = duration
+        this.interpolator = interpolator
+        addUpdateListener { animator ->
+            onUpdate(animator.animatedValue as Matrix)
         }
-        .start()
+        doOnEnd { onEnd() }
+    }
+    animator.start()
 }
 
 fun Matrix.getScaleX(): Float =
@@ -46,7 +43,7 @@ fun Matrix.getCopy(): Matrix =
         set(this@getCopy)
     }
 
-fun Matrix.getInverse(): Matrix {
+fun Matrix.inverse(): Matrix {
     val inverse = Matrix()
     invert(inverse)
     return inverse
