@@ -2,10 +2,6 @@
 <resources>
     <color name="highlight">@color/magenta_bright</color>
     <color name="higher_light">@android:color/holo_purple</color>
-    <color name="success">#FF008577</color>
     <color name="neutral_background">#000000</color>
-    <color name="crop_mask">#AB1C1C1E</color>
     <color name="surface_on_black_background">#FF434347</color>
-    <color name="enable_ssl_button">#FF00c233</color>
-    <color name="crop_pager_text">@color/light_gray</color>
 </resources>

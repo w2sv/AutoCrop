@@ -2,34 +2,25 @@ package com.w2sv.autocrop.ui.screen.cropadjustment
 
 import android.content.ContentResolver
 import android.graphics.Bitmap
-import android.graphics.Matrix
-import android.graphics.RectF
-import androidx.core.util.lruCache
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.w2sv.autocrop.ui.screen.CropSessionAccessingViewModelFactory
-import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.asMappedFrom
-import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.asRectF
-import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.getRectF
-import com.w2sv.autocrop.ui.screen.cropadjustment.model.EdgeSelectionState
-import com.w2sv.autocrop.ui.screen.cropadjustment.model.Line
+import com.w2sv.autocrop.ui.screen.cropadjustment.model.AdjustmentModeState
+import com.w2sv.autocrop.ui.screen.cropadjustment.model.AdjustmentViewState
+import com.w2sv.autocrop.ui.util.transformedMutableStateIn
 import com.w2sv.cropping.cropping.crop
 import com.w2sv.cropping.session.CropSession
 import com.w2sv.domain.model.CropAdjustmentMode
 import com.w2sv.domain.model.CropBundle
-import com.w2sv.domain.model.CropEdges
 import com.w2sv.domain.repository.PreferencesRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
-private const val N_SCREEN_ORIENTATIONS: Int = 2
 
 @HiltViewModel(assistedFactory = CropAdjustmentViewModel.Factory::class)
 class CropAdjustmentViewModel @AssistedInject constructor(
@@ -41,88 +32,44 @@ class CropAdjustmentViewModel @AssistedInject constructor(
 
     private val bundleIndex = CropAdjustmentFragmentArgs.fromSavedStateHandle(savedStateHandle).cropBundleIndex
     private val cropBundle: CropBundle = cropSession.bundles.value[bundleIndex]
+    private val originalEdges by cropBundle.crop::edges
     val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
 
-    /**
-     * CropAdjustmentView dependencies
-     */
-
-    private val edgeCandidatePoints: FloatArray by lazy {
-        cropBundle.edgeCandidates.map {
-            listOf(
-                0f,
-                it.toFloat(),
-                screenshotBitmap.width.toFloat(),
-                it.toFloat()
+    private val _viewState = preferencesRepository
+        .cropAdjustmentMode
+        .transformedMutableStateIn(viewModelScope) { mode ->
+            AdjustmentViewState(
+                originalEdges = originalEdges,
+                modeState = mode.state()
             )
         }
-            .flatten()
-            .toFloatArray()
+    val viewState = _viewState.asStateFlow()
+
+    fun updateAdjustmentMode(mode: CropAdjustmentMode) {
+        updateAdjustmentModeState(mode.state())
     }
 
-    val initialCropRectF: RectF by lazy {
-        cropBundle.crop.edges.asRectF(screenshotBitmap.width)
-    }
-
-    val imageRect: RectF by lazy {
-        screenshotBitmap.getRectF()
-    }
-
-    val edgeCandidateLinesViewDomainCache = lruCache<Matrix, List<Line>>(
-        maxSize = N_SCREEN_ORIENTATIONS,
-        create = { matrix ->
-            FloatArray(edgeCandidatePoints.size)
-                .asMappedFrom(edgeCandidatePoints, matrix)
-                .toList()
-                .windowed(4, 4)
+    private fun CropAdjustmentMode.state(): AdjustmentModeState =
+        when (this) {
+            CropAdjustmentMode.Manual -> AdjustmentModeState.Manual(originalEdges)
+            CropAdjustmentMode.EdgeSelection -> AdjustmentModeState.EdgeSelection()
         }
-    )
 
-    val edgeCandidateYsViewDomainCache =
-        lruCache<Matrix, List<Float>>(
-            N_SCREEN_ORIENTATIONS,
-            create = { matrix -> edgeCandidateLinesViewDomainCache.get(matrix).map { it[1] } }
-        )
-
-    /**
-     * CropAdjustmentMode
-     */
-
-    val adjustmentMode = preferencesRepository.cropAdjustmentMode.stateIn(viewModelScope, SharingStarted.Eagerly)
-
-    fun saveAdjustmentMode(value: CropAdjustmentMode) {
-        viewModelScope.launch { preferencesRepository.cropAdjustmentMode.save(value) }
+    fun updateAdjustmentModeState(state: AdjustmentModeState) {
+        _viewState.update { it.copy(modeState = state) }
     }
 
-    /**
-     * CropEdges
-     */
-
-    val cropEdges: LiveData<CropEdges?> get() = _cropEdges
-    private val _cropEdges = MutableLiveData(cropBundle.crop.edges)
-
-    fun postCropEdges(value: CropEdges?) {
-        _cropEdgesHaveChanged.postValue(value != null && value != _cropEdges.value)
-        _cropEdges.postValue(value)
-    }
-
-    val cropEdgesHaveChanged: LiveData<Boolean> get() = _cropEdgesHaveChanged
-    private val _cropEdgesHaveChanged = MutableLiveData(false)
-
-    fun resetCropEdges() {
-        _cropEdges.postValue(cropBundle.crop.edges)
-    }
-
-    /**
-     * Selected Edges
-     */
-
-    val edgeSelectionState: LiveData<EdgeSelectionState> get() = _edgeSelectionState
-    private val _edgeSelectionState = MutableLiveData<EdgeSelectionState>(EdgeSelectionState.Unselected)
-
-    fun postEdgeSelectionState(value: EdgeSelectionState) {
-        _edgeSelectionState.postValue(value)
-    }
+    //    private val edgeCandidatePoints: FloatArray by lazy {
+    //        cropBundle.edgeCandidates.flatMap {
+    //            listOf(
+    //                0f,
+    //                it.toFloat(),
+    //                screenshotBitmap.width.toFloat(),
+    //                it.toFloat()
+    //            )
+    //        }
+    //            .toFloatArray()
+    //    }
 
     fun applyAdjustedEdges() {
         cropSession.update(
@@ -130,10 +77,16 @@ class CropAdjustmentViewModel @AssistedInject constructor(
             newBundle = cropBundle.copy(
                 crop = screenshotBitmap.crop(
                     cropBundle.screenshot.mediaStoreData.diskUsage,
-                    checkNotNull(cropEdges.value)
+                    checkNotNull(viewState.value.adjustedEdges)
                 )
             )
         )
+    }
+
+    override fun onCleared() {
+        viewModelScope.launch {
+            preferencesRepository.cropAdjustmentMode.save(viewState.value.modeState.mode)
+        }
     }
 
     @AssistedFactory
