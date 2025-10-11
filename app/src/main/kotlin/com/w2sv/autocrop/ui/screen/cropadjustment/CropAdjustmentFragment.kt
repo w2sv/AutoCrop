@@ -32,6 +32,21 @@ import com.w2sv.domain.model.CropEdges
 import dagger.hilt.android.AndroidEntryPoint
 import slimber.log.i
 
+//@AndroidEntryPoint
+//class CropAdjustmentFragment : ViewBoundAppFragment<CropAdjustmentBinding>(CropAdjustmentBinding::class.java) {
+//
+//    private val viewModel by cropSessionInjectedViewModel<CropAdjustmentViewModel, CropAdjustmentViewModel.Factory>()
+//
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        val viewState = viewModel.viewState.value
+//        binding.cropAdjustmentView.apply {
+//            initialize(viewModel.screenshotBitmap, viewState.originalEdges)
+//            setModeConfig(viewState.modeState.mode)
+//            setAdjustmentModeStateChangedListener {}
+//        }
+//    }
+//}
+
 @AndroidEntryPoint
 class CropAdjustmentFragment : ComposeAppFragment() {
 
@@ -40,7 +55,7 @@ class CropAdjustmentFragment : ComposeAppFragment() {
     @Composable
     override fun ScreenContent() {
         val viewState by viewModel.viewState.collectAsStateWithLifecycle()
-        AdjustmentScreen(
+        CropAdjustmentScreen(
             viewState = viewState,
             image = viewModel.screenshotBitmap,
             onModeSelected = viewModel::updateAdjustmentMode,
@@ -50,7 +65,7 @@ class CropAdjustmentFragment : ComposeAppFragment() {
 }
 
 @Composable
-private fun AdjustmentScreen(
+private fun CropAdjustmentScreen(
     viewState: AdjustmentViewState,
     image: Bitmap,
     onModeSelected: (CropAdjustmentMode) -> Unit,
@@ -98,7 +113,7 @@ private fun Prev() {
     val originalEdges = CropEdges(200, 1200)
 
     AppTheme {
-        AdjustmentScreen(
+        CropAdjustmentScreen(
             AdjustmentViewState(
                 originalEdges = originalEdges,
                 modeState = AdjustmentModeState.Manual(originalEdges)
