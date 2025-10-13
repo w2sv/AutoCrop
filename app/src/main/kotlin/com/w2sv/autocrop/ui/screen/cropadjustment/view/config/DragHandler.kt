@@ -3,13 +3,12 @@ package com.w2sv.autocrop.ui.screen.cropadjustment.view.config
 import android.graphics.RectF
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.contains
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.getEdgeTouch
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.Edge
 import com.w2sv.autocrop.ui.screen.cropadjustment.view.CropAdjustmentView
 import com.w2sv.kotlinutils.threadUnsafeLazy
-import kotlin.math.max
-import kotlin.math.min
 
 class DragHandler(
     private val view: CropAdjustmentView,
@@ -24,6 +23,38 @@ class DragHandler(
             viewRectProvider = { RectF(0f, 0f, view.width.toFloat(), view.height.toFloat()) }
         )
     }
+
+    private val scaleGestureDetector = ScaleGestureDetector(
+        view.context,
+        object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            private var focusX = 0f
+            private var focusY = 0f
+
+            override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
+                // Remember focal point of the pinch
+                focusX = detector.focusX
+                focusY = detector.focusY
+                return true
+            }
+
+            override fun onScale(detector: ScaleGestureDetector): Boolean {
+                val scaleFactor = detector.scaleFactor
+
+                // Apply scaling around the focal point
+                view.transformationMatrix.postScale(
+                    scaleFactor,
+                    scaleFactor,
+                    focusX,
+                    focusY
+                )
+
+                // Keep image within view bounds (optional but recommended)
+                view.computeImageRect()
+                view.invalidate()
+                return true
+            }
+        }
+    )
 
     private val gestureDetector by threadUnsafeLazy {
         GestureDetector(
@@ -44,6 +75,7 @@ class DragHandler(
                             top = view.imageRect.top
                             bottom = top + view.cropRect.height()
                         }
+
                         bottom > view.imageRect.bottom -> {
                             bottom = view.imageRect.bottom
                             top = bottom - view.cropRect.height()
@@ -61,10 +93,14 @@ class DragHandler(
     }
 
     fun onTouchEvent(event: MotionEvent): Boolean {
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> onActionDown(event)
-            MotionEvent.ACTION_MOVE -> onActionMove(event)
-            MotionEvent.ACTION_UP -> onActionUp()
+        scaleGestureDetector.onTouchEvent(event)
+
+        if (!scaleGestureDetector.isInProgress) {
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> onActionDown(event)
+                MotionEvent.ACTION_MOVE -> onActionMove(event)
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> onActionUp()
+            }
         }
         return true
     }
