@@ -19,7 +19,6 @@ import com.w2sv.autocrop.ui.screen.cropadjustment.view.config.CropAdjustmentView
 import com.w2sv.autocrop.ui.util.view.buildPath
 import com.w2sv.autocrop.ui.util.view.inverse
 import com.w2sv.autocrop.ui.util.view.threadUnsafeLazyPaint
-import com.w2sv.domain.model.CropAdjustmentMode
 import com.w2sv.domain.model.CropEdges
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -42,7 +41,7 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
 
     private var adjustmentModeStateChangedListener: (AdjustmentModeState) -> Unit = {}
 
-    private lateinit var modeConfig: CropAdjustmentViewMode
+    private val modeConfig: CropAdjustmentViewMode = CropAdjustmentViewManualMode(this, context)
 
     fun setAdjustmentModeStateChangedListener(listener: (AdjustmentModeState) -> Unit) {
         adjustmentModeStateChangedListener = listener
@@ -75,6 +74,8 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
 
         mapRect(initialCropRectBitmapSpace, cropRect, transformationMatrix)
         initialCropRect = cropRect
+
+        modeConfig.initialize()
     }
 
     private fun computeImageMatrix(): Matrix =
@@ -115,14 +116,14 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
         canvas.drawPath(path, maskPaint)
     }
 
-    fun setModeConfig(mode: CropAdjustmentMode) {
-        //        modeConfig = when (mode) {
-        //            CropAdjustmentMode.Manual -> CropAdjustmentViewManualMode(this, context)
-        //            CropAdjustmentMode.EdgeSelection -> TODO()
-        //        }
-        modeConfig = CropAdjustmentViewManualMode(this, context)
-        post { modeConfig.setUp() }
-    }
+    //    fun setModeConfig(mode: CropAdjustmentMode) {
+    //        modeConfig = when (mode) {
+    //            CropAdjustmentMode.Manual -> CropAdjustmentViewManualMode(this, context)
+    //            CropAdjustmentMode.EdgeSelection -> TODO()
+    //        }
+    //        modeConfig = CropAdjustmentViewManualMode(this, context)
+    //        post { modeConfig.setUp() }
+    //    }
 
     fun reset() {
         modeConfig.reset()

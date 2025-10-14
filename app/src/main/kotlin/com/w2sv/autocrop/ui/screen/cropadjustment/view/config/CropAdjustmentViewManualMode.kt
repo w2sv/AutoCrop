@@ -22,7 +22,7 @@ class CropAdjustmentViewManualMode(private val view: CropAdjustmentView, context
         )
     }
 
-    override fun setUp() {
+    override fun initialize() {
         view.resetCropRect()
         view.invalidate()
     }

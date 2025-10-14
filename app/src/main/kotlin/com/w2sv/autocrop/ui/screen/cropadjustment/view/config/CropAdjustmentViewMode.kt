@@ -5,7 +5,7 @@ import android.view.MotionEvent
 import android.view.View
 
 interface CropAdjustmentViewMode {
-    fun setUp()
+    fun initialize()
     fun reset() {}
 
     /**

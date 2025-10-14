@@ -40,16 +40,20 @@ class CropAdjustmentViewModel @AssistedInject constructor(
         .transformedMutableStateIn(viewModelScope) { mode ->
             AdjustmentViewState(
                 originalEdges = originalEdges,
-                modeState = mode.state()
+                modeState = mode.defaultState()
             )
         }
     val viewState = _viewState.asStateFlow()
 
-    fun updateAdjustmentMode(mode: CropAdjustmentMode) {
-        updateAdjustmentModeState(mode.state())
+    //    fun updateAdjustmentMode(mode: CropAdjustmentMode) {
+    //        updateAdjustmentModeState(mode.state())
+    //    }
+
+    fun resetState() {
+        _viewState.update { it.copy(modeState = it.modeState.mode.defaultState()) }
     }
 
-    private fun CropAdjustmentMode.state(): AdjustmentModeState =
+    private fun CropAdjustmentMode.defaultState(): AdjustmentModeState =
         when (this) {
             CropAdjustmentMode.Manual -> AdjustmentModeState.Manual(originalEdges)
             CropAdjustmentMode.EdgeSelection -> AdjustmentModeState.EdgeSelection()
