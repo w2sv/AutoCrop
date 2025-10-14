@@ -16,7 +16,7 @@ class CropAdjustmentViewManualMode(private val view: CropAdjustmentView, context
     private val dragHandler by threadUnsafeLazy {
         DragHandler(
             view = view,
-            onStateChanged = { view.emitModeState(AdjustmentModeState.Manual(view.remappedCropEdges())) },
+            onDragStateChanged = { view.emitModeState(AdjustmentModeState.Manual(view.remappedCropEdges())) },
             onDragStarted = { animator.resetGridAlpha() },
             onDragEnded = { animator.animateToCenter() }
         )

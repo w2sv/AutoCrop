@@ -11,18 +11,15 @@ import com.w2sv.kotlinutils.threadUnsafeLazy
 
 class DragHandler(
     private val view: CropAdjustmentView,
-    private val onStateChanged: () -> Unit,
+    private val onDragStateChanged: () -> Unit,
     private val onDragStarted: () -> Unit,
     private val onDragEnded: () -> Unit
 ) {
-    private var state: DraggingState? = null
-    private val dragLimits by threadUnsafeLazy {
-        DragLimits(
-            imageRect = view.imageRectBitmapSpace,
-            viewRectProvider = { RectF(0f, 0f, view.width.toFloat(), view.height.toFloat()) }
-        )
-    }
+    private var state: DragState? = null
 
+    /**
+     * Handles [DragState.DraggingCropRect].
+     */
     private val gestureDetector by threadUnsafeLazy {
         GestureDetector(
             view.context,
@@ -42,6 +39,7 @@ class DragHandler(
                             top = view.imageRect.top
                             bottom = top + view.cropRect.height()
                         }
+
                         bottom > view.imageRect.bottom -> {
                             bottom = view.imageRect.bottom
                             top = bottom - view.cropRect.height()
@@ -58,11 +56,15 @@ class DragHandler(
         )
     }
 
+    /**
+     * @return True if the [event] was handled, false otherwise.
+     */
     fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> onActionDown(event)
             MotionEvent.ACTION_MOVE -> onActionMove(event)
-            MotionEvent.ACTION_UP -> onActionUp()
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> onActionUp()
+            else -> return false
         }
         return true
     }
@@ -71,57 +73,59 @@ class DragHandler(
         val edge = view.cropRect.getEdgeTouch(event, TOUCH_TOLERANCE_MARGIN)
 
         state = when {
-            edge != null -> DraggingState.DraggingEdge(edge).also {
-                dragLimits.compute(
-                    draggedEdge = it.edge,
-                    cropRect = view.cropRect,
-                    imageMatrix = view.transformationMatrix,
-                    imageBorderRect = view.imageRect
-                )
-            }
-
-            view.cropRect.contains(event) -> DraggingState.DraggingCropRect.also {
+            edge != null -> DragState.DraggingEdge(edge, view)
+            view.cropRect.contains(event) -> DragState.DraggingCropRect.also {
                 gestureDetector.onTouchEvent(event)
             }
 
-            else -> null
+            else -> return
         }
-
-        state?.run { onDragStarted() }
+        onDragStarted()
     }
 
     private fun onActionMove(event: MotionEvent) {
         state?.let { state ->
             when (state) {
-                is DraggingState.DraggingEdge -> {
+                is DragState.DraggingEdge -> {
                     when (state.edge) {
                         Edge.TOP -> view.cropRect.top = event.y
                         Edge.BOTTOM -> view.cropRect.bottom = event.y
                     }
-                    dragLimits.applyTo(view.cropRect)
+                    state.dragLimits.applyTo(view.cropRect)
                 }
 
-                is DraggingState.DraggingCropRect -> {
+                is DragState.DraggingCropRect -> {
                     gestureDetector.onTouchEvent(event)
                 }
             }
 
-            onStateChanged()
+            onDragStateChanged()
             view.invalidate()
         }
     }
 
     private fun onActionUp() {
         if (state == null) return
-        dragLimits.setEmpty()
         state = null
         onDragEnded()
     }
 
-    private sealed interface DraggingState {
-        @JvmInline
-        value class DraggingEdge(val edge: Edge) : DraggingState
-        data object DraggingCropRect : DraggingState
+    private sealed interface DragState {
+        data class DraggingEdge(val edge: Edge, val dragLimits: DragLimits) : DragState {
+            constructor(edge: Edge, view: CropAdjustmentView) : this(
+                edge = edge,
+                dragLimits = DragLimits.Factory(
+                    draggedEdge = edge,
+                    cropRect = view.cropRect,
+                    imageMatrix = view.transformationMatrix,
+                    imageRect = view.imageRect,
+                    viewRect = RectF(0f, 0f, view.width.toFloat(), view.height.toFloat())
+                )
+                    .compute()
+            )
+        }
+
+        data object DraggingCropRect : DragState
     }
 
     companion object {
