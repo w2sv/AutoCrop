@@ -26,8 +26,7 @@ sealed interface AdjustmentModeState {
             val cropEdges: CropEdges?
                 get() = if (this is SelectedBoth) {
                     CropEdges(indexTopEdge, indexBottomEdge)
-                }
-                else {
+                } else {
                     null
                 }
 

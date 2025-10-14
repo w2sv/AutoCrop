@@ -8,8 +8,6 @@ import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.getEdgeTouch
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.Edge
 import com.w2sv.autocrop.ui.screen.cropadjustment.view.CropAdjustmentView
 import com.w2sv.kotlinutils.threadUnsafeLazy
-import kotlin.math.max
-import kotlin.math.min
 
 class DragHandler(
     private val view: CropAdjustmentView,

@@ -33,7 +33,12 @@ data class DragLimits(
         max.setEmpty()
     }
 
-    fun compute(draggedEdge: Edge, cropRect: RectF, imageMatrix: Matrix, imageBorderRect: RectF) {
+    fun compute(
+        draggedEdge: Edge,
+        cropRect: RectF,
+        imageMatrix: Matrix,
+        imageBorderRect: RectF
+    ) {
         computeMin(draggedEdge, cropRect, imageMatrix)
         computeMax(draggedEdge, cropRect, imageBorderRect)
     }
@@ -43,7 +48,11 @@ data class DragLimits(
         rect.set(minRectOf(rect, min))
     }
 
-    private fun computeMin(draggedEdge: Edge, cropRect: RectF, imageMatrix: Matrix) {
+    private fun computeMin(
+        draggedEdge: Edge,
+        cropRect: RectF,
+        imageMatrix: Matrix
+    ) {
         val minSize = max(
             mapRect(imageMinRect, RectF(), imageMatrix).width(),
             minRectSize
@@ -66,7 +75,11 @@ data class DragLimits(
         }
     }
 
-    private fun computeMax(draggedEdge: Edge, cropRect: RectF, imageBorderRect: RectF) {
+    private fun computeMax(
+        draggedEdge: Edge,
+        cropRect: RectF,
+        imageBorderRect: RectF
+    ) {
         val borderRect = maxRectOf(imageBorderRect, viewRectProvider())
 
         when (draggedEdge) {

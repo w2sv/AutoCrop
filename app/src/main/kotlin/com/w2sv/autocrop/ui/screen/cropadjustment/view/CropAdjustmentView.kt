@@ -16,7 +16,6 @@ import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.rectF
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.AdjustmentModeState
 import com.w2sv.autocrop.ui.screen.cropadjustment.view.config.CropAdjustmentViewManualMode
 import com.w2sv.autocrop.ui.screen.cropadjustment.view.config.CropAdjustmentViewMode
-import com.w2sv.autocrop.ui.util.view.animateMatrix
 import com.w2sv.autocrop.ui.util.view.buildPath
 import com.w2sv.autocrop.ui.util.view.inverse
 import com.w2sv.autocrop.ui.util.view.threadUnsafeLazyPaint
@@ -26,11 +25,8 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
-class CropAdjustmentView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+    View(context, attrs, defStyleAttr) {
 
     private lateinit var image: Bitmap
 
@@ -66,7 +62,12 @@ class CropAdjustmentView @JvmOverloads constructor(
         }
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    override fun onSizeChanged(
+        w: Int,
+        h: Int,
+        oldw: Int,
+        oldh: Int
+    ) {
         super.onSizeChanged(w, h, oldw, oldh)
 
         initialTransformationMatrix = computeImageMatrix()

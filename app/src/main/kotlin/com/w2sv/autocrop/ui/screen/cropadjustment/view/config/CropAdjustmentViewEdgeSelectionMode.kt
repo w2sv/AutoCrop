@@ -1,8 +1,8 @@
-//package com.w2sv.autocrop.ui.screen.cropadjustment.view.config
+// package com.w2sv.autocrop.ui.screen.cropadjustment.view.config
 //
-//import com.w2sv.autocrop.R
+// import com.w2sv.autocrop.R
 //
-//class CropAdjustmentViewEdgeSelectionMode : CropAdjustmentViewMode {
+// class CropAdjustmentViewEdgeSelectionMode : CropAdjustmentViewMode {
 //
 //    private var drawCandidates: Boolean = false
 //
@@ -200,4 +200,4 @@
 //        private const val EDGE_INDICATION_TRIANGLE_EDGE_LENGTH_HALVE = 17f
 //        private const val HORIZONTAL_OFFSET_EDGE_INDICATION_TRIANGLE = 12
 //    }
-//}
+// }

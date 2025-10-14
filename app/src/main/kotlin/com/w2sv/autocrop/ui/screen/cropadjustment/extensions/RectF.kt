@@ -81,7 +81,11 @@ fun RectF.contains(
 fun RectF.containsVerticalEdges(y1: Float, y2: Float): Boolean =
     y1 > top && y2 < bottom
 
-fun mapRect(src: RectF, dst: RectF, matrix: Matrix): RectF {
+fun mapRect(
+    src: RectF,
+    dst: RectF,
+    matrix: Matrix
+): RectF {
     matrix.mapRect(dst, src)
     return dst
 }

@@ -9,4 +9,3 @@ data class AdjustmentViewState(val originalEdges: CropEdges, val modeState: Adju
     val adjustmentCanBeApplied: Boolean
         get() = adjustedEdges !in listOf(null, originalEdges)
 }
-

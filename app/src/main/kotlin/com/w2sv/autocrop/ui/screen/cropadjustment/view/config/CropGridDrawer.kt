@@ -41,7 +41,6 @@ class CropGridDrawer(private val context: Context, private val innerGridAlpha: (
     }
 
     private fun drawProtrusions(canvas: Canvas, rect: RectF) {
-
         // Top
         canvas.drawLine(
             rect.centerX() - DELTA_CENTER_HORIZONTAL_EDGE_PROTRUSION,
