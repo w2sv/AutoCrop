@@ -124,7 +124,7 @@ private fun getMaxScoreCropEdges(candidates: List<Int>, matRGBA: Mat): CropEdges
 
     candidates
         .windowed(2)
-        .map { CropEdges(it) }
+        .map { (top, bottom) -> CropEdges(top, bottom) }
         .forEach { edges ->
             val cropAreaMean: Float = matSobel.getCrop(edges).multiChannelMean().toFloat()
             val heightPortion: Float = edges.height.toFloat() / matSobel.rows().toFloat()

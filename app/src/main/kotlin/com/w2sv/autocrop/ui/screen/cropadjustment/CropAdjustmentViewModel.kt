@@ -4,29 +4,26 @@ import android.content.ContentResolver
 import android.graphics.Bitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.w2sv.autocrop.ui.screen.CropSessionAccessingViewModelFactory
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.AdjustmentModeState
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.AdjustmentViewState
-import com.w2sv.autocrop.ui.util.transformedMutableStateIn
 import com.w2sv.cropping.cropping.crop
 import com.w2sv.cropping.session.CropSession
 import com.w2sv.domain.model.CropAdjustmentMode
 import com.w2sv.domain.model.CropBundle
-import com.w2sv.domain.repository.PreferencesRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = CropAdjustmentViewModel.Factory::class)
 class CropAdjustmentViewModel @AssistedInject constructor(
     savedStateHandle: SavedStateHandle,
     contentResolver: ContentResolver,
-    private val preferencesRepository: PreferencesRepository,
+    //    private val preferencesRepository: PreferencesRepository,
     @Assisted private val cropSession: CropSession
 ) : ViewModel() {
 
@@ -35,14 +32,20 @@ class CropAdjustmentViewModel @AssistedInject constructor(
     private val originalEdges by cropBundle.crop::edges
     val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
 
-    private val _viewState = preferencesRepository
-        .cropAdjustmentMode
-        .transformedMutableStateIn(viewModelScope) { mode ->
-            AdjustmentViewState(
-                originalEdges = originalEdges,
-                modeState = mode.defaultState()
-            )
-        }
+    //    private val _viewState = preferencesRepository
+    //        .cropAdjustmentMode
+    //        .transformedMutableStateIn(viewModelScope) { mode ->
+    //            AdjustmentViewState(
+    //                originalEdges = originalEdges,
+    //                modeState = mode.defaultState()
+    //            )
+    //        }
+    private val _viewState = MutableStateFlow(
+        AdjustmentViewState(
+            originalEdges = originalEdges,
+            modeState = AdjustmentModeState.Manual(originalEdges)
+        )
+    )
     val viewState = _viewState.asStateFlow()
 
     //    fun updateAdjustmentMode(mode: CropAdjustmentMode) {
@@ -87,11 +90,11 @@ class CropAdjustmentViewModel @AssistedInject constructor(
         )
     }
 
-    override fun onCleared() {
-        viewModelScope.launch {
-            preferencesRepository.cropAdjustmentMode.save(viewState.value.modeState.mode)
-        }
-    }
+    //    override fun onCleared() {
+    //        viewModelScope.launch {
+    //            preferencesRepository.cropAdjustmentMode.save(viewState.value.modeState.mode)
+    //        }
+    //    }
 
     @AssistedFactory
     interface Factory : CropSessionAccessingViewModelFactory<CropAdjustmentViewModel>

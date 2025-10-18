@@ -7,7 +7,6 @@ import android.view.animation.LinearInterpolator
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.animateTo
 import com.w2sv.autocrop.ui.screen.cropadjustment.view.CropAdjustmentView
 import com.w2sv.autocrop.ui.util.view.animateMatrix
-import com.w2sv.autocrop.ui.util.view.getCopy
 
 private const val ALPHA_MAX = 255
 
@@ -18,7 +17,7 @@ class CropAnimator(private val view: CropAdjustmentView) {
 
     private val gridFadeOutAnimator = ValueAnimator.ofInt(ALPHA_MAX, 0).apply {
         startDelay = 750
-        duration = 500
+        duration = ANIMATION_DURATION
         interpolator = LinearInterpolator()
         addUpdateListener { animator ->
             gridAlpha = (animator.animatedValue as Int)
@@ -31,46 +30,19 @@ class CropAnimator(private val view: CropAdjustmentView) {
         gridAlpha = ALPHA_MAX
     }
 
-    fun animateToCenter() {
-        val centerRect = centeredCropRect()
-        animateImageTo(centerRect)
-        animateCropRectTo(centerRect)
+    fun centerCropRect() {
+        val viewCenteredCropRect = view.cropRect.centeredAcross(view.width.toFloat(), view.height.toFloat())
+        val dstMatrix = rectToRectMappingMatrix(src = view.cropRect, dst = viewCenteredCropRect, srcMatrix = view.transformationMatrix)
+        animateTo(dstMatrix, viewCenteredCropRect)
         gridFadeOutAnimator.start()
     }
 
-    fun animateToInitialConfig() {
-        animateImageTo(view.initialTransformationMatrix)
-        animateCropRectTo(view.initialCropRect)
+    fun animateTo(dstMatrix: Matrix, dstCropRect: RectF) {
+        animateImageTo(dstMatrix)
+        animateCropRectTo(dstCropRect)
     }
 
-    private fun centeredCropRect(): RectF {
-        val width = view.cropRect.width()
-        val height = view.cropRect.height()
-
-        val left = (view.width.toFloat() - width) / 2f
-        val top = (view.height.toFloat() - height) / 2f
-        val right = left + width
-        val bottom = top + height
-
-        return RectF(left, top, right, bottom)
-    }
-
-    private fun animateImageTo(dst: RectF) {
-        val newBitmapMatrix = view.transformationMatrix.getCopy()
-
-        val scale = dst.width() / view.cropRect.width()
-        val translateX = dst.centerX() - view.cropRect.centerX()
-        val translateY = dst.centerY() - view.cropRect.centerY()
-
-        val matrix = Matrix().apply {
-            setScale(scale, scale, view.cropRect.centerX(), view.cropRect.centerY())
-            postTranslate(translateX, translateY)
-        }
-        newBitmapMatrix.postConcat(matrix)
-        animateImageTo(newBitmapMatrix)
-    }
-
-    private fun animateImageTo(dst: Matrix, onEnd: (() -> Unit) = {}) {
+    private fun animateImageTo(dst: Matrix) {
         animateMatrix(
             src = view.transformationMatrix,
             dst = dst,
@@ -78,18 +50,55 @@ class CropAnimator(private val view: CropAdjustmentView) {
             onUpdate = { matrix ->
                 view.transformationMatrix = matrix
                 view.invalidate()
-            },
-            onEnd = onEnd
+            }
         )
     }
 
     private fun animateCropRectTo(dst: RectF) {
-        view.cropRect.animateTo(dst, ANIMATION_DURATION) {
-            view.invalidate()
-        }
+        view.cropRect.animateTo(
+            target = dst,
+            duration = ANIMATION_DURATION,
+            onUpdate = { view.invalidate() }
+        )
     }
 
     companion object {
         private const val ANIMATION_DURATION: Long = 300
     }
 }
+
+private fun RectF.centeredAcross(referenceWidth: Float, referenceHeight: Float): RectF {
+    val left = (referenceWidth - width()) / 2f
+    val top = (referenceHeight - height()) / 2f
+    val right = left + width()
+    val bottom = top + height()
+
+    return RectF(left, top, right, bottom)
+}
+
+/**
+ * Computes a transformation matrix that maps the [src] rectangle to the [dst] rectangle,
+ * applying the resulting scale and translation on top of the given [srcMatrix].
+ *
+ * The returned matrix preserves the existing transformations of [srcMatrix] and
+ * adds the delta required to align [src] to [dst].
+ *
+ * @param src The source rectangle to transform.
+ * @param dst The target rectangle to map [src] onto.
+ * @param srcMatrix The base matrix whose transformations should be preserved.
+ * @return A new [Matrix] representing [srcMatrix] combined with the delta transform
+ *         that aligns [src] with [dst].
+ */
+private fun rectToRectMappingMatrix(
+    src: RectF,
+    dst: RectF,
+    srcMatrix: Matrix
+): Matrix =
+    Matrix(srcMatrix).apply {
+        val scale = dst.width() / src.width()
+        val translateX = dst.centerX() - src.centerX()
+        val translateY = dst.centerY() - src.centerY()
+
+        postScale(scale, scale, src.centerX(), src.centerY())
+        postTranslate(translateX, translateY)
+    }

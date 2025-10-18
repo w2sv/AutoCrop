@@ -11,8 +11,8 @@ import com.w2sv.kotlinutils.threadUnsafeLazy
 
 class DragHandler(
     private val view: CropAdjustmentView,
-    private val onDragStateChanged: () -> Unit,
     private val onDragStarted: () -> Unit,
+    private val onDrag: () -> Unit,
     private val onDragEnded: () -> Unit
 ) {
     private var state: DragState? = null
@@ -70,7 +70,7 @@ class DragHandler(
     }
 
     private fun onActionDown(event: MotionEvent) {
-        val edge = view.cropRect.getEdgeTouch(event, TOUCH_TOLERANCE_MARGIN)
+        val edge = view.cropRect.getEdgeTouch(event, CropAdjustmentView.EDGE_TOUCH_SLOP.toFloat())
 
         state = when {
             edge != null -> DragState.DraggingEdge(edge, view)
@@ -99,7 +99,7 @@ class DragHandler(
                 }
             }
 
-            onDragStateChanged()
+            onDrag()
             view.invalidate()
         }
     }
@@ -126,9 +126,5 @@ class DragHandler(
         }
 
         data object DraggingCropRect : DragState
-    }
-
-    companion object {
-        const val TOUCH_TOLERANCE_MARGIN: Float = 42f
     }
 }

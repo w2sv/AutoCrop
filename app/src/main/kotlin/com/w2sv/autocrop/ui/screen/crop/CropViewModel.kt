@@ -39,7 +39,7 @@ class CropViewModel @AssistedInject constructor(
         CropNavGraphArgs.fromSavedStateHandle(savedStateHandle).imageUris.toList()
     } catch (e: IllegalArgumentException) {
         if (BuildConfig.DEBUG) {
-            contentResolver.getLatestImageUris(8)
+            contentResolver.getLatestImageUris(4)
         } else {
             throw e
         }

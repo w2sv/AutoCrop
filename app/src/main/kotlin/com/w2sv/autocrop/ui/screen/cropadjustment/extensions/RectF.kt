@@ -1,5 +1,6 @@
 package com.w2sv.autocrop.ui.screen.cropadjustment.extensions
 
+import android.animation.Animator
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.graphics.Matrix
@@ -15,6 +16,7 @@ fun RectF.animateTo(
     target: RectF,
     duration: Long = 300L,
     interpolator: TimeInterpolator = AccelerateDecelerateInterpolator(),
+    configure: Animator.() -> Unit = {},
     onUpdate: (RectF) -> Unit
 ): ValueAnimator {
     val startLeft = left
@@ -35,6 +37,7 @@ fun RectF.animateTo(
 
             onUpdate(this@animateTo)
         }
+        configure()
         start()
     }
 }
@@ -83,7 +86,7 @@ fun RectF.containsVerticalEdges(y1: Float, y2: Float): Boolean =
 
 fun mapRect(
     src: RectF,
-    dst: RectF,
+    dst: RectF = RectF(),
     matrix: Matrix
 ): RectF {
     matrix.mapRect(dst, src)
