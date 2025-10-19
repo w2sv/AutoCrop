@@ -75,7 +75,10 @@ android {
     }
     kotlin {
         compilerOptions {
-            optIn.add("androidx.compose.foundation.layout.ExperimentalLayoutApi")
+            optIn.addAll(
+                "androidx.compose.foundation.layout.ExperimentalLayoutApi",
+                "androidx.compose.material3.ExperimentalMaterial3ExpressiveApi"
+            )
         }
     }
 }

@@ -2,16 +2,12 @@ package com.w2sv.autocrop.ui.screen.crop
 
 import android.content.ContentResolver
 import android.net.Uri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.w2sv.androidutils.lifecycle.increment
 import com.w2sv.autocrop.BuildConfig
 import com.w2sv.autocrop.CropNavGraphArgs
 import com.w2sv.autocrop.ui.screen.CropSessionAccessingViewModelFactory
-import com.w2sv.autocrop.ui.util.nonNullValue
 import com.w2sv.autocrop.util.getLatestImageUris
 import com.w2sv.common.util.log
 import com.w2sv.cropping.cropping.createCropBundle
@@ -23,7 +19,10 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import slimber.log.i
 
@@ -37,46 +36,48 @@ class CropViewModel @AssistedInject constructor(
 
     private val screenshotUris: List<Uri> = try {
         CropNavGraphArgs.fromSavedStateHandle(savedStateHandle).imageUris.toList()
-    } catch (e: IllegalArgumentException) {
+    }
+    catch (e: IllegalArgumentException) {
         if (BuildConfig.DEBUG) {
             contentResolver.getLatestImageUris(4)
-        } else {
+        }
+        else {
             throw e
         }
     }
         .log { "screenshotUris=$it" }
-    val screenshotCount = screenshotUris.size
 
-    val cropProgress: LiveData<Int> get() = _cropProgress
-    private val _cropProgress = MutableLiveData(0)
+    private val _screenState = MutableStateFlow(
+        CropScreenState(
+            croppedCount = 0,
+            totalImageCount = screenshotUris.size,
+            anythingSuccessfullyCropped = false
+        )
+    )
+    val screenState = _screenState.asStateFlow()
 
     private val imminentUris: List<Uri>
         get() = screenshotUris.run {
-            subList(cropProgress.nonNullValue, size)
+            subList(screenState.value.croppedCount, size)
         }
 
     private val cropSensitivity = preferencesRepository.cropSensitivity.stateIn(viewModelScope, SharingStarted.Eagerly)
 
-    suspend fun cropScreenshots(
-        contentResolver: ContentResolver,
-        onAnySuccessfulCrops: () -> Unit,
-        onNoSuccessfulCrops: () -> Unit
-    ) {
+    suspend fun cropScreenshots(contentResolver: ContentResolver) {
         imminentUris.forEach { uri ->
             withContext(Dispatchers.IO) {
                 attemptCropBundleCreation(uri, contentResolver)
             }
-            _cropProgress.increment()
+            _screenState.update {
+                it.copy(
+                    croppedCount = it.croppedCount + 1,
+                    anythingSuccessfullyCropped = cropSession.bundles.value.isNotEmpty()
+                )
+            }
         }
 
         i {
             "bundles=${cropSession.bundles.value.size} | uncroppableImageUris=${cropSession.uncroppableImageUris.size} | unopenableImageUris=${cropSession.unopenableImageUris.size}"
-        }
-
-        if (cropSession.bundles.value.isNotEmpty()) {
-            onAnySuccessfulCrops()
-        } else {
-            onNoSuccessfulCrops()
         }
     }
 
