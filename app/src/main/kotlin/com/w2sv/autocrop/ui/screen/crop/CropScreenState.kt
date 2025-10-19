@@ -17,15 +17,18 @@ data class CropScreenState(val croppedCount: Int, val totalImageCount: Int, priv
         }
 
     @Composable
-    fun NavigateWhenCroppingFinished(delay: Long, onAnySuccessfulCrops: () -> Unit, onNoSuccessfulCrops: () -> Unit) {
+    fun NavigateWhenCroppingFinished(
+        delay: Long,
+        onAnySuccessfulCrops: () -> Unit,
+        onNoSuccessfulCrops: () -> Unit
+    ) {
         LaunchedEffect(croppingFinished) {
             if (!croppingFinished) return@LaunchedEffect
 
             delay(delay)
             if (anythingSuccessfullyCropped) {
                 onAnySuccessfulCrops()
-            }
-            else {
+            } else {
                 onNoSuccessfulCrops()
             }
         }

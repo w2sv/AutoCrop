@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -180,7 +180,7 @@ private fun Item(item: NavigationDrawerSheetElement.Item, modifier: Modifier = M
         item.explanationRes?.let {
             Text(
                 text = stringResource(id = it),
-                color = MaterialTheme.colorScheme.onSurfaceVariantLowAlpha,
+                color = colorScheme.onSurfaceVariantLowAlpha,
                 modifier = Modifier.padding(start = iconSize + labelStartPadding),
                 fontSize = 14.sp
             )
@@ -201,7 +201,7 @@ private fun MainItemRow(item: NavigationDrawerSheetElement.Item, modifier: Modif
             modifier = Modifier.size(size = iconSize),
             painter = painterResource(id = item.iconRes),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
+            tint = colorScheme.primary
         )
 
         Text(

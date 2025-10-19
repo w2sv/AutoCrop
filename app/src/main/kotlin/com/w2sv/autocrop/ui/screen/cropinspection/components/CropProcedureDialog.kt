@@ -8,7 +8,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,7 +37,7 @@ fun ProcessCropBundleDialog(
                 Checkbox(checked = deleteScreenshots(), onCheckedChange = { toggleDeleteScreenshots() })
                 Text(
                     pluralStringResource(com.w2sv.core.common.R.plurals.delete_corresponding_screenshots, count = 1),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = typography.bodyLarge,
                     modifier = Modifier.clickable(onClick = toggleDeleteScreenshots)
                 )
             }

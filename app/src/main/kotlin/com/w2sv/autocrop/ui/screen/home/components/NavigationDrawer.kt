@@ -13,7 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
@@ -59,7 +59,7 @@ private fun NavigationDrawerSheet(modifier: Modifier = Modifier) {
         modifier = modifier,
         windowInsets = emptyInsets,
         drawerContainerColor = Color.Transparent,
-        drawerContentColor = MaterialTheme.colorScheme.onSurface
+        drawerContentColor = colorScheme.onSurface
     ) {
         SystemBarsIgnoringVisibilityPaddedColumn(horizontalAlignment = Alignment.CenterHorizontally) {
             Header(
@@ -69,7 +69,7 @@ private fun NavigationDrawerSheet(modifier: Modifier = Modifier) {
             )
             HorizontalDivider(
                 modifier = Modifier.padding(top = 16.dp),
-                color = MaterialTheme.colorScheme.onSurface,
+                color = colorScheme.onSurface,
                 thickness = Dp.Hairline
             )
             NavigationDrawerSheetItemColumn(
@@ -92,7 +92,7 @@ private fun Header(modifier: Modifier = Modifier) {
             null,
             modifier = Modifier
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary)
+                .background(colorScheme.primary)
                 .padding(6.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))

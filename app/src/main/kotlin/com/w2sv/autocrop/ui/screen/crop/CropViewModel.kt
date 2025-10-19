@@ -36,12 +36,10 @@ class CropViewModel @AssistedInject constructor(
 
     private val screenshotUris: List<Uri> = try {
         CropNavGraphArgs.fromSavedStateHandle(savedStateHandle).imageUris.toList()
-    }
-    catch (e: IllegalArgumentException) {
+    } catch (e: IllegalArgumentException) {
         if (BuildConfig.DEBUG) {
             contentResolver.getLatestImageUris(4)
-        }
-        else {
+        } else {
             throw e
         }
     }

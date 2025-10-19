@@ -15,7 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -113,7 +113,7 @@ private fun BoxScope.TopButtons(
 ) {
     val modifier = Modifier.padding(top = 24.dp)
     val filledIconButtonColors =
-        IconButtonDefaults.filledIconButtonColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.5f))
+        IconButtonDefaults.filledIconButtonColors(containerColor = colorScheme.surfaceContainerHighest.copy(alpha = 0.5f))
 
     FilledIconButton(
         onClick = onBack,

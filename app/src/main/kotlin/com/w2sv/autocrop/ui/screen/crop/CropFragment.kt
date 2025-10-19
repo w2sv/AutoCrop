@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,10 +50,10 @@ class CropFragment : ComposeAppFragment() {
 
     @Composable
     override fun ScreenContent() {
-        val progress by viewModel.screenState.collectAsStateWithLifecycle()
+        val state by viewModel.screenState.collectAsStateWithLifecycle()
 
         CropScreen(
-            state = progress,
+            state = state,
             onAnythingSuccessfullyCropped = {
                 navController.navigateAnimatedAndPopCurrentDestination(
                     CropFragmentDirections.navigateToCropPagerScreen()
@@ -100,7 +100,7 @@ private fun CropScreen(
         ) {
             Text(
                 stringResource(com.w2sv.core.common.R.string.cropping_dot_dot_dot),
-                style = MaterialTheme.typography.headlineMediumEmphasized,
+                style = typography.headlineMediumEmphasized
             )
             ScreenCenterContent(content = state.centerContent)
             Text(text = remember(state) { "${state.croppedCount}/${state.totalImageCount}" })

@@ -21,7 +21,7 @@ import com.w2sv.domain.model.Crop
 
 val Crop.transitionName: String get() = hashCode().toString()
 
-private const val exitAnimationDuration = 500
+private const val EXIT_ANIMATION_DURATION = 500
 
 @Composable
 fun CropPager(
@@ -42,8 +42,9 @@ fun CropPager(
             AnimatedVisibility(
                 visible = exitAnimationPageIndex != pageIndex,
                 enter = EnterTransition.None,
-                exit = shrinkOut(animationSpec = tween(durationMillis = exitAnimationDuration), shrinkTowards = Alignment.Center) + fadeOut(
-                    animationSpec = tween(durationMillis = exitAnimationDuration)
+                exit =
+                shrinkOut(animationSpec = tween(durationMillis = EXIT_ANIMATION_DURATION), shrinkTowards = Alignment.Center) + fadeOut(
+                    animationSpec = tween(durationMillis = EXIT_ANIMATION_DURATION)
                 )
             ) {
                 OnExitAnimationFinished(onExitAnimationFinished)

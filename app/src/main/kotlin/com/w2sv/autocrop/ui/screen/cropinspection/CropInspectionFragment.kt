@@ -9,7 +9,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.w2sv.autocrop.ui.ComposeAppFragment
 import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
 import com.w2sv.autocrop.ui.util.postponeEnterTransition
-import com.w2sv.autocrop.ui.util.showSystemBars
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.toImmutableList
 

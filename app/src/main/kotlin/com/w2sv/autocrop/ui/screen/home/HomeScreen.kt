@@ -19,7 +19,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ShapeDefaults
@@ -147,7 +147,7 @@ private fun Foreground(
             Text(
                 stringResource(Strings.select_screenshots),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLarge,
+                style = typography.bodyLarge,
                 maxLines = 2
             )
         }
