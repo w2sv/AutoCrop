@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -155,7 +153,7 @@ private fun TopRow(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         IconButton(onClick = onBackButtonClick) {
-            Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
+            Icon(painterResource(R.drawable.ic_arrow_back_24), contentDescription = null)
         }
         Text(pageIndication)
     }

@@ -11,9 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsIgnoringVisibility
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -125,7 +122,7 @@ private fun BoxScope.TopButtons(
             .size(48.dp),
         colors = filledIconButtonColors
     ) {
-        Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
+        Icon(painterResource(R.drawable.ic_arrow_back_24), contentDescription = null)
     }
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -153,7 +150,7 @@ private fun BoxScope.TopButtons(
             modifier = Modifier.size(48.dp)
         ) {
             Icon(
-                Icons.Default.Check,
+                painterResource(R.drawable.ic_check_24),
                 contentDescription = null
             )
         }
