@@ -39,6 +39,7 @@ import com.w2sv.autocrop.ui.screen.cropadjustment.model.AdjustmentViewState
 import com.w2sv.autocrop.ui.screen.cropadjustment.view.CropAdjustmentView
 import com.w2sv.autocrop.ui.theme.AppTheme
 import com.w2sv.autocrop.ui.util.hideNavigationBar
+import com.w2sv.autocrop.ui.util.showSystemBars
 import com.w2sv.domain.model.CropEdges
 import dagger.hilt.android.AndroidEntryPoint
 import slimber.log.i
@@ -51,6 +52,11 @@ class CropAdjustmentFragment : ComposeAppFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         hideNavigationBar()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        showSystemBars()
     }
 
     @Composable

@@ -130,9 +130,13 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
     }
 
     private fun onBack() {
-        showSystemBars()
         viewModel.setImageType(ImageType.Crop, displayFadeOutText = false)
         navController.popBackStack()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        showSystemBars()
     }
 }
 
