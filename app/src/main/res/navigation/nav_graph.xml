@@ -78,8 +78,11 @@
 
             <argument
                 android:name="cropBundleIndex"
-                app:argType="integer"
-                android:defaultValue="0" />
+                app:argType="integer" />
+
+            <argument
+                android:name="transitionName"
+                app:argType="string" />
         </fragment>
 
         <fragment

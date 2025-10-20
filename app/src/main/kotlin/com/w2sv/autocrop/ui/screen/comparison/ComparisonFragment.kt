@@ -14,9 +14,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnNextLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import androidx.transition.Transition
-import androidx.transition.TransitionInflater
-import androidx.transition.TransitionListenerAdapter
 import com.w2sv.androidutils.view.crossVisualize
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ComparisonBinding
@@ -27,6 +24,8 @@ import com.w2sv.autocrop.ui.util.postponeEnterTransition
 import com.w2sv.autocrop.ui.util.registerOnBackPressedHandler
 import com.w2sv.autocrop.ui.util.showSystemBars
 import com.w2sv.autocrop.ui.util.view.getScaleY
+import com.w2sv.autocrop.ui.util.view.inflateTransition
+import com.w2sv.autocrop.ui.util.view.onTransitionEnd
 import com.w2sv.autocrop.ui.util.view.setDebouncedOnClickListener
 import com.w2sv.autocrop.ui.views.FadeOutTextView
 import com.w2sv.kotlinutils.coroutines.flow.collectLatestOn
@@ -47,12 +46,10 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
     }
 
     private fun cropEnterTransition(context: Context) =
-        TransitionInflater
-            .from(context)
-            .inflateTransition(android.R.transition.move)
-            ?.setDuration(500)
-            ?.setInterpolator(DecelerateInterpolator(1.5f))
-            ?.onTransitionEnd {
+        inflateTransition(context, android.R.transition.move)?.apply {
+            setDuration(500)
+            setInterpolator(DecelerateInterpolator(1.5f))
+            onTransitionEnd {
                 // Show instructions after short delay
                 lifecycleScope.launchDelayed(200) {
                     viewModel.emitFadeOutTextArgs(
@@ -64,6 +61,7 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
                     )
                 }
             }
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition(view)
@@ -158,12 +156,3 @@ private fun View.setOnTouchListenerIgnoringSystemBarAreas(listener: View.OnTouch
         listener.onTouch(view, event)
     }
 }
-
-private fun Transition.onTransitionEnd(callback: () -> Unit): Transition =
-    addListener(
-        object : TransitionListenerAdapter() {
-            override fun onTransitionEnd(transition: Transition) {
-                callback()
-            }
-        }
-    )

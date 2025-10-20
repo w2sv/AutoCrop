@@ -21,6 +21,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +54,7 @@ import com.w2sv.domain.model.ImageMimeType
 import com.w2sv.domain.model.Screenshot
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.delay
 
 @Composable
 fun CropInspectionScreen(
@@ -77,6 +79,19 @@ fun CropInspectionScreen(
         }
     }
 
+    // TODO: for dev only
+    LaunchedEffect(Unit) {
+        delay(1_000)
+        val transitionName = cropBundles[pagerState.currentPage].crop.transitionName
+        navController.navigate(
+            directions = CropInspectionFragmentDirections.navigateToCropAdjustmentScreen(
+                pagerState.currentPage,
+                transitionName
+            ),
+            navigatorExtras = FragmentNavigatorExtras(transitionNameToImageView.getValue(transitionName) to transitionName)
+        )
+    }
+
     Scaffold(
         modifier = modifier,
         // Ignore system bars visibility so that no snapping behavior occurs during shared element transition from comparison screen,
@@ -87,14 +102,21 @@ fun CropInspectionScreen(
                 onComparisonButtonClick = debounceClick {
                     val transitionName = cropBundles[pagerState.currentPage].crop.transitionName
                     navController.navigate(
-                        CropInspectionFragmentDirections.navigateToComparisonScreen(pagerState.currentPage, transitionName),
-                        FragmentNavigatorExtras(
+                        directions = CropInspectionFragmentDirections.navigateToComparisonScreen(pagerState.currentPage, transitionName),
+                        navigatorExtras = FragmentNavigatorExtras(
                             transitionNameToImageView.getValue(transitionName) to transitionName
                         )
                     )
                 },
                 onAdjustButtonClick = debounceClick {
-                    navController.navigate(CropInspectionFragmentDirections.navigateToCropAdjustmentScreen(pagerState.currentPage))
+                    val transitionName = cropBundles[pagerState.currentPage].crop.transitionName
+                    navController.navigate(
+                        directions = CropInspectionFragmentDirections.navigateToCropAdjustmentScreen(
+                            pagerState.currentPage,
+                            transitionName
+                        ),
+                        navigatorExtras = FragmentNavigatorExtras(transitionNameToImageView.getValue(transitionName) to transitionName)
+                    )
                 },
                 onSaveButtonClick = { showProcedureDialogForIndex = pagerState.currentPage },
                 onDiscardButtonClick = { exitAnimationPageIndex = pagerState.currentPage }

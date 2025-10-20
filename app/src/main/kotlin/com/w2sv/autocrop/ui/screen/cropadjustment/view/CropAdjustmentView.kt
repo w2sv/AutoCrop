@@ -23,10 +23,10 @@ import com.w2sv.autocrop.ui.util.view.buildPath
 import com.w2sv.autocrop.ui.util.view.inverse
 import com.w2sv.autocrop.ui.util.view.threadUnsafeLazyPaint
 import com.w2sv.domain.model.CropEdges
+import slimber.log.i
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
-import slimber.log.i
 
 class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     View(context, attrs, defStyleAttr) {

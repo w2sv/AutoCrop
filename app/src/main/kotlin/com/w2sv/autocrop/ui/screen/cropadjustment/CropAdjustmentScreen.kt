@@ -36,6 +36,7 @@ import com.w2sv.domain.model.CropEdges
 fun CropAdjustmentScreen(
     state: AdjustmentViewState,
     image: Bitmap,
+    sharedElementTransitionName: String,
     onModeStateChanged: (AdjustmentModeState) -> Unit,
     onReset: () -> Unit,
     onApply: () -> Unit,
@@ -50,6 +51,7 @@ fun CropAdjustmentScreen(
             CropAdjustmentView(
                 state = state,
                 image = image,
+                sharedElementTransitionName = sharedElementTransitionName,
                 onModeStateChanged = onModeStateChanged,
                 modifier = Modifier.padding(horizontal = 22.dp)
             )
@@ -120,13 +122,15 @@ private fun BoxScope.TopButtons(
 private fun CropAdjustmentView(
     state: AdjustmentViewState,
     image: Bitmap,
+    sharedElementTransitionName: String,
     onModeStateChanged: (AdjustmentModeState) -> Unit,
     modifier: Modifier = Modifier
 ) {
     AndroidView(
         modifier = modifier,
-        factory = {
-            CropAdjustmentView(it).apply {
+        factory = { context ->
+            CropAdjustmentView(context).apply {
+                transitionName = sharedElementTransitionName
                 initialize(
                     image = image,
                     cropEdges = state.adjustedEdges
@@ -151,6 +155,7 @@ private fun Prev() {
                 modeState = AdjustmentModeState.Manual(CropEdges(400, 1200))
             ),
             createBitmap(800, 1600),
+            "",
             {},
             {},
             {},
