@@ -1,6 +1,10 @@
 package com.w2sv.autocrop.ui.screen.cropadjustment
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Matrix
+import android.view.View
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -16,8 +20,13 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +39,8 @@ import com.w2sv.autocrop.ui.screen.cropadjustment.model.AdjustmentViewState
 import com.w2sv.autocrop.ui.screen.cropadjustment.view.CropAdjustmentView
 import com.w2sv.autocrop.ui.theme.AppTheme
 import com.w2sv.autocrop.ui.util.compose.debounceClick
+import com.w2sv.common.util.log
+import com.w2sv.cropping.cropping.cropped
 import com.w2sv.domain.model.CropEdges
 
 @Composable
@@ -126,21 +137,51 @@ private fun CropAdjustmentView(
     onModeStateChanged: (AdjustmentModeState) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    AndroidView(
-        modifier = modifier,
-        factory = { context ->
-            CropAdjustmentView(context).apply {
-                transitionName = sharedElementTransitionName
-                initialize(
-                    image = image,
-                    cropEdges = state.adjustedEdges
-                        ?: state.originalEdges
-                )
-                adjustmentModeStateChangedListener = onModeStateChanged
+    var cropAdjustmentView = remember<CropAdjustmentView?> { null }
+    var transformationMatrix by remember { mutableStateOf(Matrix()) }
+
+    Box(modifier = modifier) {
+        AndroidView(
+            modifier = Modifier.alpha(0.5f),
+            factory = { context ->
+                CropAdjustmentView(context)
+                    .apply {
+                        initialize(
+                            image = image,
+                            cropEdges = state.adjustedEdges
+                                ?: state.originalEdges
+                        )
+                        adjustmentModeStateChangedListener = onModeStateChanged
+                        transformationMatrixChangedListener = { transformationMatrix = it }
+                    }
+                    .also { cropAdjustmentView = it }
+            },
+            update = { view -> state.adjustedEdges?.let { view.updateFromEdges(it) } }
+        )
+
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { context ->
+                OverlayImageView(context).apply {
+                    transitionName = sharedElementTransitionName
+                    bitmap = image.cropped(state.originalEdges)
+                }
+            },
+            update = { view ->
+                view.drawMatrix = transformationMatrix
             }
-        },
-        update = { view -> state.adjustedEdges?.let { view.updateFromEdges(it) } }
-    )
+        )
+    }
+}
+
+class OverlayImageView(context: Context) : View(context) {
+    lateinit var bitmap: Bitmap
+    lateinit var drawMatrix: Matrix
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        canvas.drawBitmap(bitmap, drawMatrix, null)
+    }
 }
 
 @Preview

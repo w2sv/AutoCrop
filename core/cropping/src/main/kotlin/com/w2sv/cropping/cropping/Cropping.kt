@@ -80,7 +80,7 @@ fun createCropBundle(
         CropBundle.CreationResult.BitmapLoadingFailed // TODO
     }
 
-private fun Bitmap.cropped(edges: CropEdges): Bitmap =
+fun Bitmap.cropped(edges: CropEdges): Bitmap =
     Bitmap.createBitmap(
         this,
         0,

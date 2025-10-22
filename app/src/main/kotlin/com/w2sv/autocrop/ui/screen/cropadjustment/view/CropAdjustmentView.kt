@@ -22,6 +22,7 @@ import com.w2sv.autocrop.ui.screen.cropadjustment.view.config.CropAdjustmentView
 import com.w2sv.autocrop.ui.util.view.buildPath
 import com.w2sv.autocrop.ui.util.view.inverse
 import com.w2sv.autocrop.ui.util.view.threadUnsafeLazyPaint
+import com.w2sv.common.util.log
 import com.w2sv.domain.model.CropEdges
 import slimber.log.i
 import kotlin.math.min
@@ -36,8 +37,10 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
     var transformationMatrix: Matrix by Delegates.observable(Matrix()) { _, _, _ ->
         // Compute imageRect
         mapRect(imageRectBitmapSpace, imageRect, transformationMatrix)
+        transformationMatrixChangedListener?.invoke(Matrix(transformationMatrix))
     }
     lateinit var defaultTransformationMatrix: Matrix
+    var transformationMatrixChangedListener: ((Matrix) -> Unit)? = null
 
     lateinit var imageRectBitmapSpace: RectF
     val imageRect = RectF()
@@ -86,7 +89,7 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
 
     private fun initializeMatrix() {
         defaultTransformationMatrix = imageRectBitmapSpace.centeringMatrixAcross(width.toFloat(), height.toFloat())
-        transformationMatrix = defaultTransformationMatrix
+        transformationMatrix = defaultTransformationMatrix.log()
 
         // Set cropRect
         mapRect(cropEdgesRect, cropRect, transformationMatrix)
