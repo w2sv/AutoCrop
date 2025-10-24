@@ -159,18 +159,18 @@ private fun CropAdjustmentView(
             update = { view -> state.adjustedEdges?.let { view.updateFromEdges(it) } }
         )
 
-        AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { context ->
-                OverlayImageView(context).apply {
-                    transitionName = sharedElementTransitionName
-                    bitmap = image.cropped(state.originalEdges)
-                }
-            },
-            update = { view ->
-                view.drawMatrix = transformationMatrix
-            }
-        )
+//        AndroidView(
+//            modifier = Modifier.fillMaxSize(),
+//            factory = { context ->
+//                OverlayImageView(context).apply {
+//                    transitionName = sharedElementTransitionName
+//                    bitmap = image.cropped(state.originalEdges)
+//                }
+//            },
+//            update = { view ->
+//                view.drawMatrix = transformationMatrix
+//            }
+//        )
     }
 }
 

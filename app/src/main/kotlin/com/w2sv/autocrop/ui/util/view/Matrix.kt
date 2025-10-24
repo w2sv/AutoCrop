@@ -7,15 +7,14 @@ import android.graphics.Matrix
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.google.android.material.animation.MatrixEvaluator
 
-fun animateMatrix(
-    src: Matrix,
+fun Matrix.animateTo(
     dst: Matrix,
     duration: Long,
     interpolator: TimeInterpolator = AccelerateDecelerateInterpolator(),
     configure: Animator.() -> Unit = {},
     onUpdate: (Matrix) -> Unit
 ): ValueAnimator =
-    ValueAnimator.ofObject(MatrixEvaluator(), src, dst).apply {
+    ValueAnimator.ofObject(MatrixEvaluator(), this, dst).apply {
         this.duration = duration
         this.interpolator = interpolator
         addUpdateListener { animator ->

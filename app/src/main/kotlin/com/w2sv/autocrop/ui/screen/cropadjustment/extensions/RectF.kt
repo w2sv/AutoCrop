@@ -7,40 +7,40 @@ import android.graphics.Matrix
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.annotation.FloatRange
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.Edge
 import com.w2sv.domain.model.CropEdges
 import java.lang.Float.min
 import kotlin.math.max
 
 fun RectF.animateTo(
-    target: RectF,
-    duration: Long = 300L,
+    dst: RectF,
+    duration: Long,
     interpolator: TimeInterpolator = AccelerateDecelerateInterpolator(),
     configure: Animator.() -> Unit = {},
     onUpdate: (RectF) -> Unit
-): ValueAnimator {
-    val startLeft = left
-    val startTop = top
-    val startRight = right
-    val startBottom = bottom
-
-    return ValueAnimator.ofFloat(0f, 1f).apply {
+): ValueAnimator =
+    ValueAnimator.ofFloat(0f, 1f).apply {
         this.interpolator = interpolator
         this.duration = duration
-        addUpdateListener { animator ->
-            val fraction = animator.animatedFraction
 
-            left = startLeft + (target.left - startLeft) * fraction
-            top = startTop + (target.top - startTop) * fraction
-            right = startRight + (target.right - startRight) * fraction
-            bottom = startBottom + (target.bottom - startBottom) * fraction
-
-            onUpdate(this@animateTo)
+        addUpdateListener {
+            onUpdate(
+                RectF(
+                    lerp(left, dst.left, it.animatedFraction),
+                    lerp(top, dst.top, it.animatedFraction),
+                    lerp(right, dst.right, it.animatedFraction),
+                    lerp(bottom, dst.bottom, it.animatedFraction)
+                )
+            )
         }
+
         configure()
         start()
     }
-}
+
+private fun lerp(start: Float, end: Float, @FloatRange(0.0, 1.0) fraction: Float) =
+    start + (end - start) * fraction
 
 fun maxRectOf(a: RectF, b: RectF): RectF =
     RectF(

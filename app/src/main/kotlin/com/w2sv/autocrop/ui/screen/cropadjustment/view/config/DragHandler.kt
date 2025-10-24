@@ -117,7 +117,7 @@ class DragHandler(
                 dragLimits = DragLimits.Factory(
                     draggedEdge = edge,
                     cropRect = view.cropRect,
-                    imageMatrix = view.transformationMatrix,
+                    imageMatrix = view.imageMatrix,
                     imageRect = view.imageRect,
                     viewRect = RectF(0f, 0f, view.width.toFloat(), view.height.toFloat())
                 )

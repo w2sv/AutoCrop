@@ -1,69 +1,42 @@
 package com.w2sv.autocrop.ui.screen.cropadjustment.view.config
 
-import android.animation.ValueAnimator
 import android.graphics.Matrix
 import android.graphics.RectF
-import android.view.animation.LinearInterpolator
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.animateTo
 import com.w2sv.autocrop.ui.screen.cropadjustment.view.CropAdjustmentView
-import com.w2sv.autocrop.ui.util.view.animateMatrix
-
-private const val ALPHA_MAX = 255
+import com.w2sv.autocrop.ui.util.view.animateTo
 
 class CropAnimator(private val view: CropAdjustmentView) {
 
-    var gridAlpha = 0
-        private set
-
-    private val gridFadeOutAnimator = ValueAnimator.ofInt(ALPHA_MAX, 0).apply {
-        startDelay = 750
-        duration = ANIMATION_DURATION
-        interpolator = LinearInterpolator()
-        addUpdateListener { animator ->
-            gridAlpha = (animator.animatedValue as Int)
-            view.invalidate() // Redraw with new alpha
-        }
-    }
-
-    fun resetGridAlpha() {
-        gridFadeOutAnimator.cancel()
-        gridAlpha = ALPHA_MAX
-    }
-
     fun centerCropRect() {
         val viewCenteredCropRect = view.cropRect.centeredAcross(view.width.toFloat(), view.height.toFloat())
-        val dstMatrix = rectToRectMappingMatrix(src = view.cropRect, dst = viewCenteredCropRect, srcMatrix = view.transformationMatrix)
+        val dstMatrix = rectToRectMappingMatrix(src = view.cropRect, dst = viewCenteredCropRect, srcMatrix = view.imageMatrix)
         animateTo(dstMatrix, viewCenteredCropRect)
-        gridFadeOutAnimator.start()
     }
 
     fun animateTo(dstMatrix: Matrix, dstCropRect: RectF) {
-        animateImageTo(dstMatrix)
         animateCropRectTo(dstCropRect)
+        animateImageTo(dstMatrix)
     }
 
     private fun animateImageTo(dst: Matrix) {
-        animateMatrix(
-            src = view.transformationMatrix,
+        view.imageMatrix.animateTo(
             dst = dst,
             duration = ANIMATION_DURATION,
-            onUpdate = { matrix ->
-                view.transformationMatrix = matrix
-                view.invalidate()
-            }
+            onUpdate = { matrix -> view.imageMatrix = matrix }
         )
     }
 
     private fun animateCropRectTo(dst: RectF) {
         view.cropRect.animateTo(
-            target = dst,
+            dst = dst,
             duration = ANIMATION_DURATION,
-            onUpdate = { view.invalidate() }
+            onUpdate = { rect -> view.cropRect.set(rect) }
         )
     }
 
     companion object {
-        private const val ANIMATION_DURATION: Long = 300
+        private const val ANIMATION_DURATION: Long = 500
     }
 }
 

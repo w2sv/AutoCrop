@@ -14,6 +14,7 @@ import android.view.MotionEvent
 import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.mapRect
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.rectF
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.AdjustmentModeState
@@ -22,28 +23,22 @@ import com.w2sv.autocrop.ui.screen.cropadjustment.view.config.CropAdjustmentView
 import com.w2sv.autocrop.ui.util.view.buildPath
 import com.w2sv.autocrop.ui.util.view.inverse
 import com.w2sv.autocrop.ui.util.view.threadUnsafeLazyPaint
-import com.w2sv.common.util.log
 import com.w2sv.domain.model.CropEdges
 import slimber.log.i
 import kotlin.math.min
 import kotlin.math.roundToInt
-import kotlin.properties.Delegates
 
 class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    View(context, attrs, defStyleAttr) {
+    AppCompatImageView(context, attrs, defStyleAttr) {
 
     private lateinit var image: Bitmap
 
-    var transformationMatrix: Matrix by Delegates.observable(Matrix()) { _, _, _ ->
-        // Compute imageRect
-        mapRect(imageRectBitmapSpace, imageRect, transformationMatrix)
-        transformationMatrixChangedListener?.invoke(Matrix(transformationMatrix))
-    }
     lateinit var defaultTransformationMatrix: Matrix
     var transformationMatrixChangedListener: ((Matrix) -> Unit)? = null
 
     lateinit var imageRectBitmapSpace: RectF
-    val imageRect = RectF()
+    val imageRect
+        get() = mapRect(imageRectBitmapSpace, matrix = imageMatrix)
 
     private lateinit var cropEdges: CropEdges
     val cropEdgesRect: RectF get() = cropEdges.rectF(image.width)
@@ -53,12 +48,15 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
 
     private val modeConfig: CropAdjustmentViewMode = CropAdjustmentViewManualMode(this, context)
 
+    init {
+        scaleType = ScaleType.MATRIX
+    }
+
     fun initialize(image: Bitmap, cropEdges: CropEdges) {
         this.image = image
+        setImageBitmap(image)
         this.imageRectBitmapSpace = image.rectF()
         this.cropEdges = cropEdges
-
-        initializeMatrix()
     }
 
     fun updateFromEdges(edges: CropEdges) {
@@ -78,21 +76,18 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
         }
     }
 
-    override fun onSizeChanged(
-        w: Int,
-        h: Int,
-        oldw: Int,
-        oldh: Int
-    ) {
-        initializeMatrix()
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        if (changed) {
+            initializeMatrix()
+        }
     }
 
     private fun initializeMatrix() {
-        defaultTransformationMatrix = imageRectBitmapSpace.centeringMatrixAcross(width.toFloat(), height.toFloat())
-        transformationMatrix = defaultTransformationMatrix.log()
-
-        // Set cropRect
-        mapRect(cropEdgesRect, cropRect, transformationMatrix)
+        val matrix = image.createCenterFitMatrix(width, height)
+        imageMatrix = matrix
+        defaultTransformationMatrix = matrix
+        mapRect(cropEdgesRect, cropRect, matrix)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -103,8 +98,6 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
-        canvas.drawBitmap(image, transformationMatrix, null)
         modeConfig.onDraw(canvas)
     }
 
@@ -122,7 +115,7 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
     }
 
     fun remappedCropEdges(): CropEdges {
-        val cropRectImageDomain = mapRect(cropRect, RectF(), transformationMatrix.inverse())
+        val cropRectImageDomain = mapRect(cropRect, RectF(), imageMatrix.inverse())
         cropEdges = CropEdges(cropRectImageDomain.top.roundToInt(), cropRectImageDomain.bottom.roundToInt())
         return cropEdges
     }
@@ -144,15 +137,25 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
     }
 }
 
-private fun RectF.centeringMatrixAcross(referenceWidth: Float, referenceHeight: Float): Matrix =
+/**
+ * Creates a [Matrix] that scales and centers this bitmap to fit within the given view dimensions
+ * while preserving aspect ratio.
+ *
+ * @param viewWidth the width of the view to fit into
+ * @param viewHeight the height of the view to fit into
+ * @return a new [Matrix] configured for center-fit transformation
+ */
+private fun Bitmap.createCenterFitMatrix(viewWidth: Int, viewHeight: Int): Matrix =
     Matrix().apply {
-        // Scale uniformly to preserve aspect ratio
-        val scale = min(referenceWidth / width(), referenceHeight / height())
-        postScale(scale, scale)
-
-        val dx = (referenceWidth - width() * scale) / 2f
-        val dy = (referenceHeight - height() * scale) / 2f
-        postTranslate(dx, dy)
+        val scale = min(
+            viewWidth / width.toFloat(),
+            viewHeight / height.toFloat()
+        )
+        setScale(scale, scale)
+        postTranslate(
+            (viewWidth - width * scale) * 0.5f,
+            (viewHeight - height * scale) * 0.5f
+        )
     }
 
 private fun View.expandVerticalTouchArea(px: Int) {

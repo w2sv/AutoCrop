@@ -11,16 +11,19 @@ import com.w2sv.kotlinutils.threadUnsafeLazy
 
 class CropAdjustmentViewManualMode(private val view: CropAdjustmentView, context: Context) : CropAdjustmentViewMode {
 
-    private val animator by threadUnsafeLazy { CropAnimator(view) }
-
-    private val gridDrawer = CropGridDrawer(context, innerGridAlpha = { animator.gridAlpha })
+    private val gridAlphaHandler = GridAlphaHandler(initialValue = 0, onValueUpdate = { view.invalidate() })
+    private val animator = CropAnimator(view)
+    private val gridDrawer = CropGridDrawer(context, innerGridAlpha = { gridAlphaHandler.value })
 
     private val dragHandler by threadUnsafeLazy {
         DragHandler(
             view = view,
-            onDragStarted = { animator.resetGridAlpha() },
+            onDragStarted = { gridAlphaHandler.resetValue() },
             onDrag = { view.emitModeState(AdjustmentModeState.Manual(view.remappedCropEdges())) },
-            onDragEnded = { animator.centerCropRect() }
+            onDragEnded = {
+                gridAlphaHandler.startFadeOutAnimation()
+                animator.centerCropRect()
+            }
         )
     }
 
