@@ -1,10 +1,9 @@
 package com.w2sv.autocrop.ui.screen.cropadjustment
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Matrix
-import android.view.View
+import android.widget.ImageView
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -26,8 +25,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,20 +38,20 @@ import com.w2sv.autocrop.ui.screen.cropadjustment.model.AdjustmentViewState
 import com.w2sv.autocrop.ui.screen.cropadjustment.view.CropAdjustmentView
 import com.w2sv.autocrop.ui.theme.AppTheme
 import com.w2sv.autocrop.ui.util.compose.debounceClick
-import com.w2sv.common.util.log
-import com.w2sv.cropping.cropping.cropped
+import com.w2sv.autocrop.ui.util.view.SharedElementTransitionState
+import com.w2sv.autocrop.ui.util.view.getScaleY
 import com.w2sv.domain.model.CropEdges
 
 @Composable
 fun CropAdjustmentScreen(
     state: AdjustmentViewState,
-    image: Bitmap,
-    sharedElementTransitionName: String,
+    sharedElementTransitionState: SharedElementTransitionState,
     onModeStateChanged: (AdjustmentModeState) -> Unit,
     onReset: () -> Unit,
     onApply: () -> Unit,
     onBack: () -> Unit
 ) {
+    BackHandler(onBack = onBack)
     Scaffold(contentWindowInsets = WindowInsets.statusBarsIgnoringVisibility) { paddingValues ->
         Box(
             modifier = Modifier
@@ -61,12 +60,14 @@ fun CropAdjustmentScreen(
         ) {
             CropAdjustmentView(
                 state = state,
-                image = image,
-                sharedElementTransitionName = sharedElementTransitionName,
+                sharedElementTransitionState = sharedElementTransitionState,
                 onModeStateChanged = onModeStateChanged,
-                modifier = Modifier.padding(horizontal = 22.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 22.dp)
             )
             TopButtons(
+                backButtonEnabled = sharedElementTransitionState.isIdle,
                 cropHasBeenAdjusted = state.adjustmentCanBeApplied,
                 onReset = onReset,
                 onApply = onApply,
@@ -78,6 +79,7 @@ fun CropAdjustmentScreen(
 
 @Composable
 private fun BoxScope.TopButtons(
+    backButtonEnabled: Boolean,
     cropHasBeenAdjusted: Boolean,
     onReset: () -> Unit,
     onApply: () -> Unit,
@@ -92,7 +94,8 @@ private fun BoxScope.TopButtons(
         modifier = modifier
             .padding(start = 8.dp)
             .size(48.dp),
-        colors = filledIconButtonColors
+        colors = filledIconButtonColors,
+        enabled = backButtonEnabled
     ) {
         Icon(painterResource(R.drawable.ic_arrow_back_24), contentDescription = null)
     }
@@ -132,71 +135,83 @@ private fun BoxScope.TopButtons(
 @Composable
 private fun CropAdjustmentView(
     state: AdjustmentViewState,
-    image: Bitmap,
-    sharedElementTransitionName: String,
+    sharedElementTransitionState: SharedElementTransitionState,
     onModeStateChanged: (AdjustmentModeState) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var cropAdjustmentView = remember<CropAdjustmentView?> { null }
-    var transformationMatrix by remember { mutableStateOf(Matrix()) }
+    var imageMatrix by remember { mutableStateOf(Matrix()) }
 
-    Box(modifier = modifier) {
+    Box(modifier = modifier, contentAlignment = Alignment.TopCenter) {
         AndroidView(
-            modifier = Modifier.alpha(0.5f),
             factory = { context ->
                 CropAdjustmentView(context)
                     .apply {
                         initialize(
-                            image = image,
-                            cropEdges = state.adjustedEdges
-                                ?: state.originalEdges
+                            image = state.imageBitmap,
+                            cropEdges = state.drawEdges
                         )
                         adjustmentModeStateChangedListener = onModeStateChanged
-                        transformationMatrixChangedListener = { transformationMatrix = it }
+                        imageMatrixChangedListener = { imageMatrix = it }
                     }
-                    .also { cropAdjustmentView = it }
             },
-            update = { view -> state.adjustedEdges?.let { view.updateFromEdges(it) } }
+            update = { view ->
+                state.adjustedEdges?.let { view.updateFromEdges(it) }
+                view.overlays = when (sharedElementTransitionState) {
+                    SharedElementTransitionState.Entering -> CropAdjustmentView.Overlays.HideCropMaskAndDrawCropAreaBlack
+                    else -> CropAdjustmentView.Overlays.CropMask
+                }
+            }
         )
-
-//        AndroidView(
-//            modifier = Modifier.fillMaxSize(),
-//            factory = { context ->
-//                OverlayImageView(context).apply {
-//                    transitionName = sharedElementTransitionName
-//                    bitmap = image.cropped(state.originalEdges)
-//                }
-//            },
-//            update = { view ->
-//                view.drawMatrix = transformationMatrix
-//            }
-//        )
+        if (!sharedElementTransitionState.isIdle) {
+            CropOverlay(
+                cropBitmap = state.cropBitmap,
+                imageMatrix = imageMatrix,
+                transitionName = state.sharedElementTransitionName,
+                modifier = Modifier.graphicsLayer { translationY = state.appliedEdges.top.toFloat() * imageMatrix.getScaleY() }
+            )
+        }
     }
 }
 
-class OverlayImageView(context: Context) : View(context) {
-    lateinit var bitmap: Bitmap
-    lateinit var drawMatrix: Matrix
-
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        canvas.drawBitmap(bitmap, drawMatrix, null)
-    }
+@Composable
+private fun CropOverlay(
+    cropBitmap: Bitmap,
+    imageMatrix: Matrix,
+    transitionName: String,
+    modifier: Modifier = Modifier
+) {
+    AndroidView(
+        modifier = modifier,
+        factory = { context ->
+            ImageView(context).apply {
+                this.transitionName = transitionName
+                setImageBitmap(cropBitmap)
+                scaleType = ImageView.ScaleType.MATRIX
+                this.imageMatrix = imageMatrix
+            }
+        },
+        update = { view -> view.imageMatrix = imageMatrix }
+    )
 }
 
 @Preview
 @Composable
 private fun Prev() {
+    val imageBitmap = createBitmap(800, 1600)
+    val cropBitmap = createBitmap(800, 400)
     val originalEdges = CropEdges(200, 1200)
+    val adjustedEdges = CropEdges(400, 1200)
 
     AppTheme {
         CropAdjustmentScreen(
             AdjustmentViewState(
+                imageBitmap = imageBitmap,
+                cropBitmap = cropBitmap,
                 originalEdges = originalEdges,
-                modeState = AdjustmentModeState.Manual(CropEdges(400, 1200))
+                sharedElementTransitionName = "",
+                modeState = AdjustmentModeState.Manual(adjustedEdges)
             ),
-            createBitmap(800, 1600),
-            "",
+            SharedElementTransitionState.Idle,
             {},
             {},
             {},

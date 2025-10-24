@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
@@ -27,6 +28,7 @@ import com.w2sv.domain.model.CropEdges
 import slimber.log.i
 import kotlin.math.min
 import kotlin.math.roundToInt
+import kotlin.properties.Delegates
 
 class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     AppCompatImageView(context, attrs, defStyleAttr) {
@@ -34,7 +36,7 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
     private lateinit var image: Bitmap
 
     lateinit var defaultTransformationMatrix: Matrix
-    var transformationMatrixChangedListener: ((Matrix) -> Unit)? = null
+    var imageMatrixChangedListener: ((Matrix) -> Unit)? = null
 
     lateinit var imageRectBitmapSpace: RectF
     val imageRect
@@ -48,8 +50,21 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
 
     private val modeConfig: CropAdjustmentViewMode = CropAdjustmentViewManualMode(this, context)
 
+    var overlays: Overlays by Delegates.observable(Overlays.CropMask) { _, oldValue, newValue ->
+        if (oldValue != newValue) {
+            invalidate()
+        }
+    }
+
     init {
         scaleType = ScaleType.MATRIX
+    }
+
+    override fun setImageMatrix(matrix: Matrix?) {
+        super.setImageMatrix(matrix)
+        if (matrix != null) {
+            imageMatrixChangedListener?.invoke(matrix)
+        }
     }
 
     fun initialize(image: Bitmap, cropEdges: CropEdges) {
@@ -76,7 +91,13 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
         }
     }
 
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+    override fun onLayout(
+        changed: Boolean,
+        left: Int,
+        top: Int,
+        right: Int,
+        bottom: Int
+    ) {
         super.onLayout(changed, left, top, right, bottom)
         if (changed) {
             initializeMatrix()
@@ -91,14 +112,19 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(event: MotionEvent?): Boolean =
-        event
-            ?.let { modeConfig.onTouchEvent(it) }
-            ?: false
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (overlays == Overlays.HideCropMaskAndDrawCropAreaBlack || event == null) return false
+        return modeConfig.onTouchEvent(event)
+    }
+
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        modeConfig.onDraw(canvas)
+
+        when (overlays) {
+            Overlays.CropMask -> modeConfig.onDraw(canvas)
+            Overlays.HideCropMaskAndDrawCropAreaBlack -> canvas.drawRect(cropRect, blackPaint)
+        }
     }
 
     fun drawCropMask(canvas: Canvas) {
@@ -120,10 +146,18 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
         return cropEdges
     }
 
+    enum class Overlays {
+        CropMask,
+        HideCropMaskAndDrawCropAreaBlack
+    }
+
     companion object {
         private val maskPaint by threadUnsafeLazyPaint {
             color = 2870746142.toInt()
             style = Paint.Style.FILL
+        }
+        private val blackPaint by threadUnsafeLazyPaint {
+            color = Color.BLACK
         }
 
         /**
@@ -159,13 +193,13 @@ private fun Bitmap.createCenterFitMatrix(viewWidth: Int, viewHeight: Int): Matri
     }
 
 private fun View.expandVerticalTouchArea(px: Int) {
-    val parentView = parent as? ViewGroup
-        ?: return
-    parentView.post {
-        val rect = Rect()
-        getHitRect(rect)
-        rect.top -= px
-        rect.bottom += px
-        parentView.touchDelegate = TouchDelegate(rect, this)
+    (parent as? ViewGroup)?.let { parentView ->
+        parentView.post {
+            val rect = Rect()
+            getHitRect(rect)
+            rect.top -= px
+            rect.bottom += px
+            parentView.touchDelegate = TouchDelegate(rect, this)
+        }
     }
 }

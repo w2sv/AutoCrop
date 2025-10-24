@@ -1,7 +1,5 @@
 package com.w2sv.autocrop.ui.screen.cropinspection
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +19,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,31 +27,25 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.screen.cropinspection.components.CropPager
 import com.w2sv.autocrop.ui.screen.cropinspection.components.ProcessCropBundleDialog
-import com.w2sv.autocrop.ui.screen.cropinspection.components.transitionName
 import com.w2sv.autocrop.ui.theme.AppTheme
 import com.w2sv.autocrop.ui.util.compose.LocalNavController
+import com.w2sv.autocrop.ui.util.compose.bitmap
 import com.w2sv.autocrop.ui.util.compose.debounceClick
+import com.w2sv.autocrop.ui.util.compose.mockCropBundle
 import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
 import com.w2sv.composed.OnChange
-import com.w2sv.domain.model.Crop
 import com.w2sv.domain.model.CropBundle
-import com.w2sv.domain.model.CropEdges
-import com.w2sv.domain.model.ImageMimeType
-import com.w2sv.domain.model.Screenshot
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.delay
 
 @Composable
 fun CropInspectionScreen(
@@ -80,17 +71,17 @@ fun CropInspectionScreen(
     }
 
     // TODO: for dev only
-    LaunchedEffect(Unit) {
-        delay(1_000)
-        val transitionName = cropBundles[pagerState.currentPage].crop.transitionName
-        navController.navigate(
-            directions = CropInspectionFragmentDirections.navigateToCropAdjustmentScreen(
-                pagerState.currentPage,
-                transitionName
-            ),
-            navigatorExtras = FragmentNavigatorExtras(transitionNameToImageView.getValue(transitionName) to transitionName)
-        )
-    }
+    //    LaunchedEffect(Unit) {
+    //        delay(1_000)
+    //        val transitionName = cropBundles[pagerState.currentPage].crop.transitionName
+    //        navController.navigate(
+    //            directions = CropInspectionFragmentDirections.navigateToCropAdjustmentScreen(
+    //                pagerState.currentPage,
+    //                transitionName
+    //            ),
+    //            navigatorExtras = FragmentNavigatorExtras(transitionNameToImageView.getValue(transitionName) to transitionName)
+    //        )
+    //    }
 
     Scaffold(
         modifier = modifier,
@@ -100,21 +91,18 @@ fun CropInspectionScreen(
         floatingActionButton = {
             ProcedureFabRow(
                 onComparisonButtonClick = debounceClick {
-                    val transitionName = cropBundles[pagerState.currentPage].crop.transitionName
+                    val transitionName = cropBundles[pagerState.currentPage].id
                     navController.navigate(
-                        directions = CropInspectionFragmentDirections.navigateToComparisonScreen(pagerState.currentPage, transitionName),
+                        directions = CropInspectionFragmentDirections.navigateToComparisonScreen(pagerState.currentPage),
                         navigatorExtras = FragmentNavigatorExtras(
                             transitionNameToImageView.getValue(transitionName) to transitionName
                         )
                     )
                 },
                 onAdjustButtonClick = debounceClick {
-                    val transitionName = cropBundles[pagerState.currentPage].crop.transitionName
+                    val transitionName = cropBundles[pagerState.currentPage].id
                     navController.navigate(
-                        directions = CropInspectionFragmentDirections.navigateToCropAdjustmentScreen(
-                            pagerState.currentPage,
-                            transitionName
-                        ),
+                        directions = CropInspectionFragmentDirections.navigateToCropAdjustmentScreen(pagerState.currentPage),
                         navigatorExtras = FragmentNavigatorExtras(transitionNameToImageView.getValue(transitionName) to transitionName)
                     )
                 },
@@ -137,7 +125,7 @@ fun CropInspectionScreen(
             )
             CropPager(
                 state = pagerState,
-                getCrop = { cropBundles[it].crop },
+                getCropBundle = { cropBundles[it] },
                 exitAnimationPageIndex = exitAnimationPageIndex,
                 onExitAnimationFinished = {
                     exitAnimationPageIndex = null
@@ -155,9 +143,7 @@ fun CropInspectionScreen(
         ProcessCropBundleDialog(
             deleteScreenshots = deleteScreenshots,
             toggleDeleteScreenshots = toggleDeleteScreenshots,
-            onConfirmation = {
-                processCropBundleAt(index)
-            },
+            onConfirmation = { processCropBundleAt(index) },
             onDismissRequest = { showProcedureDialogForIndex = null }
         )
     }
@@ -230,30 +216,4 @@ private fun CropPagerScreenPrev() {
             modifier = Modifier.fillMaxSize()
         )
     }
-}
-
-private fun mockCropBundle(bitmap: Bitmap): CropBundle =
-    CropBundle(
-        Screenshot(
-            "".toUri(),
-            0,
-            Screenshot.MediaStoreData(0L, "", ImageMimeType.JPG, 0L)
-        ),
-        Crop(
-            bitmap,
-            CropEdges(0, 0),
-            -1,
-            0L
-        ),
-        listOf(),
-        0
-    )
-
-@Composable
-private fun bitmap(@DrawableRes res: Int): Bitmap {
-    val resources = LocalResources.current
-    return BitmapFactory.decodeResource(
-        resources,
-        res
-    )
 }

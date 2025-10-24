@@ -7,13 +7,11 @@ import android.view.MotionEvent.ACTION_CANCEL
 import android.view.MotionEvent.ACTION_DOWN
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
-import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnNextLayout
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
 import com.w2sv.androidutils.view.crossVisualize
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.databinding.ComparisonBinding
@@ -24,8 +22,8 @@ import com.w2sv.autocrop.ui.util.postponeEnterTransition
 import com.w2sv.autocrop.ui.util.registerOnBackPressedHandler
 import com.w2sv.autocrop.ui.util.showSystemBars
 import com.w2sv.autocrop.ui.util.view.getScaleY
-import com.w2sv.autocrop.ui.util.view.inflateTransition
-import com.w2sv.autocrop.ui.util.view.onTransitionEnd
+import com.w2sv.autocrop.ui.util.view.inflateSharedElementTransition
+import com.w2sv.autocrop.ui.util.view.onEnd
 import com.w2sv.autocrop.ui.util.view.setDebouncedOnClickListener
 import com.w2sv.autocrop.ui.views.FadeOutTextView
 import com.w2sv.kotlinutils.coroutines.flow.collectLatestOn
@@ -36,7 +34,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBinding::class.java) {
 
     private val viewModel by cropSessionInjectedViewModel<ComparisonViewModel, ComparisonViewModel.Factory>()
-    private val navArgs by navArgs<ComparisonFragmentArgs>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -46,10 +43,8 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
     }
 
     private fun cropEnterTransition(context: Context) =
-        inflateTransition(context, android.R.transition.move)?.apply {
-            setDuration(500)
-            setInterpolator(DecelerateInterpolator(1.5f))
-            onTransitionEnd {
+        inflateSharedElementTransition(context)
+            ?.onEnd {
                 // Show instructions after short delay
                 lifecycleScope.launchDelayed(200) {
                     viewModel.emitFadeOutTextArgs(
@@ -61,7 +56,6 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
                     )
                 }
             }
-        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition(view)
@@ -78,8 +72,8 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
 
             viewModel.imageType.observe(viewLifecycleOwner) {
                 when (it) {
-                    ImageType.Original -> crossVisualize(cropIv, screenshotIv)
-                    ImageType.Crop -> crossVisualize(screenshotIv, cropIv)
+                    ComparisonImageType.Original -> crossVisualize(cropIv, screenshotIv)
+                    ComparisonImageType.Crop -> crossVisualize(screenshotIv, cropIv)
                 }
             }
         }
@@ -87,7 +81,7 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
 
     private fun ComparisonBinding.initializeCropView() {
         cropIv.apply {
-            transitionName = navArgs.transitionName
+            transitionName = viewModel.sharedElementTransitionName
             setImageBitmap(viewModel.crop.bitmap)
         }
     }
@@ -111,14 +105,14 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
         root.setOnTouchListenerIgnoringSystemBarAreas { view, event ->
             when (event.actionMasked) {
                 ACTION_DOWN -> {
-                    viewModel.setImageType(ImageType.Original)
+                    viewModel.setImageType(ComparisonImageType.Original)
                     // Lets accessibility services know the view was clicked, which enables those services to react to it
                     view.performClick()
                     true
                 }
 
                 ACTION_UP, ACTION_CANCEL -> {
-                    viewModel.setImageType(ImageType.Crop)
+                    viewModel.setImageType(ComparisonImageType.Crop)
                     true
                 }
 
@@ -128,7 +122,7 @@ class ComparisonFragment : ViewBoundAppFragment<ComparisonBinding>(ComparisonBin
     }
 
     private fun onBack() {
-        viewModel.setImageType(ImageType.Crop, displayFadeOutText = false)
+        viewModel.setImageType(ComparisonImageType.Crop, displayFadeOutText = false)
         navController.popBackStack()
     }
 

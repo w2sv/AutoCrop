@@ -31,7 +31,7 @@
 
             <action
                 android:id="@+id/navigate_to_crop_pager_screen"
-                app:destination="@id/crop_adjustment_screen" />
+                app:destination="@id/crop_inspection_screen" />
         </fragment>
 
         <fragment
@@ -66,10 +66,6 @@
             <argument
                 android:name="cropBundleIndex"
                 app:argType="integer" />
-
-            <argument
-                android:name="transitionName"
-                app:argType="string" />
         </fragment>
 
         <fragment
@@ -80,11 +76,6 @@
                 android:name="cropBundleIndex"
                 app:argType="integer"
                 android:defaultValue="0"/>
-
-            <argument
-                android:name="transitionName"
-                app:argType="string"
-                android:defaultValue=""/>
         </fragment>
 
         <fragment

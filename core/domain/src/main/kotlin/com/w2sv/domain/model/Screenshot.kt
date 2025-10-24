@@ -13,7 +13,7 @@ data class Screenshot(val uri: Uri, val height: Int, val mediaStoreData: MediaSt
     @Parcelize
     data class MediaStoreData(val diskUsage: Long, val fileName: String, val mimeType: ImageMimeType, val id: Long) : Parcelable
 
-    fun getBitmap(contentResolver: ContentResolver): Bitmap =
+    fun loadBitmap(contentResolver: ContentResolver): Bitmap =
         contentResolver.loadBitmap(uri)!!
 
     sealed interface DeletionResult {

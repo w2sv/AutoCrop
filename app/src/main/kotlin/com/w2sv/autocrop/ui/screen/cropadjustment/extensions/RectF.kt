@@ -39,7 +39,11 @@ fun RectF.animateTo(
         start()
     }
 
-private fun lerp(start: Float, end: Float, @FloatRange(0.0, 1.0) fraction: Float) =
+private fun lerp(
+    start: Float,
+    end: Float,
+    @FloatRange(0.0, 1.0) fraction: Float
+) =
     start + (end - start) * fraction
 
 fun maxRectOf(a: RectF, b: RectF): RectF =

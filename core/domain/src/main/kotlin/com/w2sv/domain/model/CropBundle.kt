@@ -11,6 +11,8 @@ data class CropBundle(
     @CropSensitivity val cropSensitivity: Int
 ) : Parcelable {
 
+    val id: String get() = screenshot.mediaStoreData.id.toString()
+
     sealed interface CreationResult {
         @JvmInline
         value class Success(val cropBundle: CropBundle) : CreationResult

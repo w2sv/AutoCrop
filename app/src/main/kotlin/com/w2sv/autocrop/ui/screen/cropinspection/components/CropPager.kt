@@ -17,16 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.w2sv.autocrop.ui.util.compose.OnExitAnimationFinished
 import com.w2sv.composed.OnDispose
-import com.w2sv.domain.model.Crop
-
-val Crop.transitionName: String get() = hashCode().toString()
+import com.w2sv.domain.model.CropBundle
 
 private const val EXIT_ANIMATION_DURATION = 500
 
 @Composable
 fun CropPager(
     state: PagerState,
-    getCrop: (Int) -> Crop,
+    getCropBundle: (Int) -> CropBundle,
     exitAnimationPageIndex: Int?,
     onExitAnimationFinished: () -> Unit,
     onImageViewReady: (String, ImageView) -> Unit,
@@ -36,22 +34,25 @@ fun CropPager(
     HorizontalPager(
         state = state,
         modifier = modifier,
-        key = { getCrop(it).hashCode() }
+        key = { getCropBundle(it).id }
     ) { pageIndex ->
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             AnimatedVisibility(
                 visible = exitAnimationPageIndex != pageIndex,
                 enter = EnterTransition.None,
-                exit =
-                shrinkOut(animationSpec = tween(durationMillis = EXIT_ANIMATION_DURATION), shrinkTowards = Alignment.Center) + fadeOut(
+                exit = shrinkOut(
+                    animationSpec = tween(durationMillis = EXIT_ANIMATION_DURATION),
+                    shrinkTowards = Alignment.Center
+                ) + fadeOut(
                     animationSpec = tween(durationMillis = EXIT_ANIMATION_DURATION)
                 )
             ) {
                 OnExitAnimationFinished(onExitAnimationFinished)
-                val crop = getCrop(pageIndex)
+
+                val cropBundle = getCropBundle(pageIndex)
                 SharedElementImage(
-                    bitmap = crop.bitmap,
-                    transitionName = crop.transitionName,
+                    bitmap = cropBundle.crop.bitmap,
+                    transitionName = cropBundle.id,
                     onImageViewReady = onImageViewReady,
                     onImageViewDisposed = onImageViewDisposed
                 )

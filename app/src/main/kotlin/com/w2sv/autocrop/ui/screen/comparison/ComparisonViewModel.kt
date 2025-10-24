@@ -29,8 +29,9 @@ class ComparisonViewModel @AssistedInject constructor(
 
     private val cropBundle: CropBundle =
         cropSession.bundles.value[ComparisonFragmentArgs.fromSavedStateHandle(savedStateHandle).cropBundleIndex]
+    val sharedElementTransitionName = cropBundle.id
     val crop = cropBundle.crop
-    val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
+    val screenshotBitmap: Bitmap = cropBundle.screenshot.loadBitmap(contentResolver)
 
     private val _fadeOutTextArgs = MutableSharedFlow<FadeOutTextView.Args>()
     val fadeOutTextArgs: SharedFlow<FadeOutTextView.Args> = _fadeOutTextArgs.asSharedFlow()
@@ -39,10 +40,10 @@ class ComparisonViewModel @AssistedInject constructor(
         _fadeOutTextArgs.emit(args, viewModelScope)
     }
 
-    val imageType: LiveData<ImageType> get() = _imageType
-    private val _imageType = MutableLiveData(ImageType.Crop)
+    val imageType: LiveData<ComparisonImageType> get() = _imageType
+    private val _imageType = MutableLiveData(ComparisonImageType.Crop)
 
-    fun setImageType(value: ImageType, displayFadeOutText: Boolean = true) {
+    fun setImageType(value: ComparisonImageType, displayFadeOutText: Boolean = true) {
         _imageType.value = value
         if (displayFadeOutText) {
             emitFadeOutTextArgs(FadeOutTextView.Args(value.labelRes))

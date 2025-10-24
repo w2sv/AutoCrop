@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.w2sv.autocrop.ui.screen.CropSessionAccessingViewModelFactory
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.AdjustmentModeState
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.AdjustmentViewState
+import com.w2sv.autocrop.ui.util.view.SharedElementTransitionState
 import com.w2sv.cropping.cropping.crop
 import com.w2sv.cropping.session.CropSession
 import com.w2sv.domain.model.CropAdjustmentMode
@@ -30,7 +31,14 @@ class CropAdjustmentViewModel @AssistedInject constructor(
     private val bundleIndex = CropAdjustmentFragmentArgs.fromSavedStateHandle(savedStateHandle).cropBundleIndex
     private val cropBundle: CropBundle = cropSession.bundles.value[bundleIndex]
     private val originalEdges by cropBundle.crop::edges
-    val screenshotBitmap: Bitmap = cropBundle.screenshot.getBitmap(contentResolver)
+    private val imageBitmap: Bitmap = cropBundle.screenshot.loadBitmap(contentResolver)
+
+    private val _sharedElementTransitionState = MutableStateFlow(SharedElementTransitionState.Entering)
+    val sharedElementTransitionState = _sharedElementTransitionState.asStateFlow()
+
+    fun setSharedElementTransitionState(state: SharedElementTransitionState) {
+        _sharedElementTransitionState.value = state
+    }
 
     //    private val _viewState = preferencesRepository
     //        .cropAdjustmentMode
@@ -42,7 +50,10 @@ class CropAdjustmentViewModel @AssistedInject constructor(
     //        }
     private val _viewState = MutableStateFlow(
         AdjustmentViewState(
+            imageBitmap = imageBitmap,
+            cropBitmap = cropBundle.crop.bitmap,
             originalEdges = originalEdges,
+            sharedElementTransitionName = cropBundle.id,
             modeState = AdjustmentModeState.Manual(originalEdges)
         )
     )
@@ -79,14 +90,15 @@ class CropAdjustmentViewModel @AssistedInject constructor(
     //    }
 
     fun applyAdjustedEdges() {
+        val adjustedCrop = imageBitmap.crop(
+            cropBundle.screenshot.mediaStoreData.diskUsage,
+            checkNotNull(viewState.value.adjustedEdges)
+        )
+        _viewState.update { it.copy(adjustmentHasBeenApplied = true, cropBitmap = adjustedCrop.bitmap) }
+
         cropSession.update(
             index = bundleIndex,
-            newBundle = cropBundle.copy(
-                crop = screenshotBitmap.crop(
-                    cropBundle.screenshot.mediaStoreData.diskUsage,
-                    checkNotNull(viewState.value.adjustedEdges)
-                )
-            )
+            newBundle = cropBundle.copy(crop = adjustedCrop)
         )
     }
 
