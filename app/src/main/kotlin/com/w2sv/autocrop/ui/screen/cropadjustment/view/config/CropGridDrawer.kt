@@ -8,15 +8,9 @@ import com.w2sv.autocrop.ui.util.view.threadUnsafeLazyPaint
 
 class CropGridDrawer(private val context: Context) {
 
-    private val cropRectEdgePaint by threadUnsafeLazyPaint {
+    private val paint by threadUnsafeLazyPaint {
         color = context.getColor(com.w2sv.core.common.R.color.magenta_saturated)
         strokeWidth = 3f
-        style = Paint.Style.FILL
-    }
-
-    private val horizontalProtrusionPaint by threadUnsafeLazyPaint {
-        color = context.getColor(com.w2sv.core.common.R.color.magenta_saturated)
-        strokeWidth = 14f
         style = Paint.Style.FILL
     }
 
@@ -26,31 +20,37 @@ class CropGridDrawer(private val context: Context) {
     }
 
     private fun drawHorizontalEdges(canvas: Canvas, rect: RectF) {
-        canvas.drawLine(rect.left, rect.top, rect.right, rect.top, cropRectEdgePaint)
-        canvas.drawLine(rect.left, rect.bottom, rect.right, rect.bottom, cropRectEdgePaint)
+        canvas.drawLine(rect.left, rect.top, rect.right, rect.top, paint)
+        canvas.drawLine(rect.left, rect.bottom, rect.right, rect.bottom, paint)
     }
 
     private fun drawProtrusions(canvas: Canvas, rect: RectF) {
-        // Top
-        canvas.drawLine(
-            rect.centerX() - DELTA_CENTER_HORIZONTAL_EDGE_PROTRUSION,
-            rect.top,
-            rect.centerX() + DELTA_CENTER_HORIZONTAL_EDGE_PROTRUSION,
-            rect.top,
-            horizontalProtrusionPaint
+        // top
+        canvas.drawRoundRect(
+            rect.centerX() - PROTRUSION_WIDTH / 2f,
+            rect.top - PROTRUSION_HEIGHT / 2f,
+            rect.centerX() + PROTRUSION_WIDTH / 2f,
+            rect.top + PROTRUSION_HEIGHT / 2f,
+            PROTRUSION_CORNER_RADIUS,
+            PROTRUSION_CORNER_RADIUS,
+            paint
         )
 
-        // Bottom
-        canvas.drawLine(
-            rect.centerX() - DELTA_CENTER_HORIZONTAL_EDGE_PROTRUSION,
-            rect.bottom,
-            rect.centerX() + DELTA_CENTER_HORIZONTAL_EDGE_PROTRUSION,
-            rect.bottom,
-            horizontalProtrusionPaint
+        // bottom
+        canvas.drawRoundRect(
+            rect.centerX() - PROTRUSION_WIDTH / 2f,
+            rect.bottom - PROTRUSION_HEIGHT / 2f,
+            rect.centerX() + PROTRUSION_WIDTH / 2f,
+            rect.bottom + PROTRUSION_HEIGHT / 2f,
+            PROTRUSION_CORNER_RADIUS,
+            PROTRUSION_CORNER_RADIUS,
+            paint
         )
     }
 
     companion object {
-        private const val DELTA_CENTER_HORIZONTAL_EDGE_PROTRUSION = 32f
+        private const val PROTRUSION_WIDTH = 152f
+        private const val PROTRUSION_HEIGHT = 14f
+        private const val PROTRUSION_CORNER_RADIUS = PROTRUSION_HEIGHT / 2
     }
 }
