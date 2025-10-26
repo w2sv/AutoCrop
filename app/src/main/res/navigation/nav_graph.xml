@@ -74,8 +74,7 @@
 
             <argument
                 android:name="cropBundleIndex"
-                app:argType="integer"
-                android:defaultValue="0"/>
+                app:argType="integer"/>
         </fragment>
 
         <fragment

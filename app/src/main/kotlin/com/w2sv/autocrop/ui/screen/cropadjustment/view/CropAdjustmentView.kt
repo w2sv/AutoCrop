@@ -29,22 +29,20 @@ import com.w2sv.domain.model.CropEdges
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
-import slimber.log.i
 
 class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     AppCompatImageView(context, attrs, defStyleAttr) {
 
-    private lateinit var image: Bitmap
+    lateinit var image: Bitmap
 
-    lateinit var defaultTransformationMatrix: Matrix
+    lateinit var initialImageMatrx: Matrix
     var imageMatrixChangedListener: ((Matrix) -> Unit)? = null
 
     lateinit var imageRectBitmapSpace: RectF
-    val imageRect
-        get() = mapRect(imageRectBitmapSpace, matrix = imageMatrix)
+    val imageRect get() = mapRect(imageRectBitmapSpace, matrix = imageMatrix)
 
-    private lateinit var cropEdges: CropEdges
-    val cropEdgesRect: RectF get() = cropEdges.rectF(image.width)
+    lateinit var cropEdgesBitmapSpace: CropEdges
+    val cropRectBitmapSpace: RectF get() = cropEdgesBitmapSpace.rectF(image.width)
     val cropRect = RectF()
 
     var adjustmentModeStateChangedListener: (AdjustmentModeState) -> Unit = {}
@@ -61,6 +59,19 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
         scaleType = ScaleType.MATRIX
     }
 
+    fun initialize(image: Bitmap, cropEdges: CropEdges) {
+        this.image = image
+        setImageBitmap(image)
+        this.imageRectBitmapSpace = image.rectF()
+        this.cropEdgesBitmapSpace = cropEdges
+    }
+
+    fun updateFromEdges(edges: CropEdges) {
+        if (edges != cropEdgesBitmapSpace) {
+            modeConfig.updateFromEdges(edges)
+        }
+    }
+
     override fun setImageMatrix(matrix: Matrix?) {
         super.setImageMatrix(matrix)
         if (matrix != null) {
@@ -68,28 +79,9 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
         }
     }
 
-    fun initialize(image: Bitmap, cropEdges: CropEdges) {
-        this.image = image
-        setImageBitmap(image)
-        this.imageRectBitmapSpace = image.rectF()
-        this.cropEdges = cropEdges
-    }
-
-    fun updateFromEdges(edges: CropEdges) {
-        if (edges != cropEdges) {
-            i { "Updating from edges" }
-            cropEdges = edges
-            modeConfig.updateFromEdges(edges)
-        }
-    }
-
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-
-        if (!isInEditMode) {
-            setWillNotDraw(false)
-            expandVerticalTouchArea(EDGE_TOUCH_SLOP)
-        }
+        expandVerticalTouchArea(VERTICAL_EDGE_TOUCH_SLOP)
     }
 
     override fun onLayout(
@@ -101,15 +93,14 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
     ) {
         super.onLayout(changed, left, top, right, bottom)
         if (changed) {
-            initializeMatrix()
-        }
-    }
+            // Initialize imageMatrix
+            val matrix = image.createCenterFitMatrix(width, height)
+            imageMatrix = matrix
+            initialImageMatrx = matrix
 
-    private fun initializeMatrix() {
-        val matrix = image.createCenterFitMatrix(width, height)
-        imageMatrix = matrix
-        defaultTransformationMatrix = matrix
-        mapRect(cropEdgesRect, cropRect, matrix)
+            // Initialize the cropRect with the now computed matrix
+            mapRect(cropRectBitmapSpace, cropRect, matrix)
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -142,8 +133,8 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
 
     fun remappedCropEdges(): CropEdges {
         val cropRectImageDomain = mapRect(cropRect, RectF(), imageMatrix.inverse())
-        cropEdges = CropEdges(cropRectImageDomain.top.roundToInt(), cropRectImageDomain.bottom.roundToInt())
-        return cropEdges
+        cropEdgesBitmapSpace = CropEdges(cropRectImageDomain.top.roundToInt(), cropRectImageDomain.bottom.roundToInt())
+        return cropEdgesBitmapSpace
     }
 
     enum class Overlays {
@@ -167,7 +158,7 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
          * Used to make edge dragging easier when the user's finger is slightly
          * above or below the visible edge.
          */
-        const val EDGE_TOUCH_SLOP = 42
+        const val VERTICAL_EDGE_TOUCH_SLOP = 42
     }
 }
 

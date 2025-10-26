@@ -73,14 +73,14 @@ fun CropInspectionScreen(
     }
 
     // TODO: for dev only
-    LaunchedEffect(Unit) {
-        delay(1_000)
-        val transitionName = cropBundles[pagerState.currentPage].id
-        navController.navigate(
-            directions = CropInspectionFragmentDirections.navigateToCropAdjustmentScreen(pagerState.currentPage),
-            navigatorExtras = FragmentNavigatorExtras(transitionNameToImageView.getValue(transitionName) to transitionName)
-        )
-    }
+//    LaunchedEffect(Unit) {
+//        delay(500)
+//        val transitionName = cropBundles[pagerState.currentPage].id
+//        navController.navigate(
+//            directions = CropInspectionFragmentDirections.navigateToCropAdjustmentScreen(pagerState.currentPage),
+//            navigatorExtras = FragmentNavigatorExtras(transitionNameToImageView.getValue(transitionName) to transitionName)
+//        )
+//    }
 
     Scaffold(
         modifier = modifier,

@@ -23,7 +23,10 @@ class CropAnimator(private val view: CropAdjustmentView) {
         view.imageMatrix.animateTo(
             dst = dst,
             duration = ANIMATION_DURATION,
-            onUpdate = { matrix -> view.imageMatrix = matrix }
+            onUpdate = { matrix ->
+                // view.invalidate() automatically called when setting imageMatrix
+                view.imageMatrix = matrix
+            }
         )
     }
 
@@ -31,7 +34,10 @@ class CropAnimator(private val view: CropAdjustmentView) {
         view.cropRect.animateTo(
             dst = dst,
             duration = ANIMATION_DURATION,
-            onUpdate = { rect -> view.cropRect.set(rect) }
+            onUpdate = { rect ->
+                view.cropRect.set(rect)
+                view.invalidate()
+            }
         )
     }
 

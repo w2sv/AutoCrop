@@ -70,7 +70,7 @@ class DragHandler(
     }
 
     private fun onActionDown(event: MotionEvent) {
-        val edge = view.cropRect.getEdgeTouch(event, CropAdjustmentView.EDGE_TOUCH_SLOP.toFloat())
+        val edge = view.cropRect.getEdgeTouch(event, CropAdjustmentView.VERTICAL_EDGE_TOUCH_SLOP.toFloat())
 
         state = when {
             edge != null -> DragState.DraggingEdge(edge, view)
