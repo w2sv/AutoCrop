@@ -11,9 +11,9 @@ import com.w2sv.kotlinutils.threadUnsafeLazy
 
 class DragHandler(
     private val view: CropAdjustmentView,
-    private val onDragStarted: () -> Unit,
-    private val onDrag: () -> Unit,
-    private val onDragEnded: () -> Unit
+    private val onDragStarted: () -> Unit = {},
+    private val onDrag: () -> Unit = {},
+    private val onDragEnded: () -> Unit = {}
 ) {
     private var state: DragState? = null
 

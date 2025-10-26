@@ -49,10 +49,7 @@ fun inflateSharedElementTransition(
  * Based on Facebook's Origami design tool parameters.
  * [link](https://facebookarchive.github.io/rebound/)
  */
-class SpringInterpolator(
-    tension: Double,
-    friction: Double
-) : Interpolator {
+class SpringInterpolator(tension: Double, friction: Double) : Interpolator {
 
     private val spring: Spring by threadUnsafeLazy {
         SpringSystem

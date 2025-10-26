@@ -63,15 +63,10 @@ fun minRectOf(a: RectF, b: RectF) =
     )
 
 fun RectF.getEdgeTouch(touchEvent: MotionEvent, touchThreshold: Float): Edge? =
-    when {
-        touchEvent.x > right || touchEvent.x < left -> null
-
-        touchEvent.y < top + touchThreshold &&
-            touchEvent.y > top - touchThreshold -> Edge.TOP
-
-        touchEvent.y < bottom + touchThreshold &&
-            touchEvent.y > bottom - touchThreshold -> Edge.BOTTOM
-
+    if (touchEvent.x !in left..right) null
+    else when (touchEvent.y) {
+        in (top - touchThreshold)..(top + touchThreshold) -> Edge.TOP
+        in (bottom - touchThreshold)..(bottom + touchThreshold) -> Edge.BOTTOM
         else -> null
     }
 
