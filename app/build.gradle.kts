@@ -167,6 +167,7 @@ dependencies {
     lintChecks(libs.compose.lint.checks)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.opencv)
+    implementation(libs.facebook.rebound)
 
     // ---------------
     // unitTest

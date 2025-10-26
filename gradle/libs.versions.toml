@@ -23,6 +23,7 @@ lifecycle = "2.9.4"
 # @keep
 minSdk = "26"
 opencv = "4.12.0"
+facebook-rebound = "0.3.8"
 triplet-play = "3.12.1"
 versionCatalogUpdate = "1.0.1"
 
@@ -64,6 +65,7 @@ kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collec
 # @keep
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 opencv = { module = "org.opencv:opencv", version.ref = "opencv" }
+facebook-rebound = { module = "com.facebook.rebound:rebound", version.ref = "facebook-rebound" }
 simplestorage = "com.anggrayudi:storage:2.2.0"
 # other
 slimber = "com.github.PaulWoitaschek:Slimber:2.0.0"
