@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.graphics.Matrix
+import android.graphics.RectF
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.google.android.material.animation.MatrixEvaluator
 
@@ -24,6 +25,11 @@ fun Matrix.animateTo(
         start()
     }
 
+fun Matrix.mappedRect(src: RectF, dst: RectF = RectF()): RectF {
+    mapRect(dst, src)
+    return dst
+}
+
 fun Matrix.getScaleX(): Float =
     getValues()[Matrix.MSCALE_X]
 
@@ -42,7 +48,8 @@ fun Matrix.inverse(): Matrix {
     return inverse
 }
 
-private fun Matrix.getValues(): FloatArray =
-    FloatArray(9).apply {
-        getValues(this)
-    }
+private fun Matrix.getValues(): FloatArray {
+    val values = FloatArray(9)
+    getValues(values)
+    return values
+}

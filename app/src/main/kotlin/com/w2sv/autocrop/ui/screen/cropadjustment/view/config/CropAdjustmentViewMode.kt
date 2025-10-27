@@ -1,9 +1,9 @@
 package com.w2sv.autocrop.ui.screen.cropadjustment.view.config
 
 import android.graphics.Canvas
-import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
+import com.w2sv.autocrop.ui.screen.cropadjustment.view.BitmapSpaceRect
 
 interface CropAdjustmentViewMode {
 
@@ -13,5 +13,5 @@ interface CropAdjustmentViewMode {
      */
     fun onTouchEvent(event: MotionEvent): Boolean
     fun onDraw(canvas: Canvas)
-    fun displayCropRect(dstRect: RectF)
+    fun displayCropRect(rect: BitmapSpaceRect)
 }

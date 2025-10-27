@@ -2,10 +2,10 @@ package com.w2sv.autocrop.ui.screen.cropadjustment.view.config
 
 import android.graphics.Matrix
 import android.graphics.RectF
-import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.mapRect
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.maxRectOf
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.minRectOf
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.Edge
+import com.w2sv.autocrop.ui.util.view.mappedRect
 import kotlin.math.max
 
 data class DragLimits(val min: RectF, val max: RectF) {
@@ -38,7 +38,7 @@ data class DragLimits(val min: RectF, val max: RectF) {
                 RectF(0f, 0f, bitmapMinRectSize, bitmapMinRectSize)
             }
             val minSize = max(
-                mapRect(imageMinRect, RectF(), imageMatrix).width(),
+                imageMatrix.mappedRect(imageMinRect).width(),
                 minRectSize
             )
 

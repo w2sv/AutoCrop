@@ -8,12 +8,13 @@ import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.contains
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.getEdgeTouch
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.Edge
 import com.w2sv.autocrop.ui.screen.cropadjustment.view.CropAdjustmentView
+import com.w2sv.autocrop.ui.screen.cropadjustment.view.ViewSpaceRect
 import com.w2sv.kotlinutils.threadUnsafeLazy
 
 class DragHandler(
     private val view: ImageView,
-    private val cropRect: () -> RectF,
-    private val imageRect: () -> RectF,
+    private val cropRect: () -> ViewSpaceRect,
+    private val imageRect: () -> ViewSpaceRect,
     private val onDragStarted: () -> Unit = {},
     private val onDrag: () -> Unit = {},
     private val onDragEnded: () -> Unit = {}
@@ -115,7 +116,7 @@ class DragHandler(
 
     private sealed interface DragState {
         data class DraggingEdge(val edge: Edge, val dragLimits: DragLimits) : DragState {
-            constructor(edge: Edge, view: ImageView, cropRect: () -> RectF, imageRect: () -> RectF) : this(
+            constructor(edge: Edge, view: ImageView, cropRect: () -> ViewSpaceRect, imageRect: () -> ViewSpaceRect) : this(
                 edge = edge,
                 dragLimits = DragLimits.Factory(
                     draggedEdge = edge,

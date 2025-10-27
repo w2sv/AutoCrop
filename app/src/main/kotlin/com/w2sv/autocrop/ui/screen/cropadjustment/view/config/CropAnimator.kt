@@ -4,17 +4,19 @@ import android.graphics.Matrix
 import android.graphics.RectF
 import android.widget.ImageView
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.animateTo
+import com.w2sv.autocrop.ui.screen.cropadjustment.view.ViewSpaceRect
+import com.w2sv.autocrop.ui.screen.cropadjustment.view.viewSpace
 import com.w2sv.autocrop.ui.util.view.animateTo
 
-class CropAnimator(private val view: ImageView, private val cropRect: () -> RectF) {
+class CropAnimator(private val view: ImageView, private val cropRect: () -> ViewSpaceRect) {
 
     fun centerCropRect() {
-        val viewCenteredCropRect = cropRect().centeredAcross(view.width.toFloat(), view.height.toFloat())
+        val viewCenteredCropRect = cropRect().centeredAcross(view.width.toFloat(), view.height.toFloat()).viewSpace
         val dstMatrix = rectToRectMappingMatrix(src = cropRect(), dst = viewCenteredCropRect, srcMatrix = view.imageMatrix)
         animateTo(dstMatrix, viewCenteredCropRect)
     }
 
-    fun animateTo(dstMatrix: Matrix, dstCropRect: RectF) {
+    fun animateTo(dstMatrix: Matrix, dstCropRect: ViewSpaceRect) {
         animateCropRectTo(dstCropRect)
         animateImageTo(dstMatrix)
     }
@@ -30,12 +32,12 @@ class CropAnimator(private val view: ImageView, private val cropRect: () -> Rect
         )
     }
 
-    private fun animateCropRectTo(dst: RectF) {
+    private fun animateCropRectTo(dst: ViewSpaceRect) {
         cropRect().animateTo(
             dst = dst,
             duration = ANIMATION_DURATION,
             onUpdate = { rect ->
-                cropRect().set(rect)
+                cropRect().set(rect.viewSpace)
                 view.invalidate()
             }
         )

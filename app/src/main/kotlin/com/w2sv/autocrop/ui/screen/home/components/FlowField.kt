@@ -32,7 +32,7 @@ fun FlowFieldOrPreviewMock(modifier: Modifier = Modifier) {
 @Composable
 private fun FlowField(modifier: Modifier = Modifier) {
     val screenResolution = rememberScreenResolution()
-    val sketch = remember { PerlinNoiseFlowFieldSketch(screenResolution) }
+    val sketch = remember(screenResolution) { PerlinNoiseFlowFieldSketch(screenResolution) }
     ProcessingSketch(sketch, modifier)
 }
 

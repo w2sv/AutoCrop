@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
+import com.w2sv.autocrop.ui.screen.cropadjustment.view.ViewSpaceRect
 import com.w2sv.autocrop.ui.util.view.threadUnsafeLazyPaint
 
 class CropRectDrawer(private val context: Context) {
@@ -14,7 +15,7 @@ class CropRectDrawer(private val context: Context) {
         style = Paint.Style.FILL
     }
 
-    fun draw(canvas: Canvas, cropRect: RectF) {
+    fun draw(canvas: Canvas, cropRect: ViewSpaceRect) {
         drawHorizontalEdges(canvas, cropRect)
         drawProtrusions(canvas, cropRect)
     }

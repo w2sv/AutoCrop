@@ -9,7 +9,6 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
-import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.TouchDelegate
@@ -17,24 +16,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.graphics.ColorUtils
-import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.mapRect
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.rectF
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.AdjustmentModeState
 import com.w2sv.autocrop.ui.screen.cropadjustment.view.config.CropAdjustmentViewManualMode
 import com.w2sv.autocrop.ui.screen.cropadjustment.view.config.CropAdjustmentViewMode
 import com.w2sv.autocrop.ui.util.view.buildPath
 import com.w2sv.autocrop.ui.util.view.inverse
+import com.w2sv.autocrop.ui.util.view.mappedRect
 import com.w2sv.autocrop.ui.util.view.threadUnsafeLazyPaint
 import com.w2sv.domain.model.CropEdges
 import kotlin.math.min
-import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
 class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     AppCompatImageView(context, attrs, defStyleAttr) {
 
     private lateinit var imageState: ImageState
-    private lateinit var imageMatrixController: ImageMatrixController
+    private lateinit var coordinateMapper: ImageCoordinateMapper
     private lateinit var cropState: CropState
     private lateinit var mode: CropAdjustmentViewMode
 
@@ -54,16 +52,16 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
     fun initialize(image: Bitmap, cropEdges: CropEdges) {
         imageState = ImageState(image)
         setImageBitmap(image)
-        imageMatrixController = ImageMatrixController(
+        coordinateMapper = ImageCoordinateMapper(
             imageMatrix = { imageMatrix },
             setImageMatrix = { imageMatrix = it },
             imageState = imageState
         )
-        cropState = CropState(cropEdges, imageState.width, imageMatrixController)
+        cropState = CropState(cropEdges, imageState.width, coordinateMapper)
         mode = CropAdjustmentViewManualMode(
             view = this,
             cropState = cropState,
-            imageMatrixController = imageMatrixController,
+            coordinateMapper = coordinateMapper,
             emitModeState = { adjustmentModeStateChangedListener(it) }
         )
     }
@@ -99,7 +97,7 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
     ) {
         super.onLayout(changed, left, top, right, bottom)
         if (changed) {
-            imageMatrixController.initializeMatrix(width, height)
+            coordinateMapper.initializeMatrix(width, height)
             cropState.initializeCropRect()
         }
     }
@@ -115,7 +113,7 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
 
         when (overlays) {
             Overlays.CropMask -> {
-                OverlayRenderer.drawMask(canvas, imageMatrixController.imageRect, cropState.cropRect)
+                OverlayRenderer.drawMask(canvas, coordinateMapper.imageRect, cropState.cropRect)
                 mode.onDraw(canvas)
             }
 
@@ -128,56 +126,57 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
         HideCropMaskAndDrawCropAreaBlack
     }
 
-    class ImageMatrixController(
+    class ImageCoordinateMapper(
         private val imageMatrix: () -> Matrix,
         private val setImageMatrix: (Matrix) -> Unit,
         private val imageState: ImageState
     ) {
         /**
-         * A copy of the initial center fit matrix computed via [createCenterFitMatrix]. Used for returning to the initial view configuration.
+         * A copy of the initial center fit matrix computed via [computeCenterFitMatrix]. Used for returning to the initial view configuration.
          */
         lateinit var centerFitMatrix: Matrix
+            private set
 
         /**
          * The [ImageState.rect] in view space.
          */
-        val imageRect: RectF
-            get() = mapRect(imageState.rect)
+        val imageRect: ViewSpaceRect
+            get() = mapToViewSpace(imageState.rect)
 
         fun initializeMatrix(viewWidth: Int, viewHeight: Int) {
-            val matrix = imageState.bitmap.createCenterFitMatrix(viewWidth, viewHeight)
+            val matrix = imageState.bitmap.computeCenterFitMatrix(viewWidth, viewHeight)
             centerFitMatrix = matrix
             setImageMatrix(matrix)
         }
 
-        fun mapRect(src: RectF): RectF {
-            val dst = RectF()
-            imageMatrix().mapRect(dst, src)
-            return dst
-        }
+        fun mapToViewSpace(src: BitmapSpaceRect): ViewSpaceRect =
+            imageMatrix().mappedRect(src).viewSpace
 
-        fun mapRectInverse(src: RectF): RectF =
-            mapRect(src, RectF(), imageMatrix().inverse())
+        fun mapToBitmapSpace(src: ViewSpaceRect): BitmapSpaceRect =
+            imageMatrix().inverse().mappedRect(src).bitmapSpace
     }
 
-    class CropState(private var edges: CropEdges, private val imageWidth: Int, private val matrixController: ImageMatrixController) {
+    class CropState(private var edges: CropEdges, private val imageWidth: Int, private val matrixController: ImageCoordinateMapper) {
         /**
-         * The crop rect in bitmap space derived from [edges]. Used only for initialization of [cropRect]
+         * The crop rect in bitmap space derived from [edges].
          */
-        private val cropRectBitmapSpace: RectF
-            get() = edges.rectF(imageWidth)
+        private val cropRectBitmapSpace: BitmapSpaceRect
+            get() = edges.rectF(imageWidth).bitmapSpace
 
         /**
          * The current crop rect in view space.
          * Source of truth for the crop rect to be drawn.
          */
-        val cropRect = RectF()
+        val cropRect = ViewSpaceRect()
 
+        /**
+         * Initializes [cropRect] based on [matrixController].
+         */
         fun initializeCropRect() {
-            cropRect.set(matrixController.mapRect(cropRectBitmapSpace))
+            cropRect.set(matrixController.mapToViewSpace(cropRectBitmapSpace))
         }
 
-        fun updateEdgesIfDissimilar(edges: CropEdges, ifDissimilar: (RectF) -> Unit) {
+        fun updateEdgesIfDissimilar(edges: CropEdges, ifDissimilar: (BitmapSpaceRect) -> Unit) {
             if (this.edges != edges) {
                 this.edges = edges
                 ifDissimilar(cropRectBitmapSpace)
@@ -185,19 +184,15 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
         }
 
         /**
-         * Recomputes and returns the crop edges in bitmap space based on the current matrix.
+         * Recomputes and returns the crop edges in bitmap space based on [cropRect] and the current state of [matrixController].
          */
-        fun bitmapSpaceRemappedCropEdges(): CropEdges {
-            val cropRectBitmapSpace = matrixController.mapRectInverse(cropRect)
-            edges = CropEdges(
-                cropRectBitmapSpace.top.roundToInt(),
-                cropRectBitmapSpace.bottom.roundToInt()
-            )
+        fun remappedCropEdges(): CropEdges {
+            edges = matrixController.mapToBitmapSpace(cropRect).cropEdges()
             return edges
         }
     }
 
-    data class ImageState(var bitmap: Bitmap, val rect: RectF = bitmap.rectF(), val width: Int = bitmap.width)
+    data class ImageState(val bitmap: Bitmap, val rect: BitmapSpaceRect = bitmap.rectF().bitmapSpace, val width: Int = bitmap.width)
 
     private object OverlayRenderer {
         private val maskPaint by threadUnsafeLazyPaint {
@@ -210,8 +205,8 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
 
         fun drawMask(
             canvas: Canvas,
-            imageRect: RectF,
-            cropRect: RectF
+            imageRect: ViewSpaceRect,
+            cropRect: ViewSpaceRect
         ) {
             val path = buildPath {
                 fillType = Path.FillType.EVEN_ODD
@@ -221,7 +216,7 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
             canvas.drawPath(path, maskPaint)
         }
 
-        fun drawCropArea(canvas: Canvas, cropRect: RectF) {
+        fun drawCropArea(canvas: Canvas, cropRect: ViewSpaceRect) {
             canvas.drawRect(cropRect, blackPaint)
         }
     }
@@ -240,14 +235,14 @@ class CropAdjustmentView @JvmOverloads constructor(context: Context, attrs: Attr
 }
 
 /**
- * Creates a [Matrix] that scales and centers this bitmap to fit within the given view dimensions
+ * Computes a [Matrix] that scales and centers this bitmap to fit within the given view dimensions
  * while preserving aspect ratio.
  *
  * @param viewWidth the width of the view to fit into
  * @param viewHeight the height of the view to fit into
  * @return a new [Matrix] configured for center-fit transformation
  */
-private fun Bitmap.createCenterFitMatrix(viewWidth: Int, viewHeight: Int): Matrix =
+private fun Bitmap.computeCenterFitMatrix(viewWidth: Int, viewHeight: Int): Matrix =
     Matrix().apply {
         val scale = min(
             viewWidth / width.toFloat(),
