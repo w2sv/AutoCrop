@@ -1,9 +1,9 @@
 package com.w2sv.autocrop.ui.screen.cropadjustment.view.config
 
 import android.graphics.Canvas
+import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
-import com.w2sv.domain.model.CropEdges
 
 interface CropAdjustmentViewMode {
 
@@ -13,5 +13,5 @@ interface CropAdjustmentViewMode {
      */
     fun onTouchEvent(event: MotionEvent): Boolean
     fun onDraw(canvas: Canvas)
-    fun updateFromEdges(edges: CropEdges)
+    fun displayCropRect(dstRect: RectF)
 }

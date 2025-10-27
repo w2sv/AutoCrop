@@ -1,44 +1,47 @@
 package com.w2sv.autocrop.ui.screen.cropadjustment.view.config
 
-import android.content.Context
 import android.graphics.Canvas
+import android.graphics.RectF
 import android.view.MotionEvent
+import android.widget.ImageView
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.mapRect
-import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.rectF
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.AdjustmentModeState
 import com.w2sv.autocrop.ui.screen.cropadjustment.view.CropAdjustmentView
-import com.w2sv.domain.model.CropEdges
 import com.w2sv.kotlinutils.threadUnsafeLazy
 
-class CropAdjustmentViewManualMode(private val view: CropAdjustmentView, context: Context) : CropAdjustmentViewMode {
+class CropAdjustmentViewManualMode(
+    private val view: ImageView,
+    private val cropState: CropAdjustmentView.CropState,
+    private val imageMatrixController: CropAdjustmentView.ImageMatrixController,
+    private val emitModeState: (AdjustmentModeState) -> Unit
+) : CropAdjustmentViewMode {
 
-    private val animator = CropAnimator(view)
-    private val gridDrawer = CropGridDrawer(context)
+    private val animator = CropAnimator(view, cropRect = { cropState.cropRect })
+    private val gridDrawer = CropRectDrawer(view.context)
 
     private val dragHandler by threadUnsafeLazy {
         DragHandler(
             view = view,
-            onDrag = { view.emitModeState(AdjustmentModeState.Manual(view.remappedCropEdges())) },
+            cropRect = { cropState.cropRect },
+            imageRect = { imageMatrixController.imageRect },
+            onDrag = { emitModeState(AdjustmentModeState.Manual(cropState.bitmapSpaceRemappedCropEdges())) },
             onDragEnded = { animator.centerCropRect() }
         )
     }
 
     override fun onDraw(canvas: Canvas) {
-        view.drawCropMask(canvas)
-        gridDrawer.draw(canvas, view.cropRect)
+        gridDrawer.draw(canvas, cropState.cropRect)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean =
         dragHandler.onTouchEvent(event)
 
-    override fun updateFromEdges(edges: CropEdges) {
-        val dstMatrix = view.initialImageMatrx
-        val dstCropRectBitmapSpace = edges.rectF(view.image.width)
-        val dstCropRect = mapRect(src = dstCropRectBitmapSpace, matrix = dstMatrix)
+    override fun displayCropRect(dstRect: RectF) {
+        val dstMatrix = imageMatrixController.centerFitMatrix
+        val dstCropRect = mapRect(src = dstRect, matrix = dstMatrix)
         animator.animateTo(
             dstMatrix = dstMatrix,
             dstCropRect = dstCropRect
         )
-        view.cropEdgesBitmapSpace = edges
     }
 }

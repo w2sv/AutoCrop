@@ -6,7 +6,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import com.w2sv.autocrop.ui.util.view.threadUnsafeLazyPaint
 
-class CropGridDrawer(private val context: Context) {
+class CropRectDrawer(private val context: Context) {
 
     private val paint by threadUnsafeLazyPaint {
         color = context.getColor(com.w2sv.core.common.R.color.magenta_saturated)

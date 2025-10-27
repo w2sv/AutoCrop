@@ -3,6 +3,7 @@ package com.w2sv.autocrop.ui.screen.cropadjustment.view.config
 import android.graphics.RectF
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.widget.ImageView
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.contains
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.getEdgeTouch
 import com.w2sv.autocrop.ui.screen.cropadjustment.model.Edge
@@ -10,7 +11,9 @@ import com.w2sv.autocrop.ui.screen.cropadjustment.view.CropAdjustmentView
 import com.w2sv.kotlinutils.threadUnsafeLazy
 
 class DragHandler(
-    private val view: CropAdjustmentView,
+    private val view: ImageView,
+    private val cropRect: () -> RectF,
+    private val imageRect: () -> RectF,
     private val onDragStarted: () -> Unit = {},
     private val onDrag: () -> Unit = {},
     private val onDragEnded: () -> Unit = {}
@@ -30,23 +33,23 @@ class DragHandler(
                     distanceX: Float,
                     distanceY: Float
                 ): Boolean {
-                    var top = view.cropRect.top - distanceY
-                    var bottom = top + view.cropRect.height()
+                    var top = cropRect().top - distanceY
+                    var bottom = top + cropRect().height()
 
                     // Clamp vertical bounds
                     when {
-                        top < view.imageRect.top -> {
-                            top = view.imageRect.top
-                            bottom = top + view.cropRect.height()
+                        top < imageRect().top -> {
+                            top = imageRect().top
+                            bottom = top + cropRect().height()
                         }
 
-                        bottom > view.imageRect.bottom -> {
-                            bottom = view.imageRect.bottom
-                            top = bottom - view.cropRect.height()
+                        bottom > imageRect().bottom -> {
+                            bottom = imageRect().bottom
+                            top = bottom - cropRect().height()
                         }
                     }
 
-                    view.cropRect.apply {
+                    cropRect().apply {
                         this.top = top
                         this.bottom = bottom
                     }
@@ -70,11 +73,11 @@ class DragHandler(
     }
 
     private fun onActionDown(event: MotionEvent) {
-        val edge = view.cropRect.getEdgeTouch(event, CropAdjustmentView.VERTICAL_EDGE_TOUCH_SLOP.toFloat())
+        val edge = cropRect().getEdgeTouch(event, CropAdjustmentView.VERTICAL_EDGE_TOUCH_SLOP.toFloat())
 
         state = when {
-            edge != null -> DragState.DraggingEdge(edge, view)
-            view.cropRect.contains(event) -> DragState.DraggingCropRect.also {
+            edge != null -> DragState.DraggingEdge(edge, view, cropRect, imageRect)
+            cropRect().contains(event) -> DragState.DraggingCropRect.also {
                 gestureDetector.onTouchEvent(event)
             }
 
@@ -88,10 +91,10 @@ class DragHandler(
             when (state) {
                 is DragState.DraggingEdge -> {
                     when (state.edge) {
-                        Edge.TOP -> view.cropRect.top = event.y
-                        Edge.BOTTOM -> view.cropRect.bottom = event.y
+                        Edge.TOP -> cropRect().top = event.y
+                        Edge.BOTTOM -> cropRect().bottom = event.y
                     }
-                    state.dragLimits.applyTo(view.cropRect)
+                    state.dragLimits.applyTo(cropRect())
                 }
 
                 is DragState.DraggingCropRect -> {
@@ -112,13 +115,13 @@ class DragHandler(
 
     private sealed interface DragState {
         data class DraggingEdge(val edge: Edge, val dragLimits: DragLimits) : DragState {
-            constructor(edge: Edge, view: CropAdjustmentView) : this(
+            constructor(edge: Edge, view: ImageView, cropRect: () -> RectF, imageRect: () -> RectF) : this(
                 edge = edge,
                 dragLimits = DragLimits.Factory(
                     draggedEdge = edge,
-                    cropRect = view.cropRect,
+                    cropRect = cropRect(),
                     imageMatrix = view.imageMatrix,
-                    imageRect = view.imageRect,
+                    imageRect = imageRect(),
                     viewRect = RectF(0f, 0f, view.width.toFloat(), view.height.toFloat())
                 )
                     .compute()

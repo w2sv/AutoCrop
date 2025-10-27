@@ -2,15 +2,15 @@ package com.w2sv.autocrop.ui.screen.cropadjustment.view.config
 
 import android.graphics.Matrix
 import android.graphics.RectF
+import android.widget.ImageView
 import com.w2sv.autocrop.ui.screen.cropadjustment.extensions.animateTo
-import com.w2sv.autocrop.ui.screen.cropadjustment.view.CropAdjustmentView
 import com.w2sv.autocrop.ui.util.view.animateTo
 
-class CropAnimator(private val view: CropAdjustmentView) {
+class CropAnimator(private val view: ImageView, private val cropRect: () -> RectF) {
 
     fun centerCropRect() {
-        val viewCenteredCropRect = view.cropRect.centeredAcross(view.width.toFloat(), view.height.toFloat())
-        val dstMatrix = rectToRectMappingMatrix(src = view.cropRect, dst = viewCenteredCropRect, srcMatrix = view.imageMatrix)
+        val viewCenteredCropRect = cropRect().centeredAcross(view.width.toFloat(), view.height.toFloat())
+        val dstMatrix = rectToRectMappingMatrix(src = cropRect(), dst = viewCenteredCropRect, srcMatrix = view.imageMatrix)
         animateTo(dstMatrix, viewCenteredCropRect)
     }
 
@@ -31,11 +31,11 @@ class CropAnimator(private val view: CropAdjustmentView) {
     }
 
     private fun animateCropRectTo(dst: RectF) {
-        view.cropRect.animateTo(
+        cropRect().animateTo(
             dst = dst,
             duration = ANIMATION_DURATION,
             onUpdate = { rect ->
-                view.cropRect.set(rect)
+                cropRect().set(rect)
                 view.invalidate()
             }
         )
