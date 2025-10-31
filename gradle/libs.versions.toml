@@ -35,7 +35,7 @@ google-material = "com.google.android.material:material:1.12.0"
 junit5 = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
-lottie = "com.airbnb.android:lottie:6.6.7"
+lottie = "com.airbnb.android:lottie:6.7.1"
 simplestorage = "com.anggrayudi:storage:2.2.0"
 slimber = "com.github.PaulWoitaschek:Slimber:2.0.0"
 snacky = "com.github.matecode:Snacky:1.1.6"
