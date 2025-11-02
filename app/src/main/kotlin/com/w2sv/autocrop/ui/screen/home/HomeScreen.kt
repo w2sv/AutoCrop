@@ -32,7 +32,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,11 +42,12 @@ import com.w2sv.autocrop.ui.screen.home.components.FlowFieldOrPreviewMock
 import com.w2sv.autocrop.ui.screen.home.components.NavigationDrawer
 import com.w2sv.autocrop.ui.util.compose.LocalNavController
 import com.w2sv.autocrop.ui.util.compose.LottieButton
+import com.w2sv.autocrop.ui.util.compose.mockNavController
 import com.w2sv.autocrop.ui.util.navigateAnimated
 import com.w2sv.composed.extensions.rememberVisibilityPercentage
-import com.w2sv.core.common.R.string as Strings
 import com.w2sv.kotlinutils.coroutines.launchDelayed
 import kotlinx.coroutines.launch
+import com.w2sv.core.common.R.string as Strings
 
 @Composable
 fun HomeScreen(
@@ -99,7 +99,7 @@ private fun Prev() {
 @Composable
 private fun DrawerPrev() {
     HomeScreen(
-        navController = NavController(LocalContext.current),
+        navController = mockNavController(),
         drawerState = DrawerState(initialValue = DrawerValue.Open)
     )
 }

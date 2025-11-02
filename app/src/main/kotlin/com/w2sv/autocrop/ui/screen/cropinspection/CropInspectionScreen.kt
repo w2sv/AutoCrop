@@ -1,9 +1,7 @@
 package com.w2sv.autocrop.ui.screen.cropinspection
 
-import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -12,17 +10,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -32,7 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.w2sv.autocrop.R
 import com.w2sv.autocrop.ui.screen.cropinspection.components.CropPager
 import com.w2sv.autocrop.ui.screen.cropinspection.components.ProcessCropBundleDialog
@@ -41,6 +35,7 @@ import com.w2sv.autocrop.ui.util.compose.LocalNavController
 import com.w2sv.autocrop.ui.util.compose.bitmap
 import com.w2sv.autocrop.ui.util.compose.debounceClick
 import com.w2sv.autocrop.ui.util.compose.mockCropBundle
+import com.w2sv.autocrop.ui.util.compose.mockNavController
 import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
 import com.w2sv.composed.OnChange
 import com.w2sv.domain.model.CropBundle
@@ -57,11 +52,11 @@ fun CropInspectionScreen(
     modifier: Modifier = Modifier,
     navController: NavController = LocalNavController.current
 ) {
-    var exitAnimationPageIndex by remember { mutableStateOf<Int?>(null) }
-    val pagerState = rememberPagerState { cropBundles.size }
-    val pageIndication by remember { derivedStateOf { "${pagerState.currentPage + 1}/${pagerState.pageCount}" } }
-    var showProcedureDialogForIndex by rememberSaveable { mutableStateOf<Int?>(null) }
-    val transitionNameToImageView = remember { mutableMapOf<String, View>() }
+    val pagerState = rememberCropPagerState(
+        pageCount = cropBundles.size,
+        getCropTransitionName = { cropBundles[it].id }
+    )
+    var procedureDialogPage by rememberSaveable { mutableStateOf<Int?>(null) }
 
     // Navigate to exit screen if no crop bundles left
     OnChange(cropBundles.size) {
@@ -69,16 +64,6 @@ fun CropInspectionScreen(
             navController.navigateAnimatedAndPopCurrentDestination(CropInspectionFragmentDirections.navigateToExitScreen())
         }
     }
-
-    // TODO: for dev only
-//    LaunchedEffect(Unit) {
-//        delay(500)
-//        val transitionName = cropBundles[pagerState.currentPage].id
-//        navController.navigate(
-//            directions = CropInspectionFragmentDirections.navigateToCropAdjustmentScreen(pagerState.currentPage),
-//            navigatorExtras = FragmentNavigatorExtras(transitionNameToImageView.getValue(transitionName) to transitionName)
-//        )
-//    }
 
     Scaffold(
         modifier = modifier,
@@ -88,23 +73,19 @@ fun CropInspectionScreen(
         floatingActionButton = {
             ProcedureFabRow(
                 onComparisonButtonClick = debounceClick {
-                    val transitionName = cropBundles[pagerState.currentPage].id
                     navController.navigate(
                         directions = CropInspectionFragmentDirections.navigateToComparisonScreen(pagerState.currentPage),
-                        navigatorExtras = FragmentNavigatorExtras(
-                            transitionNameToImageView.getValue(transitionName) to transitionName
-                        )
+                        navigatorExtras = pagerState.navigatorExtras()
                     )
                 },
                 onAdjustButtonClick = debounceClick {
-                    val transitionName = cropBundles[pagerState.currentPage].id
                     navController.navigate(
                         directions = CropInspectionFragmentDirections.navigateToCropAdjustmentScreen(pagerState.currentPage),
-                        navigatorExtras = FragmentNavigatorExtras(transitionNameToImageView.getValue(transitionName) to transitionName)
+                        navigatorExtras = pagerState.navigatorExtras()
                     )
                 },
-                onSaveButtonClick = { showProcedureDialogForIndex = pagerState.currentPage },
-                onDiscardButtonClick = { exitAnimationPageIndex = pagerState.currentPage }
+                onSaveButtonClick = { procedureDialogPage = pagerState.currentPage },
+                onDiscardButtonClick = { pagerState.launchExitAnimationForCurrentPage() }
             )
         }
     ) { paddingValues ->
@@ -114,7 +95,7 @@ fun CropInspectionScreen(
                 .padding(paddingValues)
         ) {
             TopRow(
-                pageIndication = pageIndication,
+                pageIndication = pagerState.pageIndication,
                 onBackButtonClick = debounceClick { navController.popBackStack() },
                 modifier = Modifier
                     .fillMaxHeight(0.1f)
@@ -123,25 +104,18 @@ fun CropInspectionScreen(
             CropPager(
                 state = pagerState,
                 getCropBundle = { cropBundles[it] },
-                exitAnimationPageIndex = exitAnimationPageIndex,
-                onExitAnimationFinished = {
-                    exitAnimationPageIndex = null
-                    discardCropBundleAt(pagerState.currentPage)
-                },
-                onImageViewReady = { transitionName, imageView -> transitionNameToImageView[transitionName] = imageView },
-                onImageViewDisposed = { transitionNameToImageView.remove(it) },
+                onExitAnimationFinished = { discardCropBundleAt(pagerState.currentPage) },
                 modifier = Modifier.fillMaxHeight(0.8f)
             )
-            Box(modifier = Modifier.fillMaxHeight(0.1f))
         }
     }
 
-    showProcedureDialogForIndex?.let { index ->
+    procedureDialogPage?.let { index ->
         ProcessCropBundleDialog(
             deleteScreenshots = deleteScreenshots,
             toggleDeleteScreenshots = toggleDeleteScreenshots,
             onConfirmation = { processCropBundleAt(index) },
-            onDismissRequest = { showProcedureDialogForIndex = null }
+            onDismissRequest = { procedureDialogPage = null }
         )
     }
 }
@@ -210,7 +184,8 @@ private fun CropPagerScreenPrev() {
             discardCropBundleAt = {},
             deleteScreenshots = { true },
             toggleDeleteScreenshots = {},
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            navController = mockNavController()
         )
     }
 }

@@ -4,8 +4,10 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.core.net.toUri
+import androidx.navigation.NavController
 import com.w2sv.domain.model.Crop
 import com.w2sv.domain.model.CropBundle
 import com.w2sv.domain.model.CropEdges
@@ -37,3 +39,7 @@ fun bitmap(@DrawableRes res: Int): Bitmap {
         res
     )
 }
+
+@Composable
+fun mockNavController(): NavController =
+    NavController(LocalContext.current)
