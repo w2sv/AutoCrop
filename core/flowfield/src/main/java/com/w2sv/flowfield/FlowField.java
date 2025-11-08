@@ -10,8 +10,16 @@ import processing.core.PApplet;
 import processing.core.PVector;
 
 class FlowField {
+    private final int granularity;
+    private final float zOffIncrement;
+
     private final Map<Pair<Integer, Integer>, Float> xOffCache = new HashMap<>();
     private float zOff = 0;
+
+    public FlowField(int granularity, float zOffIncrement) {
+        this.granularity = granularity;
+        this.zOffIncrement = zOffIncrement;
+    }
 
     void updateAndApplyTo(Iterator<Particle> particles, PApplet parent) {
         HashMap<Pair<Integer, Integer>, PVector> forceCash = new HashMap<>();
@@ -19,15 +27,15 @@ class FlowField {
         particles.forEachRemaining((particle -> particle.applyForceVector(
                 getForceVector(
                         Pair.create(
-                                PApplet.floor(particle.pos.x / PerlinNoiseFlowFieldSketch.Config.FLOW_FIELD_GRANULARITY) + 1,
-                                PApplet.floor(particle.pos.y / PerlinNoiseFlowFieldSketch.Config.FLOW_FIELD_GRANULARITY) + 1
+                                PApplet.floor(particle.pos.x / granularity) + 1,
+                                PApplet.floor(particle.pos.y / granularity) + 1
                         ),
                         forceCash,
                         parent
                 )
         )));
 
-        zOff += PerlinNoiseFlowFieldSketch.Config.FLOW_FIELD_Z_OFF_INCREMENT;
+        zOff += zOffIncrement;
     }
 
     private PVector getForceVector(Pair<Integer, Integer> pos, HashMap<Pair<Integer, Integer>, PVector> forceCash, PApplet parent) {

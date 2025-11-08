@@ -1,6 +1,5 @@
 package com.w2sv.flowfield;
 
-import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
@@ -14,15 +13,11 @@ class Particle {
     private PVector acc;
     private boolean skipDraw = false;
 
-    public Particle(PApplet parent) {
-        vel = new PVector(
-                parent.random(PerlinNoiseFlowFieldSketch.Config.PARTICLE_START_VELOCITY_LOW, PerlinNoiseFlowFieldSketch.Config.PARTICLE_START_VELOCITY_HIGH),
-                parent.random(PerlinNoiseFlowFieldSketch.Config.PARTICLE_START_VELOCITY_LOW, PerlinNoiseFlowFieldSketch.Config.PARTICLE_START_VELOCITY_HIGH)
-        );
-        maxSpeed = parent.random(PerlinNoiseFlowFieldSketch.Config.PARTICLE_MAX_VELOCITY_LOW, PerlinNoiseFlowFieldSketch.Config.PARTICLE_MAX_VELOCITY_HIGH);
-
-        pos = new PVector(parent.random(flowFieldWidth), parent.random(flowFieldHeight));
-        previousPos = pos.copy();
+    public Particle(PVector vel, float maxSpeed, PVector startPos) {
+        this.vel = vel;
+        this.maxSpeed = maxSpeed;
+        this.pos = startPos;
+        this.previousPos = pos.copy();
     }
 
     public static void setFlowFieldDimensions(int width, int height) {
