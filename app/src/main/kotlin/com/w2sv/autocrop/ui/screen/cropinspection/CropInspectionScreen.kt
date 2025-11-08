@@ -3,6 +3,7 @@ package com.w2sv.autocrop.ui.screen.cropinspection
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -10,9 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
-import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -69,25 +71,7 @@ fun CropInspectionScreen(
         modifier = modifier,
         // Ignore system bars visibility so that no snapping behavior occurs during shared element transition from comparison screen,
         // during which system bars are unhidden
-        contentWindowInsets = WindowInsets.systemBarsIgnoringVisibility,
-        floatingActionButton = {
-            ProcedureFabRow(
-                onComparisonButtonClick = debounceClick {
-                    navController.navigate(
-                        directions = CropInspectionFragmentDirections.navigateToComparisonScreen(pagerState.currentPage),
-                        navigatorExtras = pagerState.navigatorExtras()
-                    )
-                },
-                onAdjustButtonClick = debounceClick {
-                    navController.navigate(
-                        directions = CropInspectionFragmentDirections.navigateToCropAdjustmentScreen(pagerState.currentPage),
-                        navigatorExtras = pagerState.navigatorExtras()
-                    )
-                },
-                onSaveButtonClick = { procedureDialogPage = pagerState.currentPage },
-                onDiscardButtonClick = { pagerState.launchExitAnimationForCurrentPage() }
-            )
-        }
+        contentWindowInsets = WindowInsets.systemBarsIgnoringVisibility
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -105,7 +89,26 @@ fun CropInspectionScreen(
                 state = pagerState,
                 getCropBundle = { cropBundles[it] },
                 onExitAnimationFinished = { discardCropBundleAt(pagerState.currentPage) },
-                modifier = Modifier.fillMaxHeight(0.8f)
+                modifier = Modifier.weight(1f)
+            )
+            ProcedureFabRow(
+                onComparisonButtonClick = debounceClick {
+                    navController.navigate(
+                        directions = CropInspectionFragmentDirections.navigateToComparisonScreen(pagerState.currentPage),
+                        navigatorExtras = pagerState.navigatorExtras()
+                    )
+                },
+                onAdjustButtonClick = debounceClick {
+                    navController.navigate(
+                        directions = CropInspectionFragmentDirections.navigateToCropAdjustmentScreen(pagerState.currentPage),
+                        navigatorExtras = pagerState.navigatorExtras()
+                    )
+                },
+                onSaveButtonClick = { procedureDialogPage = pagerState.currentPage },
+                onDiscardButtonClick = { pagerState.launchExitAnimationForCurrentPage() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
             )
         }
     }
@@ -146,15 +149,15 @@ private fun ProcedureFabRow(
     onDiscardButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceEvenly) {
         ProcedureFab(onComparisonButtonClick, R.drawable.ic_inspect_image_24, stringResource(com.w2sv.core.common.R.string.compare))
         ProcedureFab(onAdjustButtonClick, R.drawable.ic_crop_24, stringResource(com.w2sv.core.common.R.string.adjust))
-        ProcedureFab(onSaveButtonClick, R.drawable.ic_save_24, stringResource(com.w2sv.core.common.R.string.save))
         ProcedureFab(
             onDiscardButtonClick,
             com.w2sv.core.common.R.drawable.ic_cancel_24,
             stringResource(com.w2sv.core.common.R.string.discard)
         )
+        ProcedureFab(onSaveButtonClick, R.drawable.ic_check_24, stringResource(com.w2sv.core.common.R.string.save))
     }
 }
 
@@ -164,7 +167,7 @@ private fun ProcedureFab(
     @DrawableRes drawableRes: Int,
     label: String
 ) {
-    ExtendedFloatingActionButton(onClick = onClick) {
+    Button(onClick = onClick, shape = shapes.extraExtraLarge, contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp)) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(painterResource(drawableRes), contentDescription = null)
             Text(label)

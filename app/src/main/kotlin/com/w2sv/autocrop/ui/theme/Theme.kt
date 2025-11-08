@@ -53,5 +53,5 @@ private fun colorScheme(): ColorScheme {
     val magentaDark = colorResource(com.w2sv.core.common.R.color.magenta_dark)
     val purple = colorResource(com.w2sv.core.common.R.color.purple)
 
-    return darkColorScheme(onBackground = Color.White, onSurface = Color.White, primary = magentaBright)
+    return darkColorScheme(onBackground = Color.White, onSurface = Color.White, primary = magentaBright, onPrimary = Color.White)
 }
