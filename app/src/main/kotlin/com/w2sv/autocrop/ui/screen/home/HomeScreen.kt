@@ -1,9 +1,5 @@
 package com.w2sv.autocrop.ui.screen.home
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
@@ -21,7 +17,6 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -36,38 +31,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.w2sv.autocrop.R
-import com.w2sv.autocrop.ui.screen.home.components.FlowFieldOrPreviewMock
+import com.w2sv.autocrop.ui.designsystem.compose.FlowFieldOverlayingScaffold
 import com.w2sv.autocrop.ui.screen.home.components.NavigationDrawer
-import com.w2sv.autocrop.ui.util.compose.LocalNavController
+import com.w2sv.autocrop.ui.theme.AppTheme
 import com.w2sv.autocrop.ui.util.compose.LottieButton
-import com.w2sv.autocrop.ui.util.compose.mockNavController
-import com.w2sv.autocrop.ui.util.navigateAnimated
 import com.w2sv.composed.extensions.rememberVisibilityPercentage
-import com.w2sv.kotlinutils.coroutines.launchDelayed
-import kotlinx.coroutines.launch
 import com.w2sv.core.common.R.string as Strings
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    navController: NavController = LocalNavController.current,
-    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    launchImageSelection: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val launchImageSelection = rememberLaunchImageSelection { uris ->
-        // Give image picker time to close so that nav animation is properly displayed
-        scope.launchDelayed(200L) {
-            navController.navigateAnimated(HomeScreenFragmentDirections.navigateToCropScreen(uris.toTypedArray()))
-        }
-    }
     val drawerVisibilityPercentage by drawerState.rememberVisibilityPercentage()
 
     Box(modifier = modifier.fillMaxSize()) {
         NavigationDrawer(state = drawerState) {
-            Scaffold {
-                FlowFieldOrPreviewMock(modifier = Modifier.fillMaxSize())
+            FlowFieldOverlayingScaffold {
                 Foreground(
                     alpha = remember(drawerVisibilityPercentage) { 1 - drawerVisibilityPercentage },
                     onSelectScreenshotsButtonClick = launchImageSelection,
@@ -92,38 +76,13 @@ fun HomeScreen(
 @Preview
 @Composable
 private fun Prev() {
-    HomeScreen()
+    AppTheme { HomeScreen(launchImageSelection = {}) }
 }
 
 @Preview
 @Composable
 private fun DrawerPrev() {
-    HomeScreen(
-        navController = mockNavController(),
-        drawerState = DrawerState(initialValue = DrawerValue.Open)
-    )
-}
-
-@Composable
-private fun rememberLaunchImageSelection(onImagesSelected: (List<Uri>) -> Unit): () -> Unit {
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(),
-        onResult = { uris ->
-            if (uris.isNotEmpty()) {
-                onImagesSelected(uris)
-            }
-        }
-    )
-
-    return remember(launcher) {
-        {
-            launcher.launch(
-                PickVisualMediaRequest(
-                    ActivityResultContracts.PickVisualMedia.ImageOnly
-                )
-            )
-        }
-    }
+    AppTheme { HomeScreen(drawerState = DrawerState(initialValue = DrawerValue.Open), launchImageSelection = {}) }
 }
 
 @Composable

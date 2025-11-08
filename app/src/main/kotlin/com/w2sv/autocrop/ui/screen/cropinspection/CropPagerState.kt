@@ -23,7 +23,7 @@ data class CropPagerState(val pagerState: PagerState, private val getCropTransit
     var exitAnimationPage by mutableStateOf<Int?>(null)
         private set
 
-    val pageIndication by derivedStateOf { "${currentPage + if (pageCount > 0) 1 else 0}/${pageCount}" }
+    val pageIndication by derivedStateOf { "${currentPage + if (pageCount > 0) 1 else 0}/$pageCount" }
 
     fun launchExitAnimationForCurrentPage() {
         exitAnimationPage = currentPage

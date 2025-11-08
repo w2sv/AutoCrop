@@ -9,9 +9,9 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.commitNow
 import com.w2sv.autocrop.ui.util.findActivity
+import java.util.UUID
 import processing.android.PFragment
 import processing.core.PApplet
-import java.util.UUID
 
 @Composable
 fun ProcessingSketch(sketch: PApplet, modifier: Modifier = Modifier) {
@@ -33,7 +33,6 @@ fun ProcessingSketch(sketch: PApplet, modifier: Modifier = Modifier) {
                 val fragment = PFragment(sketch)
                 replace(view.id, fragment, fragmentTag)
             }
-
         },
         modifier = modifier
     )

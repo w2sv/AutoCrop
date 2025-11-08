@@ -9,17 +9,26 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.w2sv.autocrop.databinding.ActivityMainBinding
+import com.w2sv.autocrop.ui.util.resolution
+import com.w2sv.autocrop.ui.util.view.viewBinding
+import com.w2sv.flowfield.PerlinNoiseFlowFieldSketch
 import com.w2sv.kotlinutils.coroutines.flow.collectOn
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
+import processing.android.PFragment
 import slimber.log.i
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
+    private val binding by viewBinding(ActivityMainBinding::inflate)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        inflateFlowField()
 
         if (BuildConfig.DEBUG) {
             findNavController(R.id.nav_host_fragment).apply {
@@ -29,6 +38,17 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 setupBackStackLogging(lifecycleScope)
             }
         }
+    }
+
+    private fun inflateFlowField() {
+        val resolution = windowManager.resolution
+        supportFragmentManager
+            .beginTransaction()
+            .add(
+                binding.flowFieldCanvas.id,
+                PFragment(PerlinNoiseFlowFieldSketch(resolution.x, resolution.y))
+            )
+            .commitAllowingStateLoss() // Fixes java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
     }
 }
 
