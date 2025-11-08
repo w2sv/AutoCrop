@@ -4,7 +4,10 @@
 
 package com.w2sv.flowfield;
 
-import java.util.ArrayList;
+import com.w2sv.flowfield.helper.ColorHandler;
+import com.w2sv.flowfield.helper.ColorIntensityReducer;
+import com.w2sv.flowfield.helper.FpsLogger;
+
 import java.util.Set;
 
 import processing.core.PApplet;
@@ -13,9 +16,10 @@ import processing.core.PVector;
 public class PerlinNoiseFlowFieldSketch extends PApplet {
 
     private final FlowField flowfield = new FlowField(Config.FLOW_FIELD_GRANULARITY, Config.FLOW_FIELD_Z_OFF_INCREMENT);
-    private final ArrayList<Particle> particles = new ArrayList<>();
-    private final AlphaDropper alphaDropper = new AlphaDropper(Config.ALPHA_DROP_PERIOD);
-    private final ColorHandler colorHandler = new ColorHandler(Config.PARTICLE_COLOR_CHANGE_PERIOD, Config.PARTICLE_COLORS, Config.PARTICLE_STROKE_ALPHA);
+    private final Particle[] particles = new Particle[Config.N_PARTICLES];
+    private final ColorIntensityReducer colorIntensityReducer = new ColorIntensityReducer(Config.ALPHA_DROP_PERIOD, () -> g);
+    private final ColorHandler colorHandler = new ColorHandler(Config.PARTICLE_COLOR_CHANGE_PERIOD, Config.PARTICLE_COLORS, Config.PARTICLE_STROKE_ALPHA, () -> g);
+    private final FpsLogger fpsLogger = new FpsLogger(1_000, System.out::println);
 
     public PerlinNoiseFlowFieldSketch(int width, int height) {
         this.width = width;
@@ -37,32 +41,34 @@ public class PerlinNoiseFlowFieldSketch extends PApplet {
         colorHandler.setStrokeColor(g);
         g.strokeWeight(Config.PARTICLE_STROKE_WEIGHT);
 
-        // initialize particles
-        Particle.setFlowFieldDimensions(width, height);
+        initializeParticles();
+    }
 
+    private void initializeParticles() {
         for (int i = 0; i < Config.N_PARTICLES; i++) {
-            particles.add(
-                new Particle(
-                    new PVector(
-                        random(Config.PARTICLE_START_VELOCITY_LOW, Config.PARTICLE_START_VELOCITY_HIGH),
-                        random(Config.PARTICLE_START_VELOCITY_LOW, Config.PARTICLE_START_VELOCITY_HIGH)
-                    ),
-                    random(Config.PARTICLE_MAX_VELOCITY_LOW, Config.PARTICLE_MAX_VELOCITY_HIGH),
-                    new PVector(random(width), random(height))
-                )
+            particles[i] = new Particle(
+                new PVector(
+                    random(Config.PARTICLE_START_VELOCITY_LOW, Config.PARTICLE_START_VELOCITY_HIGH),
+                    random(Config.PARTICLE_START_VELOCITY_LOW, Config.PARTICLE_START_VELOCITY_HIGH)
+                ),
+                random(Config.PARTICLE_MAX_VELOCITY_LOW, Config.PARTICLE_MAX_VELOCITY_HIGH),
+                new PVector(random(width), random(height))
             );
         }
     }
 
     @Override
     public void draw() {
-        flowfield.updateAndApplyTo(particles.iterator(), this);
+        fpsLogger.run(frameRate, millis());
 
-        alphaDropper.dropAlphaIfDue(millis(), g);
-        colorHandler.changeColorIfDue(millis(), g);
+        // TODO: loop only once over particles
+        flowfield.updateAndApplyTo(particles, this);
+
+        colorIntensityReducer.reduceColorIntensitiesIfPeriodElapsed(millis());
+        colorHandler.changeColorIfPeriodElapsed(millis());
 
         for (Particle p : particles) {
-            p.update();
+            p.update(width, height);
             p.draw(g);
         }
     }

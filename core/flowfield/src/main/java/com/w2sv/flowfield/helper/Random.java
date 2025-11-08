@@ -1,4 +1,4 @@
-package com.w2sv.flowfield;
+package com.w2sv.flowfield.helper;
 
 import java.util.ArrayList;
 import java.util.Set;

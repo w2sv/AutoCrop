@@ -3,7 +3,6 @@ package com.w2sv.flowfield;
 import android.util.Pair;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import processing.core.PApplet;
@@ -21,19 +20,21 @@ class FlowField {
         this.zOffIncrement = zOffIncrement;
     }
 
-    void updateAndApplyTo(Iterator<Particle> particles, PApplet parent) {
+    void updateAndApplyTo(Particle[] particles, PApplet parent) {
         HashMap<Pair<Integer, Integer>, PVector> forceCash = new HashMap<>();
 
-        particles.forEachRemaining((particle -> particle.applyForceVector(
+        for (Particle p : particles) {
+            p.applyForceVector(
                 getForceVector(
-                        Pair.create(
-                                PApplet.floor(particle.pos.x / granularity) + 1,
-                                PApplet.floor(particle.pos.y / granularity) + 1
-                        ),
-                        forceCash,
-                        parent
+                    Pair.create(
+                        PApplet.floor(p.pos.x / granularity) + 1,
+                        PApplet.floor(p.pos.y / granularity) + 1
+                    ),
+                    forceCash,
+                    parent
                 )
-        )));
+            );
+        }
 
         zOff += zOffIncrement;
     }

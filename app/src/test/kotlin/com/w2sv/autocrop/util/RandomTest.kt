@@ -1,6 +1,6 @@
 package com.w2sv.autocrop.util
 
-import com.w2sv.flowfield.Random
+import com.w2sv.flowfield.helper.Random
 import junit.framework.TestCase.assertTrue
 import org.junit.Test
 

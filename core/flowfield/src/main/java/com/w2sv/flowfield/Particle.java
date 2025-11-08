@@ -4,13 +4,11 @@ import processing.core.PGraphics;
 import processing.core.PVector;
 
 class Particle {
-    private static int flowFieldWidth;
-    private static int flowFieldHeight;
     private final PVector previousPos;
     private final PVector vel;
     private final float maxSpeed;
     PVector pos;
-    private PVector acc;
+    private PVector acc; // TODO: dont accelerate; just pick velocity and stick with it
     private boolean skipDraw = false;
 
     public Particle(PVector vel, float maxSpeed, PVector startPos) {
@@ -20,19 +18,14 @@ class Particle {
         this.previousPos = pos.copy();
     }
 
-    public static void setFlowFieldDimensions(int width, int height) {
-        Particle.flowFieldWidth = width;
-        Particle.flowFieldHeight = height;
-    }
-
     void applyForceVector(PVector v) {
         acc = v;
     }
 
-    public void update() {
+    public void update(int xMax, int yMax) {
         pos.add(vel);
 
-        if (invertPosEdgesIfNecessary()) {
+        if (invertPosEdgesIfNecessary(xMax, yMax)) {
             skipDraw = true;
         }
 
@@ -42,24 +35,24 @@ class Particle {
     /**
      * @return boolean: whether any pos-coordinate has been modified to correspond to opposing display edge
      */
-    private boolean invertPosEdgesIfNecessary() {
+    private boolean invertPosEdgesIfNecessary(int xMax, int yMax) {
         boolean invertedEdge = false;
 
         // x-edges
-        if (pos.x > flowFieldWidth) {
+        if (pos.x > xMax) {
             pos.x = 0;
             invertedEdge = true;
         } else if (pos.x < 0) {
-            pos.x = flowFieldWidth;
+            pos.x = xMax;
             invertedEdge = true;
         }
 
         // y-edges
-        if (pos.y > flowFieldHeight) {
+        if (pos.y > yMax) {
             pos.y = 0;
             invertedEdge = true;
         } else if (pos.y < 0) {
-            pos.y = flowFieldHeight;
+            pos.y = yMax;
             invertedEdge = true;
         }
 
