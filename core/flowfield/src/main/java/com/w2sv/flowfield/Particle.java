@@ -1,75 +1,71 @@
 package com.w2sv.flowfield;
 
+import static processing.core.PApplet.cos;
+import static processing.core.PApplet.sin;
+
 import processing.core.PGraphics;
 import processing.core.PVector;
 
 class Particle {
-    private final PVector previousPos;
     private final PVector vel;
+    private final PVector acc = new PVector();
+    private final PVector previousPos = new PVector();
     private final float maxSpeed;
+
     PVector pos;
-    private PVector acc; // TODO: dont accelerate; just pick velocity and stick with it
     private boolean skipDraw = false;
 
     public Particle(PVector vel, float maxSpeed, PVector startPos) {
         this.vel = vel;
         this.maxSpeed = maxSpeed;
         this.pos = startPos;
-        this.previousPos = pos.copy();
-    }
-
-    void applyForceVector(PVector v) {
-        acc = v;
-    }
-
-    public void update(int xMax, int yMax) {
-        pos.add(vel);
-
-        if (invertPosEdgesIfNecessary(xMax, yMax)) {
-            skipDraw = true;
-        }
-
-        vel.add(acc).limit(maxSpeed);
+        this.previousPos.set(startPos);
     }
 
     /**
-     * @return boolean: whether any pos-coordinate has been modified to correspond to opposing display edge
+     * Updates position, handles edge wrapping, and applies acceleration.
      */
-    private boolean invertPosEdgesIfNecessary(int xMax, int yMax) {
-        boolean invertedEdge = false;
+    public void update(float angle, int width, int height) {
+        acc.set(cos(angle), sin(angle));
+        vel.add(acc).limit(maxSpeed);
+        pos.add(vel);
+        skipDraw = wrapPositionIfOutOfBounds(width, height);
+    }
 
-        // x-edges
-        if (pos.x > xMax) {
-            pos.x = 0;
-            invertedEdge = true;
+    /**
+     * Wraps the particle around when it leaves the screen bounds.
+     * Returns true if position was wrapped (to skip drawing the line).
+     */
+    private boolean wrapPositionIfOutOfBounds(int width, int height) {
+        boolean wrapped = false;
+
+        if (pos.x >= width) {
+            pos.x -= width;
+            wrapped = true;
         } else if (pos.x < 0) {
-            pos.x = xMax;
-            invertedEdge = true;
+            pos.x += width;
+            wrapped = true;
         }
 
-        // y-edges
-        if (pos.y > yMax) {
-            pos.y = 0;
-            invertedEdge = true;
+        if (pos.y >= height) {
+            pos.y -= height;
+            wrapped = true;
         } else if (pos.y < 0) {
-            pos.y = yMax;
-            invertedEdge = true;
+            pos.y += height;
+            wrapped = true;
         }
 
-        return invertedEdge;
+        return wrapped;
     }
 
+    /**
+     * Draws a trail line from the previous to the current position.
+     */
     public void draw(PGraphics canvas) {
-        if (skipDraw)
-            skipDraw = false;
-        else
+        if (!skipDraw) {
             canvas.line(pos.x, pos.y, previousPos.x, previousPos.y);
-
-        updatePreviousPos();
-    }
-
-    private void updatePreviousPos() {
-        previousPos.x = pos.x;
-        previousPos.y = pos.y;
+        }
+        skipDraw = false;
+        previousPos.set(pos);
     }
 }

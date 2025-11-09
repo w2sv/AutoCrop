@@ -28,7 +28,10 @@ public class PerlinNoiseFlowFieldSketch extends PApplet {
 
     @Override
     public void settings() {
-        size(width, height, JAVA2D);
+        // Use P3D for hardware acceleration and higher performance,
+        // even though only 2D rendering is used. P3D runs on OpenGL,
+        // while JAVA2D is CPU-bound and much slower for large particle counts.
+        size(width, height, P3D);
     }
 
     @Override
@@ -61,16 +64,16 @@ public class PerlinNoiseFlowFieldSketch extends PApplet {
     public void draw() {
         fpsLogger.run(frameRate, millis());
 
-        // TODO: loop only once over particles
-        flowfield.updateAndApplyTo(particles, this);
+        flowfield.prepareFrame();
+
+        for (Particle p : particles) {
+            float forceAngle = flowfield.forceAngle(p.pos, this);
+            p.update(forceAngle, width, height);
+            p.draw(g);
+        }
 
         colorIntensityReducer.reduceColorIntensitiesIfPeriodElapsed(millis());
         colorHandler.changeColorIfPeriodElapsed(millis());
-
-        for (Particle p : particles) {
-            p.update(width, height);
-            p.draw(g);
-        }
     }
 
     static class Config {
