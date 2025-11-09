@@ -1,5 +1,6 @@
 package com.w2sv.flowfield;
 
+import static com.w2sv.flowfield.PerlinNoiseFlowFieldSketch.Config.PARTICLE_STROKE_ALPHA;
 import static processing.core.PApplet.cos;
 import static processing.core.PApplet.sin;
 
@@ -11,15 +12,17 @@ class Particle {
     private final PVector acc = new PVector();
     private final PVector previousPos = new PVector();
     private final float maxSpeed;
+    private final int color;
 
     PVector pos;
     private boolean skipDraw = false;
 
-    public Particle(PVector vel, float maxSpeed, PVector startPos) {
+    public Particle(PVector vel, float maxSpeed, PVector startPos, int color) {
         this.vel = vel;
         this.maxSpeed = maxSpeed;
         this.pos = startPos;
         this.previousPos.set(startPos);
+        this.color = color;
     }
 
     /**
@@ -63,6 +66,7 @@ class Particle {
      */
     public void draw(PGraphics canvas) {
         if (!skipDraw) {
+            canvas.stroke(color, PARTICLE_STROKE_ALPHA);
             canvas.line(pos.x, pos.y, previousPos.x, previousPos.y);
         }
         skipDraw = false;

@@ -7,6 +7,7 @@ package com.w2sv.flowfield;
 import com.w2sv.flowfield.helper.ColorHandler;
 import com.w2sv.flowfield.helper.ColorIntensityReducer;
 import com.w2sv.flowfield.helper.FpsLogger;
+import com.w2sv.flowfield.helper.Random;
 
 import java.util.Set;
 
@@ -41,7 +42,7 @@ public class PerlinNoiseFlowFieldSketch extends PApplet {
         frameRate(120);
         background(Config.BACKGROUND_COLOR);
 
-        colorHandler.setStrokeColor(g);
+//        colorHandler.setStrokeColor(g);
         g.strokeWeight(Config.PARTICLE_STROKE_WEIGHT);
 
         initializeParticles();
@@ -55,7 +56,8 @@ public class PerlinNoiseFlowFieldSketch extends PApplet {
                     random(Config.PARTICLE_START_VELOCITY_LOW, Config.PARTICLE_START_VELOCITY_HIGH)
                 ),
                 random(Config.PARTICLE_MAX_VELOCITY_LOW, Config.PARTICLE_MAX_VELOCITY_HIGH),
-                new PVector(random(width), random(height))
+                new PVector(random(width), random(height)),
+                Random.randomElement(Config.PARTICLE_COLORS)
             );
         }
     }
@@ -73,7 +75,7 @@ public class PerlinNoiseFlowFieldSketch extends PApplet {
         }
 
         colorIntensityReducer.reduceColorIntensitiesIfPeriodElapsed(millis());
-        colorHandler.changeColorIfPeriodElapsed(millis());
+//        colorHandler.changeColorIfPeriodElapsed(millis());
     }
 
     static class Config {
@@ -87,8 +89,8 @@ public class PerlinNoiseFlowFieldSketch extends PApplet {
         static final float PARTICLE_STROKE_ALPHA = 102;
         static final int PARTICLE_STROKE_WEIGHT = 2;
         static final Set<Integer> PARTICLE_COLORS = Set.of(
-            0xFFBC275E,  // magenta bright
-            0xFF911945,  // magenta saturated
+//            0xFFBC275E,  // magenta bright
+//            0xFF911945,  // magenta saturated
             0xFF701145,  // magenta dark
             0xFFB00020,  // red
             0xFF6B13B5,  // purple
