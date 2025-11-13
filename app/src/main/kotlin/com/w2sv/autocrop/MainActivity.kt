@@ -17,6 +17,7 @@ import com.w2sv.kotlinutils.coroutines.flow.collectOn
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import processing.android.PFragment
+import processing.core.PApplet
 import slimber.log.i
 
 @AndroidEntryPoint
@@ -24,14 +25,33 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
+    private var pFragment: PFragment? = null
+    private var sketchPaused = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
         inflateFlowField()
+        val navController = findNavController(R.id.nav_host_fragment)
+            .apply {
+                addOnDestinationChangedListener { _, destination, _ ->
+                    when (destination.id) {
+                        R.id.crop_inspection_screen -> {
+                            pFragment?.sketch?.noLoop()
+                            sketchPaused = true
+                        }
+
+                        R.id.home_screen if (sketchPaused) -> {
+                            inflateFlowField()
+                            sketchPaused = false
+                        }
+                    }
+                }
+            }
 
         if (BuildConfig.DEBUG) {
-            findNavController(R.id.nav_host_fragment).apply {
+            navController.apply {
                 if (savedInstanceState == null && BuildConfig.START_WITH_CROP_SCREEN) {
                     inflateGraphWithStartDestination(R.id.crop_nav_graph)
                 }
@@ -40,13 +60,18 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
     }
 
-    private fun inflateFlowField() {
+    private fun flowFieldSketch(): PApplet {
         val resolution = windowManager.resolution
+        return PerlinNoiseFlowFieldSketch(resolution.x, resolution.y)
+    }
+
+    private fun inflateFlowField() {
+        pFragment = PFragment(flowFieldSketch())
         supportFragmentManager
             .beginTransaction()
-            .add(
+            .replace(
                 binding.flowFieldCanvas.id,
-                PFragment(PerlinNoiseFlowFieldSketch(resolution.x, resolution.y))
+                requireNotNull(pFragment)
             )
             .commitAllowingStateLoss() // Fixes java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
     }
