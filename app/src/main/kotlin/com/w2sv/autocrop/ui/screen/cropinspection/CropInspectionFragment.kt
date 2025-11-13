@@ -8,7 +8,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.w2sv.autocrop.ui.ComposeAppFragment
 import com.w2sv.autocrop.ui.screen.cropSessionInjectedViewModel
+import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
 import com.w2sv.autocrop.ui.util.postponeEnterTransition
+import com.w2sv.composed.OnChange
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.toImmutableList
 
@@ -26,6 +28,13 @@ class CropInspectionFragment : ComposeAppFragment() {
         val context = LocalContext.current
         val deleteScreenshots by viewModel.deleteScreenshots.collectAsStateWithLifecycle()
         val cropBundles by viewModel.cropBundles.collectAsStateWithLifecycle()
+
+        // Navigate to exit screen if no crop bundles left
+        OnChange(cropBundles.size) {
+            if (it == 0) {
+                navController.navigateAnimatedAndPopCurrentDestination(CropInspectionFragmentDirections.navigateToExitScreen())
+            }
+        }
 
         CropInspectionScreen(
             cropBundles = cropBundles.toImmutableList(),

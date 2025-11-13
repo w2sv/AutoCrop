@@ -46,5 +46,5 @@ data class CropPagerState(val pagerState: PagerState, private val getCropTransit
 @Composable
 fun rememberCropPagerState(pageCount: Int, getCropTransitionName: (Int) -> String): CropPagerState {
     val pagerState = rememberPagerState { pageCount }
-    return remember(pageCount) { CropPagerState(pagerState, getCropTransitionName) }
+    return remember(pageCount, getCropTransitionName) { CropPagerState(pagerState, getCropTransitionName) }
 }

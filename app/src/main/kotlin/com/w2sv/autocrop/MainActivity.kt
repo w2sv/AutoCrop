@@ -6,10 +6,12 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.commitNow
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.w2sv.autocrop.databinding.ActivityMainBinding
+import com.w2sv.autocrop.ui.screen.home.components.LoggingPFragment
 import com.w2sv.autocrop.ui.util.resolution
 import com.w2sv.autocrop.ui.util.view.viewBinding
 import com.w2sv.flowfield.PerlinNoiseFlowFieldSketch
@@ -19,13 +21,15 @@ import kotlinx.coroutines.CoroutineScope
 import processing.android.PFragment
 import processing.core.PApplet
 import slimber.log.i
+import kotlin.apply
+
+private const val P_FRAGMENT_TAG = "PFragment"
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
-    private var pFragment: PFragment? = null
     private var sketchPaused = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +42,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 addOnDestinationChangedListener { _, destination, _ ->
                     when (destination.id) {
                         R.id.crop_inspection_screen -> {
-                            pFragment?.sketch?.noLoop()
+                            pFragment()?.sketch?.noLoop()
                             sketchPaused = true
                         }
 
@@ -66,15 +70,18 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 
     private fun inflateFlowField() {
-        pFragment = PFragment(flowFieldSketch())
         supportFragmentManager
-            .beginTransaction()
-            .replace(
-                binding.flowFieldCanvas.id,
-                requireNotNull(pFragment)
-            )
-            .commitAllowingStateLoss() // Fixes java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+            .commitNow(allowStateLoss = true) {
+                replace(
+                    binding.flowFieldCanvas.id,
+                    LoggingPFragment(flowFieldSketch()),
+                    P_FRAGMENT_TAG
+                )
+            }
     }
+
+    private fun pFragment() =
+        supportFragmentManager.findFragmentByTag(P_FRAGMENT_TAG) as? PFragment
 }
 
 private fun FragmentActivity.findNavController(@IdRes id: Int): NavController =

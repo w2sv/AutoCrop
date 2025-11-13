@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.widget.ImageView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkOut
@@ -31,22 +32,17 @@ fun CropPager(
     HorizontalPager(
         state = state.pagerState,
         modifier = modifier,
-        key = { getCropBundle(state.currentPage).id }
+        key = { getCropBundle(it).id }
     ) { page ->
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             AnimatedVisibility(
                 visible = state.exitAnimationPage != page,
                 enter = EnterTransition.None,
-                exit = shrinkOut(
-                    animationSpec = tween(durationMillis = EXIT_ANIMATION_DURATION),
-                    shrinkTowards = Alignment.Center
-                ) + fadeOut(
-                    animationSpec = tween(durationMillis = EXIT_ANIMATION_DURATION)
-                )
+                exit = cropExitTransition()
             ) {
                 OnExitAnimationFinished(onExitAnimationFinished)
 
-                val cropBundle = getCropBundle(state.currentPage)
+                val cropBundle = getCropBundle(page)
                 SharedElementImage(
                     bitmap = cropBundle.crop.bitmap,
                     transitionName = cropBundle.id,
@@ -57,6 +53,14 @@ fun CropPager(
         }
     }
 }
+
+private fun cropExitTransition(): ExitTransition =
+    shrinkOut(
+        animationSpec = tween(durationMillis = EXIT_ANIMATION_DURATION),
+        shrinkTowards = Alignment.Center
+    ) + fadeOut(
+        animationSpec = tween(durationMillis = EXIT_ANIMATION_DURATION)
+    )
 
 @Composable
 private fun SharedElementImage(

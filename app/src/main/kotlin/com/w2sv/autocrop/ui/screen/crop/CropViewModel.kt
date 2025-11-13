@@ -75,7 +75,7 @@ class CropViewModel @AssistedInject constructor(
         }
 
         i {
-            "bundles=${cropSession.bundles.value.size} | uncroppableImageUris=${cropSession.uncroppableImageUris.size} | unopenableImageUris=${cropSession.unopenableImageUris.size}"
+            "bundles=${cropSession.bundles.value} | uncroppableImageUris=${cropSession.uncroppableImageUris.size} | unopenableImageUris=${cropSession.unopenableImageUris.size}"
         }
     }
 

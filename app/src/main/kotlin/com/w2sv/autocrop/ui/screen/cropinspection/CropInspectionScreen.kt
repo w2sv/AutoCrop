@@ -38,8 +38,6 @@ import com.w2sv.autocrop.ui.util.compose.bitmap
 import com.w2sv.autocrop.ui.util.compose.debounceClick
 import com.w2sv.autocrop.ui.util.compose.mockCropBundle
 import com.w2sv.autocrop.ui.util.compose.mockNavController
-import com.w2sv.autocrop.ui.util.navigateAnimatedAndPopCurrentDestination
-import com.w2sv.composed.OnChange
 import com.w2sv.domain.model.CropBundle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -59,13 +57,6 @@ fun CropInspectionScreen(
         getCropTransitionName = { cropBundles[it].id }
     )
     var procedureDialogPage by rememberSaveable { mutableStateOf<Int?>(null) }
-
-    // Navigate to exit screen if no crop bundles left
-    OnChange(cropBundles.size) {
-        if (it == 0) {
-            navController.navigateAnimatedAndPopCurrentDestination(CropInspectionFragmentDirections.navigateToExitScreen())
-        }
-    }
 
     Scaffold(
         modifier = modifier,
