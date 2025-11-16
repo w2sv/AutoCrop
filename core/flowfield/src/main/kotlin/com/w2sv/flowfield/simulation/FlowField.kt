@@ -7,7 +7,7 @@ import kotlin.math.floor
  * Generates a direction (angle in radians) for a given particle position.
  * Caches a precomputed noise-x offset per grid cell (sparse cache).
  */
-class FlowField(
+internal class FlowField(
     private val granularity: Int,
     private val zOffIncrement: Float,
     private val noiseScale: Float = 0.1f,

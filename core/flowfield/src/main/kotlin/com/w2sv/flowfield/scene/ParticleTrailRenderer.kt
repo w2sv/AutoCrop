@@ -16,7 +16,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.abs
 
-class ParticleTrailRenderer(private val engine: Engine, private val scene: Scene, assetManager: AssetManager) {
+internal class ParticleTrailRenderer(private val engine: Engine, private val scene: Scene, assetManager: AssetManager) {
     private data class ParticleRenderData(
         val particle: Particle,
         val entity: Int,
@@ -43,8 +43,7 @@ class ParticleTrailRenderer(private val engine: Engine, private val scene: Scene
 
     fun initializeParticles(particles: List<Particle>) {
         particles.forEach { particle ->
-            val renderData = createTrailRenderData(particle)
-            particleRenderData.add(renderData)
+            particleRenderData.add(createTrailRenderData(particle))
         }
     }
 

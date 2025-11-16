@@ -8,7 +8,7 @@ import kotlin.random.Random
  * Particle with position, velocity and simple Euler integration.
  * previousPos is updated after drawing so the renderer can form a line segment.
  */
-class Particle(
+internal class Particle(
     val pos: Vec2,
     private val vel: Vec2,
     private val maxSpeed: Float

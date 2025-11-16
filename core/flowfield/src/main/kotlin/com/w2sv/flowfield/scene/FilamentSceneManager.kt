@@ -1,6 +1,5 @@
 package com.w2sv.flowfield.scene
 
-import android.content.res.AssetManager
 import android.view.Surface
 import com.google.android.filament.Camera
 import com.google.android.filament.Engine
@@ -11,17 +10,35 @@ import com.google.android.filament.Renderer
 import com.google.android.filament.Scene
 import com.google.android.filament.SwapChain
 import com.google.android.filament.View
-import com.w2sv.flowfield.simulation.Particle
 
-class FilamentSceneManager(assetManager: AssetManager) {
-    private val engine: Engine
+/**
+ * Manages the core Filament rendering infrastructure for 2D/3D scenes.
+ *
+ * This class is responsible for:
+ * - Initializing and managing the Filament engine, renderer, and scene graph
+ * - Setting up the orthographic camera for 2D rendering
+ * - Configuring basic lighting for the scene
+ * - Handling surface creation and swap chain management
+ * - Executing the render loop and frame presentation
+ * - Properly cleaning up all Filament resources
+ *
+ * Usage:
+ * 1. Create instance with AssetManager for material loading
+ * 2. Set rendering surface via setSurface()
+ * 3. Scenes should use the exposed engine and scene to add content
+ * 4. Call render() each frame to present to the surface
+ * 5. Call destroy() when done to clean up resources
+ */
+internal class FilamentSceneManager {
+    val engine: Engine
+    val scene: Scene
+
     private val renderer: Renderer
-    private val scene: Scene
     private val camera: Camera
     private val view: View
     private var swapChain: SwapChain? = null
 
-    private val trailRenderer: ParticleTrailRenderer
+    private var isDestroyed = false
 
     init {
         // Initialize Filament
@@ -40,8 +57,6 @@ class FilamentSceneManager(assetManager: AssetManager) {
 
         setup2DCamera()
         setupLighting()
-
-        trailRenderer = ParticleTrailRenderer(engine, scene, assetManager)
     }
 
     private fun setup2DCamera() {
@@ -79,15 +94,8 @@ class FilamentSceneManager(assetManager: AssetManager) {
         scene.addEntity(lightEntity)
     }
 
-    fun initializeParticles(particles: List<Particle>) {
-        trailRenderer.initializeParticles(particles)
-    }
-
-    fun update(deltaTime: Float) {
-        trailRenderer.update(deltaTime)
-    }
-
     fun render() {
+        check(!isDestroyed) { "FilamentSceneManager is destroyed" }
         swapChain?.let {
             val frameTimeNanos = System.nanoTime()
             if (renderer.beginFrame(it, frameTimeNanos)) {
@@ -98,21 +106,19 @@ class FilamentSceneManager(assetManager: AssetManager) {
     }
 
     fun setSurface(surface: Surface) {
+        check(!isDestroyed) { "FilamentSceneManager is destroyed" }
         swapChain = engine.createSwapChain(surface)
     }
 
-    fun setViewSize(width: Int, height: Int) {
-        trailRenderer.setViewSize(width, height)
-    }
-
     fun destroy() {
-        trailRenderer.destroy()
+        if (isDestroyed) return
 
         engine.destroyRenderer(renderer)
         engine.destroyScene(scene)
-        engine.destroyCameraComponent(camera.entity)
         engine.destroyView(view)
         swapChain?.let { engine.destroySwapChain(it) }
         engine.destroy()
+
+        isDestroyed = true
     }
 }
