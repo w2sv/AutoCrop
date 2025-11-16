@@ -192,7 +192,7 @@
 //                @JvmField
 //                @RegisterExtension
 //                val scenarioExtension = ActivityScenarioExtension.launch<MainActivity>(
-//                    Intent(ApplicationProvider.getApplicationContext(), MainActivity::class.java)
+//                    Intent(ApplicationProvider.getApplicationContext(), MainActivity::class.kotlin)
 //                        .putParcelableArrayListExtra(
 //                            "com.w2sv.autocrop.CROP_URIS",
 //                            cropSavingUris

@@ -22,6 +22,13 @@ update-dependencies:
 update-gradle:
 	@./gradlew wrapper --gradle-version latest
 
+compile-matc:
+	sudo docker run --rm -v $(pwd):/workspace -w /workspace ubuntu:latest   bash -c "apt-get update && \
+               apt-get install -y wget && \
+               wget -q https://github.com/google/filament/releases/download/v1.67.0/filament-v1.67.0-linux.tgz && \
+               tar -xzf filament-v1.67.0-linux.tgz && \
+               ./filament/bin/matc -o core/flowfield/src/main/assets/materials/unlit.filamat -p mobile core/flowfield/src/main/assets/materials/unlit.mat"
+
 # ==============
 # Publishing
 # ==============

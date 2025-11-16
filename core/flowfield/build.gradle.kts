@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
-    api(files("libs/processing-core-4.6.1.jar"))
+    implementation(libs.google.filament)
     implementation(libs.google.guava)
+    implementation(libs.slimber)
 }

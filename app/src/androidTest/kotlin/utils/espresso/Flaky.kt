@@ -2,7 +2,7 @@
 //
 // import android.os.SystemClock
 // import androidx.test.espresso.PerformException
-// import java.util.concurrent.TimeoutException
+// import kotlin.util.concurrent.TimeoutException
 //
 // const val MEDIUM_TIMEOUT: Long = 1000
 // const val SLOW_TIMEOUT: Long = 5000

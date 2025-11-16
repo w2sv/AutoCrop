@@ -55,6 +55,7 @@ androidx-viewpager2 = "androidx.viewpager2:viewpager2:1.1.0"
 animatoo = "com.github.mohammadatif:Animatoo:1.0.1"
 compose-lint-checks = { module = "com.slack.lint.compose:compose-lint-checks", version.ref = "compose-lint-checks" }
 facebook-rebound = { module = "com.facebook.rebound:rebound", version.ref = "facebook-rebound" }
+google-filament = "com.google.android.filament:filament-android:1.67.0"
 google-guava = "com.google.guava:guava:33.5.0-jre"
 google-hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 google-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
