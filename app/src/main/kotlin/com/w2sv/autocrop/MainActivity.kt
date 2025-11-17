@@ -11,7 +11,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.w2sv.autocrop.databinding.ActivityMainBinding
 import com.w2sv.autocrop.ui.util.view.viewBinding
-import com.w2sv.flowfield.scene.FlowFieldScene
 import com.w2sv.kotlinutils.coroutines.flow.collectOn
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -25,8 +24,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-
-        binding.flowFieldCanvas.setScene(FlowFieldScene())
 
         //        inflateFlowField()
         //        val navController = findNavController(R.id.nav_host_fragment)
