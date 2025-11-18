@@ -1,7 +1,7 @@
 package com.w2sv.flowfield.simulation
 
 /** Minimal 2D vector used by the simulation (mutable for performance). */
-class Vec2(var x: Float = 0f, var y: Float = 0f) {
+internal class Vec2(var x: Float = 0f, var y: Float = 0f) {
     fun set(other: Vec2) { x = other.x; y = other.y }
     fun set(x: Float, y: Float) { this.x = x; this.y = y }
     fun copy() = Vec2(x, y)

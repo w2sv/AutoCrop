@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.opengl.GLSurfaceView
+    <com.w2sv.flowfield.rendering.FlowFieldView
         android:id="@+id/flow_field_canvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
