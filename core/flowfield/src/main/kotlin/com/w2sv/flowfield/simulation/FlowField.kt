@@ -31,7 +31,7 @@ internal class FlowField(
         val key = packedLong(xCell, yCell)
 
         val xNoise = xNoiseCache.getOrPut(key) { noiseXOffset(xCell, yCell, noiseScale) }
-        return Perlin.noise(xNoise, 0f, zOff) * NOISE_ANGLE_SCALE
+        return ProcessingNoise.noise(xNoise, 0f, zOff) * NOISE_ANGLE_SCALE
     }
 
     private fun packedLong(a: Int, b: Int): Long {
