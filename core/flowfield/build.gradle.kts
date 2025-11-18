@@ -4,4 +4,5 @@ plugins {
 
 dependencies {
     implementation(libs.slimber)
+    implementation(libs.androidx.annotation)
 }

@@ -1,7 +1,14 @@
-package com.w2sv.flowfield.rendering
+package com.w2sv.flowfield.rendering.util
 
 import android.opengl.GLES30
+import androidx.annotation.IntDef
 
+
+@Retention(AnnotationRetention.SOURCE)
+@IntDef(flag = false)
+annotation class GlProgram
+
+@GlProgram
 internal fun createProgram(vertexCode: String, fragmentCode: String): Int {
     val vertex = loadShader(GLES30.GL_VERTEX_SHADER, vertexCode)
     val fragment = loadShader(GLES30.GL_FRAGMENT_SHADER, fragmentCode)

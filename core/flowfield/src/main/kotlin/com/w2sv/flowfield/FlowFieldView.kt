@@ -1,8 +1,9 @@
-package com.w2sv.flowfield.rendering
+package com.w2sv.flowfield
 
 import android.content.Context
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
+import com.w2sv.flowfield.rendering.FlowFieldRenderer
 import com.w2sv.flowfield.simulation.FlowField
 import com.w2sv.flowfield.simulation.Particle
 import com.w2sv.flowfield.simulation.Vec2

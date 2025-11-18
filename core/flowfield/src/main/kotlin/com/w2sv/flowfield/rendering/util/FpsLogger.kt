@@ -1,4 +1,4 @@
-package com.w2sv.flowfield.rendering
+package com.w2sv.flowfield.rendering.util
 
 import slimber.log.d
 
