@@ -74,15 +74,17 @@ internal class LineRenderer(particleCount: Int) {
         GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, fbo)
         GLES30.glUseProgram(program)
 
-        // Pass resolution to vertex shader
         val resLoc = GLES30.glGetUniformLocation(program, "uResolution")
         GLES30.glUniform2f(resLoc, width.toFloat(), height.toFloat())
 
         GLES30.glBindVertexArray(vao[0])
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vbo[0])
         GLES30.glBufferSubData(GLES30.GL_ARRAY_BUFFER, 0, vertexBuffer.limit() * 4, vertexBuffer)
+
+        // Use additive blending for alpha accumulation
         GLES30.glEnable(GLES30.GL_BLEND)
-        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
+        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE)
+
         GLES30.glDrawArrays(GLES30.GL_LINES, 0, vertexBuffer.limit() / 2)
         GLES30.glBindVertexArray(0)
         GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0)

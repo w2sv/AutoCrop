@@ -17,14 +17,12 @@ internal class Particle(
     private var skipDraw = false
 
     /** Updates with a force specified as an angle (radians). Returns whether the position wrapped. */
-    fun update(angle: Float, width: Int, height: Int): Boolean {
+    fun update(angle: Float, width: Int, height: Int) {
         // set acceleration to unit vector of angle
         acc.set(cos(angle), sin(angle))
         vel.add(acc).limit(maxSpeed)
         pos.add(vel)
-        val wrapped = wrapPositionIfOutOfBounds(width, height)
-        skipDraw = wrapped
-        return wrapped
+        skipDraw = wrapPositionIfOutOfBounds(width, height)
     }
 
     private fun wrapPositionIfOutOfBounds(width: Int, height: Int): Boolean {

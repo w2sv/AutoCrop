@@ -15,18 +15,15 @@ internal class FlowFieldRenderer(
     private val particles: List<Particle>
 ) : GLSurfaceView.Renderer {
 
+    private val fpsLogger = FpsLogger()
     private lateinit var lineRenderer: LineRenderer
     private lateinit var quadRenderer: QuadRenderer
 
-    // --- FBO for persistent trails ---
     private var fbo = IntArray(1)
     private var fboTexture = IntArray(1)
 
-    private val fpsLogger = FpsLogger()
-
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES30.glClearColor(0f, 0f, 0f, 1f)
-
         lineRenderer = LineRenderer(particles.size)
         quadRenderer = QuadRenderer()
         initializeFBO()
@@ -58,6 +55,10 @@ internal class FlowFieldRenderer(
         fpsLogger.onFrame()
 
         flowField.prepareFrame()
+
+        quadRenderer.fade(fbo = fbo[0], textureId = fboTexture[0])
+
+        // Draw new trails
         lineRenderer.buildVertexBuffer {
             particles.forEach { p ->
                 val angle = flowField.forceAngle(p.pos)
@@ -68,7 +69,9 @@ internal class FlowFieldRenderer(
                 p.afterDraw()
             }
         }
+        // Fade existing trails with the threshold shader
         lineRenderer.draw(fbo[0], width, height)
+        // Display the result
         quadRenderer.draw(fboTexture[0])
     }
 }
