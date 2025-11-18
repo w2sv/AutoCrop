@@ -50,8 +50,18 @@ internal class FlowFieldRenderer(
         // --- Line shader ---
         val vertexShaderCode = """
             #version 300 es
-            layout(location = 0) in vec2 aPos;
-            void main() { gl_Position = vec4(aPos, 0.0, 1.0); }
+            layout(location = 0) in vec2 aPosPixel;
+
+            uniform vec2 uResolution;   // (width, height)
+
+            void main() {
+                vec2 ndc = vec2(
+                    (aPosPixel.x / uResolution.x) * 2.0 - 1.0,
+                    1.0 - (aPosPixel.y / uResolution.y) * 2.0
+                );
+
+                gl_Position = vec4(ndc, 0.0, 1.0);
+            }
         """.trimIndent()
         val fragmentShaderCode = """
             #version 300 es
@@ -135,10 +145,10 @@ internal class FlowFieldRenderer(
             val angle = flowField.forceAngle(p.pos)
             p.update(angle, width, height)
             if (!p.shouldSkipDraw()) {
-                vertexBuffer.put(p.previousPos.x / width * 2f - 1f)
-                vertexBuffer.put(1f - p.previousPos.y / height * 2f)
-                vertexBuffer.put(p.pos.x / width * 2f - 1f)
-                vertexBuffer.put(1f - p.pos.y / height * 2f)
+                vertexBuffer.put(p.previousPos.x)
+                vertexBuffer.put(p.previousPos.y)
+                vertexBuffer.put(p.pos.x)
+                vertexBuffer.put(p.pos.y)
             }
             p.afterDraw()
         }
@@ -148,6 +158,11 @@ internal class FlowFieldRenderer(
         // --- 3. Draw lines into FBO ---
         GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, fbo[0])
         GLES30.glUseProgram(lineProgram)
+
+        // Pass resolution to vertex shader
+        val resLoc = GLES30.glGetUniformLocation(lineProgram, "uResolution")
+        GLES30.glUniform2f(resLoc, width.toFloat(), height.toFloat())
+
         GLES30.glBindVertexArray(vao[0])
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vbo[0])
         GLES30.glBufferSubData(GLES30.GL_ARRAY_BUFFER, 0, vertexBuffer.limit() * 4, vertexBuffer)
