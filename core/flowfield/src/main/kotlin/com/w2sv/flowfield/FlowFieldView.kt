@@ -27,14 +27,14 @@ class FlowFieldView @JvmOverloads constructor(
             initialized = true
 
             // Initialize particles
-            val particleCount = 600
+            val particleCount = 6000
             val particles = List(particleCount) {
                 val pos = Vec2((0 until w).random().toFloat(), (0 until h).random().toFloat())
                 Particle(pos, Vec2(0f, 0f), maxSpeed = 2f)
             }
 
             // Initialize flow field
-            val flowField = FlowField(200, 0.01f, 0.1f, 4)
+            val flowField = FlowField(100, 0.01f, 0.1f, 4)
 
             // Initialize renderer with actual view size
             renderer = FlowFieldRenderer(w, h, flowField, particles)

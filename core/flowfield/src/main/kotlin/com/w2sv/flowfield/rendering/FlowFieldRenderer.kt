@@ -58,6 +58,8 @@ internal class FlowFieldRenderer(
         fpsLogger.onFrame()
 
         flowField.prepareFrame()
+        quadRenderer.fade(alpha = 0.05f, fbo = fbo[0]) // smaller alpha = longer trails
+
         lineRenderer.buildVertexBuffer {
             particles.forEach { p ->
                 val angle = flowField.forceAngle(p.pos)
