@@ -7,6 +7,7 @@ import com.w2sv.flowfield.rendering.FlowFieldRenderer
 import com.w2sv.flowfield.simulation.FlowField
 import com.w2sv.flowfield.simulation.Particle
 import com.w2sv.flowfield.simulation.Vec2
+import kotlin.random.Random
 
 class FlowFieldView @JvmOverloads constructor(
     context: Context,
@@ -14,7 +15,6 @@ class FlowFieldView @JvmOverloads constructor(
 ) : GLSurfaceView(context, attrs) {
 
     private var initialized = false
-    private lateinit var renderer: FlowFieldRenderer
 
     init {
         setEGLContextClientVersion(3)
@@ -27,18 +27,23 @@ class FlowFieldView @JvmOverloads constructor(
             initialized = true
 
             // Initialize particles
-            val particleCount = 600
-            val particles = List(particleCount) {
-                val pos = Vec2((0 until w).random().toFloat(), (0 until h).random().toFloat())
-                Particle(pos, Vec2(0f, 0f), maxSpeed = 2f)
+            val particles = List(Config.PARTICLE_COUNT) {
+                Particle(
+                    pos = Vec2(Random.nextFloat() * w, Random.nextFloat() * h),
+                    maxVelocity = Config.PARTICLE_MAX_VELOCITY
+                )
             }
 
             // Initialize flow field
-            val flowField = FlowField(200, 0.01f, 0.1f, 4)
+            val flowField = FlowField(
+                cellsPerPixel = Config.CELLS_PER_PIXEL,
+                timeIncrement = Config.NOISE_SAMPLING_TEMPORAL_INCREMENT,
+                noiseScale = 0.1f,
+                radianSamplingCoeff = Config.RADIAN_SAMPLING_COEFFICIENT
+            )
 
             // Initialize renderer with actual view size
-            renderer = FlowFieldRenderer(w, h, flowField, particles)
-            setRenderer(renderer)
+            setRenderer(FlowFieldRenderer(w, h, flowField, particles))
             renderMode = RENDERMODE_CONTINUOUSLY
         }
     }

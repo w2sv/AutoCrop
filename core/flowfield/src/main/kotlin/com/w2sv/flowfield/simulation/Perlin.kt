@@ -3,8 +3,7 @@ package com.w2sv.flowfield.simulation
 import kotlin.math.floor
 
 internal object ProcessingNoise {
-    private const val perlin_octaves = 4
-    private const val perlin_amp_falloff = 0.5f
+    private const val AMPLITUDE_FALLOFF = 0.5f
 
     // Extended permutation table (512 elements to avoid bounds issues)
     private val PERMUTATION = intArrayOf(
@@ -35,16 +34,16 @@ internal object ProcessingNoise {
      * Processing-style noise function
      * Returns values in range [0, 1]
      */
-    fun noise(x: Float, y: Float = 0f, z: Float = 0f): Float {
+    fun noise(x: Float, y: Float = 0f, z: Float = 0f, octaves: Int = 4): Float {
         var total = 0f
         var frequency = 1f
         var amplitude = 1f
         var maxValue = 0f
 
-        repeat(perlin_octaves) {
+        repeat(octaves) {
             total += rawNoise(x * frequency, y * frequency, z * frequency) * amplitude
             maxValue += amplitude
-            amplitude *= perlin_amp_falloff
+            amplitude *= AMPLITUDE_FALLOFF
             frequency *= 2f
         }
 

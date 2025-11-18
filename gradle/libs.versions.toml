@@ -68,7 +68,6 @@ kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collec
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 opencv = { module = "org.opencv:opencv", version.ref = "opencv" }
 simplestorage = "com.anggrayudi:storage:2.2.0"
-# other
 slimber = "com.github.PaulWoitaschek:Slimber:2.0.0"
 snacky = "com.github.matecode:Snacky:1.1.6"
 w2sv-androidutils-core = { module = "com.github.w2sv.AndroidUtils:core", version.ref = "androidutils" }

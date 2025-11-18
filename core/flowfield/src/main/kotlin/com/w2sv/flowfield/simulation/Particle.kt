@@ -9,45 +9,42 @@ import kotlin.math.sin
  */
 internal class Particle(
     val pos: Vec2,
-    private val vel: Vec2,
-    private val maxSpeed: Float
+    private val maxVelocity: Float
 ) {
-    private val acc = Vec2(0f, 0f)
+    private val vel = Vec2()
+    private val acc = Vec2()
     val previousPos = Vec2(pos.x, pos.y)
     private var skipDraw = false
 
     /** Updates with a force specified as an angle (radians). Returns whether the position wrapped. */
     fun update(angle: Float, width: Int, height: Int) {
         // set acceleration to unit vector of angle
-        acc.set(cos(angle), sin(angle))
-        vel.add(acc).limit(maxSpeed)
-        pos.add(vel)
-        skipDraw = wrapPositionIfOutOfBounds(width, height)
+        acc.setTo(cos(angle), sin(angle))
+        vel.plus(acc).limit(maxVelocity)
+        pos.plus(vel)
+        wrapPositionIfOutOfBounds(width, height)
     }
 
-    private fun wrapPositionIfOutOfBounds(width: Int, height: Int): Boolean {
-        var wrapped = false
+    private fun wrapPositionIfOutOfBounds(width: Int, height: Int) {
         if (pos.x >= width) {
-            pos.x -= width; wrapped = true
+            pos.x -= width; skipDraw = true
         }
         else if (pos.x < 0f) {
-            pos.x += width; wrapped = true
+            pos.x += width; skipDraw = true
         }
         if (pos.y >= height) {
-            pos.y -= height; wrapped = true
+            pos.y -= height; skipDraw = true
         }
         else if (pos.y < 0f) {
-            pos.y += height; wrapped = true
+            pos.y += height; skipDraw = true
         }
-        return wrapped
     }
 
     /** Mark the previous() position to current pos after drawing */
     fun afterDraw() {
-        previousPos.set(pos)
+        previousPos.setTo(pos)
     }
 
-    fun shouldSkipDraw(): Boolean {
-        return skipDraw.also { if (it) skipDraw = false }
-    }
+    fun shouldSkipDraw(): Boolean =
+        skipDraw.also { if (it) skipDraw = false }
 }
