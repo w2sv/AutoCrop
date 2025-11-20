@@ -100,7 +100,7 @@ internal class QuadRenderer {
         val alphaLoc = GLES30.glGetUniformLocation(fadeProgram, "uAlpha")
         val texLoc = GLES30.glGetUniformLocation(fadeProgram, "uTexture")
         GLES30.glUniform1i(texLoc, 0)
-        GLES30.glUniform1f(alphaLoc, 0.005f)
+        GLES30.glUniform1f(alphaLoc, 0.004f)
 
         // Important: Replace the content, don't blend
         GLES30.glDisable(GLES30.GL_BLEND)

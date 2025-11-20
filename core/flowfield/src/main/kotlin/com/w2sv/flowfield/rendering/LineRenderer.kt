@@ -41,7 +41,22 @@ internal class LineRenderer(particleCount: Int) {
             #version 300 es
             precision mediump float;
             out vec4 FragColor;
-            void main() { FragColor = vec4(1.0,1.0,1.0,1.0); }
+
+            uniform float uTime;
+
+            void main() {
+                // Color cycle
+                float colorCycle = sin(uTime) * 0.5 + 0.5;
+
+                // Separate pulse for brightness
+                float brightnessPulse = sin(uTime * 6.0) * 0.2 + 0.8;
+
+                float r = colorCycle * brightnessPulse;
+                float g = 0.0;
+                float b = (1.0 - colorCycle) * brightnessPulse;
+
+                FragColor = vec4(r, g, b, 1.0);
+            }
         """.trimIndent()
 
         program = createProgram(vertexShaderCode, fragmentShaderCode)
@@ -63,6 +78,8 @@ internal class LineRenderer(particleCount: Int) {
         vertexBuffer.position(0)
     }
 
+    private val startTime = System.currentTimeMillis()
+
     fun addParticle(particle: Particle) {
         vertexBuffer.put(particle.previousPos.x)
         vertexBuffer.put(particle.previousPos.y)
@@ -77,13 +94,16 @@ internal class LineRenderer(particleCount: Int) {
         val resLoc = GLES30.glGetUniformLocation(program, "uResolution")
         GLES30.glUniform2f(resLoc, width.toFloat(), height.toFloat())
 
+        val timeUniformLoc = GLES30.glGetUniformLocation(program, "uTime")
+        GLES30.glUniform1f(timeUniformLoc, (System.currentTimeMillis() - startTime) / 1000f) // Current time in seconds
+
         GLES30.glBindVertexArray(vao[0])
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vbo[0])
         GLES30.glBufferSubData(GLES30.GL_ARRAY_BUFFER, 0, vertexBuffer.limit() * 4, vertexBuffer)
 
         // Use additive blending for alpha accumulation
         GLES30.glEnable(GLES30.GL_BLEND)
-        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE)
+        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
 
         GLES30.glDrawArrays(GLES30.GL_LINES, 0, vertexBuffer.limit() / 2)
         GLES30.glBindVertexArray(0)
