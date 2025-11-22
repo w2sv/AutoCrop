@@ -36,8 +36,16 @@ proguard/
 # Android Studio captures folder
 captures/
 
-# IntelliJ
+# IDEA/Android Studio project files, because
+# the project can be imported from settings.gradle.kts
 *.iml
+.idea/*
+!.idea/copyright
+# Keep the code styles.
+!/.idea/codeStyles
+/.idea/codeStyles/*
+!/.idea/codeStyles/Project.xml
+!/.idea/codeStyles/codeStyleConfig.xml
 
 # Keystore files
 keystore.properties
@@ -77,5 +85,8 @@ lint/reports/
 # Android Profiling
 *.hprof
 
+# Kotlin cache
 .kotlin/
+
+# Project specific
 local_debug.properties
