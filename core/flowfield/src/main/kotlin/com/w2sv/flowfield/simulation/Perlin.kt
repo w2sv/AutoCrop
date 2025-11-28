@@ -34,7 +34,12 @@ internal object ProcessingNoise {
      * Processing-style noise function
      * Returns values in range [0, 1]
      */
-    fun noise(x: Float, y: Float = 0f, z: Float = 0f, octaves: Int = 4): Float {
+    fun noise(
+        x: Float,
+        y: Float = 0f,
+        z: Float = 0f,
+        octaves: Int = 4
+    ): Float {
         var total = 0f
         var frequency = 1f
         var amplitude = 1f
@@ -53,7 +58,11 @@ internal object ProcessingNoise {
     /**
      * Raw Perlin noise function with proper bounds checking
      */
-    private fun rawNoise(x: Float, y: Float, z: Float): Float {
+    private fun rawNoise(
+        x: Float,
+        y: Float,
+        z: Float
+    ): Float {
         val X = floor(x).toInt() and 255
         val Y = floor(y).toInt() and 255
         val Z = floor(z).toInt() and 255
@@ -67,38 +76,71 @@ internal object ProcessingNoise {
         val w = fade(zf)
 
         // Use modulo to ensure we stay within bounds
-        val A  = PERMUTATION[X] + Y
-        val AA = PERMUTATION[A and 511] + Z  // Use 511 for modulo 512
+        val A = PERMUTATION[X] + Y
+        val AA = PERMUTATION[A and 511] + Z // Use 511 for modulo 512
         val AB = PERMUTATION[(A + 1) and 511] + Z
-        val B  = PERMUTATION[(X + 1) and 255] + Y
+        val B = PERMUTATION[(X + 1) and 255] + Y
         val BA = PERMUTATION[B and 511] + Z
         val BB = PERMUTATION[(B + 1) and 511] + Z
 
-        val x1 = lerp(u,
-            lerp(v,
-                lerp(w, grad(PERMUTATION[AA and 511], xf, yf, zf),
-                    grad(PERMUTATION[BA and 511], xf - 1, yf, zf)),
-                lerp(w, grad(PERMUTATION[AB and 511], xf, yf - 1, zf),
-                    grad(PERMUTATION[BB and 511], xf - 1, yf - 1, zf))),
-            lerp(v,
-                lerp(w, grad(PERMUTATION[(AA + 1) and 511], xf, yf, zf - 1),
-                    grad(PERMUTATION[(BA + 1) and 511], xf - 1, yf, zf - 1)),
-                lerp(w, grad(PERMUTATION[(AB + 1) and 511], xf, yf - 1, zf - 1),
-                    grad(PERMUTATION[(BB + 1) and 511], xf - 1, yf - 1, zf - 1)))
+        val x1 = lerp(
+            u,
+            lerp(
+                v,
+                lerp(
+                    w,
+                    grad(PERMUTATION[AA and 511], xf, yf, zf),
+                    grad(PERMUTATION[BA and 511], xf - 1, yf, zf)
+                ),
+                lerp(
+                    w,
+                    grad(PERMUTATION[AB and 511], xf, yf - 1, zf),
+                    grad(PERMUTATION[BB and 511], xf - 1, yf - 1, zf)
+                )
+            ),
+            lerp(
+                v,
+                lerp(
+                    w,
+                    grad(PERMUTATION[(AA + 1) and 511], xf, yf, zf - 1),
+                    grad(PERMUTATION[(BA + 1) and 511], xf - 1, yf, zf - 1)
+                ),
+                lerp(
+                    w,
+                    grad(PERMUTATION[(AB + 1) and 511], xf, yf - 1, zf - 1),
+                    grad(PERMUTATION[(BB + 1) and 511], xf - 1, yf - 1, zf - 1)
+                )
+            )
         )
 
         return (x1 + 1f) * 0.5f // Convert to [0,1] range
     }
 
-    private fun fade(t: Float): Float = t * t * t * (t * (t * 6 - 15) + 10)
+    private fun fade(t: Float): Float =
+        t * t * t * (t * (t * 6 - 15) + 10)
 
-    private fun lerp(amount: Float, left: Float, right: Float): Float =
+    private fun lerp(
+        amount: Float,
+        left: Float,
+        right: Float
+    ): Float =
         (1 - amount) * left + amount * right
 
-    private fun grad(hash: Int, x: Float, y: Float, z: Float): Float {
+    private fun grad(
+        hash: Int,
+        x: Float,
+        y: Float,
+        z: Float
+    ): Float {
         val h = hash and 15
         val u = if (h < 8) x else y
-        val v = if (h < 4) y else if (h == 12 || h == 14) x else z
+        val v = if (h < 4) {
+            y
+        } else if (h == 12 || h == 14) {
+            x
+        } else {
+            z
+        }
         return (if (h and 1 == 0) u else -u) + (if (h and 2 == 0) v else -v)
     }
 }

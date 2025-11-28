@@ -10,13 +10,12 @@ import com.w2sv.flowfield.rendering.FlowFieldRenderer
 import com.w2sv.flowfield.simulation.FlowField
 import com.w2sv.flowfield.simulation.Particle
 import com.w2sv.flowfield.simulation.Vec2
-import slimber.log.i
 import kotlin.random.Random
+import slimber.log.i
 
-class FlowFieldView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null
-) : GLSurfaceView(context, attrs), DefaultLifecycleObserver {
+class FlowFieldView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+    GLSurfaceView(context, attrs),
+    DefaultLifecycleObserver {
 
     private var isInitialized = false
 
@@ -46,7 +45,12 @@ class FlowFieldView @JvmOverloads constructor(
         }
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    override fun onSizeChanged(
+        w: Int,
+        h: Int,
+        oldw: Int,
+        oldh: Int
+    ) {
         super.onSizeChanged(w, h, oldw, oldh)
 
         i { "onSizeChanged $w x $h" }

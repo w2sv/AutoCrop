@@ -3,7 +3,6 @@ package com.w2sv.flowfield.rendering.util
 import android.opengl.GLES30
 import androidx.annotation.IntDef
 
-
 @Retention(AnnotationRetention.SOURCE)
 @IntDef(flag = false)
 annotation class GlProgram
@@ -26,8 +25,8 @@ internal fun createProgram(vertexCode: String, fragmentCode: String): Int {
     }
 }
 
-private fun loadShader(type: Int, code: String): Int {
-    return GLES30.glCreateShader(type).also { shader ->
+private fun loadShader(type: Int, code: String): Int =
+    GLES30.glCreateShader(type).also { shader ->
         GLES30.glShaderSource(shader, code)
         GLES30.glCompileShader(shader)
         val compiled = IntArray(1)
@@ -38,4 +37,3 @@ private fun loadShader(type: Int, code: String): Int {
             throw RuntimeException("Shader compile failed: $info")
         }
     }
-}

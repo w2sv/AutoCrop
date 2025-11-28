@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.w2sv.autocrop.databinding.ActivityMainBinding
-import com.w2sv.flowfield.FlowFieldView
 import com.w2sv.kotlinutils.coroutines.flow.collectOn
 import com.w2sv.viewboundcontroller.ViewBoundActivity
 import dagger.hilt.android.AndroidEntryPoint

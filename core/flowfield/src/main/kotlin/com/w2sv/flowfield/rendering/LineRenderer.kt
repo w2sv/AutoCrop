@@ -87,7 +87,11 @@ internal class LineRenderer(particleCount: Int) {
         vertexBuffer.put(particle.pos.y)
     }
 
-    fun draw(fbo: Int, width: Int, height: Int) {
+    fun draw(
+        fbo: Int,
+        width: Int,
+        height: Int
+    ) {
         GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, fbo)
         GLES30.glUseProgram(program)
 

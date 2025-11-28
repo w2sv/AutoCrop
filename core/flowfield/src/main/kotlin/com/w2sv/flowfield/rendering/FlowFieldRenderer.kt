@@ -13,7 +13,7 @@ internal class FlowFieldRenderer(
     private var height: Int,
     private val flowField: FlowField,
     private val particles: List<Particle>,
-    logFps: Boolean,
+    logFps: Boolean
 ) : GLSurfaceView.Renderer {
 
     private val fpsLogger = if (logFps) FpsLogger() else null
@@ -46,7 +46,11 @@ internal class FlowFieldRenderer(
         GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0)
     }
 
-    override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+    override fun onSurfaceChanged(
+        gl: GL10?,
+        width: Int,
+        height: Int
+    ) {
         this.width = width
         this.height = height
         GLES30.glViewport(0, 0, width, height)

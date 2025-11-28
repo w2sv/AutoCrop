@@ -41,7 +41,11 @@ internal class FlowField(
      * Cantor-inspired pairing function scaled for noise input.
      * Ensures (x,y) map uniquely to a float and keeps values small for smooth noise.
      */
-    private fun noiseXOffset(x: Int, y: Int, scale: Float): Float {
+    private fun noiseXOffset(
+        x: Int,
+        y: Int,
+        scale: Float
+    ): Float {
         val s = (x + y).toFloat()
         val paired = (s * (s + 1f) * 0.5f) + y
         return paired * scale
