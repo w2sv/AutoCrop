@@ -1,13 +1,13 @@
 [versions]
-agp = "8.13.0"
+agp = "8.13.1"
 androidutils = "0.4.6"
-androidx-activity-compose = "1.11.0"
+androidx-activity-compose = "1.12.0"
 androidxNavigation = "2.9.6"
 # @keep
 compileSdk = "36"
 compose-lint-checks = "1.4.2"
-compose-material3 = "1.5.0-alpha08"
-compose-tooling = "1.9.4"
+compose-material3 = "1.5.0-alpha09"
+compose-tooling = "1.9.5"
 composed = "0.0.7-rc1"
 datastoreutils = "0.0.7-rc2"
 facebook-rebound = "0.3.8"
@@ -18,9 +18,9 @@ java = "17"
 junit = "4.13.2"
 kotlin = "2.2.21"
 kotlinxCollectionsImmutable = "0.4.0"
-ksp = "2.3.2"
-ktlint = "13.1.0"
-lifecycle = "2.9.4"
+ksp = "2.3.3"
+ktlint = "14.0.1"
+lifecycle = "2.10.0"
 # @keep
 minSdk = "26"
 opencv = "4.12.0"
@@ -41,12 +41,11 @@ androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", versi
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-tooling" }
 androidx-compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 androidx-core = "androidx.core:core-ktx:1.17.0"
-androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.1.7"
+androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.2.0"
 androidx-fragment = "androidx.fragment:fragment-ktx:1.8.9"
 androidx-hilt-navigation-fragment = { module = "androidx.hilt:hilt-navigation-fragment", version.ref = "hiltNavigationFragment" }
-androidx-lifecycle-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "lifecycle" }
-androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 androidx-navigation-fragment = { module = "androidx.navigation:navigation-fragment", version.ref = "androidxNavigation" }
 androidx-navigation-ui = { module = "androidx.navigation:navigation-ui", version.ref = "androidxNavigation" }
 androidx-splashscreen = "androidx.core:core-splashscreen:1.2.0"
