@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <com.w2sv.flowfield.FlowFieldView
-        android:id="@+id/flow_field_canvas"
+        android:id="@+id/flow_field_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

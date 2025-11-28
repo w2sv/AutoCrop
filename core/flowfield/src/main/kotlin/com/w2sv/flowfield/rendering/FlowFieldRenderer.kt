@@ -12,10 +12,11 @@ internal class FlowFieldRenderer(
     private var width: Int,
     private var height: Int,
     private val flowField: FlowField,
-    private val particles: List<Particle>
+    private val particles: List<Particle>,
+    logFps: Boolean,
 ) : GLSurfaceView.Renderer {
 
-    private val fpsLogger = FpsLogger()
+    private val fpsLogger = if (logFps) FpsLogger() else null
     private lateinit var lineRenderer: LineRenderer
     private lateinit var quadRenderer: QuadRenderer
 
@@ -52,7 +53,7 @@ internal class FlowFieldRenderer(
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        fpsLogger.onFrame()
+        fpsLogger?.onFrame()
 
         flowField.prepareFrame()
 

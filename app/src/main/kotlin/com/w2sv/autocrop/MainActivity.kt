@@ -17,33 +17,25 @@ import kotlinx.coroutines.CoroutineScope
 import slimber.log.i
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
+class MainActivity : AppCompatActivity() {
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-
-        //        inflateFlowField()
-        //        val navController = findNavController(R.id.nav_host_fragment)
-        //            .apply {
-        //                addOnDestinationChangedListener { _, destination, _ ->
-        //                    when (destination.id) {
-        //                        R.id.crop_inspection_screen -> {
-        //                            pFragment()?.sketch?.noLoop()
-        //                            sketchPaused = true
-        //                        }
-        //
-        //                        R.id.home_screen if (sketchPaused) -> {
-        //                            inflateFlowField()
-        //                            sketchPaused = false
-        //                        }
-        //                    }
-        //                }
-        //            }
+        setContentView(binding.root)
 
         val navController = findNavController(R.id.nav_host_fragment)
+            .apply {
+                addOnDestinationChangedListener { _, destination, _ ->
+                    when (destination.id) {
+                        R.id.crop_inspection_screen -> binding.flowFieldView.onPause()
+                        R.id.home_screen -> binding.flowFieldView.onResume()
+                    }
+                }
+            }
+
         if (BuildConfig.DEBUG) {
             navController.apply {
                 if (savedInstanceState == null && BuildConfig.START_WITH_CROP_SCREEN) {
@@ -52,6 +44,16 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 setupBackStackLogging(lifecycleScope)
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.flowFieldView.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.flowFieldView.onResume()
     }
 }
 
