@@ -3,38 +3,39 @@ package com.w2sv.autocrop
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.annotation.IdRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.w2sv.autocrop.databinding.ActivityMainBinding
-import com.w2sv.autocrop.ui.util.view.viewBinding
+import com.w2sv.flowfield.FlowFieldView
 import com.w2sv.kotlinutils.coroutines.flow.collectOn
+import com.w2sv.viewboundcontroller.ViewBoundActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import slimber.log.i
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
-
-    private val binding by viewBinding(ActivityMainBinding::inflate)
+class MainActivity : ViewBoundActivity<ActivityMainBinding>(ActivityMainBinding::class.java) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
 
         val navController = findNavController(R.id.nav_host_fragment)
-            .apply {
-                addOnDestinationChangedListener { _, destination, _ ->
-                    when (destination.id) {
-                        R.id.crop_inspection_screen -> binding.flowFieldView.onPause()
-                        R.id.home_screen -> binding.flowFieldView.onResume()
-                    }
+
+        binding.flowFieldView.apply {
+            attachToLifecycle(lifecycle)
+
+            // Connect to nav graph
+            navController.addOnDestinationChangedListener { _, destination, _ ->
+                when (destination.id) {
+                    R.id.crop_inspection_screen -> onPause()
+                    R.id.home_screen -> onResume()
                 }
             }
+        }
 
         if (BuildConfig.DEBUG) {
             navController.apply {
@@ -44,16 +45,6 @@ class MainActivity : AppCompatActivity() {
                 setupBackStackLogging(lifecycleScope)
             }
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        binding.flowFieldView.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        binding.flowFieldView.onResume()
     }
 }
 

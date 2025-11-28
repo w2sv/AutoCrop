@@ -3,6 +3,9 @@ package com.w2sv.flowfield
 import android.content.Context
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import com.w2sv.flowfield.rendering.FlowFieldRenderer
 import com.w2sv.flowfield.simulation.FlowField
 import com.w2sv.flowfield.simulation.Particle
@@ -13,7 +16,7 @@ import kotlin.random.Random
 class FlowFieldView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
-) : GLSurfaceView(context, attrs) {
+) : GLSurfaceView(context, attrs), DefaultLifecycleObserver {
 
     private var isInitialized = false
 
@@ -31,13 +34,15 @@ class FlowFieldView @JvmOverloads constructor(
 
     override fun onPause() {
         i { "onPause" }
-        super.onPause()
+        if (isInitialized) {
+            super<GLSurfaceView>.onPause()
+        }
     }
 
     override fun onResume() {
         i { "onResume" }
         if (isInitialized) {
-            super.onResume()
+            super<GLSurfaceView>.onResume()
         }
     }
 
@@ -79,5 +84,17 @@ class FlowFieldView @JvmOverloads constructor(
         )
         setRenderer(renderer)
         renderMode = RENDERMODE_CONTINUOUSLY
+    }
+
+    override fun onPause(owner: LifecycleOwner) {
+        onPause()
+    }
+
+    override fun onResume(owner: LifecycleOwner) {
+        onResume()
+    }
+
+    fun attachToLifecycle(lifecycle: Lifecycle) {
+        lifecycle.addObserver(this)
     }
 }
