@@ -3,6 +3,8 @@ package com.w2sv.flowfield.rendering
 import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import com.w2sv.flowfield.rendering.util.FpsLogger
+import com.w2sv.flowfield.rendering.util.wrapper.FrameBuffer
+import com.w2sv.flowfield.rendering.util.wrapper.Texture2D
 import com.w2sv.flowfield.simulation.FlowField
 import com.w2sv.flowfield.simulation.Particle
 import javax.microedition.khronos.egl.EGLConfig
@@ -20,8 +22,8 @@ internal class FlowFieldRenderer(
     private lateinit var lineRenderer: LineRenderer
     private lateinit var quadRenderer: QuadRenderer
 
-    private var fbo = IntArray(1)
-    private var fboTexture = IntArray(1)
+    private lateinit var fbo: FrameBuffer
+    private lateinit var fboTexture: Texture2D
 
     @Volatile
     private var needsReset = false
@@ -38,14 +40,13 @@ internal class FlowFieldRenderer(
     }
 
     private fun initializeFBO() {
-        GLES30.glGenFramebuffers(1, fbo, 0)
-        GLES30.glGenTextures(1, fboTexture, 0)
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, fboTexture[0])
+        fbo = FrameBuffer()
+        fboTexture = Texture2D().apply { bind() }
         GLES30.glTexImage2D(GLES30.GL_TEXTURE_2D, 0, GLES30.GL_RGBA, width, height, 0, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE, null)
         GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR)
         GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
-        withBoundFBO {
-            GLES30.glFramebufferTexture2D(GLES30.GL_FRAMEBUFFER, GLES30.GL_COLOR_ATTACHMENT0, GLES30.GL_TEXTURE_2D, fboTexture[0], 0)
+        fbo.whilstBound {
+            GLES30.glFramebufferTexture2D(GLES30.GL_FRAMEBUFFER, GLES30.GL_COLOR_ATTACHMENT0, GLES30.GL_TEXTURE_2D, fboTexture.id, 0)
             if (GLES30.glCheckFramebufferStatus(GLES30.GL_FRAMEBUFFER) != GLES30.GL_FRAMEBUFFER_COMPLETE) {
                 throw RuntimeException("FBO incomplete")
             }
@@ -76,7 +77,7 @@ internal class FlowFieldRenderer(
     private fun renderFrame() {
         flowField.prepareFrame()
 
-        quadRenderer.fade(fbo = fbo[0], textureId = fboTexture[0])
+        quadRenderer.fade(frameBuffer = fbo, texture = fboTexture)
 
         // Draw new trails
         lineRenderer.buildVertexBuffer {
@@ -90,14 +91,14 @@ internal class FlowFieldRenderer(
             }
         }
         // Fade existing trails with the threshold shader
-        lineRenderer.draw(fbo[0], width, height)
+        lineRenderer.draw(fbo, width, height)
         // Display the result
-        quadRenderer.draw(fboTexture[0])
+        quadRenderer.draw(fboTexture)
     }
 
     private fun doReset() {
         // Clear FBO to fully wipe trails
-        withBoundFBO {
+        fbo.whilstBound {
             clearColor()
             GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT)
         }
@@ -107,11 +108,5 @@ internal class FlowFieldRenderer(
 
     private fun clearColor() {
         GLES30.glClearColor(0f, 0f, 0f, 1f)
-    }
-
-    private fun withBoundFBO(block: () -> Unit) {
-        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, fbo[0])
-        block()
-        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0)
     }
 }

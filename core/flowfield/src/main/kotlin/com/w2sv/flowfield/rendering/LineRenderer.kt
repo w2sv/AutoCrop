@@ -2,17 +2,56 @@ package com.w2sv.flowfield.rendering
 
 import android.opengl.GLES30
 import com.w2sv.flowfield.rendering.util.GlProgram
-import com.w2sv.flowfield.rendering.util.createProgram
+import com.w2sv.flowfield.rendering.util.TimeTracker
+import com.w2sv.flowfield.rendering.util.wrapper.ArrayBuffer
+import com.w2sv.flowfield.rendering.util.wrapper.FrameBuffer
+import com.w2sv.flowfield.rendering.util.wrapper.VertexArray
 import com.w2sv.flowfield.simulation.Particle
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
+private val vertexShaderCode = """
+#version 300 es
+layout(location = 0) in vec2 aPosPixel;
+
+uniform vec2 uResolution;   // (width, height)
+
+void main() {
+    vec2 ndc = vec2(
+        (aPosPixel.x / uResolution.x) * 2.0 - 1.0,
+        1.0 - (aPosPixel.y / uResolution.y) * 2.0
+    );
+
+    gl_Position = vec4(ndc, 0.0, 1.0);
+}
+""".trimIndent()
+private val fragmentShaderCode = """
+#version 300 es
+precision mediump float;
+out vec4 FragColor;
+
+uniform float uTime;
+
+void main() {
+    // Color cycle
+    float colorCycle = sin(uTime) * 0.5 + 0.5;
+
+    // Separate pulse for brightness
+    float brightnessPulse = sin(uTime * 6.0) * 0.2 + 0.8;
+
+    float r = colorCycle * brightnessPulse;
+    float g = 0.0;
+    float b = (1.0 - colorCycle) * brightnessPulse;
+
+    FragColor = vec4(r, g, b, 1.0);
+}
+""".trimIndent()
+
 internal class LineRenderer(particleCount: Int) {
-    @GlProgram
-    private val program: Int
-    private var vao = IntArray(1)
-    private var vbo = IntArray(1)
+    private val program = GlProgram.create(vertexShaderCode, fragmentShaderCode)
+    private val vao = VertexArray()
+    private val vbo = ArrayBuffer()
 
     // Each particle produces 2 vertices (prev -> current) = 4 floats
     private val vertexBuffer: FloatBuffer = ByteBuffer
@@ -20,58 +59,16 @@ internal class LineRenderer(particleCount: Int) {
         .order(ByteOrder.nativeOrder())
         .asFloatBuffer()
 
-    private val startTime = System.currentTimeMillis()
+    private val timeTracker = TimeTracker()
 
     init {
-        // --- Line shader ---
-        val vertexShaderCode = """
-            #version 300 es
-            layout(location = 0) in vec2 aPosPixel;
-
-            uniform vec2 uResolution;   // (width, height)
-
-            void main() {
-                vec2 ndc = vec2(
-                    (aPosPixel.x / uResolution.x) * 2.0 - 1.0,
-                    1.0 - (aPosPixel.y / uResolution.y) * 2.0
-                );
-
-                gl_Position = vec4(ndc, 0.0, 1.0);
-            }
-        """.trimIndent()
-        val fragmentShaderCode = """
-            #version 300 es
-            precision mediump float;
-            out vec4 FragColor;
-
-            uniform float uTime;
-
-            void main() {
-                // Color cycle
-                float colorCycle = sin(uTime) * 0.5 + 0.5;
-
-                // Separate pulse for brightness
-                float brightnessPulse = sin(uTime * 6.0) * 0.2 + 0.8;
-
-                float r = colorCycle * brightnessPulse;
-                float g = 0.0;
-                float b = (1.0 - colorCycle) * brightnessPulse;
-
-                FragColor = vec4(r, g, b, 1.0);
-            }
-        """.trimIndent()
-
-        program = createProgram(vertexShaderCode, fragmentShaderCode)
-
         // VAO/VBO for lines
-        GLES30.glGenVertexArrays(1, vao, 0)
-        GLES30.glGenBuffers(1, vbo, 0)
-        GLES30.glBindVertexArray(vao[0])
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vbo[0])
-        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, particleCount * 4 * 4, null, GLES30.GL_DYNAMIC_DRAW)
-        GLES30.glVertexAttribPointer(0, 2, GLES30.GL_FLOAT, false, 2 * 4, 0)
-        GLES30.glEnableVertexAttribArray(0)
-        GLES30.glBindVertexArray(0)
+        vao.whilstBound {
+            vbo.bind()
+            GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, particleCount * 4 * 4, null, GLES30.GL_DYNAMIC_DRAW)
+            GLES30.glVertexAttribPointer(0, 2, GLES30.GL_FLOAT, false, 2 * 4, 0)
+            GLES30.glEnableVertexAttribArray(0)
+        }
     }
 
     fun buildVertexBuffer(block: () -> Unit) {
@@ -88,29 +85,27 @@ internal class LineRenderer(particleCount: Int) {
     }
 
     fun draw(
-        fbo: Int,
+        frameBuffer: FrameBuffer,
         width: Int,
         height: Int
     ) {
-        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, fbo)
-        GLES30.glUseProgram(program)
+        frameBuffer.whilstBound {
+            program.use()
 
-        val resLoc = GLES30.glGetUniformLocation(program, "uResolution")
-        GLES30.glUniform2f(resLoc, width.toFloat(), height.toFloat())
+            // Push shader inputs
+            GLES30.glUniform2f(program.uniformLocation("uResolution"), width.toFloat(), height.toFloat())
+            GLES30.glUniform1f(program.uniformLocation("uTime"), timeTracker.elapsedSeconds)
 
-        val timeUniformLoc = GLES30.glGetUniformLocation(program, "uTime")
-        GLES30.glUniform1f(timeUniformLoc, (System.currentTimeMillis() - startTime) / 1000f) // Current time in seconds
+            vao.whilstBound {
+                vbo.bind()
+                GLES30.glBufferSubData(GLES30.GL_ARRAY_BUFFER, 0, vertexBuffer.limit() * 4, vertexBuffer)
 
-        GLES30.glBindVertexArray(vao[0])
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vbo[0])
-        GLES30.glBufferSubData(GLES30.GL_ARRAY_BUFFER, 0, vertexBuffer.limit() * 4, vertexBuffer)
+                // Use additive blending for alpha accumulation
+                GLES30.glEnable(GLES30.GL_BLEND)
+                GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
 
-        // Use additive blending for alpha accumulation
-        GLES30.glEnable(GLES30.GL_BLEND)
-        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
-
-        GLES30.glDrawArrays(GLES30.GL_LINES, 0, vertexBuffer.limit() / 2)
-        GLES30.glBindVertexArray(0)
-        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0)
+                GLES30.glDrawArrays(GLES30.GL_LINES, 0, vertexBuffer.limit() / 2)
+            }
+        }
     }
 }
