@@ -31,7 +31,10 @@ class MainActivity : ViewBoundActivity<ActivityMainBinding>(ActivityMainBinding:
             navController.addOnDestinationChangedListener { _, destination, _ ->
                 when (destination.id) {
                     R.id.crop_inspection_screen -> onPause()
-                    R.id.home_screen -> onResume()
+                    R.id.home_screen -> {
+                        onResume()
+                        reset()
+                    }
                 }
             }
         }

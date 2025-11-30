@@ -20,6 +20,8 @@ internal class LineRenderer(particleCount: Int) {
         .order(ByteOrder.nativeOrder())
         .asFloatBuffer()
 
+    private val startTime = System.currentTimeMillis()
+
     init {
         // --- Line shader ---
         val vertexShaderCode = """
@@ -77,8 +79,6 @@ internal class LineRenderer(particleCount: Int) {
         block()
         vertexBuffer.position(0)
     }
-
-    private val startTime = System.currentTimeMillis()
 
     fun addParticle(particle: Particle) {
         vertexBuffer.put(particle.previousPos.x)

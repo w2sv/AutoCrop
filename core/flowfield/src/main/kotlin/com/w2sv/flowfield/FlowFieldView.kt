@@ -18,6 +18,7 @@ class FlowFieldView @JvmOverloads constructor(context: Context, attrs: Attribute
     DefaultLifecycleObserver {
 
     private var isInitialized = false
+    private var renderer: FlowFieldRenderer? = null
 
     init {
         i { "Init $this | Id=${this.id}" }
@@ -79,7 +80,7 @@ class FlowFieldView @JvmOverloads constructor(context: Context, attrs: Attribute
         )
 
         // Initialize renderer with actual view size
-        val renderer = FlowFieldRenderer(
+        renderer = FlowFieldRenderer(
             width = width,
             height = height,
             flowField = flowField,
@@ -88,6 +89,10 @@ class FlowFieldView @JvmOverloads constructor(context: Context, attrs: Attribute
         )
         setRenderer(renderer)
         renderMode = RENDERMODE_CONTINUOUSLY
+    }
+
+    fun reset() {
+        renderer?.reset()
     }
 
     override fun onPause(owner: LifecycleOwner) {
