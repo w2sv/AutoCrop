@@ -13,7 +13,7 @@ ksp = "2.2.10-2.0.2"
 lifecycle = "2.9.2"
 # @keep
 minSdk = "26"
-triplet-play = "3.12.1"
+triplet-play = "3.13.0"
 versionCatalogUpdate = "1.0.0"
 
 [libraries]
