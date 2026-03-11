@@ -18,7 +18,7 @@ versionCatalogUpdate = "1.0.0"
 
 [libraries]
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
-androidx-activity = "androidx.activity:activity-ktx:1.10.1"
+androidx-activity = "androidx.activity:activity-ktx:1.13.0"
 androidx-appcompat = "androidx.appcompat:appcompat:1.7.1"
 androidx-core = "androidx.core:core-ktx:1.17.0"
 androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.1.7"
