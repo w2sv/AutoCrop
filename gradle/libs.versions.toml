@@ -10,7 +10,7 @@ java = "17"
 junit = "5.13.4"
 kotlin = "2.2.10"
 ksp = "2.2.10-2.0.2"
-lifecycle = "2.9.2"
+lifecycle = "2.11.0"
 # @keep
 minSdk = "26"
 triplet-play = "3.12.1"
