@@ -28,7 +28,7 @@ androidx-splashscreen = "androidx.core:core-splashscreen:1.0.1"
 androidx-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-viewpager2 = "androidx.viewpager2:viewpager2:1.1.0"
 animatoo = "com.github.mohammadatif:Animatoo:1.0.1"
-google-guava = "com.google.guava:guava:33.4.8-jre"
+google-guava = "com.google.guava:guava:33.7.1-jre"
 google-hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 google-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 google-material = "com.google.android.material:material:1.12.0"
